@@ -9,13 +9,14 @@ var CAM_ROTATION = 0.002;
 
 
 //Variables
+//May them be in closure?
 var keyStates = {
     W : false,
     A : false,
     S : false,
     D : false,
     SPACE : false,
-    CTRL : false,
+    Z : false,
     Mouse_Click : false
 };
 
@@ -23,32 +24,21 @@ var cameraVectors = {
     frontBack : new THREE.Vector3(0,0,-1),
     rightLeft : new THREE.Vector3(-1,0,0),
     upDown : new THREE.Vector3(0,1,0)
-};
+};  
 
 var scene;
 var camera;
-var pitchObject = new THREE.Object3D();
-var yawObject = new THREE.Object3D();
 var renderer;
-var raycaster;
-var container = document.getElementById("container"); //document.createElement('div');
 var nodes = [];
-var lastSelectedNode = null;
-
-var lastPosition = new THREE.Vector2();
+var lastSelectedNode = null;    //Can be in closure
+var lastPosition = new THREE.Vector2(); //Can be in closure
 //var mouse; It's not necesary to be global... yet
-
-
-var render = function () {
-    requestAnimationFrame( render );
-    animate();
-    
-
-    renderer.render(scene, camera);
-};
 
 var init = function () {
     
+    var container = document.getElementById("container"); //document.createElement('div');
+    
+    //Get Test Data
     crawler.fill();
     
     scene = new THREE.Scene();
@@ -62,38 +52,31 @@ var init = function () {
 
     camera.position.z = 5;
     camera.rotation.set(0, 0, 0);
-    
-    //pitchObject.add(camera);
-    
-    //yawObject.position.y = 10;
-    //yawObject.add(pitchObject);
-    
-    //scene.add(yawObject);
-    //camera.rotation.order = 'YXZ';
+    camera.rotation.order = 'YXZ';
     
     scene.add(camera);
     create3DNodes(crawler.graph);
-    render();
+    animate();
 };
 
 var animate = function () {
+    requestAnimationFrame( animate );
     
-    /*if(keyStates.W)
-        camera.translateOnAxis(cameraVectors.frontBack, CAM_SPEED);
-    if(keyStates.S)
-        camera.translateOnAxis(cameraVectors.frontBack.negate(), CAM_SPEED);
-    if(keyStates.A)
-        camera.translateOnAxis(cameraVectors.rightLeft, CAM_SPEED);
-    if(keyStates.D)
-        camera.translateOnAxis(cameraVectors.rightLeft.negate(), CAM_SPEED);*/
+    //Move camera along its vectors
+    if(keyStates.W) camera.translateOnAxis(cameraVectors.frontBack, CAM_SPEED);
+    if(keyStates.S) camera.translateOnAxis(cameraVectors.frontBack, -CAM_SPEED);
+    if(keyStates.A) camera.translateOnAxis(cameraVectors.rightLeft, CAM_SPEED);
+    if(keyStates.D) camera.translateOnAxis(cameraVectors.rightLeft, -CAM_SPEED);
+    if(keyStates.Z) camera.translateOnAxis(cameraVectors.upDown, -CAM_SPEED);
+    if(keyStates.SPACE) camera.translateOnAxis(cameraVectors.upDown, CAM_SPEED);
     
-    if(keyStates.W) camera.position.z -= 0.05;
-    if(keyStates.S) camera.position.z += 0.05;
-    if(keyStates.A) camera.position.x -= 0.05;
-    if(keyStates.D) camera.position.x += 0.05;
-    if(keyStates.CTRL) camera.position.y -= 0.05;
-    if(keyStates.SPACE) camera.position.y += 0.05;
+    camera.updateProjectionMatrix();
     
+    render();
+};
+
+var render = function () {
+    renderer.render(scene, camera);
 };
 
 var create3DNodes = function (newNodes) {
@@ -146,8 +129,8 @@ var onKeyDown = function (e) {
         case 32: //SPACE
             keyStates.SPACE = true;
             break;
-        case 17: //CTRL
-            keyStates.CTRL = true;
+        case 90: //Z
+            keyStates.Z = true;
             break;
         default:
             break;
@@ -172,8 +155,8 @@ var onKeyUp = function (e) {
         case 32: //SPACE
             keyStates.SPACE = false;
             break;
-        case 17: //CTRL
-            keyStates.CTRL = false;
+        case 90: //Z
+            keyStates.Z = false;
             break;
         default:
             break;
@@ -185,6 +168,7 @@ var onMouseDown = function (e) {
     keyStates.Mouse_Click = true;
     
     var mouse = new THREE.Vector3(0, 0, 20);
+    var raycaster = new THREE.Raycaster();
     
     //Obtain normalized click location (-1...1)
     mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
@@ -207,7 +191,7 @@ var onMouseDown = function (e) {
     
     
     //DEBUG DATA
-    document.getElementById("deltas").innerHTML = "X = " + mouse.x + "; Y = " + mouse.y + "; Z = " + raycaster.ray.origin.z;
+    //document.getElementById("deltas").innerHTML = "X = " + mouse.x + "; Y = " + mouse.y + "; Z = " + raycaster.ray.origin.z;
     var mat = new THREE.LineBasicMaterial({color : 0xffffff});
     var g = new THREE.Geometry();
     var r = raycaster.ray;
