@@ -1,125 +1,4 @@
-var table = [
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        },
-        {
-            group : "DMP",
-            code : "EP",
-            name : "Example Plugin",
-            layer : "Middleware"
-        }
-    ];
+var table = [];
 
 var camera, scene, renderer;
 var controls;
@@ -138,6 +17,7 @@ function init() {
     scene = new THREE.Scene();
 
     // table
+    fillTable();
 
     
     for ( var i = 0; i < table.length; i++ ) {
@@ -154,6 +34,7 @@ function init() {
         var symbol = document.createElement( 'div' );
         symbol.className = 'symbol';
         symbol.textContent = table[ i ].code;
+        if(table[ i ].code.length > 2) symbol.style.fontSize = (120/table[ i ].code.length) + "px";
         element.appendChild( symbol );
 
         var details = document.createElement( 'div' );
@@ -172,8 +53,8 @@ function init() {
         //
 
         var object = new THREE.Object3D();
-        object.position.x = ( (7 + i % 5) * 140 ) - 1330;
-        object.position.y = - ( (3 + Math.floor(i/5)) * 180 ) + 990;
+        object.position.x = ( (6 + i % 10) * 140 ) - 1330;
+        object.position.y = - ( (3 + Math.floor(i/10)) * 180 ) + 990;
 
         targets.table.push( object );
 
@@ -289,6 +170,50 @@ function init() {
 
     window.addEventListener( 'resize', onWindowResize, false );
 
+}
+
+function fillTable() {
+    
+    for(var i = 0; i < testContent.length; i++) {
+        
+        var data = testContent[i].split('-');
+        
+        var _group = data[0].toUpperCase();
+        var _type = capFirstLetter(data[1]);
+        var _layer = capFirstLetter(data[2]);
+        var _name = capFirstLetter(data[3]);
+        var _code = getCode(_name);
+        
+        var element = {
+            group : _group,
+            code : _code,
+            name : _name,
+            layer : _layer,
+            type : _type
+        };
+        
+        table.push(element);
+    }
+}
+
+function capFirstLetter(string) {
+    var words = string.split(" ");
+    var result = "";
+    
+    for(var i = 0; i < words.length; i++)
+        result += words[i].charAt(0).toUpperCase() + words[i].slice(1) + " ";
+    
+    return result.trim();
+}
+
+function getCode(pluginName) {
+    var words = pluginName.split(" ");
+    var code = "";
+    
+    for(var i = 0; i < words.length; i++)
+        code += words[i].charAt(0);
+    
+    return code;
 }
 
 function transform( targets, duration ) {
