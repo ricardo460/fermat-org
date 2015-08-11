@@ -34,7 +34,7 @@ function init() {
         var symbol = document.createElement( 'div' );
         symbol.className = 'symbol';
         symbol.textContent = table[ i ].code;
-        if(table[ i ].code.length > 2) symbol.style.fontSize = (120/table[ i ].code.length) + "px";
+        //if(table[ i ].code.length > 2) symbol.style.fontSize = (120/table[ i ].code.length) + "px";
         element.appendChild( symbol );
 
         var details = document.createElement( 'div' );
@@ -210,8 +210,18 @@ function getCode(pluginName) {
     var words = pluginName.split(" ");
     var code = "";
     
-    for(var i = 0; i < words.length; i++)
-        code += words[i].charAt(0);
+    if(words.length <= 2) { //if N < 2 use first cap letter, and last letter
+        code += words[0].charAt(0).toUpperCase() + words[0].charAt(words[0].length - 1);
+    
+        if(words.length == 2) //if N = 2 use both words, with first letter cap and last letter
+            code += words[1].charAt(0).toUpperCase() + words[1].charAt(words[1].length - 1);
+    }
+    else { //if N => 3 use the N (up to 4) letters caps
+        var max = (words.length < 4) ? words.length : 4;
+
+        for(var i = 0; i < max; i++)
+            code += words[i].charAt(0);
+    }
     
     return code;
 }
