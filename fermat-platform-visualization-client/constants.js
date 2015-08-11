@@ -83,3 +83,33 @@ var testContent = [
         "dmp-android-sub app-wallet publisher",
         "dmp-android-sub app-shop manager"
     ];
+
+
+//34 layers
+var layers = [
+    "Crypto Module",
+    "Crypto Network",
+    "crypto_router",
+    "cypto_vault",
+    "agent",
+    "basic_wallet",
+    "composite_wallet",
+    "engine",
+    "middleware",
+    "module",
+    "network_service",
+    "niche_wallet_type",
+    "request",
+    "transaction",
+    "world",
+    "android",
+    "communication",
+    "actor",
+    "hardware",
+    "identity",
+    "license",
+    "module",
+    "network_service",
+    "platform_service",
+    "user"
+];

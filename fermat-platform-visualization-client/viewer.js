@@ -19,8 +19,10 @@ function init() {
     // table
     fillTable();
 
+    var columns = [0, 0, 0, 0, 0];
     
     for ( var i = 0; i < table.length; i++ ) {
+        var groupWidth = 7;
 
         var element = document.createElement( 'div' );
         element.className = 'element';
@@ -34,7 +36,6 @@ function init() {
         var symbol = document.createElement( 'div' );
         symbol.className = 'symbol';
         symbol.textContent = table[ i ].code;
-        //if(table[ i ].code.length > 2) symbol.style.fontSize = (120/table[ i ].code.length) + "px";
         element.appendChild( symbol );
 
         var details = document.createElement( 'div' );
@@ -51,10 +52,20 @@ function init() {
         objects.push( object );
 
         //
-
+        var column = 0;
+        switch(table[i].group){
+            case "PIP": column = 0; break;
+            case "DMP": column = 1; break;
+            case "CRY": column = 2; break;
+            case "OSA": column = 3; break;
+            case "P2P": column = 4; break;
+        }
+        
         var object = new THREE.Object3D();
-        object.position.x = ( (6 + i % 10) * 140 ) - 1330;
-        object.position.y = - ( (3 + Math.floor(i/10)) * 180 ) + 990;
+        object.position.x = ( (column * groupWidth + (columns[column] % (groupWidth-1))) * 140 ) - 1330;
+        object.position.y = - ( (3 + Math.floor(columns[column]/(groupWidth-1))) * 180 ) + 990;
+        
+        columns[column]++;
 
         targets.table.push( object );
 
