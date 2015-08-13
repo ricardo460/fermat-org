@@ -85,31 +85,70 @@ var testContent = [
     ];
 
 
-//34 layers
-var layers = [
-    "Crypto Module",
-    "Crypto Network",
-    "crypto_router",
-    "cypto_vault",
-    "agent",
-    "basic_wallet",
-    "composite_wallet",
-    "engine",
-    "middleware",
-    "module",
-    "network_service",
-    "niche_wallet_type",
-    "request",
-    "transaction",
-    "world",
-    "android",
-    "communication",
-    "actor",
-    "hardware",
-    "identity",
-    "license",
-    "module",
-    "network_service",
-    "platform_service",
-    "user"
-];
+//33 layers
+var layers = {
+    "Android" : 0,
+    "Multi OS" : 1,
+    "Platform Service" : 2,
+    "Hardware" : 3,
+    "User" : 4,
+    "Plugin" : 5,
+    "License" : 6,
+    "Crypto Network" : 7,
+    "Crypto Vault" : 8,
+    "Crypto Module" : 9,
+    "Crypto Router" : 10,
+    "Communication" : 11,
+    "Network Service" : 12,
+    "Identity" : 13,
+    "Asset" : 14,
+    "World" : 15,
+    "Wallet" : 16, //Maybe Basic Wallet
+    "Composite Wallet" : 17,
+    "Contract" : 18,
+    "Cash Transaction" : 19,
+    "Digital Money Transaction" : 20,
+    "Business Transaction" : 21,
+    "Request" : 22,
+    "Middleware" : 23,
+    "Actor" : 24,
+    "Device Private Network" : 25,
+    "Agent" : 26,
+    "Sub App Module" : 27,
+    "Wallet Module" : 28,
+    "Engine" : 29,
+    "Sub App" : 30,
+    "Reference Niche Wallet" : 31,
+    "Niche Wallet" : 32,
+    "Branded Wallet" : 33,
+    
+    size : function(){
+        var size = 0;
+        
+        for(var key in this){
+            if(this.hasOwnProperty(key))
+                size++;
+        }
+        
+        return size;
+    }
+};
+
+var groups = {
+    "PIP": 0,
+    "DMP": 1,
+    "CRY": 2,
+    "OSA": 3,
+    "P2P": 4,
+    
+    size : function(){
+        var size = 0;
+        
+        for(var key in this){
+            if(this.hasOwnProperty(key))
+                size++;
+        }
+        
+        return size;
+    }
+};

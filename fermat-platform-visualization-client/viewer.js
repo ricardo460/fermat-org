@@ -19,10 +19,65 @@ function init() {
     // table
     fillTable();
 
-    var columns = [0, 0, 0, 0, 0];
+    var groupsQtty = 5;
+    var section = [];
+    
+    //FIXME: When deleted TEMPORAL note below, change to j < layers.size()
+    for(var i = 0; i < groupsQtty; i++){
+        var row = [];
+        
+        for(var j = 0; j <= layers.size(); j++) row.push(0);
+        
+        section.push(row);
+    }
+    
+    var columnGroupWidth = 7;
+    var rowGroupHeight = 2;
+    
+    //As a temporal solution, precompute layout to don't have tiles far away
+    var preComputeLayout = function() {
+        
+        var _sections = [];
+        rowGroupHeight = [];
+        
+        for(var i = 0; i <= layers.size(); i++){
+            var _row = [];
+
+            for(var j = 0; j < groupsQtty; j++) _row.push(0);
+
+            _sections.push(_row);
+        }
+        
+        for(var i = 0; i < table.length; i++){
+            var c = groups[table[i].group];
+            var r = layers[table[i].layer];
+            
+            if(r == undefined) r = layers.size();
+            
+            _sections[r][c]++;
+            
+        }
+        
+        for(var i = 0; i < _sections.length; i++){
+            
+            var max = 0;
+            
+            for(var j = 0; j < _sections[i].length; j++){
+                
+                if(max < _sections[i][j]) max = _sections[i][j];
+            }
+            
+            var last;
+            
+            if(rowGroupHeight.length <= 1) last = 0;
+            else last = rowGroupHeight[i - 1];
+                
+            rowGroupHeight.push(last + Math.ceil(max / columnGroupWidth));
+        }
+    };
+    preComputeLayout();
     
     for ( var i = 0; i < table.length; i++ ) {
-        var groupWidth = 7;
 
         var element = document.createElement( 'div' );
         element.className = 'element';
@@ -52,20 +107,28 @@ function init() {
         objects.push( object );
 
         //
-        var column = 0;
-        switch(table[i].group){
-            case "PIP": column = 0; break;
-            case "DMP": column = 1; break;
-            case "CRY": column = 2; break;
-            case "OSA": column = 3; break;
-            case "P2P": column = 4; break;
+        
+        //Column (X)
+        var column = groups[table[i].group];
+        
+        //Row (Y)
+        var row = layers[table[i].layer];
+        
+        //TEMPORAL: There are plugins without specific layer, put it last for now
+        if(row == undefined) {
+            row = layers.size();
+            
+            //Marked as gray the unallocated plugins
+            object.element.style.backgroundColor = 'rgba(127,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
         }
         
-        var object = new THREE.Object3D();
-        object.position.x = ( (column * groupWidth + (columns[column] % (groupWidth-1))) * 140 ) - 1330;
-        object.position.y = - ( (3 + Math.floor(columns[column]/(groupWidth-1))) * 180 ) + 990;
         
-        columns[column]++;
+        var object = new THREE.Object3D();
+        object.position.x = ( (column * columnGroupWidth + (section[column][row] % (columnGroupWidth-1))) * 140 ) - 1330;
+        object.position.y = - ( (rowGroupHeight[row] + Math.floor(section[column][row]/(columnGroupWidth-1))) * 180 ) + 990;
+        
+        section[column][row]++;
+        //rows[row]++;
 
         targets.table.push( object );
 
