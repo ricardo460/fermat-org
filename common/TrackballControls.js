@@ -33,7 +33,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 	this.minDistance = 0;
 	this.maxDistance = Infinity;
 
-	this.keys = [ 65 /*A*/, 83 /*S*/, 68 /*D*/ ];
+	this.keys = [ 65 /*A*/, 83 /*S*/, 16 /*Shift*/ ];
 
 	// internals
 
@@ -356,7 +356,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		window.removeEventListener( 'keydown', keydown );
 
-		_prevState = _state;
+		//_prevState = _state;
 
 		if ( _state !== STATE.NONE ) {
 
@@ -374,7 +374,11 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 			_state = STATE.PAN;
 
-		}
+		} else if ( event.keyCode === 27 /* ESC */ ) {
+            
+            _this.reset();
+            
+        }
 
 	}
 
@@ -382,7 +386,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		if ( _this.enabled === false ) return;
 
-		_state = _prevState;
+		_state = STATE.NONE;
 
 		window.addEventListener( 'keydown', keydown, false );
 
@@ -391,7 +395,9 @@ THREE.TrackballControls = function ( object, domElement ) {
 	function mousedown( event ) {
 
 		if ( _this.enabled === false ) return;
-
+        
+        _prevState = _state;
+        
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -456,7 +462,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 		event.preventDefault();
 		event.stopPropagation();
 
-		_state = STATE.NONE;
+        _state = _prevState;
 
 		document.removeEventListener( 'mousemove', mousemove );
 		document.removeEventListener( 'mouseup', mouseup );
