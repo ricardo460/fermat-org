@@ -19,8 +19,9 @@ function init() {
     // table
     fillTable();
 
-    var groupsQtty = 5;
+    var groupsQtty = groups.size();
     var section = [];
+    var elementsByGroup = [];   //Elements contained by groups
     
     //FIXME: When deleted TEMPORAL note below, change to j < layers.size()
     for(var i = 0; i < groupsQtty; i++){
@@ -29,17 +30,18 @@ function init() {
         for(var j = 0; j <= layers.size(); j++) row.push(0);
         
         section.push(row);
+        elementsByGroup.push(0);
     }
     
     var columnGroupWidth = 7;
-    var rowGroupHeight = 2;
+    var rowGroupHeight = [];
     
     //As a temporal solution, precompute layout to don't have tiles far away
     var preComputeLayout = function() {
         
         var _sections = [];
-        rowGroupHeight = [];
         
+        //Initialize
         for(var i = 0; i <= layers.size(); i++){
             var _row = [];
 
@@ -48,6 +50,7 @@ function init() {
             _sections.push(_row);
         }
         
+        //Set sections sizes
         for(var i = 0; i < table.length; i++){
             var c = groups[table[i].group];
             var r = layers[table[i].layer];
@@ -55,8 +58,13 @@ function init() {
             if(r == undefined) r = layers.size();
             
             _sections[r][c]++;
+            elementsByGroup[c]++;
             
         }
+        
+        //Set max for every row and row position
+        var position = 0;
+        var lastMax = 0;
         
         for(var i = 0; i < _sections.length; i++){
             
@@ -67,12 +75,12 @@ function init() {
                 if(max < _sections[i][j]) max = _sections[i][j];
             }
             
-            var last;
-            
-            if(rowGroupHeight.length <= 1) last = 0;
-            else last = rowGroupHeight[i - 1];
-                
-            rowGroupHeight.push(last + Math.ceil(max / columnGroupWidth));
+            if(max != 0) {
+                position += lastMax;
+                rowGroupHeight.push(position);
+                lastMax = (Math.ceil(max / columnGroupWidth));
+            } else
+                rowGroupHeight.push(0);
         }
     };
     preComputeLayout();
@@ -128,7 +136,6 @@ function init() {
         object.position.y = - ( (rowGroupHeight[row] + Math.floor(section[column][row]/(columnGroupWidth-1))) * 180 ) + 990;
         
         section[column][row]++;
-        //rows[row]++;
 
         targets.table.push( object );
 
@@ -137,24 +144,35 @@ function init() {
     // sphere
 
     var vector = new THREE.Vector3();
-
-    for ( var i = 0, l = objects.length; i < l; i ++ ) {
-
-        var phi = Math.acos( -1 + ( 2 * i ) / l );
-        var theta = Math.sqrt( l * Math.PI ) * phi;
+    
+    var indexes = [];
+    
+    for ( var i = 0; i < groupsQtty; i++ ) indexes.push(0);
+    
+    for ( var i = 0; i < objects.length; i ++ ) {
+        
+        var g = groups[table[i].group];
+        
+        var radious = g * 600 + 300;
+        
+        var phi = Math.acos( ( 2 * indexes[g] ) / elementsByGroup[g] - 1 );
+        var theta = Math.sqrt( elementsByGroup[g] * Math.PI ) * phi;
 
         var object = new THREE.Object3D();
 
-        object.position.x = 800 * Math.cos( theta ) * Math.sin( phi );
-        object.position.y = 800 * Math.sin( theta ) * Math.sin( phi );
-        object.position.z = 800 * Math.cos( phi );
-
+        object.position.x = radious * Math.cos( theta ) * Math.sin( phi );
+        object.position.y = radious * Math.sin( theta ) * Math.sin( phi );
+        object.position.z = radious * Math.cos( phi );
+        
         vector.copy( object.position ).multiplyScalar( 2 );
 
         object.lookAt( vector );
 
         targets.sphere.push( object );
+        
+        indexes[g]++;
 
+        
     }
 
     // helix
