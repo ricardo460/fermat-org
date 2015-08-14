@@ -1,16 +1,17 @@
 var testContent = [
-        "cry-plugin-crypto vault-bitcoin",
-        "cry-plugin-crypto network-bitcoin",
-        "cry-plugin-crypto module-actor address book",
-        "cry-plugin-crypto module-wallet address book",
-        "cry-plugin-crypto router-incoming crypto",
+        //CRY
+        "pip-plugin-crypto vault-bitcoin",
+        "pip-plugin-crypto network-bitcoin",
+        "pip-plugin-crypto module-actor address book",
+        "pip-plugin-crypto module-wallet address book",
+        "pip-plugin-crypto router-incoming crypto",
 
-
-        "osa-addon-android-database system",
-        "osa-addon-android-file system",
-        "osa-addon-android-device connectivity",
-        "osa-addon-android-device power",
-        "osa-addon-android-logger",
+        //OSA
+        "pip-addon-android-database system",
+        "pip-addon-android-file system",
+        "pip-addon-android-device connectivity",
+        "pip-addon-android-device power",
+        "pip-addon-android-logger",
 
 
         "pip-addon-platform service-event manager",
@@ -26,9 +27,9 @@ var testContent = [
         "pip-plugin-module-developer",
         "pip-plugin-network service-subapp resources",
 
-
-        "p2p-plugin-communication-cloud client",
-        "p2p-plugin-communication-cloud server",
+        //P2P
+        "pip-plugin-communication-cloud client",
+        "pip-plugin-communication-cloud server",
 
 
         "dmp-plugin-identity-intra user",
@@ -87,40 +88,40 @@ var testContent = [
 
 //33 layers
 var layers = {
-    "Android" : 0,
-    "Multi OS" : 1,
-    "Platform Service" : 2,
-    "Hardware" : 3,
-    "User" : 4,
-    "Plugin" : 5,
-    "License" : 6,
-    "Crypto Network" : 7,
-    "Crypto Vault" : 8,
-    "Crypto Module" : 9,
-    "Crypto Router" : 10,
-    "Communication" : 11,
-    "Network Service" : 12,
-    "Identity" : 13,
-    "Asset" : 14,
-    "World" : 15,
-    "Wallet" : 16, //Maybe Basic Wallet
-    "Composite Wallet" : 17,
-    "Contract" : 18,
-    "Cash Transaction" : 19,
-    "Digital Money Transaction" : 20,
-    "Business Transaction" : 21,
-    "Request" : 22,
-    "Middleware" : 23,
-    "Actor" : 24,
-    "Device Private Network" : 25,
-    "Agent" : 26,
-    "Sub App Module" : 27,
-    "Wallet Module" : 28,
-    "Engine" : 29,
-    "Sub App" : 30,
-    "Reference Niche Wallet" : 31,
-    "Niche Wallet" : 32,
-    "Branded Wallet" : 33,
+    "Android" : 33,
+    "Multi OS" : 32,
+    "Platform Service" : 31,
+    "Hardware" : 30,
+    "User" : 29,
+    "Plugin" : 28,
+    "License" : 27,
+    "Crypto Network" : 26,
+    "Crypto Vault" : 25,
+    "Crypto Module" : 24,
+    "Crypto Router" : 23,
+    "Communication" : 22,
+    "Network Service" : 21,
+    "Identity" : 20,
+    "Asset" : 19,
+    "World" : 18,
+    "Wallet" : 17, //Maybe Basic Wallet
+    "Composite Wallet" : 16,
+    "Contract" : 15,
+    "Cash Transaction" : 14,
+    "Digital Money Transaction" : 13,
+    "Business Transaction" : 12,
+    "Request" : 11,
+    "Middleware" : 10,
+    "Actor" : 9,
+    "Device Private Network" : 8,
+    "Agent" : 7,
+    "Sub App Module" : 6,
+    "Wallet Module" : 5,
+    "Engine" : 4,
+    "Sub App" : 3,
+    "Reference Niche Wallet" : 2,
+    "Niche Wallet" : 1,
+    "Branded Wallet" : 0,
     
     size : function(){
         var size = 0;
@@ -137,9 +138,9 @@ var layers = {
 var groups = {
     "PIP": 0,
     "DMP": 1,
-    "CRY": 2,
+    /*"CRY": 2,
     "OSA": 3,
-    "P2P": 4,
+    "P2P": 4,*/
     
     size : function(){
         var size = 0;
@@ -149,6 +150,6 @@ var groups = {
                 size++;
         }
         
-        return size;
+        return size - 1;
     }
 };
