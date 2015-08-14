@@ -22,6 +22,9 @@ function init() {
     var groupsQtty = groups.size();
     var section = [];
     var elementsByGroup = [];   //Elements contained by groups
+    var columnGroupPosition = [];
+    //var columnGroupWidth = [];
+    //var rowGroupHeight = [];
     
     //FIXME: When deleted TEMPORAL note below, change to j < layers.size()
     for(var i = 0; i < groupsQtty; i++){
@@ -31,10 +34,9 @@ function init() {
         
         section.push(row);
         elementsByGroup.push(0);
+        //columnGroupWidth.push(0);
+        columnGroupPosition.push(0);
     }
-    
-    var columnGroupWidth = 7;
-    var rowGroupHeight = [];
     
     //As a temporal solution, precompute layout to don't have tiles far away
     var preComputeLayout = function() {
@@ -62,26 +64,57 @@ function init() {
             
         }
         
-        //Set max for every row and row position
-        var position = 0;
+        var current = 0;
         var lastMax = 0;
         
-        for(var i = 0; i < _sections.length; i++){
+        //Look for max
+        for ( var i = 0; i < _sections[0].length; i++ ) {
             
             var max = 0;
             
-            for(var j = 0; j < _sections[i].length; j++){
+            for ( var j = 0; j < _sections.length; j++ ) {
                 
-                if(max < _sections[i][j]) max = _sections[i][j];
+                if(max < _sections[j][i]) max = _sections[j][i];
+                
             }
             
-            if(max != 0) {
-                position += lastMax;
-                rowGroupHeight.push(position);
-                lastMax = (Math.ceil(max / columnGroupWidth));
-            } else
-                rowGroupHeight.push(0);
+            current += lastMax;
+            columnGroupPosition[i] = current;
+            lastMax = max;
+            
+            
         }
+        
+//        //Set max for every column and column position
+//        var position = 0;
+//        var lastMax = 0;
+//        
+//        for(var i = 0; i < _sections.length; i++){
+//            
+//            var max = 0;
+//            var maxColumn = 0;
+//            
+//            for(var j = 0; j < _sections[i].length; j++){
+//                
+//                if(max < _sections[i][j]) {
+//                    max = _sections[i][j];
+//                    maxColumn = j;
+//                }
+//            }
+//            
+//            if(max != 0) {
+//                columnGroupPosition[maxColumn] = max;
+//                lastMax = max;
+//            }
+//            
+//            
+//            /*if(max != 0) {
+//                position += lastMax;
+//                rowGroupHeight.push(position);
+//                lastMax = max; //if columnWidth were fixed (Math.ceil(max / columnGroupWidth));
+//            } else
+//                rowGroupHeight.push(0);*/
+//        }
     };
     preComputeLayout();
     
@@ -132,8 +165,11 @@ function init() {
         
         
         var object = new THREE.Object3D();
-        object.position.x = ( (column * columnGroupWidth + (section[column][row] % (columnGroupWidth-1))) * 140 ) - 1330;
-        object.position.y = - ( (rowGroupHeight[row] + Math.floor(section[column][row]/(columnGroupWidth-1))) * 180 ) + 990;
+        object.position.x = ( (columnGroupPosition[column] + section[column][row]) * 140 ) - 1330;
+        object.position.y = - ( (row) * 180 ) + 990;
+        
+        //object.position.x = ( (column * columnGroupWidth + (section[column][row] % (columnGroupWidth-1))) * 140 ) - 1330;
+        //object.position.y = - ( (rowGroupHeight[row]  + Math.floor(section[column][row]/(columnGroupWidth-1))) * 180 ) + 990;
         
         section[column][row]++;
 
@@ -223,7 +259,7 @@ function init() {
     //
 
     controls = new THREE.TrackballControls( camera, renderer.domElement );
-    controls.rotateSpeed = 0.5;
+    controls.rotateSpeed = 1.3;
     controls.minDistance = 500;
     controls.maxDistance = 6000;
     controls.addEventListener( 'change', render );
