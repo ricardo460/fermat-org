@@ -40,6 +40,7 @@ function init() {
         var _sections = [];
         rowGroupHeight = [];
         
+        //Initialize
         for(var i = 0; i <= layers.size(); i++){
             var _row = [];
 
@@ -48,6 +49,7 @@ function init() {
             _sections.push(_row);
         }
         
+        //Set sections sizes
         for(var i = 0; i < table.length; i++){
             var c = groups[table[i].group];
             var r = layers[table[i].layer];
@@ -58,6 +60,10 @@ function init() {
             
         }
         
+        //Set max for every row and row position
+        var position = 0;
+        var lastMax = 0;
+        
         for(var i = 0; i < _sections.length; i++){
             
             var max = 0;
@@ -67,12 +73,12 @@ function init() {
                 if(max < _sections[i][j]) max = _sections[i][j];
             }
             
-            var last;
-            
-            if(rowGroupHeight.length <= 1) last = 0;
-            else last = rowGroupHeight[i - 1];
-                
-            rowGroupHeight.push(last + Math.ceil(max / columnGroupWidth));
+            if(max != 0) {
+                position += lastMax;
+                rowGroupHeight.push(position);
+                lastMax = (Math.ceil(max / columnGroupWidth));
+            } else
+                rowGroupHeight.push(0);
         }
     };
     preComputeLayout();
@@ -128,7 +134,6 @@ function init() {
         object.position.y = - ( (rowGroupHeight[row] + Math.floor(section[column][row]/(columnGroupWidth-1))) * 180 ) + 990;
         
         section[column][row]++;
-        //rows[row]++;
 
         targets.table.push( object );
 
