@@ -28,11 +28,11 @@ function init() {
     
     //FIXME: When deleted TEMPORAL note below, change to j < layers.size()
     for(var i = 0; i < groupsQtty; i++){
-        var row = [];
+        var column = [];
         
-        for(var j = 0; j <= layers.size(); j++) row.push(0);
+        for(var j = 0; j <= layers.size(); j++) column.push(0);
         
-        section.push(row);
+        section.push(column);
         elementsByGroup.push(0);
         //columnGroupWidth.push(0);
         columnGroupPosition.push(0);
@@ -189,7 +189,7 @@ function init() {
         
         var g = groups[table[i].group];
         
-        var radious = g * 600 + 300;
+        var radious = g * 1500 + 600;
         
         var phi = Math.acos( ( 2 * indexes[g] ) / elementsByGroup[g] - 1 );
         var theta = Math.sqrt( elementsByGroup[g] * Math.PI ) * phi;
@@ -214,15 +214,45 @@ function init() {
     // helix
 
     var vector = new THREE.Vector3();
+    
+    var helixSection = [];
+    var current = [];
+    var last = 0, helixPosition = 0;
+    
+    for ( var i = 0; i < section[0].length; i++ ) {
+        
+        var totalInRow = 0;
+        
+        for ( var j = 0; j < section.length; j++ ) {
+            
+            totalInRow += section[j][i];
+            
+        }
+        
+        helixPosition += last;
+        helixSection.push(helixPosition);
+        last = totalInRow;
+        
+        current.push(0);
+    }
 
     for ( var i = 0, l = objects.length; i < l; i ++ ) {
 
-        var phi = i * 0.175 + Math.PI;
+        var row = layers[table[i].layer];
+        
+        //FIXME
+        row = (row == undefined) ? layers.size() : row;
+        
+        var x = helixSection[row] + current[row];
+        current[row]++;
+        
+        
+        var phi = x * 0.175 + Math.PI;
 
         var object = new THREE.Object3D();
 
         object.position.x = 900 * Math.sin( phi );
-        object.position.y = - ( i * 8 ) + 450;
+        object.position.y = - ( x * 8 ) + 450;
         object.position.z = 900 * Math.cos( phi );
 
         vector.x = object.position.x * 2;
@@ -261,7 +291,7 @@ function init() {
     controls = new THREE.TrackballControls( camera, renderer.domElement );
     controls.rotateSpeed = 1.3;
     controls.minDistance = 500;
-    controls.maxDistance = 6000;
+    controls.maxDistance = 20000;
     controls.addEventListener( 'change', render );
 
     var button = document.getElementById( 'table' );
