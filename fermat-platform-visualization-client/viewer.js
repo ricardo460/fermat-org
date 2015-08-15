@@ -20,17 +20,18 @@ function init() {
     fillTable();
 
     var groupsQtty = groups.size();
+    var layersQtty = layers.size();
     var section = [];
     var elementsByGroup = [];   //Elements contained by groups
     var columnGroupPosition = [];
     //var columnGroupWidth = [];
     //var rowGroupHeight = [];
     
-    //FIXME: When deleted TEMPORAL note below, change to j < layers.size()
+    //FIXME: When deleted TEMPORAL note below, change to j < layersQtty
     for(var i = 0; i < groupsQtty; i++){
         var column = [];
         
-        for(var j = 0; j <= layers.size(); j++) column.push(0);
+        for(var j = 0; j <= layersQtty; j++) column.push(0);
         
         section.push(column);
         elementsByGroup.push(0);
@@ -44,7 +45,7 @@ function init() {
         var _sections = [];
         
         //Initialize
-        for(var i = 0; i <= layers.size(); i++){
+        for(var i = 0; i <= layersQtty; i++){
             var _row = [];
 
             for(var j = 0; j < groupsQtty; j++) _row.push(0);
@@ -57,7 +58,7 @@ function init() {
             var c = groups[table[i].group];
             var r = layers[table[i].layer];
             
-            if(r == undefined) r = layers.size();
+            if(r == undefined) r = layersQtty;
             
             _sections[r][c]++;
             elementsByGroup[c]++;
@@ -157,7 +158,7 @@ function init() {
         
         //TEMPORAL: There are plugins without specific layer, put it last for now
         if(row == undefined) {
-            row = layers.size();
+            row = layersQtty;
             
             //Marked as gray the unallocated plugins
             object.element.style.backgroundColor = 'rgba(127,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
@@ -241,7 +242,7 @@ function init() {
         var row = layers[table[i].layer];
         
         //FIXME
-        row = (row == undefined) ? layers.size() : row;
+        row = (row == undefined) ? layersQtty : row;
         
         var x = helixSection[row] + current[row];
         current[row]++;
@@ -266,15 +267,52 @@ function init() {
     }
 
     // grid
+    
+    var gridLine = [];
+    var gridLayers = [];
+    var lastLayer = 0;
+    
+    
+    for ( var i = 0; i < layersQtty + 1; i++ ) {
+        
+        //gridLine.push(0);
+        var gridLineSub = [];
+        var empty = true;
+        
+        for ( var j = 0; j < section.length; j++ ) {
+            
+            if(section[j][i] != 0) empty = false;
+            
+            gridLineSub.push(0);
+        }
+        
+        if(!empty) lastLayer++;
+        
+        gridLayers.push(lastLayer);
+        gridLine.push(gridLineSub);
+    }
 
     for ( var i = 0; i < objects.length; i ++ ) {
 
+        var group = groups[table[i].group];
+        var layer = layers[table[i].layer];
+        
+        //FIXME
+        layer = (layer == undefined) ? layersQtty : layer;
+        
         var object = new THREE.Object3D();
 
-        object.position.x = ( ( i % 5 ) * 400 ) - 800;
-        object.position.y = ( - ( Math.floor( i / 5 ) % 5 ) * 400 ) + 800;
-        object.position.z = ( Math.floor( i / 25 ) ) * 1000 - 2000;
+        //By group
+        object.position.x = ( ( gridLine[layer][group] ) * 200 ) - 800;
+        object.position.y = ( - ( gridLayers[layer] ) * 200 ) + 800;
+        object.position.z = ( group ) * 200 ;
 
+        //By layer
+        /*object.position.x = ( ( gridLine[layer][0] % 5 ) * 200 ) - 800;
+        object.position.y = ( - ( Math.floor( gridLine[layer][0] / 5) % 5 ) * 200 ) + 800;
+        object.position.z = ( - gridLayers[layer] ) * 200 + (layersQtty * 100);*/
+        
+        gridLine[layer][0]++;
         targets.grid.push( object );
 
     }
@@ -352,6 +390,12 @@ function fillTable() {
         
         table.push(element);
     }
+    
+    table.sort(function(a, b) {
+        if(a.code > b.code) return 1;
+        if(a.code < b.code) return -1;
+        return 0;
+    });
 }
 
 function capFirstLetter(string) {
