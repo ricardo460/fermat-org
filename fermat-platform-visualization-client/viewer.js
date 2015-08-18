@@ -55,10 +55,8 @@ function init() {
         
         //Set sections sizes
         for(var i = 0; i < table.length; i++){
-            var c = groups[table[i].group];
-            var r = layers[table[i].layer];
-            
-            if(r == undefined) r = layersQtty;
+            var c = table[i].groupID;
+            var r = table[i].layerID;
             
             _sections[r][c]++;
             elementsByGroup[c]++;
@@ -151,15 +149,13 @@ function init() {
         //
         
         //Column (X)
-        var column = groups[table[i].group];
+        var column = table[i].groupID;
         
         //Row (Y)
-        var row = layers[table[i].layer];
+        var row = table[i].layerID;
         
         //TEMPORAL: There are plugins without specific layer, put it last for now
-        if(row == undefined) {
-            row = layersQtty;
-            
+        if(row == layersQtty) {            
             //Marked as gray the unallocated plugins
             object.element.style.backgroundColor = 'rgba(127,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
         }
@@ -188,7 +184,7 @@ function init() {
     
     for ( var i = 0; i < objects.length; i ++ ) {
         
-        var g = groups[table[i].group];
+        var g = table[i].groupID;
         
         var radious = g * 1500 + 600;
         
@@ -239,10 +235,7 @@ function init() {
 
     for ( var i = 0, l = objects.length; i < l; i ++ ) {
 
-        var row = layers[table[i].layer];
-        
-        //FIXME
-        row = (row == undefined) ? layersQtty : row;
+        var row = table[i].layerID;
         
         var x = helixSection[row] + current[row];
         current[row]++;
@@ -294,11 +287,8 @@ function init() {
 
     for ( var i = 0; i < objects.length; i ++ ) {
 
-        var group = groups[table[i].group];
-        var layer = layers[table[i].layer];
-        
-        //FIXME
-        layer = (layer == undefined) ? layersQtty : layer;
+        var group = table[i].groupID;
+        var layer = table[i].layerID;
         
         var object = new THREE.Object3D();
 
@@ -306,13 +296,14 @@ function init() {
         object.position.x = ( ( gridLine[layer][group] ) * 200 ) - 800;
         object.position.y = ( - ( gridLayers[layer] ) * 200 ) + 800;
         object.position.z = ( group ) * 200 ;
+        gridLine[layer][group]++;
 
         //By layer
         /*object.position.x = ( ( gridLine[layer][0] % 5 ) * 200 ) - 800;
         object.position.y = ( - ( Math.floor( gridLine[layer][0] / 5) % 5 ) * 200 ) + 800;
-        object.position.z = ( - gridLayers[layer] ) * 200 + (layersQtty * 100);*/
+        object.position.z = ( - gridLayers[layer] ) * 200 + (layersQtty * 100);
+        gridLine[layer][0]++;*/
         
-        gridLine[layer][0]++;
         targets.grid.push( object );
 
     }
@@ -380,11 +371,19 @@ function fillTable() {
         var _name = capFirstLetter(data[3]);
         var _code = getCode(_name);
         
+        var layerID = layers[_layer];
+        layerID = (layerID == undefined) ? layers.size() : layerID;
+        
+        var groupID = groups[_group];
+        groupID = (groupID == undefined) ? groups.size() : groupID;
+        
         var element = {
             group : _group,
+            groupID : groupID,
             code : _code,
             name : _name,
             layer : _layer,
+            layerID : layerID,
             type : _type
         };
         
