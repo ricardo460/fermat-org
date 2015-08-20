@@ -6,8 +6,18 @@ var controls;
 var objects = [];
 var targets = { table: [], sphere: [], helix: [], grid: [] };
 
-init();
-animate();
+$.ajax({
+    url: "get_plugins.php",
+    method: "GET"
+}).success(function(lists) {
+    
+    var l = JSON.parse(lists);
+    
+    fillTable(l.plugins)
+    
+    init();
+    animate();
+});
 
 function init() {
 
@@ -17,15 +27,12 @@ function init() {
     scene = new THREE.Scene();
 
     // table
-    fillTable();
 
     var groupsQtty = groups.size();
     var layersQtty = layers.size();
     var section = [];
-    var elementsByGroup = [];   //Elements contained by groups
+    var elementsByGroup = [];
     var columnGroupPosition = [];
-    //var columnGroupWidth = [];
-    //var rowGroupHeight = [];
     
     //FIXME: When deleted TEMPORAL note below, change to j < layersQtty
     for(var i = 0; i < groupsQtty; i++){
@@ -35,7 +42,6 @@ function init() {
         
         section.push(column);
         elementsByGroup.push(0);
-        //columnGroupWidth.push(0);
         columnGroupPosition.push(0);
     }
     
@@ -83,37 +89,6 @@ function init() {
             
             
         }
-        
-//        //Set max for every column and column position
-//        var position = 0;
-//        var lastMax = 0;
-//        
-//        for(var i = 0; i < _sections.length; i++){
-//            
-//            var max = 0;
-//            var maxColumn = 0;
-//            
-//            for(var j = 0; j < _sections[i].length; j++){
-//                
-//                if(max < _sections[i][j]) {
-//                    max = _sections[i][j];
-//                    maxColumn = j;
-//                }
-//            }
-//            
-//            if(max != 0) {
-//                columnGroupPosition[maxColumn] = max;
-//                lastMax = max;
-//            }
-//            
-//            
-//            /*if(max != 0) {
-//                position += lastMax;
-//                rowGroupHeight.push(position);
-//                lastMax = max; //if columnWidth were fixed (Math.ceil(max / columnGroupWidth));
-//            } else
-//                rowGroupHeight.push(0);*/
-//        }
     };
     preComputeLayout();
     
@@ -164,9 +139,6 @@ function init() {
         var object = new THREE.Object3D();
         object.position.x = ( (columnGroupPosition[column] + section[column][row]) * 140 ) - 1330;
         object.position.y = - ( (row) * 180 ) + 990;
-        
-        //object.position.x = ( (column * columnGroupWidth + (section[column][row] % (columnGroupWidth-1))) * 140 ) - 1330;
-        //object.position.y = - ( (rowGroupHeight[row]  + Math.floor(section[column][row]/(columnGroupWidth-1))) * 180 ) + 990;
         
         section[column][row]++;
 
@@ -292,17 +264,11 @@ function init() {
         
         var object = new THREE.Object3D();
 
-        //By group
-        object.position.x = ( ( gridLine[layer][group] ) * 200 ) - 800;
-        object.position.y = ( - ( gridLayers[layer] ) * 200 ) + 800;
-        object.position.z = ( group ) * 200 ;
-        gridLine[layer][group]++;
-
         //By layer
-        /*object.position.x = ( ( gridLine[layer][0] % 5 ) * 200 ) - 800;
+        object.position.x = ( ( gridLine[layer][0] % 5 ) * 200 ) - 800;
         object.position.y = ( - ( Math.floor( gridLine[layer][0] / 5) % 5 ) * 200 ) + 800;
         object.position.z = ( - gridLayers[layer] ) * 200 + (layersQtty * 100);
-        gridLine[layer][0]++;*/
+        gridLine[layer][0]++;
         
         targets.grid.push( object );
 
@@ -359,16 +325,16 @@ function init() {
 
 }
 
-function fillTable() {
+function fillTable(pluginList) {
     
-    for(var i = 0; i < testContent.length; i++) {
+    for(var i = 0; i < pluginList.length; i++) {
         
-        var data = testContent[i].split('-');
+        var data = pluginList[i];
         
-        var _group = data[0].toUpperCase();
-        var _type = capFirstLetter(data[1]);
-        var _layer = capFirstLetter(data[2]);
-        var _name = capFirstLetter(data[3]);
+        var _group = data.group[0];
+        var _type = data.type[0];
+        var _layer = data.layer[0];
+        var _name = data.name[0];
         var _code = getCode(_name);
         
         var layerID = layers[_layer];
