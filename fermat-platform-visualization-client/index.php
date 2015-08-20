@@ -10,6 +10,7 @@
 		<script src="../common/tween.min.js"></script>
 		<script src="../common/TrackballControls.js"></script>
 		<script src="../common/CSS3DRenderer.js"></script>
+        <script src="../common/jquery-2.1.4.min.js"></script>
 
 		<div id="container"></div>
 		<div id="menu">
@@ -18,7 +19,7 @@
 			<button id="helix">HELIX</button>
 			<button id="grid">GRID</button>
 		</div>
-
+        
         <script src="constants.js"></script>
 		<script src="viewer.js"></script>
 	</body>

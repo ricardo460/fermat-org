@@ -6,8 +6,18 @@ var controls;
 var objects = [];
 var targets = { table: [], sphere: [], helix: [], grid: [] };
 
-init();
-animate();
+$.ajax({
+    url: "get_plugins.php",
+    method: "GET"
+}).success(function(lists) {
+    
+    var l = JSON.parse(lists);
+    
+    fillTable(l.plugins)
+    
+    init();
+    animate();
+});
 
 function init() {
 
@@ -17,24 +27,21 @@ function init() {
     scene = new THREE.Scene();
 
     // table
-    fillTable();
 
     var groupsQtty = groups.size();
+    var layersQtty = layers.size();
     var section = [];
-    var elementsByGroup = [];   //Elements contained by groups
+    var elementsByGroup = [];
     var columnGroupPosition = [];
-    //var columnGroupWidth = [];
-    //var rowGroupHeight = [];
     
-    //FIXME: When deleted TEMPORAL note below, change to j < layers.size()
+    //FIXME: When deleted TEMPORAL note below, change to j < layersQtty
     for(var i = 0; i < groupsQtty; i++){
         var column = [];
         
-        for(var j = 0; j <= layers.size(); j++) column.push(0);
+        for(var j = 0; j <= layersQtty; j++) column.push(0);
         
         section.push(column);
         elementsByGroup.push(0);
-        //columnGroupWidth.push(0);
         columnGroupPosition.push(0);
     }
     
@@ -44,7 +51,7 @@ function init() {
         var _sections = [];
         
         //Initialize
-        for(var i = 0; i <= layers.size(); i++){
+        for(var i = 0; i <= layersQtty; i++){
             var _row = [];
 
             for(var j = 0; j < groupsQtty; j++) _row.push(0);
@@ -54,10 +61,8 @@ function init() {
         
         //Set sections sizes
         for(var i = 0; i < table.length; i++){
-            var c = groups[table[i].group];
-            var r = layers[table[i].layer];
-            
-            if(r == undefined) r = layers.size();
+            var c = table[i].groupID;
+            var r = table[i].layerID;
             
             _sections[r][c]++;
             elementsByGroup[c]++;
@@ -84,37 +89,6 @@ function init() {
             
             
         }
-        
-//        //Set max for every column and column position
-//        var position = 0;
-//        var lastMax = 0;
-//        
-//        for(var i = 0; i < _sections.length; i++){
-//            
-//            var max = 0;
-//            var maxColumn = 0;
-//            
-//            for(var j = 0; j < _sections[i].length; j++){
-//                
-//                if(max < _sections[i][j]) {
-//                    max = _sections[i][j];
-//                    maxColumn = j;
-//                }
-//            }
-//            
-//            if(max != 0) {
-//                columnGroupPosition[maxColumn] = max;
-//                lastMax = max;
-//            }
-//            
-//            
-//            /*if(max != 0) {
-//                position += lastMax;
-//                rowGroupHeight.push(position);
-//                lastMax = max; //if columnWidth were fixed (Math.ceil(max / columnGroupWidth));
-//            } else
-//                rowGroupHeight.push(0);*/
-//        }
     };
     preComputeLayout();
     
@@ -150,15 +124,13 @@ function init() {
         //
         
         //Column (X)
-        var column = groups[table[i].group];
+        var column = table[i].groupID;
         
         //Row (Y)
-        var row = layers[table[i].layer];
+        var row = table[i].layerID;
         
         //TEMPORAL: There are plugins without specific layer, put it last for now
-        if(row == undefined) {
-            row = layers.size();
-            
+        if(row == layersQtty) {            
             //Marked as gray the unallocated plugins
             object.element.style.backgroundColor = 'rgba(127,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
         }
@@ -167,9 +139,6 @@ function init() {
         var object = new THREE.Object3D();
         object.position.x = ( (columnGroupPosition[column] + section[column][row]) * 140 ) - 1330;
         object.position.y = - ( (row) * 180 ) + 990;
-        
-        //object.position.x = ( (column * columnGroupWidth + (section[column][row] % (columnGroupWidth-1))) * 140 ) - 1330;
-        //object.position.y = - ( (rowGroupHeight[row]  + Math.floor(section[column][row]/(columnGroupWidth-1))) * 180 ) + 990;
         
         section[column][row]++;
 
@@ -187,7 +156,7 @@ function init() {
     
     for ( var i = 0; i < objects.length; i ++ ) {
         
-        var g = groups[table[i].group];
+        var g = table[i].groupID;
         
         var radious = g * 1500 + 600;
         
@@ -238,10 +207,7 @@ function init() {
 
     for ( var i = 0, l = objects.length; i < l; i ++ ) {
 
-        var row = layers[table[i].layer];
-        
-        //FIXME
-        row = (row == undefined) ? layers.size() : row;
+        var row = table[i].layerID;
         
         var x = helixSection[row] + current[row];
         current[row]++;
@@ -266,15 +232,44 @@ function init() {
     }
 
     // grid
+    
+    var gridLine = [];
+    var gridLayers = [];
+    var lastLayer = 0;
+    
+    
+    for ( var i = 0; i < layersQtty + 1; i++ ) {
+        
+        //gridLine.push(0);
+        var gridLineSub = [];
+        var empty = true;
+        
+        for ( var j = 0; j < section.length; j++ ) {
+            
+            if(section[j][i] != 0) empty = false;
+            
+            gridLineSub.push(0);
+        }
+        
+        if(!empty) lastLayer++;
+        
+        gridLayers.push(lastLayer);
+        gridLine.push(gridLineSub);
+    }
 
     for ( var i = 0; i < objects.length; i ++ ) {
 
+        var group = table[i].groupID;
+        var layer = table[i].layerID;
+        
         var object = new THREE.Object3D();
 
-        object.position.x = ( ( i % 5 ) * 400 ) - 800;
-        object.position.y = ( - ( Math.floor( i / 5 ) % 5 ) * 400 ) + 800;
-        object.position.z = ( Math.floor( i / 25 ) ) * 1000 - 2000;
-
+        //By layer
+        object.position.x = ( ( gridLine[layer][0] % 5 ) * 200 ) - 800;
+        object.position.y = ( - ( Math.floor( gridLine[layer][0] / 5) % 5 ) * 200 ) + 800;
+        object.position.z = ( - gridLayers[layer] ) * 200 + (layersQtty * 100);
+        gridLine[layer][0]++;
+        
         targets.grid.push( object );
 
     }
@@ -330,28 +325,42 @@ function init() {
 
 }
 
-function fillTable() {
+function fillTable(pluginList) {
     
-    for(var i = 0; i < testContent.length; i++) {
+    for(var i = 0; i < pluginList.length; i++) {
         
-        var data = testContent[i].split('-');
+        var data = pluginList[i];
         
-        var _group = data[0].toUpperCase();
-        var _type = capFirstLetter(data[1]);
-        var _layer = capFirstLetter(data[2]);
-        var _name = capFirstLetter(data[3]);
+        var _group = data.group[0];
+        var _type = data.type[0];
+        var _layer = data.layer[0];
+        var _name = data.name[0];
         var _code = getCode(_name);
+        
+        var layerID = layers[_layer];
+        layerID = (layerID == undefined) ? layers.size() : layerID;
+        
+        var groupID = groups[_group];
+        groupID = (groupID == undefined) ? groups.size() : groupID;
         
         var element = {
             group : _group,
+            groupID : groupID,
             code : _code,
             name : _name,
             layer : _layer,
+            layerID : layerID,
             type : _type
         };
         
         table.push(element);
     }
+    
+    table.sort(function(a, b) {
+        if(a.code > b.code) return 1;
+        if(a.code < b.code) return -1;
+        return 0;
+    });
 }
 
 function capFirstLetter(string) {
