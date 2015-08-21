@@ -13,7 +13,7 @@ $.ajax({
     
     var l = JSON.parse(lists);
     
-    fillTable(l.plugins)
+    fillTable(l)
     
     init();
     animate();
@@ -325,16 +325,25 @@ function init() {
 
 }
 
-function fillTable(pluginList) {
+function fillTable(list) {
+    
+    var pluginList = list.plugins;
+    
+    for(var i = 0; i < list.layers.length; i++)
+        layers[list.layers[i].name] = list.layers[i].index;
+    
+    for(var i = 0; i < list.groups.length; i++)
+        groups[list.groups[i].code] = list.groups[i].index;
+    
     
     for(var i = 0; i < pluginList.length; i++) {
         
         var data = pluginList[i];
         
-        var _group = data.group[0];
-        var _type = data.type[0];
-        var _layer = data.layer[0];
-        var _name = data.name[0];
+        var _group = data.group;
+        var _type = data.type;
+        var _layer = data.layer;
+        var _name = data.name;
         var _code = getCode(_name);
         
         var layerID = layers[_layer];
