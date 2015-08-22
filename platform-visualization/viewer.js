@@ -96,7 +96,38 @@ function init() {
 
         var element = document.createElement( 'div' );
         element.className = 'element';
-        element.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
+        
+        switch ( table[i].code_level ) {
+                
+            case "production":
+                element.style.boxShadow = '0px 0px 12px rgba(244,133,107,0.5)';
+                //element.style.border = '1px solid rgba(255,127,127,0.25)';
+                element.style.backgroundColor = 'rgba(234,123,97,0.25)';
+                break;
+            case "development":
+                element.style.boxShadow = '0px 0px 12px rgba(80,188,107,0.5)';
+                //element.style.border = '1px solid rgba(127,255,127,0.25)';
+                element.style.backgroundColor = 'rgba(70,178,97,0.25)';
+                break;
+            case "concept":
+                element.style.boxShadow = '0px 0px 12px rgba(150,150,150,0.5)';
+                //element.style.border = '1px solid rgba(127,127,127,0.25)';
+                element.style.backgroundColor = 'rgba(127,127,127,0.25)';
+                break;
+        }
+        
+        
+        if ( table[i].picture != undefined) {
+            var picture = document.createElement( 'img' );
+            picture.className = 'picture';
+            picture.src = table[i].picture;
+            element.appendChild( picture );
+        }
+        
+        var difficulty = document.createElement( 'div' );
+        difficulty.className = 'difficulty';
+        difficulty.textContent = printDifficulty( Math.floor( table[i].difficulty / 2 ) );
+        element.appendChild( difficulty );
 
         var number = document.createElement( 'div' );
         number.className = 'number';
@@ -325,6 +356,24 @@ function init() {
 
 }
 
+function printDifficulty(value) {
+    var max = 5;
+    var result = "";
+    
+    while ( value > 0 ) {
+        result += '★';
+        max--;
+        value--;
+    }
+    
+    while ( max > 0 ) {
+        result += '☆';
+        max--;
+    }
+    
+    return result;
+}
+
 function fillTable(list) {
     
     var pluginList = list.plugins;
@@ -345,6 +394,9 @@ function fillTable(list) {
         var _layer = data.layer;
         var _name = data.name;
         var _code = getCode(_name);
+        var _picture = data.authorPicture;
+        var _difficulty = data.difficulty;
+        var _code_level = data.code_level;
         
         var layerID = layers[_layer];
         layerID = (layerID == undefined) ? layers.size() : layerID;
@@ -359,17 +411,14 @@ function fillTable(list) {
             name : _name,
             layer : _layer,
             layerID : layerID,
-            type : _type
+            type : _type,
+            picture : _picture,
+            difficulty : _difficulty,
+            code_level : _code_level
         };
         
         table.push(element);
     }
-    
-    table.sort(function(a, b) {
-        if(a.code > b.code) return 1;
-        if(a.code < b.code) return -1;
-        return 0;
-    });
 }
 
 function capFirstLetter(string) {
