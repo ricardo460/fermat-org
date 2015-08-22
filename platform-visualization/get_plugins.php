@@ -40,7 +40,7 @@ function main() {
 
             if( searchName(strval($layer['name']), $layerList) === false) {
 
-                array_push($layerList, array( 'name' => strval($layer['name']), 'index' => $layerIndex));
+                array_push($layerList, array( 'name' => strval($layer['name']), 'index' => $layerIndex, 'super_layer' => false));
                 $layerIndex++;
             }
 
@@ -50,7 +50,102 @@ function main() {
 
                     if(strval($super_layer['code']) === strval($layer['super_layer'])) {
 
-                        //TODO: Add super_layer plugins here
+                        foreach($super_layer->children() as $sub_superLayer) {
+                            
+                            if( searchName(strval($sub_superLayer['name']), $layerList) === false) {
+
+                                array_push($layerList, array( 'name' => strval($sub_superLayer['name']), 'index' => $layerIndex, 'super_layer' => true));
+                                $layerIndex++;
+                            }
+
+                            if($sub_superLayer->androids) {
+                                foreach($sub_superLayer->androids->children() as $android) {
+
+                                    if( $android['name'] != null) {
+
+                                        $newElement = array(
+                                            'name' => strval($android['name']),
+                                            'description' => strval($android['description']),
+                                            'code_level' => strval($android['code-level']),
+                                            'layer' => strval($sub_superLayer['name']),
+                                            //'group' => strval($column['code']),
+                                            'difficulty' => (int)strval($android['difficulty']),
+                                            'type' => 'Android'
+                                            );
+
+                                        $author = lookForAuthor($android);
+
+                                        if($author != null) {
+
+                                            $newElement['authorName'] = strval($author['name']);
+                                            $newElement['authorPicture'] = strval($author['picture']);
+
+                                        }
+
+                                        array_push($pluginList, $newElement);
+                                    }
+                                }
+                            }
+
+                            if($sub_superLayer->plugins) {
+                                foreach($sub_superLayer->plugins->children() as $plugin) {
+
+                                    if( $plugin['name'] != null) {
+
+                                        $newElement = array(
+                                            'name' => strval($plugin['name']),
+                                            'description' => strval($plugin['description']),
+                                            'code_level' => strval($plugin['code-level']),
+                                            'layer' => strval($sub_superLayer['name']),
+                                            //'group' => strval($column['code']),
+                                            'difficulty' => (int)strval($plugin['difficulty']),
+                                            'type' => 'Plugin'
+                                            );
+
+                                        $author = lookForAuthor($plugin);
+
+                                        if($author != null) {
+
+                                            $newElement['authorName'] = strval($author['name']);
+                                            $newElement['authorPicture'] = strval($author['picture']);
+
+                                        }
+
+                                        array_push($pluginList, $newElement);
+                                    }
+
+                                }
+                            }
+
+                            if($sub_superLayer->addons) {
+                                foreach($sub_superLayer->addons->children() as $addon) {
+
+                                    if( $addon['name'] != null) {
+
+                                        $newElement = array(
+                                            'name' => strval($addon['name']),
+                                            'description' => strval($addon['description']),
+                                            'code_level' => strval($addon['code-level']),
+                                            'layer' => strval($sub_superLayer['name']),
+                                            //'group' => strval($column['code']),
+                                            'difficulty' => (int)strval($addon['difficulty']),
+                                            'type' => 'Addon'
+                                            );
+
+                                        $author = lookForAuthor($addon);
+
+                                        if($author != null) {
+
+                                            $newElement['authorName'] = strval($author['name']);
+                                            $newElement['authorPicture'] = strval($author['picture']);
+
+                                        }
+
+                                        array_push($pluginList, $newElement);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -67,7 +162,7 @@ function main() {
                                 'code_level' => strval($android['code-level']),
                                 'layer' => strval($layer['name']),
                                 'group' => strval($column['code']),
-                                'difficulty' => (int)strval($android['dificulty']),
+                                'difficulty' => (int)strval($android['difficulty']),
                                 'type' => 'Android'
                                 );
 
@@ -96,7 +191,7 @@ function main() {
                                 'code_level' => strval($plugin['code-level']),
                                 'layer' => strval($layer['name']),
                                 'group' => strval($column['code']),
-                                'difficulty' => (int)strval($plugin['dificulty']),
+                                'difficulty' => (int)strval($plugin['difficulty']),
                                 'type' => 'Plugin'
                                 );
 
@@ -126,7 +221,7 @@ function main() {
                                 'code_level' => strval($addon['code-level']),
                                 'layer' => strval($layer['name']),
                                 'group' => strval($column['code']),
-                                'difficulty' => (int)strval($addon['dificulty']),
+                                'difficulty' => (int)strval($addon['difficulty']),
                                 'type' => 'Addon'
                                 );
 
