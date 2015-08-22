@@ -6,10 +6,12 @@ var controls;
 var objects = [];
 var targets = { table: [], sphere: [], helix: [], grid: [] };
 
+
 $.ajax({
     url: "get_plugins.php",
     method: "GET"
-}).success(function(lists) {
+}).success(
+    function(lists) {
     
     var l = JSON.parse(lists);
     
@@ -18,6 +20,8 @@ $.ajax({
     init();
     animate();
 });
+
+
 
 function init() {
 
@@ -33,39 +37,82 @@ function init() {
     var section = [];
     var elementsByGroup = [];
     var columnGroupPosition = [];
+    //var i = 0;
     
-    //FIXME: When deleted TEMPORAL note below, change to j < layersQtty
-    for(var i = 0; i < groupsQtty; i++){
+    for ( var key in layers ) {
+        if ( key == "size" ) continue;
+        
+        if ( layers[key].super_layer == true ) {
+            
+            section.push(0);
+        }
+        else {
+            
+            var newLayer = [];
+            
+            for ( var i = 0; i < groupsQtty; i++ )
+                newLayer.push(0);
+            
+            section.push(newLayer);
+        }
+    }
+    
+    /*for(var i = 0; i < groupsQtty; i++){
         var column = [];
         
-        for(var j = 0; j <= layersQtty; j++) column.push(0);
+        for(var j = 0; j < layersQtty; j++) column.push(0);
         
         section.push(column);
         elementsByGroup.push(0);
         columnGroupPosition.push(0);
-    }
+    }*/
     
-    //As a temporal solution, precompute layout to don't have tiles far away
     var preComputeLayout = function() {
         
         var _sections = [];
+        var noSuperLayer = 0;
         
         //Initialize
-        for(var i = 0; i <= layersQtty; i++){
-            var _row = [];
+        for ( var key in layers ) {
+            if ( key == "size" ) continue;
 
-            for(var j = 0; j < groupsQtty; j++) _row.push(0);
+            if ( layers[key].super_layer == true ) {
 
-            _sections.push(_row);
+                _sections.push(0);
+            }
+            else {
+
+                var newLayer = [];
+
+                for ( var i = 0; i < groupsQtty; i++ )
+                    newLayer.push(0);
+
+                _sections.push(newLayer);
+            }
+        }
+        
+        for(var j = 0; j <= groupsQtty; j++) {
+            
+            elementsByGroup.push(0);
+            columnGroupPosition.push(0);
         }
         
         //Set sections sizes
         for(var i = 0; i < table.length; i++){
-            var c = table[i].groupID;
+            
             var r = table[i].layerID;
             
-            _sections[r][c]++;
-            elementsByGroup[c]++;
+            if ( layers[table[i].layer].super_layer == true ) {
+                _sections[r]++;
+                var c = table[i].groupID;
+                elementsByGroup[c]++;
+            }
+            else {
+                
+                var c = table[i].groupID;
+                _sections[r][c]++;
+                elementsByGroup[c]++;
+            }
             
         }
         
@@ -73,18 +120,19 @@ function init() {
         var lastMax = 0;
         
         //Look for max
-        for ( var i = 0; i < _sections[0].length; i++ ) {
+        for ( var i = 0; i < groupsQtty; i++ ) {
             
             var max = 0;
             
-            for ( var j = 0; j < _sections.length; j++ ) {
+            for ( var j = 0; j < layersQtty; j++ ) {
                 
-                if(max < _sections[j][i]) max = _sections[j][i];
-                
+                if ( typeof(_sections[j]) == "object" ) {
+                    if(max < _sections[j][i]) max = _sections[j][i];
+                }
             }
             
             current += lastMax;
-            columnGroupPosition[i] = current;
+            columnGroupPosition[i] = current + i;
             lastMax = max;
             
             
@@ -131,7 +179,7 @@ function init() {
 
         var number = document.createElement( 'div' );
         number.className = 'number';
-        number.textContent = table[ i ].group;
+        number.textContent = (table[ i ].group != undefined) ? table[i].group : "";
         element.appendChild( number );
 
         var symbol = document.createElement( 'div' );
@@ -154,24 +202,28 @@ function init() {
 
         //
         
-        //Column (X)
-        var column = table[i].groupID;
+        var object = new THREE.Object3D();
         
         //Row (Y)
         var row = table[i].layerID;
         
-        //TEMPORAL: There are plugins without specific layer, put it last for now
-        if(row == layersQtty) {            
-            //Marked as gray the unallocated plugins
-            object.element.style.backgroundColor = 'rgba(127,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
+        if ( layers[table[i].layer].super_layer == true) {
+            
+            object.position.x = ( (section[row]) * 140 ) - 1330;
+            
+            section[row]++;
+            
+        }
+        else {
+            
+            //Column (X)
+            var column = table[i].groupID;
+            object.position.x = ( (columnGroupPosition[column] + section[row][column]) * 140 ) - 1330;
+
+            section[row][column]++;
         }
         
-        
-        var object = new THREE.Object3D();
-        object.position.x = ( (columnGroupPosition[column] + section[column][row]) * 140 ) - 1330;
         object.position.y = - ( (row) * 180 ) + 990;
-        
-        section[column][row]++;
 
         targets.table.push( object );
 
@@ -183,13 +235,13 @@ function init() {
     
     var indexes = [];
     
-    for ( var i = 0; i < groupsQtty; i++ ) indexes.push(0);
+    for ( var i = 0; i <= groupsQtty; i++ ) indexes.push(0);
     
     for ( var i = 0; i < objects.length; i ++ ) {
         
-        var g = table[i].groupID;
+        var g = (table[i].groupID != undefined) ? table[i].groupID : groupsQtty;
         
-        var radious = g * 1500 + 600;
+        var radious = 500 + (g * 600) / (g + 1);
         
         var phi = Math.acos( ( 2 * indexes[g] ) / elementsByGroup[g] - 1 );
         var theta = Math.sqrt( elementsByGroup[g] * Math.PI ) * phi;
@@ -203,6 +255,8 @@ function init() {
         vector.copy( object.position ).multiplyScalar( 2 );
 
         object.lookAt( vector );
+        
+        //object.position.z -= 1000;
 
         targets.sphere.push( object );
         
@@ -219,14 +273,16 @@ function init() {
     var current = [];
     var last = 0, helixPosition = 0;
     
-    for ( var i = 0; i < section[0].length; i++ ) {
+    for ( var i = 0; i < layersQtty; i++ ) {
         
         var totalInRow = 0;
         
-        for ( var j = 0; j < section.length; j++ ) {
+        for ( var j = 0; j < groupsQtty; j++ ) {
             
-            totalInRow += section[j][i];
-            
+            if ( typeof(section[i] ) == "object" )
+                totalInRow += section[i][j];
+            else if (j == 0)
+                totalInRow += section[i];
         }
         
         helixPosition += last;
@@ -296,9 +352,9 @@ function init() {
         var object = new THREE.Object3D();
 
         //By layer
-        object.position.x = ( ( gridLine[layer][0] % 5 ) * 200 ) - 800;
-        object.position.y = ( - ( Math.floor( gridLine[layer][0] / 5) % 5 ) * 200 ) + 800;
-        object.position.z = ( - gridLayers[layer] ) * 200 + (layersQtty * 100);
+        object.position.x = ( ( gridLine[layer][0] % 5 ) * 200 ) - 450;
+        object.position.y = ( - ( Math.floor( gridLine[layer][0] / 5) % 5 ) * 200 ) + 0;
+        object.position.z = ( - gridLayers[layer] ) * 200 + (layersQtty * 50);
         gridLine[layer][0]++;
         
         targets.grid.push( object );
@@ -378,8 +434,11 @@ function fillTable(list) {
     
     var pluginList = list.plugins;
     
-    for(var i = 0; i < list.layers.length; i++)
-        layers[list.layers[i].name] = list.layers[i].index;
+    for(var i = 0; i < list.layers.length; i++) {
+        layers[list.layers[i].name] = {};
+        layers[list.layers[i].name].index = list.layers[i].index;
+        layers[list.layers[i].name].super_layer = list.layers[i].super_layer;
+    }
     
     for(var i = 0; i < list.groups.length; i++)
         groups[list.groups[i].code] = list.groups[i].index;
@@ -390,15 +449,10 @@ function fillTable(list) {
         var data = pluginList[i];
         
         var _group = data.group;
-        var _type = data.type;
         var _layer = data.layer;
         var _name = data.name;
-        var _code = getCode(_name);
-        var _picture = data.authorPicture;
-        var _difficulty = data.difficulty;
-        var _code_level = data.code_level;
         
-        var layerID = layers[_layer];
+        var layerID = layers[_layer].index;
         layerID = (layerID == undefined) ? layers.size() : layerID;
         
         var groupID = groups[_group];
@@ -407,14 +461,14 @@ function fillTable(list) {
         var element = {
             group : _group,
             groupID : groupID,
-            code : _code,
+            code : getCode(_name),
             name : _name,
             layer : _layer,
             layerID : layerID,
-            type : _type,
-            picture : _picture,
-            difficulty : _difficulty,
-            code_level : _code_level
+            type : data.type,
+            picture : data.authorPicture,
+            difficulty : data.difficulty,
+            code_level : data.code_level
         };
         
         table.push(element);
@@ -495,7 +549,7 @@ function animate() {
     requestAnimationFrame( animate );
 
     TWEEN.update();
-
+    
     controls.update();
 
 }
