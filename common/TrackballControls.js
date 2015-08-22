@@ -8,7 +8,7 @@
 THREE.TrackballControls = function ( object, domElement ) {
 
 	var _this = this;
-	var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4 };
+	var STATE = { NONE: -1, PAN: 0, ZOOM: 1, ROTATE: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4 };
 
 	this.object = object;
 	this.domElement = ( domElement !== undefined ) ? domElement : document;
@@ -409,7 +409,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
-			_moveCurr.copy( getMouseOnCircle( event.pageX, event.pageY ) );
+			_moveCurr.copy( getMouseOnCircle( event.pageX, 0)); // event.pageY ) );
 			_movePrev.copy(_moveCurr);
 
 		} else if ( _state === STATE.ZOOM && !_this.noZoom ) {
@@ -441,7 +441,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 		if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
 			_movePrev.copy(_moveCurr);
-			_moveCurr.copy( getMouseOnCircle( event.pageX, event.pageY ) );
+			_moveCurr.copy( getMouseOnCircle( event.pageX, 0 ) ); //event.pageY ) );
 
 		} else if ( _state === STATE.ZOOM && !_this.noZoom ) {
 

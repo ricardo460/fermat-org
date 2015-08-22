@@ -1,4 +1,4 @@
-var testContent = [
+/*var testContent = [
         //CRY
         "pip-plugin-crypto vault-bitcoin",
         "pip-plugin-crypto network-bitcoin",
@@ -83,70 +83,31 @@ var testContent = [
         "dmp-android-sub app-wallet factory",
         "dmp-android-sub app-wallet publisher",
         "dmp-android-sub app-shop manager"
-    ];
+    ];*/
 
 
 //33 layers
 var layers = {
-    "Android" : 33,
-    "Multi OS" : 32,
-    "Platform Service" : 31,
-    "Hardware" : 30,
-    "User" : 29,
-    "Plugin" : 28,
-    "License" : 27,
-    "Crypto Network" : 26,
-    "Crypto Vault" : 25,
-    "Crypto Module" : 24,
-    "Crypto Router" : 23,
-    "Communication" : 22,
-    "Network Service" : 21,
-    "Identity" : 20,
-    "Asset" : 19,
-    "World" : 18,
-    "Wallet" : 17, //Maybe Basic Wallet
-    "Composite Wallet" : 16,
-    "Contract" : 15,
-    "Cash Transaction" : 14,
-    "Digital Money Transaction" : 13,
-    "Business Transaction" : 12,
-    "Request" : 11,
-    "Middleware" : 10,
-    "Actor" : 9,
-    "Device Private Network" : 8,
-    "Agent" : 7,
-    "Sub App Module" : 6,
-    "Wallet Module" : 5,
-    "Engine" : 4,
-    "Sub App" : 3,
-    "Reference Niche Wallet" : 2,
-    "Niche Wallet" : 1,
-    "Branded Wallet" : 0,
     
     size : function(){
         var size = 0;
         
         for(var key in this){
-            if(this.hasOwnProperty(key))
+            //if(this.hasOwnProperty(key))
                 size++;
         }
         
-        return size;
+        return size - 1;
     }
 };
 
 var groups = {
-    "PIP": 0,
-    "DMP": 1,
-    /*"CRY": 2,
-    "OSA": 3,
-    "P2P": 4,*/
     
     size : function(){
         var size = 0;
         
         for(var key in this){
-            if(this.hasOwnProperty(key))
+            //if(this.hasOwnProperty(key))
                 size++;
         }
         

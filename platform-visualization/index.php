@@ -6,11 +6,11 @@
         <link type="text/css" rel="stylesheet" href="styles.css"/>
 	</head>
 	<body>
-		<script src="../common/three.min.js"></script>
-		<script src="../common/tween.min.js"></script>
-		<script src="../common/TrackballControls.js"></script>
-		<script src="../common/CSS3DRenderer.js"></script>
-        <script src="../common/jquery-2.1.4.min.js"></script>
+		<script src="common/three.min.js"></script>
+		<script src="common/tween.min.js"></script>
+		<script src="common/TrackballControls.js"></script>
+		<script src="common/CSS3DRenderer.js"></script>
+        <script src="common/jquery-2.1.4.min.js"></script>
 
 		<div id="container"></div>
 		<div id="menu">
