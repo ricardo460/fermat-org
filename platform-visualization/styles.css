@@ -3,14 +3,14 @@ html, body {
 			}
 
 			body {
-				background-color: #000000;
+				background-color: #ffffff;
 				margin: 0;
 				font-family: Helvetica, sans-serif;;
 				overflow: hidden;
 			}
 
 			a {
-				color: #ffffff;
+				color: #000000;
 			}
 
 			#info {
@@ -32,7 +32,7 @@ html, body {
 				text-align: center;
 			}
 
-			.element {
+            .element {
 				width: 120px;
 				height: 160px;
 				box-shadow: 0px 0px 12px rgba(255,255,255,0.5);
@@ -46,56 +46,65 @@ html, body {
 				border: 1px solid rgba(255,255,255,0.75);
 			}
 
+            .element p {
+                margin: 0;
+            }
+
+                .element .name {
+                    color: rgba(255,255,255,1);
+                }
+
 				.element .number {
 					position: absolute;
 					top: 5px;
 					right: 10px;
 					font-size: 12px;
-					color: rgba(255,255,255,0.75);
+					color: black;
 				}
 
 				.element .symbol {
 					position: absolute;
-					top: 25px;
+					top: 22px;
 					left: 0px;
 					right: 0px;
 					font-size: 25px;
 					font-weight: bold;
-					color: rgba(255,255,255,0.75);
+					color: white;
 					text-shadow: 0 0 10px rgba(255,255,255,0.5);
 				}
 
 				.element .details {
 					position: absolute;
-					bottom: 5px;
+					bottom: 3px;
 					left: 0px;
 					right: 0px;
 					font-size: 12px;
-					color: rgba(255,255,255,0.75);
+					color: white;
 				}
 
                 .element .picture {
                     position: absolute;
-                    top: 55px;
+                    top: 53px;
                     left: 40px;
                     width: 35px;
                     height: 35px;
-                    border: 3px solid rgba(255,255,255,0.75);
+                    border: solid 3px rgba(255,255,255,1);
                     box-shadow: 0 0 10px rgba(255,255,255,0.95);
+                    opacity: 0.65;
                 }
 
                 .element .difficulty {
                     position: absolute;
-                    top: 95px;
+                    top: 93px;
                     left: 0px;
                     right: 0px;
-                    text-shadow: 0 0 10px rgba(255,255,255,0.95);
+                    text-shadow: 0 0 10px rgba(255,255,255,0.75);
                     font-size: 14px;
-                    color: rgba(255,255,255,0.75);
+                    color: rgba(255,255,255,1);
                 }
 
 			button {
-				color: rgba(127,255,255,0.75);
+				color: rgba(127,127,127,1);
 				background: transparent;
 				outline: 1px solid rgba(127,255,255,0.75);
 				border: 0px;
@@ -103,9 +112,9 @@ html, body {
 				cursor: pointer;
 			}
 			button:hover {
-				background-color: rgba(0,255,255,0.5);
+				background-color: rgba(127,127,127,0.5);
 			}
 			button:active {
 				color: #000000;
-				background-color: rgba(0,255,255,0.75);
+				background-color: rgba(127,127,127,0.75);
 			}
