@@ -145,26 +145,6 @@ function init() {
         var element = document.createElement( 'div' );
         element.className = 'element';
         
-        switch ( table[i].code_level ) {
-                
-            case "production":
-                element.style.boxShadow = '0px 0px 12px rgba(244,133,107,0.5)';
-                //element.style.border = '1px solid rgba(255,127,127,0.25)';
-                element.style.backgroundColor = 'rgba(234,123,97,0.25)';
-                break;
-            case "development":
-                element.style.boxShadow = '0px 0px 12px rgba(80,188,107,0.5)';
-                //element.style.border = '1px solid rgba(127,255,127,0.25)';
-                element.style.backgroundColor = 'rgba(70,178,97,0.25)';
-                break;
-            case "concept":
-                element.style.boxShadow = '0px 0px 12px rgba(150,150,150,0.5)';
-                //element.style.border = '1px solid rgba(127,127,127,0.25)';
-                element.style.backgroundColor = 'rgba(127,127,127,0.25)';
-                break;
-        }
-        
-        
         if ( table[i].picture != undefined) {
             var picture = document.createElement( 'img' );
             picture.className = 'picture';
@@ -189,8 +169,45 @@ function init() {
 
         var details = document.createElement( 'div' );
         details.className = 'details';
-        details.innerHTML = table[ i ].name + '<br>' + table[ i ].layer;
+        
+        var pluginName = document.createElement( 'p' );
+        pluginName.innerHTML = table[ i ].name;
+        pluginName.className = 'name';
+        
+        var layerName = document.createElement( 'p' );
+        layerName.innerHTML = table[ i ].layer;
+        
+        details.appendChild( pluginName );
+        details.appendChild( layerName );
         element.appendChild( details );
+        
+        switch ( table[i].code_level ) {
+                
+            case "production":
+                element.style.boxShadow = '0px 0px 12px rgba(244,133,107,0.5)';
+                element.style.backgroundColor = 'rgba(234,123,97,' + ( Math.random() * 0.25 + 0.45 ) + ')';
+                
+                number.style.color = 'rgba(234,123,97,1)';
+                layerName.style.color = 'rgba(234,123,97,1)';
+                
+                break;
+            case "development":
+                element.style.boxShadow = '0px 0px 12px rgba(80,188,107,0.5)';
+                element.style.backgroundColor = 'rgba(70,178,97,'+ ( Math.random() * 0.25 + 0.45 ) +')';
+                
+                number.style.color = 'rgba(70,178,97,1)';
+                layerName.style.color = 'rgba(70,178,97,1)';
+                
+                break;
+            case "concept":
+                element.style.boxShadow = '0px 0px 12px rgba(150,150,150,0.5)';
+                element.style.backgroundColor = 'rgba(170,170,170,'+ ( Math.random() * 0.25 + 0.45 ) +')';
+                
+                number.style.color = 'rgba(127,127,127,1)';
+                layerName.style.color = 'rgba(127,127,127,1)';
+                
+                break;
+        }
 
         var object = new THREE.CSS3DObject( element );
         object.position.x = Math.random() * 4000 - 2000;
@@ -241,7 +258,7 @@ function init() {
         
         var g = (table[i].groupID != undefined) ? table[i].groupID : groupsQtty;
         
-        var radious = 500 + (g * 600) / (g + 1);
+        var radious = 300 * (g + 1);
         
         var phi = Math.acos( ( 2 * indexes[g] ) / elementsByGroup[g] - 1 );
         var theta = Math.sqrt( elementsByGroup[g] * Math.PI ) * phi;

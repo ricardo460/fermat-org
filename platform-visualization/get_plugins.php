@@ -21,7 +21,7 @@ function main() {
 
     //$data = $data->fermat;
 
-    $columnList = [];
+    $platformList = [];
     $layerList = [];
     $pluginList = [];
     $superLayerList = [];
@@ -29,14 +29,14 @@ function main() {
     //TODO: Add dificluty, authors
 
     $layerIndex = 0;
-    $columnIndex = 0;
+    $platformIndex = 0;
 
-    foreach($data->columns->children() as $column) {
+    foreach($data->platforms->children() as $platform) {
 
-        array_push($columnList, array( 'code' => strval($column['code']), 'name' => strval($column['name']), 'index' => $columnIndex));
-        $columnIndex++;
+        array_push($platformList, array( 'code' => strval($platform['code']), 'name' => strval($platform['name']), 'index' => $platformIndex));
+        $platformIndex++;
 
-        foreach($column->children() as $layer) {
+        foreach($platform->children() as $layer) {
 
             if( searchName(strval($layer['name']), $layerList) === false) {
 
@@ -68,7 +68,7 @@ function main() {
                                             'description' => strval($android['description']),
                                             'code_level' => strval($android['code-level']),
                                             'layer' => strval($sub_superLayer['name']),
-                                            //'group' => strval($column['code']),
+                                            //'group' => strval($platform['code']),
                                             'difficulty' => (int)strval($android['difficulty']),
                                             'type' => 'Android'
                                             );
@@ -97,7 +97,7 @@ function main() {
                                             'description' => strval($plugin['description']),
                                             'code_level' => strval($plugin['code-level']),
                                             'layer' => strval($sub_superLayer['name']),
-                                            //'group' => strval($column['code']),
+                                            //'group' => strval($platform['code']),
                                             'difficulty' => (int)strval($plugin['difficulty']),
                                             'type' => 'Plugin'
                                             );
@@ -127,7 +127,7 @@ function main() {
                                             'description' => strval($addon['description']),
                                             'code_level' => strval($addon['code-level']),
                                             'layer' => strval($sub_superLayer['name']),
-                                            //'group' => strval($column['code']),
+                                            //'group' => strval($platform['code']),
                                             'difficulty' => (int)strval($addon['difficulty']),
                                             'type' => 'Addon'
                                             );
@@ -161,7 +161,7 @@ function main() {
                                 'description' => strval($android['description']),
                                 'code_level' => strval($android['code-level']),
                                 'layer' => strval($layer['name']),
-                                'group' => strval($column['code']),
+                                'group' => strval($platform['code']),
                                 'difficulty' => (int)strval($android['difficulty']),
                                 'type' => 'Android'
                                 );
@@ -190,7 +190,7 @@ function main() {
                                 'description' => strval($plugin['description']),
                                 'code_level' => strval($plugin['code-level']),
                                 'layer' => strval($layer['name']),
-                                'group' => strval($column['code']),
+                                'group' => strval($platform['code']),
                                 'difficulty' => (int)strval($plugin['difficulty']),
                                 'type' => 'Plugin'
                                 );
@@ -220,7 +220,7 @@ function main() {
                                 'description' => strval($addon['description']),
                                 'code_level' => strval($addon['code-level']),
                                 'layer' => strval($layer['name']),
-                                'group' => strval($column['code']),
+                                'group' => strval($platform['code']),
                                 'difficulty' => (int)strval($addon['difficulty']),
                                 'type' => 'Addon'
                                 );
@@ -243,7 +243,7 @@ function main() {
     }
 
     $result = array(
-        'groups' => $columnList,
+        'groups' => $platformList,
         'layers' => $layerList,
         'plugins' => $pluginList,
         'superLayers' => $superLayerList
