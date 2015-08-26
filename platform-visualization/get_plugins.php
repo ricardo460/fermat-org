@@ -1,5 +1,7 @@
 <?php
 
+$authorCache = array();
+
 main();
 
 function main() {
@@ -52,7 +54,7 @@ function main() {
                 
                 foreach($data->super_layers->children() as $super_layer) {
                     
-                    if( search('code', strval($super_layer['code']), $superLayerList) === false) {
+                    if( search('code', strval($super_layer['code']), $superLayerList) === null) {
 
                         array_push($superLayerList, array( 
                             'name' => strval($super_layer['name']),
@@ -169,6 +171,8 @@ function searchName($name, $list) {
 function lookForAuthor($element) {
     
     $author = null;
+    global $authorCache;
+    
     $userUrl = "https://api.github.com/users/";
     
     if(!$element->authors) return null;
@@ -184,8 +188,21 @@ function lookForAuthor($element) {
                     'percentage' => (int)strval($actual['percentage'])
                     );
                 
-                $userData = askGitHub($userUrl . $author['name']);
-                $pictureUrl = $userData["avatar_url"];
+                $cache = search('name', $author['name'], $authorCache);
+                
+                if ( $cache === null ) {
+                    
+                    $userData = askGitHub($userUrl . $author['name']);
+                    $pictureUrl = $userData["avatar_url"];
+                    
+                    array_push( $authorCache, array(
+                        'name' => $author['name'],
+                        'img' => $userData['avatar_url']
+                    ));
+                }
+                else {
+                    $pictureUrl = $cache['img'];
+                }
                 
                 $author['picture'] = $pictureUrl;
             }
@@ -217,10 +234,10 @@ function askGitHub($url) {
 function search($attr, $element, $list) {
     
     foreach($list as $current) {
-        if($current[$attr] === $element) return true;
+        if($current[$attr] === $element) return $current;
     }
     
-    return false;
+    return null;
 }
 
 function createElement($element, $type, $layer, $platform = null) {
