@@ -23,12 +23,10 @@ $.ajax({
 
 
 function init() {
-
-    camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
-    camera.position.z = 3000;
-
+    
     scene = new THREE.Scene();
-
+    
+    
     // table
 
     var groupsQtty = groups.size();
@@ -37,8 +35,9 @@ function init() {
     var elementsByGroup = [];
     //var columnGroupPosition = [];
     var columnWidth = 0;
+    var superLayerMaxHeight = 0;
     var layerPosition = [];
-    //var i = 0;
+    var superLayerPosition = [];
     
     for ( var key in layers ) {
         if ( key == "size" ) continue;
@@ -62,20 +61,18 @@ function init() {
         
         var _sections = [];
         var superLayerHeight = 0;
-        var superLayerMaxHeight = 0;
         var isSuperLayer = [];
         
         //Initialize
         for ( var key in layers ) {
             if ( key == "size" ) continue;
-
+            
             if ( layers[key].super_layer == true ) {
 
                 _sections.push(0);
                 superLayerHeight++;
                 
                 if( superLayerMaxHeight < superLayerHeight ) superLayerMaxHeight = superLayerHeight;
-                
             }
             else {
 
@@ -126,13 +123,19 @@ function init() {
         var actualHeight = 0;
         var remainingSpace = superLayerMaxHeight;
         var inSuperLayer = false;
+        var actualSuperLayer = 0;
         
         for ( var i = 0; i < layersQtty; i++ ) {
             
             if( isSuperLayer[i] ) {
                 
-                if(!inSuperLayer)
+                if(!inSuperLayer) {
                     actualHeight++;
+                    
+                    if ( superLayerPosition[ actualSuperLayer ] == undefined ) {
+                        superLayerPosition[ actualSuperLayer ] = actualHeight;
+                    }
+                }
                 
                 inSuperLayer = true;
                 actualHeight++;
@@ -144,6 +147,7 @@ function init() {
                     
                     actualHeight += remainingSpace + 1;
                     remainingSpace = superLayerMaxHeight;
+                    actualSuperLayer++;
                 }
                 
                 inSuperLayer = false;
@@ -263,7 +267,7 @@ function init() {
         
         if ( layers[table[i].layer].super_layer == true) {
             
-            object.position.x = ( (section[row]) * 140 ) - 1330;
+            object.position.x = ( (section[row]) * 140 ) - (columnWidth * groupsQtty * 140 / 2);
             
             section[row]++;
             
@@ -272,16 +276,52 @@ function init() {
             
             //Column (X)
             var column = table[i].groupID;
-            object.position.x = ( ( (column * (columnWidth) + section[row][column]) + column ) * 140 ) - 1330;
+            object.position.x = ( ( (column * (columnWidth) + section[row][column]) + column ) * 140 ) - (columnWidth * groupsQtty * 140 / 2);
 
             section[row][column]++;
         }
         
         
-        object.position.y = - ( (layerPosition[ row ] ) * 180 ) + 990;
+        object.position.y = - ( (layerPosition[ row ] ) * 180 ) + (layersQtty * 180 / 2);
 
         targets.table.push( object );
 
+    }
+    
+    // table groups icons
+    
+    for ( var group in groups ) {
+        if ( group == 'size' ) continue;
+        
+        var column = groups[group];
+        
+        var image = document.createElement( 'img' );
+        image.src = 'images/' + group + '_logo.png';
+        image.width = columnWidth * 140;
+        
+        var object = new THREE.CSS3DObject( image );
+        
+        object.position.x = ( columnWidth * 140 ) * ( column - ( groupsQtty - 1 ) / 2) + (( column - 1 ) * 140);
+        object.position.y = ((layersQtty + 5) * 180) / 2;
+        
+        scene.add( object );
+    }
+    
+    for ( var slayer in superLayers ) {
+        if ( slayer == 'size' ) continue;
+        
+        var row = superLayerPosition[ superLayers[ slayer ].index ];
+        
+        var image = document.createElement( 'img' );
+        image.src = 'images/' + slayer + '_logo.png';
+        image.height = superLayerMaxHeight * 180;
+        
+        var object = new THREE.CSS3DObject( image );
+        
+        object.position.x = - ( ( (groupsQtty + 1) * columnWidth * 140 / 2) + 140 );
+        object.position.y = - ( row * 180 ) - ( superLayerMaxHeight * 180 / 2 ) + (layersQtty * 180 / 2);
+        
+        scene.add( object );
     }
 
     // sphere
@@ -417,6 +457,9 @@ function init() {
     }
 
     //
+    
+    camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+    camera.position.z = (columnWidth * groupsQtty * 140);
 
     renderer = new THREE.CSS3DRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -428,7 +471,7 @@ function init() {
     controls = new THREE.TrackballControls( camera, renderer.domElement );
     controls.rotateSpeed = 1.3;
     controls.minDistance = 500;
-    controls.maxDistance = 20000;
+    controls.maxDistance = 80000;
     controls.addEventListener( 'change', render );
 
     var button = document.getElementById( 'table' );
@@ -488,6 +531,12 @@ function printDifficulty(value) {
 function fillTable(list) {
     
     var pluginList = list.plugins;
+    
+    for(var i = 0; i < list.superLayers.length; i++) {
+        superLayers[list.superLayers[i].code] = {};
+        superLayers[list.superLayers[i].code].name = list.superLayers[i].name;
+        superLayers[list.superLayers[i].code].index = list.superLayers[i].index;
+    }
     
     for(var i = 0; i < list.layers.length; i++) {
         layers[list.layers[i].name] = {};

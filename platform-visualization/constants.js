@@ -114,3 +114,17 @@ var groups = {
         return size - 1;
     }
 };
+
+var superLayers = {
+    
+    size : function(){
+        var size = 0;
+        
+        for(var key in this){
+            //if(this.hasOwnProperty(key))
+                size++;
+        }
+        
+        return size - 1;
+    }
+};
