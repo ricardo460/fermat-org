@@ -26,14 +26,18 @@ function main() {
     $pluginList = [];
     $superLayerList = [];
 
-    //TODO: Add dificluty, authors
-
     $layerIndex = 0;
     $platformIndex = 0;
+    $superLayerIndex = 0;
 
     foreach($data->platforms->children() as $platform) {
 
-        array_push($platformList, array( 'code' => strval($platform['code']), 'name' => strval($platform['name']), 'index' => $platformIndex));
+        array_push($platformList, array(
+            'code' => strval($platform['code']),
+            'name' => strval($platform['name']),
+            'logo' => strval($platform['logo']),
+            'index' => $platformIndex
+        ));
         $platformIndex++;
 
         foreach($platform->children() as $layer) {
@@ -45,8 +49,19 @@ function main() {
             }
 
             if(isset($layer['super_layer'])) {
-
+                
                 foreach($data->super_layers->children() as $super_layer) {
+                    
+                    if( search('code', strval($super_layer['code']), $superLayerList) === false) {
+
+                        array_push($superLayerList, array( 
+                            'name' => strval($super_layer['name']),
+                            'code' => strval($super_layer['code']),
+                            'index' => $superLayerIndex,
+                        ));
+                        
+                        $superLayerIndex++;
+                    }
 
                     if(strval($super_layer['code']) === strval($layer['super_layer'])) {
 
@@ -60,89 +75,33 @@ function main() {
 
                             if($sub_superLayer->androids) {
                                 foreach($sub_superLayer->androids->children() as $android) {
-
-                                    if( $android['name'] != null) {
-
-                                        $newElement = array(
-                                            'name' => strval($android['name']),
-                                            'description' => strval($android['description']),
-                                            'code_level' => strval($android['code-level']),
-                                            'layer' => strval($sub_superLayer['name']),
-                                            //'group' => strval($platform['code']),
-                                            'difficulty' => (int)strval($android['difficulty']),
-                                            'type' => 'Android'
-                                            );
-
-                                        $author = lookForAuthor($android);
-
-                                        if($author != null) {
-
-                                            $newElement['authorName'] = strval($author['name']);
-                                            $newElement['authorPicture'] = strval($author['picture']);
-
-                                        }
-
-                                        array_push($pluginList, $newElement);
-                                    }
+                                    
+                                $newElement = createElement($android, 'Android', $sub_superLayer);
+                                array_push($pluginList, $newElement);
                                 }
                             }
 
                             if($sub_superLayer->plugins) {
                                 foreach($sub_superLayer->plugins->children() as $plugin) {
 
-                                    if( $plugin['name'] != null) {
-
-                                        $newElement = array(
-                                            'name' => strval($plugin['name']),
-                                            'description' => strval($plugin['description']),
-                                            'code_level' => strval($plugin['code-level']),
-                                            'layer' => strval($sub_superLayer['name']),
-                                            //'group' => strval($platform['code']),
-                                            'difficulty' => (int)strval($plugin['difficulty']),
-                                            'type' => 'Plugin'
-                                            );
-
-                                        $author = lookForAuthor($plugin);
-
-                                        if($author != null) {
-
-                                            $newElement['authorName'] = strval($author['name']);
-                                            $newElement['authorPicture'] = strval($author['picture']);
-
-                                        }
-
-                                        array_push($pluginList, $newElement);
-                                    }
-
+                                $newElement = createElement($plugin, 'Plugin', $sub_superLayer);
+                                array_push($pluginList, $newElement);
                                 }
                             }
 
                             if($sub_superLayer->addons) {
                                 foreach($sub_superLayer->addons->children() as $addon) {
-
-                                    if( $addon['name'] != null) {
-
-                                        $newElement = array(
-                                            'name' => strval($addon['name']),
-                                            'description' => strval($addon['description']),
-                                            'code_level' => strval($addon['code-level']),
-                                            'layer' => strval($sub_superLayer['name']),
-                                            //'group' => strval($platform['code']),
-                                            'difficulty' => (int)strval($addon['difficulty']),
-                                            'type' => 'Addon'
-                                            );
-
-                                        $author = lookForAuthor($addon);
-
-                                        if($author != null) {
-
-                                            $newElement['authorName'] = strval($author['name']);
-                                            $newElement['authorPicture'] = strval($author['picture']);
-
-                                        }
-
-                                        array_push($pluginList, $newElement);
-                                    }
+                                    
+                                    $newElement = createElement($addon, 'Addon', $sub_superLayer);
+                                    array_push($pluginList, $newElement);
+                                }
+                            }
+                            
+                            if($sub_superLayer->libraries) {
+                                foreach($sub_superLayer->libraries->children() as $library) {
+                                    
+                                    $newElement = createElement($library, 'Library', $sub_superLayer);
+                                    array_push($pluginList, $newElement);
                                 }
                             }
                         }
@@ -153,89 +112,33 @@ function main() {
 
                 if($layer->androids) {
                     foreach($layer->androids->children() as $android) {
-
-                        if( $android['name'] != null) {
-
-                            $newElement = array(
-                                'name' => strval($android['name']),
-                                'description' => strval($android['description']),
-                                'code_level' => strval($android['code-level']),
-                                'layer' => strval($layer['name']),
-                                'group' => strval($platform['code']),
-                                'difficulty' => (int)strval($android['difficulty']),
-                                'type' => 'Android'
-                                );
-
-                            $author = lookForAuthor($android);
-
-                            if($author != null) {
-
-                                $newElement['authorName'] = strval($author['name']);
-                                $newElement['authorPicture'] = strval($author['picture']);
-
-                            }
-
-                            array_push($pluginList, $newElement);
-                        }
+                        
+                    $newElement = createElement($android, 'Android', $layer, $platform);
+                    array_push($pluginList, $newElement);
                     }
                 }
 
                 if($layer->plugins) {
                     foreach($layer->plugins->children() as $plugin) {
 
-                        if( $plugin['name'] != null) {
-
-                            $newElement = array(
-                                'name' => strval($plugin['name']),
-                                'description' => strval($plugin['description']),
-                                'code_level' => strval($plugin['code-level']),
-                                'layer' => strval($layer['name']),
-                                'group' => strval($platform['code']),
-                                'difficulty' => (int)strval($plugin['difficulty']),
-                                'type' => 'Plugin'
-                                );
-
-                            $author = lookForAuthor($plugin);
-
-                            if($author != null) {
-
-                                $newElement['authorName'] = strval($author['name']);
-                                $newElement['authorPicture'] = strval($author['picture']);
-
-                            }
-
-                            array_push($pluginList, $newElement);
-                        }
-
+                        $newElement = createElement($plugin, 'Plugin', $layer, $platform);
+                        array_push($pluginList, $newElement);
                     }
                 }
 
                 if($layer->addons) {
                     foreach($layer->addons->children() as $addon) {
+                        
+                    $newElement = createElement($addon, 'Addon', $layer, $platform);
+                    array_push($pluginList, $newElement);
+                    }
+                }
+                
+                if($layer->libraries) {
+                    foreach($layer->libraries->children() as $library) {
 
-                        if( $addon['name'] != null) {
-
-                            $newElement = array(
-                                'name' => strval($addon['name']),
-                                'description' => strval($addon['description']),
-                                'code_level' => strval($addon['code-level']),
-                                'layer' => strval($layer['name']),
-                                'group' => strval($platform['code']),
-                                'difficulty' => (int)strval($addon['difficulty']),
-                                'type' => 'Addon'
-                                );
-
-                            $author = lookForAuthor($addon);
-
-                            if($author != null) {
-
-                                $newElement['authorName'] = strval($author['name']);
-                                $newElement['authorPicture'] = strval($author['picture']);
-
-                            }
-
-                            array_push($pluginList, $newElement);
-                        }
+                        $newElement = createElement($library, 'Library', $layer, $platform);
+                        array_push($pluginList, $newElement);
                     }
                 }
             }
@@ -309,6 +212,42 @@ function askGitHub($url) {
     curl_close($ch);
     
     return json_decode($data, true);
+}
+
+function search($attr, $element, $list) {
+    
+    foreach($list as $current) {
+        if($current[$attr] === $element) return true;
+    }
+    
+    return false;
+}
+
+function createElement($element, $type, $layer, $platform = null) {
+    
+    if ( $element['name'] == null ) return null;
+    
+    $newElement = array(
+        'name' => strval($element['name']),
+        'description' => strval($element['description']),
+        'code_level' => strval($element['code-level']),
+        'layer' => strval($layer['name']),
+        'difficulty' => (int)strval($element['difficulty']),
+        'type' => $type
+        );
+    
+    
+    if ( $platform != null) $newElement['group'] = strval($platform['code']);
+    
+    $author = lookForAuthor($element);
+
+    if($author != null) {
+
+        $newElement['authorName'] = strval($author['name']);
+        $newElement['authorPicture'] = strval($author['picture']);
+    }
+    
+    return $newElement;
 }
 
 ?>

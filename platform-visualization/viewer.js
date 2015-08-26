@@ -22,22 +22,22 @@ $.ajax({
 });
 
 
-
 function init() {
-
-    camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
-    camera.position.z = 3000;
-
+    
     scene = new THREE.Scene();
-
+    
+    
     // table
 
     var groupsQtty = groups.size();
     var layersQtty = layers.size();
     var section = [];
     var elementsByGroup = [];
-    var columnGroupPosition = [];
-    //var i = 0;
+    //var columnGroupPosition = [];
+    var columnWidth = 0;
+    var superLayerMaxHeight = 0;
+    var layerPosition = [];
+    var superLayerPosition = [];
     
     for ( var key in layers ) {
         if ( key == "size" ) continue;
@@ -57,66 +57,107 @@ function init() {
         }
     }
     
-    /*for(var i = 0; i < groupsQtty; i++){
-        var column = [];
-        
-        for(var j = 0; j < layersQtty; j++) column.push(0);
-        
-        section.push(column);
-        elementsByGroup.push(0);
-        columnGroupPosition.push(0);
-    }*/
-    
     var preComputeLayout = function() {
         
         var _sections = [];
-        var noSuperLayer = 0;
+        var superLayerHeight = 0;
+        var isSuperLayer = [];
         
         //Initialize
         for ( var key in layers ) {
             if ( key == "size" ) continue;
-
+            
             if ( layers[key].super_layer == true ) {
 
                 _sections.push(0);
+                superLayerHeight++;
+                
+                if( superLayerMaxHeight < superLayerHeight ) superLayerMaxHeight = superLayerHeight;
             }
             else {
 
                 var newLayer = [];
+                superLayerHeight = 0;
 
                 for ( var i = 0; i < groupsQtty; i++ )
                     newLayer.push(0);
 
                 _sections.push(newLayer);
             }
+            
+            isSuperLayer.push(false);
         }
         
         for(var j = 0; j <= groupsQtty; j++) {
             
             elementsByGroup.push(0);
-            columnGroupPosition.push(0);
+            //columnGroupPosition.push(0);
         }
         
         //Set sections sizes
+         
         for(var i = 0; i < table.length; i++){
             
             var r = table[i].layerID;
+            var c = table[i].groupID;
+            
+            elementsByGroup[c]++;
             
             if ( layers[table[i].layer].super_layer == true ) {
+                
                 _sections[r]++;
-                var c = table[i].groupID;
-                elementsByGroup[c]++;
+                isSuperLayer[r] = true;
             }
             else {
                 
-                var c = table[i].groupID;
                 _sections[r][c]++;
-                elementsByGroup[c]++;
+                
+                if ( _sections[r][c] > columnWidth ) columnWidth = _sections[r][c];
             }
             
+            //if ( c != groups.size() && elementsByGroup[c] > columnWidth ) columnWidth = elementsByGroup[c];
         }
         
-        var current = 0;
+        //Set row height
+        
+        var actualHeight = 0;
+        var remainingSpace = superLayerMaxHeight;
+        var inSuperLayer = false;
+        var actualSuperLayer = 0;
+        
+        for ( var i = 0; i < layersQtty; i++ ) {
+            
+            if( isSuperLayer[i] ) {
+                
+                if(!inSuperLayer) {
+                    actualHeight++;
+                    
+                    if ( superLayerPosition[ actualSuperLayer ] == undefined ) {
+                        superLayerPosition[ actualSuperLayer ] = actualHeight;
+                    }
+                }
+                
+                inSuperLayer = true;
+                actualHeight++;
+                remainingSpace--;
+            }
+            else {
+                
+                if(inSuperLayer) {
+                    
+                    actualHeight += remainingSpace + 1;
+                    remainingSpace = superLayerMaxHeight;
+                    actualSuperLayer++;
+                }
+                
+                inSuperLayer = false;
+                actualHeight++;
+            }
+            
+            layerPosition[ i ] = actualHeight;
+        }
+        
+        /*var current = 0;
         var lastMax = 0;
         
         //Look for max
@@ -136,7 +177,7 @@ function init() {
             lastMax = max;
             
             
-        }
+        }*/
     };
     preComputeLayout();
     
@@ -226,7 +267,7 @@ function init() {
         
         if ( layers[table[i].layer].super_layer == true) {
             
-            object.position.x = ( (section[row]) * 140 ) - 1330;
+            object.position.x = ( (section[row]) * 140 ) - (columnWidth * groupsQtty * 140 / 2);
             
             section[row]++;
             
@@ -235,15 +276,52 @@ function init() {
             
             //Column (X)
             var column = table[i].groupID;
-            object.position.x = ( (columnGroupPosition[column] + section[row][column]) * 140 ) - 1330;
+            object.position.x = ( ( (column * (columnWidth) + section[row][column]) + column ) * 140 ) - (columnWidth * groupsQtty * 140 / 2);
 
             section[row][column]++;
         }
         
-        object.position.y = - ( (row) * 180 ) + 990;
+        
+        object.position.y = - ( (layerPosition[ row ] ) * 180 ) + (layersQtty * 180 / 2);
 
         targets.table.push( object );
 
+    }
+    
+    // table groups icons
+    
+    for ( var group in groups ) {
+        if ( group == 'size' ) continue;
+        
+        var column = groups[group];
+        
+        var image = document.createElement( 'img' );
+        image.src = 'images/' + group + '_logo.png';
+        image.width = columnWidth * 140;
+        
+        var object = new THREE.CSS3DObject( image );
+        
+        object.position.x = ( columnWidth * 140 ) * ( column - ( groupsQtty - 1 ) / 2) + (( column - 1 ) * 140);
+        object.position.y = ((layersQtty + 5) * 180) / 2;
+        
+        scene.add( object );
+    }
+    
+    for ( var slayer in superLayers ) {
+        if ( slayer == 'size' ) continue;
+        
+        var row = superLayerPosition[ superLayers[ slayer ].index ];
+        
+        var image = document.createElement( 'img' );
+        image.src = 'images/' + slayer + '_logo.png';
+        image.height = superLayerMaxHeight * 180;
+        
+        var object = new THREE.CSS3DObject( image );
+        
+        object.position.x = - ( ( (groupsQtty + 1) * columnWidth * 140 / 2) + 140 );
+        object.position.y = - ( row * 180 ) - ( superLayerMaxHeight * 180 / 2 ) + (layersQtty * 180 / 2);
+        
+        scene.add( object );
     }
 
     // sphere
@@ -379,6 +457,9 @@ function init() {
     }
 
     //
+    
+    camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+    camera.position.z = (columnWidth * groupsQtty * 140);
 
     renderer = new THREE.CSS3DRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -390,7 +471,7 @@ function init() {
     controls = new THREE.TrackballControls( camera, renderer.domElement );
     controls.rotateSpeed = 1.3;
     controls.minDistance = 500;
-    controls.maxDistance = 20000;
+    controls.maxDistance = 80000;
     controls.addEventListener( 'change', render );
 
     var button = document.getElementById( 'table' );
@@ -451,6 +532,12 @@ function fillTable(list) {
     
     var pluginList = list.plugins;
     
+    for(var i = 0; i < list.superLayers.length; i++) {
+        superLayers[list.superLayers[i].code] = {};
+        superLayers[list.superLayers[i].code].name = list.superLayers[i].name;
+        superLayers[list.superLayers[i].code].index = list.superLayers[i].index;
+    }
+    
     for(var i = 0; i < list.layers.length; i++) {
         layers[list.layers[i].name] = {};
         layers[list.layers[i].name].index = list.layers[i].index;
@@ -503,16 +590,24 @@ function capFirstLetter(string) {
 }
 
 function getCode(pluginName) {
+    
     var words = pluginName.split(" ");
     var code = "";
     
-    if(words.length <= 2) { //if N < 2 use first cap letter, and last letter
-        code += words[0].charAt(0).toUpperCase() + words[0].charAt(words[0].length - 1);
-    
-        if(words.length == 2) //if N = 2 use both words, with first letter cap and last letter
-            code += words[1].charAt(0).toUpperCase() + words[1].charAt(words[1].length - 1);
+    if( words.length == 1) { //if N = 1, use whole word or 3 first letters
+        
+        if(words[0].length <= 4)
+            code = capFirstLetter( words[0] );
+        else
+            code = capFirstLetter( words[0].slice( 0, 3 ) );
+    }
+    else if( words.length == 2 ) { //if N = 2 use first cap letter, and second letter
+        
+        code += words[0].charAt(0).toUpperCase() + words[0].charAt(1);
+        code += words[1].charAt(0).toUpperCase() + words[1].charAt(1);
     }
     else { //if N => 3 use the N (up to 4) letters caps
+        
         var max = (words.length < 4) ? words.length : 4;
 
         for(var i = 0; i < max; i++)
