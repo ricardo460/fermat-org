@@ -5,7 +5,9 @@ var controls;
 
 var objects = [];
 var targets = { table: [], sphere: [], helix: [], grid: [] };
+var headers = [];
 
+var lastTargets = null;
 
 $.ajax({
     url: "get_plugins.php",
@@ -185,6 +187,9 @@ function init() {
 
         var element = document.createElement( 'div' );
         element.className = 'element';
+        element.id = i;
+        
+        element.addEventListener( 'click', onElementClick, false);
         
         if ( table[i].picture != undefined) {
             var picture = document.createElement( 'img' );
@@ -298,6 +303,8 @@ function init() {
         var image = document.createElement( 'img' );
         image.src = 'images/' + group + '_logo.png';
         image.width = columnWidth * 140;
+        image.style.opacity = 0;
+        headers.push( image );
         
         var object = new THREE.CSS3DObject( image );
         
@@ -315,6 +322,8 @@ function init() {
         var image = document.createElement( 'img' );
         image.src = 'images/' + slayer + '_logo.png';
         image.height = superLayerMaxHeight * 180;
+        image.style.opacity = 0;
+        headers.push( image );
         
         var object = new THREE.CSS3DObject( image );
         
@@ -507,7 +516,59 @@ function init() {
     //
 
     window.addEventListener( 'resize', onWindowResize, false );
+    window.addEventListener( 'keydown', onKeyDown, false );
 
+}
+
+function onElementClick() {
+    var id = this.id;
+    setFocus(id);
+    setTimeout( function() { setFocus(id); }, 4500 );
+}
+
+function setFocus(id) {
+    
+    TWEEN.removeAll();
+    
+    var vec = new THREE.Vector4(0, 0, 180, 1);
+    var duration = 2000;
+    var target = objects[ id ];
+    
+    vec.applyMatrix4( target.matrix );
+    
+    new TWEEN.Tween( controls.target )
+        .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
+        .easing( TWEEN.Easing.Exponential.InOut )
+        .start();
+    
+    new TWEEN.Tween( camera.position )
+        .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration )
+        .easing( TWEEN.Easing.Exponential.InOut )
+        .start();
+    
+    new TWEEN.Tween( camera.up )
+        .to( { x: target.up.x, y: target.up.y, z: target.up.z }, Math.random() * duration + duration )
+        .easing( TWEEN.Easing.Exponential.InOut )
+        .start();
+    
+    for ( var i = 0; i < headers.length; i++ ) {
+        new TWEEN.Tween( headers[ i ].style )
+            .to( { opacity : 0 }, Math.random() * duration + duration )
+            .easing( TWEEN.Easing.Exponential.InOut )
+            .start();
+    }
+    
+    for( var i = 0; i < objects.length; i++ ) {
+        
+        if ( i == id ) continue;
+        
+        new TWEEN.Tween( objects[ i ].position )
+            .to( { x: 0, y: 0, z: controls.maxDistance }, Math.random() * duration + duration )
+            .easing( TWEEN.Easing.Exponential.InOut )
+            .start();
+    }
+    
+    
 }
 
 function printDifficulty(value) {
@@ -617,14 +678,16 @@ function getCode(pluginName) {
     return code;
 }
 
-function transform( targets, duration ) {
+function transform( goal, duration ) {
 
     TWEEN.removeAll();
+    
+    lastTargets = goal;
 
     for ( var i = 0; i < objects.length; i ++ ) {
 
         var object = objects[ i ];
-        var target = targets[ i ];
+        var target = goal[ i ];
 
         new TWEEN.Tween( object.position )
             .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
@@ -636,6 +699,23 @@ function transform( targets, duration ) {
             .easing( TWEEN.Easing.Exponential.InOut )
             .start();
 
+    }
+    
+    if ( goal == targets.table ) {
+        for ( var i = 0; i < headers.length; i++ ) {
+            new TWEEN.Tween( headers[ i ].style )
+                .to( { opacity : 1 }, Math.random() * duration + duration )
+                .easing( TWEEN.Easing.Exponential.InOut )
+                .start();
+        }
+    }
+    else {
+        for ( var i = 0; i < headers.length; i++ ) {
+            new TWEEN.Tween( headers[ i ].style )
+                .to( { opacity : 0 }, Math.random() * duration + duration )
+                .easing( TWEEN.Easing.Exponential.InOut )
+                .start();
+        }
     }
 
     new TWEEN.Tween( this )
@@ -654,6 +734,35 @@ function onWindowResize() {
 
     render();
 
+}
+
+function onKeyDown( event ) {
+    
+    if ( event.keyCode === 27 /* ESC */ ) {
+        
+        //TWEEN.removeAll();
+        var duration = 2000;
+        
+        if ( lastTargets != null ) {
+            transform( lastTargets, duration );
+            //lastTargets = null;
+        }
+        
+        new TWEEN.Tween( controls.target )
+            .to( { x: controls.target0.x, y: controls.target0.y, z: controls.target0.z }, Math.random() * duration + duration )
+            .easing( TWEEN.Easing.Exponential.InOut )
+            .start();
+
+        new TWEEN.Tween( camera.position )
+            .to( { x: controls.position0.x, y: controls.position0.y, z: controls.position0.z }, Math.random() * duration + duration )
+            .easing( TWEEN.Easing.Exponential.InOut )
+            .start();
+
+        new TWEEN.Tween( camera.up )
+            .to( { x: 0, y: 1, z: 0 }, Math.random() * duration + duration )
+            .easing( TWEEN.Easing.Exponential.InOut )
+            .start();
+    }
 }
 
 function animate() {
