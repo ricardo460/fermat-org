@@ -374,13 +374,13 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 			_state = STATE.PAN;*/
 
-		} else if ( event.keyCode === 27 /* ESC */ ) {
+		//} else if ( event.keyCode === 27 /* ESC */ ) {
             
-            _this.reset();
+            //_this.reset();
             
+        //}
         }
-
-	}
+    }
 
 	function keyup( event ) {
 
