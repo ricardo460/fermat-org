@@ -189,7 +189,7 @@ function init() {
         element.className = 'element';
         element.id = i;
         
-        element.addEventListener( 'click', setFocus, false);
+        element.addEventListener( 'click', onElementClick, false);
         
         if ( table[i].picture != undefined) {
             var picture = document.createElement( 'img' );
@@ -520,13 +520,19 @@ function init() {
 
 }
 
-function setFocus() {
+function onElementClick() {
+    var id = this.id;
+    setFocus(id);
+    setTimeout( function() { setFocus(id); }, 4500 );
+}
+
+function setFocus(id) {
     
     TWEEN.removeAll();
     
     var vec = new THREE.Vector4(0, 0, 180, 1);
     var duration = 2000;
-    var target = objects[ this.id ];
+    var target = objects[ id ];
     
     vec.applyMatrix4( target.matrix );
     
@@ -554,7 +560,7 @@ function setFocus() {
     
     for( var i = 0; i < objects.length; i++ ) {
         
-        if ( i == this.id ) continue;
+        if ( i == id ) continue;
         
         new TWEEN.Tween( objects[ i ].position )
             .to( { x: 0, y: 0, z: controls.maxDistance }, Math.random() * duration + duration )
