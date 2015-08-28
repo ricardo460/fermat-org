@@ -8,6 +8,7 @@ var targets = { table: [], sphere: [], helix: [], grid: [] };
 var headers = [];
 
 var lastTargets = null;
+var focus = null;
 
 $.ajax({
     url: "get_plugins.php",
@@ -23,6 +24,13 @@ $.ajax({
     animate();
 });
 
+/*var l = JSON.parse(testData);
+    
+    fillTable(l)
+    
+    init();
+    animate();*/
+
 
 function init() {
     
@@ -35,7 +43,6 @@ function init() {
     var layersQtty = layers.size();
     var section = [];
     var elementsByGroup = [];
-    //var columnGroupPosition = [];
     var columnWidth = 0;
     var superLayerMaxHeight = 0;
     var layerPosition = [];
@@ -185,75 +192,7 @@ function init() {
     
     for ( var i = 0; i < table.length; i++ ) {
 
-        var element = document.createElement( 'div' );
-        element.className = 'element';
-        element.id = i;
-        
-        element.addEventListener( 'click', onElementClick, false);
-        
-        if ( table[i].picture != undefined) {
-            var picture = document.createElement( 'img' );
-            picture.className = 'picture';
-            picture.src = table[i].picture;
-            element.appendChild( picture );
-        }
-        
-        var difficulty = document.createElement( 'div' );
-        difficulty.className = 'difficulty';
-        difficulty.textContent = printDifficulty( Math.floor( table[i].difficulty / 2 ) );
-        element.appendChild( difficulty );
-
-        var number = document.createElement( 'div' );
-        number.className = 'number';
-        number.textContent = (table[ i ].group != undefined) ? table[i].group : "";
-        element.appendChild( number );
-
-        var symbol = document.createElement( 'div' );
-        symbol.className = 'symbol';
-        symbol.textContent = table[ i ].code;
-        element.appendChild( symbol );
-
-        var details = document.createElement( 'div' );
-        details.className = 'details';
-        
-        var pluginName = document.createElement( 'p' );
-        pluginName.innerHTML = table[ i ].name;
-        pluginName.className = 'name';
-        
-        var layerName = document.createElement( 'p' );
-        layerName.innerHTML = table[ i ].layer;
-        
-        details.appendChild( pluginName );
-        details.appendChild( layerName );
-        element.appendChild( details );
-        
-        switch ( table[i].code_level ) {
-                
-            case "production":
-                element.style.boxShadow = '0px 0px 12px rgba(244,133,107,0.5)';
-                element.style.backgroundColor = 'rgba(234,123,97,' + ( Math.random() * 0.25 + 0.45 ) + ')';
-                
-                number.style.color = 'rgba(234,123,97,1)';
-                layerName.style.color = 'rgba(234,123,97,1)';
-                
-                break;
-            case "development":
-                element.style.boxShadow = '0px 0px 12px rgba(80,188,107,0.5)';
-                element.style.backgroundColor = 'rgba(70,178,97,'+ ( Math.random() * 0.25 + 0.45 ) +')';
-                
-                number.style.color = 'rgba(70,178,97,1)';
-                layerName.style.color = 'rgba(70,178,97,1)';
-                
-                break;
-            case "concept":
-                element.style.boxShadow = '0px 0px 12px rgba(150,150,150,0.5)';
-                element.style.backgroundColor = 'rgba(170,170,170,'+ ( Math.random() * 0.25 + 0.45 ) +')';
-                
-                number.style.color = 'rgba(127,127,127,1)';
-                layerName.style.color = 'rgba(127,127,127,1)';
-                
-                break;
-        }
+        var element = createElement( i );
 
         var object = new THREE.CSS3DObject( element );
         object.position.x = Math.random() * 4000 - 2000;
@@ -486,28 +425,28 @@ function init() {
     var button = document.getElementById( 'table' );
     button.addEventListener( 'click', function ( event ) {
 
-        transform( targets.table, 2000 );
+        changeView( targets.table );
 
     }, false );
 
     var button = document.getElementById( 'sphere' );
     button.addEventListener( 'click', function ( event ) {
 
-        transform( targets.sphere, 2000 );
+        changeView( targets.sphere );
 
     }, false );
 
     var button = document.getElementById( 'helix' );
     button.addEventListener( 'click', function ( event ) {
 
-        transform( targets.helix, 2000 );
+        changeView( targets.helix );
 
     }, false );
 
     var button = document.getElementById( 'grid' );
     button.addEventListener( 'click', function ( event ) {
 
-        transform( targets.grid, 2000 );
+        changeView( targets.grid );
 
     }, false );
 
@@ -520,18 +459,222 @@ function init() {
 
 }
 
-function onElementClick() {
-    var id = this.id;
-    setFocus(id);
-    setTimeout( function() { setFocus(id); }, 4500 );
+function changeView(targets) {
+    
+    if( targets != null )
+        transform( targets, 2000 );
+    
+    
+    controls.enabled = true;
+        
+    if ( focus != null )
+        loseFocus();
 }
 
-function setFocus(id) {
+function onElementClick() {
+    
+    var id = this.id;
+    
+    var image = document.getElementById('img-' + id);
+    
+    if ( focus == null ) {
+        
+        setFocus(id, 2000);
+        setTimeout( function() {
+            setFocus(id, 1000);
+        }, 3000 );
+        controls.enabled = false;
+
+        if ( image != null ) {
+
+            var handler = function() { onImageClick(id, image, handler); };
+
+            image.addEventListener( 'click', handler, true );
+        }
+    }
+    
+    focus = id;
+}
+
+function onImageClick(id, image, handler) {
+    
+    image.removeEventListener( 'click', handler, true );
+
+    createSidePanel( id, image );
+    createElementsPanel( id );
+}
+
+function createSidePanel( id, image ) {
+    
+    var sidePanel = document.createElement( 'div' );
+    sidePanel.id = 'sidePanel';
+    sidePanel.style.position = 'absolute';
+    sidePanel.style.top = '0px';
+    sidePanel.style.bottom = '0px';
+    sidePanel.style.left = '0px';
+    sidePanel.style.marginTop = '50px';
+    sidePanel.style.width = '35%';
+    sidePanel.style.textAlign = 'center';
+    
+    var panelImage = document.createElement( 'img' );
+    panelImage.id = 'focusImg';
+    panelImage.src = image.src;
+    panelImage.style.position = 'relative';
+    panelImage.style.width = '50%';
+    panelImage.style.opacity = 0;
+    sidePanel.appendChild( panelImage );
+    
+    var userName = document.createElement( 'p' );
+    userName.style.opacity = 0;
+    userName.style.position = 'relative';
+    userName.style.fontWeight = 'bold';
+    userName.textContent = table[ id ].author;
+    sidePanel.appendChild( userName );
+    
+    var realName = document.createElement( 'p' );
+    realName.style.opacity = 0;
+    realName.style.position = 'relative';
+    realName.textContent = table[ id ].authorRealName;
+    sidePanel.appendChild( realName );
+    
+    var email = document.createElement( 'p' );
+    email.style.opacity = 0;
+    email.style.position = 'relative';
+    email.textContent = table[ id ].authorEmail;
+    sidePanel.appendChild( email );
+    
+    $('#container').append(sidePanel);
+    
+    $(renderer.domElement).fadeTo(1000, 0);
+    
+    $(panelImage).fadeTo(1000, 1, function() {
+        $(userName).fadeTo(1000, 1, function() {
+            $(realName).fadeTo(1000, 1, function() {
+                $(email).fadeTo(1000, 1);
+            });
+        });
+    });
+    
+    
+}
+
+function createElementsPanel( id ) {
+    
+    var elementPanel = document.createElement( 'div' );
+    elementPanel.id = 'elementPanel';
+    elementPanel.style.position = 'absolute';
+    elementPanel.style.top = '0px';
+    elementPanel.style.bottom = '0px';
+    elementPanel.style.right = '0px';
+    elementPanel.style.marginTop = '50px';
+    elementPanel.style.marginRight = '5%';
+    elementPanel.style.width = '60%';
+    elementPanel.style.overflowY = 'auto';
+    
+    $('#container').append(elementPanel);
+    
+    for ( i = 0; i < table.length; i++ ) {
+        
+        if ( table[ id ].author == table[ i ].author ) {
+            
+            var clone = document.getElementById( i ).cloneNode(true);
+
+            clone.id = 'task-' + i;
+            clone.style.transform = '';
+            $(clone).find('img').remove();
+            clone.style.position = 'relative';
+            clone.style.display = 'inline-block';
+            clone.style.marginLeft = '5px';
+            clone.style.opacity = 0;
+            elementPanel.appendChild(clone);
+            
+            $(clone).fadeTo(2000, 1);
+        }
+    }
+    
+}
+
+function createElement( i ) {
+    
+    var element = document.createElement( 'div' );
+    element.className = 'element';
+    element.id = i;
+
+    element.addEventListener( 'click', onElementClick, false);
+
+    if ( table[i].picture != undefined) {
+        var picture = document.createElement( 'img' );
+        picture.id = 'img-' + i;
+        picture.className = 'picture';
+        picture.src = table[i].picture;
+        element.appendChild( picture );
+    }
+
+    var difficulty = document.createElement( 'div' );
+    difficulty.className = 'difficulty';
+    difficulty.textContent = printDifficulty( Math.floor( table[i].difficulty / 2 ) );
+    element.appendChild( difficulty );
+
+    var number = document.createElement( 'div' );
+    number.className = 'number';
+    number.textContent = (table[ i ].group != undefined) ? table[i].group : "";
+    element.appendChild( number );
+
+    var symbol = document.createElement( 'div' );
+    symbol.className = 'symbol';
+    symbol.textContent = table[ i ].code;
+    element.appendChild( symbol );
+
+    var details = document.createElement( 'div' );
+    details.className = 'details';
+
+    var pluginName = document.createElement( 'p' );
+    pluginName.innerHTML = table[ i ].name;
+    pluginName.className = 'name';
+
+    var layerName = document.createElement( 'p' );
+    layerName.innerHTML = table[ i ].layer;
+
+    details.appendChild( pluginName );
+    details.appendChild( layerName );
+    element.appendChild( details );
+
+    switch ( table[i].code_level ) {
+
+        case "production":
+            element.style.boxShadow = '0px 0px 12px rgba(244,133,107,0.5)';
+            element.style.backgroundColor = 'rgba(234,123,97,' + ( Math.random() * 0.25 + 0.45 ) + ')';
+
+            number.style.color = 'rgba(234,123,97,1)';
+            layerName.style.color = 'rgba(234,123,97,1)';
+
+            break;
+        case "development":
+            element.style.boxShadow = '0px 0px 12px rgba(80,188,107,0.5)';
+            element.style.backgroundColor = 'rgba(70,178,97,'+ ( Math.random() * 0.25 + 0.45 ) +')';
+
+            number.style.color = 'rgba(70,178,97,1)';
+            layerName.style.color = 'rgba(70,178,97,1)';
+
+            break;
+        case "concept":
+            element.style.boxShadow = '0px 0px 12px rgba(150,150,150,0.5)';
+            element.style.backgroundColor = 'rgba(170,170,170,'+ ( Math.random() * 0.25 + 0.45 ) +')';
+
+            number.style.color = 'rgba(127,127,127,1)';
+            layerName.style.color = 'rgba(127,127,127,1)';
+
+            break;
+    }
+    
+    return element;
+}
+
+function setFocus(id, duration) {
     
     TWEEN.removeAll();
     
     var vec = new THREE.Vector4(0, 0, 180, 1);
-    var duration = 2000;
     var target = objects[ id ];
     
     vec.applyMatrix4( target.matrix );
@@ -569,6 +712,15 @@ function setFocus(id) {
     }
     
     
+}
+
+function loseFocus() {
+    
+    $('#sidePanel').fadeTo(1000, 0, function() { $('#sidePanel').remove(); });
+    $('#elementPanel').fadeTo(1000, 0, function() { $('#elementPanel').remove(); });
+    $(renderer.domElement).fadeTo(1000, 1);
+    
+    focus = null;
 }
 
 function printDifficulty(value) {
@@ -632,8 +784,12 @@ function fillTable(list) {
             layerID : layerID,
             type : data.type,
             picture : data.authorPicture,
+            author : data.authorName,
+            authorRealName : data.authorRealName,
+            authorEmail : data.authorEmail,
             difficulty : data.difficulty,
-            code_level : data.code_level
+            code_level : data.code_level,
+            life_cycle : data.life_cycle
         };
         
         table.push(element);
@@ -743,10 +899,7 @@ function onKeyDown( event ) {
         //TWEEN.removeAll();
         var duration = 2000;
         
-        if ( lastTargets != null ) {
-            transform( lastTargets, duration );
-            //lastTargets = null;
-        }
+        changeView(lastTargets);
         
         new TWEEN.Tween( controls.target )
             .to( { x: controls.target0.x, y: controls.target0.y, z: controls.target0.z }, Math.random() * duration + duration )

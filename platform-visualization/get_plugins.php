@@ -1,25 +1,16 @@
 <?php
 
+require 'common.php';
+
 $authorCache = array();
+
+ini_set('zlib.output_compression','Off');
 
 main();
 
 function main() {
 
-    $token = "fb6c27928d83f8ea6a9565e0f008cceffee83af1";
-    //$token2 = "fbceba186a66e9e8434ede8a5ac03d32c99be19f"; //Miguelcldn token (only for testing!)
-
-    $url = "https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml";
-    
-    $data = askGitHub($url);
-    
-    $data = $data["content"];
-    $data = str_replace('', '\n', $data);
-    $data = base64_decode($data);
-
-    $data = simplexml_load_string($data);
-
-
+    $data = parseRepoXML();
 
     //$data = $data->fermat;
 
@@ -153,8 +144,13 @@ function main() {
         'plugins' => $pluginList,
         'superLayers' => $superLayerList
         );
+    
+    $output = gzencode(json_encode($result));
+    
+    header('Content-Encoding: gzip');
+    //header('Content-Length: '.strlen($gzipoutput));
 
-    echo json_encode($result);
+    echo $output;
 }
 
 //=======================================================================================================================
@@ -193,51 +189,31 @@ function lookForAuthor($element) {
                 if ( $cache === null ) {
                     
                     $userData = askGitHub($userUrl . $author['name']);
-                    $pictureUrl = $userData["avatar_url"];
+                    $pictureUrl = strval($userData["avatar_url"]);
+                    $realName = strval($userData['name']);
+                    $mail = strval($userData['email']);
                     
                     array_push( $authorCache, array(
                         'name' => $author['name'],
-                        'img' => $userData['avatar_url']
+                        'img' => $pictureUrl,
+                        'realName' => $realName,
+                        'email' => $mail
                     ));
                 }
                 else {
                     $pictureUrl = $cache['img'];
+                    $realName = $cache['realName'];
+                    $mail = $cache['email'];
                 }
                 
                 $author['picture'] = $pictureUrl;
+                $author['realName'] = $realName;
+                $author['email'] = $mail;
             }
         }
     }
     
     return $author;
-}
-
-function askGitHub($url) {
-    
-    $token = "fb6c27928d83f8ea6a9565e0f008cceffee83af1";
-    $url = $url . "?access_token=$token";
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        'User-Agent: MALOTeam',
-        //'User-Agent: Miguelcldn', //For testing
-        'Accept: */*'
-    ));
-    $data = curl_exec($ch);
-    curl_close($ch);
-    
-    return json_decode($data, true);
-}
-
-function search($attr, $element, $list) {
-    
-    foreach($list as $current) {
-        if($current[$attr] === $element) return $current;
-    }
-    
-    return null;
 }
 
 function createElement($element, $type, $layer, $platform = null) {
@@ -260,8 +236,28 @@ function createElement($element, $type, $layer, $platform = null) {
 
     if($author != null) {
 
-        $newElement['authorName'] = strval($author['name']);
-        $newElement['authorPicture'] = strval($author['picture']);
+        $newElement['authorName'] = $author['name'];
+        $newElement['authorPicture'] = $author['picture'];
+        $newElement['authorRealName'] = $author['realName'];
+        $newElement['authorEmail'] = $author['email'];
+    }
+    
+    if ( $element->life_cycle ) {
+        
+        $deadlines = [];
+        
+        foreach ( $element->life_cycle->children() as $status ) {
+            
+            $newDeadline = array(
+                'name' => strval($status['name']),
+                'reached' => strval($status['reached']),
+                'target' => strval($status['target'])
+                );
+            
+            array_push( $deadlines, $newDeadline );
+        }
+        
+        $newElement['life_cycle'] = $deadlines;
     }
     
     return $newElement;
