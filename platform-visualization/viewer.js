@@ -240,7 +240,7 @@ function init() {
         var column = groups[group];
         
         var image = document.createElement( 'img' );
-        image.src = 'images/' + group + '_logo.png';
+        image.src = 'images/' + group + '_logo.svg';
         image.width = columnWidth * 140;
         image.style.opacity = 0;
         headers.push( image );
@@ -259,7 +259,7 @@ function init() {
         var row = superLayerPosition[ superLayers[ slayer ].index ];
         
         var image = document.createElement( 'img' );
-        image.src = 'images/' + slayer + '_logo.png';
+        image.src = 'images/' + slayer + '_logo.svg';
         image.height = superLayerMaxHeight * 180;
         image.style.opacity = 0;
         headers.push( image );
@@ -421,7 +421,26 @@ function init() {
     controls.minDistance = 500;
     controls.maxDistance = 80000;
     controls.addEventListener( 'change', render );
+    
+    $('.backButton').click( function() { changeView( targets.table ); });
+    $('#legendButton').click( function() { 
+        if( document.getElementById('legend').style.opacity == 1) $('#legend').fadeTo( 1000, 0);
+        else $('#legend').fadeTo( 1000, 1);
+    });
 
+    //Disabled Menu
+    //initMenu();
+
+    transform( targets.table, 2000 );
+
+    //
+
+    window.addEventListener( 'resize', onWindowResize, false );
+    window.addEventListener( 'keydown', onKeyDown, false );
+}
+
+function initMenu() {
+    
     var button = document.getElementById( 'table' );
     button.addEventListener( 'click', function ( event ) {
 
@@ -449,148 +468,6 @@ function init() {
         changeView( targets.grid );
 
     }, false );
-
-    transform( targets.table, 2000 );
-
-    //
-
-    window.addEventListener( 'resize', onWindowResize, false );
-    window.addEventListener( 'keydown', onKeyDown, false );
-
-}
-
-function changeView(targets) {
-    
-    if( targets != null )
-        transform( targets, 2000 );
-    
-    
-    controls.enabled = true;
-        
-    if ( focus != null )
-        loseFocus();
-}
-
-function onElementClick() {
-    
-    var id = this.id;
-    
-    var image = document.getElementById('img-' + id);
-    
-    if ( focus == null ) {
-        
-        setFocus(id, 2000);
-        setTimeout( function() {
-            setFocus(id, 1000);
-        }, 3000 );
-        controls.enabled = false;
-
-        if ( image != null ) {
-
-            var handler = function() { onImageClick(id, image, handler); };
-
-            image.addEventListener( 'click', handler, true );
-        }
-    }
-    
-    focus = id;
-}
-
-function onImageClick(id, image, handler) {
-    
-    image.removeEventListener( 'click', handler, true );
-
-    createSidePanel( id, image );
-    createElementsPanel( id );
-}
-
-function createSidePanel( id, image ) {
-    
-    var sidePanel = document.createElement( 'div' );
-    sidePanel.id = 'sidePanel';
-    sidePanel.style.position = 'absolute';
-    sidePanel.style.top = '0px';
-    sidePanel.style.bottom = '0px';
-    sidePanel.style.left = '0px';
-    sidePanel.style.marginTop = '50px';
-    sidePanel.style.width = '35%';
-    sidePanel.style.textAlign = 'center';
-    
-    var panelImage = document.createElement( 'img' );
-    panelImage.id = 'focusImg';
-    panelImage.src = image.src;
-    panelImage.style.position = 'relative';
-    panelImage.style.width = '50%';
-    panelImage.style.opacity = 0;
-    sidePanel.appendChild( panelImage );
-    
-    var userName = document.createElement( 'p' );
-    userName.style.opacity = 0;
-    userName.style.position = 'relative';
-    userName.style.fontWeight = 'bold';
-    userName.textContent = table[ id ].author;
-    sidePanel.appendChild( userName );
-    
-    var realName = document.createElement( 'p' );
-    realName.style.opacity = 0;
-    realName.style.position = 'relative';
-    realName.textContent = table[ id ].authorRealName;
-    sidePanel.appendChild( realName );
-    
-    var email = document.createElement( 'p' );
-    email.style.opacity = 0;
-    email.style.position = 'relative';
-    email.textContent = table[ id ].authorEmail;
-    sidePanel.appendChild( email );
-    
-    $('#container').append(sidePanel);
-    
-    $(renderer.domElement).fadeTo(1000, 0);
-    
-    $(panelImage).fadeTo(1000, 1, function() {
-        $(userName).fadeTo(1000, 1, function() {
-            $(realName).fadeTo(1000, 1, function() {
-                $(email).fadeTo(1000, 1);
-            });
-        });
-    });
-    
-    
-}
-
-function createElementsPanel( id ) {
-    
-    var elementPanel = document.createElement( 'div' );
-    elementPanel.id = 'elementPanel';
-    elementPanel.style.position = 'absolute';
-    elementPanel.style.top = '0px';
-    elementPanel.style.bottom = '0px';
-    elementPanel.style.right = '0px';
-    elementPanel.style.marginTop = '50px';
-    elementPanel.style.marginRight = '5%';
-    elementPanel.style.width = '60%';
-    elementPanel.style.overflowY = 'auto';
-    
-    $('#container').append(elementPanel);
-    
-    for ( i = 0; i < table.length; i++ ) {
-        
-        if ( table[ id ].author == table[ i ].author ) {
-            
-            var clone = document.getElementById( i ).cloneNode(true);
-
-            clone.id = 'task-' + i;
-            clone.style.transform = '';
-            $(clone).find('img').remove();
-            clone.style.position = 'relative';
-            clone.style.display = 'inline-block';
-            clone.style.marginLeft = '5px';
-            clone.style.opacity = 0;
-            elementPanel.appendChild(clone);
-            
-            $(clone).fadeTo(2000, 1);
-        }
-    }
     
 }
 
@@ -641,22 +518,6 @@ function createElement( i ) {
 
     switch ( table[i].code_level ) {
 
-        case "production":
-            element.style.boxShadow = '0px 0px 12px rgba(244,133,107,0.5)';
-            element.style.backgroundColor = 'rgba(234,123,97,' + ( Math.random() * 0.25 + 0.45 ) + ')';
-
-            number.style.color = 'rgba(234,123,97,1)';
-            layerName.style.color = 'rgba(234,123,97,1)';
-
-            break;
-        case "development":
-            element.style.boxShadow = '0px 0px 12px rgba(80,188,107,0.5)';
-            element.style.backgroundColor = 'rgba(70,178,97,'+ ( Math.random() * 0.25 + 0.45 ) +')';
-
-            number.style.color = 'rgba(70,178,97,1)';
-            layerName.style.color = 'rgba(70,178,97,1)';
-
-            break;
         case "concept":
             element.style.boxShadow = '0px 0px 12px rgba(150,150,150,0.5)';
             element.style.backgroundColor = 'rgba(170,170,170,'+ ( Math.random() * 0.25 + 0.45 ) +')';
@@ -665,9 +526,249 @@ function createElement( i ) {
             layerName.style.color = 'rgba(127,127,127,1)';
 
             break;
+        case "development":
+            element.style.boxShadow = '0px 0px 12px rgba(244,133,107,0.5)';
+            element.style.backgroundColor = 'rgba(234,123,97,' + ( Math.random() * 0.25 + 0.45 ) + ')';
+
+            number.style.color = 'rgba(234,123,97,1)';
+            layerName.style.color = 'rgba(234,123,97,1)';
+
+
+            break;
+        case "qa":
+            element.style.boxShadow = '0px 0px 12px rgba(244,244,107,0.5)';
+            element.style.backgroundColor = 'rgba(194,194,57,' + ( Math.random() * 0.25 + 0.45 ) + ')';
+
+            number.style.color = 'rgba(194,194,57,1)';
+            layerName.style.color = 'rgba(194,194,57,1)';
+
+
+            break;
+        case "production":
+            element.style.boxShadow = '0px 0px 12px rgba(80,188,107,0.5)';
+            element.style.backgroundColor = 'rgba(70,178,97,'+ ( Math.random() * 0.25 + 0.45 ) +')';
+
+            number.style.color = 'rgba(70,178,97,1)';
+            layerName.style.color = 'rgba(70,178,97,1)';
+            
+            break;
     }
     
     return element;
+}
+
+function changeView(targets) {
+    
+    if( targets != null )
+        transform( targets, 2000 );
+    
+    
+    controls.enabled = true;
+        
+    if ( focus != null )
+        loseFocus();
+}
+
+function onElementClick() {
+    
+    var id = this.id;
+    
+    var image = document.getElementById('img-' + id);
+    
+    if ( focus == null ) {
+        
+        setFocus(id, 2000);
+        setTimeout( function() {
+            setFocus(id, 1000);
+            $('.backButton').fadeTo(1000, 1);
+        }, 3000 );
+        controls.enabled = false;
+
+        if ( image != null ) {
+
+            var handler = function() { onImageClick(id, image, handler); };
+
+            image.addEventListener( 'click', handler, true );
+        }
+        else {
+            
+            createTimeline( [ id ] );
+        }
+    }
+    
+    focus = id;
+}
+
+function onImageClick(id, image, handler) {
+    
+    image.removeEventListener( 'click', handler, true );
+    
+    var relatedTasks = [];
+    
+    for( var i = 0; i < table.length; i++ ) {
+        if ( table[ i ].author == table[ id ].author ) relatedTasks.push( i );
+    }
+
+    createSidePanel( id, image );
+    createElementsPanel( relatedTasks );
+    createTimeline( relatedTasks );
+}
+
+function createSidePanel( id, image ) {
+    
+    var sidePanel = document.createElement( 'div' );
+    sidePanel.id = 'sidePanel';
+    sidePanel.style.position = 'absolute';
+    sidePanel.style.top = '0px';
+    sidePanel.style.bottom = '25%';
+    sidePanel.style.left = '0px';
+    sidePanel.style.marginTop = '50px';
+    sidePanel.style.width = '35%';
+    sidePanel.style.textAlign = 'center';
+    
+    var panelImage = document.createElement( 'img' );
+    panelImage.id = 'focusImg';
+    panelImage.src = image.src;
+    panelImage.style.position = 'relative';
+    panelImage.style.width = '50%';
+    panelImage.style.opacity = 0;
+    sidePanel.appendChild( panelImage );
+    
+    var userName = document.createElement( 'p' );
+    userName.style.opacity = 0;
+    userName.style.position = 'relative';
+    userName.style.fontWeight = 'bold';
+    userName.textContent = table[ id ].author;
+    sidePanel.appendChild( userName );
+    
+    var realName = document.createElement( 'p' );
+    realName.style.opacity = 0;
+    realName.style.position = 'relative';
+    realName.textContent = table[ id ].authorRealName;
+    sidePanel.appendChild( realName );
+    
+    var email = document.createElement( 'p' );
+    email.style.opacity = 0;
+    email.style.position = 'relative';
+    email.textContent = table[ id ].authorEmail;
+    sidePanel.appendChild( email );
+    
+    $('#container').append(sidePanel);
+    
+    $(renderer.domElement).fadeTo(1000, 0);
+    
+    $(panelImage).fadeTo(1000, 1, function() {
+        $(userName).fadeTo(1000, 1, function() {
+            $(realName).fadeTo(1000, 1, function() {
+                $(email).fadeTo(1000, 1);
+            });
+        });
+    });
+    
+    
+}
+
+function createElementsPanel( tasks ) {
+    
+    var elementPanel = document.createElement( 'div' );
+    elementPanel.id = 'elementPanel';
+    elementPanel.style.position = 'absolute';
+    elementPanel.style.top = '0px';
+    elementPanel.style.bottom = '25%';
+    elementPanel.style.right = '0px';
+    elementPanel.style.marginTop = '50px';
+    elementPanel.style.marginRight = '5%';
+    elementPanel.style.width = '60%';
+    elementPanel.style.overflowY = 'auto';
+    
+    $('#container').append(elementPanel);
+    
+    for ( i = 0; i < tasks.length; i++ ) {
+        
+        
+        var clone = document.getElementById( tasks[i] ).cloneNode(true);
+
+        clone.id = 'task-' + tasks[i];
+        clone.style.transform = '';
+        $(clone).find('img').remove();
+        clone.style.position = 'relative';
+        clone.style.display = 'inline-block';
+        clone.style.marginLeft = '5px';
+        clone.style.opacity = 0;
+        elementPanel.appendChild(clone);
+
+        $(clone).fadeTo(2000, 1);
+    }
+    
+}
+
+function createTimeline( tasks ) {
+    
+    var groups = [];
+    var items = [];
+    
+    for( var i = 0; i < tasks.length; i++ ) {
+        
+        var task = table[ tasks[i] ];
+        
+        if ( task != null && task.life_cycle != null ) {
+            
+            var schedule = task.life_cycle;
+            
+            groups.push ( {
+                id : i,
+                content : task.group + '/' + task.layer + '/' + task.name
+            });
+            
+            for( var j = 0; j < schedule.length; j++ ) {
+                
+                if ( schedule[j].target != '' )
+                    items.push ( {
+                        id : 2 * j,
+                        content : schedule[j].name + ' <span style="color:#97B0F8;">(target)</span>',
+                        start : parseDate( schedule[j].target ),
+                        group : i
+                    });
+                
+                if ( schedule[j].reached != '' )
+                    items.push ( {
+                        id : 2 * j + 1,
+                        content : schedule[j].name + ' <span style="color:#97B0F8;">(reached)</span>',
+                        start : parseDate( schedule[j].reached ),
+                        group : i
+                    });
+            }
+        }
+    }
+    
+    if ( groups.length != 0 ) {
+        
+        var container = document.createElement( 'div' );
+        container.id = 'timelineContainer';
+        container.style.position = 'absolute';
+        container.style.left = '0px';
+        container.style.right = '0px';
+        container.style.bottom = '0px';
+        container.style.height = '25%';
+        container.style.overflowY = 'auto';
+        container.style.borderStyle = 'ridge';
+        container.style.opacity = 0;
+        $('#container').append(container);
+        
+        var timeline = new vis.Timeline( container );
+        timeline.setOptions( { editable : false } );
+        timeline.setGroups( groups );
+        timeline.setItems( items );
+        
+        $(container).fadeTo(2000, 1);
+    }
+}
+                            
+function parseDate( date ) {
+    
+    var parts = date.split('-');
+    
+    return new Date( parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]) );
 }
 
 function setFocus(id, duration) {
@@ -695,10 +796,11 @@ function setFocus(id, duration) {
         .start();
     
     for ( var i = 0; i < headers.length; i++ ) {
-        new TWEEN.Tween( headers[ i ].style )
+        /*new TWEEN.Tween( headers[ i ].style )
             .to( { opacity : 0 }, Math.random() * duration + duration )
             .easing( TWEEN.Easing.Exponential.InOut )
-            .start();
+            .start();*/
+        $(headers[i]).fadeTo( Math.random() * duration + duration, 0);
     }
     
     for( var i = 0; i < objects.length; i++ ) {
@@ -710,14 +812,14 @@ function setFocus(id, duration) {
             .easing( TWEEN.Easing.Exponential.InOut )
             .start();
     }
-    
-    
 }
 
 function loseFocus() {
     
     $('#sidePanel').fadeTo(1000, 0, function() { $('#sidePanel').remove(); });
     $('#elementPanel').fadeTo(1000, 0, function() { $('#elementPanel').remove(); });
+    $('#timelineContainer').fadeTo(1000, 0, function() { $('#timelineContainer').remove(); });
+    $('.backButton').fadeTo(1000, 0);
     $(renderer.domElement).fadeTo(1000, 1);
     
     focus = null;
@@ -859,18 +961,20 @@ function transform( goal, duration ) {
     
     if ( goal == targets.table ) {
         for ( var i = 0; i < headers.length; i++ ) {
-            new TWEEN.Tween( headers[ i ].style )
+            /*new TWEEN.Tween( headers[ i ].style )
                 .to( { opacity : 1 }, Math.random() * duration + duration )
                 .easing( TWEEN.Easing.Exponential.InOut )
-                .start();
+                .start();*/
+            $( headers[i] ).fadeTo(Math.random() * duration + duration, 1);
         }
     }
     else {
         for ( var i = 0; i < headers.length; i++ ) {
-            new TWEEN.Tween( headers[ i ].style )
+            /*new TWEEN.Tween( headers[ i ].style )
                 .to( { opacity : 0 }, Math.random() * duration + duration )
                 .easing( TWEEN.Easing.Exponential.InOut )
-                .start();
+                .start();*/
+            $( headers[i] ).fadeTo(Math.random() * duration + duration, 0);
         }
     }
 
