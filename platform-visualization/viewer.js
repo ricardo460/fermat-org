@@ -15,14 +15,18 @@ $.ajax({
     method: "GET"
 }).success(
     function(lists) {
-    
-    var l = JSON.parse(lists);
-    
-    fillTable(l)
-    
-    init();
-    animate();
-});
+        
+        var l = JSON.parse(lists);
+
+        fillTable(l);
+
+        $('#splash').fadeTo(0, 500, function() {
+            $('#splash').remove();
+            init();
+            setTimeout( animate, 500);
+        });
+    }
+);
 
 /*var l = JSON.parse(testData);
     
@@ -30,7 +34,6 @@ $.ajax({
     
     init();
     animate();*/
-
 
 function init() {
     
@@ -195,9 +198,9 @@ function init() {
         var element = createElement( i );
 
         var object = new THREE.CSS3DObject( element );
-        object.position.x = Math.random() * 4000 - 2000;
-        object.position.y = Math.random() * 4000 - 2000;
-        object.position.z = Math.random() * 4000 - 2000;
+        object.position.x = 0; //Math.random() * 4000 - 2000;
+        object.position.y = 0; //Math.random() * 4000 - 2000;
+        object.position.z = 80000; //Math.random() * 4000 - 2000;
         scene.add( object );
 
         objects.push( object );
@@ -424,14 +427,20 @@ function init() {
     
     $('.backButton').click( function() { changeView( targets.table ); });
     $('#legendButton').click( function() { 
-        if( document.getElementById('legend').style.opacity == 1) $('#legend').fadeTo( 1000, 0);
-        else $('#legend').fadeTo( 1000, 1);
-    });
+        
+        var legend = document.getElementById('legend');
+        
+        if( legend.style.opacity == 1) $('#legend').fadeTo( 1000, 0, function() { legend.style.display = 'none'; } );
+        else { 
+            legend.style.display = 'block';
+            $(legend).fadeTo( 1000, 1);
+        }
+    } );
 
     //Disabled Menu
     //initMenu();
 
-    transform( targets.table, 2000 );
+    transform( targets.table, 4000 );
 
     //
 
@@ -580,7 +589,7 @@ function onElementClick() {
         setFocus(id, 2000);
         setTimeout( function() {
             setFocus(id, 1000);
-            $('.backButton').fadeTo(1000, 1);
+            $('#backButton').fadeTo(1000, 1, function() { $('#backButton').show(); } );
         }, 3000 );
         controls.enabled = false;
 
@@ -693,7 +702,8 @@ function createElementsPanel( tasks ) {
         $(clone).find('img').remove();
         clone.style.position = 'relative';
         clone.style.display = 'inline-block';
-        clone.style.marginLeft = '5px';
+        clone.style.marginLeft = '10px';
+        clone.style.marginTop = '10px';
         clone.style.opacity = 0;
         elementPanel.appendChild(clone);
 
@@ -706,6 +716,7 @@ function createTimeline( tasks ) {
     
     var groups = [];
     var items = [];
+    var id = 0;
     
     for( var i = 0; i < tasks.length; i++ ) {
         
@@ -722,21 +733,27 @@ function createTimeline( tasks ) {
             
             for( var j = 0; j < schedule.length; j++ ) {
                 
-                if ( schedule[j].target != '' )
+                if ( schedule[j].target != '' ) {
                     items.push ( {
-                        id : 2 * j,
+                        id : id,
                         content : schedule[j].name + ' <span style="color:#97B0F8;">(target)</span>',
                         start : parseDate( schedule[j].target ),
                         group : i
                     });
+                    
+                    id++;
+                }
                 
-                if ( schedule[j].reached != '' )
+                if ( schedule[j].reached != '' ) {
                     items.push ( {
-                        id : 2 * j + 1,
+                        id : id,
                         content : schedule[j].name + ' <span style="color:#97B0F8;">(reached)</span>',
                         start : parseDate( schedule[j].reached ),
                         group : i
                     });
+                    
+                    id++;
+                }
             }
         }
     }
@@ -781,7 +798,7 @@ function setFocus(id, duration) {
     vec.applyMatrix4( target.matrix );
     
     new TWEEN.Tween( controls.target )
-        .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
+        .to( { x: target.position.x, y: target.position.y, z: target.position.z }, duration )
         .easing( TWEEN.Easing.Exponential.InOut )
         .start();
     
@@ -816,10 +833,11 @@ function setFocus(id, duration) {
 
 function loseFocus() {
     
+    var backButton = document.getElementById('backButton');
+    $(backButton).fadeTo(1000, 0, function() { backButton.style.display = 'none'; } );
     $('#sidePanel').fadeTo(1000, 0, function() { $('#sidePanel').remove(); });
     $('#elementPanel').fadeTo(1000, 0, function() { $('#elementPanel').remove(); });
     $('#timelineContainer').fadeTo(1000, 0, function() { $('#timelineContainer').remove(); });
-    $('.backButton').fadeTo(1000, 0);
     $(renderer.domElement).fadeTo(1000, 1);
     
     focus = null;

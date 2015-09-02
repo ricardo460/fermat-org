@@ -14,10 +14,12 @@
         <script src="common/jquery-2.1.4.min.js"></script>
         <script src="common/vis.min.js"></script>
         
-        <button class="backButton" style="opacity : 0;">BACK</button>
+        <img src="images/fermat_logo.png" id="splash"/>
+        
+        <button id="backButton" class="backButton" style="opacity : 0; display : none;">BACK</button>
         <button id="legendButton"> ? </button>
         
-        <div id="legend" class="legend" style="opacity : 0;">
+        <div id="legend" class="legend" style="opacity : 0; display : none;">
             <table>
                 <tr>
                     <td><div class="colorBox" style="background-color: rgba(150,150,150,0.5);"></div></td>
@@ -28,7 +30,7 @@
                     <td><span>Development</span></td>
                 </tr>
                 <tr>
-                    <td><div class="colorBox" style="background-color: rgba(244,244,107,0.5);"></div></td>
+                    <td><div class="colorBox" style="background-color: rgba(234,234,97,1);"></div></td>
                     <td><span>QA</span></td>
                 </tr>
                 <tr>
