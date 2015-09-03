@@ -52,7 +52,6 @@
             </div>*/
         ?>
         
-        <script src="constants.js"></script>
-		<script src="viewer.js"></script>
+        <script src="main.js"></script>
 	</body>
 </html>
