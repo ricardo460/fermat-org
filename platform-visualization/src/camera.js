@@ -1,27 +1,58 @@
+/**
+ *
+ * @class Camera
+ *
+ * @param  {Position}
+ * @param  {Renderer}
+ * @param  {Function}
+ */
 function Camera(position, renderer, renderFunc) {
-    
-    //Private Properties
+    /**
+     * private constans
+     */
+    var ROTATE_SPEED = 1.3,
+        MIN_DISTANCE = 500,
+        MAX_DISTANCE = 80000;
+
+    /**
+     * private properties
+     */    
     var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
     var controls = new THREE.TrackballControls( camera, renderer.domElement );
     var focus = null;
     
     camera.position.copy( position );
 
-    controls.rotateSpeed = 1.3;
-    controls.minDistance = 500;
-    controls.maxDistance = 80000;
+    controls.rotateSpeed = ROTATE_SPEED;
+    controls.minDistance = MIN_DISTANCE;
+    controls.maxDistance = MAX_DISTANCE;
     controls.addEventListener( 'change', renderFunc );
     controls.position0.copy( position );
     
     // Public Methods
+
+    /**
+     * @method disable disables camera controls
+     */
     this.disable = function() {
         controls.enabled = false;
     };
     
+    /**
+     *
+     * @method enable enables camera controls
+     */
     this.enable = function() {
         controls.enabled = true;
     };
     
+    /**
+     * 
+     * @method setFocus sets focus to a target given its id
+     *
+     * @param {Number} id       target id
+     * @param {Number} duration animation duration time
+     */
     this.setFocus = function( id, duration ) {
         
         TWEEN.removeAll();
@@ -47,7 +78,7 @@ function Camera(position, renderer, renderFunc) {
             .easing( TWEEN.Easing.Exponential.InOut )
             .start();
 
-        for ( var i = 0; i < headers.length; i++ ) {
+        for ( var i = 0, l = headers.length; i < l; i++ ) {
             /*new TWEEN.Tween( headers[ i ].style )
                 .to( { opacity : 0 }, Math.random() * duration + duration )
                 .easing( TWEEN.Easing.Exponential.InOut )
@@ -55,7 +86,7 @@ function Camera(position, renderer, renderFunc) {
             $(headers[i]).fadeTo( Math.random() * duration + duration, 0);
         }
 
-        for( var i = 0; i < objects.length; i++ ) {
+        for( var i = 0, l = objects.length; i < l; i++ ) {
 
             if ( i == id ) continue;
 
@@ -66,6 +97,11 @@ function Camera(position, renderer, renderFunc) {
         }
     };
     
+    /**
+     *
+     * @method loseFocus    loses focus from target
+     *
+     */
     this.loseFocus = function() {
         
         if ( focus != null ) {
@@ -80,16 +116,30 @@ function Camera(position, renderer, renderFunc) {
         }
     };
     
+    /**
+     *
+     * @method onWindowResize   execute in case of window resizing
+     * 
+     */
     this.onWindowResize = function() {
+        var innerWidth = window.innerWidth,
+            innerHeight = window.innerHeight;
         
-        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.aspect = innerWidth / innerHeight;
         camera.updateProjectionMatrix();
 
-        renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.setSize( innerWidth, innerHeight );
 
         render();
     };
     
+    /**
+     *
+     * @method onKeyDown    execute in case of key down pressed
+     *
+     * @param {Event} event event to listen to
+     * 
+     */
     this.onKeyDown = function( event ) {
     
         if ( event.keyCode === 27 /* ESC */ ) {
@@ -116,17 +166,36 @@ function Camera(position, renderer, renderFunc) {
         }
     };
     
-    this.update = function() {
-        
+    /**
+     *
+     * @method update    updates camera controls  
+     *
+     */
+    this.update = function() {        
         controls.update();
     };
     
-    this.render = function ( renderer, scene ) {
-        
+    /**
+     *
+     * @method render    renders an scene
+     *
+     * @param {Renderer} renderer renderer for camera
+     * @param {Scene}    scene    scene to render
+     *
+     */
+    this.render = function ( renderer, scene ) {        
         renderer.render ( scene, camera );
     };
     
-    this.getFocus = function () { return focus; };
+    /**
+     *
+     * @method getFocus gets focused target
+     *
+     * @return {Number} focused target
+     */
+    this.getFocus = function () { 
+        return focus;
+    };
     
     // Events
     window.addEventListener( 'resize', this.onWindowResize, false );
