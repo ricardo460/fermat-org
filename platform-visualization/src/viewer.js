@@ -8,7 +8,7 @@ var headers = [];
 
 var lastTargets = null;
 
-/*$.ajax({
+$.ajax({
     url: "get_plugins.php",
     method: "GET"
 }).success(
@@ -24,9 +24,9 @@ var lastTargets = null;
             setTimeout( animate, 500);
         });
     }
-);*/
+);
 
-var l = JSON.parse(testData);
+/*var l = JSON.parse(testData);
     
     fillTable(l);
     
@@ -34,7 +34,7 @@ var l = JSON.parse(testData);
             $('#splash').remove();
             init();
             setTimeout( animate, 500);
-        });
+        });*/
 
 function init() {
     
@@ -583,12 +583,11 @@ function onImageClick(id, image, handler) {
         if ( table[ i ].author == table[ id ].author ) relatedTasks.push( i );
     }
 
-    createSidePanel( id, image );
+    createSidePanel( id, image, relatedTasks );
     createElementsPanel( relatedTasks );
-    createTimeline( relatedTasks );
 }
 
-function createSidePanel( id, image ) {
+function createSidePanel( id, image, relatedTasks ) {
     
     var sidePanel = document.createElement( 'div' );
     sidePanel.id = 'sidePanel';
@@ -627,6 +626,21 @@ function createSidePanel( id, image ) {
     email.textContent = table[ id ].authorEmail;
     sidePanel.appendChild( email );
     
+    if ( relatedTasks != null && relatedTasks.length > 0 ) {
+        
+        var tlButton = document.createElement( 'button' );
+        tlButton.id = 'timelineButton';
+        tlButton.style.opacity = 0;
+        tlButton.style.position = 'relative';
+        tlButton.textContent = 'See Timeline';
+        
+        $(tlButton).click( function() {
+            showTimeline( relatedTasks );
+        });
+        
+        sidePanel.appendChild( tlButton );
+    }
+    
     $('#container').append(sidePanel);
     
     $(renderer.domElement).fadeTo(1000, 0);
@@ -634,12 +648,14 @@ function createSidePanel( id, image ) {
     $(panelImage).fadeTo(1000, 1, function() {
         $(userName).fadeTo(1000, 1, function() {
             $(realName).fadeTo(1000, 1, function() {
-                $(email).fadeTo(1000, 1);
+                $(email).fadeTo(1000, 1, function() {
+                    
+                    if( tlButton != null) $(tlButton).fadeTo(1000, 1);
+                    
+                });
             });
         });
     });
-    
-    
 }
 
 function createElementsPanel( tasks ) {
@@ -677,73 +693,25 @@ function createElementsPanel( tasks ) {
     
 }
 
-function createTimeline( tasks ) {
+function showTimeline( tasks ) {
     
-    var groups = [];
-    var items = [];
-    var id = 0;
+    helper.hide('sidePanel');
+    helper.hide('elementPanel');
     
-    for( var i = 0; i < tasks.length; i++ ) {
-        
-        var task = table[ tasks[i] ];
-        
-        if ( task != null && task.life_cycle != null ) {
-            
-            var schedule = task.life_cycle;
-            
-            groups.push ( {
-                id : i,
-                content : task.group + '/' + task.layer + '/' + task.name
-            });
-            
-            for( var j = 0; j < schedule.length; j++ ) {
-                
-                if ( schedule[j].target != '' ) {
-                    items.push ( {
-                        id : id,
-                        content : schedule[j].name + ' <span style="color:#97B0F8;">(target)</span>',
-                        start : parseDate( schedule[j].target ),
-                        group : i
-                    });
-                    
-                    id++;
-                }
-                
-                if ( schedule[j].reached != '' ) {
-                    items.push ( {
-                        id : id,
-                        content : schedule[j].name + ' <span style="color:#97B0F8;">(reached)</span>',
-                        start : parseDate( schedule[j].reached ),
-                        group : i
-                    });
-                    
-                    id++;
-                }
-            }
-        }
-    }
+    var tlContainer = document.createElement('div');
+    tlContainer.id = 'tlContainer';
+    tlContainer.style.position = 'absolute';
+    tlContainer.style.top = '50px';
+    tlContainer.style.bottom = '50px';
+    tlContainer.style.left = '50px';
+    tlContainer.style.right = '50px';
+    tlContainer.style.overflowY = 'auto';
+    tlContainer.style.opacity = 0;
+    $('#container').append(tlContainer);
     
-    if ( groups.length != 0 ) {
-        
-        var container = document.createElement( 'div' );
-        container.id = 'timelineContainer';
-        container.style.position = 'absolute';
-        container.style.left = '0px';
-        container.style.right = '0px';
-        container.style.bottom = '0px';
-        container.style.height = '25%';
-        container.style.overflowY = 'auto';
-        container.style.borderStyle = 'ridge';
-        container.style.opacity = 0;
-        $('#container').append(container);
-        
-        var timeline = new vis.Timeline( container );
-        timeline.setOptions( { editable : false } );
-        timeline.setGroups( groups );
-        timeline.setItems( items );
-        
-        $(container).fadeTo(2000, 1);
-    }
+    $(tlContainer).fadeTo(1000, 1);
+    
+    new Timeline(tasks, tlContainer).show();
 }
                             
 function parseDate( date ) {
