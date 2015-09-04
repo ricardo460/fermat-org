@@ -8,12 +8,16 @@ function askGitHub($url) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'User-Agent: MALOTeam',
         //'User-Agent: Miguelcldn', //For testing
         'Accept: */*'
     ));
     $data = curl_exec($ch);
+    
+    if ( $data === false ) echo 'Curl error: ' . curl_error($ch);
+    
     curl_close($ch);
     
     return json_decode($data, true);
