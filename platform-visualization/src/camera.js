@@ -73,7 +73,8 @@ function Camera(position, renderer, renderFunc) {
             $(backButton).fadeTo(1000, 0, function() { backButton.style.display = 'none'; } );
             $('#sidePanel').fadeTo(1000, 0, function() { $('#sidePanel').remove(); });
             $('#elementPanel').fadeTo(1000, 0, function() { $('#elementPanel').remove(); });
-            $('#timelineContainer').fadeTo(1000, 0, function() { $('#timelineContainer').remove(); });
+            $('#timelineButton').fadeTo(1000, 0, function() { $('#timelineButton').remove(); });
+            if( $('#tlContainer') != null ) helper.hide($('#tlContainer'), 1000);
             $(renderer.domElement).fadeTo(1000, 1);
 
             focus = null;
