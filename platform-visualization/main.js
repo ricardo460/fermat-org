@@ -1,27 +1,58 @@
+/**
+ *
+ * @class Camera
+ *
+ * @param  {Position}
+ * @param  {Renderer}
+ * @param  {Function}
+ */
 function Camera(position, renderer, renderFunc) {
-    
-    //Private Properties
+    /**
+     * private constans
+     */
+    var ROTATE_SPEED = 1.3,
+        MIN_DISTANCE = 500,
+        MAX_DISTANCE = 80000;
+
+    /**
+     * private properties
+     */    
     var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
     var controls = new THREE.TrackballControls( camera, renderer.domElement );
     var focus = null;
     
     camera.position.copy( position );
 
-    controls.rotateSpeed = 1.3;
-    controls.minDistance = 500;
-    controls.maxDistance = 80000;
+    controls.rotateSpeed = ROTATE_SPEED;
+    controls.minDistance = MIN_DISTANCE;
+    controls.maxDistance = MAX_DISTANCE;
     controls.addEventListener( 'change', renderFunc );
     controls.position0.copy( position );
     
     // Public Methods
+
+    /**
+     * @method disable disables camera controls
+     */
     this.disable = function() {
         controls.enabled = false;
     };
     
+    /**
+     *
+     * @method enable enables camera controls
+     */
     this.enable = function() {
         controls.enabled = true;
     };
     
+    /**
+     * 
+     * @method setFocus sets focus to a target given its id
+     *
+     * @param {Number} id       target id
+     * @param {Number} duration animation duration time
+     */
     this.setFocus = function( id, duration ) {
         
         TWEEN.removeAll();
@@ -47,7 +78,7 @@ function Camera(position, renderer, renderFunc) {
             .easing( TWEEN.Easing.Exponential.InOut )
             .start();
 
-        for ( var i = 0; i < headers.length; i++ ) {
+        for ( var i = 0, l = headers.length; i < l; i++ ) {
             /*new TWEEN.Tween( headers[ i ].style )
                 .to( { opacity : 0 }, Math.random() * duration + duration )
                 .easing( TWEEN.Easing.Exponential.InOut )
@@ -55,7 +86,7 @@ function Camera(position, renderer, renderFunc) {
             $(headers[i]).fadeTo( Math.random() * duration + duration, 0);
         }
 
-        for( var i = 0; i < objects.length; i++ ) {
+        for( var i = 0, l = objects.length; i < l; i++ ) {
 
             if ( i == id ) continue;
 
@@ -66,6 +97,11 @@ function Camera(position, renderer, renderFunc) {
         }
     };
     
+    /**
+     *
+     * @method loseFocus    loses focus from target
+     *
+     */
     this.loseFocus = function() {
         
         if ( focus != null ) {
@@ -81,16 +117,30 @@ function Camera(position, renderer, renderFunc) {
         }
     };
     
+    /**
+     *
+     * @method onWindowResize   execute in case of window resizing
+     * 
+     */
     this.onWindowResize = function() {
+        var innerWidth = window.innerWidth,
+            innerHeight = window.innerHeight;
         
-        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.aspect = innerWidth / innerHeight;
         camera.updateProjectionMatrix();
 
-        renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.setSize( innerWidth, innerHeight );
 
         render();
     };
     
+    /**
+     *
+     * @method onKeyDown    execute in case of key down pressed
+     *
+     * @param {Event} event event to listen to
+     * 
+     */
     this.onKeyDown = function( event ) {
     
         if ( event.keyCode === 27 /* ESC */ ) {
@@ -117,17 +167,36 @@ function Camera(position, renderer, renderFunc) {
         }
     };
     
-    this.update = function() {
-        
+    /**
+     *
+     * @method update    updates camera controls  
+     *
+     */
+    this.update = function() {        
         controls.update();
     };
     
-    this.render = function ( renderer, scene ) {
-        
+    /**
+     *
+     * @method render    renders an scene
+     *
+     * @param {Renderer} renderer renderer for camera
+     * @param {Scene}    scene    scene to render
+     *
+     */
+    this.render = function ( renderer, scene ) {        
         renderer.render ( scene, camera );
     };
     
-    this.getFocus = function () { return focus; };
+    /**
+     *
+     * @method getFocus gets focused target
+     *
+     * @return {Number} focused target
+     */
+    this.getFocus = function () { 
+        return focus;
+    };
     
     // Events
     window.addEventListener( 'resize', this.onWindowResize, false );
@@ -282,8 +351,16 @@ function Headers(colunmWidth, superLayerMaxHeight) {
     
     console.log("Please, implement me Headers.js");
 }
+/**
+ * Static object with help functions commonly used
+ */
 function Helper() {
     
+    /**
+     * Hides an element vanishing it and then eliminating it from the DOM
+     * @param {DOMElement} element  The element to eliminate
+     * @param {Number} duration Duration of the fade animation
+     */
     this.hide = function (element, duration) {
         
         var dur = duration || 1000,
@@ -295,59 +372,200 @@ function Helper() {
             $(el).remove();
         });
     };
+    
+    /**
+     * Clones a tile and *without* it's developer picture
+     * @param   {String} id    The id of the source
+     * @param   {String} newID The id of the created clone
+     * @returns {DOMElement} The cloned tile without it's picture
+     */
+    this.cloneTile = function (id, newID) {
+        
+        var clone = document.getElementById( id ).cloneNode(true);
+
+        clone.id = newID;
+        clone.style.transform = '';
+        $(clone).find('img').remove();
+        
+        return clone;
+    }
+    
+    /**
+     * Parses ISODate to a javascript Date
+     * @param   {String} date Input
+     * @returns {Date}   js Date object (yyyy-mm-dd)
+     */
+    this.parseDate = function( date ) {
+    
+        if( date == null ) return null;
+        
+        var parts = date.split('-');
+
+        return new Date( parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]) );
+    }
+    
+    /**
+     * Capitalizes the first letter of a word
+     * @param   {String} string Input
+     * @returns {String} input capitalized
+     */
+    this.capFirstLetter = function(string) {
+        
+        var words = string.split(" ");
+        var result = "";
+
+        for(var i = 0; i < words.length; i++)
+            result += words[i].charAt(0).toUpperCase() + words[i].slice(1) + " ";
+
+        return result.trim();
+    }
+
+    /**
+     * Extract the code of a plugin
+     * @param   {String} pluginName The name of the plugin
+     * @returns {String} Code of the plugin
+     */
+    this.getCode = function(pluginName) {
+    
+        var words = pluginName.split(" ");
+        var code = "";
+
+        if( words.length == 1) { //if N = 1, use whole word or 3 first letters
+
+            if(words[0].length <= 4)
+                code = this.capFirstLetter( words[0] );
+            else
+                code = this.capFirstLetter( words[0].slice( 0, 3 ) );
+        }
+        else if( words.length == 2 ) { //if N = 2 use first cap letter, and second letter
+
+            code += words[0].charAt(0).toUpperCase() + words[0].charAt(1);
+            code += words[1].charAt(0).toUpperCase() + words[1].charAt(1);
+        }
+        else { //if N => 3 use the N (up to 4) letters caps
+
+            var max = (words.length < 4) ? words.length : 4;
+
+            for(var i = 0; i < max; i++)
+                code += words[i].charAt(0);
+        }
+
+        return code;
+    }
+    
 }
 
 // Make helper a static object
 var helper = new Helper();
+
+/**
+ * @class Timeline
+ *
+ * @param {Array}  tasks     An array of numbers containing all task ids
+ * @param {Object} [container] Container of the created timeline
+ */
 function Timeline ( tasks, container ) {
     
+    // Constants
+    var CONCEPT_COLOR = 'rgba(170,170,170,1)',
+        DEVEL_COLOR = 'rgba(234,123,97,1)',
+        QA_COLOR = 'rgba(194,194,57,1)';
+    
+    // Public properties
     this.groups = [];
     this.items = [];
     this.container = container;
     
+    
     var id = 0;
     
-    for( var i = 0; i < tasks.length; i++ ) {
+    for( var i = 0, tl = tasks.length; i < tl; i++ ) {
         
         var task = table[ tasks[i] ];
         
         if ( task != null && task.life_cycle != null ) {
             
-            var schedule = task.life_cycle;
+            var schedule = task.life_cycle,
+                tile, wrap,
+                lastTarget = helper.parseDate( schedule[0].reached ),
+                lastReached = lastTarget;
+            
+            tile = helper.cloneTile(tasks[i], 'timeline-' + tasks[i]);
+            tile.style.position = 'relative';
+            tile.style.display = 'inline-block';
+            
+            wrap = document.createElement('div');
+            wrap.appendChild( tile );
             
             this.groups.push ( {
                 id : i,
-                content : task.group + '/' + task.layer + '/' + task.name
+                content : wrap.innerHTML
             });
             
-            for( var j = 0; j < schedule.length; j++ ) {
+            // First status marks the start point, not needed here
+            for( var j = 1, sl = schedule.length; j < sl; j++ ) {
                 
-                if ( schedule[j].target != '' ) {
-                    this.items.push ( {
-                        id : id,
-                        content : schedule[j].name + ' <span style="color:#97B0F8;">(target)</span>',
-                        start : parseDate( schedule[j].target ),
-                        group : i
-                    });
+                var itemColor;
                     
-                    id++;
+                switch(schedule[j-1].name) {
+                    case "Concept":
+                        itemColor = CONCEPT_COLOR; break;
+                    case "Development":
+                        itemColor = DEVEL_COLOR; break;
+                    case "QA":
+                        itemColor = QA_COLOR; break;
                 }
                 
-                if ( schedule[j].reached != '' ) {
-                    this.items.push ( {
-                        id : id,
-                        content : schedule[j].name + ' <span style="color:#97B0F8;">(reached)</span>',
-                        start : parseDate( schedule[j].reached ),
-                        group : i
-                    });
+                
+                // Planned
+                if(schedule[j].target != '') {
                     
-                    id++;
+                    var end = helper.parseDate( schedule[j].target );
+                    
+                    var item = {
+                        id : id++,
+                        content : schedule[j-1].name + ' (plan)',
+                        start : lastTarget,
+                        end : end,
+                        group: i,
+                        subgroup: 'plan',
+                        style: 'background-color:' + itemColor
+                    }
+                    
+                    this.items.push( item );
+                    
+                    lastTarget = end;
+                }
+                
+                // Real
+                if(schedule[j].reached != '') {
+                    
+                    var end = helper.parseDate( schedule[j].reached );
+                    
+                    var item = {
+                        id : id++,
+                        content : schedule[j-1].name + ' (real)',
+                        start : lastReached,
+                        end : end,
+                        group: i,
+                        subgroup: 'real',
+                        style: 'background-color:' + itemColor
+                    }
+                    
+                    this.items.push( item );
+                    
+                    lastReached = end;
                 }
             }
         }
     }
 }
 
+
+/**
+ * Hides and destroys the timeline
+ * @param {Number} [duration=1000] Duration of fading in milliseconds
+ */
 Timeline.prototype.hide = function ( duration ) {
     
     var _duration = duration || 1000;
@@ -355,6 +573,11 @@ Timeline.prototype.hide = function ( duration ) {
     $('#timelineContainer').fadeTo(_duration, 0, function() { $('#timelineContainer').remove(); });
 }
 
+
+/**
+ * Shows the timeline in it's given container, if it was null, creates one at the bottom
+ * @param {Number} [duration=2000] Duration of fading in milliseconds
+ */
 Timeline.prototype.show = function ( duration ) {
     
     var _duration = duration || 2000;
@@ -378,7 +601,9 @@ Timeline.prototype.show = function ( duration ) {
         var timeline = new vis.Timeline( this.container );
         timeline.setOptions( { 
             editable : false,
-            minHeight : '100%'
+            minHeight : '100%',
+            stack : false,
+            align : 'center'
         } );
         timeline.setGroups( this.groups );
         timeline.setItems( this.items );
@@ -1063,12 +1288,7 @@ function createElementsPanel( tasks ) {
     
     for ( i = 0; i < tasks.length; i++ ) {
         
-        
-        var clone = document.getElementById( tasks[i] ).cloneNode(true);
-
-        clone.id = 'task-' + tasks[i];
-        clone.style.transform = '';
-        $(clone).find('img').remove();
+        var clone = helper.cloneTile(tasks[i], 'task-' + tasks[i]);
         clone.style.position = 'relative';
         clone.style.display = 'inline-block';
         clone.style.marginLeft = '10px';
@@ -1100,13 +1320,6 @@ function showTimeline( tasks ) {
     $(tlContainer).fadeTo(1000, 1);
     
     new Timeline(tasks, tlContainer).show();
-}
-                            
-function parseDate( date ) {
-    
-    var parts = date.split('-');
-    
-    return new Date( parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]) );
 }
 
 function printDifficulty(value) {
@@ -1164,7 +1377,7 @@ function fillTable(list) {
         var element = {
             group : _group,
             groupID : groupID,
-            code : getCode(_name),
+            code : helper.getCode(_name),
             name : _name,
             layer : _layer,
             layerID : layerID,
@@ -1180,44 +1393,6 @@ function fillTable(list) {
         
         table.push(element);
     }
-}
-
-function capFirstLetter(string) {
-    var words = string.split(" ");
-    var result = "";
-    
-    for(var i = 0; i < words.length; i++)
-        result += words[i].charAt(0).toUpperCase() + words[i].slice(1) + " ";
-    
-    return result.trim();
-}
-
-function getCode(pluginName) {
-    
-    var words = pluginName.split(" ");
-    var code = "";
-    
-    if( words.length == 1) { //if N = 1, use whole word or 3 first letters
-        
-        if(words[0].length <= 4)
-            code = capFirstLetter( words[0] );
-        else
-            code = capFirstLetter( words[0].slice( 0, 3 ) );
-    }
-    else if( words.length == 2 ) { //if N = 2 use first cap letter, and second letter
-        
-        code += words[0].charAt(0).toUpperCase() + words[0].charAt(1);
-        code += words[1].charAt(0).toUpperCase() + words[1].charAt(1);
-    }
-    else { //if N => 3 use the N (up to 4) letters caps
-        
-        var max = (words.length < 4) ? words.length : 4;
-
-        for(var i = 0; i < max; i++)
-            code += words[i].charAt(0);
-    }
-    
-    return code;
 }
 
 function transform( goal, duration ) {
