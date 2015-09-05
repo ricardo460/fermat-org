@@ -675,12 +675,7 @@ function createElementsPanel( tasks ) {
     
     for ( i = 0; i < tasks.length; i++ ) {
         
-        
-        var clone = document.getElementById( tasks[i] ).cloneNode(true);
-
-        clone.id = 'task-' + tasks[i];
-        clone.style.transform = '';
-        $(clone).find('img').remove();
+        var clone = helper.cloneTile(tasks[i], 'task-' + tasks[i]);
         clone.style.position = 'relative';
         clone.style.display = 'inline-block';
         clone.style.marginLeft = '10px';
@@ -712,13 +707,6 @@ function showTimeline( tasks ) {
     $(tlContainer).fadeTo(1000, 1);
     
     new Timeline(tasks, tlContainer).show();
-}
-                            
-function parseDate( date ) {
-    
-    var parts = date.split('-');
-    
-    return new Date( parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]) );
 }
 
 function printDifficulty(value) {
@@ -776,7 +764,7 @@ function fillTable(list) {
         var element = {
             group : _group,
             groupID : groupID,
-            code : getCode(_name),
+            code : helper.getCode(_name),
             name : _name,
             layer : _layer,
             layerID : layerID,
@@ -792,44 +780,6 @@ function fillTable(list) {
         
         table.push(element);
     }
-}
-
-function capFirstLetter(string) {
-    var words = string.split(" ");
-    var result = "";
-    
-    for(var i = 0; i < words.length; i++)
-        result += words[i].charAt(0).toUpperCase() + words[i].slice(1) + " ";
-    
-    return result.trim();
-}
-
-function getCode(pluginName) {
-    
-    var words = pluginName.split(" ");
-    var code = "";
-    
-    if( words.length == 1) { //if N = 1, use whole word or 3 first letters
-        
-        if(words[0].length <= 4)
-            code = capFirstLetter( words[0] );
-        else
-            code = capFirstLetter( words[0].slice( 0, 3 ) );
-    }
-    else if( words.length == 2 ) { //if N = 2 use first cap letter, and second letter
-        
-        code += words[0].charAt(0).toUpperCase() + words[0].charAt(1);
-        code += words[1].charAt(0).toUpperCase() + words[1].charAt(1);
-    }
-    else { //if N => 3 use the N (up to 4) letters caps
-        
-        var max = (words.length < 4) ? words.length : 4;
-
-        for(var i = 0; i < max; i++)
-            code += words[i].charAt(0);
-    }
-    
-    return code;
 }
 
 function transform( goal, duration ) {
