@@ -242,7 +242,7 @@ function init() {
         
         var image = document.createElement( 'img' );
         image.src = 'images/' + slayer + '_logo.svg';
-        image.height = superLayerMaxHeight * 180;
+        image.width = columnWidth * 140;
         image.style.opacity = 0;
         headers.push( image );
         
