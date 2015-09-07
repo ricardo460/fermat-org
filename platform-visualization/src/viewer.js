@@ -55,7 +55,7 @@ function init() {
     for ( var key in layers ) {
         if ( key == "size" ) continue;
         
-        if ( layers[key].super_layer == true ) {
+        if ( layers[key].super_layer ) {
             
             section.push(0);
         }
@@ -80,7 +80,7 @@ function init() {
         for ( var key in layers ) {
             if ( key == "size" ) continue;
             
-            if ( layers[key].super_layer == true ) {
+            if ( layers[key].super_layer ) {
 
                 _sections.push(0);
                 superLayerHeight++;
@@ -116,7 +116,7 @@ function init() {
             
             elementsByGroup[c]++;
             
-            if ( layers[table[i].layer].super_layer == true ) {
+            if ( layers[table[i].layer].super_layer ) {
                 
                 _sections[r]++;
                 isSuperLayer[r] = true;
@@ -191,7 +191,7 @@ function init() {
         //Row (Y)
         var row = table[i].layerID;
         
-        if ( layers[table[i].layer].super_layer == true) {
+        if ( layers[table[i].layer].super_layer ) {
             
             object.position.x = ( (section[row]) * 140 ) - (columnWidth * groupsQtty * 140 / 2);
             
@@ -242,7 +242,7 @@ function init() {
         
         var image = document.createElement( 'img' );
         image.src = 'images/' + slayer + '_logo.svg';
-        image.height = superLayerMaxHeight * 180;
+        image.width = columnWidth * 140;
         image.style.opacity = 0;
         headers.push( image );
         
@@ -473,7 +473,7 @@ function createElement( i ) {
 
     var number = document.createElement( 'div' );
     number.className = 'number';
-    number.textContent = (table[ i ].group != undefined) ? table[i].group : "";
+    number.textContent = (table[ i ].group != undefined) ? table[i].group : layers[table[i].layer].super_layer;
     element.appendChild( number );
 
     var symbol = document.createElement( 'div' );

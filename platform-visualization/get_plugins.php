@@ -62,7 +62,7 @@ function main() {
                             
                             if( searchName(strval($sub_superLayer['name']), $layerList) === false) {
 
-                                array_push($layerList, array( 'name' => strval($sub_superLayer['name']), 'index' => $layerIndex, 'super_layer' => true));
+                                array_push($layerList, array( 'name' => strval($sub_superLayer['name']), 'index' => $layerIndex, 'super_layer' => strval($super_layer['code'])));
                                 $layerIndex++;
                             }
 
