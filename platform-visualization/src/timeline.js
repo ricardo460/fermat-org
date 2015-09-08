@@ -46,7 +46,9 @@ function Timeline ( tasks, container ) {
             // First status marks the start point, not needed here
             for( var j = 1, sl = schedule.length; j < sl; j++ ) {
                 
-                var itemColor;
+                var itemColor,
+                    end,
+                    item;
                     
                 switch(schedule[j-1].name) {
                     case "Concept":
@@ -59,11 +61,11 @@ function Timeline ( tasks, container ) {
                 
                 
                 // Planned
-                if(schedule[j].target != '') {
+                if(schedule[j].target !== '') {
                     
-                    var end = helper.parseDate( schedule[j].target );
+                    end = helper.parseDate( schedule[j].target );
                     
-                    var item = {
+                    item = {
                         id : id++,
                         content : schedule[j-1].name + ' (plan)',
                         start : lastTarget,
@@ -71,7 +73,7 @@ function Timeline ( tasks, container ) {
                         group: i,
                         subgroup: 'plan',
                         style: 'background-color:' + itemColor
-                    }
+                    };
                     
                     this.items.push( item );
                     
@@ -79,11 +81,11 @@ function Timeline ( tasks, container ) {
                 }
                 
                 // Real
-                if(schedule[j].reached != '') {
+                if(schedule[j].reached !== '') {
                     
-                    var end = helper.parseDate( schedule[j].reached );
+                    end = helper.parseDate( schedule[j].reached );
                     
-                    var item = {
+                    item = {
                         id : id++,
                         content : schedule[j-1].name + ' (real)',
                         start : lastReached,
@@ -91,7 +93,7 @@ function Timeline ( tasks, container ) {
                         group: i,
                         subgroup: 'real',
                         style: 'background-color:' + itemColor
-                    }
+                    };
                     
                     this.items.push( item );
                     
@@ -112,7 +114,7 @@ Timeline.prototype.hide = function ( duration ) {
     var _duration = duration || 1000;
     
     $('#timelineContainer').fadeTo(_duration, 0, function() { $('#timelineContainer').remove(); });
-}
+};
 
 
 /**
@@ -123,7 +125,7 @@ Timeline.prototype.show = function ( duration ) {
     
     var _duration = duration || 2000;
     
-    if ( this.groups.length != 0 ) {
+    if ( this.groups.length !== 0 ) {
         
         if ( this.container == null ) {
             this.container = document.createElement( 'div' );
@@ -151,4 +153,4 @@ Timeline.prototype.show = function ( duration ) {
         
         $(this.container).fadeTo( _duration, 1 );
     }
-}
+};

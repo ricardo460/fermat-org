@@ -78,13 +78,7 @@ function Camera(position, renderer, renderFunc) {
             .easing( TWEEN.Easing.Exponential.InOut )
             .start();
 
-        for ( var i = 0, l = headers.length; i < l; i++ ) {
-            /*new TWEEN.Tween( headers[ i ].style )
-                .to( { opacity : 0 }, Math.random() * duration + duration )
-                .easing( TWEEN.Easing.Exponential.InOut )
-                .start();*/
-            $(headers[i]).fadeTo( Math.random() * duration + duration, 0);
-        }
+        headers.hide(duration);
 
         for( var i = 0, l = objects.length; i < l; i++ ) {
 
