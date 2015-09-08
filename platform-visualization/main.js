@@ -480,33 +480,44 @@ function Helper() {
 // Make helper a static object
 var helper = new Helper();
 function Loader() {
+    // reference to the object
+    var that = this;
 
+    /**
+     * does an ajax request to check if repo folder exists
+     * @method folderExists
+     * @param  {Number}     index index of element
+     */
     this.folderExists = function(index) {
         var repoDir = helper.getRepoDir(table[index]);
-        //console.log(index);
-        console.log(repoDir);
-        /*$.ajax({
-            url: "get_contents.php?url=" + repoDir,
-            method: "GET"
-        }).done(function(result) {
-        	//console.log(index);
-        	var res = JSON.parse(result);
-        	console.dir(result);
-            //alert("success");
-        }).fail(function(result, error) {
-        	//console.log(index);
-            console.dir(result);
-            console.dir(error);
-        });*/
-
+        if (repoDir) {
+            $.ajax({
+                url: "get_contents.php?url=" + repoDir,
+                method: "GET"
+            }).done(function(result) {
+                var res = JSON.parse(result);
+                var found = true;
+                if (res.message && res.message == "Not Found") {
+                    found = false;
+                }
+                if (found) console.log(repoDir);
+                table[index].folder_found = found;
+            });
+        } else {
+            table[index].folder_found = false;
+        }
     };
 
-    for (var i = 0, l = table.length; i < l; i++) {
-        this.folderExists(i);
-    }
+    /**
+     * check all elements in table
+     * @method findThemAll
+     */
+    this.findThemAll = function() {
+        for (var i = 0, l = table.length; i < l; i++) {
+            that.folderExists(i);
+        }
+    };
 }
-
-//var loader = new Loader();
 
 /**
  * @class Timeline
@@ -1454,7 +1465,8 @@ function fillTable(list) {
         table.push(element);
     }
 
-    new Loader();
+    var loader = new Loader();
+    loader.findThemAll();
 }
 
 function transform(goal, duration) {

@@ -791,7 +791,8 @@ function fillTable(list) {
         table.push(element);
     }
 
-    new Loader();
+    var loader = new Loader();
+    loader.findThemAll();
 }
 
 function transform(goal, duration) {
