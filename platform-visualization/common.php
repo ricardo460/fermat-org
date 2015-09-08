@@ -12,7 +12,6 @@ function askGitHub($url) {
     //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'User-Agent: MALOTeam',
-        //'User-Agent: Miguelcldn', //For testing
         'Accept: */*'
     ));
     $data = curl_exec($ch);

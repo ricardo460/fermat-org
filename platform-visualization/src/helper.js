@@ -35,7 +35,7 @@ function Helper() {
         $(clone).find('img').remove();
         
         return clone;
-    }
+    };
     
     /**
      * Parses ISODate to a javascript Date
@@ -49,7 +49,7 @@ function Helper() {
         var parts = date.split('-');
 
         return new Date( parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]) );
-    }
+    };
     
     /**
      * Capitalizes the first letter of a word
@@ -65,7 +65,7 @@ function Helper() {
             result += words[i].charAt(0).toUpperCase() + words[i].slice(1) + " ";
 
         return result.trim();
-    }
+    };
 
     /**
      * Extract the code of a plugin
@@ -98,7 +98,7 @@ function Helper() {
         }
 
         return code;
-    }
+    };
     
 }
 

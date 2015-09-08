@@ -78,13 +78,7 @@ function Camera(position, renderer, renderFunc) {
             .easing( TWEEN.Easing.Exponential.InOut )
             .start();
 
-        for ( var i = 0, l = headers.length; i < l; i++ ) {
-            /*new TWEEN.Tween( headers[ i ].style )
-                .to( { opacity : 0 }, Math.random() * duration + duration )
-                .easing( TWEEN.Easing.Exponential.InOut )
-                .start();*/
-            $(headers[i]).fadeTo( Math.random() * duration + duration, 0);
-        }
+        headers.hide(duration);
 
         for( var i = 0, l = objects.length; i < l; i++ ) {
 
@@ -344,12 +338,73 @@ var superLayers = {
         return size - 1;
     }
 };
-function Headers(colunmWidth, superLayerMaxHeight) {
+function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, superLayerPosition) {
     
-    var groupsHeader,
-        slayersHeader;
+    var headers = [],
+        group,
+        column,
+        image,
+        object,
+        slayer,
+        row;
     
-    console.log("Please, implement me Headers.js");
+    
+    for (group in groups) {
+        if (groups.hasOwnProperty(group) && group !== 'size') {
+        
+            column = groups[group];
+
+            image = document.createElement('img');
+            image.src = 'images/' + group + '_logo.svg';
+            image.width = columnWidth * 140;
+            image.style.opacity = 0;
+            headers.push(image);
+
+            object = new THREE.CSS3DObject(image);
+
+            object.position.x = (columnWidth * 140) * (column - (groupsQtty - 1) / 2) + ((column - 1) * 140);
+            object.position.y = ((layersQtty + 5) * 180) / 2;
+
+            scene.add(object);
+        }
+    }
+    
+    for (slayer in superLayers) {
+        if (superLayers.hasOwnProperty(slayer) && slayer !== 'size') {
+        
+            row = superLayerPosition[superLayers[slayer].index];
+
+            image = document.createElement('img');
+            image.src = 'images/' + slayer + '_logo.svg';
+            image.width = columnWidth * 140;
+            image.style.opacity = 0;
+            headers.push(image);
+
+            object = new THREE.CSS3DObject(image);
+
+            object.position.x = -(((groupsQtty + 1) * columnWidth * 140 / 2) + 140);
+            object.position.y = -(row * 180) - (superLayerMaxHeight * 180 / 2) + (layersQtty * 180 / 2);
+
+            scene.add(object);
+        }
+    }
+    
+    
+    this.show = function (duration) {
+        var i;
+        
+        for (i = 0; i < headers.length; i++ ) {
+            $(headers[i]).fadeTo(Math.random() * duration + duration, 1);
+        }
+    };
+    
+    this.hide = function (duration) {
+        var i;
+        
+        for (i = 0; i < headers.length; i++) {
+            $(headers[i]).fadeTo(Math.random() * duration + duration, 0);
+        }
+    };
 }
 /**
  * Static object with help functions commonly used
@@ -388,7 +443,7 @@ function Helper() {
         $(clone).find('img').remove();
         
         return clone;
-    }
+    };
     
     /**
      * Parses ISODate to a javascript Date
@@ -402,7 +457,7 @@ function Helper() {
         var parts = date.split('-');
 
         return new Date( parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]) );
-    }
+    };
     
     /**
      * Capitalizes the first letter of a word
@@ -418,7 +473,7 @@ function Helper() {
             result += words[i].charAt(0).toUpperCase() + words[i].slice(1) + " ";
 
         return result.trim();
-    }
+    };
 
     /**
      * Extract the code of a plugin
@@ -451,7 +506,7 @@ function Helper() {
         }
 
         return code;
-    }
+    };
     
 }
 
@@ -505,7 +560,9 @@ function Timeline ( tasks, container ) {
             // First status marks the start point, not needed here
             for( var j = 1, sl = schedule.length; j < sl; j++ ) {
                 
-                var itemColor;
+                var itemColor,
+                    end,
+                    item;
                     
                 switch(schedule[j-1].name) {
                     case "Concept":
@@ -518,11 +575,11 @@ function Timeline ( tasks, container ) {
                 
                 
                 // Planned
-                if(schedule[j].target != '') {
+                if(schedule[j].target !== '') {
                     
-                    var end = helper.parseDate( schedule[j].target );
+                    end = helper.parseDate( schedule[j].target );
                     
-                    var item = {
+                    item = {
                         id : id++,
                         content : schedule[j-1].name + ' (plan)',
                         start : lastTarget,
@@ -530,7 +587,7 @@ function Timeline ( tasks, container ) {
                         group: i,
                         subgroup: 'plan',
                         style: 'background-color:' + itemColor
-                    }
+                    };
                     
                     this.items.push( item );
                     
@@ -538,11 +595,11 @@ function Timeline ( tasks, container ) {
                 }
                 
                 // Real
-                if(schedule[j].reached != '') {
+                if(schedule[j].reached !== '') {
                     
-                    var end = helper.parseDate( schedule[j].reached );
+                    end = helper.parseDate( schedule[j].reached );
                     
-                    var item = {
+                    item = {
                         id : id++,
                         content : schedule[j-1].name + ' (real)',
                         start : lastReached,
@@ -550,7 +607,7 @@ function Timeline ( tasks, container ) {
                         group: i,
                         subgroup: 'real',
                         style: 'background-color:' + itemColor
-                    }
+                    };
                     
                     this.items.push( item );
                     
@@ -571,7 +628,7 @@ Timeline.prototype.hide = function ( duration ) {
     var _duration = duration || 1000;
     
     $('#timelineContainer').fadeTo(_duration, 0, function() { $('#timelineContainer').remove(); });
-}
+};
 
 
 /**
@@ -582,7 +639,7 @@ Timeline.prototype.show = function ( duration ) {
     
     var _duration = duration || 2000;
     
-    if ( this.groups.length != 0 ) {
+    if ( this.groups.length !== 0 ) {
         
         if ( this.container == null ) {
             this.container = document.createElement( 'div' );
@@ -610,14 +667,14 @@ Timeline.prototype.show = function ( duration ) {
         
         $(this.container).fadeTo( _duration, 1 );
     }
-}
+};
 var table = [];
 
 var camera, scene, renderer;
 
 var objects = [];
 var targets = { table: [], sphere: [], helix: [], grid: [] };
-var headers = [];
+var headers = null;
 
 var lastTargets = null;
 
@@ -668,7 +725,7 @@ function init() {
     for ( var key in layers ) {
         if ( key == "size" ) continue;
         
-        if ( layers[key].super_layer == true ) {
+        if ( layers[key].super_layer ) {
             
             section.push(0);
         }
@@ -693,7 +750,7 @@ function init() {
         for ( var key in layers ) {
             if ( key == "size" ) continue;
             
-            if ( layers[key].super_layer == true ) {
+            if ( layers[key].super_layer ) {
 
                 _sections.push(0);
                 superLayerHeight++;
@@ -721,7 +778,7 @@ function init() {
         }
         
         //Set sections sizes
-         
+        
         for(var i = 0; i < table.length; i++){
             
             var r = table[i].layerID;
@@ -729,7 +786,7 @@ function init() {
             
             elementsByGroup[c]++;
             
-            if ( layers[table[i].layer].super_layer == true ) {
+            if ( layers[table[i].layer].super_layer ) {
                 
                 _sections[r]++;
                 isSuperLayer[r] = true;
@@ -804,7 +861,7 @@ function init() {
         //Row (Y)
         var row = table[i].layerID;
         
-        if ( layers[table[i].layer].super_layer == true) {
+        if ( layers[table[i].layer].super_layer ) {
             
             object.position.x = ( (section[row]) * 140 ) - (columnWidth * groupsQtty * 140 / 2);
             
@@ -828,44 +885,7 @@ function init() {
     }
     
     // table groups icons
-    
-    for ( var group in groups ) {
-        if ( group == 'size' ) continue;
-        
-        var column = groups[group];
-        
-        var image = document.createElement( 'img' );
-        image.src = 'images/' + group + '_logo.svg';
-        image.width = columnWidth * 140;
-        image.style.opacity = 0;
-        headers.push( image );
-        
-        var object = new THREE.CSS3DObject( image );
-        
-        object.position.x = ( columnWidth * 140 ) * ( column - ( groupsQtty - 1 ) / 2) + (( column - 1 ) * 140);
-        object.position.y = ((layersQtty + 5) * 180) / 2;
-        
-        scene.add( object );
-    }
-    
-    for ( var slayer in superLayers ) {
-        if ( slayer == 'size' ) continue;
-        
-        var row = superLayerPosition[ superLayers[ slayer ].index ];
-        
-        var image = document.createElement( 'img' );
-        image.src = 'images/' + slayer + '_logo.svg';
-        image.height = superLayerMaxHeight * 180;
-        image.style.opacity = 0;
-        headers.push( image );
-        
-        var object = new THREE.CSS3DObject( image );
-        
-        object.position.x = - ( ( (groupsQtty + 1) * columnWidth * 140 / 2) + 140 );
-        object.position.y = - ( row * 180 ) - ( superLayerMaxHeight * 180 / 2 ) + (layersQtty * 180 / 2);
-        
-        scene.add( object );
-    }
+    headers = new Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, superLayerPosition);
 
     // sphere
 
@@ -1086,7 +1106,7 @@ function createElement( i ) {
 
     var number = document.createElement( 'div' );
     number.className = 'number';
-    number.textContent = (table[ i ].group != undefined) ? table[i].group : "";
+    number.textContent = (table[ i ].group != undefined) ? table[i].group : layers[table[i].layer].super_layer;
     element.appendChild( number );
 
     var symbol = document.createElement( 'div' );
@@ -1178,10 +1198,6 @@ function onElementClick() {
             var handler = function() { onImageClick(id, image, handler); };
 
             image.addEventListener( 'click', handler, true );
-        }
-        else {
-            
-            createTimeline( [ id ] );
         }
     }
 }
@@ -1419,22 +1435,10 @@ function transform( goal, duration ) {
     }
     
     if ( goal == targets.table ) {
-        for ( var i = 0; i < headers.length; i++ ) {
-            /*new TWEEN.Tween( headers[ i ].style )
-                .to( { opacity : 1 }, Math.random() * duration + duration )
-                .easing( TWEEN.Easing.Exponential.InOut )
-                .start();*/
-            $( headers[i] ).fadeTo(Math.random() * duration + duration, 1);
-        }
+        headers.show(duration);
     }
     else {
-        for ( var i = 0; i < headers.length; i++ ) {
-            /*new TWEEN.Tween( headers[ i ].style )
-                .to( { opacity : 0 }, Math.random() * duration + duration )
-                .easing( TWEEN.Easing.Exponential.InOut )
-                .start();*/
-            $( headers[i] ).fadeTo(Math.random() * duration + duration, 0);
-        }
+        headers.hide(duration);
     }
 
     new TWEEN.Tween( this )
