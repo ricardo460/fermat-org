@@ -1,0 +1,25 @@
+{
+	"browser": true,
+	"jquery": true,
+    "eqnull" : true,
+    "globals": {
+       "$" : true,
+       "THREE" : true,
+       "TWEEN" : true,
+       "groups" : true,
+       "layers" : true,
+       "superLayers" : true,
+       "table" : true,
+       "scene" : true,
+       "renderer" : true,
+       "camera" : true,
+       "objects" : true,
+       "targets" : true,
+       "headers" : true,
+       "lastTargets" : true,
+        "helper" : true,
+        "render" : true,
+        "changeView" : true,
+        "vis" : true
+    }
+}
