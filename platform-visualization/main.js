@@ -539,11 +539,29 @@ function Loader() {
     var that = this;
 
     /**
+     * [getStamp description]
+     * @method getStamp
+     * @return {[type]} [description]
+     */
+    function getStamp() {
+        var img = document.createElement("img");
+        img.className = 'stamp';
+        img.src = 'images/not_found.png';
+        img.alt = 'Not Found';
+        img.style.width = '15%';
+        img.style.margin = '5% 80% 0 0';
+        //img.style["margin-right"] = '80%';
+        //img.style["margin-top"] = '5%';
+        return img;
+    }
+
+    /**
      * does an ajax request to check if repo folder exists
      * @method folderExists
      * @param  {Number}     index index of element
      */
     this.folderExists = function(index) {
+        var strIndex = "#" + index;
         var repoDir = helper.getRepoDir(table[index]);
         if (repoDir) {
             $.ajax({
@@ -554,12 +572,15 @@ function Loader() {
                 var found = true;
                 if (res.message && res.message == "Not Found") {
                     found = false;
+                    $(strIndex).append(getStamp());
+                } else {
+                    console.log(repoDir);
                 }
-                if (found) console.log(repoDir);
                 table[index].folder_found = found;
             });
         } else {
             table[index].folder_found = false;
+            $(strIndex).append(getStamp());
         }
     };
 
@@ -843,7 +864,7 @@ function init() {
         }
 
         //Set sections sizes
-        
+
         for (var i = 0; i < table.length; i++) {
 
             var r = table[i].layerID;
@@ -1269,144 +1290,144 @@ function onElementClick() {
             };
 
             image.addEventListener('click', handler, true);
-        } else {
-    }
-}
-
-function onImageClick(id, image, handler) {
-
-    image.removeEventListener('click', handler, true);
-
-    var relatedTasks = [];
-
-    for (var i = 0; i < table.length; i++) {
-        if (table[i].author == table[id].author) relatedTasks.push(i);
+        } else {}
     }
 
-    createSidePanel(id, image, relatedTasks);
-    createElementsPanel(relatedTasks);
-}
+    function onImageClick(id, image, handler) {
 
-function createSidePanel(id, image, relatedTasks) {
+        image.removeEventListener('click', handler, true);
 
-    var sidePanel = document.createElement('div');
-    sidePanel.id = 'sidePanel';
-    sidePanel.style.position = 'absolute';
-    sidePanel.style.top = '0px';
-    sidePanel.style.bottom = '25%';
-    sidePanel.style.left = '0px';
-    sidePanel.style.marginTop = '50px';
-    sidePanel.style.width = '35%';
-    sidePanel.style.textAlign = 'center';
+        var relatedTasks = [];
 
-    var panelImage = document.createElement('img');
-    panelImage.id = 'focusImg';
-    panelImage.src = image.src;
-    panelImage.style.position = 'relative';
-    panelImage.style.width = '50%';
-    panelImage.style.opacity = 0;
-    sidePanel.appendChild(panelImage);
+        for (var i = 0; i < table.length; i++) {
+            if (table[i].author == table[id].author) relatedTasks.push(i);
+        }
 
-    var userName = document.createElement('p');
-    userName.style.opacity = 0;
-    userName.style.position = 'relative';
-    userName.style.fontWeight = 'bold';
-    userName.textContent = table[id].author;
-    sidePanel.appendChild(userName);
-
-    var realName = document.createElement('p');
-    realName.style.opacity = 0;
-    realName.style.position = 'relative';
-    realName.textContent = table[id].authorRealName;
-    sidePanel.appendChild(realName);
-
-    var email = document.createElement('p');
-    email.style.opacity = 0;
-    email.style.position = 'relative';
-    email.textContent = table[id].authorEmail;
-    sidePanel.appendChild(email);
-
-    if (relatedTasks != null && relatedTasks.length > 0) {
-
-        var tlButton = document.createElement('button');
-        tlButton.id = 'timelineButton';
-        tlButton.style.opacity = 0;
-        tlButton.style.position = 'relative';
-        tlButton.textContent = 'See Timeline';
-
-        $(tlButton).click(function() {
-            showTimeline(relatedTasks);
-        });
-
-        sidePanel.appendChild(tlButton);
+        createSidePanel(id, image, relatedTasks);
+        createElementsPanel(relatedTasks);
     }
 
-    $('#container').append(sidePanel);
+    function createSidePanel(id, image, relatedTasks) {
 
-    $(renderer.domElement).fadeTo(1000, 0);
+        var sidePanel = document.createElement('div');
+        sidePanel.id = 'sidePanel';
+        sidePanel.style.position = 'absolute';
+        sidePanel.style.top = '0px';
+        sidePanel.style.bottom = '25%';
+        sidePanel.style.left = '0px';
+        sidePanel.style.marginTop = '50px';
+        sidePanel.style.width = '35%';
+        sidePanel.style.textAlign = 'center';
 
-    $(panelImage).fadeTo(1000, 1, function() {
-        $(userName).fadeTo(1000, 1, function() {
-            $(realName).fadeTo(1000, 1, function() {
-                $(email).fadeTo(1000, 1, function() {
+        var panelImage = document.createElement('img');
+        panelImage.id = 'focusImg';
+        panelImage.src = image.src;
+        panelImage.style.position = 'relative';
+        panelImage.style.width = '50%';
+        panelImage.style.opacity = 0;
+        sidePanel.appendChild(panelImage);
 
-                    if (tlButton != null) $(tlButton).fadeTo(1000, 1);
+        var userName = document.createElement('p');
+        userName.style.opacity = 0;
+        userName.style.position = 'relative';
+        userName.style.fontWeight = 'bold';
+        userName.textContent = table[id].author;
+        sidePanel.appendChild(userName);
 
+        var realName = document.createElement('p');
+        realName.style.opacity = 0;
+        realName.style.position = 'relative';
+        realName.textContent = table[id].authorRealName;
+        sidePanel.appendChild(realName);
+
+        var email = document.createElement('p');
+        email.style.opacity = 0;
+        email.style.position = 'relative';
+        email.textContent = table[id].authorEmail;
+        sidePanel.appendChild(email);
+
+        if (relatedTasks != null && relatedTasks.length > 0) {
+
+            var tlButton = document.createElement('button');
+            tlButton.id = 'timelineButton';
+            tlButton.style.opacity = 0;
+            tlButton.style.position = 'relative';
+            tlButton.textContent = 'See Timeline';
+
+            $(tlButton).click(function() {
+                showTimeline(relatedTasks);
+            });
+
+            sidePanel.appendChild(tlButton);
+        }
+
+        $('#container').append(sidePanel);
+
+        $(renderer.domElement).fadeTo(1000, 0);
+
+        $(panelImage).fadeTo(1000, 1, function() {
+            $(userName).fadeTo(1000, 1, function() {
+                $(realName).fadeTo(1000, 1, function() {
+                    $(email).fadeTo(1000, 1, function() {
+
+                        if (tlButton != null) $(tlButton).fadeTo(1000, 1);
+
+                    });
                 });
             });
         });
-    });
-}
-
-function createElementsPanel(tasks) {
-
-    var elementPanel = document.createElement('div');
-    elementPanel.id = 'elementPanel';
-    elementPanel.style.position = 'absolute';
-    elementPanel.style.top = '0px';
-    elementPanel.style.bottom = '25%';
-    elementPanel.style.right = '0px';
-    elementPanel.style.marginTop = '50px';
-    elementPanel.style.marginRight = '5%';
-    elementPanel.style.width = '60%';
-    elementPanel.style.overflowY = 'auto';
-
-    $('#container').append(elementPanel);
-
-    for (i = 0; i < tasks.length; i++) {
-
-        var clone = helper.cloneTile(tasks[i], 'task-' + tasks[i]);
-        clone.style.position = 'relative';
-        clone.style.display = 'inline-block';
-        clone.style.marginLeft = '10px';
-        clone.style.marginTop = '10px';
-        clone.style.opacity = 0;
-        elementPanel.appendChild(clone);
-
-        $(clone).fadeTo(2000, 1);
     }
 
-}
+    function createElementsPanel(tasks) {
 
-function showTimeline(tasks) {
+        var elementPanel = document.createElement('div');
+        elementPanel.id = 'elementPanel';
+        elementPanel.style.position = 'absolute';
+        elementPanel.style.top = '0px';
+        elementPanel.style.bottom = '25%';
+        elementPanel.style.right = '0px';
+        elementPanel.style.marginTop = '50px';
+        elementPanel.style.marginRight = '5%';
+        elementPanel.style.width = '60%';
+        elementPanel.style.overflowY = 'auto';
 
-    helper.hide('sidePanel');
-    helper.hide('elementPanel');
+        $('#container').append(elementPanel);
 
-    var tlContainer = document.createElement('div');
-    tlContainer.id = 'tlContainer';
-    tlContainer.style.position = 'absolute';
-    tlContainer.style.top = '50px';
-    tlContainer.style.bottom = '50px';
-    tlContainer.style.left = '50px';
-    tlContainer.style.right = '50px';
-    tlContainer.style.overflowY = 'auto';
-    tlContainer.style.opacity = 0;
-    $('#container').append(tlContainer);
+        for (i = 0; i < tasks.length; i++) {
 
-    $(tlContainer).fadeTo(1000, 1);
+            var clone = helper.cloneTile(tasks[i], 'task-' + tasks[i]);
+            clone.style.position = 'relative';
+            clone.style.display = 'inline-block';
+            clone.style.marginLeft = '10px';
+            clone.style.marginTop = '10px';
+            clone.style.opacity = 0;
+            elementPanel.appendChild(clone);
 
-    new Timeline(tasks, tlContainer).show();
+            $(clone).fadeTo(2000, 1);
+        }
+
+    }
+
+    function showTimeline(tasks) {
+
+        helper.hide('sidePanel');
+        helper.hide('elementPanel');
+
+        var tlContainer = document.createElement('div');
+        tlContainer.id = 'tlContainer';
+        tlContainer.style.position = 'absolute';
+        tlContainer.style.top = '50px';
+        tlContainer.style.bottom = '50px';
+        tlContainer.style.left = '50px';
+        tlContainer.style.right = '50px';
+        tlContainer.style.overflowY = 'auto';
+        tlContainer.style.opacity = 0;
+        $('#container').append(tlContainer);
+
+        $(tlContainer).fadeTo(1000, 1);
+
+        new Timeline(tasks, tlContainer).show();
+    }
 }
 
 function printDifficulty(value) {
@@ -1527,7 +1548,6 @@ function transform(goal, duration) {
         .to({}, duration * 2)
         .onUpdate(render)
         .start();
-
 }
 
 function animate() {
@@ -1537,12 +1557,10 @@ function animate() {
     TWEEN.update();
 
     camera.update();
-
 }
 
 function render() {
 
     //renderer.render( scene, camera );
     camera.render(renderer, scene);
-
 }
