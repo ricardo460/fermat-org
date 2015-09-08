@@ -460,7 +460,7 @@ function Helper() {
      * @return {String}   directory route
      */
     this.getRepoDir = function(item) {
-        console.dir(item);
+        //console.dir(item);
         var _root = "fermat",
             _group = item.group ? item.group.toUpperCase().split(' ').join('_') : null,
             _type = item.type ? item.type.toLowerCase().split(' ').join('_') : null,
@@ -479,6 +479,34 @@ function Helper() {
 
 // Make helper a static object
 var helper = new Helper();
+function Loader() {
+
+    this.folderExists = function(index) {
+        var repoDir = helper.getRepoDir(table[index]);
+        //console.log(index);
+        console.log(repoDir);
+        /*$.ajax({
+            url: "get_contents.php?url=" + repoDir,
+            method: "GET"
+        }).done(function(result) {
+        	//console.log(index);
+        	var res = JSON.parse(result);
+        	console.dir(result);
+            //alert("success");
+        }).fail(function(result, error) {
+        	//console.log(index);
+            console.dir(result);
+            console.dir(error);
+        });*/
+
+    };
+
+    for (var i = 0, l = table.length; i < l; i++) {
+        this.folderExists(i);
+    }
+}
+
+//var loader = new Loader();
 
 /**
  * @class Timeline
@@ -653,18 +681,17 @@ $.ajax({
     method: "GET"
 }).success(
     function(lists) {
-
-        var l = JSON.parse(lists);
-
-        fillTable(l);
-
-        //console.dir(table);
-
-        $('#splash').fadeTo(0, 500, function() {
-            $('#splash').remove();
-            init();
-            setTimeout(animate, 500);
-        });
+        try {
+            var l = JSON.parse(lists);
+            fillTable(l);
+            $('#splash').fadeTo(0, 500, function() {
+                $('#splash').remove();
+                init();
+                setTimeout(animate, 500);
+            });
+        } catch (err) {
+            console.dir(err);
+        }
     }
 );
 
@@ -1424,10 +1451,10 @@ function fillTable(list) {
             life_cycle: data.life_cycle
         };
 
-        console.log(helper.getRepoDir(element));
-
         table.push(element);
     }
+
+    new Loader();
 }
 
 function transform(goal, duration) {

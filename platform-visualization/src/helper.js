@@ -107,7 +107,7 @@ function Helper() {
      * @return {String}   directory route
      */
     this.getRepoDir = function(item) {
-        console.dir(item);
+        //console.dir(item);
         var _root = "fermat",
             _group = item.group ? item.group.toUpperCase().split(' ').join('_') : null,
             _type = item.type ? item.type.toLowerCase().split(' ').join('_') : null,

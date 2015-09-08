@@ -18,18 +18,17 @@ $.ajax({
     method: "GET"
 }).success(
     function(lists) {
-
-        var l = JSON.parse(lists);
-
-        fillTable(l);
-
-        //console.dir(table);
-
-        $('#splash').fadeTo(0, 500, function() {
-            $('#splash').remove();
-            init();
-            setTimeout(animate, 500);
-        });
+        try {
+            var l = JSON.parse(lists);
+            fillTable(l);
+            $('#splash').fadeTo(0, 500, function() {
+                $('#splash').remove();
+                init();
+                setTimeout(animate, 500);
+            });
+        } catch (err) {
+            console.dir(err);
+        }
     }
 );
 
@@ -789,10 +788,10 @@ function fillTable(list) {
             life_cycle: data.life_cycle
         };
 
-        console.log(helper.getRepoDir(element));
-
         table.push(element);
     }
+
+    new Loader();
 }
 
 function transform(goal, duration) {
