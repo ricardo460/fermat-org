@@ -1391,9 +1391,8 @@ function onElementClick() {
         elementPanel.style.width = '60%';
         elementPanel.style.overflowY = 'auto';
 
-        $('#container').append(elementPanel);
 
-        for (i = 0; i < tasks.length; i++) {
+        for (i = 0, l = tasks.length; i < l; i++) {
 
             var clone = helper.cloneTile(tasks[i], 'task-' + tasks[i]);
             clone.style.position = 'relative';
@@ -1405,6 +1404,8 @@ function onElementClick() {
 
             $(clone).fadeTo(2000, 1);
         }
+        
+        $('#container').append(elementPanel);
 
     }
 
@@ -1492,9 +1493,9 @@ function fillTable(list) {
             layerID: layerID,
             type: data.type,
             picture: data.authorPicture,
-            author: data.authorName,
-            authorRealName: data.authorRealName,
-            authorEmail: data.authorEmail,
+            author: data.authorName.trim().toLowerCase(),
+            authorRealName: data.authorRealName.trim(),
+            authorEmail: data.authorEmail.trim(),
             difficulty: data.difficulty,
             code_level: data.code_level,
             life_cycle: data.life_cycle
