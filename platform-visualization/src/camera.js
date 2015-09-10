@@ -13,17 +13,21 @@ function Camera(position, renderer, renderFunc) {
     var ROTATE_SPEED = 1.3,
         MIN_DISTANCE = 500,
         MAX_DISTANCE = 80000;
+    
+    //this.light = new THREE.PointLight(0xFFFFFF, 0.25, 5000);
+    //scene.add(this.light);
 
     /**
      * private properties
      */    
-    var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+    var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, MAX_DISTANCE );
     var controls = new THREE.TrackballControls( camera, renderer.domElement );
     var focus = null;
     
     camera.position.copy( position );
 
     controls.rotateSpeed = ROTATE_SPEED;
+    //controls.noRotate = true;
     controls.minDistance = MIN_DISTANCE;
     controls.maxDistance = MAX_DISTANCE;
     controls.addEventListener( 'change', renderFunc );
@@ -168,6 +172,7 @@ function Camera(position, renderer, renderFunc) {
      */
     this.update = function() {        
         controls.update();
+        //this.light.position.copy(camera.position);
     };
     
     /**
