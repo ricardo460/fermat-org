@@ -3,8 +3,8 @@
 function askGitHub($url) {
 
     //$token = "3c12e4c95821c7c2602a47ae46faf8a0ddab4962"; // Miguelcldn    
-    //$token = "fb6c27928d83f8ea6a9565e0f008cceffee83af1"; // MALOTeam
-    $token = "2086bf3c7edd8a1c9937794eeaa1144f29f82558"; // fuelusumar
+    $token = "fb6c27928d83f8ea6a9565e0f008cceffee83af1"; // MALOTeam
+    //$token = "2086bf3c7edd8a1c9937794eeaa1144f29f82558"; // fuelusumar
     $url = $url . "?access_token=$token";
 
     $ch = curl_init();
@@ -14,8 +14,8 @@ function askGitHub($url) {
     //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         //'User-Agent: Miguelcldn', //For testing
-        //'User-Agent: MALOTeam',
-        'User-Agent: fuelusumar',
+        'User-Agent: MALOTeam',
+        //'User-Agent: fuelusumar',
         'Accept: */*'
     ));
     $data = curl_exec($ch);
