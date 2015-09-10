@@ -652,7 +652,7 @@ function onElementClick() {
 
             $(clone).fadeTo(2000, 1);
         }
-        
+
         $('#container').append(elementPanel);
 
     }
@@ -741,9 +741,9 @@ function fillTable(list) {
             layerID: layerID,
             type: data.type,
             picture: data.authorPicture,
-            author: data.authorName.trim().toLowerCase(),
-            authorRealName: data.authorRealName.trim(),
-            authorEmail: data.authorEmail.trim(),
+            author: data.authorName ? data.authorName.trim().toLowerCase() : undefined,
+            authorRealName: data.authorRealName ? data.authorRealName.trim() : undefined,
+            authorEmail: data.authorEmail ? data.authorEmail.trim() : undefined,
             difficulty: data.difficulty,
             code_level: data.code_level,
             life_cycle: data.life_cycle
