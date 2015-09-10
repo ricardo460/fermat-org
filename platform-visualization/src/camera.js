@@ -24,6 +24,7 @@ function Camera(position, renderer, renderFunc) {
     camera.position.copy( position );
 
     controls.rotateSpeed = ROTATE_SPEED;
+    controls.noRotate = true;
     controls.minDistance = MIN_DISTANCE;
     controls.maxDistance = MAX_DISTANCE;
     controls.addEventListener( 'change', renderFunc );
@@ -78,13 +79,7 @@ function Camera(position, renderer, renderFunc) {
             .easing( TWEEN.Easing.Exponential.InOut )
             .start();
 
-        for ( var i = 0, l = headers.length; i < l; i++ ) {
-            /*new TWEEN.Tween( headers[ i ].style )
-                .to( { opacity : 0 }, Math.random() * duration + duration )
-                .easing( TWEEN.Easing.Exponential.InOut )
-                .start();*/
-            $(headers[i]).fadeTo( Math.random() * duration + duration, 0);
-        }
+        headers.hide(duration);
 
         for( var i = 0, l = objects.length; i < l; i++ ) {
 
