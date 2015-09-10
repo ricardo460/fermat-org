@@ -24,6 +24,7 @@ function Camera(position, renderer, renderFunc) {
     camera.position.copy( position );
 
     controls.rotateSpeed = ROTATE_SPEED;
+    controls.noRotate = true;
     controls.minDistance = MIN_DISTANCE;
     controls.maxDistance = MAX_DISTANCE;
     controls.addEventListener( 'change', renderFunc );
@@ -442,7 +443,7 @@ function Helper() {
 
         clone.id = newID;
         clone.style.transform = '';
-        $(clone).find('img').remove();
+        $(clone).find('.picture').remove();
 
         return clone;
     };
@@ -549,9 +550,11 @@ function Loader() {
         img.src = 'images/alt_not_found.png';
         img.alt = 'Not Found';
         img.style.width = '90%';
-        img.style.margin = '35% 0 0 0';
+        //img.style.margin = '35% 0 0 0';
         //img.style["margin-right"] = '80%';
-        //img.style["margin-top"] = '5%';
+        img.style.left = '10%';
+        img.style.top = '30%';
+        img.style.position = 'absolute';
         return img;
     }
 
@@ -572,9 +575,9 @@ function Loader() {
                 var found = true;
                 if (res.message && res.message == "Not Found") {
                     found = false;
-                    $(strIndex).append(getStamp());
+                    if (table[index].code_level != "concept") $(strIndex).append(getStamp());
                 } else {
-                    console.log(repoDir);
+                    //console.log(repoDir);
                 }
                 table[index].folder_found = found;
             });
@@ -1497,7 +1500,7 @@ function fillTable(list) {
             authorRealName: data.authorRealName ? data.authorRealName.trim() : undefined,
             authorEmail: data.authorEmail ? data.authorEmail.trim() : undefined,
             difficulty: data.difficulty,
-            code_level: data.code_level,
+            code_level: data.code_level ? data.code_level.trim().toLowerCase() : undefined,
             life_cycle: data.life_cycle
         };
 

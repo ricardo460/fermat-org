@@ -745,7 +745,7 @@ function fillTable(list) {
             authorRealName: data.authorRealName ? data.authorRealName.trim() : undefined,
             authorEmail: data.authorEmail ? data.authorEmail.trim() : undefined,
             difficulty: data.difficulty,
-            code_level: data.code_level,
+            code_level: data.code_level ? data.code_level.trim().toLowerCase() : undefined,
             life_cycle: data.life_cycle
         };
 

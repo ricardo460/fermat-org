@@ -13,9 +13,11 @@ function Loader() {
         img.src = 'images/alt_not_found.png';
         img.alt = 'Not Found';
         img.style.width = '90%';
-        img.style.margin = '35% 0 0 0';
+        //img.style.margin = '35% 0 0 0';
         //img.style["margin-right"] = '80%';
-        //img.style["margin-top"] = '5%';
+        img.style.left = '10%';
+        img.style.top = '30%';
+        img.style.position = 'absolute';
         return img;
     }
 
@@ -36,9 +38,9 @@ function Loader() {
                 var found = true;
                 if (res.message && res.message == "Not Found") {
                     found = false;
-                    $(strIndex).append(getStamp());
+                    if (table[index].code_level != "concept") $(strIndex).append(getStamp());
                 } else {
-                    console.log(repoDir);
+                    //console.log(repoDir);
                 }
                 table[index].folder_found = found;
             });

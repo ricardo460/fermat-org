@@ -24,6 +24,7 @@ function Camera(position, renderer, renderFunc) {
     camera.position.copy( position );
 
     controls.rotateSpeed = ROTATE_SPEED;
+    controls.noRotate = true;
     controls.minDistance = MIN_DISTANCE;
     controls.maxDistance = MAX_DISTANCE;
     controls.addEventListener( 'change', renderFunc );

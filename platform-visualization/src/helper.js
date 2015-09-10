@@ -34,7 +34,7 @@ function Helper() {
 
         clone.id = newID;
         clone.style.transform = '';
-        $(clone).find('img').remove();
+        $(clone).find('.picture').remove();
 
         return clone;
     };
