@@ -143,7 +143,7 @@ function Camera(position, renderer, renderFunc) {
             //TWEEN.removeAll();
             var duration = 2000;
 
-            changeView(lastTargets);
+            viewManager.rollBack();
 
             new TWEEN.Tween( controls.target )
                 .to( { x: controls.target0.x, y: controls.target0.y, z: controls.target0.z }, Math.random() * duration + duration )
