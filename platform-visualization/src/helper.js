@@ -121,6 +121,31 @@ function Helper() {
             return null;
         }
     };
+    
+    
+
+    /**
+     * Prints difficulty as stars
+     * @param   {Number} value Difficulty to represent (max 5)
+     * @returns {String} A maximun of 5 stars
+     */
+    this.printDifficulty = function(value) {
+        var max = 5;
+        var result = "";
+
+        while (value > 0) {
+            result += '★';
+            max--;
+            value--;
+        }
+
+        while (max > 0) {
+            result += '☆';
+            max--;
+        }
+
+        return result;
+    }
 
 }
 

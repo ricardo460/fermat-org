@@ -339,8 +339,17 @@ var superLayers = {
         return size - 1;
     }
 };
+/**
+ * @class Represents the group of all header icons
+ * @param {Number} columnWidth         The number of elements that contains a column
+ * @param {Number} superLayerMaxHeight Max rows a superLayer can hold
+ * @param {Number} groupsQtty          Number of groups (column headers)
+ * @param {Number} layersQtty          Number of layers (rows)
+ * @param {Array}  superLayerPosition  Array of the position of every superlayer
+ */
 function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, superLayerPosition) {
     
+    // Private members
     var headers = [],
         group,
         column,
@@ -349,11 +358,20 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         slayer,
         row;
     
-    
-    for (group in groups) {
-        if (groups.hasOwnProperty(group) && group !== 'size') {
+    // Private methods
+    var buildDependencies = function() {
         
-            column = groups[group];
+        // Does platform depends on superlayers or vice versa?
+    };
+    
+    
+    
+    // Initialization code
+    //=========================================================
+    for (group in groups) {
+        if (window.groups.hasOwnProperty(group) && group !== 'size') {
+        
+            column = window.groups[group];
 
             image = document.createElement('img');
             image.src = 'images/' + group + '_logo.svg';
@@ -371,7 +389,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     }
     
     for (slayer in superLayers) {
-        if (superLayers.hasOwnProperty(slayer) && slayer !== 'size') {
+        if (window.superLayers.hasOwnProperty(slayer) && slayer !== 'size') {
         
             row = superLayerPosition[superLayers[slayer].index];
 
@@ -390,7 +408,24 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         }
     }
     
+    buildDependencies();
+    //=========================================================
     
+    // Public methods
+    /**
+     * Arranges the headers by dependency
+     * @param {Number} duration Duration in milliseconds for the animation
+     */
+    this.arrangeByDependency = function(duration) {
+        var _duration = duration || 2000;
+        
+        
+    };
+    
+    /**
+     * Shows the headers as a fade
+     * @param {Number} duration Milliseconds of fading
+     */
     this.show = function (duration) {
         var i;
         
@@ -399,6 +434,10 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         }
     };
     
+    /**
+     * Hides the headers (but don't deletes them)
+     * @param {Number} duration Milliseconds to fade
+     */
     this.hide = function (duration) {
         var i;
         
@@ -407,6 +446,17 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         }
     };
 }
+
+/*
+
+Para obtener la lista completa de dependencias hay dos opciones:
+1) Recibir del servidor un json con las dependencias como una lista de adyacencias hecha a mano
+2) 3 pasadas:
+    1 obtener la lista de grupos
+    2 recorrer agregando la adyacencia
+    3 crear un nodo raiz con la lista de independientes
+
+*/
 /**
  * Static object with help functions commonly used
  */
@@ -530,6 +580,31 @@ function Helper() {
             return null;
         }
     };
+    
+    
+
+    /**
+     * Prints difficulty as stars
+     * @param   {Number} value Difficulty to represent (max 5)
+     * @returns {String} A maximun of 5 stars
+     */
+    this.printDifficulty = function(value) {
+        var max = 5;
+        var result = "";
+
+        while (value > 0) {
+            result += '★';
+            max--;
+            value--;
+        }
+
+        while (max > 0) {
+            result += '☆';
+            max--;
+        }
+
+        return result;
+    }
 
 }
 
@@ -552,8 +627,8 @@ function Loader() {
         img.style.width = '90%';
         //img.style.margin = '35% 0 0 0';
         //img.style["margin-right"] = '80%';
-        img.style.left = '10%';
-        img.style.top = '30%';
+        img.style.left = '5%';
+        img.style.top = '40%';
         img.style.position = 'absolute';
         return img;
     }
@@ -773,17 +848,13 @@ $.ajax({
     method: "GET"
 }).success(
     function(lists) {
-        try {
-            var l = JSON.parse(lists);
-            fillTable(l);
-            $('#splash').fadeTo(0, 500, function() {
-                $('#splash').remove();
-                init();
-                setTimeout(animate, 500);
-            });
-        } catch (err) {
-            console.dir(err);
-        }
+        var l = JSON.parse(lists);
+        fillTable(l);
+        $('#splash').fadeTo(0, 500, function() {
+            $('#splash').remove();
+            init();
+            setTimeout(animate, 500);
+        });
     }
 );
 
@@ -972,142 +1043,7 @@ function init() {
 
     // table groups icons
     headers = new Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, superLayerPosition);
-
-    // sphere
-
-    var vector = new THREE.Vector3();
-
-    var indexes = [];
-
-    for (var i = 0; i <= groupsQtty; i++) indexes.push(0);
-
-    for (var i = 0; i < objects.length; i++) {
-
-        var g = (table[i].groupID != undefined) ? table[i].groupID : groupsQtty;
-
-        var radious = 300 * (g + 1);
-
-        var phi = Math.acos((2 * indexes[g]) / elementsByGroup[g] - 1);
-        var theta = Math.sqrt(elementsByGroup[g] * Math.PI) * phi;
-
-        var object = new THREE.Object3D();
-
-        object.position.x = radious * Math.cos(theta) * Math.sin(phi);
-        object.position.y = radious * Math.sin(theta) * Math.sin(phi);
-        object.position.z = radious * Math.cos(phi);
-
-        vector.copy(object.position).multiplyScalar(2);
-
-        object.lookAt(vector);
-
-        targets.sphere.push(object);
-
-        indexes[g]++;
-
-
-    }
-
-    // helix
-
-    var vector = new THREE.Vector3();
-
-    var helixSection = [];
-    var current = [];
-    var last = 0,
-        helixPosition = 0;
-
-    for (var i = 0; i < layersQtty; i++) {
-
-        var totalInRow = 0;
-
-        for (var j = 0; j < groupsQtty; j++) {
-
-            if (typeof(section[i]) == "object")
-                totalInRow += section[i][j];
-            else if (j == 0)
-                totalInRow += section[i];
-        }
-
-        helixPosition += last;
-        helixSection.push(helixPosition);
-        last = totalInRow;
-
-        current.push(0);
-    }
-
-    for (var i = 0, l = objects.length; i < l; i++) {
-
-        var row = table[i].layerID;
-
-        var x = helixSection[row] + current[row];
-        current[row]++;
-
-
-        var phi = x * 0.175 + Math.PI;
-
-        var object = new THREE.Object3D();
-
-        object.position.x = 900 * Math.sin(phi);
-        object.position.y = -(x * 8) + 450;
-        object.position.z = 900 * Math.cos(phi);
-
-        vector.x = object.position.x * 2;
-        vector.y = object.position.y;
-        vector.z = object.position.z * 2;
-
-        object.lookAt(vector);
-
-        targets.helix.push(object);
-
-    }
-
-    // grid
-
-    var gridLine = [];
-    var gridLayers = [];
-    var lastLayer = 0;
-
-
-    for (var i = 0; i < layersQtty + 1; i++) {
-
-        //gridLine.push(0);
-        var gridLineSub = [];
-        var empty = true;
-
-        for (var j = 0; j < section.length; j++) {
-
-            if (section[j][i] != 0) empty = false;
-
-            gridLineSub.push(0);
-        }
-
-        if (!empty) lastLayer++;
-
-        gridLayers.push(lastLayer);
-        gridLine.push(gridLineSub);
-    }
-
-    for (var i = 0; i < objects.length; i++) {
-
-        var group = table[i].groupID;
-        var layer = table[i].layerID;
-
-        var object = new THREE.Object3D();
-
-        //By layer
-        object.position.x = ((gridLine[layer][0] % 5) * 200) - 450;
-        object.position.y = (-(Math.floor(gridLine[layer][0] / 5) % 5) * 200) + 0;
-        object.position.z = (-gridLayers[layer]) * 200 + (layersQtty * 50);
-        gridLine[layer][0]++;
-
-        targets.grid.push(object);
-
-    }
-
-    //
-
-
-
+    
     renderer = new THREE.CSS3DRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
@@ -1192,7 +1128,7 @@ function createElement(i) {
 
     var difficulty = document.createElement('div');
     difficulty.className = 'difficulty';
-    difficulty.textContent = printDifficulty(Math.floor(table[i].difficulty / 2));
+    difficulty.textContent = helper.printDifficulty(Math.floor(table[i].difficulty / 2));
     element.appendChild(difficulty);
 
     var number = document.createElement('div');
@@ -1434,83 +1370,6 @@ function onElementClick() {
     }
 }
 
-function printDifficulty(value) {
-    var max = 5;
-    var result = "";
-
-    while (value > 0) {
-        result += '★';
-        max--;
-        value--;
-    }
-
-    while (max > 0) {
-        result += '☆';
-        max--;
-    }
-
-    return result;
-}
-
-function fillTable(list) {
-
-    var pluginList = list.plugins;
-
-    for (var i = 0, l = list.superLayers.length; i < l; i++) {
-        superLayers[list.superLayers[i].code] = {};
-        superLayers[list.superLayers[i].code].name = list.superLayers[i].name;
-        superLayers[list.superLayers[i].code].index = list.superLayers[i].index;
-    }
-
-    for (var i = 0, l = list.layers.length; i < l; i++) {
-        layers[list.layers[i].name] = {};
-        layers[list.layers[i].name].index = list.layers[i].index;
-        layers[list.layers[i].name].super_layer = list.layers[i].super_layer;
-    }
-
-    for (var i = 0, l = list.groups.length; i < l; i++) {
-        groups[list.groups[i].code] = list.groups[i].index;
-    }
-
-
-    for (var i = 0, l = pluginList.length; i < l; i++) {
-
-        var data = pluginList[i];
-
-        var _group = data.group;
-        var _layer = data.layer;
-        var _name = data.name;
-
-        var layerID = layers[_layer].index;
-        layerID = (layerID == undefined) ? layers.size() : layerID;
-
-        var groupID = groups[_group];
-        groupID = (groupID == undefined) ? groups.size() : groupID;
-
-        var element = {
-            group: _group,
-            groupID: groupID,
-            code: helper.getCode(_name),
-            name: _name,
-            layer: _layer,
-            layerID: layerID,
-            type: data.type,
-            picture: data.authorPicture,
-            author: data.authorName ? data.authorName.trim().toLowerCase() : undefined,
-            authorRealName: data.authorRealName ? data.authorRealName.trim() : undefined,
-            authorEmail: data.authorEmail ? data.authorEmail.trim() : undefined,
-            difficulty: data.difficulty,
-            code_level: data.code_level ? data.code_level.trim().toLowerCase() : undefined,
-            life_cycle: data.life_cycle
-        };
-
-        table.push(element);
-    }
-
-    var loader = new Loader();
-    loader.findThemAll();
-}
-
 function transform(goal, duration) {
 
     TWEEN.removeAll();
@@ -1567,4 +1426,209 @@ function render() {
 
     //renderer.render( scene, camera );
     camera.render(renderer, scene);
+}
+
+function otherViews() {
+    // sphere
+
+    var vector = new THREE.Vector3();
+
+    var indexes = [];
+
+    for (var i = 0; i <= groupsQtty; i++) indexes.push(0);
+
+    for (var i = 0; i < objects.length; i++) {
+
+        var g = (table[i].groupID != undefined) ? table[i].groupID : groupsQtty;
+
+        var radious = 300 * (g + 1);
+
+        var phi = Math.acos((2 * indexes[g]) / elementsByGroup[g] - 1);
+        var theta = Math.sqrt(elementsByGroup[g] * Math.PI) * phi;
+
+        var object = new THREE.Object3D();
+
+        object.position.x = radious * Math.cos(theta) * Math.sin(phi);
+        object.position.y = radious * Math.sin(theta) * Math.sin(phi);
+        object.position.z = radious * Math.cos(phi);
+
+        vector.copy(object.position).multiplyScalar(2);
+
+        object.lookAt(vector);
+
+        targets.sphere.push(object);
+
+        indexes[g]++;
+
+
+    }
+
+    // helix
+
+    var vector = new THREE.Vector3();
+
+    var helixSection = [];
+    var current = [];
+    var last = 0,
+        helixPosition = 0;
+
+    for (var i = 0; i < layersQtty; i++) {
+
+        var totalInRow = 0;
+
+        for (var j = 0; j < groupsQtty; j++) {
+
+            if (typeof(section[i]) == "object")
+                totalInRow += section[i][j];
+            else if (j == 0)
+                totalInRow += section[i];
+        }
+
+        helixPosition += last;
+        helixSection.push(helixPosition);
+        last = totalInRow;
+
+        current.push(0);
+    }
+
+    for (var i = 0, l = objects.length; i < l; i++) {
+
+        var row = table[i].layerID;
+
+        var x = helixSection[row] + current[row];
+        current[row]++;
+
+
+        var phi = x * 0.175 + Math.PI;
+
+        var object = new THREE.Object3D();
+
+        object.position.x = 900 * Math.sin(phi);
+        object.position.y = -(x * 8) + 450;
+        object.position.z = 900 * Math.cos(phi);
+
+        vector.x = object.position.x * 2;
+        vector.y = object.position.y;
+        vector.z = object.position.z * 2;
+
+        object.lookAt(vector);
+
+        targets.helix.push(object);
+
+    }
+
+    // grid
+
+    var gridLine = [];
+    var gridLayers = [];
+    var lastLayer = 0;
+
+
+    for (var i = 0; i < layersQtty + 1; i++) {
+
+        //gridLine.push(0);
+        var gridLineSub = [];
+        var empty = true;
+
+        for (var j = 0; j < section.length; j++) {
+
+            if (section[j][i] != 0) empty = false;
+
+            gridLineSub.push(0);
+        }
+
+        if (!empty) lastLayer++;
+
+        gridLayers.push(lastLayer);
+        gridLine.push(gridLineSub);
+    }
+
+    for (var i = 0; i < objects.length; i++) {
+
+        var group = table[i].groupID;
+        var layer = table[i].layerID;
+
+        var object = new THREE.Object3D();
+
+        //By layer
+        object.position.x = ((gridLine[layer][0] % 5) * 200) - 450;
+        object.position.y = (-(Math.floor(gridLine[layer][0] / 5) % 5) * 200) + 0;
+        object.position.z = (-gridLayers[layer]) * 200 + (layersQtty * 50);
+        gridLine[layer][0]++;
+
+        targets.grid.push(object);
+
+    }
+
+    //
+}
+
+function fillTable(list) {
+
+    var pluginList = list.plugins,
+        i, l, dependency;
+
+    for (i = 0, l = list.superLayers.length; i < l; i++) {
+        superLayers[list.superLayers[i].code] = {};
+        superLayers[list.superLayers[i].code].name = list.superLayers[i].name;
+        superLayers[list.superLayers[i].code].index = list.superLayers[i].index;
+        
+        if(list.superLayers[i].dependsOn && list.superLayers[i].dependsOn.length != 0) {
+            dependency = list.superLayers[i].dependsOn.replace(' ', '').split(',');
+            superLayers[list.superLayers[i].code].dependsOn = dependency;
+        }
+    }
+
+    for (i = 0, l = list.layers.length; i < l; i++) {
+        layers[list.layers[i].name] = {};
+        layers[list.layers[i].name].index = list.layers[i].index;
+        layers[list.layers[i].name].super_layer = list.layers[i].super_layer;
+    }
+
+    for (i = 0, l = list.groups.length; i < l; i++) {
+        groups[list.groups[i].code] = list.groups[i].index;
+        
+        if(list.groups[i].dependsOn && list.groups[i].dependsOn.length != 0) {
+            dependency = list.groups[i].dependsOn.replace(' ', '').split(',');
+            groups[list.groups[i].code].dependsOn = dependency;
+        }
+    }
+
+
+    for (i = 0, l = pluginList.length; i < l; i++) {
+
+        var data = pluginList[i];
+
+        var _group = data.group;
+        var _layer = data.layer;
+        var _name = data.name;
+
+        var layerID = layers[_layer].index;
+        layerID = (layerID === undefined) ? layers.size() : layerID;
+
+        var groupID = groups[_group];
+        groupID = (groupID === undefined) ? groups.size() : groupID;
+
+        var element = {
+            group: _group,
+            groupID: groupID,
+            code: helper.getCode(_name),
+            name: _name,
+            layer: _layer,
+            layerID: layerID,
+            type: data.type,
+            picture: data.authorPicture,
+            author: data.authorName ? data.authorName.trim().toLowerCase() : undefined,
+            authorRealName: data.authorRealName ? data.authorRealName.trim() : undefined,
+            authorEmail: data.authorEmail ? data.authorEmail.trim() : undefined,
+            difficulty: data.difficulty,
+            code_level: data.code_level ? data.code_level.trim().toLowerCase() : undefined,
+            life_cycle: data.life_cycle
+        };
+
+        table.push(element);
+    }
+
+    var loader = new Loader();
+    loader.findThemAll();
 }
