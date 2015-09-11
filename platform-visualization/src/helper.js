@@ -145,7 +145,7 @@ function Helper() {
         }
 
         return result;
-    }
+    };
 
 }
 
