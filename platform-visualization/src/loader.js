@@ -15,8 +15,8 @@ function Loader() {
         img.style.width = '90%';
         //img.style.margin = '35% 0 0 0';
         //img.style["margin-right"] = '80%';
-        img.style.left = '10%';
-        img.style.top = '30%';
+        img.style.left = '5%';
+        img.style.top = '40%';
         img.style.position = 'absolute';
         return img;
     }
