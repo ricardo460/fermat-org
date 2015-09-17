@@ -1,9 +1,14 @@
 {
-  "name": "fermat-org-api-server",
+  "name": "api-server",
+  "description": "fermat-org api server",
+  "author": {
+    "name": "Luis Fuenmayor",
+    "email": "fuelusumar@gmail.com"
+  },
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "NODE_ENV=production PORT=8080 node ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
