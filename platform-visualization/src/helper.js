@@ -5,10 +5,11 @@ function Helper() {
 
     /**
      * Hides an element vanishing it and then eliminating it from the DOM
-     * @param {DOMElement} element  The element to eliminate
-     * @param {Number} duration Duration of the fade animation
+     * @param {DOMElement} element         The element to eliminate
+     * @param {Number}     [duration=1000] Duration of the fade animation
+     * @param {Boolean}    [keep=false]     If set true, don't remove the element, just dissapear
      */
-    this.hide = function(element, duration) {
+    this.hide = function(element, duration, keep) {
 
         var dur = duration || 1000,
             el = element;
@@ -18,7 +19,10 @@ function Helper() {
         }
 
         $(el).fadeTo(duration, 0, function() {
-            $(el).remove();
+            if(keep)
+                el.style.display = 'none';
+            else
+                $(el).remove();
         });
     };
 
@@ -122,8 +126,6 @@ function Helper() {
         }
     };
     
-    
-
     /**
      * Prints difficulty as stars
      * @param   {Number} value Difficulty to represent (max 5)
@@ -146,7 +148,6 @@ function Helper() {
 
         return result;
     };
-
 }
 
 // Make helper a static object

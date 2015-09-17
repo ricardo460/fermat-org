@@ -275,7 +275,7 @@ function ViewManager() {
             superLayers[list.superLayers[i].code].index = list.superLayers[i].index;
 
             if(list.superLayers[i].dependsOn && list.superLayers[i].dependsOn.length !== 0) {
-                dependency = list.superLayers[i].dependsOn.replace(' ', '').split(',');
+                dependency = list.superLayers[i].dependsOn.split(' ').join('').split(',');
                 superLayers[list.superLayers[i].code].dependsOn = dependency;
             }
         }
@@ -287,10 +287,11 @@ function ViewManager() {
         }
 
         for (i = 0, l = list.groups.length; i < l; i++) {
-            groups[list.groups[i].code] = list.groups[i].index;
+            groups[list.groups[i].code] = {};
+            groups[list.groups[i].code].index = list.groups[i].index;
 
             if(list.groups[i].dependsOn && list.groups[i].dependsOn.length !== 0) {
-                dependency = list.groups[i].dependsOn.replace(' ', '').split(',');
+                dependency = list.groups[i].dependsOn.split(' ').join('').split(',');
                 groups[list.groups[i].code].dependsOn = dependency;
             }
         }
@@ -307,7 +308,7 @@ function ViewManager() {
             var layerID = layers[_layer].index;
             layerID = (layerID === undefined) ? layers.size() : layerID;
 
-            var groupID = groups[_group];
+            var groupID = (_group !== undefined) ? groups[_group].index : undefined;
             groupID = (groupID === undefined) ? groups.size() : groupID;
 
             var element = {
@@ -332,9 +333,6 @@ function ViewManager() {
         
         groupsQtty = groups.size();
         layersQtty = layers.size();
-
-        var loader = new Loader();
-        loader.findThemAll();
     };
     
     /**
@@ -435,41 +433,47 @@ function ViewManager() {
      */
     this.transform = function(goal, duration) {
 
+        var i, l;
+        
+        duration = duration || 2000;
+        
         TWEEN.removeAll();
 
-        this.lastTargets = goal;
+        if(goal) {
+            this.lastTargets = goal;
 
-        for (var i = 0; i < objects.length; i++) {
+            for (i = 0; i < objects.length; i++) {
 
-            var object = objects[i];
-            var target = goal[i];
+                var object = objects[i];
+                var target = goal[i];
 
-            new TWEEN.Tween(object.position)
-                .to({
-                    x: target.position.x,
-                    y: target.position.y,
-                    z: target.position.z
-                }, Math.random() * duration + duration)
-                .easing(TWEEN.Easing.Exponential.InOut)
-                .start();
+                new TWEEN.Tween(object.position)
+                    .to({
+                        x: target.position.x,
+                        y: target.position.y,
+                        z: target.position.z
+                    }, Math.random() * duration + duration)
+                    .easing(TWEEN.Easing.Exponential.InOut)
+                    .start();
 
-            new TWEEN.Tween(object.rotation)
-                .to({
-                    x: target.rotation.x,
-                    y: target.rotation.y,
-                    z: target.rotation.z
-                }, Math.random() * duration + duration)
-                .easing(TWEEN.Easing.Exponential.InOut)
-                .start();
+                new TWEEN.Tween(object.rotation)
+                    .to({
+                        x: target.rotation.x,
+                        y: target.rotation.y,
+                        z: target.rotation.z
+                    }, Math.random() * duration + duration)
+                    .easing(TWEEN.Easing.Exponential.InOut)
+                    .start();
 
+            }
+
+            if (goal == this.targets.table) {
+                headers.show(duration);
+            } else {
+                headers.hide(duration);
+            }
         }
-
-        if (goal == this.targets.table) {
-            headers.show(duration);
-        } else {
-            headers.hide(duration);
-        }
-
+        
         new TWEEN.Tween(this)
             .to({}, duration * 2)
             .onUpdate(render)
@@ -538,6 +542,38 @@ function ViewManager() {
             layersQtty : layersQtty,
             superLayerPosition : superLayerPosition
         };
+    };
+    
+    /**
+     * Takes away all the tiles except the one with the id
+     * @param {Number} [id]            The id to let alone
+     * @param {Number} [duration=2000] Duration of the animation
+     */
+    this.letAlone = function(id, duration) {
+        
+        var i, _duration = duration || 2000,
+            distance = camera.getMaxDistance();
+        
+        TWEEN.removeAll();
+        
+        for(i = 0; i < objects.length; i++) {
+            
+            if(i === id) continue;
+            
+            new TWEEN.Tween(objects[i].position)
+            .to({
+                x: 0,
+                y: 0,
+                z: distance
+            }, Math.random() * _duration + _duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
+        }
+        
+        new TWEEN.Tween(this)
+            .to({}, _duration * 2)
+            .onUpdate(render)
+            .start();
     };
     
 }
