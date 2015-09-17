@@ -1,0 +1,24 @@
+{
+  "name": "fermat-org-api-server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.13.2",
+    "color": "^0.10.1",
+    "cookie-parser": "~1.3.5",
+    "debug": "~2.2.0",
+    "express": "~4.13.1",
+    "jade": "~1.11.0",
+    "mongoose": "^4.1.6",
+    "morgan": "~1.6.1",
+    "passport": "^0.3.0",
+    "passport-http-bearer": "^1.0.1",
+    "passport-local": "^1.0.0",
+    "request": "^2.61.0",
+    "response-time": "^2.3.1",
+    "serve-favicon": "~2.3.0"
+  }
+}

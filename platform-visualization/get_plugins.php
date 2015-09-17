@@ -31,6 +31,10 @@ function main() {
             'logo' => strval($platform['logo']),
             'index' => $platformIndex
         ));
+        
+        if($platform['dependsOn'])
+            $platformList[$platformIndex]['dependsOn'] = strval($platform['dependsOn']);
+        
         $platformIndex++;
 
         foreach($platform->children() as $layer) {
@@ -52,6 +56,9 @@ function main() {
                             'code' => strval($super_layer['code']),
                             'index' => $superLayerIndex,
                         ));
+        
+                        if($super_layer['dependsOn'])
+                            $superLayerList[$superLayerIndex]['dependsOn'] = strval($super_layer['dependsOn']);
                         
                         $superLayerIndex++;
                     }

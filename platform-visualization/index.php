@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
 		<meta charset="utf-8">
@@ -17,7 +18,8 @@
         <img src="images/fermat_logo.png" id="splash"/>
         
         <button id="backButton" class="backButton" style="opacity : 0; display : none;">BACK</button>
-        <button id="legendButton"> ? </button>
+        <button id="legendButton" style="opacity: 0; display : none;"> ? </button>
+        <button id="tableViewButton" style="opacity : 0; display : none;">View Table</button>
         
         <div id="legend" class="legend" style="opacity : 0; display : none;">
             <table>

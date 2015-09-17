@@ -4,7 +4,8 @@ var table = [],
     scene = new THREE.Scene(),
     renderer,
     objects = [],
-    headers = null;
+    headers = null,
+    actualView = 'stack';
 
 $.ajax({
     url: "get_plugins.php",
@@ -13,7 +14,7 @@ $.ajax({
     function(lists) {
         var l = JSON.parse(lists);
         viewManager.fillTable(l);
-        $('#splash').fadeTo(0, 500, function() {
+        $('#splash').fadeTo(2000, 0, function() {
             $('#splash').remove();
             init();
             setTimeout(animate, 500);
@@ -23,9 +24,9 @@ $.ajax({
 
 /*var l = JSON.parse(testData);
     
-    fillTable(l);
+    viewManager.fillTable(l);
     
-    $('#splash').fadeTo(0, 500, function() {
+    $('#splash').fadeTo(2000, 0, function() {
             $('#splash').remove();
             init();
             setTimeout( animate, 500);
@@ -54,7 +55,7 @@ function init() {
 
     //
 
-    $('.backButton').click(function() {
+    $('#backButton').click(function() {
         changeView(viewManager.targets.table);
     });
     $('#legendButton').click(function() {
@@ -69,11 +70,68 @@ function init() {
             $(legend).fadeTo(1000, 1);
         }
     });
+    $('#tableViewButton').click(function() {
+        if(actualView === 'stack')
+            goToView('table');
+        else
+            goToView('stack');
+    });
 
     //Disabled Menu
     //initMenu();
 
-    viewManager.transform(viewManager.targets.table, 4000);
+    goToView('stack');
+    
+    setTimeout(function() {
+        var loader = new Loader();
+        loader.findThemAll();
+    }, 2000);
+}
+
+/**
+ * Changes the actual state of the viewer
+ * @param {String} name The name of the target state
+ */
+function goToView(name) {
+    
+    var tableButton;
+    
+    actualView = name;
+    
+    switch(name) {
+        case 'table':
+            
+            tableButton = document.getElementById('tableViewButton');
+            var legendBtn = document.getElementById('legendButton');
+            
+            headers.transformTable();
+            legendBtn.style.display = 'block';
+            $(legendBtn).fadeTo(1000, 1);
+            
+            $(tableButton).fadeTo(1000, 0, function(){ 
+                tableButton.style.display = 'block';
+                tableButton.innerHTML = 'View Dependencies';
+            });
+            $(tableButton).fadeTo(1000, 1);
+            
+            break;
+        case 'stack':
+            
+            tableButton = document.getElementById('tableViewButton');
+            
+            headers.transformStack();
+            
+            $(tableButton).fadeTo(1000, 0, function(){ 
+                tableButton.style.display = 'block';
+                tableButton.innerHTML = 'View Table';
+            });
+            $(tableButton).fadeTo(1000, 1);
+            
+            break;
+        default:
+            actualView = 'stack';
+            break;
+    }
 }
 
 function initMenu() {

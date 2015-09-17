@@ -26,6 +26,8 @@
         "Headers" : false,
         "Camera" : false,
         "Timeline" : false,
-        "console" : false
+        "console" : false,
+        "window" : true,
+        "testData" : true
     }
 }

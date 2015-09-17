@@ -31,6 +31,12 @@ function Camera(position, renderer, renderFunc) {
     controls.position0.copy( position );
     
     // Public Methods
+    
+    /**
+     * Returns the max distance set
+     * @returns {Number} Max distance constant
+     */
+    this.getMaxDistance = function() { return MAX_DISTANCE; };
 
     /**
      * @method disable disables camera controls
@@ -48,6 +54,14 @@ function Camera(position, renderer, renderFunc) {
     };
     
     /**
+     * Returns a copy of the actual position
+     * @returns {THREE.Vector3} Actual position of the camera
+     */
+    this.getPosition = function() {
+        return camera.position.clone();
+    };
+    
+    /**
      * 
      * @method setFocus sets focus to a target given its id
      *
@@ -57,10 +71,14 @@ function Camera(position, renderer, renderFunc) {
     this.setFocus = function( id, duration ) {
         
         TWEEN.removeAll();
-        focus = id;
+        focus = parseInt(id);
+        
+        headers.hide(duration);
+
+        viewManager.letAlone(focus, duration);
     
         var vec = new THREE.Vector4(0, 0, 180, 1);
-        var target = objects[ id ];
+        var target = window.objects[ focus ];
 
         vec.applyMatrix4( target.matrix );
 
@@ -78,18 +96,6 @@ function Camera(position, renderer, renderFunc) {
             .to( { x: target.up.x, y: target.up.y, z: target.up.z }, Math.random() * duration + duration )
             .easing( TWEEN.Easing.Exponential.InOut )
             .start();
-
-        headers.hide(duration);
-
-        for( var i = 0, l = objects.length; i < l; i++ ) {
-
-            if ( i == id ) continue;
-
-            new TWEEN.Tween( objects[ i ].position )
-                .to( { x: 0, y: 0, z: controls.maxDistance }, Math.random() * duration + duration )
-                .easing( TWEEN.Easing.Exponential.InOut )
-                .start();
-        }
     };
     
     /**
@@ -145,7 +151,19 @@ function Camera(position, renderer, renderFunc) {
 
             viewManager.rollBack();
 
-            new TWEEN.Tween( controls.target )
+            this.resetPosition(duration);
+        }
+    };
+    
+    /**
+     * Resets the camera position
+     * @param {Number} [duration=2000] Duration of the animation
+     */
+    this.resetPosition = function(duration) {
+        
+        duration = duration || 2000;
+        
+        new TWEEN.Tween( controls.target )
                 .to( { x: controls.target0.x, y: controls.target0.y, z: controls.target0.z }, Math.random() * duration + duration )
                 .easing( TWEEN.Easing.Exponential.InOut )
                 .start();
@@ -159,7 +177,6 @@ function Camera(position, renderer, renderFunc) {
                 .to( { x: 0, y: 1, z: 0 }, Math.random() * duration + duration )
                 .easing( TWEEN.Easing.Exponential.InOut )
                 .start();
-        }
     };
     
     /**
