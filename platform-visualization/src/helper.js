@@ -5,9 +5,11 @@ function Helper() {
     
     /**
      * Hides an element vanishing it and then eliminating it from the DOM
-     * @param {DOMElement} element  The element to eliminate
-     * @param {Number} duration Duration of the fade animation
+     * @param {DOMElement} element         The element to eliminate
+     * @param {Number}     [duration=1000] Duration of the fade animation
+     * @param {Boolean}    [keep=false]     If set true, don't remove the element, just dissapear
      */
+<<<<<<< HEAD
     this.hide = function (element, duration) {
         
         var dur = duration || 1000,
@@ -17,6 +19,22 @@ function Helper() {
         
         $(el).fadeTo(duration, 0, function () {
             $(el).remove();
+=======
+    this.hide = function(element, duration, keep) {
+
+        var dur = duration || 1000,
+            el = element;
+
+        if (typeof(el) === "string") {
+            el = document.getElementById(element);
+        }
+
+        $(el).fadeTo(duration, 0, function() {
+            if(keep)
+                el.style.display = 'none';
+            else
+                $(el).remove();
+>>>>>>> lab
         });
     };
     
@@ -32,8 +50,13 @@ function Helper() {
 
         clone.id = newID;
         clone.style.transform = '';
+<<<<<<< HEAD
         $(clone).find('img').remove();
         
+=======
+        $(clone).find('.picture').remove();
+
+>>>>>>> lab
         return clone;
     };
     
@@ -99,6 +122,7 @@ function Helper() {
 
         return code;
     };
+<<<<<<< HEAD
     
     this.getLevelColor = function(codeLevel, alpha) {
         
@@ -147,10 +171,58 @@ function Helper() {
                 color = 'rgba(70,178,97,'+ alpha +')';
                 
                 break;
+=======
+
+    /**
+     * parse dir route from an element data
+     * @method getRepoDir
+     * @param  {Element}   item table element
+     * @return {String}   directory route
+     */
+    this.getRepoDir = function(item) {
+        //console.dir(item);
+        var _root = "fermat",
+            _group = item.group ? item.group.toUpperCase().split(' ').join('_') : null,
+            _type = item.type ? item.type.toLowerCase().split(' ').join('_') : null,
+            _layer = item.layer ? item.layer.toLowerCase().split(' ').join('_') : null,
+            _name = item.name ? item.name.toLowerCase().split(' ').join('-') : null;
+
+        if (_group && _type && _layer && _name) {
+            return _group + "/" + _type + "/" + _layer + "/" +
+                _root + "-" + _group.split('_').join('-').toLowerCase() + "-" + _type.split('_').join('-') + "-" + _layer.split('_').join('-') + "-" + _name + "-bitdubai";
+        } else {
+            return null;
+>>>>>>> lab
         }
         
         return color;
     };
+<<<<<<< HEAD
+=======
+    
+    /**
+     * Prints difficulty as stars
+     * @param   {Number} value Difficulty to represent (max 5)
+     * @returns {String} A maximun of 5 stars
+     */
+    this.printDifficulty = function(value) {
+        var max = 5;
+        var result = "";
+
+        while (value > 0) {
+            result += '★';
+            max--;
+            value--;
+        }
+
+        while (max > 0) {
+            result += '☆';
+            max--;
+        }
+
+        return result;
+    };
+>>>>>>> lab
 }
 
 // Make helper a static object

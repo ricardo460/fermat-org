@@ -14,13 +14,20 @@
        "renderer" : true,
        "camera" : true,
        "objects" : true,
-       "targets" : true,
        "headers" : true,
-       "lastTargets" : true,
         "helper" : true,
         "render" : true,
         "changeView" : true,
         "vis" : true,
-        "console" : false
+        "Loader" : false,
+        "onElementClick" : false,
+        "ViewManager" : false,
+        "viewManager" : true,
+        "Headers" : false,
+        "Camera" : false,
+        "Timeline" : false,
+        "console" : false,
+        "window" : true,
+        "testData" : true
     }
 }
