@@ -74,5 +74,43 @@ Dao.prototype.insertSchema = function(model, callback) {
     });
 };
 
+Dao.prototype.findAndPopulateSchemaById = function(_id, path, callback) {
+    this.Schema.findOne({
+        '_id': _id
+    })
+        .populate(path)
+        .exec(function(err, schema) {
+            var model = new this.Model();
+            model.init(schema);
+            callback(err, model);
+        });
+};
+
+Dao.prototype.findAndPopulateSchema = function(query, path, callback) {
+    this.Schema.findOne(query)
+        .populate(path)
+        .exec(function(err, schema) {
+            var model = new this.Model();
+            model.init(schema);
+            callback(err, model);
+        });
+};
+
+Dao.prototype.findAndPopulateSchemaLst = function(query, limit, sort, path, callback) {
+    this.Schema.find(query)
+        .limit(limit)
+        .sort(sort)
+        .populate(path)
+        .exec(function(err, schemas) {
+            var models = [];
+            for (var i = 0, l = schemas.length; i < l; i++) {
+                var model = new this.Model();
+                model.init(schemas[i]);
+                models.push(model);
+            };
+            callback(err, models);;
+        });
+};
+
 // export the class
 module.exports = Dao;

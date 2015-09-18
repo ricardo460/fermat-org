@@ -36,16 +36,6 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-
-/*var devSch = require('./modules/repository/developer/schemas/dev');
-var devMdl = require('./modules/repository/developer/models/dev');
-var Dao = require('./modules/database/dao');
-var devDao = new Dao('Dev', devSch, devMdl);*/
-var devDao = require('./modules/repository/developer/database/dev');
-devDao.findAllSchemaLst({}, {}, function(err, res) {
-  console.dir(res);
-  console.dir(err);
-});
 // error handlers
 
 // development error handler
