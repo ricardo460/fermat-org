@@ -38,7 +38,7 @@ server.on('listening', onListening);
  * Uncaught exceptions handler
  */
 process.on('uncaughtException', function (err) {
-  console.error(err.stack);
+  winston.log('info', 'Mongoose default connection error', err);
 });
 
 /**
