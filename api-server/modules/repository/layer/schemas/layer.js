@@ -14,8 +14,7 @@ var layerSchema = mongoose.Schema({
         'default': new mongoose.Types.ObjectId()
     }
 }, {
-    collection: 'layers',
-    autoIndex: false
+    collection: 'layers'
 });
 
 layerSchema.index({

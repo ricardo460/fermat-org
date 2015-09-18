@@ -7,12 +7,17 @@
 var app = require('../app');
 var debug = require('debug')('api-server:server');
 var http = require('http');
+var winston = require('winston');
+var config = require('../config');
+
+winston.log('info', 'Setting %s environment', config.env);
 
 /**
  * Get port from environment and store in Express.
  */
 
 var port = normalizePort(process.env.PORT || '3000');
+winston.log('info', 'HTTP server listening in port %s', port);
 app.set('port', port);
 
 /**

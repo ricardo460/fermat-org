@@ -49,8 +49,7 @@ var compSchema = mongoose.Schema({
         'default': new mongoose.Types.ObjectId()
     }
 }, {
-    collection: 'platfrms',
-    autoIndex: false
+    collection: 'platfrms'
 });
 
 compSchema.index({

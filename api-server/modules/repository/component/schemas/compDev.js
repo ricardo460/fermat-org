@@ -7,7 +7,7 @@ var compDevSchema = mongoose.Schema({
     },
     _comp_id: {
         type: mongoose.Schema.Types.ObjectId //,
-        //ref: 'Comp'
+        ref: 'Comp'
     },
     role: {
         type: String,
@@ -28,8 +28,7 @@ var compDevSchema = mongoose.Schema({
         'default': new mongoose.Types.ObjectId()
     }
 }, {
-    collection: 'comp_devs',
-    autoIndex: false
+    collection: 'comp_devs'
 });
 
 compDevSchema.index({

@@ -52,8 +52,7 @@ var devSchema = mongoose.Schema({
 		'default': new mongoose.Types.ObjectId()
 	}
 }, {
-	collection: 'devs',
-	autoIndex: false
+	collection: 'devs'
 });
 
 devSchema.methods.getAge = function () {

@@ -16,6 +16,7 @@ var platfrmSchema = mongoose.Schema({
         trim: true
     },
     deps: [{
+        // code reference
         type: String,
         uppercase: true,
         trim: true,
@@ -26,8 +27,7 @@ var platfrmSchema = mongoose.Schema({
         'default': new mongoose.Types.ObjectId()
     }
 }, {
-    collection: 'platfrms',
-    autoIndex: false
+    collection: 'platfrms'
 });
 
 platfrmSchema.index({

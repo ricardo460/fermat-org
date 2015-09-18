@@ -16,6 +16,7 @@ var suprlaySchema = mongoose.Schema({
         trim: true
     },
     deps: [{
+        // code reference
         type: String,
         uppercase: true,
         trim: true,
@@ -26,8 +27,7 @@ var suprlaySchema = mongoose.Schema({
         'default': new mongoose.Types.ObjectId()
     }
 }, {
-    collection: 'suprlays',
-    autoIndex: false
+    collection: 'suprlays'
 });
 
 suprlaySchema.index({
