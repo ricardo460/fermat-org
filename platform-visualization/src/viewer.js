@@ -7,7 +7,14 @@ var table = [],
     headers = null,
     actualView = 'stack';
 
-$.ajax({
+//Global constants
+var TILE_DIMENSION = {
+    width : 140,
+    height : 180
+},
+    TILE_SPACING = 20;
+
+/*$.ajax({
     url: "get_plugins.php",
     method: "GET"
 }).success(
@@ -20,9 +27,9 @@ $.ajax({
             setTimeout(animate, 500);
         });
     }
-);
+);*/
 
-/*var l = JSON.parse(testData);
+var l = JSON.parse(testData);
     
     viewManager.fillTable(l);
     
@@ -30,7 +37,7 @@ $.ajax({
             $('#splash').remove();
             init();
             setTimeout( animate, 500);
-        });*/
+        });
 
 function init() {
 
@@ -48,7 +55,7 @@ function init() {
     renderer.domElement.style.position = 'absolute';
     document.getElementById('container').appendChild(renderer.domElement);
 
-    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * 140),
+    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * TILE_DIMENSION.width),
         renderer,
         render);
 
@@ -82,10 +89,10 @@ function init() {
 
     goToView('stack');
     
-    setTimeout(function() {
+    /*setTimeout(function() {
         var loader = new Loader();
         loader.findThemAll();
-    }, 2000);
+    }, 2000);*/
 }
 
 /**

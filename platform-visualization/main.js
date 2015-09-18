@@ -11,7 +11,7 @@ function Camera(position, renderer, renderFunc) {
      * private constans
      */
     var ROTATE_SPEED = 1.3,
-        MIN_DISTANCE = 500,
+        MIN_DISTANCE = 50,
         MAX_DISTANCE = 80000;
 
     /**
@@ -20,6 +20,7 @@ function Camera(position, renderer, renderFunc) {
     var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
     var controls = new THREE.TrackballControls( camera, renderer.domElement );
     var focus = null;
+    var self = this;
     
     camera.position.copy( position );
 
@@ -77,7 +78,7 @@ function Camera(position, renderer, renderFunc) {
 
         viewManager.letAlone(focus, duration);
     
-        var vec = new THREE.Vector4(0, 0, 180, 1);
+        var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width, 1);
         var target = window.objects[ focus ];
 
         vec.applyMatrix4( target.matrix );
@@ -151,7 +152,7 @@ function Camera(position, renderer, renderFunc) {
 
             viewManager.rollBack();
 
-            this.resetPosition(duration);
+            self.resetPosition(duration);
         }
     };
     
@@ -619,7 +620,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 image = document.createElement('img');
                 image.src = 'images/' + group + '_logo.svg';
-                image.width = columnWidth * 140;
+                image.width = columnWidth * window.TILE_DIMENSION.width;
                 image.style.opacity = 0;
                 headers.push(image);
 
@@ -632,8 +633,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = new THREE.Object3D();
                 
-                object.position.x = (columnWidth * 140) * (column - (groupsQtty - 1) / 2) + ((column - 1) * 140);
-                object.position.y = ((layersQtty + 5) * 180) / 2;
+                object.position.x = (columnWidth * (window.TILE_DIMENSION.width)) * (column - (groupsQtty - 1) / 2) + ((column - 1) * (window.TILE_DIMENSION.width));
+                object.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
                 
                 positions.table.push(object);
 
@@ -649,7 +650,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 image = document.createElement('img');
                 image.src = 'images/' + slayer + '_logo.svg';
-                image.width = columnWidth * 140;
+                image.width = columnWidth * window.TILE_DIMENSION.width;
                 image.style.opacity = 0;
                 headers.push(image);
 
@@ -662,8 +663,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 
                 object = new THREE.Object3D();
 
-                object.position.x = -(((groupsQtty + 1) * columnWidth * 140 / 2) + 140);
-                object.position.y = -(row * 180) - (superLayerMaxHeight * 180 / 2) + (layersQtty * 180 / 2);
+                object.position.x = -(((groupsQtty + 1) * columnWidth * window.TILE_DIMENSION.width / 2) + window.TILE_DIMENSION.width);
+                object.position.y = -(row * window.TILE_DIMENSION.height) - (superLayerMaxHeight * window.TILE_DIMENSION.height / 2) + (layersQtty * window.TILE_DIMENSION.height / 2);
                 
                 positions.table.push(object);
 
@@ -1059,7 +1060,14 @@ var table = [],
     headers = null,
     actualView = 'stack';
 
-$.ajax({
+//Global constants
+var TILE_DIMENSION = {
+    width : 140,
+    height : 180
+},
+    TILE_SPACING = 20;
+
+/*$.ajax({
     url: "get_plugins.php",
     method: "GET"
 }).success(
@@ -1072,9 +1080,9 @@ $.ajax({
             setTimeout(animate, 500);
         });
     }
-);
+);*/
 
-/*var l = JSON.parse(testData);
+var l = JSON.parse(testData);
     
     viewManager.fillTable(l);
     
@@ -1082,7 +1090,7 @@ $.ajax({
             $('#splash').remove();
             init();
             setTimeout( animate, 500);
-        });*/
+        });
 
 function init() {
 
@@ -1100,7 +1108,7 @@ function init() {
     renderer.domElement.style.position = 'absolute';
     document.getElementById('container').appendChild(renderer.domElement);
 
-    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * 140),
+    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * TILE_DIMENSION.width),
         renderer,
         render);
 
@@ -1134,10 +1142,10 @@ function init() {
 
     goToView('stack');
     
-    setTimeout(function() {
+    /*setTimeout(function() {
         var loader = new Loader();
         loader.findThemAll();
-    }, 2000);
+    }, 2000);*/
 }
 
 /**
@@ -1832,7 +1840,7 @@ function ViewManager() {
 
                 break;
         }
-
+        
         return element;
     };
     
@@ -1912,6 +1920,7 @@ function ViewManager() {
             object.position.x = 0;
             object.position.y = 0;
             object.position.z = 80000;
+            
             scene.add(object);
 
             objects.push(object);
@@ -1925,7 +1934,7 @@ function ViewManager() {
 
             if (layers[table[i].layer].super_layer) {
 
-                object.position.x = ((section[row]) * 140) - (columnWidth * groupsQtty * 140 / 2);
+                object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
                 section[row]++;
 
@@ -1933,13 +1942,13 @@ function ViewManager() {
 
                 //Column (X)
                 var column = table[i].groupID;
-                object.position.x = (((column * (columnWidth) + section[row][column]) + column) * 140) - (columnWidth * groupsQtty * 140 / 2);
+                object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
                 section[row][column]++;
             }
 
 
-            object.position.y = -((layerPosition[row]) * 180) + (layersQtty * 180 / 2);
+            object.position.y = -((layerPosition[row]) * window.TILE_DIMENSION.height) + (layersQtty * window.TILE_DIMENSION.height / 2);
 
             this.targets.table.push(object);
 
