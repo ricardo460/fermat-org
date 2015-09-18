@@ -422,7 +422,7 @@ function ViewManager() {
 
                 break;
         }
-        
+
         return element;
     };
     
@@ -502,7 +502,6 @@ function ViewManager() {
             object.position.x = 0;
             object.position.y = 0;
             object.position.z = 80000;
-            
             scene.add(object);
 
             objects.push(object);
@@ -516,7 +515,7 @@ function ViewManager() {
 
             if (layers[table[i].layer].super_layer) {
 
-                object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
+                object.position.x = ((section[row]) * 140) - (columnWidth * groupsQtty * 140 / 2);
 
                 section[row]++;
 
@@ -524,13 +523,13 @@ function ViewManager() {
 
                 //Column (X)
                 var column = table[i].groupID;
-                object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
+                object.position.x = (((column * (columnWidth) + section[row][column]) + column) * 140) - (columnWidth * groupsQtty * 140 / 2);
 
                 section[row][column]++;
             }
 
 
-            object.position.y = -((layerPosition[row]) * window.TILE_DIMENSION.height) + (layersQtty * window.TILE_DIMENSION.height / 2);
+            object.position.y = -((layerPosition[row]) * 180) + (layersQtty * 180 / 2);
 
             this.targets.table.push(object);
 

@@ -11,7 +11,7 @@ function Camera(position, renderer, renderFunc) {
      * private constans
      */
     var ROTATE_SPEED = 1.3,
-        MIN_DISTANCE = 50,
+        MIN_DISTANCE = 500,
         MAX_DISTANCE = 80000;
 
     /**
@@ -20,7 +20,6 @@ function Camera(position, renderer, renderFunc) {
     var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
     var controls = new THREE.TrackballControls( camera, renderer.domElement );
     var focus = null;
-    var self = this;
     
     camera.position.copy( position );
 
@@ -78,7 +77,7 @@ function Camera(position, renderer, renderFunc) {
 
         viewManager.letAlone(focus, duration);
     
-        var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width, 1);
+        var vec = new THREE.Vector4(0, 0, 180, 1);
         var target = window.objects[ focus ];
 
         vec.applyMatrix4( target.matrix );
@@ -152,7 +151,7 @@ function Camera(position, renderer, renderFunc) {
 
             viewManager.rollBack();
 
-            self.resetPosition(duration);
+            this.resetPosition(duration);
         }
     };
     

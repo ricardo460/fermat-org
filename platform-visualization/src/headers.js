@@ -261,7 +261,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 image = document.createElement('img');
                 image.src = 'images/' + group + '_logo.svg';
-                image.width = columnWidth * window.TILE_DIMENSION.width;
+                image.width = columnWidth * 140;
                 image.style.opacity = 0;
                 headers.push(image);
 
@@ -274,8 +274,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = new THREE.Object3D();
                 
-                object.position.x = (columnWidth * (window.TILE_DIMENSION.width)) * (column - (groupsQtty - 1) / 2) + ((column - 1) * (window.TILE_DIMENSION.width));
-                object.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
+                object.position.x = (columnWidth * 140) * (column - (groupsQtty - 1) / 2) + ((column - 1) * 140);
+                object.position.y = ((layersQtty + 5) * 180) / 2;
                 
                 positions.table.push(object);
 
@@ -291,7 +291,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 image = document.createElement('img');
                 image.src = 'images/' + slayer + '_logo.svg';
-                image.width = columnWidth * window.TILE_DIMENSION.width;
+                image.width = columnWidth * 140;
                 image.style.opacity = 0;
                 headers.push(image);
 
@@ -304,8 +304,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 
                 object = new THREE.Object3D();
 
-                object.position.x = -(((groupsQtty + 1) * columnWidth * window.TILE_DIMENSION.width / 2) + window.TILE_DIMENSION.width);
-                object.position.y = -(row * window.TILE_DIMENSION.height) - (superLayerMaxHeight * window.TILE_DIMENSION.height / 2) + (layersQtty * window.TILE_DIMENSION.height / 2);
+                object.position.x = -(((groupsQtty + 1) * columnWidth * 140 / 2) + 140);
+                object.position.y = -(row * 180) - (superLayerMaxHeight * 180 / 2) + (layersQtty * 180 / 2);
                 
                 positions.table.push(object);
 
