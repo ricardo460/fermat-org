@@ -73,10 +73,10 @@ function Camera(position, renderer, renderFunc) {
         
         TWEEN.removeAll();
         focus = parseInt(id);
-        
-        headers.hide(duration);
 
         viewManager.letAlone(focus, duration);
+        
+        headers.hide(duration);
     
         var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width, 1);
         var target = window.objects[ focus ];
