@@ -342,88 +342,25 @@ function ViewManager() {
      */
     this.createElement = function(i) {
 
-        var element = document.createElement('div');
-        element.className = 'element';
-        element.id = i;
-
-        element.addEventListener('click', onElementClick, false);
-
-        if (table[i].picture !== undefined) {
-            var picture = document.createElement('img');
-            picture.id = 'img-' + i;
-            picture.className = 'picture';
-            picture.src = table[i].picture;
-            element.appendChild(picture);
-        }
-
-        var difficulty = document.createElement('div');
-        difficulty.className = 'difficulty';
-        difficulty.textContent = helper.printDifficulty(Math.floor(table[i].difficulty / 2));
-        element.appendChild(difficulty);
-
-        var number = document.createElement('div');
-        number.className = 'number';
-        number.textContent = (table[i].group !== undefined) ? table[i].group : layers[table[i].layer].super_layer;
-        element.appendChild(number);
-
-        var symbol = document.createElement('div');
-        symbol.className = 'symbol';
-        symbol.textContent = table[i].code;
-        element.appendChild(symbol);
-
-        var details = document.createElement('div');
-        details.className = 'details';
-
-        var pluginName = document.createElement('p');
-        pluginName.innerHTML = table[i].name;
-        pluginName.className = 'name';
-
-        var layerName = document.createElement('p');
-        layerName.innerHTML = table[i].layer;
-
-        details.appendChild(pluginName);
-        details.appendChild(layerName);
-        element.appendChild(details);
-
-        switch (table[i].code_level) {
-
-            case "concept":
-                element.style.boxShadow = '0px 0px 12px rgba(150,150,150,0.5)';
-                element.style.backgroundColor = 'rgba(170,170,170,' + (Math.random() * 0.25 + 0.45) + ')';
-
-                number.style.color = 'rgba(127,127,127,1)';
-                layerName.style.color = 'rgba(127,127,127,1)';
-
-                break;
-            case "development":
-                element.style.boxShadow = '0px 0px 12px rgba(244,133,107,0.5)';
-                element.style.backgroundColor = 'rgba(234,123,97,' + (Math.random() * 0.25 + 0.45) + ')';
-
-                number.style.color = 'rgba(234,123,97,1)';
-                layerName.style.color = 'rgba(234,123,97,1)';
-
-
-                break;
-            case "qa":
-                element.style.boxShadow = '0px 0px 12px rgba(244,244,107,0.5)';
-                element.style.backgroundColor = 'rgba(194,194,57,' + (Math.random() * 0.25 + 0.45) + ')';
-
-                number.style.color = 'rgba(194,194,57,1)';
-                layerName.style.color = 'rgba(194,194,57,1)';
-
-
-                break;
-            case "production":
-                element.style.boxShadow = '0px 0px 12px rgba(80,188,107,0.5)';
-                element.style.backgroundColor = 'rgba(70,178,97,' + (Math.random() * 0.25 + 0.45) + ')';
-
-                number.style.color = 'rgba(70,178,97,1)';
-                layerName.style.color = 'rgba(70,178,97,1)';
-
-                break;
-        }
-
-        return element;
+        var geometry = new THREE.PlaneGeometry(window.TILE_DIMENSION.width - window.TILE_SPACING,
+                                               window.TILE_DIMENSION.height - window.TILE_SPACING);
+        var material = new THREE.MeshBasicMaterial({vertexColors : THREE.FaceColors, side : THREE.FrontSide});
+        var mesh = new THREE.Mesh(geometry, material);
+        var loader = new THREE.TextureLoader();
+        
+        loader.load(
+            'images/tile_development.png',
+            function(tex) {
+                tex.minFilter = THREE.NearestFilter;
+                tex.needsUpdate = true;
+                mesh.material.map = tex;
+                mesh.material.needsUpdate = true;
+            });
+        
+        mesh.userData = {id : i};
+        
+        
+        return mesh;
     };
     
     /**
@@ -496,9 +433,8 @@ function ViewManager() {
         
         for (var i = 0; i < table.length; i++) {
 
-            var element = this.createElement(i);
-
-            var object = new THREE.CSS3DObject(element);
+            var object = this.createElement(i);
+            
             object.position.x = 0;
             object.position.y = 0;
             object.position.z = 80000;
@@ -515,7 +451,7 @@ function ViewManager() {
 
             if (layers[table[i].layer].super_layer) {
 
-                object.position.x = ((section[row]) * 140) - (columnWidth * groupsQtty * 140 / 2);
+                object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
                 section[row]++;
 
@@ -523,13 +459,13 @@ function ViewManager() {
 
                 //Column (X)
                 var column = table[i].groupID;
-                object.position.x = (((column * (columnWidth) + section[row][column]) + column) * 140) - (columnWidth * groupsQtty * 140 / 2);
+                object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
                 section[row][column]++;
             }
 
 
-            object.position.y = -((layerPosition[row]) * 180) + (layersQtty * 180 / 2);
+            object.position.y = -((layerPosition[row]) * window.TILE_DIMENSION.height) + (layersQtty * window.TILE_DIMENSION.height / 2);
 
             this.targets.table.push(object);
 

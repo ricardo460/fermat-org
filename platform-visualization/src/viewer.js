@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-var table = [];
-
-var camera, scene, renderer;
-
-var objects = [];
-var targets = { table: [], sphere: [], helix: [], grid: [] };
-var headers = null;
-
-var lastTargets = null;
-
-$.ajax({
-=======
 var table = [],
     viewManager = new ViewManager(),
     camera,
@@ -20,32 +7,29 @@ var table = [],
     headers = null,
     actualView = 'stack';
 
-$.ajax({
->>>>>>> lab
+//Global constants
+var TILE_DIMENSION = {
+    width : 180,
+    height : 140
+},
+    TILE_SPACING = 20;
+
+/*$.ajax({
     url: "get_plugins.php",
     method: "GET"
 }).success(
     function(lists) {
-<<<<<<< HEAD
-        
-        var l = JSON.parse(lists);
-
-        fillTable(l);
-
-        $('#splash').fadeTo(0, 500, function() {
-=======
         var l = JSON.parse(lists);
         viewManager.fillTable(l);
         $('#splash').fadeTo(2000, 0, function() {
->>>>>>> lab
             $('#splash').remove();
             init();
-            setTimeout( animate, 500);
+            setTimeout(animate, 500);
         });
     }
-);
+);*/
 
-/*var l = JSON.parse(testData);
+var l = JSON.parse(testData);
     
     viewManager.fillTable(l);
     
@@ -53,357 +37,28 @@ $.ajax({
             $('#splash').remove();
             init();
             setTimeout( animate, 500);
-        });*/
+        });
 
 function init() {
-<<<<<<< HEAD
-    
-    scene = new THREE.Scene();
-    
-=======
 
->>>>>>> lab
     // table
     viewManager.drawTable();
     
     var dimensions = viewManager.dimensions;
 
-<<<<<<< HEAD
-    var groupsQtty = groups.size();
-    var layersQtty = layers.size();
-    var section = [];
-    var elementsByGroup = [];
-    var columnWidth = 0;
-    var superLayerMaxHeight = 0;
-    var layerPosition = [];
-    var superLayerPosition = [];
-    
-    for ( var key in layers ) {
-        if ( key == "size" ) continue;
-        
-        if ( layers[key].super_layer ) {
-            
-            section.push(0);
-        }
-        else {
-            
-            var newLayer = [];
-            
-            for ( var i = 0; i < groupsQtty; i++ )
-                newLayer.push(0);
-            
-            section.push(newLayer);
-        }
-    }
-    
-    var preComputeLayout = function() {
-        
-        var _sections = [];
-        var superLayerHeight = 0;
-        var isSuperLayer = [];
-        
-        //Initialize
-        for ( var key in layers ) {
-            if ( key == "size" ) continue;
-            
-            if ( layers[key].super_layer ) {
-
-                _sections.push(0);
-                superLayerHeight++;
-                
-                if( superLayerMaxHeight < superLayerHeight ) superLayerMaxHeight = superLayerHeight;
-            }
-            else {
-
-                var newLayer = [];
-                superLayerHeight = 0;
-
-                for ( var i = 0; i < groupsQtty; i++ )
-                    newLayer.push(0);
-
-                _sections.push(newLayer);
-            }
-            
-            isSuperLayer.push(false);
-        }
-        
-        for(var j = 0; j <= groupsQtty; j++) {
-            
-            elementsByGroup.push(0);
-            //columnGroupPosition.push(0);
-        }
-        
-        //Set sections sizes
-        
-        for(var i = 0; i < table.length; i++){
-            
-            var r = table[i].layerID;
-            var c = table[i].groupID;
-            
-            elementsByGroup[c]++;
-            
-            if ( layers[table[i].layer].super_layer ) {
-                
-                _sections[r]++;
-                isSuperLayer[r] = true;
-            }
-            else {
-                
-                _sections[r][c]++;
-                
-                if ( _sections[r][c] > columnWidth ) columnWidth = _sections[r][c];
-            }
-            
-            //if ( c != groups.size() && elementsByGroup[c] > columnWidth ) columnWidth = elementsByGroup[c];
-        }
-        
-        //Set row height
-        
-        var actualHeight = 0;
-        var remainingSpace = superLayerMaxHeight;
-        var inSuperLayer = false;
-        var actualSuperLayer = 0;
-        
-        for ( var i = 0; i < layersQtty; i++ ) {
-            
-            if( isSuperLayer[i] ) {
-                
-                if(!inSuperLayer) {
-                    actualHeight++;
-                    
-                    if ( superLayerPosition[ actualSuperLayer ] == undefined ) {
-                        superLayerPosition[ actualSuperLayer ] = actualHeight;
-                    }
-                }
-                
-                inSuperLayer = true;
-                actualHeight++;
-                remainingSpace--;
-            }
-            else {
-                
-                if(inSuperLayer) {
-                    
-                    actualHeight += remainingSpace + 1;
-                    remainingSpace = superLayerMaxHeight;
-                    actualSuperLayer++;
-                }
-                
-                inSuperLayer = false;
-                actualHeight++;
-            }
-            
-            layerPosition[ i ] = actualHeight;
-        }
-    };
-    preComputeLayout();
-    
-    for ( var i = 0; i < table.length; i++ ) {
-
-        var object = new createElement(i);
-        
-        object.position.x = 0;
-        object.position.y = 0;
-        object.position.z = 80000;
-        scene.add( object );
-
-        objects.push(object);
-
-        //
-        
-        var object = new THREE.Object3D();
-        
-        //Row (Y)
-        var row = table[i].layerID;
-        
-        if ( layers[table[i].layer].super_layer ) {
-            
-            object.position.x = ( (section[row]) * 140 ) - (columnWidth * groupsQtty * 140 / 2);
-            
-            section[row]++;
-            
-        }
-        else {
-            
-            //Column (X)
-            var column = table[i].groupID;
-            object.position.x = ( ( (column * (columnWidth) + section[row][column]) + column ) * 140 ) - (columnWidth * groupsQtty * 140 / 2);
-
-            section[row][column]++;
-        }
-        
-        
-        object.position.y = - ( (layerPosition[ row ] ) * 180 ) + (layersQtty * 180 / 2);
-
-        targets.table.push( object );
-
-    }
-    
-    // table groups icons
-    headers = new Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, superLayerPosition);
-
-    /*
-    // sphere
-
-    var vector = new THREE.Vector3();
-    
-    var indexes = [];
-    
-    for ( var i = 0; i <= groupsQtty; i++ ) indexes.push(0);
-    
-    for ( var i = 0; i < objects.length; i ++ ) {
-        
-        var g = (table[i].groupID != undefined) ? table[i].groupID : groupsQtty;
-        
-        var radious = 300 * (g + 1);
-        
-        var phi = Math.acos( ( 2 * indexes[g] ) / elementsByGroup[g] - 1 );
-        var theta = Math.sqrt( elementsByGroup[g] * Math.PI ) * phi;
-
-        var object = new THREE.Object3D();
-
-        object.position.x = radious * Math.cos( theta ) * Math.sin( phi );
-        object.position.y = radious * Math.sin( theta ) * Math.sin( phi );
-        object.position.z = radious * Math.cos( phi );
-        
-        vector.copy( object.position ).multiplyScalar( 2 );
-
-        object.lookAt( vector );
-
-        targets.sphere.push( object );
-        
-        indexes[g]++;
-
-        
-    }
-
-    // helix
-
-    var vector = new THREE.Vector3();
-    
-    var helixSection = [];
-    var current = [];
-    var last = 0, helixPosition = 0;
-    
-    for ( var i = 0; i < layersQtty; i++ ) {
-        
-        var totalInRow = 0;
-        
-        for ( var j = 0; j < groupsQtty; j++ ) {
-            
-            if ( typeof(section[i] ) == "object" )
-                totalInRow += section[i][j];
-            else if (j == 0)
-                totalInRow += section[i];
-        }
-        
-        helixPosition += last;
-        helixSection.push(helixPosition);
-        last = totalInRow;
-        
-        current.push(0);
-    }
-
-    for ( var i = 0, l = objects.length; i < l; i ++ ) {
-
-        var row = table[i].layerID;
-        
-        var x = helixSection[row] + current[row];
-        current[row]++;
-        
-        
-        var phi = x * 0.175 + Math.PI;
-
-        var object = new THREE.Object3D();
-
-        object.position.x = 900 * Math.sin( phi );
-        object.position.y = - ( x * 8 ) + 450;
-        object.position.z = 900 * Math.cos( phi );
-
-        vector.x = object.position.x * 2;
-        vector.y = object.position.y;
-        vector.z = object.position.z * 2;
-
-        object.lookAt( vector );
-
-        targets.helix.push( object );
-
-    }
-
-    // grid
-    
-    var gridLine = [];
-    var gridLayers = [];
-    var lastLayer = 0;
-    
-    
-    for ( var i = 0; i < layersQtty + 1; i++ ) {
-        
-        //gridLine.push(0);
-        var gridLineSub = [];
-        var empty = true;
-        
-        for ( var j = 0; j < section.length; j++ ) {
-            
-            if(section[j][i] != 0) empty = false;
-            
-            gridLineSub.push(0);
-        }
-        
-        if(!empty) lastLayer++;
-        
-        gridLayers.push(lastLayer);
-        gridLine.push(gridLineSub);
-    }
-
-    for ( var i = 0; i < objects.length; i ++ ) {
-
-        var group = table[i].groupID;
-        var layer = table[i].layerID;
-        
-        var object = new THREE.Object3D();
-
-        //By layer
-        object.position.x = ( ( gridLine[layer][0] % 5 ) * 200 ) - 450;
-        object.position.y = ( - ( Math.floor( gridLine[layer][0] / 5) % 5 ) * 200 ) + 0;
-        object.position.z = ( - gridLayers[layer] ) * 200 + (layersQtty * 50);
-        gridLine[layer][0]++;
-        
-        targets.grid.push( object );
-
-    }
-*/
-    //
-    //var light = new THREE.HemisphereLight( 0xFFFFFF, 0xFFFFFF, 1);
-    var light = new THREE.AmbientLight(0xFFFFFF);
-    scene.add( light );
-    renderer = new THREE.WebGLRenderer({ antialias : true, logarithmicDepthBuffer : true });
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xffffff);
-    document.getElementById( 'container' ).appendChild( renderer.domElement );
-    
-    camera = new Camera( new THREE.Vector3( 0, 0, columnWidth * groupsQtty * 140 ),
-                        renderer,
-                        render );
-    
-
-    //
-    
-    $('.backButton').click( function() { changeView( targets.table ); });
-    $('#legendButton').click( function() { 
-        
-=======
     // groups icons
     headers = new Headers(dimensions.columnWidth, dimensions.superLayerMaxHeight, dimensions.groupsQtty,
                           dimensions.layersQtty, dimensions.superLayerPosition);
     
-    renderer = new THREE.CSS3DRenderer();
+    var light = new THREE.AmbientLight(0xFFFFFF);
+    scene.add( light );
+    renderer = new THREE.WebGLRenderer({ antialias : true, logarithmicDepthBuffer : true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
+    renderer.setClearColor(0xffffff);
     document.getElementById('container').appendChild(renderer.domElement);
 
-    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * 140),
+    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * TILE_DIMENSION.width),
         renderer,
         render);
 
@@ -415,17 +70,15 @@ function init() {
     });
     $('#legendButton').click(function() {
 
->>>>>>> lab
         var legend = document.getElementById('legend');
-        
-        if( legend.style.opacity == 1) $('#legend').fadeTo( 1000, 0, function() { legend.style.display = 'none'; } );
-        else { 
+
+        if (legend.style.opacity == 1) $('#legend').fadeTo(1000, 0, function() {
+            legend.style.display = 'none';
+        });
+        else {
             legend.style.display = 'block';
-            $(legend).fadeTo( 1000, 1);
+            $(legend).fadeTo(1000, 1);
         }
-<<<<<<< HEAD
-    } );
-=======
     });
     $('#tableViewButton').click(function() {
         if(actualView === 'stack')
@@ -433,20 +86,17 @@ function init() {
         else
             goToView('stack');
     });
->>>>>>> lab
+    $('#container').click(onClick);
 
     //Disabled Menu
     //initMenu();
 
-<<<<<<< HEAD
-    transform( targets.table, 4000 );
-=======
     goToView('stack');
     
-    setTimeout(function() {
+    /*setTimeout(function() {
         var loader = new Loader();
         loader.findThemAll();
-    }, 2000);
+    }, 2000);*/
 }
 
 /**
@@ -493,22 +143,10 @@ function goToView(name) {
             actualView = 'stack';
             break;
     }
->>>>>>> lab
 }
 
 function initMenu() {
-    
-    var button = document.getElementById( 'table' );
-    button.addEventListener( 'click', function ( event ) {
 
-<<<<<<< HEAD
-        changeView( targets.table );
-
-    }, false );
-
-    var button = document.getElementById( 'sphere' );
-    button.addEventListener( 'click', function ( event ) {
-=======
     var button = document.getElementById('table');
     button.addEventListener('click', function(event) {
 
@@ -520,45 +158,236 @@ function initMenu() {
     button.addEventListener('click', function(event) {
 
         changeView(viewManager.targets.sphere);
->>>>>>> lab
 
-        changeView( targets.sphere );
+    }, false);
 
-<<<<<<< HEAD
-    }, false );
-
-    var button = document.getElementById( 'helix' );
-    button.addEventListener( 'click', function ( event ) {
-=======
     button = document.getElementById('helix');
     button.addEventListener('click', function(event) {
 
         changeView(viewManager.targets.helix);
->>>>>>> lab
 
-        changeView( targets.helix );
+    }, false);
 
-<<<<<<< HEAD
-    }, false );
-
-    var button = document.getElementById( 'grid' );
-    button.addEventListener( 'click', function ( event ) {
-=======
     button = document.getElementById('grid');
     button.addEventListener('click', function(event) {
 
         changeView(viewManager.targets.grid);
->>>>>>> lab
 
-        changeView( targets.grid );
+    }, false);
 
-    }, false );
-    
 }
-<<<<<<< HEAD
+ 
+function changeView(targets) {
 
-//Should return a mesh
-function createElement( i ) {
+    camera.enable();
+    camera.loseFocus();
+
+    if (targets != null)
+        viewManager.transform(targets, 2000);
+}
+
+function onElementClick(id) {
+
+    //var id = this.id;
+
+    //var image = document.getElementById('img-' + id);
+
+    if (camera.getFocus() == null) {
+
+        camera.setFocus(id, 2000);
+        setTimeout(function() {
+            camera.setFocus(id, 1000);
+            $('#backButton').fadeTo(1000, 1, function() {
+                $('#backButton').show();
+            });
+        }, 3000);
+        camera.disable();
+
+        /*if (image != null) {
+
+            var handler = function() {
+                onImageClick(id, image, handler);
+            };
+
+            image.addEventListener('click', handler, true);
+        } else {}*/
+    }
+
+    function onImageClick(id, image, handler) {
+
+        image.removeEventListener('click', handler, true);
+
+        var relatedTasks = [];
+
+        for (var i = 0; i < table.length; i++) {
+            if (table[i].author == table[id].author) relatedTasks.push(i);
+        }
+
+        createSidePanel(id, image, relatedTasks);
+        createElementsPanel(relatedTasks);
+    }
+
+    function createSidePanel(id, image, relatedTasks) {
+
+        var sidePanel = document.createElement('div');
+        sidePanel.id = 'sidePanel';
+        sidePanel.style.position = 'absolute';
+        sidePanel.style.top = '0px';
+        sidePanel.style.bottom = '25%';
+        sidePanel.style.left = '0px';
+        sidePanel.style.marginTop = '50px';
+        sidePanel.style.width = '35%';
+        sidePanel.style.textAlign = 'center';
+
+        var panelImage = document.createElement('img');
+        panelImage.id = 'focusImg';
+        panelImage.src = image.src;
+        panelImage.style.position = 'relative';
+        panelImage.style.width = '50%';
+        panelImage.style.opacity = 0;
+        sidePanel.appendChild(panelImage);
+
+        var userName = document.createElement('p');
+        userName.style.opacity = 0;
+        userName.style.position = 'relative';
+        userName.style.fontWeight = 'bold';
+        userName.textContent = table[id].author;
+        sidePanel.appendChild(userName);
+
+        var realName = document.createElement('p');
+        realName.style.opacity = 0;
+        realName.style.position = 'relative';
+        realName.textContent = table[id].authorRealName;
+        sidePanel.appendChild(realName);
+
+        var email = document.createElement('p');
+        email.style.opacity = 0;
+        email.style.position = 'relative';
+        email.textContent = table[id].authorEmail;
+        sidePanel.appendChild(email);
+
+        if (relatedTasks != null && relatedTasks.length > 0) {
+
+            var tlButton = document.createElement('button');
+            tlButton.id = 'timelineButton';
+            tlButton.style.opacity = 0;
+            tlButton.style.position = 'relative';
+            tlButton.textContent = 'See Timeline';
+
+            $(tlButton).click(function() {
+                showTimeline(relatedTasks);
+            });
+
+            sidePanel.appendChild(tlButton);
+        }
+
+        $('#container').append(sidePanel);
+
+        $(renderer.domElement).fadeTo(1000, 0);
+
+        $(panelImage).fadeTo(1000, 1, function() {
+            $(userName).fadeTo(1000, 1, function() {
+                $(realName).fadeTo(1000, 1, function() {
+                    $(email).fadeTo(1000, 1, function() {
+
+                        if (tlButton != null) $(tlButton).fadeTo(1000, 1);
+
+                    });
+                });
+            });
+        });
+    }
+
+    function createElementsPanel(tasks) {
+        
+        var i, l;
+
+        var elementPanel = document.createElement('div');
+        elementPanel.id = 'elementPanel';
+        elementPanel.style.position = 'absolute';
+        elementPanel.style.top = '0px';
+        elementPanel.style.bottom = '25%';
+        elementPanel.style.right = '0px';
+        elementPanel.style.marginTop = '50px';
+        elementPanel.style.marginRight = '5%';
+        elementPanel.style.width = '60%';
+        elementPanel.style.overflowY = 'auto';
+
+
+        for (i = 0, l = tasks.length; i < l; i++) {
+
+            var clone = helper.cloneTile(tasks[i], 'task-' + tasks[i]);
+            clone.style.position = 'relative';
+            clone.style.display = 'inline-block';
+            clone.style.marginLeft = '10px';
+            clone.style.marginTop = '10px';
+            clone.style.opacity = 0;
+            elementPanel.appendChild(clone);
+
+            $(clone).fadeTo(2000, 1);
+        }
+
+        $('#container').append(elementPanel);
+
+    }
+
+    function showTimeline(tasks) {
+
+        helper.hide('sidePanel');
+        helper.hide('elementPanel');
+
+        var tlContainer = document.createElement('div');
+        tlContainer.id = 'tlContainer';
+        tlContainer.style.position = 'absolute';
+        tlContainer.style.top = '50px';
+        tlContainer.style.bottom = '50px';
+        tlContainer.style.left = '50px';
+        tlContainer.style.right = '50px';
+        tlContainer.style.overflowY = 'auto';
+        tlContainer.style.opacity = 0;
+        $('#container').append(tlContainer);
+
+        $(tlContainer).fadeTo(1000, 1);
+
+        new Timeline(tasks, tlContainer).show();
+    }
+}
+
+function onClick(e) {
+    
+    var mouse = new THREE.Vector2(0, 0),
+        clicked = [];
+    
+    if(actualView === 'table') {
+    
+        //Obtain normalized click location (-1...1)
+        mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
+        mouse.y = - ((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height) * 2 + 1;
+        
+        clicked = camera.rayCast(mouse, objects);
+        
+        if(clicked && clicked.length > 0) {
+            onElementClick(clicked[0].object.userData.id);
+        }
+    }
+}
+
+function animate() {
+
+    requestAnimationFrame(animate);
+
+    TWEEN.update();
+
+    camera.update();
+}
+
+function render() {
+
+    //renderer.render( scene, camera );
+    camera.render(renderer, scene);
+}
+
+function createElement(i) {
    
     var canvas,
         ctx,
@@ -588,8 +417,8 @@ function createElement( i ) {
     lastY = drawText(table[i].layer, center, 150, ctx, 12, 120, 14);
     
     // Group
-    var text = ((table[ i ].group != undefined) ? table[i].group : layers[table[i].layer].super_layer);
-    drawText(text, 97, 17, ctx, 116, 14)
+    var text = ((table[ i ].group !== undefined) ? table[i].group : layers[table[i].layer].super_layer);
+    drawText(text, 97, 17, ctx, 116, 14);
     
     // Name
     ctx.fillStyle = '#FFFFFF';
@@ -598,7 +427,7 @@ function createElement( i ) {
     
     // Dificulty
     ctx.font = '14px ' + font;
-    drawText(printDifficulty(Math.floor( table[i].difficulty / 2)), center, 93 + 14, ctx, 116, 14);
+    drawText(helper.printDifficulty(Math.floor( table[i].difficulty / 2)), center, 93 + 14, ctx, 116, 14);
     
     // Symbol
     ctx.font = 'bold 25px ' + font;
@@ -753,456 +582,4 @@ function drawText(text, x, y, context, size, maxWidth, lineHeight) {
         drawText(text2, x, y, ctx, size);
     }*/
 }
-
-=======
- 
->>>>>>> lab
-function changeView(targets) {
-    
-    camera.enable();
-    camera.loseFocus();
-<<<<<<< HEAD
-    
-    if( targets != null )
-        transform( targets, 2000 );
-=======
-
-    if (targets != null)
-        viewManager.transform(targets, 2000);
->>>>>>> lab
-}
-
-function onElementClick() {
-    
-    var id = this.id;
-    
-    var image = document.getElementById('img-' + id);
-    
-    if ( camera.getFocus() == null ) {
         
-        camera.setFocus(id, 2000);
-        setTimeout( function() {
-            camera.setFocus(id, 1000);
-            $('#backButton').fadeTo(1000, 1, function() { $('#backButton').show(); } );
-        }, 3000 );
-        camera.disable();
-
-        if ( image != null ) {
-
-            var handler = function() { onImageClick(id, image, handler); };
-
-<<<<<<< HEAD
-            image.addEventListener( 'click', handler, true );
-        }
-=======
-            image.addEventListener('click', handler, true);
-        } else {}
->>>>>>> lab
-    }
-
-<<<<<<< HEAD
-function onImageClick(id, image, handler) {
-    
-    image.removeEventListener( 'click', handler, true );
-    
-    var relatedTasks = [];
-    
-    for( var i = 0; i < table.length; i++ ) {
-        if ( table[ i ].author == table[ id ].author ) relatedTasks.push( i );
-    }
-
-    createSidePanel( id, image, relatedTasks );
-    createElementsPanel( relatedTasks );
-}
-
-function createSidePanel( id, image, relatedTasks ) {
-    
-    var sidePanel = document.createElement( 'div' );
-    sidePanel.id = 'sidePanel';
-    sidePanel.style.position = 'absolute';
-    sidePanel.style.top = '0px';
-    sidePanel.style.bottom = '25%';
-    sidePanel.style.left = '0px';
-    sidePanel.style.marginTop = '50px';
-    sidePanel.style.width = '35%';
-    sidePanel.style.textAlign = 'center';
-    
-    var panelImage = document.createElement( 'img' );
-    panelImage.id = 'focusImg';
-    panelImage.src = image.src;
-    panelImage.style.position = 'relative';
-    panelImage.style.width = '50%';
-    panelImage.style.opacity = 0;
-    sidePanel.appendChild( panelImage );
-    
-    var userName = document.createElement( 'p' );
-    userName.style.opacity = 0;
-    userName.style.position = 'relative';
-    userName.style.fontWeight = 'bold';
-    userName.textContent = table[ id ].author;
-    sidePanel.appendChild( userName );
-    
-    var realName = document.createElement( 'p' );
-    realName.style.opacity = 0;
-    realName.style.position = 'relative';
-    realName.textContent = table[ id ].authorRealName;
-    sidePanel.appendChild( realName );
-    
-    var email = document.createElement( 'p' );
-    email.style.opacity = 0;
-    email.style.position = 'relative';
-    email.textContent = table[ id ].authorEmail;
-    sidePanel.appendChild( email );
-    
-    if ( relatedTasks != null && relatedTasks.length > 0 ) {
-        
-        var tlButton = document.createElement( 'button' );
-        tlButton.id = 'timelineButton';
-        tlButton.style.opacity = 0;
-        tlButton.style.position = 'relative';
-        tlButton.textContent = 'See Timeline';
-        
-        $(tlButton).click( function() {
-            showTimeline( relatedTasks );
-        });
-        
-        sidePanel.appendChild( tlButton );
-    }
-    
-    $('#container').append(sidePanel);
-    
-    $(renderer.domElement).fadeTo(1000, 0);
-    
-    $(panelImage).fadeTo(1000, 1, function() {
-        $(userName).fadeTo(1000, 1, function() {
-            $(realName).fadeTo(1000, 1, function() {
-                $(email).fadeTo(1000, 1, function() {
-                    
-                    if( tlButton != null) $(tlButton).fadeTo(1000, 1);
-                    
-                });
-            });
-        });
-    });
-}
-
-function createElementsPanel( tasks ) {
-    
-    var elementPanel = document.createElement( 'div' );
-    elementPanel.id = 'elementPanel';
-    elementPanel.style.position = 'absolute';
-    elementPanel.style.top = '0px';
-    elementPanel.style.bottom = '25%';
-    elementPanel.style.right = '0px';
-    elementPanel.style.marginTop = '50px';
-    elementPanel.style.marginRight = '5%';
-    elementPanel.style.width = '60%';
-    elementPanel.style.overflowY = 'auto';
-    
-    $('#container').append(elementPanel);
-    
-    for ( i = 0; i < tasks.length; i++ ) {
-        
-        var clone = helper.cloneTile(tasks[i], 'task-' + tasks[i]);
-        clone.style.position = 'relative';
-        clone.style.display = 'inline-block';
-        clone.style.marginLeft = '10px';
-        clone.style.marginTop = '10px';
-        clone.style.opacity = 0;
-        elementPanel.appendChild(clone);
-
-        $(clone).fadeTo(2000, 1);
-    }
-    
-}
-
-function showTimeline( tasks ) {
-    
-    helper.hide('sidePanel');
-    helper.hide('elementPanel');
-    
-    var tlContainer = document.createElement('div');
-    tlContainer.id = 'tlContainer';
-    tlContainer.style.position = 'absolute';
-    tlContainer.style.top = '50px';
-    tlContainer.style.bottom = '50px';
-    tlContainer.style.left = '50px';
-    tlContainer.style.right = '50px';
-    tlContainer.style.overflowY = 'auto';
-    tlContainer.style.opacity = 0;
-    $('#container').append(tlContainer);
-    
-    $(tlContainer).fadeTo(1000, 1);
-    
-    new Timeline(tasks, tlContainer).show();
-}
-
-function printDifficulty(value) {
-    var max = 5;
-    var result = "";
-    
-    while ( value > 0 ) {
-        result += '★';
-        max--;
-        value--;
-    }
-    
-    while ( max > 0 ) {
-        result += '☆';
-        max--;
-    }
-    
-    return result;
-}
-
-function fillTable(list) {
-    
-    var pluginList = list.plugins;
-    
-    for(var i = 0; i < list.superLayers.length; i++) {
-        superLayers[list.superLayers[i].code] = {};
-        superLayers[list.superLayers[i].code].name = list.superLayers[i].name;
-        superLayers[list.superLayers[i].code].index = list.superLayers[i].index;
-    }
-    
-    for(var i = 0; i < list.layers.length; i++) {
-        layers[list.layers[i].name] = {};
-        layers[list.layers[i].name].index = list.layers[i].index;
-        layers[list.layers[i].name].super_layer = list.layers[i].super_layer;
-    }
-    
-    for(var i = 0; i < list.groups.length; i++)
-        groups[list.groups[i].code] = list.groups[i].index;
-    
-    
-    for(var i = 0; i < pluginList.length; i++) {
-        
-        var data = pluginList[i];
-        
-        var _group = data.group;
-        var _layer = data.layer;
-        var _name = data.name;
-        
-        var layerID = layers[_layer].index;
-        layerID = (layerID == undefined) ? layers.size() : layerID;
-        
-        var groupID = groups[_group];
-        groupID = (groupID == undefined) ? groups.size() : groupID;
-        
-        var element = {
-            group : _group,
-            groupID : groupID,
-            code : helper.getCode(_name),
-            name : _name,
-            layer : _layer,
-            layerID : layerID,
-            type : data.type,
-            picture : data.authorPicture,
-            author : data.authorName,
-            authorRealName : data.authorRealName,
-            authorEmail : data.authorEmail,
-            difficulty : data.difficulty,
-            code_level : data.code_level,
-            life_cycle : data.life_cycle
-        };
-        
-        table.push(element);
-    }
-}
-
-function transform( goal, duration ) {
-
-    TWEEN.removeAll();
-    
-    lastTargets = goal;
-
-    for ( var i = 0; i < objects.length; i ++ ) {
-
-        var object = objects[ i ];
-        var target = goal[ i ];
-
-        new TWEEN.Tween( object.position )
-            .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
-            .easing( TWEEN.Easing.Exponential.InOut )
-            .start();
-
-        new TWEEN.Tween( object.rotation )
-            .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
-            .easing( TWEEN.Easing.Exponential.InOut )
-            .start();
-
-    }
-    
-    if ( goal == targets.table ) {
-        headers.show(duration);
-    }
-    else {
-        headers.hide(duration);
-    }
-
-    new TWEEN.Tween( this )
-        .to( {}, duration * 2 )
-        .onUpdate( render )
-        .start();
-
-=======
-    function onImageClick(id, image, handler) {
-
-        image.removeEventListener('click', handler, true);
-
-        var relatedTasks = [];
-
-        for (var i = 0; i < table.length; i++) {
-            if (table[i].author == table[id].author) relatedTasks.push(i);
-        }
-
-        createSidePanel(id, image, relatedTasks);
-        createElementsPanel(relatedTasks);
-    }
-
-    function createSidePanel(id, image, relatedTasks) {
-
-        var sidePanel = document.createElement('div');
-        sidePanel.id = 'sidePanel';
-        sidePanel.style.position = 'absolute';
-        sidePanel.style.top = '0px';
-        sidePanel.style.bottom = '25%';
-        sidePanel.style.left = '0px';
-        sidePanel.style.marginTop = '50px';
-        sidePanel.style.width = '35%';
-        sidePanel.style.textAlign = 'center';
-
-        var panelImage = document.createElement('img');
-        panelImage.id = 'focusImg';
-        panelImage.src = image.src;
-        panelImage.style.position = 'relative';
-        panelImage.style.width = '50%';
-        panelImage.style.opacity = 0;
-        sidePanel.appendChild(panelImage);
-
-        var userName = document.createElement('p');
-        userName.style.opacity = 0;
-        userName.style.position = 'relative';
-        userName.style.fontWeight = 'bold';
-        userName.textContent = table[id].author;
-        sidePanel.appendChild(userName);
-
-        var realName = document.createElement('p');
-        realName.style.opacity = 0;
-        realName.style.position = 'relative';
-        realName.textContent = table[id].authorRealName;
-        sidePanel.appendChild(realName);
-
-        var email = document.createElement('p');
-        email.style.opacity = 0;
-        email.style.position = 'relative';
-        email.textContent = table[id].authorEmail;
-        sidePanel.appendChild(email);
-
-        if (relatedTasks != null && relatedTasks.length > 0) {
-
-            var tlButton = document.createElement('button');
-            tlButton.id = 'timelineButton';
-            tlButton.style.opacity = 0;
-            tlButton.style.position = 'relative';
-            tlButton.textContent = 'See Timeline';
-
-            $(tlButton).click(function() {
-                showTimeline(relatedTasks);
-            });
-
-            sidePanel.appendChild(tlButton);
-        }
-
-        $('#container').append(sidePanel);
-
-        $(renderer.domElement).fadeTo(1000, 0);
-
-        $(panelImage).fadeTo(1000, 1, function() {
-            $(userName).fadeTo(1000, 1, function() {
-                $(realName).fadeTo(1000, 1, function() {
-                    $(email).fadeTo(1000, 1, function() {
-
-                        if (tlButton != null) $(tlButton).fadeTo(1000, 1);
-
-                    });
-                });
-            });
-        });
-    }
-
-    function createElementsPanel(tasks) {
-        
-        var i, l;
-
-        var elementPanel = document.createElement('div');
-        elementPanel.id = 'elementPanel';
-        elementPanel.style.position = 'absolute';
-        elementPanel.style.top = '0px';
-        elementPanel.style.bottom = '25%';
-        elementPanel.style.right = '0px';
-        elementPanel.style.marginTop = '50px';
-        elementPanel.style.marginRight = '5%';
-        elementPanel.style.width = '60%';
-        elementPanel.style.overflowY = 'auto';
-
-
-        for (i = 0, l = tasks.length; i < l; i++) {
-
-            var clone = helper.cloneTile(tasks[i], 'task-' + tasks[i]);
-            clone.style.position = 'relative';
-            clone.style.display = 'inline-block';
-            clone.style.marginLeft = '10px';
-            clone.style.marginTop = '10px';
-            clone.style.opacity = 0;
-            elementPanel.appendChild(clone);
-
-            $(clone).fadeTo(2000, 1);
-        }
-
-        $('#container').append(elementPanel);
-
-    }
-
-    function showTimeline(tasks) {
-
-        helper.hide('sidePanel');
-        helper.hide('elementPanel');
-
-        var tlContainer = document.createElement('div');
-        tlContainer.id = 'tlContainer';
-        tlContainer.style.position = 'absolute';
-        tlContainer.style.top = '50px';
-        tlContainer.style.bottom = '50px';
-        tlContainer.style.left = '50px';
-        tlContainer.style.right = '50px';
-        tlContainer.style.overflowY = 'auto';
-        tlContainer.style.opacity = 0;
-        $('#container').append(tlContainer);
-
-        $(tlContainer).fadeTo(1000, 1);
-
-        new Timeline(tasks, tlContainer).show();
-    }
->>>>>>> lab
-}
-
-function animate() {
-
-    requestAnimationFrame( animate );
-
-    TWEEN.update();
-    
-    camera.update();
-}
-
-function render() {
-
-    //renderer.render( scene, camera );
-<<<<<<< HEAD
-    camera.render( renderer, scene );
-
-=======
-    camera.render(renderer, scene);
->>>>>>> lab
-}
