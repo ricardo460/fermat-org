@@ -1,5 +1,11 @@
 html, body {
 				height: 100%;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
 			}
 
 body {
@@ -161,6 +167,13 @@ button:active {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+#tableViewButton {
+    position : fixed;
+    bottom : 10px;
+    right : 10px;
+    z-index: 10;
 }
 
 @keyframes loop {
