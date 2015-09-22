@@ -9,8 +9,10 @@ function Dao(ref, schema, model, pop_ref, pop_schema, pop_model) {
     // always initialize all instance properties
     this.Schema = mongoose.model(ref, schema);
     this.Model = model;
-    this.PopSchema = mongoose.model(pop_ref, pop_schema);
-    this.PopModel = pop_model;
+    if (pop_ref && pop_schema && pop_model) {
+        this.PopSchema = mongoose.model(pop_ref, pop_schema);
+        this.PopModel = pop_model;
+    }
     if (config.env == 'development') {
         this.Schema.ensureIndexes(function(err, res) {
             if (err) winston.log('info', 'Mongoose default connection error', err);
