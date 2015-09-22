@@ -10,17 +10,37 @@ var config = require('../../config');
  * @param  {[type]} ref        [description]
  * @param  {[type]} schema     [description]
  * @param  {[type]} model      [description]
- * @param  {[type]} pop_ref    [description]
- * @param  {[type]} pop_schema [description]
- * @param  {[type]} pop_model  [description]
+ * @param  {[type]} *path_ref    [description]
+ * @param  {[type]} *path_schema [description]
+ * @param  {[type]} *path_model  [description]
  */
-function Dao(ref, schema, model, pop_ref, pop_schema, pop_model) {
+function Dao(ref, schema, model, path_ref, path_schema, path_model,
+    sec_path_ref, sec_path_schema, sec_path_model,
+    thr_path_ref, thr_path_schema, thr_path_model,
+    frt_path_ref, frt_path_schema, frt_path_model,
+    fit_path_ref, fit_path_schema, fit_path_model) {
     // always initialize all instance properties
     this.Schema = mongoose.model(ref, schema);
     this.Model = model;
-    if (pop_ref && pop_schema && pop_model) {
-        this.PopSchema = mongoose.model(pop_ref, pop_schema);
-        this.PopModel = pop_model;
+    if (path_ref && path_schema && path_model) {
+        this.PathSchema = mongoose.model(path_ref, path_schema);
+        this.PathModel = path_model;
+    }
+    if (sec_path_ref && sec_path_schema && sec_path_model) {
+        this.SecPathSchema = mongoose.model(sec_path_ref, sec_path_schema);
+        this.SecPathModel = sec_path_model;
+    }
+    if (thr_path_ref && thr_path_schema && thr_path_model) {
+        this.ThrPathSchema = mongoose.model(thr_path_ref, thr_path_schema);
+        this.ThrPathModel = thr_path_model;
+    }
+    if (frt_path_ref && frt_path_schema && frt_path_model) {
+        this.FrtPathSchema = mongoose.model(frt_path_ref, frt_path_schema);
+        this.FrtPathModel = frt_path_model;
+    }
+    if (fit_path_ref && fit_path_schema && fit_path_model) {
+        this.FitPathSchema = mongoose.model(fit_path_ref, fit_path_schema);
+        this.FitPathModel = fit_path_model;
     }
     if (config.env == 'development') {
         this.Schema.ensureIndexes(function(err, res) {
@@ -185,6 +205,9 @@ Dao.prototype.insertSchema = function(model, callback) {
     });
 };
 
+//pull
+//push
+
 Dao.prototype.findAndPopulateSchemaById = function(_id, path, callback) {
     var that = this;
     this.Schema.findOne({
@@ -221,6 +244,26 @@ Dao.prototype.findAndPopulateSchemaLst = function(query, limit, sort, path, call
     var that = this;
     this.Schema.find(query)
         .limit(limit)
+        .sort(sort)
+        .populate(path)
+        .exec(function(err, schemas) {
+            if (err && !schemas) {
+                return callback(err, null);
+            } else {
+                var models = [];
+                for (var i = 0, l = schemas.length; i < l; i++) {
+                    var model = new that.Model();
+                    model.init(schemas[i]);
+                    models.push(model);
+                };
+                return callback(err, models);;
+            }
+        });
+};
+
+Dao.prototype.findAndPopulateAllSchemaLst = function(query, sort, path, callback) {
+    var that = this;
+    this.Schema.find(query)
         .sort(sort)
         .populate(path)
         .exec(function(err, schemas) {
