@@ -5,7 +5,7 @@ var winston = require('winston');
 var mongoose = require('mongoose');
 
 // Build the connection string 
-var dbURI = 'mongodb://' + config.database.server + '/' + config.database.name + ':' + config.database.port;
+var dbURI = 'mongodb://' + config.database.server + ':' + config.database.port + '/' + config.database.name ;
 
 // Create the database connection 
 mongoose.connect(dbURI);
@@ -14,6 +14,7 @@ mongoose.connect(dbURI);
 // When successfully connected 
 mongoose.connection.on('connected', function () {
 	winston.log('info', 'Mongoose default connection open to %s', dbURI);
+	require('./modules/repository/developer');
 });
 
 // If the connection throws an error 

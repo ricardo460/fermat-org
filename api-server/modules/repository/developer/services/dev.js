@@ -3,16 +3,12 @@ var Dao = require('../../../database/dao');
 var devMdl = require('../models/dev');
 var devSch = require('../schemas/dev');
 
-console.dir(devMdl);
-console.dir(devSch);
-
 var devDao = new Dao('Dev', devSch, devMdl);
 
 exports.insertDev = function (dev_mdl, callback) {
-	console.dir(devDao);
-	/*devDao.insertSchema(dev_mdl, function (err, dev) {
+	devDao.insertSchema(dev_mdl, function (err, dev) {
 		callback(err, dev);
-	});*/
+	});
 };
 
 exports.findDevById = function (_id, callback) {
