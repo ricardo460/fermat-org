@@ -2,9 +2,18 @@ var mongoose = require('mongoose');
 var winston = require('winston');
 var config = require('../../config');
 
-var mongoose = require('mongoose');
-
-// Constructor
+/**
+ * [Dao Constructor]
+ *
+ * @method Dao
+ *
+ * @param  {[type]} ref        [description]
+ * @param  {[type]} schema     [description]
+ * @param  {[type]} model      [description]
+ * @param  {[type]} pop_ref    [description]
+ * @param  {[type]} pop_schema [description]
+ * @param  {[type]} pop_model  [description]
+ */
 function Dao(ref, schema, model, pop_ref, pop_schema, pop_model) {
     // always initialize all instance properties
     this.Schema = mongoose.model(ref, schema);
@@ -20,6 +29,16 @@ function Dao(ref, schema, model, pop_ref, pop_schema, pop_model) {
     }
 }
 
+/**
+ * [findSchemaById description]
+ *
+ * @method findSchemaById
+ *
+ * @param  {[type]}       _id      [description]
+ * @param  {Function}     callback [description]
+ *
+ * @return {[type]}       [description]
+ */
 Dao.prototype.findSchemaById = function(_id, callback) {
     var that = this;
     this.Schema.findOne({
@@ -35,6 +54,16 @@ Dao.prototype.findSchemaById = function(_id, callback) {
     });
 };
 
+/**
+ * [findSchema description]
+ *
+ * @method findSchema
+ *
+ * @param  {[type]}   query    [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 Dao.prototype.findSchema = function(query, callback) {
     var that = this;
     this.Schema.findOne(query).exec(function(err, schema) {
@@ -48,6 +77,18 @@ Dao.prototype.findSchema = function(query, callback) {
     });
 };
 
+/**
+ * [findSchemaLst description]
+ *
+ * @method findSchemaLst
+ *
+ * @param  {[type]}      query    [description]
+ * @param  {[type]}      limit    [description]
+ * @param  {[type]}      sort     [description]
+ * @param  {Function}    callback [description]
+ *
+ * @return {[type]}      [description]
+ */
 Dao.prototype.findSchemaLst = function(query, limit, sort, callback) {
     var that = this;
     this.Schema.find(query)
@@ -68,6 +109,17 @@ Dao.prototype.findSchemaLst = function(query, limit, sort, callback) {
         });
 };
 
+/**
+ * [findAllSchemaLst description]
+ *
+ * @method findAllSchemaLst
+ *
+ * @param  {[type]}         query    [description]
+ * @param  {[type]}         sort     [description]
+ * @param  {Function}       callback [description]
+ *
+ * @return {[type]}         [description]
+ */
 Dao.prototype.findAllSchemaLst = function(query, sort, callback) {
     var that = this;
     this.Schema.find(query)
@@ -87,6 +139,18 @@ Dao.prototype.findAllSchemaLst = function(query, sort, callback) {
         });
 };
 
+/**
+ * [updateSchema description]
+ *
+ * @method updateSchema
+ *
+ * @param  {[type]}     condition [description]
+ * @param  {[type]}     update    [description]
+ * @param  {[type]}     options   [description]
+ * @param  {Function}   callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
 Dao.prototype.updateSchema = function(condition, update, options, callback) {
     this.Schema.update(condition, update, options, function(err, res) {
         if (err && !res) {
@@ -97,6 +161,16 @@ Dao.prototype.updateSchema = function(condition, update, options, callback) {
     });
 };
 
+/**
+ * [insertSchema description]
+ *
+ * @method insertSchema
+ *
+ * @param  {[type]}     model    [description]
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
 Dao.prototype.insertSchema = function(model, callback) {
     var schema = new this.Schema(model);
     var that = this;

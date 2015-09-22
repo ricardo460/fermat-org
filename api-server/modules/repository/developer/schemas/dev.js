@@ -1,5 +1,10 @@
 var mongoose = require('mongoose');
 
+/**
+ * [devSchema description]
+ *
+ * @type {[type]}
+ */
 var devSchema = mongoose.Schema({
 	usrnm: {
 		type: String,
@@ -55,6 +60,13 @@ var devSchema = mongoose.Schema({
 	collection: 'devs'
 });
 
+/**
+ * [getAge description]
+ *
+ * @method getAge
+ *
+ * @return {[type]} [description]
+ */
 devSchema.methods.getAge = function () {
 	var diff = new Date() - this.bday;
 	var diffdays = diff / 1000 / (60 * 60 * 24);
@@ -62,7 +74,11 @@ devSchema.methods.getAge = function () {
 	return age;
 };
 
-// schema level
+/**
+ * [usrnm description]
+ *
+ * @type {[type]}
+ */
 devSchema.index({
 	usrnm: 1
 }, {
@@ -71,7 +87,11 @@ devSchema.index({
 	name: "devs_usrnm_uq_indx"
 }); 
 
-// schema level
+/**
+ * [email description]
+ *
+ * @type {[type]}
+ */
 devSchema.index({
 	email: 1
 }, {
@@ -80,7 +100,11 @@ devSchema.index({
 	name: "devs_email_uq_indx"
 }); 
 
-// schema level
+/**
+ * [usrnm description]
+ *
+ * @type {number}
+ */
 devSchema.index({
 	usrnm: 1,
 	email: 1,

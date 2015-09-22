@@ -30,7 +30,7 @@ devSrv.findAllDevs({}, {}, function(err, res) {
 	if (res) console.dir(res);
 });*/
 
-devSrv.updateDevById('560169c78340957c20355729', {bday: "1986/07/31"}, function(err, res) {
+/*devSrv.updateDevById('560169c78340957c20355729', {bday: "1986/07/31"}, function(err, res) {
 	if (err) console.dir(err);
 	if (res) console.dir(res);
-});
+});*/

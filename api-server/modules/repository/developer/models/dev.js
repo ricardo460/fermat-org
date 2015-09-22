@@ -1,6 +1,19 @@
 var mongoose = require('mongoose');
 
-// Constructor
+/**
+ * [DevMdl coonstructor]
+ *
+ * @method DevMdl
+ *
+ * @param  {[type]} usrnm      [description]
+ * @param  {[type]} email      [description]
+ * @param  {[type]} name       [description]
+ * @param  {[type]} bday       [description]
+ * @param  {[type]} country    [description]
+ * @param  {[type]} avatar_url [description]
+ * @param  {[type]} url        [description]
+ * @param  {[type]} bio        [description]
+ */
 function DevMdl(usrnm, email, name, bday, country, avatar_url, url, bio) {
 	// always initialize all instance properties
 	this.usrnm = usrnm;
@@ -14,7 +27,15 @@ function DevMdl(usrnm, email, name, bday, country, avatar_url, url, bio) {
 	this.upd_at = new mongoose.Types.ObjectId();
 }
 
-// class methods
+/**
+ * [init description]
+ *
+ * @method init
+ *
+ * @param  {[type]} devSchema [description]
+ *
+ * @return {[type]} [description]
+ */
 DevMdl.prototype.init = function(devSchema) {
 	this.usrnm = devSchema.usrnm;
 	this.email = devSchema.email;
@@ -27,10 +48,22 @@ DevMdl.prototype.init = function(devSchema) {
 	this.upd_at = devSchema.upd_at;
 };
 
+/**
+ * [setUpdate description]
+ *
+ * @method setUpdate
+ */
 DevMdl.prototype.setUpdate = function() {
 	this.upd_at = new mongoose.Types.ObjectId();
 };
 
+/**
+ * [getAge description]
+ *
+ * @method getAge
+ *
+ * @return {[type]} [description]
+ */
 DevMdl.prototype.getAge = function () {
 	var diff = new Date() - this.bday;
 	var diffdays = diff / 1000 / (60 * 60 * 24);
