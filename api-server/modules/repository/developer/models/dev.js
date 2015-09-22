@@ -31,5 +31,12 @@ DevMdl.prototype.setUpdate = function() {
 	this.upd_at = new mongoose.Types.ObjectId();
 };
 
+DevMdl.prototype.getAge = function () {
+	var diff = new Date() - this.bday;
+	var diffdays = diff / 1000 / (60 * 60 * 24);
+	var age = Math.floor(diffdays / 365.25);
+	return age;
+};
+
 // export the class
 module.exports = DevMdl;
