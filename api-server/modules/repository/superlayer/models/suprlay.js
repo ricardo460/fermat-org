@@ -12,6 +12,7 @@ function SuprlayMdl(code, name, logo, deps) {
 
 // class methods
 SuprlayMdl.prototype.init = function(suprlaySchema) {
+	this._id = devSchema._id;
 	this.code = suprlaySchema.code;
 	this.name = suprlaySchema.name;
 	this.logo = suprlaySchema.logo;

@@ -16,6 +16,7 @@ mongoose.connection.on('connected', function () {
 	winston.log('info', 'Mongoose default connection open to %s', dbURI);
 	// for test
 	//require('./modules/repository/developer');
+	//require('./modules/repository/team');
 });
 
 // If the connection throws an error 

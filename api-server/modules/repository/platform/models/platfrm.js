@@ -12,6 +12,7 @@ function PlatfrmMdl(code, name, logo, deps) {
 
 // class methods
 PlatfrmMdl.prototype.init = function(platfrmSchema) {
+	this._id = devSchema._id;
 	this.code = platfrmSchema.code;
 	this.name = platfrmSchema.name;
 	this.logo = platfrmSchema.logo;

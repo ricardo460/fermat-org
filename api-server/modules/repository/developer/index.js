@@ -1,9 +1,9 @@
 var devSrv = require('./services/dev');
 var DevMdl = require('./models/dev');
 
-//var dev = new DevMdl("fuelusumar", "fuelusumar@gmail.com", "Luis Fuenmayor", "1983/08/16", "VE", null, null, null);
+/*var dev = new DevMdl("gefusu", "gefusu@gmail.com", "Gerardo Fuenmayor", "1983/08/16", "VE", null, null, null);
 
-/*devSrv.insertDev(dev, function(err, res) {
+devSrv.insertDev(dev, function(err, res) {
 	console.dir(err);
 	console.dir(res);
 });*/

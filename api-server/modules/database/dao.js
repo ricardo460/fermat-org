@@ -205,9 +205,17 @@ Dao.prototype.insertSchema = function(model, callback) {
     });
 };
 
-//pull
-//push
-
+/**
+ * [findAndPopulateSchemaById description]
+ *
+ * @method findAndPopulateSchemaById
+ *
+ * @param  {[type]}                  _id      [description]
+ * @param  {[type]}                  path     [description]
+ * @param  {Function}                callback [description]
+ *
+ * @return {[type]}                  [description]
+ */
 Dao.prototype.findAndPopulateSchemaById = function(_id, path, callback) {
     var that = this;
     this.Schema.findOne({
@@ -225,6 +233,17 @@ Dao.prototype.findAndPopulateSchemaById = function(_id, path, callback) {
         });
 };
 
+/**
+ * [findAndPopulateSchemaById description]
+ *
+ * @method findAndPopulateSchemaById
+ *
+ * @param  {[type]}                  _id      [description]
+ * @param  {[type]}                  path     [description]
+ * @param  {Function}                callback [description]
+ *
+ * @return {[type]}                  [description]
+ */
 Dao.prototype.findAndPopulateSchema = function(query, path, callback) {
     var that = this;
     this.Schema.findOne(query)
@@ -240,6 +259,17 @@ Dao.prototype.findAndPopulateSchema = function(query, path, callback) {
         });
 };
 
+/**
+ * [findAndPopulateSchemaById description]
+ *
+ * @method findAndPopulateSchemaById
+ *
+ * @param  {[type]}                  _id      [description]
+ * @param  {[type]}                  path     [description]
+ * @param  {Function}                callback [description]
+ *
+ * @return {[type]}                  [description]
+ */
 Dao.prototype.findAndPopulateSchemaLst = function(query, limit, sort, path, callback) {
     var that = this;
     this.Schema.find(query)
@@ -261,6 +291,17 @@ Dao.prototype.findAndPopulateSchemaLst = function(query, limit, sort, path, call
         });
 };
 
+/**
+ * [findAndPopulateSchemaById description]
+ *
+ * @method findAndPopulateSchemaById
+ *
+ * @param  {[type]}                  _id      [description]
+ * @param  {[type]}                  path     [description]
+ * @param  {Function}                callback [description]
+ *
+ * @return {[type]}                  [description]
+ */
 Dao.prototype.findAndPopulateAllSchemaLst = function(query, sort, path, callback) {
     var that = this;
     this.Schema.find(query)
@@ -279,6 +320,70 @@ Dao.prototype.findAndPopulateAllSchemaLst = function(query, sort, path, callback
                 return callback(err, models);;
             }
         });
+};
+
+/**
+ * [findAndPopulateSchemaById description]
+ *
+ * @method findAndPopulateSchemaById
+ *
+ * @param  {[type]}                  _id      [description]
+ * @param  {[type]}                  path     [description]
+ * @param  {Function}                callback [description]
+ *
+ * @return {[type]}                  [description]
+ */
+Dao.prototype.pushToArray = function(condition, array_name, array_item, options, callback) {
+    var push = {};
+    push[array_name] = array_item;
+    this.Schema.update(condition, {
+        '$push': push
+    }, options, function(err, res) {
+        callback(err, res);
+    });
+};
+
+/**
+ * [findAndPopulateSchemaById description]
+ *
+ * @method findAndPopulateSchemaById
+ *
+ * @param  {[type]}                  _id      [description]
+ * @param  {[type]}                  path     [description]
+ * @param  {Function}                callback [description]
+ *
+ * @return {[type]}                  [description]
+ */
+Dao.prototype.pullFromArray = function(condition, array_name, array_item, options, callback) {
+    var pull = {};
+    pull[array_name] = array_item;
+    this.Schema.update(condition, {
+        '$pull': pull
+        //{
+        //    'usrs': _prof_id
+        //}
+    }, options, function(err, res) {
+        callback(err, res);
+    });
+};
+
+/**
+ * [findAndPopulateSchemaById description]
+ *
+ * @method findAndPopulateSchemaById
+ *
+ * @param  {[type]}                  _id      [description]
+ * @param  {[type]}                  path     [description]
+ * @param  {Function}                callback [description]
+ *
+ * @return {[type]}                  [description]
+ */
+Dao.prototype.delSchemaById = function(_id, callback) {
+    this.Schema.remove({
+        _id: _id
+    }, function(err, res) {
+        callback(err, res);
+    });
 };
 
 // export the class

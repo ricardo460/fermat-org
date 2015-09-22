@@ -37,6 +37,7 @@ function DevMdl(usrnm, email, name, bday, country, avatar_url, url, bio) {
  * @return {[type]} [description]
  */
 DevMdl.prototype.init = function(devSchema) {
+	this._id = devSchema._id;
 	this.usrnm = devSchema.usrnm;
 	this.email = devSchema.email;
 	this.name = devSchema.name;

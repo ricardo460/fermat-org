@@ -1,5 +1,10 @@
 var mongoose = require('mongoose');
 
+/**
+ * [teamSchema description]
+ *
+ * @type {[type]}
+ */
 var teamSchema = mongoose.Schema({
     name: {
         type: String,
@@ -21,11 +26,14 @@ var teamSchema = mongoose.Schema({
     collection: 'teams'
 });
 
-// schema level
+/**
+ * [name description]
+ *
+ * @type {number}
+ */
 teamSchema.index({
     name: 1,
-    descript: 1,
-    devs: 1
+    descript: 1
 }, {
     name: "teams_cp_indx"
 });

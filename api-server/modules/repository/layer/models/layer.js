@@ -10,6 +10,7 @@ function LayerMdl(name, lang) {
 
 // class methods
 LayerMdl.prototype.init = function(layerSchema) {
+	this._id = devSchema._id;
 	this.name = layerSchema.name;
 	this.lang = layerSchema.lang;
 	this.upd_at = layerSchema.upd_at;

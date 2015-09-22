@@ -18,6 +18,7 @@ function CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, d
 
 // class methods
 CompMdl.prototype.init = function(compSchema) {
+    this._id = devSchema._id;
     this._platfrm_id = compSchema._platfrm_id;
     this._suprlay_id = compSchema._suprlay_id;
     this._layer_id = compSchema._layer_id;
