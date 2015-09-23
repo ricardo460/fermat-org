@@ -1,5 +1,10 @@
 var mongoose = require('mongoose');
 
+/**
+ * [layerSchema description]
+ *
+ * @type {[type]}
+ */
 var layerSchema = mongoose.Schema({
     name: {
         type: String,
@@ -17,11 +22,16 @@ var layerSchema = mongoose.Schema({
     collection: 'layers'
 });
 
+/**
+ * [name description]
+ *
+ * @type {number}
+ */
 layerSchema.index({
     name: 1,
     lang: 1
 }, {
     name: "layers_cp_indx"
-}); // schema level
+});
 
 module.exports = layerSchema;

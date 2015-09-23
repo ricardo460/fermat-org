@@ -47,7 +47,7 @@ exports.findSuprlayById = function (_id, callback) {
  *
  * @method findSuprlayByCode
  *
- * @param  {[type]}       email    [description]
+ * @param  {[type]}       code    [description]
  * @param  {Function}     callback [description]
  *
  * @return {[type]}       [description]
@@ -65,7 +65,7 @@ exports.findSuprlayByCode = function (code, callback) {
  *
  * @method findSuprlayByName
  *
- * @param  {[type]}       usrnm    [description]
+ * @param  {[type]}       name    [description]
  * @param  {Function}     callback [description]
  *
  * @return {[type]}       [description]

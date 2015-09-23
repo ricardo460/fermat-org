@@ -47,7 +47,7 @@ exports.findPlatfrmById = function (_id, callback) {
  *
  * @method findPlatfrmByCode
  *
- * @param  {[type]}       email    [description]
+ * @param  {[type]}       code    [description]
  * @param  {Function}     callback [description]
  *
  * @return {[type]}       [description]
@@ -65,7 +65,7 @@ exports.findPlatfrmByCode = function (code, callback) {
  *
  * @method findPlatfrmByName
  *
- * @param  {[type]}       usrnm    [description]
+ * @param  {[type]}       name    [description]
  * @param  {Function}     callback [description]
  *
  * @return {[type]}       [description]
