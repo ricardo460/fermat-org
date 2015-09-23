@@ -1,5 +1,10 @@
 var mongoose = require('mongoose');
 
+/**
+ * [compDevSchema description]
+ *
+ * @type {[type]}
+ */
 var compDevSchema = mongoose.Schema({
     _dev_id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -31,6 +36,11 @@ var compDevSchema = mongoose.Schema({
     collection: 'comp_devs'
 });
 
+/**
+ * [_dev_id description]
+ *
+ * @type {number}
+ */
 compDevSchema.index({
     _dev_id: 1,
     _comp_id: 1,

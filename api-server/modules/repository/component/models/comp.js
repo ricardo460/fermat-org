@@ -1,6 +1,19 @@
 var mongoose = require('mongoose');
 
-// Constructor
+/**
+ * [CompMdl constructor]
+ *
+ * @method CompMdl
+ *
+ * @param  {[type]} _platfrm_id [description]
+ * @param  {[type]} _suprlay_id [description]
+ * @param  {[type]} _layer_id   [description]
+ * @param  {[type]} name        [description]
+ * @param  {[type]} type        [description]
+ * @param  {[type]} description [description]
+ * @param  {[type]} difficulty  [description]
+ * @param  {[type]} code_level  [description]
+ */
 function CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level) {
     // always initialize all instance properties
     this._platfrm_id = null;
@@ -16,7 +29,15 @@ function CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, d
     this.upd_at = new mongoose.Types.ObjectId();
 }
 
-// class methods
+/**
+ * [init description]
+ *
+ * @method init
+ *
+ * @param  {[type]} compSchema [description]
+ *
+ * @return {[type]} [description]
+ */
 CompMdl.prototype.init = function(compSchema) {
     this._id = devSchema._id;
     this._platfrm_id = compSchema._platfrm_id;
@@ -32,6 +53,11 @@ CompMdl.prototype.init = function(compSchema) {
     this.upd_at = compSchema.upd_at;
 };
 
+/**
+ * [setUpdate description]
+ *
+ * @method setUpdate
+ */
 CompMdl.prototype.setUpdate = function() {
     this.upd_at = new mongoose.Types.ObjectId();
 };

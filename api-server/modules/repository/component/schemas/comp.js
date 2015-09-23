@@ -1,5 +1,10 @@
 var mongoose = require('mongoose');
 
+/**
+ * [compSchema description]
+ *
+ * @type {[type]}
+ */
 var compSchema = mongoose.Schema({
     _platfrm_id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -52,6 +57,11 @@ var compSchema = mongoose.Schema({
     collection: 'platfrms'
 });
 
+/**
+ * [code description]
+ *
+ * @type {number}
+ */
 compSchema.index({
     code: 1,
     name: 1,
