@@ -1,106 +1,72 @@
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
-var teamMdl = require('../models/team');
-var teamSch = require('../schemas/team');
-var devMdl = require('../../developer/models/dev');
-var devSch = require('../../developer/schemas/dev');
+var compMdl = require('../models/comp');
+var compSch = require('../schemas/comp');
+var compDevMdl = require('../models/compDev');
+var compDevSch = require('../schemas/compDev');
+var compDevSrv = require('./compDev');
+var platfrmMdl = require('../../platform/models/platfrm');
+var platfrmSch = require('../../platform/schemas/platfrm');
+var suprlayMdl = require('../../superlayer/models/suprlay');
+var suprlaySch = require('../../superlayer/schemas/suprlay');
+var layerMdl = require('../../layer/models/layer');
+var layerSch = require('../../layer/schemas/layer');
+
 
 /**
- * [teamDao description]
+ * [compDao description]
  *
  * @type {Dao}
  */
-var teamDao = new Dao('Team', teamSch, teamMdl, 'Dev', devSch, devMdl);
+var compDao = new Dao('Comp', compSch, compMdl, 'CompDev', compDevSch, compDevMdl,
+    'Platfrm', platfrmSch, platfrmMdl,
+    'Suprlay', suprlaySch, suprlayMdl,
+    'Layer', layerSch, layerMdl);
 
 /**
- * [insertTeam description]
+ * [insertComp description]
  *
- * @method insertTeam
+ * @method insertComp
  *
- * @param  {[type]}   team_mdl  [description]
+ * @param  {[type]}   comp_mdl  [description]
  * @param  {Function} callback [description]
  *
  * @return {[type]}   [description]
  */
-exports.insertTeam = function(team_mdl, callback) {
-    teamDao.insertSchema(team_mdl, function(err, team) {
-        callback(err, team);
+exports.insertComp = function(comp_mdl, callback) {
+    compDao.insertSchema(comp_mdl, function(err, comp) {
+        callback(err, comp);
+    });
+};
+
+
+exports.findCompById = function(_id, callback) {
+    compDao.findAndPopulateSchemaById(_id, '_platfrm_id _suprlay_id _layer_id', function(err, comp) {
+        //TODO: fill devs
+        callback(err, comp);
+    });
+};
+
+
+exports.findComps = function(query, limit, order, callback) {
+    compDao.findAndPopulateSchemaLst(query, limit, order, '_platfrm_id _suprlay_id _layer_id', function(err, comp) {
+        //TODO: fill devs
+        callback(err, comp);
+    });
+};
+
+
+exports.findAllComps = function(query, order, callback) {
+    compDao.findAndPopulateAllSchemaLst(query, order, '_platfrm_id _suprlay_id _layer_id', function(err, comp) {
+        //TODO: fill devs
+        callback(err, comp);
     });
 };
 
 /**
- * [findTeamById description]
+ * [updateCompById description]
  *
- * @method findTeamById
- *
- * @param  {[type]}    _id      [description]
- * @param  {Function}  callback [description]
- *
- * @return {[type]}    [description]
- */
-exports.findTeamById = function(_id, callback) {
-    teamDao.findAndPopulateSchemaById(_id, 'devs', function(err, team) {
-        callback(err, team);
-    });
-};
-
-/**
- * [findTeamByName description]
- *
- * @method findTeamByName
- *
- * @param  {[type]}       name     [description]
- * @param  {Function}     callback [description]
- *
- * @return {[type]}       [description]
- */
-exports.findTeamByName = function(name, callback) {
-    teamDao.findAndPopulateSchema({
-        name: name
-    }, 'devs', function(err, team) {
-        callback(err, team);
-    });
-};
-
-/**
- * [findTeams description]
- *
- * @method findTeams
- *
- * @param  {[type]}   query    [description]
- * @param  {[type]}   limit    [description]
- * @param  {[type]}   order    [description]
- * @param  {Function} callback [description]
- *
- * @return {[type]}   [description]
- */
-exports.findTeams = function(query, limit, order, callback) {
-    teamDao.findAndPopulateSchemaLst(query, limit, order, 'devs', function(err, team) {
-        callback(err, team);
-    });
-};
-
-/**
- * [findAllTeams description]
- *
- * @method findAllTeams
- *
- * @param  {[type]}    query    [description]
- * @param  {[type]}    order    [description]
- * @param  {Function}  callback [description]
- *
- * @return {[type]}    [description]
- */
-exports.findAllTeams = function(query, order, callback) {
-    teamDao.findAndPopulateAllSchemaLst(query, order, 'devs', function(err, team) {
-        callback(err, team);
-    });
-};
-
-/**
- * [updateTeamById description]
- *
- * @method updateTeamById
+ * @method updateCompById
  *
  * @param  {[type]}      _id      [description]
  * @param  {[type]}      set      [description]
@@ -108,53 +74,35 @@ exports.findAllTeams = function(query, order, callback) {
  *
  * @return {[type]}      [description]
  */
-exports.updateTeamById = function(_id, set, callback) {
+exports.updateCompById = function(_id, set, callback) {
     set.upd_at = new mongoose.Types.ObjectId();
-    teamDao.updateSchema({
+    compDao.updateSchema({
         _id: _id
-    }, set, {}, function(err, team) {
-        callback(err, team);
+    }, set, {}, function(err, comp) {
+        callback(err, comp);
     });
 };
 
-/**
- * [pushDevToTeamById description]
- *
- * @method pushDevToTeamById
- *
- * @param  {[type]}          _id      [description]
- * @param  {[type]}          _dev_id  [description]
- * @param  {Function}        callback [description]
- *
- * @return {[type]}          [description]
- */
-exports.pushDevToTeamById = function(_id, _dev_id, callback) {
-    teamDao.pushToArray({
+
+exports.pushDevToCompById = function(_id, _dev_id, callback) {
+    //TODO: insert compDev
+    compDao.pushToArray({
         _id: _id
     }, 'devs', _dev_id, {
         multi: false
-    }, function(err, team) {
-        callback(err, team);
+    }, function(err, comp) {
+        callback(err, comp);
     });
 };
 
-/**
- * [pullDevToTeamById description]
- *
- * @method pullDevToTeamById
- *
- * @param  {[type]}          _id      [description]
- * @param  {[type]}          _dev_id  [description]
- * @param  {Function}        callback [description]
- *
- * @return {[type]}          [description]
- */
-exports.pullDevToTeamById = function(_id, _dev_id, callback) {
-    teamDao.pullFromArray({
+
+exports.pullDevFromCompById = function(_id, _dev_id, callback) {
+    //TODO: find compDev
+    compDao.pullFromArray({
         _id: _id
     }, 'devs', _dev_id, {
         multi: false
-    }, function(err, team) {
-        callback(err, team);
+    }, function(err, comp) {
+        callback(err, comp);
     });
 };
