@@ -43,36 +43,36 @@ exports.findPlatfrmById = function (_id, callback) {
 };
 
 /**
- * [findPlatfrmByEmail description]
+ * [findPlatfrmByCode description]
  *
- * @method findPlatfrmByEmail
+ * @method findPlatfrmByCode
  *
  * @param  {[type]}       email    [description]
  * @param  {Function}     callback [description]
  *
  * @return {[type]}       [description]
  */
-exports.findPlatfrmByEmail = function (email, callback) {
+exports.findPlatfrmByCode = function (code, callback) {
 	platfrmDao.findSchema({
-		email: email
+		code: code
 	}, function (err, platfrm) {
 		callback(err, platfrm);
 	});
 };
 
 /**
- * [findPlatfrmByUsrnm description]
+ * [findPlatfrmByName description]
  *
- * @method findPlatfrmByUsrnm
+ * @method findPlatfrmByName
  *
  * @param  {[type]}       usrnm    [description]
  * @param  {Function}     callback [description]
  *
  * @return {[type]}       [description]
  */
-exports.findPlatfrmByUsrnm = function (usrnm, callback) {
+exports.findPlatfrmByName = function (name, callback) {
 	platfrmDao.findSchema({
-		usrnm: usrnm
+		name: name
 	}, function (err, platfrm) {
 		callback(err, platfrm);
 	});

@@ -1,5 +1,10 @@
 var mongoose = require('mongoose');
 
+/**
+ * [platfrmSchema description]
+ *
+ * @type {[type]}
+ */
 var platfrmSchema = mongoose.Schema({
     code: {
         type: String,
@@ -30,12 +35,17 @@ var platfrmSchema = mongoose.Schema({
     collection: 'platfrms'
 });
 
+/**
+ * [code description]
+ *
+ * @type {number}
+ */
 platfrmSchema.index({
     code: 1,
     name: 1,
     logo: 1
 }, {
     name: "platfrms_cp_indx"
-}); // schema level
+});
 
 module.exports = platfrmSchema;
