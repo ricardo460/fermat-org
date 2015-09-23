@@ -1,3 +1,4 @@
+var async = require('async');
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var compMdl = require('../models/comp');
@@ -39,27 +40,78 @@ exports.insertComp = function(comp_mdl, callback) {
     });
 };
 
-
+//TODO: need testing
 exports.findCompById = function(_id, callback) {
     compDao.findAndPopulateSchemaById(_id, '_platfrm_id _suprlay_id _layer_id', function(err, comp) {
         //TODO: fill devs
-        callback(err, comp);
+        if (comp && comp.devs && Array.isArray(comp.devs) && comp.devs.length > 0) {
+            async.forEach(comp.devs, function(compDev, callbackForEach) {
+                compDevSrv.findCompDevById(compDev, function(err, res) {
+                    compDev = res; // asign res to compDev
+                    callbackForEach(); // tell async that the iterator has completed
+                });
+            }, function(err) {
+                callback(err, comp); // iterating done
+            });
+        } else {
+            callback(err, comp);
+        }
     });
 };
 
-
+//TODO: need testing
 exports.findComps = function(query, limit, order, callback) {
-    compDao.findAndPopulateSchemaLst(query, limit, order, '_platfrm_id _suprlay_id _layer_id', function(err, comp) {
-        //TODO: fill devs
-        callback(err, comp);
+    compDao.findAndPopulateSchemaLst(query, limit, order, '_platfrm_id _suprlay_id _layer_id', function(err, comps) {
+        if (comps && Array.isArray(comps) && comps.length > 0) {
+            async.forEach(comps, function(comp, callbackForEachComps) {
+                /********************************************************/
+                if (comp && comp.devs && Array.isArray(comp.devs) && comp.devs.length > 0) {
+                    async.forEach(comp.devs, function(compDev, callbackForEach) {
+                        compDevSrv.findCompDevById(compDev, function(err, res) {
+                            compDev = res; // asign res to compDev
+                            callbackForEach(); // tell async that the iterator has completed
+                        });
+                    }, function(err) {
+                        callbackForEachComps(); // iterating done
+                    });
+                } else {
+                    callbackForEachComps();
+                }
+                /********************************************************/
+            }, function(err) {
+                callback(err, comps); // iterating done
+            });
+        } else {
+            callback(err, comps);
+        }
     });
 };
 
-
+//TODO: need testing
 exports.findAllComps = function(query, order, callback) {
-    compDao.findAndPopulateAllSchemaLst(query, order, '_platfrm_id _suprlay_id _layer_id', function(err, comp) {
-        //TODO: fill devs
-        callback(err, comp);
+    compDao.findAndPopulateAllSchemaLst(query, order, '_platfrm_id _suprlay_id _layer_id', function(err, comps) {
+        if (comps && Array.isArray(comps) && comps.length > 0) {
+            async.forEach(comps, function(comp, callbackForEachComps) {
+                /********************************************************/
+                if (comp && comp.devs && Array.isArray(comp.devs) && comp.devs.length > 0) {
+                    async.forEach(comp.devs, function(compDev, callbackForEach) {
+                        compDevSrv.findCompDevById(compDev, function(err, res) {
+                            compDev = res; // asign res to compDev
+                            callbackForEach(); // tell async that the iterator has completed
+                        });
+                    }, function(err) {
+                        callbackForEachComps(); // iterating done
+                    });
+                } else {
+                    callbackForEachComps();
+                }
+                /********************************************************/
+            }, function(err) {
+                callback(err, comps); // iterating done
+            });
+        } else {
+            callback(err, comps);
+        }
     });
 };
 
@@ -83,24 +135,43 @@ exports.updateCompById = function(_id, set, callback) {
     });
 };
 
-
-exports.pushDevToCompById = function(_id, _dev_id, callback) {
-    //TODO: insert compDev
+/**
+ * [pushDevToCompById description]
+ *
+ * @method pushDevToCompById
+ *
+ * @param  {[type]}          _id         [description]
+ * @param  {[type]}          _compDev_id [description]
+ * @param  {Function}        callback    [description]
+ *
+ * @return {[type]}          [description]
+ */
+exports.pushDevToCompById = function(_id, _compDev_id, callback) {
+    var compDev_mdl = new compDevMdl();
     compDao.pushToArray({
         _id: _id
-    }, 'devs', _dev_id, {
+    }, 'devs', _compDev_id, {
         multi: false
     }, function(err, comp) {
         callback(err, comp);
     });
 };
 
-
-exports.pullDevFromCompById = function(_id, _dev_id, callback) {
-    //TODO: find compDev
+/**
+ * [pushDevToCompById description]
+ *
+ * @method pushDevToCompById
+ *
+ * @param  {[type]}          _id         [description]
+ * @param  {[type]}          _compDev_id [description]
+ * @param  {Function}        callback    [description]
+ *
+ * @return {[type]}          [description]
+ */
+exports.pullDevFromCompById = function(_id, _compDev_id, callback) {
     compDao.pullFromArray({
         _id: _id
-    }, 'devs', _dev_id, {
+    }, 'devs', _compDev_id, {
         multi: false
     }, function(err, comp) {
         callback(err, comp);
