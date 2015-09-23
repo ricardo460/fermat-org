@@ -1,5 +1,10 @@
 var mongoose = require('mongoose');
 
+/**
+ * [suprlaySchema description]
+ *
+ * @type {[type]}
+ */
 var suprlaySchema = mongoose.Schema({
     code: {
         type: String,
@@ -30,12 +35,17 @@ var suprlaySchema = mongoose.Schema({
     collection: 'suprlays'
 });
 
+/**
+ * [code description]
+ *
+ * @type {number}
+ */
 suprlaySchema.index({
     code: 1,
     name: 1,
     logo: 1
 }, {
     name: "suprlays_cp_indx"
-}); // schema level
+});
 
 module.exports = suprlaySchema;
