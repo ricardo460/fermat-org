@@ -18,7 +18,8 @@ function Dao(ref, schema, model, path_ref, path_schema, path_model,
     sec_path_ref, sec_path_schema, sec_path_model,
     thr_path_ref, thr_path_schema, thr_path_model,
     frt_path_ref, frt_path_schema, frt_path_model,
-    fit_path_ref, fit_path_schema, fit_path_model) {
+    fit_path_ref, fit_path_schema, fit_path_model,
+    six_path_ref, six_path_schema, six_path_model) {
     // always initialize all instance properties
     this.Schema = mongoose.model(ref, schema);
     this.Model = model;
@@ -41,6 +42,10 @@ function Dao(ref, schema, model, path_ref, path_schema, path_model,
     if (fit_path_ref && fit_path_schema && fit_path_model) {
         this.FitPathSchema = mongoose.model(fit_path_ref, fit_path_schema);
         this.FitPathModel = fit_path_model;
+    }
+    if (six_path_ref && six_path_schema && six_path_model) {
+        this.SixPathSchema = mongoose.model(six_path_ref, six_path_schema);
+        this.SixPathModel = six_path_model;
     }
     if (config.env == 'development') {
         this.Schema.ensureIndexes(function(err, res) {

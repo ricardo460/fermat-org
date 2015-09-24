@@ -31,7 +31,7 @@ function CompDevMdl(_dev_id, _comp_id, role, scope, percnt) {
  * @return {[type]} [description]
  */
 CompDevMdl.prototype.init = function(compDevSchema) {
-    this._id = devSchema._id;
+    this._id = compDevSchema._id;
     this._dev_id = compDevSchema._dev_id;
     this._comp_id = compDevSchema._comp_id;
     this.role = compDevSchema.role;

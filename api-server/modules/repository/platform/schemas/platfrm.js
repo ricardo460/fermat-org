@@ -27,6 +27,14 @@ var platfrmSchema = mongoose.Schema({
         trim: true,
         required: true
     }],
+    platfrm_index: {
+        type: Number,
+        'default': 0
+    },
+    layer_index: {
+        type: Number,
+        'default': 0
+    },
     upd_at: {
         type: mongoose.Schema.Types.ObjectId,
         'default': new mongoose.Types.ObjectId()

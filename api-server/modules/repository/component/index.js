@@ -1,9 +1,14 @@
 var teamSrv = require('./services/team');
 var TeamMdl = require('./models/team');
 
-/*var team = new TeamMdl('fermat-org', 'description of fermat-org work group');
+var comp_0 = new CompMdl('fermat-org', 'description of fermat-org work group');
+var comp_1 = new CompMdl('fermat-org', 'description of fermat-org work group');
+var comp_2 = new CompMdl('fermat-org', 'description of fermat-org work group');
 
-teamSrv.insertTeam(team, function(err, res) {
+comp_0.getCode();
+comp_1.getCode();
+
+/*teamSrv.insertTeam(team, function(err, res) {
 	console.dir(err);
 	console.dir(res);
 });*/

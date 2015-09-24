@@ -41,6 +41,10 @@ var compSchema = mongoose.Schema({
         lowercase: true,
         trim: true
     },
+    found: {
+        type: Boolean,
+        'default': false
+    },
     devs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CompDev'
@@ -48,6 +52,10 @@ var compSchema = mongoose.Schema({
     certs: [{
         type: mongoose.Schema.Types.ObjectId //,
         //ref: 'Cert'
+    }],
+    life_cycle: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Status'
     }],
     upd_at: {
         type: mongoose.Schema.Types.ObjectId,
@@ -63,6 +71,9 @@ var compSchema = mongoose.Schema({
  * @type {number}
  */
 compSchema.index({
+    _platfrm_id: 1,
+    _suprlay_id: 1,
+    _layer_id: 1,
     code: 1,
     name: 1,
     logo: 1

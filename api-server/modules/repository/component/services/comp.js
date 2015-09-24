@@ -12,6 +12,8 @@ var suprlayMdl = require('../../superlayer/models/suprlay');
 var suprlaySch = require('../../superlayer/schemas/suprlay');
 var layerMdl = require('../../layer/models/layer');
 var layerSch = require('../../layer/schemas/layer');
+var statusMdl = require('../../status/models/status');
+var statusSch = require('../../status/schemas/status');
 
 
 /**
@@ -22,7 +24,8 @@ var layerSch = require('../../layer/schemas/layer');
 var compDao = new Dao('Comp', compSch, compMdl, 'CompDev', compDevSch, compDevMdl,
     'Platfrm', platfrmSch, platfrmMdl,
     'Suprlay', suprlaySch, suprlayMdl,
-    'Layer', layerSch, layerMdl);
+    'Layer', layerSch, layerMdl,
+    'Status', statusSch, statusMdl);
 
 /**
  * [insertComp description]
@@ -42,7 +45,7 @@ exports.insertComp = function(comp_mdl, callback) {
 
 //TODO: need testing
 exports.findCompById = function(_id, callback) {
-    compDao.findAndPopulateSchemaById(_id, '_platfrm_id _suprlay_id _layer_id', function(err, comp) {
+    compDao.findAndPopulateSchemaById(_id, '_platfrm_id _suprlay_id _layer_id life_cycle', function(err, comp) {
         //TODO: fill devs
         if (comp && comp.devs && Array.isArray(comp.devs) && comp.devs.length > 0) {
             async.forEach(comp.devs, function(compDev, callbackForEach) {
@@ -61,7 +64,7 @@ exports.findCompById = function(_id, callback) {
 
 //TODO: need testing
 exports.findComps = function(query, limit, order, callback) {
-    compDao.findAndPopulateSchemaLst(query, limit, order, '_platfrm_id _suprlay_id _layer_id', function(err, comps) {
+    compDao.findAndPopulateSchemaLst(query, limit, order, '_platfrm_id _suprlay_id _layer_id life_cycle', function(err, comps) {
         if (comps && Array.isArray(comps) && comps.length > 0) {
             async.forEach(comps, function(comp, callbackForEachComps) {
                 /********************************************************/
@@ -89,7 +92,7 @@ exports.findComps = function(query, limit, order, callback) {
 
 //TODO: need testing
 exports.findAllComps = function(query, order, callback) {
-    compDao.findAndPopulateAllSchemaLst(query, order, '_platfrm_id _suprlay_id _layer_id', function(err, comps) {
+    compDao.findAndPopulateAllSchemaLst(query, order, '_platfrm_id _suprlay_id _layer_id life_cycle', function(err, comps) {
         if (comps && Array.isArray(comps) && comps.length > 0) {
             async.forEach(comps, function(comp, callbackForEachComps) {
                 /********************************************************/
@@ -172,6 +175,49 @@ exports.pullDevFromCompById = function(_id, _compDev_id, callback) {
     compDao.pullFromArray({
         _id: _id
     }, 'devs', _compDev_id, {
+        multi: false
+    }, function(err, comp) {
+        callback(err, comp);
+    });
+};
+
+/**
+ * [pushLifeCycleToCompById description]
+ *
+ * @method pushLifeCycleToCompById
+ *
+ * @param  {[type]}                _id        [description]
+ * @param  {[type]}                _status_id [description]
+ * @param  {Function}              callback   [description]
+ *
+ * @return {[type]}                [description]
+ */
+exports.pushStatusToCompLifeCycleById = function(_id, _status_id, callback) {
+    var compDev_mdl = new compDevMdl();
+    compDao.pushToArray({
+        _id: _id
+    }, 'life_cycle', _status_id, {
+        multi: false
+    }, function(err, comp) {
+        callback(err, comp);
+    });
+};
+
+/**
+ * [pullLifeCycleFromCompById description]
+ *
+ * @method pullLifeCycleFromCompById
+ *
+ * @param  {[type]}                  _id        [description]
+ * @param  {[type]}                  _status_id [description]
+ * @param  {Function}                callback   [description]
+ *
+ * @return {[type]}                  [description]
+ */
+exports.pullStatusFromCompLifeCycleById = function(_id, _status_id, callback) {
+    compDao.pullFromArray({
+        _id: _id
+    }, 'life_cycle', _status_id, {
         multi: false
     }, function(err, comp) {
         callback(err, comp);
