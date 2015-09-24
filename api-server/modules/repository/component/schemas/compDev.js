@@ -11,7 +11,7 @@ var compDevSchema = mongoose.Schema({
         ref: 'Dev'
     },
     _comp_id: {
-        type: mongoose.Schema.Types.ObjectId //,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Comp'
     },
     role: {
@@ -27,7 +27,7 @@ var compDevSchema = mongoose.Schema({
         min: 0,
         max: 100,
         'default': 0
-    }
+    },
     upd_at: {
         type: mongoose.Schema.Types.ObjectId,
         'default': new mongoose.Types.ObjectId()

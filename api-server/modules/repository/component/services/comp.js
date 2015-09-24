@@ -3,6 +3,8 @@ var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var compMdl = require('../models/comp');
 var compSch = require('../schemas/comp');
+var statusMdl = require('../models/status');
+var statusSch = require('../schemas/status');
 var compDevMdl = require('../models/compDev');
 var compDevSch = require('../schemas/compDev');
 var compDevSrv = require('./compDev');
@@ -12,8 +14,6 @@ var suprlayMdl = require('../../superlayer/models/suprlay');
 var suprlaySch = require('../../superlayer/schemas/suprlay');
 var layerMdl = require('../../layer/models/layer');
 var layerSch = require('../../layer/schemas/layer');
-var statusMdl = require('../../status/models/status');
-var statusSch = require('../../status/schemas/status');
 
 
 /**

@@ -30,15 +30,16 @@ var statusSchema = mongoose.Schema({
     collection: 'statuses'
 });
 
+/**
+ * [_comp_id description]
+ *
+ * @type {number}
+ */
 statusSchema.index({
     _comp_id: 1,
     name: 1,
-    _layer_id: 1,
-    code: 1,
-    name: 1,
-    logo: 1
 }, {
     name: "statuses_cp_indx"
 }); // schema level
 
-module.exports = compSchema;
+module.exports = statusSchema;

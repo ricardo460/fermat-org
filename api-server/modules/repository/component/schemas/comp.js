@@ -35,7 +35,7 @@ var compSchema = mongoose.Schema({
         type: Number,
         min: 0,
         'default': 0
-    }
+    },
     code_level: {
         type: String,
         lowercase: true,
