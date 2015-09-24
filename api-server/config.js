@@ -14,4 +14,6 @@ if (config.env == 'development') {
     config.database.name = 'fermat-org';
 }
 
+//ssh -i FermatBitcoin.pem ubuntu@52.11.156.16
+
 module.exports = config;
