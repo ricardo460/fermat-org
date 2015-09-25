@@ -5,8 +5,8 @@ var repMod = require('../modules/repository');
 /* GET comps listing. */
 router.get('/comps', function(req, res, next) {
     repMod.getComps(req, function(error, result) {
-        if (error) res.send(200, error);
-        else res.send(200, result);
+        if (error) res.status(200).send(error);
+        else res.status(200).send(result);
     });
 });
 

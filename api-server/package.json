@@ -23,7 +23,7 @@
     "passport": "^0.3.0",
     "passport-http-bearer": "^1.0.1",
     "passport-local": "^1.0.0",
-    "request": "^2.61.0",
+    "request": "^2.63.0",
     "response-time": "^2.3.1",
     "serve-favicon": "~2.3.0",
     "winston": "^1.0.1"
