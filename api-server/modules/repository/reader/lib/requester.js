@@ -1,4 +1,5 @@
 var request = require('request');
+var parseString = require('xml2js').parseString;
 
 var USER_AGENT = 'Miguelcldn';
 //var USER_AGENT = 'MALOTeam'
@@ -22,12 +23,10 @@ var doRequest = function(method, url, params, callback) {
                 form: form,
                 headers: {
                     'User-Agent': USER_AGENT,
-                    'Accept': '*/*'
+                    'Accept': 'application/json'
                 }
-            }, function(err, httpResponse, body) {
-            	console.dir(err);
-            	console.dir(httpResponse);
-            	console.dir(body);
+            }, function(err, res, body) {
+                callback(err, body);
             });
             break;
         case 'GET':
@@ -35,15 +34,50 @@ var doRequest = function(method, url, params, callback) {
                 url: url,
                 headers: {
                     'User-Agent': USER_AGENT,
-                    'Accept': '*/*'
+                    'Accept': 'application/json'
                 }
-            }, function(err, httpResponse, body) {
-            	console.dir(err);
-            	console.dir(httpResponse);
-            	console.dir(body);
+            }, function(err, res, body) {
+                callback(err, body);
             });
             break;
     }
 };
 
-doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function(){});
+var processRequestBody = function(body, callback) {
+    try {
+        var reqBody = JSON.parse(body);
+        if (reqBody.content && reqBody.encoding) {
+            var content = new Buffer(reqBody.content, reqBody.encoding);
+            var strCont = content.toString().split('\n').join(' ').split('\t').join(' ');
+            callback(null, strCont);
+        } else if (false) {
+
+        } else {
+            callback(new Error('body without any content'), null);
+        }
+    } catch (err) {
+        callback(err, null);
+    }
+}
+
+exports.getManifest = function(callback) {
+    doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function(err_req, res_req) {
+        if (err_req) {
+            callback(err_req, null);
+        } else {
+            processRequestBody(res_req, function(err_pro, res_pro) {
+                if (err_pro) {
+                	callback(err_pro, null);
+                } else {
+                    parseString(res_pro, function(err_par, res_par) {
+                    	if (err_par) {
+                    		callback(err_par, null);
+                    	} else {
+                    		callback(null, res_par);
+                    	}
+                    });
+                }
+            });
+        }
+    });
+}
