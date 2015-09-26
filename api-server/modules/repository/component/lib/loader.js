@@ -58,7 +58,7 @@ var processRequestBody = function(body, callback) {
     } catch (err) {
         callback(err, null);
     }
-}
+};
 
 var processCompList = function(section, layer, compList, type) {
     var comps = [];
@@ -66,20 +66,11 @@ var processCompList = function(section, layer, compList, type) {
         var comp = {};
         comp = processComp(section, layer, compList[i]['$'], type);
         comps.push(comp);
-    }
-    
+    }    
     return comps;
 };
 
 var processComp = function(section, layer, comp, type) {
-    //console.dir('section');
-    //console.dir(section); //.code
-    //console.dir('layer');
-    //console.dir(layer); //.name
-    //console.dir('comp');
-    //console.dir(comp); //.name
-    //console.dir('type');
-    //console.dir(type);
     comp.type = type;
     comp.repo_dir = getRepoDir(section.code, layer.name, type, comp.name, 'bitdubai');
     return comp;
