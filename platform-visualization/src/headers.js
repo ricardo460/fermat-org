@@ -12,8 +12,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     var INITIAL_POS = new THREE.Vector3(0, 0, 8000);
     
     // Private members
-    var headers = [],
-        objects = [],
+    var objects = [],
         dependencies = {
             root : []
         },
@@ -69,7 +68,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 .onUpdate(render)
                 .start();
 
-            self.hide(_duration / 2);
+            self.hide(_duration);
             $(container).fadeTo(_duration, 1);
             
         }, _duration);
@@ -109,20 +108,26 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     this.show = function (duration) {
         var i;
         
-        for (i = 0; i < headers.length; i++ ) {
-            $(headers[i]).fadeTo(Math.random() * duration + duration, 1);
+        for (i = 0; i < objects.length; i++ ) {
+            new TWEEN.Tween(objects[i].material)
+            .to({opacity : 1, needsUpdate : true}, duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
         }
     };
     
     /**
-     * Hides the headers (but don't deletes them)
+     * Hides the headers (but donesn't delete them)
      * @param {Number} duration Milliseconds to fade
      */
     this.hide = function (duration) {
         var i;
         
-        for (i = 0; i < headers.length; i++) {
-            $(headers[i]).fadeTo(Math.random() * duration + duration, 0);
+        for (i = 0; i < objects.length; i++) {
+            new TWEEN.Tween(objects[i].material)
+            .to({opacity : 0, needsUpdate : true}, duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
         }
     };
     
@@ -154,7 +159,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                         _nodes.push({
                             id : child,
                             shape : 'image',
-                            image : 'images/' + child + '_logo.svg',
+                            image : 'images/headers/svg/' + child + '_logo.svg',
                             level : _level
                         });
                     }
@@ -205,14 +210,14 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         
         /*var z = window.camera.getPosition().z - 3500,
             dimensions = {
-                width : (headers[0]) ? headers[0].clientWidth : columnWidth * 140,
-                height : (headers[0]) ? headers[0].clientHeight : columnWidth * 140,
+                width : (objects[0]) ? objects[0].clientWidth : columnWidth * window.TILE_DIMENSION.width,
+                height : (objects[0]) ? objects[0].clientHeight : columnWidth * window.TILE_DIMENSION.width,
             },
             i, level = 0;*/
         var i, obj;
         
         // Dummy, send all to center
-        for(i = 0; i < headers.length; i++) {
+        for(i = 0; i < objects.length; i++) {
             obj = new THREE.Object3D();
             obj.position.copy(INITIAL_POS);
             positions.stack.push(obj);
@@ -229,9 +234,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             image,
             object,
             slayer,
-            row,
+            row;
             
-            createChildren = function(child, parents) {
+        function createChildren(child, parents) {
                 
                 var i, l, actual;
                 
@@ -251,7 +256,20 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 }
                 
                 dependencies[child] = dependencies[child] || [];
-            };
+            }
+        
+        function createHeader(src, width, height) {
+            
+            var geometry = new THREE.PlaneGeometry(width, height),
+                material = new THREE.MeshBasicMaterial({transparent : true, opacity : 0}),
+                object = new THREE.Mesh(geometry, material);
+            
+            helper.applyTexture(src, object);
+            
+            return object;
+        }
+        
+        var src, width, height;
             
         for (group in groups) {
             if (window.groups.hasOwnProperty(group) && group !== 'size') {
@@ -259,13 +277,12 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 headerData = window.groups[group];
                 column = headerData.index;
 
-                image = document.createElement('img');
-                image.src = 'images/' + group + '_logo.svg';
-                image.width = columnWidth * window.TILE_DIMENSION.width;
-                image.style.opacity = 0;
-                headers.push(image);
+                
+                src = 'images/headers/' + group + '_logo.png';
+                width = columnWidth * window.TILE_DIMENSION.width;
+                height = width * 443 / 1379;
 
-                object = new THREE.CSS3DObject(image);
+                object = createHeader(src, width, height);
                 
                 object.position.copy(INITIAL_POS);
 
@@ -274,7 +291,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = new THREE.Object3D();
                 
-                object.position.x = (columnWidth * (window.TILE_DIMENSION.width)) * (column - (groupsQtty - 1) / 2) + ((column - 1) * (window.TILE_DIMENSION.width));
+                object.position.x = (columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width);
                 object.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
                 
                 positions.table.push(object);
@@ -289,13 +306,11 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 headerData = window.superLayers[slayer];
                 row = superLayerPosition[headerData.index];
 
-                image = document.createElement('img');
-                image.src = 'images/' + slayer + '_logo.svg';
-                image.width = columnWidth * window.TILE_DIMENSION.width;
-                image.style.opacity = 0;
-                headers.push(image);
+                src = 'images/headers/' + group + '_logo.png';
+                width = columnWidth * window.TILE_DIMENSION.width;
+                height = width * 443 / 1379;
 
-                object = new THREE.CSS3DObject(image);
+                object = createHeader(src, width, height);
                 
                 object.position.copy(INITIAL_POS);
 

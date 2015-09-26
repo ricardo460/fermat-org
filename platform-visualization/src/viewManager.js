@@ -94,7 +94,7 @@ function ViewManager() {
             if (isSuperLayer[i]) {
 
                 if (!inSuperLayer) {
-                    actualHeight++;
+                    actualHeight+= 3;
 
                     if (superLayerPosition[actualSuperLayer] === undefined) {
                         superLayerPosition[actualSuperLayer] = actualHeight;
@@ -340,87 +340,136 @@ function ViewManager() {
      * @param   {Number}     i ID of the tile (index in table)
      * @returns {DOMElement} The drawable element that represents the tile
      */
-    this.createElement = function(i) {
+    this.createElement = function(id) {
 
-        var element = document.createElement('div');
-        element.className = 'element';
-        element.id = i;
-
-        element.addEventListener('click', onElementClick, false);
-
-        if (table[i].picture !== undefined) {
-            var picture = document.createElement('img');
-            picture.id = 'img-' + i;
-            picture.className = 'picture';
-            picture.src = table[i].picture;
-            element.appendChild(picture);
+        var mesh,
+            element = new THREE.LOD(),
+            levels = [
+            ['high', 0],
+            ['medium', 1000],
+            ['small', 1800],
+            ['mini', 2300]],
+            state = table[id].code_level,
+            difficulty = Math.ceil(table[id].difficulty / 2),
+            group = table[id].group,
+            type = table[id].type,
+            picture = table[id].picture,
+            base = 'images/tiles/',
+            texture, canvas,
+            tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
+            tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
+        
+        for(var j = 0, l = levels.length; j < l; j++) {
+            
+            canvas = document.createElement('canvas');
+            canvas.width = tileWidth;
+            canvas.height = tileHeight;
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(0,0,tileWidth,tileHeight);
+            texture = new THREE.Texture(canvas);
+            texture.minFilter = THREE.NearestFilter;
+            texture.magFilter = THREE.LinearFilter;
+            
+            var pic = {
+                    src : picture,
+                    x : 82, y : 47,
+                    w : 53, h : 53
+                },
+                portrait = {
+                    src : base + 'portrait/' + levels[j][0] + '/' + state + '.png',
+                    x : 0, y : 0,
+                    w : tileWidth, h : tileHeight
+                },
+                groupIcon = {
+                    src : base + 'icons/group/' + levels[j][0] + '/icon_' + group + '.png',
+                    x : 35, y : 76,
+                    w : 24, h : 24
+                },
+                typeIcon = {
+                    src : base + 'icons/type/' + levels[j][0] + '/' + type + '_logo.png',
+                    x : 154, y : 76,
+                    w : 24, h : 24
+                },
+                data = {
+                    pic : pic,
+                    portrait : portrait,
+                    groupIcon : groupIcon,
+                    typeIcon : typeIcon
+                };
+            
+            drawPicture(data, ctx, texture);
+            
+            mesh = new THREE.Mesh(
+                new THREE.PlaneGeometry(tileWidth, tileHeight),
+                new THREE.MeshBasicMaterial({vertexColors : THREE.FaceColors, side : THREE.FrontSide, color : 0xffffff})
+            );
+            mesh.userData = {id : id};
+            mesh.material.map = texture;
+            mesh.material.needsUpdate = true;
+            element.addLevel(mesh, levels[j][1]);
         }
-
-        var difficulty = document.createElement('div');
-        difficulty.className = 'difficulty';
-        difficulty.textContent = helper.printDifficulty(Math.floor(table[i].difficulty / 2));
-        element.appendChild(difficulty);
-
-        var number = document.createElement('div');
-        number.className = 'number';
-        number.textContent = (table[i].group !== undefined) ? table[i].group : layers[table[i].layer].super_layer;
-        element.appendChild(number);
-
-        var symbol = document.createElement('div');
-        symbol.className = 'symbol';
-        symbol.textContent = table[i].code;
-        element.appendChild(symbol);
-
-        var details = document.createElement('div');
-        details.className = 'details';
-
-        var pluginName = document.createElement('p');
-        pluginName.innerHTML = table[i].name;
-        pluginName.className = 'name';
-
-        var layerName = document.createElement('p');
-        layerName.innerHTML = table[i].layer;
-
-        details.appendChild(pluginName);
-        details.appendChild(layerName);
-        element.appendChild(details);
-
-        switch (table[i].code_level) {
-
-            case "concept":
-                element.style.boxShadow = '0px 0px 12px rgba(150,150,150,0.5)';
-                element.style.backgroundColor = 'rgba(170,170,170,' + (Math.random() * 0.25 + 0.45) + ')';
-
-                number.style.color = 'rgba(127,127,127,1)';
-                layerName.style.color = 'rgba(127,127,127,1)';
-
-                break;
-            case "development":
-                element.style.boxShadow = '0px 0px 12px rgba(244,133,107,0.5)';
-                element.style.backgroundColor = 'rgba(234,123,97,' + (Math.random() * 0.25 + 0.45) + ')';
-
-                number.style.color = 'rgba(234,123,97,1)';
-                layerName.style.color = 'rgba(234,123,97,1)';
-
-
-                break;
-            case "qa":
-                element.style.boxShadow = '0px 0px 12px rgba(244,244,107,0.5)';
-                element.style.backgroundColor = 'rgba(194,194,57,' + (Math.random() * 0.25 + 0.45) + ')';
-
-                number.style.color = 'rgba(194,194,57,1)';
-                layerName.style.color = 'rgba(194,194,57,1)';
-
-
-                break;
-            case "production":
-                element.style.boxShadow = '0px 0px 12px rgba(80,188,107,0.5)';
-                element.style.backgroundColor = 'rgba(70,178,97,' + (Math.random() * 0.25 + 0.45) + ')';
-
-                number.style.color = 'rgba(70,178,97,1)';
-                layerName.style.color = 'rgba(70,178,97,1)';
-
-                break;
+        
+        function drawPicture(data, ctx, texture) {
+            
+            var image = new Image();
+            image.onload = function() {
+                
+                ctx.globalAlpha = 0.8;
+                ctx.drawImage(image, data.pic.x, data.pic.y, data.pic.w, data.pic.h);
+                if(texture)
+                    texture.needsUpdate = true;
+                
+                ctx.globalAlpha = 1;
+                drawPortrait(data, ctx, texture);
+            };
+            image.crossOrigin="anonymous";
+            image.src = data.pic.src;
+        }
+        
+        function drawPortrait(data, ctx, texture) {
+            
+            var image = new Image();
+            image.onload = function() {
+                
+                ctx.drawImage(image, data.portrait.x, data.portrait.y, data.portrait.w, data.portrait.h);
+                if(texture)
+                    texture.needsUpdate = true;
+                
+                drawGroupIcon(data, ctx, texture);
+            };
+            image.crossOrigin="anonymous";
+            image.src = data.portrait.src;
+        }
+        
+        function drawGroupIcon(data, ctx, texture) {
+            
+            var image = new Image();
+            image.onload = function() {
+                
+                ctx.drawImage(image, data.groupIcon.x, data.groupIcon.y, data.groupIcon.w, data.groupIcon.h);
+                if(texture)
+                    texture.needsUpdate = true;
+                
+                drawTypeIcon(data, ctx, texture);
+            };
+            image.crossOrigin="anonymous";
+            image.src = data.groupIcon.src;
+        }
+        
+        function drawTypeIcon(data, ctx, texture) {
+            
+            var image = new Image();
+            image.onload = function() {
+                
+                ctx.drawImage(image, data.typeIcon.x, data.typeIcon.y, data.typeIcon.w, data.typeIcon.h);
+                if(texture)
+                    texture.needsUpdate = true;
+                
+                //Call next function
+            };
+            image.crossOrigin="anonymous";
+            image.src = data.typeIcon.src;
         }
         
         return element;
@@ -496,13 +545,11 @@ function ViewManager() {
         
         for (var i = 0; i < table.length; i++) {
 
-            var element = this.createElement(i);
-
-            var object = new THREE.CSS3DObject(element);
+            var object = this.createElement(i);
+            
             object.position.x = 0;
             object.position.y = 0;
             object.position.z = 80000;
-            
             scene.add(object);
 
             objects.push(object);
@@ -576,5 +623,4 @@ function ViewManager() {
             .onUpdate(render)
             .start();
     };
-    
 }
