@@ -61,27 +61,54 @@ var processRequestBody = function(body, callback) {
 }
 
 var processCompList = function(compList, type) {
-    //try {
     var comps = [];
     for (var i = 0; i < compList.length; i++) {
         var comp = {};
         comp = processComp(compList[i], type);
         comps.push(comp);
-        //console.log(JSON.stringify(compList[i], null, 4));
     }
-    //console.log(JSON.stringify(comps, null, 4));
     return comps;
-    //} catch (err) {
-    //}
 };
 
 var processComp = function(comp, type) {
-    //try {
     var component = comp['$'];
     return component;
-    //} catch (err) {
-    //console.log(JSON.stringify(err, null, 4));
-    //}
+};
+
+var getRepoDir = function(item) {
+    var _root = "fermat",
+        _group = item.group ? item.group.toUpperCase().split(' ').join('_') : null,
+        _type = item.type ? item.type.toLowerCase().split(' ').join('_') : null,
+        _layer = item.layer ? item.layer.toLowerCase().split(' ').join('_') : null,
+        _name = item.name ? item.name.toLowerCase().split(' ').join('-') : null;
+    if (_group && _type && _layer && _name) {
+        return _group + "/" + _type + "/" + _layer + "/" +
+            _root + "-" + _group.split('_').join('-').toLowerCase() + "-" + _type.split('_').join('-') + "-" + _layer.split('_').join('-') + "-" + _name + "-bitdubai";
+    } else {
+        return null;
+    }
+};
+
+var getManifest = function(callback) {
+    doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function(err_req, res_req) {
+        if (err_req) {
+            callback(err_req, null);
+        } else {
+            processRequestBody(res_req, function(err_pro, res_pro) {
+                if (err_pro) {
+                    callback(err_pro, null);
+                } else {
+                    parseString(res_pro, function(err_par, res_par) {
+                        if (err_par) {
+                            callback(err_par, null);
+                        } else {
+                            callback(null, res_par);
+                        }
+                    });
+                }
+            });
+        }
+    });
 };
 
 exports.loadComps = function(callback) {
@@ -157,6 +184,16 @@ exports.loadComps = function(callback) {
                         layers.push(layer);
                     }
                     suprlay.layers = layers;
+                    var depends = [];
+                    if (_suprlays[i].dependencies) {
+                        var _depends = _suprlays[i].dependencies[0].dependency;
+                        for (var j = 0; j < _depends.length; j++) {
+                            var depend = {};
+                            depend = _depends[j]['$'];
+                            depends.push(depend);
+                        }
+                    }
+                    suprlay.depends = depends;
                     suprlays.push(suprlay);
                 }
                 fermat.suprlays = suprlays;
@@ -167,39 +204,3 @@ exports.loadComps = function(callback) {
         callback(err, null);
     }
 };
-
-var getRepoDir = function(item) {
-    var _root = "fermat",
-        _group = item.group ? item.group.toUpperCase().split(' ').join('_') : null,
-        _type = item.type ? item.type.toLowerCase().split(' ').join('_') : null,
-        _layer = item.layer ? item.layer.toLowerCase().split(' ').join('_') : null,
-        _name = item.name ? item.name.toLowerCase().split(' ').join('-') : null;
-    if (_group && _type && _layer && _name) {
-        return _group + "/" + _type + "/" + _layer + "/" +
-            _root + "-" + _group.split('_').join('-').toLowerCase() + "-" + _type.split('_').join('-') + "-" + _layer.split('_').join('-') + "-" + _name + "-bitdubai";
-    } else {
-        return null;
-    }
-};
-
-var getManifest = function(callback) {
-    doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function(err_req, res_req) {
-        if (err_req) {
-            callback(err_req, null);
-        } else {
-            processRequestBody(res_req, function(err_pro, res_pro) {
-                if (err_pro) {
-                    callback(err_pro, null);
-                } else {
-                    parseString(res_pro, function(err_par, res_par) {
-                        if (err_par) {
-                            callback(err_par, null);
-                        } else {
-                            callback(null, res_par);
-                        }
-                    });
-                }
-            });
-        }
-    });
-}
