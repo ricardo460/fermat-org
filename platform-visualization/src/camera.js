@@ -78,7 +78,7 @@ function Camera(position, renderer, renderFunc) {
         
         headers.hide(duration);
     
-        var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width, 1);
+        var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1);
         var target = window.objects[ focus ];
 
         vec.applyMatrix4( target.matrix );
@@ -197,7 +197,14 @@ function Camera(position, renderer, renderFunc) {
      * @param {Scene}    scene    scene to render
      *
      */
-    this.render = function ( renderer, scene ) {        
+    this.render = function ( renderer, scene ) {
+        
+        scene.traverse( function ( object ) {
+
+            if ( object instanceof THREE.LOD ) {
+                object.update( camera );
+            }
+        });
         renderer.render ( scene, camera );
     };
     

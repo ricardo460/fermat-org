@@ -94,7 +94,7 @@ function ViewManager() {
             if (isSuperLayer[i]) {
 
                 if (!inSuperLayer) {
-                    actualHeight++;
+                    actualHeight+= 3;
 
                     if (superLayerPosition[actualSuperLayer] === undefined) {
                         superLayerPosition[actualSuperLayer] = actualHeight;
@@ -340,27 +340,139 @@ function ViewManager() {
      * @param   {Number}     i ID of the tile (index in table)
      * @returns {DOMElement} The drawable element that represents the tile
      */
-    this.createElement = function(i) {
+    this.createElement = function(id) {
 
-        var geometry = new THREE.PlaneGeometry(window.TILE_DIMENSION.width - window.TILE_SPACING,
-                                               window.TILE_DIMENSION.height - window.TILE_SPACING);
-        var material = new THREE.MeshBasicMaterial({vertexColors : THREE.FaceColors, side : THREE.FrontSide});
-        var mesh = new THREE.Mesh(geometry, material);
-        var loader = new THREE.TextureLoader();
+        var mesh,
+            element = new THREE.LOD(),
+            levels = [
+            ['high', 0],
+            ['medium', 1000],
+            ['small', 1800],
+            ['mini', 2300]],
+            state = table[id].code_level,
+            difficulty = Math.ceil(table[id].difficulty / 2),
+            group = table[id].group,
+            type = table[id].type,
+            picture = table[id].picture,
+            base = 'images/tiles/',
+            texture, canvas,
+            tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
+            tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
         
-        loader.load(
-            'images/tile_development.png',
-            function(tex) {
-                tex.minFilter = THREE.NearestFilter;
-                tex.needsUpdate = true;
-                mesh.material.map = tex;
-                mesh.material.needsUpdate = true;
-            });
+        for(var j = 0, l = levels.length; j < l; j++) {
+            
+            canvas = document.createElement('canvas');
+            canvas.width = tileWidth;
+            canvas.height = tileHeight;
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(0,0,tileWidth,tileHeight);
+            texture = new THREE.Texture(canvas);
+            texture.minFilter = THREE.NearestFilter;
+            texture.magFilter = THREE.LinearFilter;
+            
+            var pic = {
+                    src : picture,
+                    x : 82, y : 47,
+                    w : 53, h : 53
+                },
+                portrait = {
+                    src : base + 'portrait/' + levels[j][0] + '/' + state + '.png',
+                    x : 0, y : 0,
+                    w : tileWidth, h : tileHeight
+                },
+                groupIcon = {
+                    src : base + 'icons/group/' + levels[j][0] + '/icon_' + group + '.png',
+                    x : 35, y : 76,
+                    w : 24, h : 24
+                },
+                typeIcon = {
+                    src : base + 'icons/type/' + levels[j][0] + '/' + type + '_logo.png',
+                    x : 154, y : 76,
+                    w : 24, h : 24
+                },
+                data = {
+                    pic : pic,
+                    portrait : portrait,
+                    groupIcon : groupIcon,
+                    typeIcon : typeIcon
+                };
+            
+            drawPicture(data, ctx, texture);
+            
+            mesh = new THREE.Mesh(
+                new THREE.PlaneGeometry(tileWidth, tileHeight),
+                new THREE.MeshBasicMaterial({vertexColors : THREE.FaceColors, side : THREE.FrontSide, color : 0xffffff})
+            );
+            mesh.userData = {id : id};
+            mesh.material.map = texture;
+            mesh.material.needsUpdate = true;
+            element.addLevel(mesh, levels[j][1]);
+        }
         
-        mesh.userData = {id : i};
+        function drawPicture(data, ctx, texture) {
+            
+            var image = new Image();
+            image.onload = function() {
+                
+                ctx.globalAlpha = 0.8;
+                ctx.drawImage(image, data.pic.x, data.pic.y, data.pic.w, data.pic.h);
+                if(texture)
+                    texture.needsUpdate = true;
+                
+                ctx.globalAlpha = 1;
+                drawPortrait(data, ctx, texture);
+            };
+            image.crossOrigin="anonymous";
+            image.src = data.pic.src;
+        }
         
+        function drawPortrait(data, ctx, texture) {
+            
+            var image = new Image();
+            image.onload = function() {
+                
+                ctx.drawImage(image, data.portrait.x, data.portrait.y, data.portrait.w, data.portrait.h);
+                if(texture)
+                    texture.needsUpdate = true;
+                
+                drawGroupIcon(data, ctx, texture);
+            };
+            image.crossOrigin="anonymous";
+            image.src = data.portrait.src;
+        }
         
-        return mesh;
+        function drawGroupIcon(data, ctx, texture) {
+            
+            var image = new Image();
+            image.onload = function() {
+                
+                ctx.drawImage(image, data.groupIcon.x, data.groupIcon.y, data.groupIcon.w, data.groupIcon.h);
+                if(texture)
+                    texture.needsUpdate = true;
+                
+                drawTypeIcon(data, ctx, texture);
+            };
+            image.crossOrigin="anonymous";
+            image.src = data.groupIcon.src;
+        }
+        
+        function drawTypeIcon(data, ctx, texture) {
+            
+            var image = new Image();
+            image.onload = function() {
+                
+                ctx.drawImage(image, data.typeIcon.x, data.typeIcon.y, data.typeIcon.w, data.typeIcon.h);
+                if(texture)
+                    texture.needsUpdate = true;
+                
+                //Call next function
+            };
+            image.crossOrigin="anonymous";
+            image.src = data.typeIcon.src;
+        }
+        
+        return element;
     };
     
     /**
@@ -511,5 +623,4 @@ function ViewManager() {
             .onUpdate(render)
             .start();
     };
-    
 }

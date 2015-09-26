@@ -159,7 +159,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                         _nodes.push({
                             id : child,
                             shape : 'image',
-                            image : 'images/' + child + '_logo.svg',
+                            image : 'images/headers/svg/' + child + '_logo.svg',
                             level : _level
                         });
                     }
@@ -261,19 +261,10 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         function createHeader(src, width, height) {
             
             var geometry = new THREE.PlaneGeometry(width, height),
-                material = new THREE.MeshBasicMaterial({ transparent : true, opacity : 0}),
-                loader = new THREE.TextureLoader(),
+                material = new THREE.MeshBasicMaterial({transparent : true, opacity : 0}),
                 object = new THREE.Mesh(geometry, material);
             
-            loader.load(
-                src,
-                function(tex) {
-                    tex.minFilter = THREE.NearestFilter;
-                    tex.needsUpdate = true;
-                    object.material.map = tex;
-                    object.material.needsUpdate = true;
-                }
-            );
+            helper.applyTexture(src, object);
             
             return object;
         }
@@ -287,7 +278,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 column = headerData.index;
 
                 
-                src = 'images/BCH_logo.png';
+                src = 'images/headers/' + group + '_logo.png';
                 width = columnWidth * window.TILE_DIMENSION.width;
                 height = width * 443 / 1379;
 
@@ -315,7 +306,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 headerData = window.superLayers[slayer];
                 row = superLayerPosition[headerData.index];
 
-                src = 'images/BCH_logo.png';
+                src = 'images/headers/' + group + '_logo.png';
                 width = columnWidth * window.TILE_DIMENSION.width;
                 height = width * 443 / 1379;
 

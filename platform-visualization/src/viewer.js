@@ -9,12 +9,12 @@ var table = [],
 
 //Global constants
 var TILE_DIMENSION = {
-    width : 180,
+    width : 234,
     height : 140
 },
     TILE_SPACING = 20;
 
-$.ajax({
+/*$.ajax({
     url: "get_plugins.php",
     method: "GET"
 }).success(
@@ -27,9 +27,9 @@ $.ajax({
             setTimeout(animate, 500);
         });
     }
-);
+);*/
 
-/*var l = JSON.parse(testData);
+var l = JSON.parse(testData);
     
     viewManager.fillTable(l);
     
@@ -37,7 +37,7 @@ $.ajax({
             $('#splash').remove();
             init();
             setTimeout( animate, 500);
-        });*/
+        });
 
 function init() {
 
@@ -52,7 +52,7 @@ function init() {
     
     var light = new THREE.AmbientLight(0xFFFFFF);
     scene.add( light );
-    renderer = new THREE.WebGLRenderer({ antialias : true, logarithmicDepthBuffer : true });
+    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true});
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
     renderer.setClearColor(0xffffff);
