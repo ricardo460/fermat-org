@@ -17,7 +17,6 @@ function Timeline ( tasks, container ) {
     this.items = [];
     this.container = container;
     
-    
     var id = 0;
     
     for( var i = 0, tl = tasks.length; i < tl; i++ ) {

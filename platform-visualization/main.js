@@ -11,15 +11,16 @@ function Camera(position, renderer, renderFunc) {
      * private constans
      */
     var ROTATE_SPEED = 1.3,
-        MIN_DISTANCE = 500,
+        MIN_DISTANCE = 50,
         MAX_DISTANCE = 80000;
 
     /**
      * private properties
      */    
-    var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+    var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, MAX_DISTANCE );
     var controls = new THREE.TrackballControls( camera, renderer.domElement );
     var focus = null;
+    var self = this;
     
     camera.position.copy( position );
 
@@ -72,12 +73,12 @@ function Camera(position, renderer, renderFunc) {
         
         TWEEN.removeAll();
         focus = parseInt(id);
-        
-        headers.hide(duration);
 
         viewManager.letAlone(focus, duration);
+        
+        headers.hide(duration);
     
-        var vec = new THREE.Vector4(0, 0, 180, 1);
+        var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1);
         var target = window.objects[ focus ];
 
         vec.applyMatrix4( target.matrix );
@@ -151,7 +152,7 @@ function Camera(position, renderer, renderFunc) {
 
             viewManager.rollBack();
 
-            this.resetPosition(duration);
+            self.resetPosition(duration);
         }
     };
     
@@ -196,7 +197,14 @@ function Camera(position, renderer, renderFunc) {
      * @param {Scene}    scene    scene to render
      *
      */
-    this.render = function ( renderer, scene ) {        
+    this.render = function ( renderer, scene ) {
+        
+        scene.traverse( function ( object ) {
+
+            if ( object instanceof THREE.LOD ) {
+                object.update( camera );
+            }
+        });
         renderer.render ( scene, camera );
     };
     
@@ -208,6 +216,15 @@ function Camera(position, renderer, renderFunc) {
      */
     this.getFocus = function () { 
         return focus;
+    };
+    
+    this.rayCast = function(target, elements) {
+        
+        var raycaster = new THREE.Raycaster();
+        
+        raycaster.setFromCamera(target, camera);
+        
+        return raycaster.intersectObjects(elements);
     };
     
     // Events
@@ -370,8 +387,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     var INITIAL_POS = new THREE.Vector3(0, 0, 8000);
     
     // Private members
-    var headers = [],
-        objects = [],
+    var objects = [],
         dependencies = {
             root : []
         },
@@ -427,7 +443,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 .onUpdate(render)
                 .start();
 
-            self.hide(_duration / 2);
+            self.hide(_duration);
             $(container).fadeTo(_duration, 1);
             
         }, _duration);
@@ -467,20 +483,26 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     this.show = function (duration) {
         var i;
         
-        for (i = 0; i < headers.length; i++ ) {
-            $(headers[i]).fadeTo(Math.random() * duration + duration, 1);
+        for (i = 0; i < objects.length; i++ ) {
+            new TWEEN.Tween(objects[i].material)
+            .to({opacity : 1, needsUpdate : true}, duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
         }
     };
     
     /**
-     * Hides the headers (but don't deletes them)
+     * Hides the headers (but donesn't delete them)
      * @param {Number} duration Milliseconds to fade
      */
     this.hide = function (duration) {
         var i;
         
-        for (i = 0; i < headers.length; i++) {
-            $(headers[i]).fadeTo(Math.random() * duration + duration, 0);
+        for (i = 0; i < objects.length; i++) {
+            new TWEEN.Tween(objects[i].material)
+            .to({opacity : 0, needsUpdate : true}, duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
         }
     };
     
@@ -512,7 +534,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                         _nodes.push({
                             id : child,
                             shape : 'image',
-                            image : 'images/' + child + '_logo.svg',
+                            image : 'images/headers/svg/' + child + '_logo.svg',
                             level : _level
                         });
                     }
@@ -563,14 +585,14 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         
         /*var z = window.camera.getPosition().z - 3500,
             dimensions = {
-                width : (headers[0]) ? headers[0].clientWidth : columnWidth * 140,
-                height : (headers[0]) ? headers[0].clientHeight : columnWidth * 140,
+                width : (objects[0]) ? objects[0].clientWidth : columnWidth * window.TILE_DIMENSION.width,
+                height : (objects[0]) ? objects[0].clientHeight : columnWidth * window.TILE_DIMENSION.width,
             },
             i, level = 0;*/
         var i, obj;
         
         // Dummy, send all to center
-        for(i = 0; i < headers.length; i++) {
+        for(i = 0; i < objects.length; i++) {
             obj = new THREE.Object3D();
             obj.position.copy(INITIAL_POS);
             positions.stack.push(obj);
@@ -587,9 +609,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             image,
             object,
             slayer,
-            row,
+            row;
             
-            createChildren = function(child, parents) {
+        function createChildren(child, parents) {
                 
                 var i, l, actual;
                 
@@ -609,7 +631,20 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 }
                 
                 dependencies[child] = dependencies[child] || [];
-            };
+            }
+        
+        function createHeader(src, width, height) {
+            
+            var geometry = new THREE.PlaneGeometry(width, height),
+                material = new THREE.MeshBasicMaterial({transparent : true, opacity : 0}),
+                object = new THREE.Mesh(geometry, material);
+            
+            helper.applyTexture(src, object);
+            
+            return object;
+        }
+        
+        var src, width, height;
             
         for (group in groups) {
             if (window.groups.hasOwnProperty(group) && group !== 'size') {
@@ -617,13 +652,12 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 headerData = window.groups[group];
                 column = headerData.index;
 
-                image = document.createElement('img');
-                image.src = 'images/' + group + '_logo.svg';
-                image.width = columnWidth * 140;
-                image.style.opacity = 0;
-                headers.push(image);
+                
+                src = 'images/headers/' + group + '_logo.png';
+                width = columnWidth * window.TILE_DIMENSION.width;
+                height = width * 443 / 1379;
 
-                object = new THREE.CSS3DObject(image);
+                object = createHeader(src, width, height);
                 
                 object.position.copy(INITIAL_POS);
 
@@ -632,8 +666,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = new THREE.Object3D();
                 
-                object.position.x = (columnWidth * 140) * (column - (groupsQtty - 1) / 2) + ((column - 1) * 140);
-                object.position.y = ((layersQtty + 5) * 180) / 2;
+                object.position.x = (columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width);
+                object.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
                 
                 positions.table.push(object);
 
@@ -647,13 +681,11 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 headerData = window.superLayers[slayer];
                 row = superLayerPosition[headerData.index];
 
-                image = document.createElement('img');
-                image.src = 'images/' + slayer + '_logo.svg';
-                image.width = columnWidth * 140;
-                image.style.opacity = 0;
-                headers.push(image);
+                src = 'images/headers/' + group + '_logo.png';
+                width = columnWidth * window.TILE_DIMENSION.width;
+                height = width * 443 / 1379;
 
-                object = new THREE.CSS3DObject(image);
+                object = createHeader(src, width, height);
                 
                 object.position.copy(INITIAL_POS);
 
@@ -662,8 +694,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 
                 object = new THREE.Object3D();
 
-                object.position.x = -(((groupsQtty + 1) * columnWidth * 140 / 2) + 140);
-                object.position.y = -(row * 180) - (superLayerMaxHeight * 180 / 2) + (layersQtty * 180 / 2);
+                object.position.x = -(((groupsQtty + 1) * columnWidth * window.TILE_DIMENSION.width / 2) + window.TILE_DIMENSION.width);
+                object.position.y = -(row * window.TILE_DIMENSION.height) - (superLayerMaxHeight * window.TILE_DIMENSION.height / 2) + (layersQtty * window.TILE_DIMENSION.height / 2);
                 
                 positions.table.push(object);
 
@@ -828,6 +860,31 @@ function Helper() {
 
         return result;
     };
+    
+    /**
+     * Loads a texture and applies it to the given mesh
+     * @param {String}   source     Address of the image to load
+     * @param {Mesh}     object     Mesh to apply the texture
+     * @param {Function} [callback] Function to call when texture gets loaded, with mesh as parameter
+     */
+    this.applyTexture = function(source, object, callback) {
+        
+        var loader = new THREE.TextureLoader();
+        
+        loader.load(
+            source,
+            function(tex) {
+                tex.minFilter = THREE.NearestFilter;
+                tex.needsUpdate = true;
+                object.material.map = tex;
+                object.needsUpdate = true;
+                
+                //console.log(tex.image.currentSrc);
+                
+                if(callback != null && typeof(callback) === 'function')
+                    callback(object);
+            });
+    };
 }
 
 // Make helper a static object
@@ -912,7 +969,6 @@ function Timeline ( tasks, container ) {
     this.groups = [];
     this.items = [];
     this.container = container;
-    
     
     var id = 0;
     
@@ -1059,7 +1115,14 @@ var table = [],
     headers = null,
     actualView = 'stack';
 
-$.ajax({
+//Global constants
+var TILE_DIMENSION = {
+    width : 234,
+    height : 140
+},
+    TILE_SPACING = 20;
+
+/*$.ajax({
     url: "get_plugins.php",
     method: "GET"
 }).success(
@@ -1072,9 +1135,9 @@ $.ajax({
             setTimeout(animate, 500);
         });
     }
-);
+);*/
 
-/*var l = JSON.parse(testData);
+var l = JSON.parse(testData);
     
     viewManager.fillTable(l);
     
@@ -1082,7 +1145,7 @@ $.ajax({
             $('#splash').remove();
             init();
             setTimeout( animate, 500);
-        });*/
+        });
 
 function init() {
 
@@ -1095,12 +1158,15 @@ function init() {
     headers = new Headers(dimensions.columnWidth, dimensions.superLayerMaxHeight, dimensions.groupsQtty,
                           dimensions.layersQtty, dimensions.superLayerPosition);
     
-    renderer = new THREE.CSS3DRenderer();
+    var light = new THREE.AmbientLight(0xFFFFFF);
+    scene.add( light );
+    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true});
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
+    renderer.setClearColor(0xffffff);
     document.getElementById('container').appendChild(renderer.domElement);
 
-    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * 140),
+    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * TILE_DIMENSION.width),
         renderer,
         render);
 
@@ -1128,16 +1194,17 @@ function init() {
         else
             goToView('stack');
     });
+    $('#container').click(onClick);
 
     //Disabled Menu
     //initMenu();
 
     goToView('stack');
     
-    setTimeout(function() {
+    /*setTimeout(function() {
         var loader = new Loader();
         loader.findThemAll();
-    }, 2000);
+    }, 2000);*/
 }
 
 /**
@@ -1227,11 +1294,12 @@ function changeView(targets) {
         viewManager.transform(targets, 2000);
 }
 
-function onElementClick() {
+function onElementClick(id) {
 
-    var id = this.id;
+    //var id = this.id;
 
-    var image = document.getElementById('img-' + id);
+    //var image = document.getElementById('img-' + id);
+    
 
     if (camera.getFocus() == null) {
 
@@ -1244,14 +1312,14 @@ function onElementClick() {
         }, 3000);
         camera.disable();
 
-        if (image != null) {
+        /*if (image != null) {
 
             var handler = function() {
                 onImageClick(id, image, handler);
             };
 
             image.addEventListener('click', handler, true);
-        } else {}
+        } else {}*/
     }
 
     function onImageClick(id, image, handler) {
@@ -1394,6 +1462,25 @@ function onElementClick() {
     }
 }
 
+function onClick(e) {
+    
+    var mouse = new THREE.Vector2(0, 0),
+        clicked = [];
+    
+    if(actualView === 'table') {
+    
+        //Obtain normalized click location (-1...1)
+        mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
+        mouse.y = - ((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height) * 2 + 1;
+        
+        clicked = camera.rayCast(mouse, objects);
+        
+        if(clicked && clicked.length > 0) {
+            onElementClick(clicked[0].object.userData.id);
+        }
+    }
+}
+
 function animate() {
 
     requestAnimationFrame(animate);
@@ -1408,6 +1495,203 @@ function render() {
     //renderer.render( scene, camera );
     camera.render(renderer, scene);
 }
+
+function createElement(i) {
+   
+    var canvas,
+        ctx,
+        center,
+        texture,
+        material,
+        mesh,
+        font = 'Helvetica, sans-serif',
+        levelColor,
+        lastY;
+    
+    canvas = document.createElement('canvas');
+    canvas.width = 120;
+    canvas.height = 160;
+    center = 60;
+    ctx = canvas.getContext('2d');
+    
+    // Background
+    ctx.fillStyle = '#CCCCCC';
+    ctx.fillRect(0, 0, 120, 160);
+    
+    ctx.textAlign = 'center';
+    
+    // Layer
+    ctx.font = '12px ' + font;
+    ctx.fillStyle = helper.getLevelColor(table[i].code_level);
+    lastY = drawText(table[i].layer, center, 150, ctx, 12, 120, 14);
+    
+    // Group
+    var text = ((table[ i ].group !== undefined) ? table[i].group : layers[table[i].layer].super_layer);
+    drawText(text, 97, 17, ctx, 116, 14);
+    
+    // Name
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '12px ' + font;
+    drawText(table[i].name, center, lastY, ctx, 12 + 12, 120, 14);
+    
+    // Dificulty
+    ctx.font = '14px ' + font;
+    drawText(helper.printDifficulty(Math.floor( table[i].difficulty / 2)), center, 93 + 14, ctx, 116, 14);
+    
+    // Symbol
+    ctx.font = 'bold 25px ' + font;
+    drawText(table[i].code, center, 22 + 25, ctx, 25, 120, 22);
+    
+    
+    
+    // Mesh Creation
+    texture = new THREE.Texture(canvas);
+    texture.needsUpdate = true;
+    texture.minFilter = THREE.NearestFilter;
+    material = new THREE.MeshBasicMaterial({
+        map : texture
+    });
+    mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry(canvas.width, canvas.height), material);
+    mesh.doubleSided = true;
+    
+    return mesh;
+    
+    
+/*    var element = document.createElement( 'div' );
+    element.className = 'element';
+    element.id = i;
+
+    element.addEventListener( 'click', onElementClick, false);
+
+    if ( table[i].picture != undefined) {
+        var picture = document.createElement( 'img' );
+        picture.id = 'img-' + i;
+        picture.className = 'picture';
+        picture.src = table[i].picture;
+        element.appendChild( picture );
+    }
+
+    var difficulty = document.createElement( 'div' );
+    difficulty.className = 'difficulty';
+    difficulty.textContent = printDifficulty( Math.floor( table[i].difficulty / 2 ) );
+    element.appendChild( difficulty );
+
+    var number = document.createElement( 'div' );
+    number.className = 'number';
+    number.textContent = (table[ i ].group != undefined) ? table[i].group : layers[table[i].layer].super_layer;
+    element.appendChild( number );
+
+    var symbol = document.createElement( 'div' );
+    symbol.className = 'symbol';
+    symbol.textContent = table[ i ].code;
+    element.appendChild( symbol );
+
+    var details = document.createElement( 'div' );
+    details.className = 'details';
+
+    var pluginName = document.createElement( 'p' );
+    pluginName.innerHTML = table[ i ].name;
+    pluginName.className = 'name';
+
+    var layerName = document.createElement( 'p' );
+    layerName.innerHTML = table[ i ].layer;
+
+    details.appendChild( pluginName );
+    details.appendChild( layerName );
+    element.appendChild( details );
+
+    switch ( table[i].code_level ) {
+
+        case "concept":
+            element.style.boxShadow = '0px 0px 12px rgba(150,150,150,0.5)';
+            element.style.backgroundColor = 'rgba(170,170,170,'+ ( Math.random() * 0.25 + 0.45 ) +')';
+
+            number.style.color = 'rgba(127,127,127,1)';
+            layerName.style.color = 'rgba(127,127,127,1)';
+
+            break;
+        case "development":
+            element.style.boxShadow = '0px 0px 12px rgba(244,133,107,0.5)';
+            element.style.backgroundColor = 'rgba(234,123,97,' + ( Math.random() * 0.25 + 0.45 ) + ')';
+
+            number.style.color = 'rgba(234,123,97,1)';
+            layerName.style.color = 'rgba(234,123,97,1)';
+
+
+            break;
+        case "qa":
+            element.style.boxShadow = '0px 0px 12px rgba(244,244,107,0.5)';
+            element.style.backgroundColor = 'rgba(194,194,57,' + ( Math.random() * 0.25 + 0.45 ) + ')';
+
+            number.style.color = 'rgba(194,194,57,1)';
+            layerName.style.color = 'rgba(194,194,57,1)';
+
+
+            break;
+        case "production":
+            element.style.boxShadow = '0px 0px 12px rgba(80,188,107,0.5)';
+            element.style.backgroundColor = 'rgba(70,178,97,'+ ( Math.random() * 0.25 + 0.45 ) +')';
+
+            number.style.color = 'rgba(70,178,97,1)';
+            layerName.style.color = 'rgba(70,178,97,1)';
+            
+            break;
+    }
+    
+    return element;*/
+}
+
+function drawText(text, x, y, context, size, maxWidth, lineHeight) {
+    
+    var words = text.split(' ');
+    var line = '';
+
+    for(var n = 0; n < words.length; n++) {
+      var testLine = line + words[n] + ' ';
+      var metrics = context.measureText(testLine);
+      var testWidth = metrics.width;
+      if (testWidth > maxWidth && n > 0) {
+        context.fillText(line, x, y);
+        line = words[n] + ' ';
+        y -= lineHeight;
+      }
+      else {
+        line = testLine;
+      }
+    }
+    context.fillText(line, x, y);
+    
+    return y - lineHeight;
+    /*if(ctx.measureText(text).width < ctx.canvas.width - 4) {
+        ctx.fillText(text, x, y);
+    } 
+    else {
+        
+        var words = text.split(' ');
+        var half = Math.ceil(words.length / 2);
+        var half1 = words.slice(0, half);
+        var half2 = words.slice(half);
+        var text1 = '', text2 = '';
+        
+        if(words.length >= 5){
+            half = half;
+        }
+        
+        for( var i = 0; i < half1.length; i++) {
+            text1 += half1[i] + ' ';
+        }
+        text1 = text1.trim();
+        
+        for( var i = 0; i < half2.length; i++) {
+            text2 += half2[i] + ' ';
+        }
+        text2 = text2.trim();
+        
+        drawText(text1, x, y - size - 3, ctx, size);
+        drawText(text2, x, y, ctx, size);
+    }*/
+}
+        
 function ViewManager() {
     
     this.lastTargets = null;
@@ -1504,7 +1788,7 @@ function ViewManager() {
             if (isSuperLayer[i]) {
 
                 if (!inSuperLayer) {
-                    actualHeight++;
+                    actualHeight+= 3;
 
                     if (superLayerPosition[actualSuperLayer] === undefined) {
                         superLayerPosition[actualSuperLayer] = actualHeight;
@@ -1750,89 +2034,138 @@ function ViewManager() {
      * @param   {Number}     i ID of the tile (index in table)
      * @returns {DOMElement} The drawable element that represents the tile
      */
-    this.createElement = function(i) {
+    this.createElement = function(id) {
 
-        var element = document.createElement('div');
-        element.className = 'element';
-        element.id = i;
-
-        element.addEventListener('click', onElementClick, false);
-
-        if (table[i].picture !== undefined) {
-            var picture = document.createElement('img');
-            picture.id = 'img-' + i;
-            picture.className = 'picture';
-            picture.src = table[i].picture;
-            element.appendChild(picture);
+        var mesh,
+            element = new THREE.LOD(),
+            levels = [
+            ['high', 0],
+            ['medium', 1000],
+            ['small', 1800],
+            ['mini', 2300]],
+            state = table[id].code_level,
+            difficulty = Math.ceil(table[id].difficulty / 2),
+            group = table[id].group,
+            type = table[id].type,
+            picture = table[id].picture,
+            base = 'images/tiles/',
+            texture, canvas,
+            tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
+            tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
+        
+        for(var j = 0, l = levels.length; j < l; j++) {
+            
+            canvas = document.createElement('canvas');
+            canvas.width = tileWidth;
+            canvas.height = tileHeight;
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(0,0,tileWidth,tileHeight);
+            texture = new THREE.Texture(canvas);
+            texture.minFilter = THREE.NearestFilter;
+            texture.magFilter = THREE.LinearFilter;
+            
+            var pic = {
+                    src : picture,
+                    x : 82, y : 47,
+                    w : 53, h : 53
+                },
+                portrait = {
+                    src : base + 'portrait/' + levels[j][0] + '/' + state + '.png',
+                    x : 0, y : 0,
+                    w : tileWidth, h : tileHeight
+                },
+                groupIcon = {
+                    src : base + 'icons/group/' + levels[j][0] + '/icon_' + group + '.png',
+                    x : 35, y : 76,
+                    w : 24, h : 24
+                },
+                typeIcon = {
+                    src : base + 'icons/type/' + levels[j][0] + '/' + type + '_logo.png',
+                    x : 154, y : 76,
+                    w : 24, h : 24
+                },
+                data = {
+                    pic : pic,
+                    portrait : portrait,
+                    groupIcon : groupIcon,
+                    typeIcon : typeIcon
+                };
+            
+            drawPicture(data, ctx, texture);
+            
+            mesh = new THREE.Mesh(
+                new THREE.PlaneGeometry(tileWidth, tileHeight),
+                new THREE.MeshBasicMaterial({vertexColors : THREE.FaceColors, side : THREE.FrontSide, color : 0xffffff})
+            );
+            mesh.userData = {id : id};
+            mesh.material.map = texture;
+            mesh.material.needsUpdate = true;
+            element.addLevel(mesh, levels[j][1]);
         }
-
-        var difficulty = document.createElement('div');
-        difficulty.className = 'difficulty';
-        difficulty.textContent = helper.printDifficulty(Math.floor(table[i].difficulty / 2));
-        element.appendChild(difficulty);
-
-        var number = document.createElement('div');
-        number.className = 'number';
-        number.textContent = (table[i].group !== undefined) ? table[i].group : layers[table[i].layer].super_layer;
-        element.appendChild(number);
-
-        var symbol = document.createElement('div');
-        symbol.className = 'symbol';
-        symbol.textContent = table[i].code;
-        element.appendChild(symbol);
-
-        var details = document.createElement('div');
-        details.className = 'details';
-
-        var pluginName = document.createElement('p');
-        pluginName.innerHTML = table[i].name;
-        pluginName.className = 'name';
-
-        var layerName = document.createElement('p');
-        layerName.innerHTML = table[i].layer;
-
-        details.appendChild(pluginName);
-        details.appendChild(layerName);
-        element.appendChild(details);
-
-        switch (table[i].code_level) {
-
-            case "concept":
-                element.style.boxShadow = '0px 0px 12px rgba(150,150,150,0.5)';
-                element.style.backgroundColor = 'rgba(170,170,170,' + (Math.random() * 0.25 + 0.45) + ')';
-
-                number.style.color = 'rgba(127,127,127,1)';
-                layerName.style.color = 'rgba(127,127,127,1)';
-
-                break;
-            case "development":
-                element.style.boxShadow = '0px 0px 12px rgba(244,133,107,0.5)';
-                element.style.backgroundColor = 'rgba(234,123,97,' + (Math.random() * 0.25 + 0.45) + ')';
-
-                number.style.color = 'rgba(234,123,97,1)';
-                layerName.style.color = 'rgba(234,123,97,1)';
-
-
-                break;
-            case "qa":
-                element.style.boxShadow = '0px 0px 12px rgba(244,244,107,0.5)';
-                element.style.backgroundColor = 'rgba(194,194,57,' + (Math.random() * 0.25 + 0.45) + ')';
-
-                number.style.color = 'rgba(194,194,57,1)';
-                layerName.style.color = 'rgba(194,194,57,1)';
-
-
-                break;
-            case "production":
-                element.style.boxShadow = '0px 0px 12px rgba(80,188,107,0.5)';
-                element.style.backgroundColor = 'rgba(70,178,97,' + (Math.random() * 0.25 + 0.45) + ')';
-
-                number.style.color = 'rgba(70,178,97,1)';
-                layerName.style.color = 'rgba(70,178,97,1)';
-
-                break;
+        
+        function drawPicture(data, ctx, texture) {
+            
+            var image = new Image();
+            image.onload = function() {
+                
+                ctx.globalAlpha = 0.8;
+                ctx.drawImage(image, data.pic.x, data.pic.y, data.pic.w, data.pic.h);
+                if(texture)
+                    texture.needsUpdate = true;
+                
+                ctx.globalAlpha = 1;
+                drawPortrait(data, ctx, texture);
+            };
+            image.crossOrigin="anonymous";
+            image.src = data.pic.src;
         }
-
+        
+        function drawPortrait(data, ctx, texture) {
+            
+            var image = new Image();
+            image.onload = function() {
+                
+                ctx.drawImage(image, data.portrait.x, data.portrait.y, data.portrait.w, data.portrait.h);
+                if(texture)
+                    texture.needsUpdate = true;
+                
+                drawGroupIcon(data, ctx, texture);
+            };
+            image.crossOrigin="anonymous";
+            image.src = data.portrait.src;
+        }
+        
+        function drawGroupIcon(data, ctx, texture) {
+            
+            var image = new Image();
+            image.onload = function() {
+                
+                ctx.drawImage(image, data.groupIcon.x, data.groupIcon.y, data.groupIcon.w, data.groupIcon.h);
+                if(texture)
+                    texture.needsUpdate = true;
+                
+                drawTypeIcon(data, ctx, texture);
+            };
+            image.crossOrigin="anonymous";
+            image.src = data.groupIcon.src;
+        }
+        
+        function drawTypeIcon(data, ctx, texture) {
+            
+            var image = new Image();
+            image.onload = function() {
+                
+                ctx.drawImage(image, data.typeIcon.x, data.typeIcon.y, data.typeIcon.w, data.typeIcon.h);
+                if(texture)
+                    texture.needsUpdate = true;
+                
+                //Call next function
+            };
+            image.crossOrigin="anonymous";
+            image.src = data.typeIcon.src;
+        }
+        
         return element;
     };
     
@@ -1906,9 +2239,8 @@ function ViewManager() {
         
         for (var i = 0; i < table.length; i++) {
 
-            var element = this.createElement(i);
-
-            var object = new THREE.CSS3DObject(element);
+            var object = this.createElement(i);
+            
             object.position.x = 0;
             object.position.y = 0;
             object.position.z = 80000;
@@ -1925,7 +2257,7 @@ function ViewManager() {
 
             if (layers[table[i].layer].super_layer) {
 
-                object.position.x = ((section[row]) * 140) - (columnWidth * groupsQtty * 140 / 2);
+                object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
                 section[row]++;
 
@@ -1933,13 +2265,13 @@ function ViewManager() {
 
                 //Column (X)
                 var column = table[i].groupID;
-                object.position.x = (((column * (columnWidth) + section[row][column]) + column) * 140) - (columnWidth * groupsQtty * 140 / 2);
+                object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
                 section[row][column]++;
             }
 
 
-            object.position.y = -((layerPosition[row]) * 180) + (layersQtty * 180 / 2);
+            object.position.y = -((layerPosition[row]) * window.TILE_DIMENSION.height) + (layersQtty * window.TILE_DIMENSION.height / 2);
 
             this.targets.table.push(object);
 
@@ -1985,5 +2317,4 @@ function ViewManager() {
             .onUpdate(render)
             .start();
     };
-    
 }

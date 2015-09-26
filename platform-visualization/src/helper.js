@@ -148,6 +148,31 @@ function Helper() {
 
         return result;
     };
+    
+    /**
+     * Loads a texture and applies it to the given mesh
+     * @param {String}   source     Address of the image to load
+     * @param {Mesh}     object     Mesh to apply the texture
+     * @param {Function} [callback] Function to call when texture gets loaded, with mesh as parameter
+     */
+    this.applyTexture = function(source, object, callback) {
+        
+        var loader = new THREE.TextureLoader();
+        
+        loader.load(
+            source,
+            function(tex) {
+                tex.minFilter = THREE.NearestFilter;
+                tex.needsUpdate = true;
+                object.material.map = tex;
+                object.needsUpdate = true;
+                
+                //console.log(tex.image.currentSrc);
+                
+                if(callback != null && typeof(callback) === 'function')
+                    callback(object);
+            });
+    };
 }
 
 // Make helper a static object

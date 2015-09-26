@@ -11,15 +11,16 @@ function Camera(position, renderer, renderFunc) {
      * private constans
      */
     var ROTATE_SPEED = 1.3,
-        MIN_DISTANCE = 500,
+        MIN_DISTANCE = 50,
         MAX_DISTANCE = 80000;
 
     /**
      * private properties
      */    
-    var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+    var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, MAX_DISTANCE );
     var controls = new THREE.TrackballControls( camera, renderer.domElement );
     var focus = null;
+    var self = this;
     
     camera.position.copy( position );
 
@@ -72,12 +73,12 @@ function Camera(position, renderer, renderFunc) {
         
         TWEEN.removeAll();
         focus = parseInt(id);
-        
-        headers.hide(duration);
 
         viewManager.letAlone(focus, duration);
+        
+        headers.hide(duration);
     
-        var vec = new THREE.Vector4(0, 0, 180, 1);
+        var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1);
         var target = window.objects[ focus ];
 
         vec.applyMatrix4( target.matrix );
@@ -151,7 +152,7 @@ function Camera(position, renderer, renderFunc) {
 
             viewManager.rollBack();
 
-            this.resetPosition(duration);
+            self.resetPosition(duration);
         }
     };
     
@@ -196,7 +197,14 @@ function Camera(position, renderer, renderFunc) {
      * @param {Scene}    scene    scene to render
      *
      */
-    this.render = function ( renderer, scene ) {        
+    this.render = function ( renderer, scene ) {
+        
+        scene.traverse( function ( object ) {
+
+            if ( object instanceof THREE.LOD ) {
+                object.update( camera );
+            }
+        });
         renderer.render ( scene, camera );
     };
     
@@ -208,6 +216,15 @@ function Camera(position, renderer, renderFunc) {
      */
     this.getFocus = function () { 
         return focus;
+    };
+    
+    this.rayCast = function(target, elements) {
+        
+        var raycaster = new THREE.Raycaster();
+        
+        raycaster.setFromCamera(target, camera);
+        
+        return raycaster.intersectObjects(elements);
     };
     
     // Events
