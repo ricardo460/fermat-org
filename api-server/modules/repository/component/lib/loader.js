@@ -60,30 +60,41 @@ var processRequestBody = function(body, callback) {
     }
 }
 
-var processCompList = function(compList, type) {
+var processCompList = function(section, layer, compList, type) {
     var comps = [];
     for (var i = 0; i < compList.length; i++) {
         var comp = {};
-        comp = processComp(compList[i], type);
+        comp = processComp(section, layer, compList[i]['$'], type);
         comps.push(comp);
     }
+    
     return comps;
 };
 
-var processComp = function(comp, type) {
-    var component = comp['$'];
-    return component;
+var processComp = function(section, layer, comp, type) {
+    //console.dir('section');
+    //console.dir(section); //.code
+    //console.dir('layer');
+    //console.dir(layer); //.name
+    //console.dir('comp');
+    //console.dir(comp); //.name
+    //console.dir('type');
+    //console.dir(type);
+    comp.type = type;
+    comp.repo_dir = getRepoDir(section.code, layer.name, type, comp.name, 'bitdubai');
+    return comp;
 };
 
-var getRepoDir = function(item) {
+var getRepoDir = function(section, layer, type, comp, team) {
     var _root = "fermat",
-        _group = item.group ? item.group.toUpperCase().split(' ').join('_') : null,
-        _type = item.type ? item.type.toLowerCase().split(' ').join('_') : null,
-        _layer = item.layer ? item.layer.toLowerCase().split(' ').join('_') : null,
-        _name = item.name ? item.name.toLowerCase().split(' ').join('-') : null;
-    if (_group && _type && _layer && _name) {
-        return _group + "/" + _type + "/" + _layer + "/" +
-            _root + "-" + _group.split('_').join('-').toLowerCase() + "-" + _type.split('_').join('-') + "-" + _layer.split('_').join('-') + "-" + _name + "-bitdubai";
+        _section = section ? section.toUpperCase().split(' ').join('_') : null,
+        _type = type ? type.toLowerCase().split(' ').join('_') : null,
+        _layer = layer ? layer.toLowerCase().split(' ').join('_') : null,
+        _comp = comp ? comp.toLowerCase().split(' ').join('-') : null;
+        _team = team ? team.toLowerCase().split(' ').join('-') : null;
+    if (_section && _type && _layer && _comp && _team) {
+        return _section + "/" + _type + "/" + _layer + "/" +
+            _root + "-" + _section.split('_').join('-').toLowerCase() + "-" + _type.split('_').join('-') + "-" + _layer.split('_').join('-') + "-" + _comp + "-" + _team;
     } else {
         return null;
     }
@@ -129,16 +140,16 @@ exports.loadComps = function(callback) {
                         layer = _layers[j]['$'];
                         var comps = [];
                         if (_layers[j].plugins) {
-                            comps = comps.concat(processCompList(_layers[j].plugins[0].plugin, 'plugin'));
+                            comps = comps.concat(processCompList(platfrm, layer, _layers[j].plugins[0].plugin, 'plugin'));
                         }
                         if (_layers[j].androids) {
-                            comps = comps.concat(processCompList(_layers[j].androids[0].android, 'android'));
+                            comps = comps.concat(processCompList(platfrm, layer, _layers[j].androids[0].android, 'android'));
                         }
                         if (_layers[j].addons) {
-                            comps = comps.concat(processCompList(_layers[j].addons[0].addon, 'addon'));
+                            comps = comps.concat(processCompList(platfrm, layer, _layers[j].addons[0].addon, 'addon'));
                         }
                         if (_layers[j].libraries) {
-                            comps = comps.concat(processCompList(_layers[j].libraries[0].library, 'library'));
+                            comps = comps.concat(processCompList(platfrm, layer, _layers[j].libraries[0].library, 'library'));
                         }
                         layer.comps = comps;
                         layers.push(layer);
@@ -169,16 +180,16 @@ exports.loadComps = function(callback) {
                         layer = _layers[j]['$'];
                         var comps = [];
                         if (_layers[j].plugins) {
-                            comps = comps.concat(processCompList(_layers[j].plugins[0].plugin, 'plugin'));
+                            comps = comps.concat(processCompList(suprlay, layer, _layers[j].plugins[0].plugin, 'plugin'));
                         }
                         if (_layers[j].androids) {
-                            comps = comps.concat(processCompList(_layers[j].androids[0].android, 'android'));
+                            comps = comps.concat(processCompList(suprlay, layer, _layers[j].androids[0].android, 'android'));
                         }
                         if (_layers[j].addons) {
-                            comps = comps.concat(processCompList(_layers[j].addons[0].addon, 'addon'));
+                            comps = comps.concat(processCompList(suprlay, layer, _layers[j].addons[0].addon, 'addon'));
                         }
                         if (_layers[j].libraries) {
-                            comps = comps.concat(processCompList(_layers[j].libraries[0].library, 'library'));
+                            comps = comps.concat(processCompList(suprlay, layer, _layers[j].libraries[0].library, 'library'));
                         }
                         layer.comps = comps;
                         layers.push(layer);
