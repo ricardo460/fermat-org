@@ -1,8 +1,23 @@
-var compSrv = require('./component/services/comp');
+var compMod = require('./component');
 
 exports.getComps = function (req, next) {
 	try {
-		compSrv.findAllComps({}, {}, function(err, comps) {
+		compMod.getComps(function(err, comps) {
+			if (err) {
+				next(err, null);
+			} else {
+				next(null, comps);
+			}
+		});
+	} catch (err) {
+		next(err, null);
+	}
+};
+
+
+exports.loadComps = function (req, next) {
+	try {
+		compMod.loadComps(function(err, comps) {
 			if (err) {
 				next(err, null);
 			} else {
