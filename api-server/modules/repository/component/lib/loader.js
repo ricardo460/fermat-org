@@ -64,16 +64,34 @@ var processCompList = function(section, layer, compList, type) {
     var comps = [];
     for (var i = 0; i < compList.length; i++) {
         var comp = {};
-        comp = processComp(section, layer, compList[i]['$'], type);
+        comp = processComp(section, layer, compList[i], type);
         comps.push(comp);
-    }    
+    }
     return comps;
 };
 
 var processComp = function(section, layer, comp, type) {
-    comp.type = type;
-    comp.repo_dir = getRepoDir(section.code, layer.name, type, comp.name, 'bitdubai');
-    return comp;
+    var proComp = {};
+    proComp = comp['$'];
+    proComp.type = type;
+    proComp.repo_dir = getRepoDir(section.code, layer.name, type, proComp.name, 'bitdubai');
+    var devs = [];
+    var _authors = comp.authors[0].author ? comp.authors[0].author : [];
+    var _mantainers = comp.mantainers[0].mantainer ? comp.mantainers[0].mantainer : [];
+    for (var i = 0; i < _authors.length; i++) {
+        var dev = {};
+        dev = _authors[i]['$'];
+        dev.role = 'author';
+        devs.push(dev);
+    }
+    for (var i = 0; i < _mantainers.length; i++) {
+        var dev = {};
+        dev = _mantainers[i]['$'];
+        dev.role = 'mantainer';
+        devs.push(dev);
+    }
+    proComp.devs = devs;
+    return proComp;
 };
 
 var getRepoDir = function(section, layer, type, comp, team) {
@@ -82,7 +100,7 @@ var getRepoDir = function(section, layer, type, comp, team) {
         _type = type ? type.toLowerCase().split(' ').join('_') : null,
         _layer = layer ? layer.toLowerCase().split(' ').join('_') : null,
         _comp = comp ? comp.toLowerCase().split(' ').join('-') : null;
-        _team = team ? team.toLowerCase().split(' ').join('-') : null;
+    _team = team ? team.toLowerCase().split(' ').join('-') : null;
     if (_section && _type && _layer && _comp && _team) {
         return _section + "/" + _type + "/" + _layer + "/" +
             _root + "-" + _section.split('_').join('-').toLowerCase() + "-" + _type.split('_').join('-') + "-" + _layer.split('_').join('-') + "-" + _comp + "-" + _team;
@@ -116,7 +134,7 @@ var getManifest = function(callback) {
 exports.loadComps = function(callback) {
     try {
         getManifest(function(err_man, res_man) {
-            if (err_man) console.dir(err_man);
+            if (err_man) callback(err_man, null);
             else {
                 var fermat = {};
                 var platfrms = [];

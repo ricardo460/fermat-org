@@ -16,7 +16,7 @@ var loadComps = function() {
     loadLib.loadComps(function(err, res) {
         if (err) console.dir(err);
         else {
-            console.log(JSON.stringify(res, null, 2));
+            //console.log(JSON.stringify(res, null, 2));
         	//console.dir(res);
         }
     });
