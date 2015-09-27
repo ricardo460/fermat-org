@@ -5,17 +5,19 @@ var mongoose = require('mongoose');
  *
  * @method PlatfrmMdl
  *
- * @param  {[type]}   code [description]
- * @param  {[type]}   name [description]
- * @param  {[type]}   logo [description]
- * @param  {[type]}   deps [description]
+ * @param  {[type]}   code          [description]
+ * @param  {[type]}   name          [description]
+ * @param  {[type]}   logo          [description]
+ * @param  {[type]}   deps          [description]
+ * @param  {[type]}   platfrm_index [description]
+ * @param  {[type]}   layer_index   [description]
  */
 function PlatfrmMdl(code, name, logo, deps, platfrm_index, layer_index) {
 	// always initialize all instance properties
 	this.code = code;
 	this.name = name;
 	this.logo = logo;
-	this.deps = [];
+	this.deps = deps;
 	this.platfrm_index = platfrm_index;
 	this.layer_index = layer_index;
 	this.upd_at = new mongoose.Types.ObjectId();

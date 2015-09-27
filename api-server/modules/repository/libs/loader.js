@@ -236,9 +236,6 @@ var parseManifest = function(callback) {
 exports.loadComps = function(callback) {
     parseManifest(function(err_par, res_par) {
         if (err_par) callback(err_par, null);
-        else {
-            //if ()
-            callback(null, res_par);
-        }
+        else callback(null, res_par);
     });
 }
