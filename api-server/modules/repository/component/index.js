@@ -17,7 +17,7 @@ var loadComps = function() {
         if (err) console.dir(err);
         else {
             //console.log(JSON.stringify(res, null, 2));
-        	//console.dir(res);
+        	console.dir(res);
         }
     });
 };
