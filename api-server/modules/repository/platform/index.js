@@ -50,5 +50,5 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, platfrm_index, layer_
                 else return callback(null, res_ins);
             });
         }
-    })
+    });
 };

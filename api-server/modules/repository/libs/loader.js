@@ -1,5 +1,10 @@
 var request = require('request');
 var parseString = require('xml2js').parseString;
+var platfrmMod = require('../platform');
+var layerMod = require('../layer');
+var compMod = require('../component');
+
+var db = require('../../../db');
 
 var USER_AGENT = 'Miguelcldn';
 //var USER_AGENT = 'MALOTeam'
@@ -233,9 +238,92 @@ var parseManifest = function(callback) {
     }
 };
 
-exports.loadComps = function(callback) {
+var loadComps = function(callback) {
     parseManifest(function(err_par, res_par) {
         if (err_par) callback(err_par, null);
         else callback(null, res_par);
     });
-}
+};
+
+var saveManifest = function() {
+    try {
+        loadComps(function(err_load, res_load) {
+            if (err_load) console.dir(err_load);
+            else {
+                if (res_load.platfrms && Array.isArray(res_load.platfrms)) {
+                    var _platfrms = res_load.platfrms;
+
+                    function loopPlatfrms(i) {
+                        if (i < _platfrms.length) {
+                            var _platfrm = _platfrms[i];
+                            platfrmMod.insOrUpdPlatfrm(_platfrm.code.trim().toUpperCase(),
+                                _platfrm.name.trim().toLowerCase(),
+                                _platfrm.logo,
+                                _platfrm.dependsOn.split(' ').join('').split(','),
+                                0,
+                                0,
+                                function(err_plat, res_plat) {
+                                    if (err_plat) {
+                                        loopPlatfrms(++i);
+                                    } else {
+                                        var _layers = _platfrm.layers;
+
+                                        function loopLayers(j) {
+                                            if (j < _layers.length) {
+                                                var _layer = _layers[j];
+                                                layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null,
+                                                    _layer.language ? _layer.language.toLowerCase() : null,
+                                                    0,
+                                                    0,
+                                                    function(err_lay, res_lay) {
+                                                        if (err_lay) {
+                                                            loopLayers(++j);
+                                                        } else {
+                                                            var _comps = _layer.comps;
+
+                                                            function loopComps(k) {
+                                                                if (k < _comps.length) {
+                                                                    var _comp = _comps[k];
+                                                                    compMod.insOrUpdComp(res_plat._id,
+                                                                        null,
+                                                                        res_lay._id,
+                                                                        _comp.name.trim().toLowerCase(),
+                                                                        _comp.type.trim().toLowerCase(),
+                                                                        _comp.description.trim().toLowerCase(),
+                                                                        _comp.difficulty,
+                                                                        _comp['code-level'].trim().toLowerCase(), [], [], [],
+                                                                        function(err_comp, res_comp) {
+                                                                            if (err_comp) {
+                                                                                loopComps(++k);
+                                                                            } else {
+                                                                                loopComps(++k);
+                                                                            }
+                                                                        });
+                                                                } else {
+                                                                    loopLayers(++j);
+                                                                }
+                                                            }
+                                                            loopComps(0);
+                                                        }
+                                                    });
+                                            } else {
+                                                loopPlatfrms(++i);
+                                            }
+                                        };
+                                        loopLayers(0);
+                                    }
+                                });
+                        } else {
+                            //callback
+                        }
+                    };
+                    loopPlatfrms(0);
+                }
+            }
+        });
+    } catch (err) {
+        console.dir(err);
+    }
+};
+
+saveManifest();

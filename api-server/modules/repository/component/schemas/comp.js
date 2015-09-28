@@ -19,12 +19,14 @@ var compSchema = mongoose.Schema({
         ref: 'Layer'
     },
     name: {
+        lowercase: true,
         type: String,
         trim: true
     },
     type: {
         // library / android / addon / plugin
         type: String,
+        lowercase: true,
         trim: true
     },
     description: {
@@ -62,7 +64,7 @@ var compSchema = mongoose.Schema({
         'default': new mongoose.Types.ObjectId()
     }
 }, {
-    collection: 'platfrms'
+    collection: 'comps'
 });
 
 /**

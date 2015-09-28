@@ -16,9 +16,9 @@ var mongoose = require('mongoose');
  */
 function CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level) {
     // always initialize all instance properties
-    this._platfrm_id = null;
-    this._suprlay_id = null;
-    this._layer_id = null;
+    this._platfrm_id = _platfrm_id;
+    this._suprlay_id = _suprlay_id;
+    this._layer_id = _layer_id;
     this.name = name;
     this.type = type;
     this.description = description;

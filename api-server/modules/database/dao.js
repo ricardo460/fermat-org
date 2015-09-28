@@ -259,12 +259,14 @@ Dao.prototype.findAndPopulateSchema = function(query, path, callback) {
     this.Schema.findOne(query)
         .populate(path)
         .exec(function(err, schema) {
-            if (err && !schema) {
+            if (err) {
                 return callback(err, null);
-            } else {
+            } else if (schema) {
                 var model = new that.Model();
                 model.init(schema);
-                return callback(err, model);
+                return callback(null, model);
+            } else {
+                return callback(null, null);
             }
         });
 };
