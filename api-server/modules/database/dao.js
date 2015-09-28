@@ -161,7 +161,7 @@ Dao.prototype.findAllSchemaLst = function(query, sort, callback) {
                     var model = new that.Model();
                     model.init(schemas[i]);
                     models.push(model);
-                };
+                }
                 return callback(err, models);;
             }
         });
@@ -202,13 +202,15 @@ Dao.prototype.updateSchema = function(condition, update, options, callback) {
 Dao.prototype.insertSchema = function(model, callback) {
     var schema = new this.Schema(model);
     var that = this;
-    schema.save(function(err, schema) {
-        if (err && !schema) {
+    schema.save(function(err, sch) {
+        if (err) {
             return callback(err, null);
-        } else {
+        } else if (sch) {
             var mdl = new that.Model();
-            mdl.init(schema);
-            return callback(err, mdl);
+            mdl.init(sch);
+            return callback(null, mdl);
+        } else {
+            callback(null, null);
         }
     });
 };
