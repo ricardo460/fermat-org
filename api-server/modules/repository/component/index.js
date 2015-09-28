@@ -2,6 +2,8 @@ var compSrv = require('./services/comp');
 var CompMdl = require('./models/comp');
 var compDevSrv = require('./services/compDev');
 var CompDevMdl = require('./models/compDev');
+var statusSrv = require('./services/status');
+var StatusMdl = require('./models/status');
 
 exports.getComps = function(callback) {
     compSrv.findAllComps({}, {}, function(err, comps) {
@@ -14,7 +16,6 @@ exports.getComps = function(callback) {
 };
 
 exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, callback) {
-    //console.dir(arguments);
     var find_obj = {
         '$and': []
     };
@@ -39,14 +40,9 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
         });
     }
     compSrv.findComp(find_obj, function(err_comp, res_comp) {
-        //console.dir(err_comp);
-        //console.dir(res_comp);
         if (err_comp) {
-            //console.log('step 1')
             return callback(err_comp, null);
         } else if (res_comp) {
-            //console.log('step 2')
-            //TODO: update
             var set_obj = {};
             if (type != res_comp.type) {
                 set_obj.type = type;
@@ -77,10 +73,7 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
                 return callback(null, res_comp);
             }
         } else {
-            //console.log('step 3')
-            //TODO: insert
             var comp = new CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir);
-            //console.dir(comp);
             compSrv.insertComp(comp, function(err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
                 else return callback(null, res_ins);
@@ -90,7 +83,6 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
 };
 
 exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callback) {
-    //console.dir(arguments);
     var find_obj = {
         '$and': []
     };
@@ -115,14 +107,9 @@ exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callb
         });
     }
     compDevSrv.findCompDev(find_obj, function(err_compDev, res_compDev) {
-        //console.dir(err_compDev);
-        //console.dir(res_compDev);
         if (err_compDev) {
-            //console.log('step 1')
             return callback(err_compDev, null);
         } else if (res_compDev) {
-            //console.log('step 2')
-            //TODO: update
             var set_obj = {};
             if (percnt != res_compDev.percnt) {
                 set_obj.percnt = percnt;
@@ -137,10 +124,7 @@ exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callb
                 return callback(null, res_compDev);
             }
         } else {
-            //console.log('step 3')
-            //TODO: insert
             var compDev = new CompDevMdl(_comp_id, _dev_id, role, scope, percnt);
-            //console.dir(compDev);
             compDevSrv.insertCompDev(compDev, function(err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
                 else return callback(null, res_ins);
@@ -150,7 +134,6 @@ exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callb
 };
 
 exports.insOrUpdStatus = function(_comp_id, name, target, reached, callback) {
-    //console.dir(arguments);
     var find_obj = {
         '$and': []
     };
@@ -165,18 +148,17 @@ exports.insOrUpdStatus = function(_comp_id, name, target, reached, callback) {
         });
     }
     statusSrv.findStatus(find_obj, function(err_status, res_status) {
-        //console.dir(err_status);
-        //console.dir(res_status);
         if (err_status) {
-            //console.log('step 1')
             return callback(err_status, null);
         } else if (res_status) {
-            //console.log('step 2')
-            //TODO: update
             var set_obj = {};
-            if (percnt != res_status.percnt) {
-                set_obj.percnt = percnt;
-                res_status.percnt = percnt;
+            if (target != res_status.target) {
+                set_obj.target = target;
+                res_status.target = target;
+            }
+            if (reached != res_status.reached) {
+                set_obj.reached = reached;
+                res_status.reached = reached;
             }
             if (Object.keys(set_obj).length > 0) {
                 statusSrv.updateStatusById(res_status._id, set_obj, function(err_upd, res_upd) {
@@ -187,10 +169,7 @@ exports.insOrUpdStatus = function(_comp_id, name, target, reached, callback) {
                 return callback(null, res_status);
             }
         } else {
-            //console.log('step 3')
-            //TODO: insert
             var status = new StatusMdl(_comp_id, name, target, reached);
-            //console.dir(status);
             statusSrv.insertStatus(status, function(err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
                 else return callback(null, res_ins);
