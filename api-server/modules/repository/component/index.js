@@ -13,7 +13,7 @@ exports.getComps = function(callback) {
     });
 };
 
-exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, devs, certs, life_cycle, callback) {
+exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, callback) {
     //console.dir(arguments);
     var find_obj = {};
     if (_platfrm_id) {
@@ -54,17 +54,9 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
                 set_obj.code_level = code_level;
                 res_comp.code_level = code_level;
             }
-            if (devs != res_comp.devs) {
-                set_obj.devs = devs;
-                res_comp.devs = devs;
-            }
-            if (certs != res_comp.certs) {
-                set_obj.certs = certs;
-                res_comp.certs = certs;
-            }
-            if (life_cycle != res_comp.life_cycle) {
-                set_obj.life_cycle = life_cycle;
-                res_comp.life_cycle = life_cycle;
+            if (repo_dir != res_comp.repo_dir) {
+                set_obj.repo_dir = repo_dir;
+                res_comp.repo_dir = repo_dir;
             }
             if (Object.keys(set_obj).length > 0) {
                 compSrv.updateCompById(res_comp._id, set_obj, function(err_upd, res_upd) {
@@ -77,7 +69,7 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
         } else {
             //console.log('step 3')
             //TODO: insert
-            var comp = new CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level);
+            var comp = new CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir);
             //console.dir(comp);
             compSrv.insertComp(comp, function(err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
@@ -102,7 +94,7 @@ exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callb
     if (scope) {
         find_obj.scope = scope;
     }
-    compSrv.findCompDev(find_obj, function(err_compDev, res_compDev) {
+    compDevSrv.findCompDev(find_obj, function(err_compDev, res_compDev) {
         //console.dir(err_compDev);
         //console.dir(res_compDev);
         if (err_compDev) {
@@ -127,9 +119,9 @@ exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callb
         } else {
             //console.log('step 3')
             //TODO: insert
-            var compDev = new CompMdl(_comp_id, _dev_id, role, scope, percnt);
-            //console.dir(comp);
-            compSrv.insertCompDev(comp, function(err_ins, res_ins) {
+            var compDev = new CompDevMdl(_comp_id, _dev_id, role, scope, percnt);
+            //console.dir(compDev);
+            compDevSrv.insertCompDev(compDev, function(err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
                 else return callback(null, res_ins);
             });

@@ -13,8 +13,9 @@ var mongoose = require('mongoose');
  * @param  {[type]} description [description]
  * @param  {[type]} difficulty  [description]
  * @param  {[type]} code_level  [description]
+ * @param  {[type]} repo_dir  [description]
  */
-function CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level) {
+function CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir) {
     // always initialize all instance properties
     this._platfrm_id = _platfrm_id;
     this._suprlay_id = _suprlay_id;
@@ -24,6 +25,7 @@ function CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, d
     this.description = description;
     this.difficulty = difficulty;
     this.code_level = code_level;
+    this.repo_dir = repo_dir;
     this.found = false;
     this.devs = [];
     this.certs = [];
@@ -50,6 +52,7 @@ CompMdl.prototype.init = function(compSchema) {
     this.description = compSchema.description;
     this.difficulty = compSchema.difficulty;
     this.code_level = compSchema.code_level;
+    this.repo_dir = compSchema.repo_dir;
     this.found = compSchema.found;
     this.devs = compSchema.devs;
     this.certs = compSchema.certs;

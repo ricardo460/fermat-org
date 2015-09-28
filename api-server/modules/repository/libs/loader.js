@@ -294,6 +294,7 @@ var saveManifest = function() {
                                                             function loopComps(k) {
                                                                 if (k < _comps.length) {
                                                                     var _comp = _comps[k];
+                                                                    console.dir(_comp);
                                                                     compMod.insOrUpdComp(res_plat._id,
                                                                         null,
                                                                         res_lay._id,
@@ -301,7 +302,8 @@ var saveManifest = function() {
                                                                         _comp.type.trim().toLowerCase(),
                                                                         _comp.description.trim().toLowerCase(),
                                                                         _comp.difficulty,
-                                                                        _comp['code-level'].trim().toLowerCase(), [], [], [],
+                                                                        _comp['code-level'].trim().toLowerCase(), 
+                                                                        _comp.repo_dir,
                                                                         function(err_comp, res_comp) {
                                                                             if (err_comp) {
                                                                                 loopComps(++k);
@@ -310,14 +312,20 @@ var saveManifest = function() {
                                                                                 function loopDevs(l) {
                                                                                     if (l < _devs.length) {
                                                                                         var _dev = _devs[l];
+                                                                                        //console.dir(_dev);
                                                                                         devMod.insOrUpdDev(_dev.name.trim().toLowerCase(), null, null, null, null, null, null, null, function(err_dev, res_dev) {
                                                                                             if (err_dev) {
                                                                                                 //console.dir(err_dev);
                                                                                                 loopDevs(++l);
                                                                                             } else {
-                                                                                                console.log(res_dev);
-                                                                                                loopDevs(++l);
-                                                                                                //insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callback)
+                                                                                                //console.log(res_dev);
+                                                                                                compMod.insOrUpdCompDev(res_comp._id, res_dev._id, _dev.role, _dev.scope, _dev.percentage, function(err_compDev, res_compDev) {
+                                                                                                    if (err_compDev) {
+                                                                                                        loopDevs(++l);
+                                                                                                    } else {
+                                                                                                        loopDevs(++l);
+                                                                                                    }
+                                                                                                });
                                                                                             }
                                                                                         });
                                                                                     } else {
@@ -325,7 +333,6 @@ var saveManifest = function() {
                                                                                     }
                                                                                 }
                                                                                 loopDevs(0);
-                                                                                //TODO: load devs
                                                                                 //TODO: load life_cycle
                                                                             }
                                                                         });

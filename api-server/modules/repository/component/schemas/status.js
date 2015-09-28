@@ -15,11 +15,11 @@ var statusSchema = mongoose.Schema({
         trim: true
     },
     target: {
-        type: String,
+        type: Date,
         trim: true
     },
     reached: {
-        type: String,
+        type: Date,
         trim: true
     },
     upd_at: {

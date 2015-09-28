@@ -43,6 +43,10 @@ var compSchema = mongoose.Schema({
         lowercase: true,
         trim: true
     },
+    repo_dir: {
+        type: String,
+        trim: true
+    },
     found: {
         type: Boolean,
         'default': false
