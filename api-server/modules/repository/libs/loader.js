@@ -7,7 +7,7 @@ var layerMod = require('../layer');
 var compMod = require('../component');
 var devMod = require('../developer');
 
-var db = require('../../../db');
+//var db = require('../../../db');
 
 var USER_AGENT = 'Miguelcldn';
 //var USER_AGENT = 'MALOTeam'
@@ -491,7 +491,10 @@ var saveManifest = function(callback) {
     }
 };
 
-saveManifest(function(err, res) {
-    if (err) console.dir(err);
-    if (res) console.dir(res);
-});
+exports.loadComps = function(callback) {
+    saveManifest(function(err, res) {
+        if (err) callback(err, null);
+        else if (res) callback(null, res);
+        else callback(null, null);
+    });
+};

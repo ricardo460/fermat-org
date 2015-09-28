@@ -1,4 +1,5 @@
 var compMod = require('./component');
+var loadLib = require('./libs/loader');
 
 exports.getComps = function (req, next) {
 	try {
@@ -17,11 +18,11 @@ exports.getComps = function (req, next) {
 
 exports.loadComps = function (req, next) {
 	try {
-		compMod.loadComps(function(err, comps) {
+		loadLib.loadComps(function(err, res) {
 			if (err) {
 				next(err, null);
 			} else {
-				next(null, comps);
+				next(null, res);
 			}
 		});
 	} catch (err) {
