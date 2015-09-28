@@ -31,6 +31,9 @@ function Camera(position, renderer, renderFunc) {
     controls.addEventListener( 'change', renderFunc );
     controls.position0.copy( position );
     
+    // Public properties
+    this.moving = false;
+    
     // Public Methods
     
     /**
@@ -187,6 +190,7 @@ function Camera(position, renderer, renderFunc) {
      */
     this.update = function() {        
         controls.update();
+        self.moving = controls.moving;
     };
     
     /**

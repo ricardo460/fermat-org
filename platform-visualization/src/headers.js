@@ -306,7 +306,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 headerData = window.superLayers[slayer];
                 row = superLayerPosition[headerData.index];
 
-                src = 'images/headers/' + group + '_logo.png';
+                src = 'images/headers/' + slayer + '_logo.png';
                 width = columnWidth * window.TILE_DIMENSION.width;
                 height = width * 443 / 1379;
 

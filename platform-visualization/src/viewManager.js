@@ -349,56 +349,14 @@ function ViewManager() {
             ['medium', 1000],
             ['small', 1800],
             ['mini', 2300]],
-            state = table[id].code_level,
-            difficulty = Math.ceil(table[id].difficulty / 2),
-            group = table[id].group,
-            type = table[id].type,
-            picture = table[id].picture,
-            base = 'images/tiles/',
-            texture, canvas,
+            texture,
             tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
-            tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
+            tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING,
+            scale = 2;
         
         for(var j = 0, l = levels.length; j < l; j++) {
             
-            canvas = document.createElement('canvas');
-            canvas.width = tileWidth;
-            canvas.height = tileHeight;
-            var ctx = canvas.getContext('2d');
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fillRect(0,0,tileWidth,tileHeight);
-            texture = new THREE.Texture(canvas);
-            texture.minFilter = THREE.NearestFilter;
-            texture.magFilter = THREE.LinearFilter;
-            
-            var pic = {
-                    src : picture,
-                    x : 82, y : 47,
-                    w : 53, h : 53
-                },
-                portrait = {
-                    src : base + 'portrait/' + levels[j][0] + '/' + state + '.png',
-                    x : 0, y : 0,
-                    w : tileWidth, h : tileHeight
-                },
-                groupIcon = {
-                    src : base + 'icons/group/' + levels[j][0] + '/icon_' + group + '.png',
-                    x : 35, y : 76,
-                    w : 24, h : 24
-                },
-                typeIcon = {
-                    src : base + 'icons/type/' + levels[j][0] + '/' + type + '_logo.png',
-                    x : 154, y : 76,
-                    w : 24, h : 24
-                },
-                data = {
-                    pic : pic,
-                    portrait : portrait,
-                    groupIcon : groupIcon,
-                    typeIcon : typeIcon
-                };
-            
-            drawPicture(data, ctx, texture);
+            texture = createTexture(id, tileWidth, tileHeight, scale);
             
             mesh = new THREE.Mesh(
                 new THREE.PlaneGeometry(tileWidth, tileHeight),
@@ -410,66 +368,324 @@ function ViewManager() {
             element.addLevel(mesh, levels[j][1]);
         }
         
+        function createTexture(id, tileWidth, tileHeight, scale) {
+            
+            var state = table[id].code_level,
+                difficulty = Math.ceil(table[id].difficulty / 2),
+                group = table[id].group || window.layers[table[id].layer].super_layer,
+                type = table[id].type,
+                picture = table[id].picture,
+                base = 'images/tiles/';
+            
+            var canvas = document.createElement('canvas');
+            canvas.width = tileWidth * scale;
+            canvas.height = tileHeight * scale;
+            
+            var middle = canvas.width / 2;
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(0, 0, tileWidth * scale, tileHeight * scale);
+            ctx.textAlign = 'center';
+            
+            var texture = new THREE.Texture(canvas);
+            texture.minFilter = THREE.NearestFilter;
+            texture.magFilter = THREE.LinearFilter;
+            
+            var pic = {
+                    src : picture,
+                    alpha : 0.8
+                },
+                portrait = {
+                    src : base + 'portrait/' + levels[j][0] + '/' + state + '.png',
+                    x : 0, y : 0,
+                    w : tileWidth * scale, h : tileHeight * scale
+                },
+                groupIcon = {
+                    src : base + 'icons/group/' + levels[j][0] + '/icon_' + group + '.png'
+                },
+                typeIcon = {
+                    src : base + 'icons/type/' + levels[j][0] + '/' + type.toLowerCase() + '_logo.png'
+                },
+                ring = {
+                    src : base + 'rings/' + levels[j][0] + '/' + state + '_diff_' + difficulty + '.png'
+                },
+                codeText = {
+                    text : table[id].code,
+                    font : (24 * scale) + "px Arial"
+                },
+                nameText = {
+                    text : table[id].name,
+                    font : (10 * scale) + 'px Arial'
+                },
+                layerText = {
+                    text : table[id].layer,
+                    font : (10 * scale) + 'px Arial'
+                },
+                authorText = {
+                    text : table[id].author || '',
+                    font : (5 * scale) + 'px Arial',
+                    constraint : 29 * scale
+                };
+            
+            if(id === 185)
+                console.log("now");
+            
+            switch(state) {
+                case "concept":
+                    pic.x = 80 * scale;
+                    pic.y = 36 * scale;
+                    pic.w = 53 * scale;
+                    pic.h = 53 * scale;
+                    
+                    groupIcon.x = 25 * scale;
+                    groupIcon.y = 49 * scale;
+                    groupIcon.w = 28 * scale;
+                    groupIcon.h = 28 * scale;
+                    
+                    typeIcon.x = 160 * scale;
+                    typeIcon.y = 49 * scale;
+                    typeIcon.w = 28 * scale;
+                    typeIcon.h = 28 * scale;
+                    
+                    ring.x = 72 * scale;
+                    ring.y = 93 * scale;
+                    ring.w = 68 * scale;
+                    ring.h = 9 * scale;
+                    
+                    codeText.x = middle;
+                    codeText.y = 21 * scale;
+                    codeText.font = (22 * scale) + "px Arial";
+                    
+                    nameText.x = middle;
+                    nameText.y = 33 * scale;
+                    nameText.font = (9 * scale) + 'px Arial';
+                    nameText.color = "#000000";
+                    
+                    layerText.x = middle;
+                    layerText.y = 114 * scale;
+                    layerText.font = (9 * scale) + 'px Arial';
+                    
+                    authorText.x = middle;
+                    authorText.y = 81 * scale;
+                    
+                    break;
+                case "development":
+                    pic.x = 82 * scale;
+                    pic.y = 47 * scale;
+                    pic.w = 53 * scale;
+                    pic.h = 53 * scale;
+                    
+                    groupIcon.x = 35 * scale;
+                    groupIcon.y = 76 * scale;
+                    groupIcon.w = 24 * scale;
+                    groupIcon.h = 24 * scale;
+                    
+                    typeIcon.x = 154 * scale;
+                    typeIcon.y = 76 * scale;
+                    typeIcon.w = 24 * scale;
+                    typeIcon.h = 24 * scale;
+                    
+                    ring.x = 66 * scale;
+                    ring.y = 31 * scale;
+                    ring.w = 82 * scale;
+                    ring.h = 81 * scale;
+                    
+                    codeText.x = middle;
+                    codeText.y = 20 * scale;
+                    codeText.font = (18 * scale) + "px Arial";
+                    
+                    nameText.x = middle;
+                    nameText.y = 28 * scale;
+                    nameText.font = (6 * scale) + 'px Arial';
+                    
+                    layerText.x = middle;
+                    layerText.y = 113 * scale;
+                    layerText.font = (6 * scale) + 'px Arial';
+                    layerText.color = "#F26662";
+                    
+                    authorText.x = middle;
+                    authorText.y = 89 * scale;
+                    
+                    break;
+                case "qa":
+                    pic.x = 80 * scale;
+                    pic.y = 35 * scale;
+                    pic.w = 53 * scale;
+                    pic.h = 53 * scale;
+                    
+                    groupIcon.x = 35 * scale;
+                    groupIcon.y = 76 * scale;
+                    groupIcon.w = 24 * scale;
+                    groupIcon.h = 24 * scale;
+                    
+                    typeIcon.x = 154 * scale;
+                    typeIcon.y = 76 * scale;
+                    typeIcon.w = 24 * scale;
+                    typeIcon.h = 24 * scale;
+                    
+                    ring.x = 68 * scale;
+                    ring.y = 35 * scale;
+                    ring.w = 79 * scale;
+                    ring.h = 68 * scale;
+                    
+                    codeText.x = middle;
+                    codeText.y = 20 * scale;
+                    codeText.font = (18 * scale) + "px Arial";
+                    
+                    nameText.x = middle;
+                    nameText.y = 28 * scale;
+                    nameText.font = (6 * scale) + 'px Arial';
+                    
+                    layerText.x = middle;
+                    layerText.y = 112 * scale;
+                    layerText.font = (6 * scale) + 'px Arial';
+                    layerText.color = "#FCC083";
+                    
+                    authorText.x = middle;
+                    authorText.y = 79 * scale;
+                    
+                    break;
+                case "production":
+                    pic.x = 56 * scale;
+                    pic.y = 33 * scale;
+                    pic.w = 53 * scale;
+                    pic.h = 53 * scale;
+                    
+                    groupIcon.x = 17 * scale;
+                    groupIcon.y = 30 * scale;
+                    groupIcon.w = 28 * scale;
+                    groupIcon.h = 28 * scale;
+                    
+                    typeIcon.x = 17 * scale;
+                    typeIcon.y = 62 * scale;
+                    typeIcon.w = 28 * scale;
+                    typeIcon.h = 28 * scale;
+                    
+                    ring.x = 25 * scale;
+                    ring.y = 99 * scale;
+                    ring.w = 68 * scale;
+                    ring.h = 9 * scale;
+                    
+                    codeText.x = 170 * scale;
+                    codeText.y = 26 * scale;
+                    codeText.font = (22 * scale) + "px Arial";
+                    
+                    nameText.x = 170 * scale;
+                    nameText.y = 71 * scale;
+                    nameText.font = (7 * scale) + 'px Arial';
+                    nameText.constraint = 60 * scale;
+                    nameText.lineHeight = 9 * scale;
+                    nameText.wrap = true;
+                    
+                    layerText.x = 170 * scale;
+                    layerText.y = 107 * scale;
+                    layerText.font = (5 * scale) + 'px Arial';
+                    
+                    authorText.x = 82 * scale;
+                    authorText.y = 78 * scale;
+                    
+                    break;
+            }
+            
+            if(state == "concept" || state == "production")
+                ring.src = base + 'rings/' + levels[j][0] + '/linear_diff_' + difficulty + '.png';
+            
+            if(difficulty === 0)
+                ring = {};
+            
+            var data = [
+                    pic,
+                    portrait,
+                    groupIcon,
+                    typeIcon,
+                    ring,
+                    codeText,
+                    nameText,
+                    layerText,
+                    authorText
+                ];
+            
+            drawPicture(data, ctx, texture);
+            
+            return texture;
+        }
+        
         function drawPicture(data, ctx, texture) {
             
             var image = new Image();
-            image.onload = function() {
+            var actual = data.shift();
+            
+            if(actual.src && actual.src != 'undefined') {
+            
+                image.onload = function() {
+
+
+                    if(actual.alpha)
+                        ctx.globalAlpha = actual.alpha;
+
+                    ctx.drawImage(image, actual.x, actual.y, actual.w, actual.h);
+                    if(texture)
+                        texture.needsUpdate = true;
+
+                    ctx.globalAlpha = 1;
+
+                    if(data.length !== 0) {
+
+                        if(data[0].text)
+                            drawText(data, ctx, texture);
+                        else
+                            drawPicture(data, ctx, texture);
+                    }
+                };
                 
-                ctx.globalAlpha = 0.8;
-                ctx.drawImage(image, data.pic.x, data.pic.y, data.pic.w, data.pic.h);
-                if(texture)
-                    texture.needsUpdate = true;
+                image.onerror = function() {
+                    if(data.length !== 0) {
+                        if(data[0].text)
+                            drawText(data, ctx, texture);
+                        else
+                            drawPicture(data, ctx, texture);
+                    }
+                };
                 
-                ctx.globalAlpha = 1;
-                drawPortrait(data, ctx, texture);
-            };
-            image.crossOrigin="anonymous";
-            image.src = data.pic.src;
+                image.crossOrigin="anonymous";
+                image.src = actual.src;
+            }
+            else {
+                if(data.length !== 0) {
+                    if(data[0].text)
+                        drawText(data, ctx, texture);
+                    else
+                        drawPicture(data, ctx, texture);
+                }
+            }
         }
         
-        function drawPortrait(data, ctx, texture) {
+        function drawText(data, ctx, texture) {
             
-            var image = new Image();
-            image.onload = function() {
-                
-                ctx.drawImage(image, data.portrait.x, data.portrait.y, data.portrait.w, data.portrait.h);
-                if(texture)
-                    texture.needsUpdate = true;
-                
-                drawGroupIcon(data, ctx, texture);
-            };
-            image.crossOrigin="anonymous";
-            image.src = data.portrait.src;
-        }
-        
-        function drawGroupIcon(data, ctx, texture) {
+            var actual = data.shift();
             
-            var image = new Image();
-            image.onload = function() {
-                
-                ctx.drawImage(image, data.groupIcon.x, data.groupIcon.y, data.groupIcon.w, data.groupIcon.h);
-                if(texture)
-                    texture.needsUpdate = true;
-                
-                drawTypeIcon(data, ctx, texture);
-            };
-            image.crossOrigin="anonymous";
-            image.src = data.groupIcon.src;
-        }
-        
-        function drawTypeIcon(data, ctx, texture) {
+            //TODO: Set Roboto typo
             
-            var image = new Image();
-            image.onload = function() {
-                
-                ctx.drawImage(image, data.typeIcon.x, data.typeIcon.y, data.typeIcon.w, data.typeIcon.h);
-                if(texture)
-                    texture.needsUpdate = true;
-                
-                //Call next function
-            };
-            image.crossOrigin="anonymous";
-            image.src = data.typeIcon.src;
+            if(actual.color)
+                ctx.fillStyle = actual.color;
+            
+            ctx.font = actual.font;
+            
+            if(actual.constraint)
+                if(actual.wrap)
+                    helper.drawText(actual.text, actual.x, actual.y, ctx, actual.constraint, actual.lineHeight);
+                else
+                    ctx.fillText(actual.text, actual.x, actual.y, actual.constraint);
+            else
+                ctx.fillText(actual.text, actual.x, actual.y);
+            
+            if(texture)
+                texture.needsUpdate = true;
+            
+            ctx.fillStyle = "#FFFFFF";
+            
+            if(data.length !== 0)
+                drawText(data, ctx);
         }
         
         return element;
