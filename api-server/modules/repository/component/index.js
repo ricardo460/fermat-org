@@ -76,7 +76,7 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
             //console.log('step 3')
             //TODO: insert
             var comp = new CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level);
-            console.dir(comp);
+            //console.dir(comp);
             compSrv.insertComp(comp, function(err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
                 else return callback(null, res_ins);

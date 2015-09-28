@@ -91,7 +91,6 @@ Dao.prototype.findSchemaById = function(_id, callback) {
  */
 Dao.prototype.findSchema = function(query, callback) {
     var that = this;
-    console.dir(query);
     this.Schema.findOne(query).exec(function(err, schema) {
         if (err) {
             return callback(err, null);

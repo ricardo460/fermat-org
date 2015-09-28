@@ -29,8 +29,9 @@ var processComp = function(section, layer, comp, type) {
     proComp.type = type;
     proComp.repo_dir = getRepoDir(section.code, layer.name, type, proComp.name, 'bitdubai');
     var devs = [];
-    var _authors = comp.authors[0].author ? comp.authors[0].author : [];
-    var _mantainers = comp.mantainers[0].mantainer ? comp.mantainers[0].mantainer : [];
+    var _authors = comp.authors && comp.authors[0] && comp.authors[0].author ? comp.authors[0].author : [];
+    var _mantainers = comp.mantainers && comp.mantainers[0] && comp.mantainers[0].mantainer ? comp.mantainers[0].mantainer : [];
+    var _life_cycle = comp.life_cycle && comp.life_cycle[0] && comp.life_cycle[0].status ? comp.life_cycle[0].status : [];
     for (var i = 0; i < _authors.length; i++) {
         var dev = {};
         dev = _authors[i]['$'];
@@ -44,6 +45,14 @@ var processComp = function(section, layer, comp, type) {
         devs.push(dev);
     }
     proComp.devs = devs;
+    var life_cycle = [];
+    for (var i = 0; i < _life_cycle.length; i++) {
+        var status = {};
+        status = _life_cycle[i]['$'];
+        life_cycle.push(status);
+    }
+    proComp.life_cycle = life_cycle;
+    //console.dir(proComp);
     return proComp;
 };
 
@@ -297,6 +306,8 @@ var saveManifest = function() {
                                                                                 loopComps(++k);
                                                                             } else {
                                                                                 loopComps(++k);
+                                                                                //TODO: load devs
+                                                                                //TODO: load life_cycle
                                                                             }
                                                                         });
                                                                 } else {
