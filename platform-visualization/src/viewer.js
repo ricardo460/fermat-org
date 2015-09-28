@@ -14,7 +14,7 @@ var TILE_DIMENSION = {
 },
     TILE_SPACING = 20;
 
-/*$.ajax({
+$.ajax({
     url: "get_plugins.php",
     method: "GET"
 }).success(
@@ -27,9 +27,9 @@ var TILE_DIMENSION = {
             setTimeout(animate, 500);
         });
     }
-);*/
+);
 
-var l = JSON.parse(testData);
+/*var l = JSON.parse(testData);
     
     viewManager.fillTable(l);
     
@@ -37,7 +37,7 @@ var l = JSON.parse(testData);
             $('#splash').remove();
             init();
             setTimeout( animate, 500);
-        });
+        });*/
 
 function init() {
 

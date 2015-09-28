@@ -1051,7 +1051,7 @@ var TILE_DIMENSION = {
 },
     TILE_SPACING = 20;
 
-/*$.ajax({
+$.ajax({
     url: "get_plugins.php",
     method: "GET"
 }).success(
@@ -1064,9 +1064,9 @@ var TILE_DIMENSION = {
             setTimeout(animate, 500);
         });
     }
-);*/
+);
 
-var l = JSON.parse(testData);
+/*var l = JSON.parse(testData);
     
     viewManager.fillTable(l);
     
@@ -1074,7 +1074,7 @@ var l = JSON.parse(testData);
             $('#splash').remove();
             init();
             setTimeout( animate, 500);
-        });
+        });*/
 
 function init() {
 
@@ -1818,7 +1818,7 @@ function ViewManager() {
             texture.magFilter = THREE.LinearFilter;
             
             var pic = {
-                    src : picture,
+                    src : picture || base + 'buster.png',
                     alpha : 0.8
                 },
                 portrait = {
@@ -1827,17 +1827,19 @@ function ViewManager() {
                     w : tileWidth * scale, h : tileHeight * scale
                 },
                 groupIcon = {
-                    src : base + 'icons/group/' + levels[j][0] + '/icon_' + group + '.png'
+                    src : base + 'icons/group/' + levels[j][0] + '/icon_' + group + '.png',
+                    w : 28 * scale, h : 28 * scale
                 },
                 typeIcon = {
-                    src : base + 'icons/type/' + levels[j][0] + '/' + type.toLowerCase() + '_logo.png'
+                    src : base + 'icons/type/' + levels[j][0] + '/' + type.toLowerCase() + '_logo.png',
+                    w : 28 * scale, h : 28 * scale
                 },
                 ring = {
                     src : base + 'rings/' + levels[j][0] + '/' + state + '_diff_' + difficulty + '.png'
                 },
                 codeText = {
                     text : table[id].code,
-                    font : (24 * scale) + "px Arial"
+                    font : (18 * scale) + "px Arial"
                 },
                 nameText = {
                     text : table[id].name,
@@ -1845,12 +1847,11 @@ function ViewManager() {
                 },
                 layerText = {
                     text : table[id].layer,
-                    font : (10 * scale) + 'px Arial'
+                    font : (6 * scale) + 'px Arial'
                 },
                 authorText = {
-                    text : table[id].author || '',
-                    font : (5 * scale) + 'px Arial',
-                    constraint : 29 * scale
+                    text : table[id].authorRealName || table[id].author || '',
+                    font : (3.5 * scale) + 'px Arial'
                 };
             
             if(id === 185)
@@ -1865,13 +1866,9 @@ function ViewManager() {
                     
                     groupIcon.x = 25 * scale;
                     groupIcon.y = 49 * scale;
-                    groupIcon.w = 28 * scale;
-                    groupIcon.h = 28 * scale;
                     
                     typeIcon.x = 160 * scale;
                     typeIcon.y = 49 * scale;
-                    typeIcon.w = 28 * scale;
-                    typeIcon.h = 28 * scale;
                     
                     ring.x = 72 * scale;
                     ring.y = 93 * scale;
@@ -1880,7 +1877,6 @@ function ViewManager() {
                     
                     codeText.x = middle;
                     codeText.y = 21 * scale;
-                    codeText.font = (22 * scale) + "px Arial";
                     
                     nameText.x = middle;
                     nameText.y = 33 * scale;
@@ -1889,10 +1885,9 @@ function ViewManager() {
                     
                     layerText.x = middle;
                     layerText.y = 114 * scale;
-                    layerText.font = (9 * scale) + 'px Arial';
                     
                     authorText.x = middle;
-                    authorText.y = 81 * scale;
+                    authorText.y = 80 * scale;
                     
                     break;
                 case "development":
@@ -1903,13 +1898,9 @@ function ViewManager() {
                     
                     groupIcon.x = 35 * scale;
                     groupIcon.y = 76 * scale;
-                    groupIcon.w = 24 * scale;
-                    groupIcon.h = 24 * scale;
                     
                     typeIcon.x = 154 * scale;
                     typeIcon.y = 76 * scale;
-                    typeIcon.w = 24 * scale;
-                    typeIcon.h = 24 * scale;
                     
                     ring.x = 66 * scale;
                     ring.y = 31 * scale;
@@ -1918,7 +1909,6 @@ function ViewManager() {
                     
                     codeText.x = middle;
                     codeText.y = 20 * scale;
-                    codeText.font = (18 * scale) + "px Arial";
                     
                     nameText.x = middle;
                     nameText.y = 28 * scale;
@@ -1926,11 +1916,10 @@ function ViewManager() {
                     
                     layerText.x = middle;
                     layerText.y = 113 * scale;
-                    layerText.font = (6 * scale) + 'px Arial';
                     layerText.color = "#F26662";
                     
                     authorText.x = middle;
-                    authorText.y = 89 * scale;
+                    authorText.y = 88 * scale;
                     
                     break;
                 case "qa":
@@ -1941,13 +1930,9 @@ function ViewManager() {
                     
                     groupIcon.x = 35 * scale;
                     groupIcon.y = 76 * scale;
-                    groupIcon.w = 24 * scale;
-                    groupIcon.h = 24 * scale;
                     
                     typeIcon.x = 154 * scale;
                     typeIcon.y = 76 * scale;
-                    typeIcon.w = 24 * scale;
-                    typeIcon.h = 24 * scale;
                     
                     ring.x = 68 * scale;
                     ring.y = 35 * scale;
@@ -1956,7 +1941,6 @@ function ViewManager() {
                     
                     codeText.x = middle;
                     codeText.y = 20 * scale;
-                    codeText.font = (18 * scale) + "px Arial";
                     
                     nameText.x = middle;
                     nameText.y = 28 * scale;
@@ -1964,11 +1948,10 @@ function ViewManager() {
                     
                     layerText.x = middle;
                     layerText.y = 112 * scale;
-                    layerText.font = (6 * scale) + 'px Arial';
                     layerText.color = "#FCC083";
                     
                     authorText.x = middle;
-                    authorText.y = 79 * scale;
+                    authorText.y = 78 * scale;
                     
                     break;
                 case "production":
@@ -1979,13 +1962,9 @@ function ViewManager() {
                     
                     groupIcon.x = 17 * scale;
                     groupIcon.y = 30 * scale;
-                    groupIcon.w = 28 * scale;
-                    groupIcon.h = 28 * scale;
                     
                     typeIcon.x = 17 * scale;
                     typeIcon.y = 62 * scale;
-                    typeIcon.w = 28 * scale;
-                    typeIcon.h = 28 * scale;
                     
                     ring.x = 25 * scale;
                     ring.y = 99 * scale;
@@ -1994,7 +1973,6 @@ function ViewManager() {
                     
                     codeText.x = 170 * scale;
                     codeText.y = 26 * scale;
-                    codeText.font = (22 * scale) + "px Arial";
                     
                     nameText.x = 170 * scale;
                     nameText.y = 71 * scale;
@@ -2005,10 +1983,9 @@ function ViewManager() {
                     
                     layerText.x = 170 * scale;
                     layerText.y = 107 * scale;
-                    layerText.font = (5 * scale) + 'px Arial';
                     
                     authorText.x = 82 * scale;
-                    authorText.y = 78 * scale;
+                    authorText.y = 77 * scale;
                     
                     break;
             }
