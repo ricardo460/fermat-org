@@ -11,10 +11,10 @@ var mongoose = require('mongoose');
  * @param  {[type]}   scope    [description]
  * @param  {[type]}   percnt   [description]
  */
-function CompDevMdl(_dev_id, _comp_id, role, scope, percnt) {
+function CompDevMdl(_comp_id, _dev_id, role, scope, percnt) {
     // always initialize all instance properties
-    this._dev_id = null;
-    this._comp_id = null;
+    this._comp_id = _comp_id;
+    this._dev_id = _dev_id;
     this.role = role;
     this.scope = scope;
     this.percnt = percnt;
@@ -32,8 +32,8 @@ function CompDevMdl(_dev_id, _comp_id, role, scope, percnt) {
  */
 CompDevMdl.prototype.init = function(compDevSchema) {
     this._id = compDevSchema._id;
-    this._dev_id = compDevSchema._dev_id;
     this._comp_id = compDevSchema._comp_id;
+    this._dev_id = compDevSchema._dev_id;
     this.role = compDevSchema.role;
     this.scope = compDevSchema.scope;
     this.percnt = compDevSchema.percnt;

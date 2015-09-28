@@ -10,15 +10,15 @@ var devSchema = mongoose.Schema({
 		type: String,
 		lowercase: true,
 		trim: true,
-		required: true,
-		validate: /^[a-zA-Z][a-zA-Z0-9\._\-]{3,14}?[a-zA-Z0-9]{0,2}$/
+		required: true
+		//validate: /^[a-zA-Z][a-zA-Z0-9\._\-]{3,14}?[a-zA-Z0-9]{0,2}$/
 	},
 	email: {
 		type: String,
 		lowercase: true,
 		trim: true,
 		required: false,
-		validate: /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/,
+		//validate: /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/,
 		'default': null
 	},
 	name: {
@@ -92,13 +92,13 @@ devSchema.index({
  *
  * @type {[type]}
  */
-devSchema.index({
+/*devSchema.index({
 	email: 1
 }, {
 	unique: true
 }, {
 	name: "devs_email_uq_indx"
-}); 
+}); */
 
 /**
  * [usrnm description]

@@ -1,5 +1,7 @@
 var compSrv = require('./services/comp');
 var CompMdl = require('./models/comp');
+var compDevSrv = require('./services/compDev');
+var CompDevMdl = require('./models/compDev');
 
 exports.getComps = function(callback) {
     compSrv.findAllComps({}, {}, function(err, comps) {
@@ -78,6 +80,56 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
             var comp = new CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level);
             //console.dir(comp);
             compSrv.insertComp(comp, function(err_ins, res_ins) {
+                if (err_ins) return callback(err_ins, null);
+                else return callback(null, res_ins);
+            });
+        }
+    })
+};
+
+exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callback) {
+    //console.dir(arguments);
+    var find_obj = {};
+    if (_comp_id) {
+        find_obj._comp_id = _comp_id;
+    }
+    if (_dev_id) {
+        find_obj._dev_id = _dev_id;
+    }
+    if (role) {
+        find_obj.role = role;
+    }
+    if (scope) {
+        find_obj.scope = scope;
+    }
+    compSrv.findCompDev(find_obj, function(err_compDev, res_compDev) {
+        //console.dir(err_compDev);
+        //console.dir(res_compDev);
+        if (err_compDev) {
+            //console.log('step 1')
+            return callback(err_compDev, null);
+        } else if (res_compDev) {
+            //console.log('step 2')
+            //TODO: update
+            var set_obj = {};
+            if (percnt != res_compDev.percnt) {
+                set_obj.percnt = percnt;
+                res_compDev.percnt = percnt;
+            }
+            if (Object.keys(set_obj).length > 0) {
+                compDevSrv.updateCompDevById(res_compDev._id, set_obj, function(err_upd, res_upd) {
+                    if (err_upd) return callback(err_upd, null);
+                    else return callback(null, res_compDev);
+                });
+            } else {
+                return callback(null, res_compDev);
+            }
+        } else {
+            //console.log('step 3')
+            //TODO: insert
+            var compDev = new CompMdl(_comp_id, _dev_id, role, scope, percnt);
+            //console.dir(comp);
+            compSrv.insertCompDev(comp, function(err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
                 else return callback(null, res_ins);
             });

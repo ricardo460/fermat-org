@@ -3,6 +3,7 @@ var parseString = require('xml2js').parseString;
 var platfrmMod = require('../platform');
 var layerMod = require('../layer');
 var compMod = require('../component');
+var devMod = require('../developer');
 
 var db = require('../../../db');
 
@@ -304,8 +305,26 @@ var saveManifest = function() {
                                                                         function(err_comp, res_comp) {
                                                                             if (err_comp) {
                                                                                 loopComps(++k);
-                                                                            } else {
-                                                                                loopComps(++k);
+                                                                            } else {                                                                                
+                                                                                var _devs = _comp.devs;
+                                                                                function loopDevs(l) {
+                                                                                    if (l < _devs.length) {
+                                                                                        var _dev = _devs[l];
+                                                                                        devMod.insOrUpdDev(_dev.name.trim().toLowerCase(), null, null, null, null, null, null, null, function(err_dev, res_dev) {
+                                                                                            if (err_dev) {
+                                                                                                //console.dir(err_dev);
+                                                                                                loopDevs(++l);
+                                                                                            } else {
+                                                                                                console.log(res_dev);
+                                                                                                loopDevs(++l);
+                                                                                                //insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callback)
+                                                                                            }
+                                                                                        });
+                                                                                    } else {
+                                                                                        loopComps(++k);
+                                                                                    }
+                                                                                }
+                                                                                loopDevs(0);
                                                                                 //TODO: load devs
                                                                                 //TODO: load life_cycle
                                                                             }

@@ -35,13 +35,29 @@ exports.insertCompDev = function(compDev_mdl, callback) {
  *
  * @method findCompDevById
  *
- * @param  {[type]}    _id      [description]
+ * @param  {[type]}        _id      [description]
+ * @param  {Function}      callback [description]
+ *
+ * @return {[type]}        [description]
+ */
+exports.findCompDevById = function(_id, callback) {
+    compDevDao.findAndPopulateSchemaById(_id, '_dev_id _comp_id', function(err, compDev) {
+        callback(err, compDev);
+    });
+};
+
+/**
+ * [findCompDev description]
+ *
+ * @method findCompDev
+ *
+ * @param  {[type]}    query    [description]
  * @param  {Function}  callback [description]
  *
  * @return {[type]}    [description]
  */
-exports.findCompDevById = function(_id, callback) {
-    compDevDao.findAndPopulateSchemaById(_id, '_dev_id _comp_id', function(err, compDev) {
+exports.findCompDev = function(query, callback) {
+    compDevDao.findAndPopulateSchema(query, '_dev_id _comp_id', function(err, compDev) {
         callback(err, compDev);
     });
 };
