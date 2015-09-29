@@ -79,7 +79,7 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
                 else return callback(null, res_ins);
             });
         }
-    })
+    });
 };
 
 exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callback) {
@@ -130,7 +130,7 @@ exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callb
                 else return callback(null, res_ins);
             });
         }
-    })
+    });
 };
 
 exports.insOrUpdStatus = function(_comp_id, name, target, reached, callback) {
@@ -175,5 +175,35 @@ exports.insOrUpdStatus = function(_comp_id, name, target, reached, callback) {
                 else return callback(null, res_ins);
             });
         }
-    })
+    });
+};
+
+exports.updCompDevAndLifCyc = function(_comp_id, devs, life_cycle, callback) {
+    //console.dir(arguments[2]);
+    //return callback(null, null);
+    compSrv.findCompById(_comp_id, function(err_comp, res_comp) {
+        if (err_comp) {
+            return callback(err_comp, null);
+        } else if (res_comp) {
+            var set_obj = {};
+            if (devs != res_comp.devs) {
+                set_obj.devs = devs;
+                res_comp.devs = devs;
+            }
+            if (life_cycle != res_comp.life_cycle) {
+                set_obj.life_cycle = life_cycle;
+                res_comp.life_cycle = life_cycle;
+            }
+            if (Object.keys(set_obj).length > 0) {
+                compSrv.updateCompById(res_comp._id, set_obj, function(err_upd, res_upd) {
+                    if (err_upd) return callback(err_upd, null);
+                    else return callback(null, res_comp);
+                });
+            } else {
+                return callback(null, res_comp);
+            }
+        } else {
+            return callback(null, null);
+        }
+    });
 };

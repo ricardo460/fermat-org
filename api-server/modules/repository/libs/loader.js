@@ -307,6 +307,8 @@ var saveManifest = function(callback) {
                                                                                 loopComps(++k);
                                                                             } else {
                                                                                 var _devs = _comp.devs;
+                                                                                var upd_devs = [];
+                                                                                var upd_life_cycle = [];
 
                                                                                 function loopDevs(l) {
                                                                                     if (l < _devs.length) {
@@ -322,32 +324,42 @@ var saveManifest = function(callback) {
                                                                                                         winston.log('info', err_compDev.message, err_compDev);
                                                                                                         loopDevs(++l);
                                                                                                     } else {
-                                                                                                        var _life_cycle = _comp.life_cycle;
+                                                                                                        upd_devs.push(res_compDev._id);
+                                                                                                        loopDevs(++l);
 
-                                                                                                        function loopLifeCycle(m) {
-                                                                                                            if (m < _life_cycle.length) {
-                                                                                                                var _status = _life_cycle[m];
-                                                                                                                compMod.insOrUpdStatus(res_comp._id, _status.name, _status.target, _status.reached, function(err_sta, res_sta) {
-                                                                                                                    if (err_sta) {
-                                                                                                                        winston.log('info', err_sta.message, err_sta);
-                                                                                                                        loopLifeCycle(++m);
-                                                                                                                    } else {
-                                                                                                                        loopLifeCycle(++m);
-                                                                                                                    }
-                                                                                                                });
-                                                                                                            } else {
-                                                                                                                loopDevs(++l);
-                                                                                                            }
-                                                                                                        };
-                                                                                                        loopLifeCycle(0);
                                                                                                     }
                                                                                                 });
                                                                                             }
                                                                                         });
                                                                                     } else {
-                                                                                        loopComps(++k);
+                                                                                        var _life_cycle = _comp.life_cycle;
+
+                                                                                        function loopLifeCycle(m) {
+                                                                                            if (m < _life_cycle.length) {
+                                                                                                var _status = _life_cycle[m];
+                                                                                                compMod.insOrUpdStatus(res_comp._id, _status.name, _status.target, _status.reached, function(err_sta, res_sta) {
+                                                                                                    if (err_sta) {
+                                                                                                        winston.log('info', err_sta.message, err_sta);
+                                                                                                        loopLifeCycle(++m);
+                                                                                                    } else {
+                                                                                                        upd_life_cycle.push(res_sta._id);
+                                                                                                        loopLifeCycle(++m);
+                                                                                                    }
+                                                                                                });
+                                                                                            } else {
+                                                                                                compMod.updCompDevAndLifCyc(res_comp._id, upd_devs, upd_life_cycle, function(err_upd, res_upd) {
+                                                                                                    if (err_upd) {
+                                                                                                        loopComps(++k);
+                                                                                                    } else {
+                                                                                                        loopComps(++k);
+                                                                                                    }
+
+                                                                                                });
+                                                                                            }
+                                                                                        };
+                                                                                        loopLifeCycle(0);
                                                                                     }
-                                                                                }
+                                                                                };
                                                                                 loopDevs(0);
                                                                             }
                                                                         });
@@ -498,3 +510,8 @@ exports.loadComps = function(callback) {
         else callback(null, null);
     });
 };
+
+/*saveManifest(function(err, res) {
+    if (err) console.dir(err);
+    if (res) console.dir(res);
+});*/

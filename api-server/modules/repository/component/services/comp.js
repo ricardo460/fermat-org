@@ -43,68 +43,35 @@ exports.insertComp = function(comp_mdl, callback) {
     });
 };
 
-//TODO: need testing
+/**
+ * [findCompById description]
+ *
+ * @method findCompById
+ *
+ * @param  {[type]}     _id      [description]
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
 exports.findCompById = function(_id, callback) {
-    compDao.findAndPopulateSchemaById(_id, '_platfrm_id _suprlay_id _layer_id life_cycle', function(err, comp) {
-        //TODO: fill devs
-        if (comp && comp.devs && Array.isArray(comp.devs) && comp.devs.length > 0) {
-            async.forEach(comp.devs, function(compDev, callbackForEach) {
-                compDevSrv.findCompDevById(compDev, function(err, res) {
-                    compDev = res; // asign res to compDev
-                    callbackForEach(); // tell async that the iterator has completed
-                });
-            }, function(err) {
-                callback(err, comp); // iterating done
-            });
-        } else {
-            callback(err, comp);
-        }
+    compDao.findSchemaById(_id, function(err, comp) {
+        callback(err, comp);
     });
 };
 
-//TODO: need testing
+/**
+ * [findComp description]
+ *
+ * @method findComp
+ *
+ * @param  {[type]}   query    [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.findComp = function(query, callback) {
-    compDao.findAndPopulateSchema(query, '_platfrm_id _suprlay_id _layer_id life_cycle', function(err, comp) {
-        if (comp && comp.devs && Array.isArray(comp.devs) && comp.devs.length > 0) {
-            async.forEach(comp.devs, function(compDev, callbackForEach) {
-                compDevSrv.findCompDevById(compDev, function(err, res) {
-                    compDev = res; // asign res to compDev
-                    callbackForEach(); // tell async that the iterator has completed
-                });
-            }, function(err) {
-                callback(err, comp); // iterating done
-            });
-        } else {
-            callback(err, comp);
-        }
-    });
-};
-
-//TODO: need testing
-exports.findComps = function(query, limit, order, callback) {
-    compDao.findAndPopulateSchemaLst(query, limit, order, '_platfrm_id _suprlay_id _layer_id life_cycle', function(err, comps) {
-        if (comps && Array.isArray(comps) && comps.length > 0) {
-            async.forEach(comps, function(comp, callbackForEachComps) {
-                /********************************************************/
-                if (comp && comp.devs && Array.isArray(comp.devs) && comp.devs.length > 0) {
-                    async.forEach(comp.devs, function(compDev, callbackForEach) {
-                        compDevSrv.findCompDevById(compDev, function(err, res) {
-                            compDev = res; // asign res to compDev
-                            callbackForEach(); // tell async that the iterator has completed
-                        });
-                    }, function(err) {
-                        callbackForEachComps(); // iterating done
-                    });
-                } else {
-                    callbackForEachComps();
-                }
-                /********************************************************/
-            }, function(err) {
-                callback(err, comps); // iterating done
-            });
-        } else {
-            callback(err, comps);
-        }
+    compDao.findSchema(query, function(err, comp) {
+        callback(err, comp);
     });
 };
 
