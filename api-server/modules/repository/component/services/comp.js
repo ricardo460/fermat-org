@@ -105,10 +105,8 @@ exports.findAllComps = function(query, order, callback) {
                             var _compDev = {};
                             devSrv.findDevById(_compDevs[j]._dev_id, function(err_dev, res_dev) {
                                 if (err_dev) {
-                                    console.dir(err_dev);
                                     loopCompDevs(++j);
                                 } else {
-                                    console.dir(res_dev);
                                     _compDev.dev = res_dev;
                                     _compDev.role = _compDevs[j].role;
                                     _compDev.scope = _compDevs[j].scope;

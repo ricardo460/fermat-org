@@ -17,4 +17,11 @@ router.post('/comps', function(req, res, next) {
     });
 });
 
+router.post('/devs', function(req, res, next) {
+    repMod.updDevs(req, function(error, result) {
+        if (error) res.status(200).send(error);
+        else res.status(200).send(result);
+    });
+});
+
 module.exports = router;

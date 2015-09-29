@@ -31,9 +31,8 @@ var devSchema = mongoose.Schema({
 		//'default': null
 		'default': new Date()
 	},
-	country: {
+	location: {
 		type: String,
-		uppercase: true,
 		trim: true,
 		'default': null
 	},

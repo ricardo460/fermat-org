@@ -60,3 +60,13 @@ exports.insOrUpdDev = function(usrnm, email, name, bday, country, avatar_url, ur
         }
     })
 };
+
+exports.getDevs = function(callback) {
+    devSrv.findAllDevs({}, {}, function(err, devs) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, devs);
+        }
+    });
+};

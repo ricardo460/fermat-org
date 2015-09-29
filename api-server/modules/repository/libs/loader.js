@@ -9,12 +9,12 @@ var devMod = require('../developer');
 
 //var db = require('../../../db');
 
-var USER_AGENT = 'Miguelcldn';
+//var USER_AGENT = 'Miguelcldn';
 //var USER_AGENT = 'MALOTeam'
-//var USER_AGENT = 'fuelusumar'
-var TOKEN = '3c12e4c95821c7c2602a47ae46faf8a0ddab4962'; // Miguelcldn    
+var USER_AGENT = 'fuelusumar'
+//var TOKEN = '3c12e4c95821c7c2602a47ae46faf8a0ddab4962'; // Miguelcldn    
 //var TOKEN = 'fb6c27928d83f8ea6a9565e0f008cceffee83af1'; // MALOTeam
-//var TOKEN = '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
+var TOKEN = '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
 
 var processCompList = function(section, layer, compList, type) {
     var comps = [];
@@ -119,8 +119,8 @@ var processRequestBody = function(body, callback) {
             var content = new Buffer(reqBody.content, reqBody.encoding);
             var strCont = content.toString().split('\n').join(' ').split('\t').join(' ');
             callback(null, strCont);
-        } else if (false) {
-
+        } else if (reqBody.login) {
+            callback(null, reqBody);
         } else {
             callback(new Error('body without any content'), null);
         }
@@ -491,7 +491,7 @@ var saveManifest = function(callback) {
                                 });
                         } else {
                             callback(null, {
-                                'load': true
+                                'save': true
                             });
                         }
                     };
@@ -503,6 +503,84 @@ var saveManifest = function(callback) {
     }
 };
 
+var getUser = function(usrnm, callback) {
+    try {
+        doRequest('GET', 'https://api.github.com/users/' + usrnm, null, function(err_req, res_req) {
+            if (err_req) {
+                callback(err_req, null);
+            } else {
+                processRequestBody(res_req, function(err_pro, res_pro) {
+                    if (err_pro) {
+                        callback(err_pro, null);
+                    } else {
+                        callback(null, res_pro);
+                    }
+                });
+            }
+        });
+    } catch (err) {
+        callback(err, null);
+    }
+};
+
+var updateDevs = function(callback) {
+    devMod.getDevs(function(err_devs, res_devs) {
+        if (err_devs) {
+            callback(err_devs, null);
+        } else if (res_devs && Array.isArray(res_devs)) {
+            callback(null, {
+                'update': true
+            });
+
+            function loopDevs(i) {
+                if (i < res_devs.length) {
+                    var _dev = res_devs[i];
+                    getUser(_dev.usrnm, function(err_usr, res_usr) {
+                        if (err_usr) {
+                            winston.log('info', err_usr.message, err_usr);
+                            loopDevs(++i);
+                        } else if (res_usr) {
+                            devMod.insOrUpdDev(_dev.usrnm,
+                                res_usr.email ? res_usr.email : null,
+                                res_usr.name ? res_usr.name : null,
+                                null,
+                                res_usr.location ? res_usr.location : null,
+                                res_usr.avatar_url ? res_usr.avatar_url : null,
+                                res_usr.html_url ? res_usr.html_url : null,
+                                res_usr.bio ? res_usr.bio : null,
+                                function(err_upd, res_upd) {
+                                    if (err_upd) {
+                                        winston.log('info', err_upd.message, err_upd);
+                                        //loopDevs(++i);
+                                    } else {
+                                        //console.dir(res_upd);
+                                    }
+                                });
+                        }
+                    });
+                    loopDevs(++i);
+                }
+            };
+            loopDevs(0);
+        } else {
+            callback(new Error('no developers to iterate'), null);
+        }
+    });
+};
+
+exports.updDevs = function(callback) {
+    updateDevs(function(err, res) {
+        if (err) callback(err, null);
+        else if (res) callback(null, res);
+        else callback(null, null);
+    });
+};
+
+//updateDevs(function(err, res) {
+    //if (err) console.dir(err);
+    //if (res) console.dir(res);
+//});
+
 exports.loadComps = function(callback) {
     saveManifest(function(err, res) {
         if (err) callback(err, null);
@@ -510,8 +588,3 @@ exports.loadComps = function(callback) {
         else callback(null, null);
     });
 };
-
-/*saveManifest(function(err, res) {
-    if (err) console.dir(err);
-    if (res) console.dir(res);
-});*/

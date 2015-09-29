@@ -9,18 +9,18 @@ var mongoose = require('mongoose');
  * @param  {[type]} email      [description]
  * @param  {[type]} name       [description]
  * @param  {[type]} bday       [description]
- * @param  {[type]} country    [description]
+ * @param  {[type]} location   [description]
  * @param  {[type]} avatar_url [description]
  * @param  {[type]} url        [description]
  * @param  {[type]} bio        [description]
  */
-function DevMdl(usrnm, email, name, bday, country, avatar_url, url, bio) {
+function DevMdl(usrnm, email, name, bday, location, avatar_url, url, bio) {
 	// always initialize all instance properties
 	this.usrnm = usrnm;
 	this.email = email;
 	this.name = name;
 	this.bday = bday;
-	this.country = country;
+	this.location = location;
 	this.avatar_url = avatar_url;
 	this.url = url;
 	this.bio = bio;
@@ -42,7 +42,7 @@ DevMdl.prototype.init = function(devSchema) {
 	this.email = devSchema.email;
 	this.name = devSchema.name;
 	this.bday = devSchema.bday;
-	this.country = devSchema.country;
+	this.location = devSchema.location;
 	this.avatar_url = devSchema.avatar_url;
 	this.url = devSchema.url;
 	this.bio = devSchema.bio;
