@@ -576,11 +576,6 @@ exports.updDevs = function(callback) {
     });
 };
 
-//updateDevs(function(err, res) {
-    //if (err) console.dir(err);
-    //if (res) console.dir(res);
-//});
-
 exports.loadComps = function(callback) {
     saveManifest(function(err, res) {
         if (err) callback(err, null);
