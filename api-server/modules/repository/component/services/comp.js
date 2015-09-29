@@ -1,13 +1,13 @@
 var async = require('async');
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
+var devSrv = require('../../developer/services/dev');
 var compMdl = require('../models/comp');
 var compSch = require('../schemas/comp');
 var statusMdl = require('../models/status');
 var statusSch = require('../schemas/status');
 var compDevMdl = require('../models/compDev');
 var compDevSch = require('../schemas/compDev');
-var compDevSrv = require('./compDev');
 var platfrmMdl = require('../../platform/models/platfrm');
 var platfrmSch = require('../../platform/schemas/platfrm');
 var suprlayMdl = require('../../superlayer/models/suprlay');
@@ -75,30 +75,60 @@ exports.findComp = function(query, callback) {
     });
 };
 
-//TODO: need testing
+/**
+ * [findAllComps description]
+ *
+ * @method findAllComps
+ *
+ * @param  {[type]}     query    [description]
+ * @param  {[type]}     order    [description]
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
 exports.findAllComps = function(query, order, callback) {
-    compDao.findAndPopulateAllSchemaLst(query, order, '_platfrm_id _suprlay_id _layer_id life_cycle', function(err, comps) {
-        if (comps && Array.isArray(comps) && comps.length > 0) {
-            async.forEach(comps, function(comp, callbackForEachComps) {
-                /********************************************************/
-                if (comp && comp.devs && Array.isArray(comp.devs) && comp.devs.length > 0) {
-                    async.forEach(comp.devs, function(compDev, callbackForEach) {
-                        compDevSrv.findCompDevById(compDev, function(err, res) {
-                            compDev = res; // asign res to compDev
-                            callbackForEach(); // tell async that the iterator has completed
-                        });
-                    }, function(err) {
-                        callbackForEachComps(); // iterating done
-                    });
-                } else {
-                    callbackForEachComps();
-                }
-                /********************************************************/
-            }, function(err) {
-                callback(err, comps); // iterating done
-            });
+    compDao.findAndPopulateAllSchemaLst(query, order, '_platfrm_id _suprlay_id _layer_id life_cycle devs', function(err, comps) {
+        if (err) {
+            callback(err, null);
         } else {
-            callback(err, comps);
+            var _comps = [];
+
+            function loopComps(i) {
+                if (i < comps.length) {
+                    var _comp = comps[i];
+                    var _compDevs = _comp.devs;
+                    var _lifeCycle = _comp.life_cycle;
+                    var _devs = [];
+
+                    function loopCompDevs(j) {
+                        if (j < _compDevs.length) {
+                            var _compDev = {};
+                            devSrv.findDevById(_compDevs[j]._dev_id, function(err_dev, res_dev) {
+                                if (err_dev) {
+                                    console.dir(err_dev);
+                                    loopCompDevs(++j);
+                                } else {
+                                    console.dir(res_dev);
+                                    _compDev.dev = res_dev;
+                                    _compDev.role = _compDevs[j].role;
+                                    _compDev.scope = _compDevs[j].scope;
+                                    _compDev.percnt = _compDevs[j].percnt;
+                                    _devs.push(_compDev);
+                                    loopCompDevs(++j);
+                                }
+                            });
+                        } else {
+                            _comp.devs = _devs;
+                            _comps.push(_comp);
+                            loopComps(++i);
+                        }
+                    };
+                    loopCompDevs(0);
+                } else {
+                    callback(null, _comps);
+                }
+            };
+            loopComps(0);
         }
     });
 };

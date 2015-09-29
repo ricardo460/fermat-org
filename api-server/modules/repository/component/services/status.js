@@ -39,7 +39,7 @@ exports.insertStatus = function(status_mdl, callback) {
  * @return {[type]}    [description]
  */
 exports.findStatusById = function(_id, callback) {
-    statusDao.findAndPopulateSchemaById(_id, '_comp_id', function(err, status) {
+    statusDao.findSchemaById(_id, function(err, status) {
         callback(err, status);
     });
 };
