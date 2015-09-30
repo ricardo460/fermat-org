@@ -1,17 +1,24 @@
 var layerSrv = require('./services/layer');
 var LayerMdl = require('./models/layer');
 
-exports.insOrUpdLayer = function(name, lang, platfrm_index, layer_index, callback) {
-    //console.dir(arguments);
+/**
+ * [insOrUpdLayer description]
+ *
+ * @method insOrUpdLayer
+ *
+ * @param  {[type]}      name          [description]
+ * @param  {[type]}      lang          [description]
+ * @param  {[type]}      platfrm_index [description]
+ * @param  {[type]}      layer_index   [description]
+ * @param  {Function}    callback      [description]
+ *
+ * @return {[type]}      [description]
+ */
+exports.insOrUpdLayer = function(name, lang, order, callback) {
     layerSrv.findLayerByName(name, function(err_lay, res_lay) {
-        //console.dir(err_lay);
-        //console.dir(res_lay);
         if (err_lay) {
-            //console.log('step 1')
             return callback(err_lay, null);
         } else if (res_lay) {
-            //console.log('step 2')
-            //TODO: update
             var set_obj = {};
             if (name && name != res_lay.name) {
                 set_obj.name = name;
@@ -21,13 +28,9 @@ exports.insOrUpdLayer = function(name, lang, platfrm_index, layer_index, callbac
                 set_obj.lang = lang;
                 res_lay.lang = lang;
             }
-            if (platfrm_index && platfrm_index != res_lay.platfrm_index) {
-                set_obj.platfrm_index = platfrm_index;
-                res_lay.platfrm_index = platfrm_index;
-            }
-            if (layer_index && layer_index != res_lay.layer_index) {
-                set_obj.layer_index = layer_index;
-                res_lay.layer_index = layer_index;
+            if (order && order != res_lay.order) {
+                set_obj.order = order;
+                res_lay.order = order;
             }
             if (Object.keys(set_obj).length > 0) {
                 layerSrv.updateLayerById(res_lay._id, set_obj, function(err_upd, res_upd) {
@@ -38,9 +41,7 @@ exports.insOrUpdLayer = function(name, lang, platfrm_index, layer_index, callbac
                 return callback(null, res_lay);
             }
         } else {
-            //console.log('step 3')
-            //TODO: insert
-            var layer = new LayerMdl(name, lang, layer_index, layer_index);
+            var layer = new LayerMdl(name, lang, order);
             layerSrv.insertLayer(layer, function(err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
                 else return callback(null, res_ins);

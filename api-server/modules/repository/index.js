@@ -1,6 +1,16 @@
 var compMod = require('./component');
 var loadLib = require('./libs/loader');
 
+/**
+ * [getComps description]
+ *
+ * @method getComps
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.getComps = function (req, next) {
 	try {
 		compMod.getComps(function(err, comps) {
@@ -15,7 +25,16 @@ exports.getComps = function (req, next) {
 	}
 };
 
-
+/**
+ * [loadComps description]
+ *
+ * @method loadComps
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.loadComps = function (req, next) {
 	try {
 		loadLib.loadComps(function(err, res) {
@@ -30,6 +49,16 @@ exports.loadComps = function (req, next) {
 	}
 };
 
+/**
+ * [updComps description]
+ *
+ * @method updComps
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.updComps = function (req, next) {
 	try {
 		loadLib.updComps(function(err, res) {
@@ -44,6 +73,16 @@ exports.updComps = function (req, next) {
 	}
 };
 
+/**
+ * [updDevs description]
+ *
+ * @method updDevs
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.updDevs = function (req, next) {
 	try {
 		loadLib.updDevs(function(err, res) {

@@ -16,6 +16,18 @@ var USER_AGENT = 'fuelusumar';
 //var TOKEN = 'fb6c27928d83f8ea6a9565e0f008cceffee83af1'; // MALOTeam
 var TOKEN = '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
 
+/**
+ * [processCompList description]
+ *
+ * @method processCompList
+ *
+ * @param  {[type]}        section  [description]
+ * @param  {[type]}        layer    [description]
+ * @param  {[type]}        compList [description]
+ * @param  {[type]}        type     [description]
+ *
+ * @return {[type]}        [description]
+ */
 var processCompList = function(section, layer, compList, type) {
     var comps = [];
     for (var i = 0; i < compList.length; i++) {
@@ -26,6 +38,18 @@ var processCompList = function(section, layer, compList, type) {
     return comps;
 };
 
+/**
+ * [processComp description]
+ *
+ * @method processComp
+ *
+ * @param  {[type]}    section [description]
+ * @param  {[type]}    layer   [description]
+ * @param  {[type]}    comp    [description]
+ * @param  {[type]}    type    [description]
+ *
+ * @return {[type]}    [description]
+ */
 var processComp = function(section, layer, comp, type) {
     var proComp = {};
     proComp = comp['$'];
@@ -58,6 +82,19 @@ var processComp = function(section, layer, comp, type) {
     return proComp;
 };
 
+/**
+ * [getRepoDir description]
+ *
+ * @method getRepoDir
+ *
+ * @param  {[type]}   section [description]
+ * @param  {[type]}   layer   [description]
+ * @param  {[type]}   type    [description]
+ * @param  {[type]}   comp    [description]
+ * @param  {[type]}   team    [description]
+ *
+ * @return {[type]}   [description]
+ */
 var getRepoDir = function(section, layer, type, comp, team) {
     var _root = "fermat",
         _section = section ? section.toUpperCase().split(' ').join('_') : null,
@@ -73,6 +110,18 @@ var getRepoDir = function(section, layer, type, comp, team) {
     }
 };
 
+/**
+ * [doRequest description]
+ *
+ * @method doRequest
+ *
+ * @param  {[type]}   method   [description]
+ * @param  {[type]}   url      [description]
+ * @param  {[type]}   params   [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 var doRequest = function(method, url, params, callback) {
     try {
         url += '?access_token=' + TOKEN;
@@ -112,6 +161,16 @@ var doRequest = function(method, url, params, callback) {
     }
 };
 
+/**
+ * [processRequestBody description]
+ *
+ * @method processRequestBody
+ *
+ * @param  {[type]}           body     [description]
+ * @param  {Function}         callback [description]
+ *
+ * @return {[type]}           [description]
+ */
 var processRequestBody = function(body, callback) {
     try {
         var reqBody = JSON.parse(body);
@@ -129,6 +188,15 @@ var processRequestBody = function(body, callback) {
     }
 };
 
+/**
+ * [getManifest description]
+ *
+ * @method getManifest
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
 var getManifest = function(callback) {
     try {
         doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function(err_req, res_req) {
@@ -155,6 +223,15 @@ var getManifest = function(callback) {
     }
 };
 
+/**
+ * [parseManifest description]
+ *
+ * @method parseManifest
+ *
+ * @param  {Function}    callback [description]
+ *
+ * @return {[type]}      [description]
+ */
 var parseManifest = function(callback) {
     try {
         getManifest(function(err_man, res_man) {
@@ -249,6 +326,15 @@ var parseManifest = function(callback) {
     }
 };
 
+/**
+ * [saveManifest description]
+ *
+ * @method saveManifest
+ *
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
 var saveManifest = function(callback) {
     try {
         parseManifest(function(err_load, res_load) {
@@ -267,7 +353,6 @@ var saveManifest = function(callback) {
                                 _platfrm.logo,
                                 _platfrm.dependsOn ? _platfrm.dependsOn.split(' ').join('').split(',') : [],
                                 0,
-                                0,
                                 function(err_plat, res_plat) {
                                     if (err_plat) {
                                         winston.log('info', err_plat.message, err_plat);
@@ -280,7 +365,6 @@ var saveManifest = function(callback) {
                                                 var _layer = _layers[j];
                                                 layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null,
                                                     _layer.language ? _layer.language.toLowerCase() : null,
-                                                    0,
                                                     0,
                                                     function(err_lay, res_lay) {
                                                         if (err_lay) {
@@ -391,7 +475,6 @@ var saveManifest = function(callback) {
                                 _suprlay.logo,
                                 _suprlay.dependsOn ? _suprlay.dependsOn.split(' ').join('').split(',') : [],
                                 0,
-                                0,
                                 function(err_supr, res_supr) {
                                     if (err_supr) {
                                         winston.log('info', err_supr.message, err_supr);
@@ -404,7 +487,6 @@ var saveManifest = function(callback) {
                                                 var _layer = _layers[o];
                                                 layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null,
                                                     _layer.language ? _layer.language.toLowerCase() : null,
-                                                    0,
                                                     0,
                                                     function(err_lay, res_lay) {
                                                         if (err_lay) {
@@ -510,6 +592,16 @@ var saveManifest = function(callback) {
     }
 };
 
+/**
+ * [getUser description]
+ *
+ * @method getUser
+ *
+ * @param  {[type]}   usrnm    [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 var getUser = function(usrnm, callback) {
     try {
         doRequest('GET', 'https://api.github.com/users/' + usrnm, null, function(err_req, res_req) {
@@ -530,6 +622,15 @@ var getUser = function(usrnm, callback) {
     }
 };
 
+/**
+ * [updateDevs description]
+ *
+ * @method updateDevs
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 var updateDevs = function(callback) {
     devMod.getDevs(function(err_devs, res_devs) {
         if (err_devs) {
@@ -558,10 +659,7 @@ var updateDevs = function(callback) {
                                 function(err_upd, res_upd) {
                                     if (err_upd) {
                                         winston.log('info', err_upd.message, err_upd);
-                                        //loopDevs(++i);
-                                    } //else {
-                                    //console.dir(res_upd);
-                                    //}
+                                    }
                                 });
                         }
                     });
@@ -575,9 +673,18 @@ var updateDevs = function(callback) {
     });
 };
 
+/**
+ * [getContent description]
+ *
+ * @method getContent
+ *
+ * @param  {[type]}   repo_dir [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 var getContent = function(repo_dir, callback) {
     try {
-        //console.log('https://api.github.com/repos/bitDubai/fermat/contents/' + repo_dir);
         doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/' + repo_dir, null, function(err_req, res_req) {
             if (err_req) {
                 callback(err_req, null);
@@ -597,6 +704,15 @@ var getContent = function(repo_dir, callback) {
     }
 };
 
+/**
+ * [updateComps description]
+ *
+ * @method updateComps
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
 var updateComps = function(callback) {
     compMod.findComps(function(err_comps, res_comps) {
         if (err_comps) {
@@ -610,16 +726,12 @@ var updateComps = function(callback) {
             function loopComps(i) {
                 if (i < res_comps.length) {
                     var _comp = res_comps[i];
-                    //console.dir(_comp);
-
                     if (_comp.code_level != 'concept') {
                         getContent(_comp.repo_dir, function(err_dir, res_dir) {
                             if (err_dir) {
                                 winston.log('info', err_dir.message, err_dir);
                                 loopComps(++i);
                             } else if (res_dir) {
-                                //console.dir(_comp);
-                                //console.dir(res_dir);
                                 if (Array.isArray(res_dir)) {
                                     compMod.insOrUpdComp(_comp._platfrm_id, _comp._suprlay_id, _comp._layer_id, _comp.name, null, null, null, null, null, true,
                                         function(err_upd, res_upd) {
@@ -643,6 +755,15 @@ var updateComps = function(callback) {
     });
 };
 
+/**
+ * [updComps description]
+ *
+ * @method updComps
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.updComps = function(callback) {
     updateComps(function(err, res) {
         if (err) callback(err, null);
@@ -651,6 +772,15 @@ exports.updComps = function(callback) {
     });
 };
 
+/**
+ * [updDevs description]
+ *
+ * @method updDevs
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.updDevs = function(callback) {
     updateDevs(function(err, res) {
         if (err) callback(err, null);
@@ -659,6 +789,15 @@ exports.updDevs = function(callback) {
     });
 };
 
+/**
+ * [loadComps description]
+ *
+ * @method loadComps
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.loadComps = function(callback) {
     saveManifest(function(err, res) {
         if (err) callback(err, null);

@@ -2,7 +2,12 @@ var express = require('express');
 var router = express.Router();
 var repMod = require('../modules/repository');
 
-/* GET comps listing. */
+/**
+ * [description]
+ *
+ * @route
+ * 
+ */
 router.put('/comps', function(req, res, next) {
     repMod.updComps(req, function(error, result) {
         if (error) res.status(200).send(error);
@@ -10,6 +15,12 @@ router.put('/comps', function(req, res, next) {
     });
 });
 
+/**
+ * [description]
+ *
+ * @route
+ * 
+ */
 router.get('/comps', function(req, res, next) {
     repMod.getComps(req, function(error, result) {
         if (error) res.status(200).send(error);
@@ -17,6 +28,12 @@ router.get('/comps', function(req, res, next) {
     });
 });
 
+/**
+ * [description]
+ *
+ * @route
+ * 
+ */
 router.post('/comps', function(req, res, next) {
     repMod.loadComps(req, function(error, result) {
         if (error) res.status(200).send(error);
@@ -24,6 +41,12 @@ router.post('/comps', function(req, res, next) {
     });
 });
 
+/**
+ * [description]
+ *
+ * @route
+ * 
+ */
 router.post('/devs', function(req, res, next) {
     repMod.updDevs(req, function(error, result) {
         if (error) res.status(200).send(error);

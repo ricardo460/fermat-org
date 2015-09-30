@@ -27,11 +27,7 @@ var platfrmSchema = mongoose.Schema({
         trim: true,
         required: true
     }],
-    platfrm_index: {
-        type: Number,
-        'default': 0
-    },
-    layer_index: {
+    order: {
         type: Number,
         'default': 0
     },

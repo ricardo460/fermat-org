@@ -44,6 +44,16 @@ exports.findStatusById = function(_id, callback) {
     });
 };
 
+/**
+ * [findStatus description]
+ *
+ * @method findStatus
+ *
+ * @param  {[type]}   query    [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.findStatus = function(query, callback) {
     statusDao.findAndPopulateSchema(query, '_comp_id', function(err, compDev) {
         callback(err, compDev);

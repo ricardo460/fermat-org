@@ -14,11 +14,7 @@ var layerSchema = mongoose.Schema({
         type: String,
         trim: true
     },
-    platfrm_index: {
-        type: Number,
-        'default': 0
-    },
-    layer_index: {
+    order: {
         type: Number,
         'default': 0
     },

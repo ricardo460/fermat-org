@@ -1,19 +1,19 @@
 var mongoose = require('mongoose');
 
 /**
- * [LayerMdl constructor]
+ * [LayerMdl description]
  *
  * @method LayerMdl
  *
- * @param  {[type]} name [description]
- * @param  {[type]} lang [description]
+ * @param  {[type]} name  [description]
+ * @param  {[type]} lang  [description]
+ * @param  {[type]} order [description]
  */
-function LayerMdl(name, lang, platfrm_index, layer_index) {
+function LayerMdl(name, lang, order) {
 	// always initialize all instance properties
 	this.name = name;
 	this.lang = lang;
-	this.platfrm_index = platfrm_index;
-	this.layer_index = layer_index;
+	this.order = order;
 	this.upd_at = new mongoose.Types.ObjectId();
 }
 
@@ -30,8 +30,7 @@ LayerMdl.prototype.init = function(layerSchema) {
 	this._id = layerSchema._id;
 	this.name = layerSchema.name;
 	this.lang = layerSchema.lang;
-	this.platfrm_index = layerSchema.platfrm_index;
-	this.layer_index = layerSchema.layer_index;
+	this.order = layerSchema.order;
 	this.upd_at = layerSchema.upd_at;
 };
 

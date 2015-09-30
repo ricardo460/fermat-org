@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 /**
- * [TeamMdl constructor]
+ * [TeamMdl description]
  *
  * @method TeamMdl
  *

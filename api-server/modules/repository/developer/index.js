@@ -1,17 +1,28 @@
 var devSrv = require('./services/dev');
 var DevMdl = require('./models/dev');
 
+/**
+ * [insOrUpdDev description]
+ *
+ * @method insOrUpdDev
+ *
+ * @param  {[type]}    usrnm      [description]
+ * @param  {[type]}    email      [description]
+ * @param  {[type]}    name       [description]
+ * @param  {[type]}    bday       [description]
+ * @param  {[type]}    country    [description]
+ * @param  {[type]}    avatar_url [description]
+ * @param  {[type]}    url        [description]
+ * @param  {[type]}    bio        [description]
+ * @param  {Function}  callback   [description]
+ *
+ * @return {[type]}    [description]
+ */
 exports.insOrUpdDev = function(usrnm, email, name, bday, country, avatar_url, url, bio, callback) {
-    //console.dir(arguments);
     devSrv.findDevByUsrnm(usrnm, function(err_dev, res_dev) {
-        //console.dir(err_dev);
-        //console.dir(res_dev);
         if (err_dev) {
-            //console.log('step 1')
             return callback(err_dev, null);
         } else if (res_dev) {
-            //console.log('step 2')
-            //TODO: update
             var set_obj = {};
             if (email && email != res_dev.email) {
                 set_obj.email = email;
@@ -50,8 +61,6 @@ exports.insOrUpdDev = function(usrnm, email, name, bday, country, avatar_url, ur
                 return callback(null, res_dev);
             }
         } else {
-            //console.log('step 3')
-            //TODO: insert
             var dev = new DevMdl(usrnm, email, name, bday, country, avatar_url, url, bio);
             devSrv.insertDev(dev, function(err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
@@ -61,6 +70,15 @@ exports.insOrUpdDev = function(usrnm, email, name, bday, country, avatar_url, ur
     })
 };
 
+/**
+ * [getDevs description]
+ *
+ * @method getDevs
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.getDevs = function(callback) {
     devSrv.findAllDevs({}, {}, function(err, devs) {
         if (err) {
