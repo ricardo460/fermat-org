@@ -13,23 +13,23 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, platfrm_index, layer_
             //console.log('step 2')
             //TODO: update
             var set_obj = {};
-            if (name != res_plat.name) {
+            if (name && name != res_plat.name) {
                 set_obj.name = name;
                 res_plat.name = name;
             }
-            if (logo != res_plat.logo) {
+            if (logo && logo != res_plat.logo) {
                 set_obj.logo = logo;
                 res_plat.logo = logo;
             }
-            if (deps != res_plat.deps) {
+            if (deps && deps != res_plat.deps) {
                 set_obj.deps = deps;
                 res_plat.deps = deps;
             }
-            if (platfrm_index != res_plat.platfrm_index) {
+            if (platfrm_index && platfrm_index != res_plat.platfrm_index) {
                 set_obj.platfrm_index = platfrm_index;
                 res_plat.platfrm_index = platfrm_index;
             }
-            if (layer_index != res_plat.layer_index) {
+            if (layer_index && layer_index != res_plat.layer_index) {
                 set_obj.layer_index = layer_index;
                 res_plat.layer_index = layer_index;
             }

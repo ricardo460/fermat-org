@@ -13,31 +13,31 @@ exports.insOrUpdDev = function(usrnm, email, name, bday, country, avatar_url, ur
             //console.log('step 2')
             //TODO: update
             var set_obj = {};
-            if (email != res_dev.email) {
+            if (email && email != res_dev.email) {
                 set_obj.email = email;
                 res_dev.email = email;
             }
-            if (name != res_dev.name) {
+            if (name && name != res_dev.name) {
                 set_obj.name = name;
                 res_dev.name = name;
             }
-            if (bday != res_dev.bday) {
+            if (bday && bday != res_dev.bday) {
                 set_obj.bday = bday;
                 res_dev.bday = bday;
             }
-            if (country != res_dev.country) {
+            if (country && country != res_dev.country) {
                 set_obj.country = country;
                 res_dev.country = country;
             }
-            if (avatar_url != res_dev.avatar_url) {
+            if (avatar_url && avatar_url != res_dev.avatar_url) {
                 set_obj.avatar_url = avatar_url;
                 res_dev.avatar_url = avatar_url;
             }
-            if (url != res_dev.url) {
+            if (url && url != res_dev.url) {
                 set_obj.url = url;
                 res_dev.url = url;
             }
-            if (bio != res_dev.bio) {
+            if (bio && bio != res_dev.bio) {
                 set_obj.bio = bio;
                 res_dev.bio = bio;
             }

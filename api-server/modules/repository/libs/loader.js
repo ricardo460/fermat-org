@@ -11,7 +11,7 @@ var devMod = require('../developer');
 
 //var USER_AGENT = 'Miguelcldn';
 //var USER_AGENT = 'MALOTeam'
-var USER_AGENT = 'fuelusumar'
+var USER_AGENT = 'fuelusumar';
 //var TOKEN = '3c12e4c95821c7c2602a47ae46faf8a0ddab4962'; // Miguelcldn    
 //var TOKEN = 'fb6c27928d83f8ea6a9565e0f008cceffee83af1'; // MALOTeam
 var TOKEN = '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
@@ -119,7 +119,7 @@ var processRequestBody = function(body, callback) {
             var content = new Buffer(reqBody.content, reqBody.encoding);
             var strCont = content.toString().split('\n').join(' ').split('\t').join(' ');
             callback(null, strCont);
-        } else if (reqBody.login) {
+        } else if (reqBody.login || reqBody.message || Array.isArray(reqBody)) {
             callback(null, reqBody);
         } else {
             callback(new Error('body without any content'), null);
@@ -255,7 +255,7 @@ var saveManifest = function(callback) {
             if (err_load) {
                 winston.log('info', err_load.message, err_load);
             } else {
-                if (res_load.platfrms && Array.isArray(res_load.platfrms)) {
+                if (res_load.platfrms && Array.isArray(res_load.platfrms) && res_load.suprlays && Array.isArray(res_load.suprlays)) {
                     var _platfrms = res_load.platfrms;
                     var _suprlays = res_load.suprlays;
 
@@ -301,6 +301,7 @@ var saveManifest = function(callback) {
                                                                         _comp.difficulty,
                                                                         _comp['code-level'].trim().toLowerCase(),
                                                                         _comp.repo_dir,
+                                                                        null,
                                                                         function(err_comp, res_comp) {
                                                                             if (err_comp) {
                                                                                 winston.log('info', err_comp.message, err_comp);
@@ -381,7 +382,6 @@ var saveManifest = function(callback) {
                             loopSuprlays(0);
                         }
                     };
-                    loopPlatfrms(0);
 
                     function loopSuprlays(n) {
                         if (n < _suprlays.length) {
@@ -425,6 +425,7 @@ var saveManifest = function(callback) {
                                                                         _comp.difficulty,
                                                                         _comp['code-level'].trim().toLowerCase(),
                                                                         _comp.repo_dir,
+                                                                        null,
                                                                         function(err_comp, res_comp) {
                                                                             if (err_comp) {
                                                                                 winston.log('info', err_comp.message, err_comp);
@@ -490,11 +491,17 @@ var saveManifest = function(callback) {
                                     }
                                 });
                         } else {
-                            callback(null, {
-                                'save': true
-                            });
+                            winston.log('info', 'done loading components');
                         }
                     };
+                    callback(null, {
+                        'save': true
+                    });
+                    loopPlatfrms(0);
+                } else {
+                    callback(null, {
+                        'save': false
+                    });
                 }
             }
         });
@@ -552,9 +559,9 @@ var updateDevs = function(callback) {
                                     if (err_upd) {
                                         winston.log('info', err_upd.message, err_upd);
                                         //loopDevs(++i);
-                                    } else {
-                                        //console.dir(res_upd);
-                                    }
+                                    } //else {
+                                    //console.dir(res_upd);
+                                    //}
                                 });
                         }
                     });
@@ -565,6 +572,82 @@ var updateDevs = function(callback) {
         } else {
             callback(new Error('no developers to iterate'), null);
         }
+    });
+};
+
+var getContent = function(repo_dir, callback) {
+    try {
+        //console.log('https://api.github.com/repos/bitDubai/fermat/contents/' + repo_dir);
+        doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/' + repo_dir, null, function(err_req, res_req) {
+            if (err_req) {
+                callback(err_req, null);
+            } else {
+                processRequestBody(res_req, function(err_pro, res_pro) {
+                    if (err_pro) {
+                        callback(err_pro, null);
+                    } else {
+                        callback(null, res_pro);
+                    }
+                });
+            }
+        });
+        return callback(null, null);
+    } catch (err) {
+        callback(err, null);
+    }
+};
+
+var updateComps = function(callback) {
+    compMod.findComps(function(err_comps, res_comps) {
+        if (err_comps) {
+            callback(err_comps, null);
+        } else if (res_comps && Array.isArray(res_comps)) {
+            callback(null, {
+                'update': true
+            });
+            var upd_cont = 0;
+
+            function loopComps(i) {
+                if (i < res_comps.length) {
+                    var _comp = res_comps[i];
+                    //console.dir(_comp);
+
+                    if (_comp.code_level != 'concept') {
+                        getContent(_comp.repo_dir, function(err_dir, res_dir) {
+                            if (err_dir) {
+                                winston.log('info', err_dir.message, err_dir);
+                                loopComps(++i);
+                            } else if (res_dir) {
+                                //console.dir(_comp);
+                                //console.dir(res_dir);
+                                if (Array.isArray(res_dir)) {
+                                    compMod.insOrUpdComp(_comp._platfrm_id, _comp._suprlay_id, _comp._layer_id, _comp.name, null, null, null, null, null, true,
+                                        function(err_upd, res_upd) {
+                                            if (err_upd) {
+                                                winston.log('info', err_upd.message, err_upd);
+                                            } else {
+                                                winston.log('info', 'updating %s...', _comp._id);
+                                            }
+                                        });
+                                }
+                                loopComps(++i);
+                            }
+                        });
+                    }
+                }
+            };
+            loopComps(0);
+        } else {
+            callback(new Error('no developers to iterate'), null);
+        }
+    });
+};
+
+exports.updComps = function(callback) {
+    updateComps(function(err, res) {
+        if (err) callback(err, null);
+        else if (res) callback(null, res);
+        else callback(null, null);
     });
 };
 

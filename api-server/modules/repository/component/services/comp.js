@@ -76,6 +76,22 @@ exports.findComp = function(query, callback) {
 };
 
 /**
+ * [findComps description]
+ *
+ * @method findComps
+ *
+ * @param  {[type]}   query    [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.findComps = function(query, sort, callback) {
+    compDao.findAllSchemaLst(query, sort, function(err, comp) {
+        callback(err, comp);
+    });
+};
+
+/**
  * [findAllComps description]
  *
  * @method findAllComps

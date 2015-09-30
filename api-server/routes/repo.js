@@ -3,6 +3,13 @@ var router = express.Router();
 var repMod = require('../modules/repository');
 
 /* GET comps listing. */
+router.put('/comps', function(req, res, next) {
+    repMod.updComps(req, function(error, result) {
+        if (error) res.status(200).send(error);
+        else res.status(200).send(result);
+    });
+});
+
 router.get('/comps', function(req, res, next) {
     repMod.getComps(req, function(error, result) {
         if (error) res.status(200).send(error);

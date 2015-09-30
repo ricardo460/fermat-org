@@ -30,6 +30,20 @@ exports.loadComps = function (req, next) {
 	}
 };
 
+exports.updComps = function (req, next) {
+	try {
+		loadLib.updComps(function(err, res) {
+			if (err) {
+				next(err, null);
+			} else {
+				next(null, res);
+			}
+		});
+	} catch (err) {
+		next(err, null);
+	}
+};
+
 exports.updDevs = function (req, next) {
 	try {
 		loadLib.updDevs(function(err, res) {

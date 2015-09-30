@@ -13,19 +13,19 @@ exports.insOrUpdLayer = function(name, lang, platfrm_index, layer_index, callbac
             //console.log('step 2')
             //TODO: update
             var set_obj = {};
-            if (name != res_lay.name) {
+            if (name && name != res_lay.name) {
                 set_obj.name = name;
                 res_lay.name = name;
             }
-            if (lang != res_lay.lang) {
+            if (lang && lang != res_lay.lang) {
                 set_obj.lang = lang;
                 res_lay.lang = lang;
             }
-            if (platfrm_index != res_lay.platfrm_index) {
+            if (platfrm_index && platfrm_index != res_lay.platfrm_index) {
                 set_obj.platfrm_index = platfrm_index;
                 res_lay.platfrm_index = platfrm_index;
             }
-            if (layer_index != res_lay.layer_index) {
+            if (layer_index && layer_index != res_lay.layer_index) {
                 set_obj.layer_index = layer_index;
                 res_lay.layer_index = layer_index;
             }

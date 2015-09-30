@@ -15,7 +15,17 @@ exports.getComps = function(callback) {
     });
 };
 
-exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, callback) {
+exports.findComps = function(callback) {
+    compSrv.findComps({}, {}, function(err, comps) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, comps);
+        }
+    });
+};
+
+exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, found, callback) {
     var find_obj = {
         '$and': []
     };
@@ -44,25 +54,29 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
             return callback(err_comp, null);
         } else if (res_comp) {
             var set_obj = {};
-            if (type != res_comp.type) {
+            if (type && type != res_comp.type) {
                 set_obj.type = type;
                 res_comp.type = type;
             }
-            if (description != res_comp.description) {
+            if (description && description != res_comp.description) {
                 set_obj.description = description;
                 res_comp.description = description;
             }
-            if (difficulty != res_comp.difficulty) {
+            if (difficulty && difficulty != res_comp.difficulty) {
                 set_obj.difficulty = difficulty;
                 res_comp.difficulty = difficulty;
             }
-            if (code_level != res_comp.code_level) {
+            if (code_level && code_level != res_comp.code_level) {
                 set_obj.code_level = code_level;
                 res_comp.code_level = code_level;
             }
-            if (repo_dir != res_comp.repo_dir) {
+            if (repo_dir && repo_dir != res_comp.repo_dir) {
                 set_obj.repo_dir = repo_dir;
                 res_comp.repo_dir = repo_dir;
+            }
+            if (found && found != res_comp.found) {
+                set_obj.found = found;
+                res_comp.found = found;
             }
             if (Object.keys(set_obj).length > 0) {
                 compSrv.updateCompById(res_comp._id, set_obj, function(err_upd, res_upd) {
