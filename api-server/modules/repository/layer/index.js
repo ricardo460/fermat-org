@@ -47,5 +47,5 @@ exports.insOrUpdLayer = function(name, lang, order, callback) {
                 else return callback(null, res_ins);
             });
         }
-    })
+    });
 };

@@ -1,3 +1,4 @@
+/*jshint -W069 */
 var compSrv = require('./services/comp');
 var CompMdl = require('./models/comp');
 var compDevSrv = require('./services/compDev');
@@ -295,3 +296,4 @@ exports.updCompDevAndLifCyc = function(_comp_id, devs, life_cycle, callback) {
         }
     });
 };
+/*jshint +W069 */

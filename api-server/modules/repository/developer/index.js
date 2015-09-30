@@ -67,7 +67,7 @@ exports.insOrUpdDev = function(usrnm, email, name, bday, country, avatar_url, ur
                 else return callback(null, res_ins);
             });
         }
-    })
+    });
 };
 
 /**

@@ -1,3 +1,4 @@
+/*jshint -W069 */
 var winston = require('winston');
 var request = require('request');
 var parseString = require('xml2js').parseString;
@@ -345,7 +346,7 @@ var saveManifest = function(callback) {
                     var _platfrms = res_load.platfrms;
                     var _suprlays = res_load.suprlays;
 
-                    function loopPlatfrms(i) {
+                    var loopPlatfrms = function(i) {
                         if (i < _platfrms.length) {
                             var _platfrm = _platfrms[i];
                             platfrmMod.insOrUpdPlatfrm(_platfrm.code.trim().toUpperCase(),
@@ -360,7 +361,7 @@ var saveManifest = function(callback) {
                                     } else {
                                         var _layers = _platfrm.layers;
 
-                                        function loopLayers(j) {
+                                        var loopLayers = function(j) {
                                             if (j < _layers.length) {
                                                 var _layer = _layers[j];
                                                 layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null,
@@ -373,7 +374,7 @@ var saveManifest = function(callback) {
                                                         } else {
                                                             var _comps = _layer.comps;
 
-                                                            function loopComps(k) {
+                                                            var loopComps = function(k) {
                                                                 if (k < _comps.length) {
                                                                     var _comp = _comps[k];
                                                                     compMod.insOrUpdComp(res_plat._id,
@@ -395,7 +396,7 @@ var saveManifest = function(callback) {
                                                                                 var upd_devs = [];
                                                                                 var upd_life_cycle = [];
 
-                                                                                function loopDevs(l) {
+                                                                                var loopDevs = function(l) {
                                                                                     if (l < _devs.length) {
                                                                                         var _dev = _devs[l];
                                                                                         devMod.insOrUpdDev(_dev.name.trim().toLowerCase(), null, null, null, null, null, null, null, function(err_dev, res_dev) {
@@ -419,7 +420,7 @@ var saveManifest = function(callback) {
                                                                                     } else {
                                                                                         var _life_cycle = _comp.life_cycle;
 
-                                                                                        function loopLifeCycle(m) {
+                                                                                        var loopLifeCycle = function(m) {
                                                                                             if (m < _life_cycle.length) {
                                                                                                 var _status = _life_cycle[m];
                                                                                                 compMod.insOrUpdStatus(res_comp._id, _status.name, _status.target, _status.reached, function(err_sta, res_sta) {
@@ -451,7 +452,7 @@ var saveManifest = function(callback) {
                                                                 } else {
                                                                     loopLayers(++j);
                                                                 }
-                                                            }
+                                                            };
                                                             loopComps(0);
                                                         }
                                                     });
@@ -467,7 +468,7 @@ var saveManifest = function(callback) {
                         }
                     };
 
-                    function loopSuprlays(n) {
+                    var loopSuprlays = function(n) {
                         if (n < _suprlays.length) {
                             var _suprlay = _suprlays[n];
                             suprlayMod.insOrUpdSuprlay(_suprlay.code.trim().toUpperCase(),
@@ -482,7 +483,7 @@ var saveManifest = function(callback) {
                                     } else {
                                         var _layers = _suprlay.layers;
 
-                                        function loopLayers(o) {
+                                        var loopLayers = function(o) {
                                             if (o < _layers.length) {
                                                 var _layer = _layers[o];
                                                 layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null,
@@ -495,7 +496,7 @@ var saveManifest = function(callback) {
                                                         } else {
                                                             var _comps = _layer.comps;
 
-                                                            function loopComps(p) {
+                                                            var loopComps = function(p) {
                                                                 if (p < _comps.length) {
                                                                     var _comp = _comps[p];
                                                                     compMod.insOrUpdComp(null,
@@ -515,7 +516,7 @@ var saveManifest = function(callback) {
                                                                             } else {
                                                                                 var _devs = _comp.devs;
 
-                                                                                function loopDevs(q) {
+                                                                                var loopDevs = function(q) {
                                                                                     if (q < _devs.length) {
                                                                                         var _dev = _devs[q];
                                                                                         devMod.insOrUpdDev(_dev.name.trim().toLowerCase(), null, null, null, null, null, null, null, function(err_dev, res_dev) {
@@ -531,7 +532,7 @@ var saveManifest = function(callback) {
                                                                                                     } else {
                                                                                                         var _life_cycle = _comp.life_cycle;
 
-                                                                                                        function loopLifeCycle(r) {
+                                                                                                        var loopLifeCycle = function(r) {
                                                                                                             if (r < _life_cycle.length) {
                                                                                                                 var _status = _life_cycle[r];
                                                                                                                 compMod.insOrUpdStatus(res_comp._id, _status.name, _status.target, _status.reached, function(err_sta, res_sta) {
@@ -554,14 +555,14 @@ var saveManifest = function(callback) {
                                                                                     } else {
                                                                                         loopComps(++p);
                                                                                     }
-                                                                                }
+                                                                                };
                                                                                 loopDevs(0);
                                                                             }
                                                                         });
                                                                 } else {
                                                                     loopLayers(++o);
                                                                 }
-                                                            }
+                                                            };
                                                             loopComps(0);
                                                         }
                                                     });
@@ -640,7 +641,7 @@ var updateDevs = function(callback) {
                 'update': true
             });
 
-            function loopDevs(i) {
+            var loopDevs = function(i) {
                 if (i < res_devs.length) {
                     var _dev = res_devs[i];
                     getUser(_dev.usrnm, function(err_usr, res_usr) {
@@ -698,7 +699,6 @@ var getContent = function(repo_dir, callback) {
                 });
             }
         });
-        return callback(null, null);
     } catch (err) {
         callback(err, null);
     }
@@ -723,29 +723,31 @@ var updateComps = function(callback) {
             });
             var upd_cont = 0;
 
-            function loopComps(i) {
+            var loopComps = function(i) {
                 if (i < res_comps.length) {
                     var _comp = res_comps[i];
+                    console.dir(_comp);
                     if (_comp.code_level != 'concept') {
                         getContent(_comp.repo_dir, function(err_dir, res_dir) {
                             if (err_dir) {
                                 winston.log('info', err_dir.message, err_dir);
-                                loopComps(++i);
-                            } else if (res_dir) {
-                                if (Array.isArray(res_dir)) {
+                            } else {
+                                if (res_dir && Array.isArray(res_dir)) {
                                     compMod.insOrUpdComp(_comp._platfrm_id, _comp._suprlay_id, _comp._layer_id, _comp.name, null, null, null, null, null, true,
                                         function(err_upd, res_upd) {
                                             if (err_upd) {
                                                 winston.log('info', err_upd.message, err_upd);
                                             } else {
-                                                winston.log('info', 'updating %s...', _comp._id);
+                                                winston.log('info', 'updating %s...', _comp._id + '');
                                             }
                                         });
                                 }
-                                loopComps(++i);
                             }
                         });
                     }
+                    loopComps(++i);
+                } else {
+                    winston.log('info', 'done iterating components');
                 }
             };
             loopComps(0);
@@ -805,3 +807,4 @@ exports.loadComps = function(callback) {
         else callback(null, null);
     });
 };
+/*jshint +W069 */

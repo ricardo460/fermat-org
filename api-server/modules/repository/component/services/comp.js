@@ -109,14 +109,14 @@ exports.findAllComps = function(query, order, callback) {
         } else {
             var _comps = [];
 
-            function loopComps(i) {
+            var loopComps = function(i) {
                 if (i < comps.length) {
                     var _comp = comps[i];
                     var _compDevs = _comp.devs;
                     var _lifeCycle = _comp.life_cycle;
                     var _devs = [];
 
-                    function loopCompDevs(j) {
+                    var loopCompDevs = function(j) {
                         if (j < _compDevs.length) {
                             var _compDev = {};
                             devSrv.findDevById(_compDevs[j]._dev_id, function(err_dev, res_dev) {

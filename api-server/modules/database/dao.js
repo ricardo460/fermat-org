@@ -47,7 +47,7 @@ function Dao(ref, schema, model, path_ref, path_schema, path_model,
         this.SixPathSchema = mongoose.model(six_path_ref, six_path_schema);
         this.SixPathModel = six_path_model;
     }
-    if (config.env == 'development') {
+    if (config.env === 'development') {
         this.Schema.ensureIndexes(function(err, res) {
             if (err) winston.log('info', 'Mongoose default connection error', err);
         });
@@ -132,8 +132,8 @@ Dao.prototype.findSchemaLst = function(query, limit, sort, callback) {
                     var model = new that.Model();
                     model.init(schemas[i]);
                     models.push(model);
-                };
-                return callback(err, models);;
+                }
+                return callback(err, models);
             }
         });
 };
@@ -163,7 +163,7 @@ Dao.prototype.findAllSchemaLst = function(query, sort, callback) {
                     model.init(schemas[i]);
                     models.push(model);
                 }
-                return callback(err, models);;
+                return callback(err, models);
             }
         });
 };
@@ -298,8 +298,8 @@ Dao.prototype.findAndPopulateSchemaLst = function(query, limit, sort, path, call
                     var model = new that.Model();
                     model.init(schemas[i]);
                     models.push(model);
-                };
-                return callback(err, models);;
+                }
+                return callback(err, models);
             }
         });
 };
@@ -329,8 +329,8 @@ Dao.prototype.findAndPopulateAllSchemaLst = function(query, sort, path, callback
                     var model = new that.Model();
                     model.init(schemas[i]);
                     models.push(model);
-                };
-                return callback(err, models);;
+                }
+                return callback(err, models);
             }
         });
 };
