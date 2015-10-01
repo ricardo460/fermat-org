@@ -197,6 +197,3 @@ function Helper() {
         return y - lineHeight;
     };
 }
-
-// Make helper a static object
-var helper = new Helper();

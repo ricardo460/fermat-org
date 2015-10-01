@@ -7,10 +7,7 @@
  * @param {Array}  superLayerPosition  Array of the position of every superlayer
  */
 function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, superLayerPosition) {
-    
-    // Private constants
-    var INITIAL_POS = new THREE.Vector3(0, 0, 8000);
-    
+        
     // Private members
     var objects = [],
         dependencies = {
@@ -79,12 +76,15 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      * @param {Number} [duration=2000] Duration of the animation
      */
     this.transformTable = function(duration) {
-        var _duration = duration || 2000,
+        var _duration = duration || 4000,
             i, l;
         
         helper.hide('stackContainer', _duration / 2);
         
-        viewManager.transform(viewManager.targets.table);
+        //This should be moved to be called by viewer.js when we no longer use vis for this
+        setTimeout(function() {    
+            viewManager.transform(viewManager.targets.table); 
+        }, _duration);
         
         for(i = 0, l = objects.length; i < l; i++) {
             
@@ -97,6 +97,11 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             .easing(TWEEN.Easing.Exponential.InOut)
             .start();
         }
+        
+        new TWEEN.Tween(this)
+            .to({}, duration * 2)
+            .onUpdate(render)
+            .start();
         
         self.show(_duration);
     };
@@ -219,7 +224,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         // Dummy, send all to center
         for(i = 0; i < objects.length; i++) {
             obj = new THREE.Object3D();
-            obj.position.copy(INITIAL_POS);
+            obj.position.set(0, 0, 8000);
             positions.stack.push(obj);
         }
         
@@ -284,7 +289,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = createHeader(src, width, height);
                 
-                object.position.copy(INITIAL_POS);
+                object.position.set(-160000,
+                                    Math.random() * 320000 - 160000,
+                                    0);
 
                 scene.add(object);
                 objects.push(object);
@@ -312,7 +319,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = createHeader(src, width, height);
                 
-                object.position.copy(INITIAL_POS);
+                object.position.set(160000,
+                                    Math.random() * 320000 - 160000,
+                                    0);
 
                 scene.add(object);
                 objects.push(object);

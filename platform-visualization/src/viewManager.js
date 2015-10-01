@@ -740,9 +740,12 @@ function ViewManager() {
 
             var object = this.createElement(i);
             
-            object.position.x = 0;
-            object.position.y = 0;
+            object.position.x = Math.random() * 80000 - 40000;
+            object.position.y = Math.random() * 80000 - 40000;
             object.position.z = 80000;
+            object.rotation.x = Math.random() * 180;
+            object.rotation.y = Math.random() * 180;
+            object.rotation.z = Math.random() * 180;
             scene.add(object);
 
             objects.push(object);

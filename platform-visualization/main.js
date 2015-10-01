@@ -86,14 +86,15 @@ function Camera(position, renderer, renderFunc) {
 
         vec.applyMatrix4( target.matrix );
 
-        new TWEEN.Tween( controls.target )
+        /*new TWEEN.Tween( controls.target )
             .to( { x: target.position.x, y: target.position.y, z: target.position.z }, duration )
             .easing( TWEEN.Easing.Exponential.InOut )
-            .start();
+            .start();*/
 
         new TWEEN.Tween( camera.position )
             .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration )
-            .easing( TWEEN.Easing.Exponential.InOut )
+            //.easing( TWEEN.Easing.Exponential.InOut )
+            .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
             .start();
 
         new TWEEN.Tween( camera.up )
@@ -167,14 +168,15 @@ function Camera(position, renderer, renderFunc) {
         
         duration = duration || 2000;
         
-        new TWEEN.Tween( controls.target )
+        /*new TWEEN.Tween( controls.target )
                 .to( { x: controls.target0.x, y: controls.target0.y, z: controls.target0.z }, Math.random() * duration + duration )
                 .easing( TWEEN.Easing.Exponential.InOut )
-                .start();
+                .start();*/
 
             new TWEEN.Tween( camera.position )
                 .to( { x: controls.position0.x, y: controls.position0.y, z: controls.position0.z }, Math.random() * duration + duration )
-                .easing( TWEEN.Easing.Exponential.InOut )
+                //.easing( TWEEN.Easing.Exponential.InOut )
+                .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
                 .start();
 
             new TWEEN.Tween( camera.up )
@@ -279,6 +281,37 @@ var superLayers = {
         return size - 1;
     }
 };
+
+var viewManager = new ViewManager();
+
+function getData() {
+    $.ajax({
+        url: "get_plugins.php",
+        method: "GET"
+    }).success(
+        function(lists) {
+            var l = JSON.parse(lists);
+            viewManager.fillTable(l);
+            $('#splash').fadeTo(2000, 0, function() {
+                $('#splash').remove();
+                init();
+                //setTimeout(animate, 500);
+                animate();
+            });
+        }
+    );
+
+    /*var l = JSON.parse(testData);
+
+        viewManager.fillTable(l);
+
+        $('#splash').fadeTo(2000, 0, function() {
+                $('#splash').remove();
+                init();
+                //setTimeout( animate, 500);
+                animate();
+            });*/
+}
 /**
  * @class Represents the group of all header icons
  * @param {Number} columnWidth         The number of elements that contains a column
@@ -288,10 +321,7 @@ var superLayers = {
  * @param {Array}  superLayerPosition  Array of the position of every superlayer
  */
 function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, superLayerPosition) {
-    
-    // Private constants
-    var INITIAL_POS = new THREE.Vector3(0, 0, 8000);
-    
+        
     // Private members
     var objects = [],
         dependencies = {
@@ -360,12 +390,15 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      * @param {Number} [duration=2000] Duration of the animation
      */
     this.transformTable = function(duration) {
-        var _duration = duration || 2000,
+        var _duration = duration || 4000,
             i, l;
         
         helper.hide('stackContainer', _duration / 2);
         
-        viewManager.transform(viewManager.targets.table);
+        //This should be moved to be called by viewer.js when we no longer use vis for this
+        setTimeout(function() {    
+            viewManager.transform(viewManager.targets.table); 
+        }, _duration);
         
         for(i = 0, l = objects.length; i < l; i++) {
             
@@ -378,6 +411,11 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             .easing(TWEEN.Easing.Exponential.InOut)
             .start();
         }
+        
+        new TWEEN.Tween(this)
+            .to({}, duration * 2)
+            .onUpdate(render)
+            .start();
         
         self.show(_duration);
     };
@@ -500,7 +538,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         // Dummy, send all to center
         for(i = 0; i < objects.length; i++) {
             obj = new THREE.Object3D();
-            obj.position.copy(INITIAL_POS);
+            obj.position.set(0, 0, 8000);
             positions.stack.push(obj);
         }
         
@@ -565,7 +603,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = createHeader(src, width, height);
                 
-                object.position.copy(INITIAL_POS);
+                object.position.set(-160000,
+                                    Math.random() * 320000 - 160000,
+                                    0);
 
                 scene.add(object);
                 objects.push(object);
@@ -593,7 +633,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = createHeader(src, width, height);
                 
-                object.position.copy(INITIAL_POS);
+                object.position.set(160000,
+                                    Math.random() * 320000 - 160000,
+                                    0);
 
                 scene.add(object);
                 objects.push(object);
@@ -815,9 +857,6 @@ function Helper() {
         return y - lineHeight;
     };
 }
-
-// Make helper a static object
-var helper = new Helper();
 function Loader() {
     // reference to the object
     var that = this;
@@ -1036,7 +1075,7 @@ Timeline.prototype.show = function ( duration ) {
     }
 };
 var table = [],
-    viewManager = new ViewManager(),
+    helper = new Helper(),
     camera,
     scene = new THREE.Scene(),
     renderer,
@@ -1051,30 +1090,7 @@ var TILE_DIMENSION = {
 },
     TILE_SPACING = 20;
 
-$.ajax({
-    url: "get_plugins.php",
-    method: "GET"
-}).success(
-    function(lists) {
-        var l = JSON.parse(lists);
-        viewManager.fillTable(l);
-        $('#splash').fadeTo(2000, 0, function() {
-            $('#splash').remove();
-            init();
-            setTimeout(animate, 500);
-        });
-    }
-);
-
-/*var l = JSON.parse(testData);
-    
-    viewManager.fillTable(l);
-    
-    $('#splash').fadeTo(2000, 0, function() {
-            $('#splash').remove();
-            init();
-            setTimeout( animate, 500);
-        });*/
+getData();
 
 function init() {
 
@@ -1128,7 +1144,7 @@ function init() {
     //Disabled Menu
     //initMenu();
 
-    goToView('stack');
+    setTimeout(function() {goToView('table'); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
@@ -2166,9 +2182,12 @@ function ViewManager() {
 
             var object = this.createElement(i);
             
-            object.position.x = 0;
-            object.position.y = 0;
+            object.position.x = Math.random() * 80000 - 40000;
+            object.position.y = Math.random() * 80000 - 40000;
             object.position.z = 80000;
+            object.rotation.x = Math.random() * 180;
+            object.rotation.y = Math.random() * 180;
+            object.rotation.z = Math.random() * 180;
             scene.add(object);
 
             objects.push(object);

@@ -86,14 +86,15 @@ function Camera(position, renderer, renderFunc) {
 
         vec.applyMatrix4( target.matrix );
 
-        new TWEEN.Tween( controls.target )
+        /*new TWEEN.Tween( controls.target )
             .to( { x: target.position.x, y: target.position.y, z: target.position.z }, duration )
             .easing( TWEEN.Easing.Exponential.InOut )
-            .start();
+            .start();*/
 
         new TWEEN.Tween( camera.position )
             .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration )
-            .easing( TWEEN.Easing.Exponential.InOut )
+            //.easing( TWEEN.Easing.Exponential.InOut )
+            .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
             .start();
 
         new TWEEN.Tween( camera.up )
@@ -167,14 +168,15 @@ function Camera(position, renderer, renderFunc) {
         
         duration = duration || 2000;
         
-        new TWEEN.Tween( controls.target )
+        /*new TWEEN.Tween( controls.target )
                 .to( { x: controls.target0.x, y: controls.target0.y, z: controls.target0.z }, Math.random() * duration + duration )
                 .easing( TWEEN.Easing.Exponential.InOut )
-                .start();
+                .start();*/
 
             new TWEEN.Tween( camera.position )
                 .to( { x: controls.position0.x, y: controls.position0.y, z: controls.position0.z }, Math.random() * duration + duration )
-                .easing( TWEEN.Easing.Exponential.InOut )
+                //.easing( TWEEN.Easing.Exponential.InOut )
+                .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
                 .start();
 
             new TWEEN.Tween( camera.up )

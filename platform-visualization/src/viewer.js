@@ -1,5 +1,5 @@
 var table = [],
-    viewManager = new ViewManager(),
+    helper = new Helper(),
     camera,
     scene = new THREE.Scene(),
     renderer,
@@ -14,30 +14,7 @@ var TILE_DIMENSION = {
 },
     TILE_SPACING = 20;
 
-$.ajax({
-    url: "get_plugins.php",
-    method: "GET"
-}).success(
-    function(lists) {
-        var l = JSON.parse(lists);
-        viewManager.fillTable(l);
-        $('#splash').fadeTo(2000, 0, function() {
-            $('#splash').remove();
-            init();
-            setTimeout(animate, 500);
-        });
-    }
-);
-
-/*var l = JSON.parse(testData);
-    
-    viewManager.fillTable(l);
-    
-    $('#splash').fadeTo(2000, 0, function() {
-            $('#splash').remove();
-            init();
-            setTimeout( animate, 500);
-        });*/
+getData();
 
 function init() {
 
@@ -91,7 +68,7 @@ function init() {
     //Disabled Menu
     //initMenu();
 
-    goToView('stack');
+    setTimeout(function() {goToView('table'); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
