@@ -1,0 +1,803 @@
+FAIL	modules/database/dao.js (4)
+modules/database/dao.js:24:5	Missing 'use strict' statement.
+modules/database/dao.js:51:43	Expected exactly one space between 'function' and '('.
+modules/database/dao.js:52:22	Expected '{' and instead saw 'winston'.
+modules/database/dao.js:52:22	Stopping. (12% scanned).
+FAIL	modules/repository/component/index.js (33)
+modules/repository/component/index.js:18:28	Expected exactly one space between 'function' and '('.
+modules/repository/component/index.js:19:5	Missing 'use strict' statement.
+modules/repository/component/index.js:19:42	Expected exactly one space between 'function' and '('.
+modules/repository/component/index.js:37:29	Expected exactly one space between 'function' and '('.
+modules/repository/component/index.js:38:5	Missing 'use strict' statement.
+modules/repository/component/index.js:38:39	Expected exactly one space between 'function' and '('.
+modules/repository/component/index.js:66:32	Expected exactly one space between 'function' and '('.
+modules/repository/component/index.js:66:33	Unexpected dangling '_' in '_platfrm_id'.
+modules/repository/component/index.js:66:46	Unexpected dangling '_' in '_suprlay_id'.
+modules/repository/component/index.js:66:59	Unexpected dangling '_' in '_layer_id'.
+modules/repository/component/index.js:67:5	Missing 'use strict' statement.
+modules/repository/component/index.js:70:9	Unexpected dangling '_' in '_platfrm_id'.
+modules/repository/component/index.js:71:18	['$and'] is better written in dot notation.
+modules/repository/component/index.js:72:28	Unexpected dangling '_' in '_platfrm_id'.
+modules/repository/component/index.js:75:9	Unexpected dangling '_' in '_suprlay_id'.
+modules/repository/component/index.js:76:18	['$and'] is better written in dot notation.
+modules/repository/component/index.js:77:28	Unexpected dangling '_' in '_suprlay_id'.
+modules/repository/component/index.js:80:9	Unexpected dangling '_' in '_layer_id'.
+modules/repository/component/index.js:81:18	['$and'] is better written in dot notation.
+modules/repository/component/index.js:82:26	Unexpected dangling '_' in '_layer_id'.
+modules/repository/component/index.js:86:18	['$and'] is better written in dot notation.
+modules/repository/component/index.js:90:40	Expected exactly one space between 'function' and '('.
+modules/repository/component/index.js:93:11	Unnecessary 'else' after disruption.
+modules/repository/component/index.js:95:30	Expected '!==' and instead saw '!='.
+modules/repository/component/index.js:99:44	Expected '!==' and instead saw '!='.
+modules/repository/component/index.js:103:42	Expected '!==' and instead saw '!='.
+modules/repository/component/index.js:107:42	Expected '!==' and instead saw '!='.
+modules/repository/component/index.js:111:38	Expected '!==' and instead saw '!='.
+modules/repository/component/index.js:115:32	Expected '!==' and instead saw '!='.
+modules/repository/component/index.js:120:49	Unexpected dangling '_' in '_id'.
+modules/repository/component/index.js:120:71	Expected exactly one space between 'function' and '('.
+modules/repository/component/index.js:121:34	Expected '{' and instead saw 'return'.
+modules/repository/component/index.js:121:34	Stopping. (40% scanned).
+FAIL	modules/repository/component/models/comp.js (27)
+modules/repository/component/models/comp.js:18:18	Unexpected dangling '_' in '_platfrm_id'.
+modules/repository/component/models/comp.js:18:31	Unexpected dangling '_' in '_suprlay_id'.
+modules/repository/component/models/comp.js:18:44	Unexpected dangling '_' in '_layer_id'.
+modules/repository/component/models/comp.js:20:5	Missing 'use strict' statement.
+modules/repository/component/models/comp.js:20:10	Unexpected dangling '_' in '_platfrm_id'.
+modules/repository/component/models/comp.js:20:24	Unexpected dangling '_' in '_platfrm_id'.
+modules/repository/component/models/comp.js:21:10	Unexpected dangling '_' in '_suprlay_id'.
+modules/repository/component/models/comp.js:21:24	Unexpected dangling '_' in '_suprlay_id'.
+modules/repository/component/models/comp.js:22:10	Unexpected dangling '_' in '_layer_id'.
+modules/repository/component/models/comp.js:22:22	Unexpected dangling '_' in '_layer_id'.
+modules/repository/component/models/comp.js:45:34	Expected exactly one space between 'function' and '('.
+modules/repository/component/models/comp.js:46:5	Missing 'use strict' statement.
+modules/repository/component/models/comp.js:46:10	Unexpected dangling '_' in '_id'.
+modules/repository/component/models/comp.js:46:27	Unexpected dangling '_' in '_id'.
+modules/repository/component/models/comp.js:47:10	Unexpected dangling '_' in '_platfrm_id'.
+modules/repository/component/models/comp.js:47:35	Unexpected dangling '_' in '_platfrm_id'.
+modules/repository/component/models/comp.js:48:10	Unexpected dangling '_' in '_suprlay_id'.
+modules/repository/component/models/comp.js:48:35	Unexpected dangling '_' in '_suprlay_id'.
+modules/repository/component/models/comp.js:49:10	Unexpected dangling '_' in '_layer_id'.
+modules/repository/component/models/comp.js:49:33	Unexpected dangling '_' in '_layer_id'.
+modules/repository/component/models/comp.js:70:37	Expected exactly one space between 'function' and '('.
+modules/repository/component/models/comp.js:71:5	Missing 'use strict' statement.
+modules/repository/component/models/comp.js:72:9	Combine this with the previous 'var' statement.
+modules/repository/component/models/comp.js:75:13	Redefinition of 'words' from line 71.
+modules/repository/component/models/comp.js:76:13	Combine this with the previous 'var' statement.
+modules/repository/component/models/comp.js:77:14	Move 'var' declarations to the top of the function.
+modules/repository/component/models/comp.js:77:14	Stopping. (71% scanned).
+FAIL	modules/repository/component/models/compDev.js (17)
+modules/repository/component/models/compDev.js:14:21	Unexpected dangling '_' in '_comp_id'.
+modules/repository/component/models/compDev.js:14:31	Unexpected dangling '_' in '_dev_id'.
+modules/repository/component/models/compDev.js:16:5	Missing 'use strict' statement.
+modules/repository/component/models/compDev.js:16:10	Unexpected dangling '_' in '_comp_id'.
+modules/repository/component/models/compDev.js:16:21	Unexpected dangling '_' in '_comp_id'.
+modules/repository/component/models/compDev.js:17:10	Unexpected dangling '_' in '_dev_id'.
+modules/repository/component/models/compDev.js:17:20	Unexpected dangling '_' in '_dev_id'.
+modules/repository/component/models/compDev.js:33:37	Expected exactly one space between 'function' and '('.
+modules/repository/component/models/compDev.js:34:5	Missing 'use strict' statement.
+modules/repository/component/models/compDev.js:34:10	Unexpected dangling '_' in '_id'.
+modules/repository/component/models/compDev.js:34:30	Unexpected dangling '_' in '_id'.
+modules/repository/component/models/compDev.js:35:10	Unexpected dangling '_' in '_comp_id'.
+modules/repository/component/models/compDev.js:35:35	Unexpected dangling '_' in '_comp_id'.
+modules/repository/component/models/compDev.js:36:10	Unexpected dangling '_' in '_dev_id'.
+modules/repository/component/models/compDev.js:36:34	Unexpected dangling '_' in '_dev_id'.
+modules/repository/component/models/compDev.js:48:42	Expected exactly one space between 'function' and '('.
+modules/repository/component/models/compDev.js:49:5	Missing 'use strict' statement.
+FAIL	modules/repository/component/models/status.js (43)
+modules/repository/component/models/status.js:13:20	Unexpected dangling '_' in '_comp_id'.
+modules/repository/component/models/status.js:14:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:15:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:15:2	Missing 'use strict' statement.
+modules/repository/component/models/status.js:15:7	Unexpected dangling '_' in '_comp_id'.
+modules/repository/component/models/status.js:15:18	Unexpected dangling '_' in '_comp_id'.
+modules/repository/component/models/status.js:16:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:16:2	Expected 'this' at column 5, not column 2.
+modules/repository/component/models/status.js:17:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:17:2	Expected 'this' at column 5, not column 2.
+modules/repository/component/models/status.js:18:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:18:2	Expected 'this' at column 5, not column 2.
+modules/repository/component/models/status.js:19:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:19:2	Expected 'this' at column 5, not column 2.
+modules/repository/component/models/status.js:31:36	Expected exactly one space between 'function' and '('.
+modules/repository/component/models/status.js:32:5	Missing 'use strict' statement.
+modules/repository/component/models/status.js:32:10	Unexpected dangling '_' in '_id'.
+modules/repository/component/models/status.js:32:29	Unexpected dangling '_' in '_id'.
+modules/repository/component/models/status.js:33:10	Unexpected dangling '_' in '_comp_id'.
+modules/repository/component/models/status.js:33:34	Unexpected dangling '_' in '_comp_id'.
+modules/repository/component/models/status.js:45:41	Expected exactly one space between 'function' and '('.
+modules/repository/component/models/status.js:46:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:46:2	Missing 'use strict' statement.
+modules/repository/component/models/status.js:56:41	Expected exactly one space between 'function' and '('.
+modules/repository/component/models/status.js:57:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:57:2	Missing 'use strict' statement.
+modules/repository/component/models/status.js:58:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:58:2	Expected 'this' at column 5, not column 2.
+modules/repository/component/models/status.js:68:42	Expected exactly one space between 'function' and '('.
+modules/repository/component/models/status.js:69:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:69:2	Missing 'use strict' statement.
+modules/repository/component/models/status.js:70:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:70:2	Expected 'this' at column 5, not column 2.
+modules/repository/component/models/status.js:81:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:81:2	Missing 'use strict' statement.
+modules/repository/component/models/status.js:82:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:82:2	Expected 'var' at column 5, not column 2.
+modules/repository/component/models/status.js:82:6	Combine this with the previous 'var' statement.
+modules/repository/component/models/status.js:83:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:83:2	Expected 'var' at column 5, not column 2.
+modules/repository/component/models/status.js:83:6	Combine this with the previous 'var' statement.
+modules/repository/component/models/status.js:84:1	Use spaces, not tabs.
+modules/repository/component/models/status.js:84:2	Expected 'return' at column 5, not column 2.
+FAIL	modules/repository/component/schemas/comp.js (6)
+modules/repository/component/schemas/comp.js:9:5	Unexpected dangling '_' in '_platfrm_id'.
+modules/repository/component/schemas/comp.js:13:5	Unexpected dangling '_' in '_suprlay_id'.
+modules/repository/component/schemas/comp.js:17:5	Unexpected dangling '_' in '_layer_id'.
+modules/repository/component/schemas/comp.js:80:5	Unexpected dangling '_' in '_platfrm_id'.
+modules/repository/component/schemas/comp.js:81:5	Unexpected dangling '_' in '_suprlay_id'.
+modules/repository/component/schemas/comp.js:82:5	Unexpected dangling '_' in '_layer_id'.
+FAIL	modules/repository/component/schemas/compDev.js (4)
+modules/repository/component/schemas/compDev.js:9:5	Unexpected dangling '_' in '_dev_id'.
+modules/repository/component/schemas/compDev.js:13:5	Unexpected dangling '_' in '_comp_id'.
+modules/repository/component/schemas/compDev.js:45:5	Unexpected dangling '_' in '_dev_id'.
+modules/repository/component/schemas/compDev.js:46:5	Unexpected dangling '_' in '_comp_id'.
+FAIL	modules/repository/component/schemas/status.js (3)
+modules/repository/component/schemas/status.js:9:5	Unexpected dangling '_' in '_comp_id'.
+modules/repository/component/schemas/status.js:39:5	Unexpected dangling '_' in '_comp_id'.
+modules/repository/component/schemas/status.js:40:12	Unexpected ','.
+FAIL	modules/repository/component/services/comp.js (51)
+modules/repository/component/services/comp.js:40:30	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:41:5	Missing 'use strict' statement.
+modules/repository/component/services/comp.js:41:44	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:56:32	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:56:33	Unexpected dangling '_' in '_id'.
+modules/repository/component/services/comp.js:57:5	Missing 'use strict' statement.
+modules/repository/component/services/comp.js:57:28	Unexpected dangling '_' in '_id'.
+modules/repository/component/services/comp.js:57:41	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:72:28	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:73:5	Missing 'use strict' statement.
+modules/repository/component/services/comp.js:73:39	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:88:29	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:89:5	Missing 'use strict' statement.
+modules/repository/component/services/comp.js:89:51	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:105:32	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:106:5	Missing 'use strict' statement.
+modules/repository/component/services/comp.js:106:116	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:110:17	Unexpected dangling '_' in '_comps'.
+modules/repository/component/services/comp.js:112:17	Combine this with the previous 'var' statement.
+modules/repository/component/services/comp.js:112:37	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:114:25	Unexpected dangling '_' in '_comp'.
+modules/repository/component/services/comp.js:115:25	Unexpected dangling '_' in '_compDevs'.
+modules/repository/component/services/comp.js:115:25	Combine this with the previous 'var' statement.
+modules/repository/component/services/comp.js:115:37	Unexpected dangling '_' in '_comp'.
+modules/repository/component/services/comp.js:116:25	Unexpected dangling '_' in '_lifeCycle'.
+modules/repository/component/services/comp.js:116:25	Combine this with the previous 'var' statement.
+modules/repository/component/services/comp.js:116:38	Unexpected dangling '_' in '_comp'.
+modules/repository/component/services/comp.js:117:25	Unexpected dangling '_' in '_devs'.
+modules/repository/component/services/comp.js:117:25	Combine this with the previous 'var' statement.
+modules/repository/component/services/comp.js:119:25	Combine this with the previous 'var' statement.
+modules/repository/component/services/comp.js:119:48	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:120:33	Unexpected dangling '_' in '_compDevs'.
+modules/repository/component/services/comp.js:121:33	Unexpected dangling '_' in '_compDev'.
+modules/repository/component/services/comp.js:122:48	Unexpected dangling '_' in '_compDevs'.
+modules/repository/component/services/comp.js:122:61	Unexpected dangling '_' in '_dev_id'.
+modules/repository/component/services/comp.js:122:78	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:124:50	Unexpected '++'.
+modules/repository/component/services/comp.js:126:37	Unexpected dangling '_' in '_compDev'.
+modules/repository/component/services/comp.js:127:37	Unexpected dangling '_' in '_compDev'.
+modules/repository/component/services/comp.js:127:53	Unexpected dangling '_' in '_compDevs'.
+modules/repository/component/services/comp.js:128:37	Unexpected dangling '_' in '_compDev'.
+modules/repository/component/services/comp.js:128:54	Unexpected dangling '_' in '_compDevs'.
+modules/repository/component/services/comp.js:129:37	Unexpected dangling '_' in '_compDev'.
+modules/repository/component/services/comp.js:129:55	Unexpected dangling '_' in '_compDevs'.
+modules/repository/component/services/comp.js:130:37	Unexpected dangling '_' in '_devs'.
+modules/repository/component/services/comp.js:130:48	Unexpected dangling '_' in '_compDev'.
+modules/repository/component/services/comp.js:131:50	Unexpected '++'.
+modules/repository/component/services/comp.js:135:29	Unexpected dangling '_' in '_comp'.
+modules/repository/component/services/comp.js:135:42	Unexpected dangling '_' in '_devs'.
+modules/repository/component/services/comp.js:136:29	Unexpected dangling '_' in '_comps'.
+modules/repository/component/services/comp.js:136:29	Too many errors. (53% scanned).
+FAIL	modules/repository/component/services/compDev.js (23)
+modules/repository/component/services/compDev.js:27:33	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:28:5	Missing 'use strict' statement.
+modules/repository/component/services/compDev.js:28:50	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:43:35	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:43:36	Unexpected dangling '_' in '_id'.
+modules/repository/component/services/compDev.js:44:5	Missing 'use strict' statement.
+modules/repository/component/services/compDev.js:44:42	Unexpected dangling '_' in '_id'.
+modules/repository/component/services/compDev.js:44:75	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:59:31	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:60:5	Missing 'use strict' statement.
+modules/repository/component/services/compDev.js:60:73	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:77:32	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:78:5	Missing 'use strict' statement.
+modules/repository/component/services/compDev.js:78:90	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:94:35	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:95:5	Missing 'use strict' statement.
+modules/repository/component/services/compDev.js:95:86	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:111:37	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:111:38	Unexpected dangling '_' in '_id'.
+modules/repository/component/services/compDev.js:112:5	Missing 'use strict' statement.
+modules/repository/component/services/compDev.js:114:9	Unexpected dangling '_' in '_id'.
+modules/repository/component/services/compDev.js:114:14	Unexpected dangling '_' in '_id'.
+modules/repository/component/services/compDev.js:115:25	Expected exactly one space between 'function' and '('.
+FAIL	modules/repository/component/services/status.js (23)
+modules/repository/component/services/status.js:25:32	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:26:5	Missing 'use strict' statement.
+modules/repository/component/services/status.js:26:48	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:41:34	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:41:35	Unexpected dangling '_' in '_id'.
+modules/repository/component/services/status.js:42:5	Missing 'use strict' statement.
+modules/repository/component/services/status.js:42:30	Unexpected dangling '_' in '_id'.
+modules/repository/component/services/status.js:42:43	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:57:30	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:58:5	Missing 'use strict' statement.
+modules/repository/component/services/status.js:58:64	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:75:32	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:76:5	Missing 'use strict' statement.
+modules/repository/component/services/status.js:76:81	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:92:35	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:93:5	Missing 'use strict' statement.
+modules/repository/component/services/status.js:93:77	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:109:36	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:109:37	Unexpected dangling '_' in '_id'.
+modules/repository/component/services/status.js:110:5	Missing 'use strict' statement.
+modules/repository/component/services/status.js:112:9	Unexpected dangling '_' in '_id'.
+modules/repository/component/services/status.js:112:14	Unexpected dangling '_' in '_id'.
+modules/repository/component/services/status.js:113:25	Expected exactly one space between 'function' and '('.
+FAIL	modules/repository/developer/index.js (15)
+modules/repository/developer/index.js:21:31	Expected exactly one space between 'function' and '('.
+modules/repository/developer/index.js:22:5	Missing 'use strict' statement.
+modules/repository/developer/index.js:22:42	Expected exactly one space between 'function' and '('.
+modules/repository/developer/index.js:25:11	Unnecessary 'else' after disruption.
+modules/repository/developer/index.js:27:32	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:31:30	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:35:30	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:39:36	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:43:42	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:47:28	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:51:28	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:56:46	Unexpected dangling '_' in '_id'.
+modules/repository/developer/index.js:56:68	Expected exactly one space between 'function' and '('.
+modules/repository/developer/index.js:57:34	Expected '{' and instead saw 'return'.
+modules/repository/developer/index.js:57:34	Stopping. (63% scanned).
+FAIL	modules/repository/developer/models/dev.js (51)
+modules/repository/developer/models/dev.js:18:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:19:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:19:2	Missing 'use strict' statement.
+modules/repository/developer/models/dev.js:20:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:20:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:21:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:21:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:22:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:22:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:23:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:23:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:24:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:24:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:25:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:25:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:26:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:26:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:27:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:27:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:39:33	Expected exactly one space between 'function' and '('.
+modules/repository/developer/models/dev.js:40:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:40:2	Missing 'use strict' statement.
+modules/repository/developer/models/dev.js:40:7	Unexpected dangling '_' in '_id'.
+modules/repository/developer/models/dev.js:40:23	Unexpected dangling '_' in '_id'.
+modules/repository/developer/models/dev.js:41:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:41:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:42:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:42:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:43:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:43:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:44:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:44:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:45:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:45:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:46:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:46:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:47:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:47:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:48:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:48:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:49:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:49:2	Expected 'this' at column 5, not column 2.
+modules/repository/developer/models/dev.js:57:38	Expected exactly one space between 'function' and '('.
+modules/repository/developer/models/dev.js:58:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:58:2	Missing 'use strict' statement.
+modules/repository/developer/models/dev.js:69:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:69:2	Missing 'use strict' statement.
+modules/repository/developer/models/dev.js:70:1	Use spaces, not tabs.
+modules/repository/developer/models/dev.js:70:2	Expected 'var' at column 5, not column 2.
+modules/repository/developer/models/dev.js:70:6	Combine this with the previous 'var' statement.
+modules/repository/developer/models/dev.js:70:6	Too many errors. (92% scanned).
+FAIL	modules/repository/developer/schemas/dev.js (51)
+modules/repository/developer/schemas/dev.js:9:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:9:2	Expected 'usrnm' at column 9, not column 2.
+modules/repository/developer/schemas/dev.js:10:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:10:3	Expected 'type' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:11:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:11:3	Expected 'lowercase' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:12:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:12:3	Expected 'trim' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:13:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:13:3	Expected 'required' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:14:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:15:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:15:2	Expected '}' at column 9, not column 2.
+modules/repository/developer/schemas/dev.js:16:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:16:2	Expected 'email' at column 9, not column 2.
+modules/repository/developer/schemas/dev.js:17:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:17:3	Expected 'type' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:18:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:18:3	Expected 'lowercase' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:19:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:19:3	Expected 'trim' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:20:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:20:3	Expected 'required' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:21:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:22:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:22:3	Expected 'default' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:23:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:23:2	Expected '}' at column 9, not column 2.
+modules/repository/developer/schemas/dev.js:24:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:24:2	Expected 'name' at column 9, not column 2.
+modules/repository/developer/schemas/dev.js:25:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:25:3	Expected 'type' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:26:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:26:3	Expected 'trim' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:27:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:27:3	Expected 'default' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:28:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:28:2	Expected '}' at column 9, not column 2.
+modules/repository/developer/schemas/dev.js:29:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:29:2	Expected 'bday' at column 9, not column 2.
+modules/repository/developer/schemas/dev.js:30:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:30:3	Expected 'type' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:31:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:32:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:32:3	Expected 'default' at column 13, not column 3.
+modules/repository/developer/schemas/dev.js:33:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:33:2	Expected '}' at column 9, not column 2.
+modules/repository/developer/schemas/dev.js:34:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:34:2	Expected 'location' at column 9, not column 2.
+modules/repository/developer/schemas/dev.js:35:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:35:1	Too many errors. (30% scanned).
+FAIL	modules/repository/developer/services/dev.js (51)
+modules/repository/developer/services/dev.js:24:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:24:2	Missing 'use strict' statement.
+modules/repository/developer/services/dev.js:25:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:25:3	Expected 'callback' at column 9, not column 3.
+modules/repository/developer/services/dev.js:26:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:26:2	Expected '}' at column 5, not column 2.
+modules/repository/developer/services/dev.js:39:33	Unexpected dangling '_' in '_id'.
+modules/repository/developer/services/dev.js:40:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:40:2	Missing 'use strict' statement.
+modules/repository/developer/services/dev.js:40:24	Unexpected dangling '_' in '_id'.
+modules/repository/developer/services/dev.js:41:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:41:3	Expected 'callback' at column 9, not column 3.
+modules/repository/developer/services/dev.js:42:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:42:2	Expected '}' at column 5, not column 2.
+modules/repository/developer/services/dev.js:56:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:56:2	Missing 'use strict' statement.
+modules/repository/developer/services/dev.js:57:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:57:3	Expected 'email' at column 9, not column 3.
+modules/repository/developer/services/dev.js:58:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:58:2	Expected '}' at column 5, not column 2.
+modules/repository/developer/services/dev.js:59:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:59:3	Expected 'callback' at column 9, not column 3.
+modules/repository/developer/services/dev.js:60:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:60:2	Expected '}' at column 5, not column 2.
+modules/repository/developer/services/dev.js:74:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:74:2	Missing 'use strict' statement.
+modules/repository/developer/services/dev.js:75:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:75:3	Expected 'usrnm' at column 9, not column 3.
+modules/repository/developer/services/dev.js:76:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:76:2	Expected '}' at column 5, not column 2.
+modules/repository/developer/services/dev.js:77:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:77:3	Expected 'callback' at column 9, not column 3.
+modules/repository/developer/services/dev.js:78:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:78:2	Expected '}' at column 5, not column 2.
+modules/repository/developer/services/dev.js:94:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:94:2	Missing 'use strict' statement.
+modules/repository/developer/services/dev.js:95:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:95:3	Expected 'callback' at column 9, not column 3.
+modules/repository/developer/services/dev.js:96:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:96:2	Expected '}' at column 5, not column 2.
+modules/repository/developer/services/dev.js:111:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:111:2	Missing 'use strict' statement.
+modules/repository/developer/services/dev.js:112:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:112:3	Expected 'callback' at column 9, not column 3.
+modules/repository/developer/services/dev.js:113:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:113:2	Expected '}' at column 5, not column 2.
+modules/repository/developer/services/dev.js:127:35	Unexpected dangling '_' in '_id'.
+modules/repository/developer/services/dev.js:128:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:128:2	Missing 'use strict' statement.
+modules/repository/developer/services/dev.js:129:1	Use spaces, not tabs.
+modules/repository/developer/services/dev.js:129:1	Too many errors. (96% scanned).
+FAIL	modules/repository/index.js (51)
+modules/repository/index.js:15:1	Use spaces, not tabs.
+modules/repository/index.js:15:2	Missing 'use strict' statement.
+modules/repository/index.js:16:1	Use spaces, not tabs.
+modules/repository/index.js:16:3	Expected 'compMod' at column 9, not column 3.
+modules/repository/index.js:16:28	Expected exactly one space between 'function' and '('.
+modules/repository/index.js:17:1	Use spaces, not tabs.
+modules/repository/index.js:17:4	Expected 'if' at column 13, not column 4.
+modules/repository/index.js:18:1	Use spaces, not tabs.
+modules/repository/index.js:18:5	Expected 'next' at column 17, not column 5.
+modules/repository/index.js:19:1	Use spaces, not tabs.
+modules/repository/index.js:19:4	Expected '}' at column 13, not column 4.
+modules/repository/index.js:20:1	Use spaces, not tabs.
+modules/repository/index.js:20:5	Expected 'next' at column 17, not column 5.
+modules/repository/index.js:21:1	Use spaces, not tabs.
+modules/repository/index.js:21:4	Expected '}' at column 13, not column 4.
+modules/repository/index.js:22:1	Use spaces, not tabs.
+modules/repository/index.js:22:3	Expected '}' at column 9, not column 3.
+modules/repository/index.js:23:1	Use spaces, not tabs.
+modules/repository/index.js:23:2	Expected '}' at column 5, not column 2.
+modules/repository/index.js:24:1	Use spaces, not tabs.
+modules/repository/index.js:24:3	Expected 'next' at column 9, not column 3.
+modules/repository/index.js:25:1	Use spaces, not tabs.
+modules/repository/index.js:25:2	Expected '}' at column 5, not column 2.
+modules/repository/index.js:14:30	Unused 'req'.
+modules/repository/index.js:39:1	Use spaces, not tabs.
+modules/repository/index.js:39:2	Missing 'use strict' statement.
+modules/repository/index.js:40:1	Use spaces, not tabs.
+modules/repository/index.js:40:3	Expected 'loadLib' at column 9, not column 3.
+modules/repository/index.js:40:29	Expected exactly one space between 'function' and '('.
+modules/repository/index.js:41:1	Use spaces, not tabs.
+modules/repository/index.js:41:4	Expected 'if' at column 13, not column 4.
+modules/repository/index.js:42:1	Use spaces, not tabs.
+modules/repository/index.js:42:5	Expected 'next' at column 17, not column 5.
+modules/repository/index.js:43:1	Use spaces, not tabs.
+modules/repository/index.js:43:4	Expected '}' at column 13, not column 4.
+modules/repository/index.js:44:1	Use spaces, not tabs.
+modules/repository/index.js:44:5	Expected 'next' at column 17, not column 5.
+modules/repository/index.js:45:1	Use spaces, not tabs.
+modules/repository/index.js:45:4	Expected '}' at column 13, not column 4.
+modules/repository/index.js:46:1	Use spaces, not tabs.
+modules/repository/index.js:46:3	Expected '}' at column 9, not column 3.
+modules/repository/index.js:47:1	Use spaces, not tabs.
+modules/repository/index.js:47:2	Expected '}' at column 5, not column 2.
+modules/repository/index.js:48:1	Use spaces, not tabs.
+modules/repository/index.js:48:3	Expected 'next' at column 9, not column 3.
+modules/repository/index.js:49:1	Use spaces, not tabs.
+modules/repository/index.js:49:2	Expected '}' at column 5, not column 2.
+modules/repository/index.js:38:31	Unused 'req'.
+modules/repository/index.js:63:1	Use spaces, not tabs.
+modules/repository/index.js:63:2	Missing 'use strict' statement.
+modules/repository/index.js:63:2	Too many errors. (64% scanned).
+FAIL	modules/repository/layer/index.js (11)
+modules/repository/layer/index.js:17:33	Expected exactly one space between 'function' and '('.
+modules/repository/layer/index.js:18:5	Missing 'use strict' statement.
+modules/repository/layer/index.js:18:44	Expected exactly one space between 'function' and '('.
+modules/repository/layer/index.js:21:11	Unnecessary 'else' after disruption.
+modules/repository/layer/index.js:23:30	Expected '!==' and instead saw '!='.
+modules/repository/layer/index.js:27:30	Expected '!==' and instead saw '!='.
+modules/repository/layer/index.js:31:32	Expected '!==' and instead saw '!='.
+modules/repository/layer/index.js:36:50	Unexpected dangling '_' in '_id'.
+modules/repository/layer/index.js:36:72	Expected exactly one space between 'function' and '('.
+modules/repository/layer/index.js:37:34	Expected '{' and instead saw 'return'.
+modules/repository/layer/index.js:37:34	Stopping. (72% scanned).
+FAIL	modules/repository/layer/models/layer.js (25)
+modules/repository/layer/models/layer.js:13:1	Use spaces, not tabs.
+modules/repository/layer/models/layer.js:14:1	Use spaces, not tabs.
+modules/repository/layer/models/layer.js:14:2	Missing 'use strict' statement.
+modules/repository/layer/models/layer.js:15:1	Use spaces, not tabs.
+modules/repository/layer/models/layer.js:15:2	Expected 'this' at column 5, not column 2.
+modules/repository/layer/models/layer.js:16:1	Use spaces, not tabs.
+modules/repository/layer/models/layer.js:16:2	Expected 'this' at column 5, not column 2.
+modules/repository/layer/models/layer.js:17:1	Use spaces, not tabs.
+modules/repository/layer/models/layer.js:17:2	Expected 'this' at column 5, not column 2.
+modules/repository/layer/models/layer.js:29:35	Expected exactly one space between 'function' and '('.
+modules/repository/layer/models/layer.js:30:1	Use spaces, not tabs.
+modules/repository/layer/models/layer.js:30:2	Missing 'use strict' statement.
+modules/repository/layer/models/layer.js:30:7	Unexpected dangling '_' in '_id'.
+modules/repository/layer/models/layer.js:30:25	Unexpected dangling '_' in '_id'.
+modules/repository/layer/models/layer.js:31:1	Use spaces, not tabs.
+modules/repository/layer/models/layer.js:31:2	Expected 'this' at column 5, not column 2.
+modules/repository/layer/models/layer.js:32:1	Use spaces, not tabs.
+modules/repository/layer/models/layer.js:32:2	Expected 'this' at column 5, not column 2.
+modules/repository/layer/models/layer.js:33:1	Use spaces, not tabs.
+modules/repository/layer/models/layer.js:33:2	Expected 'this' at column 5, not column 2.
+modules/repository/layer/models/layer.js:34:1	Use spaces, not tabs.
+modules/repository/layer/models/layer.js:34:2	Expected 'this' at column 5, not column 2.
+modules/repository/layer/models/layer.js:42:40	Expected exactly one space between 'function' and '('.
+modules/repository/layer/models/layer.js:43:1	Use spaces, not tabs.
+modules/repository/layer/models/layer.js:43:2	Missing 'use strict' statement.
+FAIL	modules/repository/layer/services/layer.js (51)
+modules/repository/layer/services/layer.js:24:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:24:2	Missing 'use strict' statement.
+modules/repository/layer/services/layer.js:25:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:25:3	Expected 'callback' at column 9, not column 3.
+modules/repository/layer/services/layer.js:26:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:26:2	Expected '}' at column 5, not column 2.
+modules/repository/layer/services/layer.js:39:35	Unexpected dangling '_' in '_id'.
+modules/repository/layer/services/layer.js:40:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:40:2	Missing 'use strict' statement.
+modules/repository/layer/services/layer.js:40:26	Unexpected dangling '_' in '_id'.
+modules/repository/layer/services/layer.js:41:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:41:3	Expected 'callback' at column 9, not column 3.
+modules/repository/layer/services/layer.js:42:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:42:2	Expected '}' at column 5, not column 2.
+modules/repository/layer/services/layer.js:56:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:56:2	Missing 'use strict' statement.
+modules/repository/layer/services/layer.js:57:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:57:3	Expected 'lang' at column 9, not column 3.
+modules/repository/layer/services/layer.js:58:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:58:2	Expected '}' at column 5, not column 2.
+modules/repository/layer/services/layer.js:59:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:59:3	Expected 'callback' at column 9, not column 3.
+modules/repository/layer/services/layer.js:60:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:60:2	Expected '}' at column 5, not column 2.
+modules/repository/layer/services/layer.js:74:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:74:2	Missing 'use strict' statement.
+modules/repository/layer/services/layer.js:75:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:75:3	Expected 'name' at column 9, not column 3.
+modules/repository/layer/services/layer.js:76:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:76:2	Expected '}' at column 5, not column 2.
+modules/repository/layer/services/layer.js:77:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:77:3	Expected 'callback' at column 9, not column 3.
+modules/repository/layer/services/layer.js:78:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:78:2	Expected '}' at column 5, not column 2.
+modules/repository/layer/services/layer.js:94:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:94:2	Missing 'use strict' statement.
+modules/repository/layer/services/layer.js:95:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:95:3	Expected 'callback' at column 9, not column 3.
+modules/repository/layer/services/layer.js:96:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:96:2	Expected '}' at column 5, not column 2.
+modules/repository/layer/services/layer.js:111:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:111:2	Missing 'use strict' statement.
+modules/repository/layer/services/layer.js:112:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:112:3	Expected 'callback' at column 9, not column 3.
+modules/repository/layer/services/layer.js:113:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:113:2	Expected '}' at column 5, not column 2.
+modules/repository/layer/services/layer.js:127:37	Unexpected dangling '_' in '_id'.
+modules/repository/layer/services/layer.js:128:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:128:2	Missing 'use strict' statement.
+modules/repository/layer/services/layer.js:129:1	Use spaces, not tabs.
+modules/repository/layer/services/layer.js:129:1	Too many errors. (96% scanned).
+FAIL	modules/repository/libs/loader.js (4)
+modules/repository/libs/loader.js:32:31	Expected exactly one space between 'function' and '('.
+modules/repository/libs/loader.js:33:5	Missing 'use strict' statement.
+modules/repository/libs/loader.js:34:10	Move 'var' declarations to the top of the function.
+modules/repository/libs/loader.js:34:10	Stopping. (4% scanned).
+FAIL	modules/repository/platform/index.js (12)
+modules/repository/platform/index.js:18:35	Expected exactly one space between 'function' and '('.
+modules/repository/platform/index.js:19:5	Missing 'use strict' statement.
+modules/repository/platform/index.js:19:48	Expected exactly one space between 'function' and '('.
+modules/repository/platform/index.js:22:11	Unnecessary 'else' after disruption.
+modules/repository/platform/index.js:24:30	Expected '!==' and instead saw '!='.
+modules/repository/platform/index.js:28:30	Expected '!==' and instead saw '!='.
+modules/repository/platform/index.js:32:30	Expected '!==' and instead saw '!='.
+modules/repository/platform/index.js:36:32	Expected '!==' and instead saw '!='.
+modules/repository/platform/index.js:41:55	Unexpected dangling '_' in '_id'.
+modules/repository/platform/index.js:41:77	Expected exactly one space between 'function' and '('.
+modules/repository/platform/index.js:42:34	Expected '{' and instead saw 'return'.
+modules/repository/platform/index.js:42:34	Stopping. (75% scanned).
+FAIL	modules/repository/platform/models/platfrm.js (33)
+modules/repository/platform/models/platfrm.js:15:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:16:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:16:2	Missing 'use strict' statement.
+modules/repository/platform/models/platfrm.js:17:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:17:2	Expected 'this' at column 5, not column 2.
+modules/repository/platform/models/platfrm.js:18:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:18:2	Expected 'this' at column 5, not column 2.
+modules/repository/platform/models/platfrm.js:19:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:19:2	Expected 'this' at column 5, not column 2.
+modules/repository/platform/models/platfrm.js:20:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:20:2	Expected 'this' at column 5, not column 2.
+modules/repository/platform/models/platfrm.js:21:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:21:2	Expected 'this' at column 5, not column 2.
+modules/repository/platform/models/platfrm.js:33:37	Expected exactly one space between 'function' and '('.
+modules/repository/platform/models/platfrm.js:34:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:34:2	Missing 'use strict' statement.
+modules/repository/platform/models/platfrm.js:34:7	Unexpected dangling '_' in '_id'.
+modules/repository/platform/models/platfrm.js:34:27	Unexpected dangling '_' in '_id'.
+modules/repository/platform/models/platfrm.js:35:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:35:2	Expected 'this' at column 5, not column 2.
+modules/repository/platform/models/platfrm.js:36:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:36:2	Expected 'this' at column 5, not column 2.
+modules/repository/platform/models/platfrm.js:37:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:37:2	Expected 'this' at column 5, not column 2.
+modules/repository/platform/models/platfrm.js:38:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:38:2	Expected 'this' at column 5, not column 2.
+modules/repository/platform/models/platfrm.js:39:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:39:2	Expected 'this' at column 5, not column 2.
+modules/repository/platform/models/platfrm.js:40:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:40:2	Expected 'this' at column 5, not column 2.
+modules/repository/platform/models/platfrm.js:48:42	Expected exactly one space between 'function' and '('.
+modules/repository/platform/models/platfrm.js:49:1	Use spaces, not tabs.
+modules/repository/platform/models/platfrm.js:49:2	Missing 'use strict' statement.
+FAIL	modules/repository/platform/services/platfrm.js (51)
+modules/repository/platform/services/platfrm.js:24:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:24:2	Missing 'use strict' statement.
+modules/repository/platform/services/platfrm.js:25:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:25:3	Expected 'callback' at column 9, not column 3.
+modules/repository/platform/services/platfrm.js:26:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:26:2	Expected '}' at column 5, not column 2.
+modules/repository/platform/services/platfrm.js:39:37	Unexpected dangling '_' in '_id'.
+modules/repository/platform/services/platfrm.js:40:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:40:2	Missing 'use strict' statement.
+modules/repository/platform/services/platfrm.js:40:28	Unexpected dangling '_' in '_id'.
+modules/repository/platform/services/platfrm.js:41:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:41:3	Expected 'callback' at column 9, not column 3.
+modules/repository/platform/services/platfrm.js:42:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:42:2	Expected '}' at column 5, not column 2.
+modules/repository/platform/services/platfrm.js:56:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:56:2	Missing 'use strict' statement.
+modules/repository/platform/services/platfrm.js:57:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:57:3	Expected 'code' at column 9, not column 3.
+modules/repository/platform/services/platfrm.js:58:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:58:2	Expected '}' at column 5, not column 2.
+modules/repository/platform/services/platfrm.js:59:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:59:3	Expected 'callback' at column 9, not column 3.
+modules/repository/platform/services/platfrm.js:60:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:60:2	Expected '}' at column 5, not column 2.
+modules/repository/platform/services/platfrm.js:74:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:74:2	Missing 'use strict' statement.
+modules/repository/platform/services/platfrm.js:75:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:75:3	Expected 'name' at column 9, not column 3.
+modules/repository/platform/services/platfrm.js:76:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:76:2	Expected '}' at column 5, not column 2.
+modules/repository/platform/services/platfrm.js:77:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:77:3	Expected 'callback' at column 9, not column 3.
+modules/repository/platform/services/platfrm.js:78:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:78:2	Expected '}' at column 5, not column 2.
+modules/repository/platform/services/platfrm.js:94:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:94:2	Missing 'use strict' statement.
+modules/repository/platform/services/platfrm.js:95:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:95:3	Expected 'callback' at column 9, not column 3.
+modules/repository/platform/services/platfrm.js:96:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:96:2	Expected '}' at column 5, not column 2.
+modules/repository/platform/services/platfrm.js:111:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:111:2	Missing 'use strict' statement.
+modules/repository/platform/services/platfrm.js:112:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:112:3	Expected 'callback' at column 9, not column 3.
+modules/repository/platform/services/platfrm.js:113:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:113:2	Expected '}' at column 5, not column 2.
+modules/repository/platform/services/platfrm.js:127:39	Unexpected dangling '_' in '_id'.
+modules/repository/platform/services/platfrm.js:128:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:128:2	Missing 'use strict' statement.
+modules/repository/platform/services/platfrm.js:129:1	Use spaces, not tabs.
+modules/repository/platform/services/platfrm.js:129:1	Too many errors. (96% scanned).
+FAIL	modules/repository/superlayer/index.js (12)
+modules/repository/superlayer/index.js:19:35	Expected exactly one space between 'function' and '('.
+modules/repository/superlayer/index.js:20:5	Missing 'use strict' statement.
+modules/repository/superlayer/index.js:20:48	Expected exactly one space between 'function' and '('.
+modules/repository/superlayer/index.js:23:11	Unnecessary 'else' after disruption.
+modules/repository/superlayer/index.js:25:30	Expected '!==' and instead saw '!='.
+modules/repository/superlayer/index.js:29:30	Expected '!==' and instead saw '!='.
+modules/repository/superlayer/index.js:33:30	Expected '!==' and instead saw '!='.
+modules/repository/superlayer/index.js:37:32	Expected '!==' and instead saw '!='.
+modules/repository/superlayer/index.js:42:55	Unexpected dangling '_' in '_id'.
+modules/repository/superlayer/index.js:42:77	Expected exactly one space between 'function' and '('.
+modules/repository/superlayer/index.js:43:34	Expected '{' and instead saw 'return'.
+modules/repository/superlayer/index.js:43:34	Stopping. (75% scanned).
+FAIL	modules/repository/superlayer/models/suprlay.js (8)
+modules/repository/superlayer/models/suprlay.js:17:5	Missing 'use strict' statement.
+modules/repository/superlayer/models/suprlay.js:15:39	Unused 'deps'.
+modules/repository/superlayer/models/suprlay.js:35:37	Expected exactly one space between 'function' and '('.
+modules/repository/superlayer/models/suprlay.js:36:5	Missing 'use strict' statement.
+modules/repository/superlayer/models/suprlay.js:36:10	Unexpected dangling '_' in '_id'.
+modules/repository/superlayer/models/suprlay.js:36:30	Unexpected dangling '_' in '_id'.
+modules/repository/superlayer/models/suprlay.js:50:42	Expected exactly one space between 'function' and '('.
+modules/repository/superlayer/models/suprlay.js:51:5	Missing 'use strict' statement.
+FAIL	modules/repository/superlayer/services/suprlay.js (51)
+modules/repository/superlayer/services/suprlay.js:24:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:24:2	Missing 'use strict' statement.
+modules/repository/superlayer/services/suprlay.js:25:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:25:3	Expected 'callback' at column 9, not column 3.
+modules/repository/superlayer/services/suprlay.js:26:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:26:2	Expected '}' at column 5, not column 2.
+modules/repository/superlayer/services/suprlay.js:39:37	Unexpected dangling '_' in '_id'.
+modules/repository/superlayer/services/suprlay.js:40:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:40:2	Missing 'use strict' statement.
+modules/repository/superlayer/services/suprlay.js:40:28	Unexpected dangling '_' in '_id'.
+modules/repository/superlayer/services/suprlay.js:41:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:41:3	Expected 'callback' at column 9, not column 3.
+modules/repository/superlayer/services/suprlay.js:42:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:42:2	Expected '}' at column 5, not column 2.
+modules/repository/superlayer/services/suprlay.js:56:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:56:2	Missing 'use strict' statement.
+modules/repository/superlayer/services/suprlay.js:57:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:57:3	Expected 'code' at column 9, not column 3.
+modules/repository/superlayer/services/suprlay.js:58:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:58:2	Expected '}' at column 5, not column 2.
+modules/repository/superlayer/services/suprlay.js:59:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:59:3	Expected 'callback' at column 9, not column 3.
+modules/repository/superlayer/services/suprlay.js:60:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:60:2	Expected '}' at column 5, not column 2.
+modules/repository/superlayer/services/suprlay.js:74:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:74:2	Missing 'use strict' statement.
+modules/repository/superlayer/services/suprlay.js:75:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:75:3	Expected 'name' at column 9, not column 3.
+modules/repository/superlayer/services/suprlay.js:76:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:76:2	Expected '}' at column 5, not column 2.
+modules/repository/superlayer/services/suprlay.js:77:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:77:3	Expected 'callback' at column 9, not column 3.
+modules/repository/superlayer/services/suprlay.js:78:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:78:2	Expected '}' at column 5, not column 2.
+modules/repository/superlayer/services/suprlay.js:94:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:94:2	Missing 'use strict' statement.
+modules/repository/superlayer/services/suprlay.js:95:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:95:3	Expected 'callback' at column 9, not column 3.
+modules/repository/superlayer/services/suprlay.js:96:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:96:2	Expected '}' at column 5, not column 2.
+modules/repository/superlayer/services/suprlay.js:111:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:111:2	Missing 'use strict' statement.
+modules/repository/superlayer/services/suprlay.js:112:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:112:3	Expected 'callback' at column 9, not column 3.
+modules/repository/superlayer/services/suprlay.js:113:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:113:2	Expected '}' at column 5, not column 2.
+modules/repository/superlayer/services/suprlay.js:127:39	Unexpected dangling '_' in '_id'.
+modules/repository/superlayer/services/suprlay.js:128:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:128:2	Missing 'use strict' statement.
+modules/repository/superlayer/services/suprlay.js:129:1	Use spaces, not tabs.
+modules/repository/superlayer/services/suprlay.js:129:1	Too many errors. (96% scanned).
+FAIL	modules/repository/team/models/team.js (7)
+modules/repository/team/models/team.js:13:5	Missing 'use strict' statement.
+modules/repository/team/models/team.js:28:34	Expected exactly one space between 'function' and '('.
+modules/repository/team/models/team.js:29:5	Missing 'use strict' statement.
+modules/repository/team/models/team.js:29:10	Unexpected dangling '_' in '_id'.
+modules/repository/team/models/team.js:29:27	Unexpected dangling '_' in '_id'.
+modules/repository/team/models/team.js:41:39	Expected exactly one space between 'function' and '('.
+modules/repository/team/models/team.js:42:5	Missing 'use strict' statement.
+FAIL	modules/repository/team/services/team.js (39)
+modules/repository/team/services/team.js:25:30	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:26:5	Missing 'use strict' statement.
+modules/repository/team/services/team.js:26:44	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:41:32	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:41:33	Unexpected dangling '_' in '_id'.
+modules/repository/team/services/team.js:42:5	Missing 'use strict' statement.
+modules/repository/team/services/team.js:42:39	Unexpected dangling '_' in '_id'.
+modules/repository/team/services/team.js:42:60	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:57:34	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:58:5	Missing 'use strict' statement.
+modules/repository/team/services/team.js:60:24	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:77:29	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:78:5	Missing 'use strict' statement.
+modules/repository/team/services/team.js:78:75	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:94:32	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:95:5	Missing 'use strict' statement.
+modules/repository/team/services/team.js:95:71	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:111:34	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:111:35	Unexpected dangling '_' in '_id'.
+modules/repository/team/services/team.js:112:5	Missing 'use strict' statement.
+modules/repository/team/services/team.js:114:9	Unexpected dangling '_' in '_id'.
+modules/repository/team/services/team.js:114:14	Unexpected dangling '_' in '_id'.
+modules/repository/team/services/team.js:115:25	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:131:37	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:131:38	Unexpected dangling '_' in '_id'.
+modules/repository/team/services/team.js:131:43	Unexpected dangling '_' in '_dev_id'.
+modules/repository/team/services/team.js:132:5	Missing 'use strict' statement.
+modules/repository/team/services/team.js:133:9	Unexpected dangling '_' in '_id'.
+modules/repository/team/services/team.js:133:14	Unexpected dangling '_' in '_id'.
+modules/repository/team/services/team.js:134:16	Unexpected dangling '_' in '_dev_id'.
+modules/repository/team/services/team.js:136:16	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:152:37	Expected exactly one space between 'function' and '('.
+modules/repository/team/services/team.js:152:38	Unexpected dangling '_' in '_id'.
+modules/repository/team/services/team.js:152:43	Unexpected dangling '_' in '_dev_id'.
+modules/repository/team/services/team.js:153:5	Missing 'use strict' statement.
+modules/repository/team/services/team.js:154:9	Unexpected dangling '_' in '_id'.
+modules/repository/team/services/team.js:154:14	Unexpected dangling '_' in '_id'.
+modules/repository/team/services/team.js:155:16	Unexpected dangling '_' in '_dev_id'.
+modules/repository/team/services/team.js:157:16	Expected exactly one space between 'function' and '('.
+FAIL	routes/index.js (4)
+routes/index.js:5:25	Expected exactly one space between 'function' and '('.
+routes/index.js:6:3	Missing 'use strict' statement.
+routes/index.js:5:26	Unused 'req'.
+routes/index.js:5:36	Unused 'next'.
+FAIL	routes/repo.js (5)
+routes/repo.js:11:30	Expected exactly one space between 'function' and '('.
+routes/repo.js:12:5	Missing 'use strict' statement.
+routes/repo.js:12:34	Expected exactly one space between 'function' and '('.
+routes/repo.js:13:20	Expected '{' and instead saw 'res'.
+routes/repo.js:13:20	Stopping. (22% scanned).
+FAIL	routes/users.js (4)
+routes/users.js:5:25	Expected exactly one space between 'function' and '('.
+routes/users.js:6:3	Missing 'use strict' statement.
+routes/users.js:5:26	Unused 'req'.
+routes/users.js:5:36	Unused 'next'.
+
+# JSLint failed, 770 violations in 31.  36 files scanned.
