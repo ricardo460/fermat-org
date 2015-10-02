@@ -186,7 +186,7 @@ function Helper() {
           if (testWidth > maxWidth && n > 0) {
             context.fillText(line, x, y);
             line = words[n] + ' ';
-            y -= lineHeight;
+            y += lineHeight;
           }
           else {
             line = testLine;
@@ -194,6 +194,29 @@ function Helper() {
         }
         context.fillText(line, x, y);
 
-        return y - lineHeight;
+        return y + lineHeight;
+    };
+    
+    this.searchElement = function(elementFullName) {
+        
+        if(typeof elementFullName !== 'string') return -1;
+        
+        var group,
+            components = elementFullName.split('/');
+        
+        if(components.length === 3) {
+        
+            for(var i = 0, l = table.length; i < l; i++) {
+
+                group = table[i].group || window.layers[table[i].layer].super_layer;
+
+                if(group.toLowerCase() === components[0].toLowerCase() &&
+                   table[i].layer.toLowerCase() === components[1].toLowerCase() &&
+                   table[i].name.toLowerCase() === components[2].toLowerCase())
+                    return i;
+            }
+        }
+        
+        return -1;
     };
 }

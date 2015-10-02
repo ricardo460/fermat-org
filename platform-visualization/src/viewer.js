@@ -350,6 +350,17 @@ function onClick(e) {
     }
 }
 
+function showFlow(id) {
+    
+    var tile = objects[id];
+    
+    camera.enable();
+    camera.move(tile.position.x, tile.position.y, tile.position.z + window.TILE_DIMENSION.width * 2);
+    
+    var flow = new ActionFlow();
+    flow.draw(tile.position.x, tile.position.y);
+}
+
 function animate() {
 
     requestAnimationFrame(animate);

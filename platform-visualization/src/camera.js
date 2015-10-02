@@ -233,6 +233,17 @@ function Camera(position, renderer, renderFunc) {
         return raycaster.intersectObjects(elements);
     };
     
+    this.move = function(x, y, z, duration) {
+        
+        var _duration = duration || 2000;
+        
+        new TWEEN.Tween(camera.position)
+        .to({x : x, y : y, z : z}, _duration)
+        .easing(TWEEN.Easing.Exponential.InOut)
+        .start();
+        
+    };
+    
     // Events
     window.addEventListener( 'resize', this.onWindowResize, false );
     window.addEventListener( 'keydown', this.onKeyDown, false );

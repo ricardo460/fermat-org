@@ -1,7 +1,7 @@
 {
+	"eqnull": true,
 	"browser": true,
 	"jquery": true,
-    "eqnull" : true,
     "globals": {
        "$" : true,
        "THREE" : true,
@@ -28,6 +28,7 @@
         "Timeline" : false,
         "console" : false,
         "window" : true,
-        "testData" : true
+        "testData" : true,
+        "ActionFlow" : true
     }
 }
