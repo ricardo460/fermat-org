@@ -394,7 +394,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             i, l;
         
         helper.hide('stackContainer', _duration / 2);
-        
+        helper.hide('headContainer', _duration / 2);
         //This should be moved to be called by viewer.js when we no longer use vis for this
         setTimeout(function() {    
             viewManager.transform(viewManager.targets.table); 
@@ -419,7 +419,54 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         
         self.show(_duration);
     };
-    
+    /**
+     * created by Ricardo Delgado
+     * Screen shows the head
+     * @param {Number} duration Milliseconds of fading
+     */
+    this.transformHead = function( duration ) {
+        var _duration = duration || 1000;
+        var container = document.createElement('div');
+        container.id = 'headContainer';
+        container.style.position = 'absolute';
+        container.style.opacity = 0;
+        container.style.width = '100%';
+        container.style.height = '100%';
+        container.style.zIndex = 5;
+        
+        /*var imagen = document.createElement("img");
+        imagen.id = 'iamgen'; 
+        imagen.src = "images/fermat_logo.png";
+        imagen.style.top = "50%";
+        imagen.style.left = "50%";
+        container.appendChild(imagen);*/
+        document.getElementById('container').appendChild(container);
+
+        viewManager.letAlone();
+        camera.resetPosition();
+        setTimeout(function() {
+            for(i = 0, l = objects.length; i < l; i++) {
+
+                new TWEEN.Tween(objects[i].position)
+                .to({
+                    x : positions.stack[i].position.x,
+                    y : positions.stack[i].position.y,
+                    z : positions.stack[i].position.z
+                }, _duration)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .start();
+            }
+
+           new TWEEN.Tween(this)
+                .to({}, _duration * 2)
+                .onUpdate(render)
+                .start();
+
+            self.hide(_duration);
+            $(container).fadeTo(_duration, 1);
+            
+        }, _duration);
+    };
     /**
      * Shows the headers as a fade
      * @param {Number} duration Milliseconds of fading
@@ -1081,7 +1128,8 @@ var table = [],
     renderer,
     objects = [],
     headers = null,
-    actualView = 'stack';
+    actualView = 'start',
+    stats = null;
 
 //Global constants
 var TILE_DIMENSION = {
@@ -1115,12 +1163,13 @@ function init() {
         renderer,
         render);
 
-
-    //
+    // uncomment for testing
+    //create_stats();
 
     $('#backButton').click(function() {
         changeView(viewManager.targets.table);
     });
+
     $('#legendButton').click(function() {
 
         var legend = document.getElementById('legend');
@@ -1133,18 +1182,29 @@ function init() {
             $(legend).fadeTo(1000, 1);
         }
     });
-    $('#tableViewButton').click(function() {
-        if(actualView === 'stack')
+
+    $('#browserRightButton').click(function() {
+       if ( actualView === 'start' )
             goToView('table');
-        else
+       else if ( actualView === 'table' )
             goToView('stack');
     });
+    
+    $('#browserLeftButton').click(function() {
+       if ( actualView === 'start' ) ;
+       //     goToView('stack');
+       else if ( actualView === 'table' )
+            goToView('start');
+       else if ( actualView === 'stack' )
+            goToView('table');
+    });
+
     $('#container').click(onClick);
 
     //Disabled Menu
     //initMenu();
 
-    setTimeout(function() {goToView('table'); }, 500);
+    setTimeout(function() {goToView('start'); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
@@ -1153,50 +1213,118 @@ function init() {
 }
 
 /**
+ * created by Miguel Celedon
+ * modified by Ricardo Delgado
  * Changes the actual state of the viewer
  * @param {String} name The name of the target state
  */
-function goToView(name) {
+function goToView ( current ) {
     
-    var tableButton;
-    
-    actualView = name;
-    
-    switch(name) {
+    actualView = current;
+
+    switch(current) {
         case 'table':
-            
-            tableButton = document.getElementById('tableViewButton');
-            var legendBtn = document.getElementById('legendButton');
-            
+
+            modifyButtonLegend(1);
+
             headers.transformTable();
-            legendBtn.style.display = 'block';
-            $(legendBtn).fadeTo(1000, 1);
             
-            $(tableButton).fadeTo(1000, 0, function(){ 
-                tableButton.style.display = 'block';
-                tableButton.innerHTML = 'View Dependencies';
-            });
-            $(tableButton).fadeTo(1000, 1);
+            modifyButtonRight( 'View Dependencies', 'none');
+           
+            modifyButtonLeft( 'Start', 'block');
+
             
+            break;
+        case 'start':
+
+           headers.transformHead();  
+
+           modifyButtonRight( 'View Table', 'block');
+
+           modifyButtonLeft( 'Book', 'none' );
+
+           modifyButtonBack(0);
+            
+           modifyButtonLegend(0);
+
             break;
         case 'stack':
             
-            tableButton = document.getElementById('tableViewButton');
-            
             headers.transformStack();
+
+            modifyButtonRight( '', 'none' );
+           
+            modifyButtonLeft( 'View Table', 'block' );
+
+            modifyButtonBack(0);
             
-            $(tableButton).fadeTo(1000, 0, function(){ 
-                tableButton.style.display = 'block';
-                tableButton.innerHTML = 'View Table';
-            });
-            $(tableButton).fadeTo(1000, 1);
+            modifyButtonLegend(0);
             
             break;
+
         default:
-            actualView = 'stack';
+            actualView = 'start';
             break;
     }
 }
+/**
+ * created by Ricardo Delgado
+ * editing text , animation and control button state
+ * @param {String} label, The button name.
+ * @param {String} view, The view button.
+ * @param {int} start, button to start the animation.
+ * @param {int} end, button to end the animation.
+ */
+function modifyButtonRight ( label, view ) {
+    
+var browserButton = document.getElementById('browserRightButton');
+    
+    browserButton.style.display=view;
+    browserButton.innerHTML = label;
+
+
+}
+/**
+ * Created by Ricardo Delgado
+ * Editing text , animation and control button state
+ * @param {String} label, The button name.
+ * @param {String} view, The view button.
+ * @param {int} start, button to start the animation.
+ * @param {int} end, button to end the animation.
+ */
+function modifyButtonLeft ( label, view ) {
+    
+var browserButton = document.getElementById('browserLeftButton');
+
+    browserButton.style.display = view;
+    browserButton.innerHTML = label;
+
+
+}
+
+/**
+ * Created by Ricardo Delgado
+ */
+function modifyButtonBack ( valor ) {
+    
+var browserButton = document.getElementById('backButton');
+
+ $(browserButton).fadeTo(1000, valor, function() {
+                $(browserButton).show();
+            });
+}
+/**
+ * Created by Ricardo Delgado
+ */
+function modifyButtonLegend ( valor ) {
+    
+var browserButton = document.getElementById('legendButton');
+
+ $(browserButton).fadeTo(1000, valor, function() {
+                $(browserButton).show();
+            });
+}
+
 
 function initMenu() {
 
@@ -1251,9 +1379,7 @@ function onElementClick(id) {
         camera.setFocus(id, 2000);
         setTimeout(function() {
             camera.setFocus(id, 1000);
-            $('#backButton').fadeTo(1000, 1, function() {
-                $('#backButton').show();
-            });
+            modifyButtonBack(1);
         }, 3000);
         camera.disable();
 
@@ -1433,7 +1559,22 @@ function animate() {
     TWEEN.update();
 
     camera.update();
+
+    if ( stats ) stats.update();
 }
+
+function create_stats(){ 
+
+    stats = new Stats();
+    stats.setMode(0);
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.left    = '0px';
+    stats.domElement.style.top   = '0px';
+    stats.domElement.style.display  = 'block';
+    var contai = document.getElementById("container");
+    contai.appendChild(stats.domElement);
+
+    }
 
 function render() {
 
