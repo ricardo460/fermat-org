@@ -80,7 +80,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             i, l;
         
         helper.hide('stackContainer', _duration / 2);
-        
+        helper.hide('headContainer', _duration / 2);
         //This should be moved to be called by viewer.js when we no longer use vis for this
         setTimeout(function() {    
             viewManager.transform(viewManager.targets.table); 
@@ -105,7 +105,54 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         
         self.show(_duration);
     };
-    
+    /**
+     * created by Ricardo Delgado
+     * Screen shows the head
+     * @param {Number} duration Milliseconds of fading
+     */
+    this.transformHead = function( duration ) {
+        var _duration = duration || 1000;
+        var container = document.createElement('div');
+        container.id = 'headContainer';
+        container.style.position = 'absolute';
+        container.style.opacity = 0;
+        container.style.width = '100%';
+        container.style.height = '100%';
+        container.style.zIndex = 5;
+        
+        /*var imagen = document.createElement("img");
+        imagen.id = 'iamgen'; 
+        imagen.src = "images/fermat_logo.png";
+        imagen.style.top = "50%";
+        imagen.style.left = "50%";
+        container.appendChild(imagen);*/
+        document.getElementById('container').appendChild(container);
+
+        viewManager.letAlone();
+        camera.resetPosition();
+        setTimeout(function() {
+            for(i = 0, l = objects.length; i < l; i++) {
+
+                new TWEEN.Tween(objects[i].position)
+                .to({
+                    x : positions.stack[i].position.x,
+                    y : positions.stack[i].position.y,
+                    z : positions.stack[i].position.z
+                }, _duration)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .start();
+            }
+
+           new TWEEN.Tween(this)
+                .to({}, _duration * 2)
+                .onUpdate(render)
+                .start();
+
+            self.hide(_duration);
+            $(container).fadeTo(_duration, 1);
+            
+        }, _duration);
+    };
     /**
      * Shows the headers as a fade
      * @param {Number} duration Milliseconds of fading
