@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var apicache = require('apicache').options({ debug: true }).middleware;
 var repMod = require('../modules/repository');
 
 /**
@@ -21,7 +22,7 @@ router.put('/comps', function(req, res, next) {
  * @route
  * 
  */
-router.get('/comps', function(req, res, next) {
+router.get('/comps', apicache('30 minutes'), function(req, res, next) {
     repMod.getComps(req, function(error, result) {
         if (error) res.status(200).send(error);
         else res.status(200).send(result);
