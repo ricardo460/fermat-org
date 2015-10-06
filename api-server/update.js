@@ -5,6 +5,8 @@ var _INTERVAL = 1200000;
 
 var loop = 0;
 
+winston.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000)/60 );
+
 setInterval(function() {
     var mod = loop % 3;
     loop++;

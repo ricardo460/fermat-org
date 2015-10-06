@@ -726,7 +726,6 @@ var updateComps = function(callback) {
             var loopComps = function(i) {
                 if (i < res_comps.length) {
                     var _comp = res_comps[i];
-                    console.dir(_comp);
                     if (_comp.code_level != 'concept') {
                         getContent(_comp.repo_dir, function(err_dir, res_dir) {
                             if (err_dir) {
