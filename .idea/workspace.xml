@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e62016d0-09ef-48b8-a76d-f19d1322f092" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platform-visualization/src/getData.js" afterPath="$PROJECT_DIR$/platform-visualization/src/getData.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/app.js" afterPath="$PROJECT_DIR$/api-server/app.js" />
     </list>
     <list id="50c15a60-f7d8-476c-91ee-1bad739aa365" name="New changelist" comment="" />
     <ignored path="fermat-org.iws" />
@@ -37,7 +37,7 @@
       <file leaf-file-name="getData.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/platform-visualization/src/getData.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.037383176">
+            <state vertical-scroll-proportion="0.07476635">
               <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
               <folding />
             </state>
@@ -454,7 +454,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/platform-visualization/src/getData.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.037383176">
+        <state vertical-scroll-proportion="0.07476635">
           <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
           <folding />
         </state>
