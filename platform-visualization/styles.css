@@ -169,10 +169,15 @@ button:active {
     transform: translate(-50%, -50%);
 }
 
-#tableViewButton {
+#browserRightButton {
+    position : fixed;
+    right : 10px;
+    z-index: 10;
+}
+#browserLeftButton {
     position : fixed;
     bottom : 10px;
-    right : 10px;
+    left : 10px;
     z-index: 10;
 }
 

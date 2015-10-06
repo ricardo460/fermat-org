@@ -224,6 +224,12 @@ function Camera(position, renderer, renderFunc) {
         return focus;
     };
     
+    /**
+     * Casts a ray between the camera to the target
+     * @param   {Object} target   Vector2D target
+     * @param   {Array}  elements Array of elements expected to collide
+     * @returns {Array}  All intercepted members of elements
+     */
     this.rayCast = function(target, elements) {
         
         var raycaster = new THREE.Raycaster();
@@ -233,6 +239,13 @@ function Camera(position, renderer, renderFunc) {
         return raycaster.intersectObjects(elements);
     };
     
+    /**
+     * Moves the camera to a position
+     * @param {Number} x               X coordinate
+     * @param {Number} y               Y coordinate
+     * @param {Number} z               Z coordinate
+     * @param {Number} [duration=2000] Milliseconds of the animation
+     */
     this.move = function(x, y, z, duration) {
         
         var _duration = duration || 2000;
@@ -240,6 +253,7 @@ function Camera(position, renderer, renderFunc) {
         new TWEEN.Tween(camera.position)
         .to({x : x, y : y, z : z}, _duration)
         .easing(TWEEN.Easing.Exponential.InOut)
+        .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
         .start();
         
     };

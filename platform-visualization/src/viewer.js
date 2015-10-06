@@ -5,7 +5,8 @@ var table = [],
     renderer,
     objects = [],
     headers = null,
-    actualView = 'stack';
+    actualView = 'stack',
+    actualFlow = null;
 
 //Global constants
 var TILE_DIMENSION = {
@@ -158,6 +159,11 @@ function changeView(targets) {
 
     camera.enable();
     camera.loseFocus();
+    
+    if(actualFlow) {
+        actualFlow.delete();
+        actualFlow = null;
+    }
 
     if (targets != null)
         viewManager.transform(targets, 2000);
@@ -352,13 +358,17 @@ function onClick(e) {
 
 function showFlow(id) {
     
+    //Should receive the id and the flow's name
+    
     var tile = objects[id];
     
     camera.enable();
-    camera.move(tile.position.x, tile.position.y, tile.position.z + window.TILE_DIMENSION.width * 2);
+    camera.move(tile.position.x, tile.position.y, tile.position.z + window.TILE_DIMENSION.width * 5);
     
-    var flow = new ActionFlow();
-    flow.draw(tile.position.x, tile.position.y);
+    setTimeout(function() {
+        actualFlow = new ActionFlow();
+        actualFlow.draw(tile.position.x, tile.position.y);
+    }, 1500);
 }
 
 function animate() {

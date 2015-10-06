@@ -14,12 +14,14 @@
 		<script src="common/CSS3DRenderer.js"></script>
         <script src="common/jquery-2.1.4.min.js"></script>
         <script src="common/vis.min.js"></script>
+        <script src="common/stats.min.js"></script>
         
         <img src="images/fermat_logo.png" id="splash"/>
         
         <button id="backButton" class="backButton" style="opacity : 0; display : none;">BACK</button>
         <button id="legendButton" style="opacity: 0; display : none;"> ? </button>
-        <button id="tableViewButton" style="opacity : 0; display : none;">View Table</button>
+        <button id="browserRightButton" style="opacity : 0; display : none;">View Table</button>
+        <button id="browserLeftButton" style="opacity : 0; display : none;">View Table</button>
         
         <div id="legend" class="legend" style="opacity : 0; display : none;">
             <table>

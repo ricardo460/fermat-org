@@ -343,4 +343,4 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     
     initialize();
     //=========================================================
-}
+☺}

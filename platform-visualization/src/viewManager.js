@@ -676,7 +676,7 @@ function ViewManager() {
         
         duration = duration || 2000;
         
-        TWEEN.removeAll();
+        //TWEEN.removeAll();
 
         if(goal) {
             this.lastTargets = goal;
