@@ -41,11 +41,15 @@ exports.insOrUpdLayer = function(name, lang, order, callback) {
                 return callback(null, res_lay);
             }
         } else {
-            var layer = new LayerMdl(name, lang, order);
-            layerSrv.insertLayer(layer, function(err_ins, res_ins) {
-                if (err_ins) return callback(err_ins, null);
-                else return callback(null, res_ins);
-            });
+            if (name && lang) {
+                var layer = new LayerMdl(name, lang, order);
+                layerSrv.insertLayer(layer, function(err_ins, res_ins) {
+                    if (err_ins) return callback(err_ins, null);
+                    else return callback(null, res_ins);
+                });
+            } else {
+                return callback(null, null);
+            }
         }
     });
 };

@@ -9,9 +9,9 @@ function getData() {
         method: "GET"
     }).success(
         function(lists) {
-            console.dir(lists);
-            var l = JSON.parse(lists);
-            viewManager.fillTable(l);
+            //console.dir(lists);
+            //var l = JSON.parse(lists);
+            viewManager.fillTable(lists);
             $('#splash').fadeTo(2000, 0, function() {
                 $('#splash').remove();
                 init();
