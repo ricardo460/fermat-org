@@ -17,53 +17,7 @@ function PlatfrmMdl(code, name, logo, deps, order) {
 	this.name = name;
 	this.logo = logo;
 	this.deps = deps;
-	switch (code) {
-        case 'COR':
-            this.order = 0;
-            break;
-        case 'PIP':
-            this.order = 1;
-            break;
-        case 'WPD':
-            this.order = 2;
-            break;
-        case 'CCP':
-            this.order = 3;
-            break;
-        case 'CCM':
-            this.order = 4;
-            break;
-        case 'BNP':
-            this.order = 5;
-            break;
-        case 'SHP':
-            this.order = 6;
-            break;
-        case 'DAP':
-            this.order = 7;
-            break;
-        case 'MKT':
-            this.order = 8;
-            break;
-        case 'CSH':
-            this.order = 9;
-            break;
-        case 'BNK':
-            this.order = 10;
-            break;
-        case 'CBP':
-            this.order = 11;
-            break;
-        case 'CDN':
-            this.order = 12;
-            break;
-        case 'DPN':
-            this.order = 13;
-            break;
-        default:
-            this.order = -1;
-            break;
-    }
+	this.order = order;
 	this.upd_at = new mongoose.Types.ObjectId();
 }
 
