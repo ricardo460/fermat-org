@@ -25,6 +25,15 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(function(req, res, next) {
+    //res.header("Content-Type",'application/json');
+    res.header("Access-Control-Allow-Origin", '*');
+    res.header("Access-Control-Allow-Methods", 'GET, POST, PUT');
+    res.header("Access-Control-Allow-Headers", 'X-Requested-With, Content-Type');
+    //res.header("Access-Control-Allow-Credentials", true);
+    next();
+});
+
 app.use('/', routes);
 //app.use('/users', users);
 app.use('/repo', repo);
@@ -34,20 +43,6 @@ app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
-});
-
-app.use(function(req, res, next) {
-    res.setHeader("Content-Type",'application/json');
-    res.setHeader("Access-Control-Allow-Origin", '*');
-    res.setHeader("Access-Control-Allow-Methods", 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader("Access-Control-Allow-Headers", 'X-Requested-With, content-type');
-    res.setHeader("Access-Control-Allow-Credentials", true);
-    res.header("Content-Type",'application/json');
-    res.header("Access-Control-Allow-Origin", '*');
-    res.header("Access-Control-Allow-Methods", 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.header("Access-Control-Allow-Headers", 'X-Requested-With, Content-Type');
-    res.header("Access-Control-Allow-Credentials", true);
-    next();
 });
 
 // error handlers
