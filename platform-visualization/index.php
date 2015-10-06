@@ -20,8 +20,8 @@
         
         <button id="backButton" class="backButton" style="opacity : 0; display : none;">BACK</button>
         <button id="legendButton" style="opacity: 0; display : none;"> ? </button>
-        <button id="browserRightButton" style="opacity : 0; display : none;">View Table</button>
-        <button id="browserLeftButton" style="opacity : 0; display : none;">View Table</button>
+        <button id="browserRightButton" style="display : none;"></button>
+        <button id="browserLeftButton" style="display : none;"></button>
         
         <div id="legend" class="legend" style="opacity : 0; display : none;">
             <table>

@@ -1,419 +1,3 @@
-var testFlow = 
-{
-    name : 'Nombre que describe al flujo',
-    description : 'Descripcion del proceso',
-    steps : [
-        {
-            title : 'Paso uno',
-            desc : 'Paso inicial del flujo',
-            element : 'cor/core/fermat core',               // Grupo/Layer/Nombre
-            next : [1]                                      // Una lista de indices del mismo array
-        },
-        {
-            title : 'Paso dos',
-            desc : 'Este le sigue al paso uno\ncon salto de línea',
-            element : 'ccm/reference wallet/discount wallet',
-            next : [2]
-        },
-        {
-            title : 'Paso tres',
-            desc : 'Este se bifurca en dos pasos',
-            element : 'bnp/reference wallet/bank notes',
-            next : [3, 1]
-        },
-        {
-            title : 'Paso tres punto a',
-            desc : 'Este es uno de los que sigue del 3',
-            element : 'dap/actor/asset issuer',
-            next : []
-        }
-    ]
-};
-
-var processes = [{
-    name: 'Generacion Asset en Wallet Factory',
-    description: '',
-    steps: [{
-        type: 'start',
-        title: 'Bitcoin Wallet',
-        desc: 'long getAvailableBalance()\nObtiene el balance actual de los bitcoins para habilitar el boton de publicar calculando el monto total de los bitcoins a necesitar para enviar los assets\nMonto Total: (Cantidad de Assets * Valor Unitario) + fee',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer: 'sub app',
-        comp: 'wallet factory',
-        next: [1]
-    }, {
-        type: 'activity',
-        title: 'Asset Issuing Transaction',
-        desc: 'void issueAsset(DigitalAsset, amount, blockchainNetworkType)\nInicia la transacción de IssueAsset pasando el DigitalAsset y la cantidad de assets a generar',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer: 'sub app',
-        comp: 'wallet factory',
-        next: [2]
-    }, {
-        type: 'activity',
-        title: 'Bitcoin Wallet',
-        desc: 'long getAvailableBalance()\nObtiene el balance actual de los bitcoins para habilitar el boton de publicar calculando el monto total de los bitcoins a necesitar para enviar los assets\nMonto Total: (Cantidad de Assets * Valor Unitario) + fee',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [3]
-    }, {
-        type: 'activity',
-        title: 'Asset CryptoVault',
-        desc: 'CryptoAddress getNewAssetVaultCryptoAddress(BlockchainAddress)\nLa asset vault entrega una direccio bitcoin que es registrada en el Address Book. Esta direccion es la Genesis Address',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [4, 5]
-    }, {
-        type: 'preparation',
-        title: 'Address Book',
-        desc: 'NA\nRegistra la GenesisAddress en el address book para detectar luego el ingreso del bitcoin',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer: null,
-        comp: 'Asset CryptoVault',
-        next: []
-    }, {
-        type: 'activity',
-        title: 'Asset Issuing Transaction',
-        desc: 'private bool isDigitalAssetComplete()\nMe aseguro que el DigitalAsset esta completo antes de generar el hash del mismo y formar el objeto DigitalAssetMetadata',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [6]
-    }, {
-        type: 'activity',
-        title: 'Outgoing Intra Actor',
-        desc: 'public String sendCrypto(String walletPublicKey, CryptoAddress destinationAddress, String op_Return, long cryptoAmount, String description, String senderPublicKey, String receptorPublicKey, Actors senderActorType, Actors receptorActorType, ReferenceWallet referenceWallet)\nHago el envio de los bitcoins a traves del Outgoing Intra Actor Transaction. El mismo va a generar una transaccion bitcoin y me va a devolver el hash de la misma. Este hash es la genesis transaction que debo ingresar en el DigitalAssetMetadata',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [7]
-    }, {
-        type: 'activity',
-        title: '',
-        desc: 'Genero y persisto el objeto DigitalAssetMetadata, que forma la "mitad" del asset',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [3, 8]
-    }, {
-        type: 'preparation',
-        title: 'cloud',
-        desc: '',
-        suprlay: null,
-        platfrm: null,
-        layer: null,
-        comp: null,
-        next: [9]
-    }, {
-        type: 'activity',
-        title: 'Incoming Crypto',
-        desc: 'NA\nDetecta la llegada de Bitcoins a la GenesisAddress y dispara el evento de IncomingCryptoDigitalAssetOnCryptoNetwork',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [10]
-    }, {
-        type: 'activity',
-        title: 'Issuer AssetWallet',
-        desc: 'bookCredit(DigitalAssetMetadata)\nGenera un credito en el book balance de la Issuer Asset Wallet y persiste el DigitalAssetMetadata en la Issuer Wallet',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [11]
-    }, {
-        type: 'activity',
-        title: 'Incoming Crypto',
-        desc: 'NA\nDetecta la llegada de Bitcoins a la GenesisAddress y dispara el evento de IncomingCryptoDigitalAssetOnBlockChain',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [12]
-    }, {
-        type: 'end',
-        title: 'Issuer AssetWallet',
-        desc: 'availableCredit(DigitalAssetMetadata)\nGenera un credito en el available balance de la Issuer Asset Wallet',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: []
-    }]
-}];
-
-/**
- * Represents a flow of actions related to some tiles
- * @param   {Object}  flow The objects that describes the flow including a set of steps
- */
-function ActionFlow(flow) {
-    
-    this.flow = flow || processes[0] || [];
-    var self = this;
-    var objects = [];
-    
-    var i, l;
-    
-    for(i = 0, l = self.flow.steps.length; i < l; i++) {
-        
-        var element = self.flow.steps[i];
-        
-        self.flow.steps[i].element = helper.searchElement(
-            (element.platfrm || element.suprlay) + '/' + element.layer + '/' + element.comp
-        );
-    }
-    
-    /**
-     * Draws the flow
-     * @param   {Number}  initialX Position where to start
-     * @param   {Number}  initialY Position where to start
-     */
-    this.draw = function(initialX, initialY) {
-        
-        var title = createTextBox(self.flow.name, {
-            height : window.TILE_DIMENSION.height, size : 36, textAlign : 'center', fontWeight : 'bold'
-        });
-        
-        title.position.set(initialX, initialY + window.TILE_DIMENSION.height * 2, 0);
-        objects.push(title);
-        scene.add(title);
-        
-        var columnWidth = window.TILE_DIMENSION.width * 3,
-            rowHeight = window.TILE_DIMENSION.width * 3;
-        
-        new TWEEN.Tween(this)
-            .to({}, 4000)
-            .onUpdate(window.render)
-            .start();
-        
-        for(i = 0, l = self.flow.steps.length; i < l; i++)
-            drawTree(self.flow.steps[i], initialX + columnWidth * i, initialY);
-        
-        for(i = 0, l = objects.length; i < l; i++) {
-            helper.showMaterial(objects[i].material);
-        }
-        
-        
-        function drawTree(root, x, y) {
-            
-            if(typeof root.drawn === 'undefined') {
-                drawStep(root, x, y);
-            
-                var childCount = root.next.length,
-                    startX = x - 0.5 * (childCount - 1) * columnWidth;
-
-                if(childCount !== 0) {
-
-                    var lineGeo = new THREE.Geometry();
-                    var lineMat = new THREE.LineBasicMaterial({color : 0x000000, transparent : true, opacity : 0});
-
-                    var rootPoint = new THREE.Vector3(x, y - rowHeight / 2);
-
-                    lineGeo.vertices.push(
-                        new THREE.Vector3(x, y - rowHeight * 0.25, 0),
-                        rootPoint);
-
-                    var rootLine = new THREE.Line(lineGeo, lineMat);
-                    objects.push(rootLine);
-                    window.scene.add(rootLine);
-
-                    var nextX, nextY, childLine, child, i, isLoop;
-
-                    for(i = 0; i < childCount; i++) {
-
-                        child = self.flow.steps[root.next[i]];
-                        isLoop = (typeof child.drawn !== 'undefined');
-                        
-                        
-                        nextX = startX + i * columnWidth;
-                        
-                        if(nextX !== rootPoint.x && colides(nextX, root)) {
-                            nextX += childCount * columnWidth;
-                        }
-                        
-                        if(isLoop) {
-                            console.log(Math.abs(nextX));
-                            lineMat = new THREE.LineBasicMaterial({color : 0x888888, transparent : true, opacity : 0});
-                            nextY = child.drawn.y;
-                        }
-                        else {
-                            lineMat = new THREE.LineBasicMaterial({color : 0x000000, transparent : true, opacity : 0});
-                            nextY = y - rowHeight;
-                        }
-
-                        lineGeo = new THREE.Geometry();
-                        lineGeo.vertices.push(
-                            rootPoint,
-                            new THREE.Vector3(nextX, rootPoint.y, 0),
-                            new THREE.Vector3(nextX, nextY + rowHeight * 0.05, 0)
-                        );
-                        
-                        if(isLoop) {
-                            lineGeo.vertices[2].setY(nextY + rowHeight * 0.1);
-                            
-                            lineGeo.vertices.push(
-                                new THREE.Vector3(child.drawn.x, child.drawn.y + rowHeight * 0.1, 0)
-                            );
-                        }
-
-                        childLine = new THREE.Line(lineGeo, lineMat);
-                        objects.push(childLine);
-                        window.scene.add(childLine);
-
-                        drawTree(child, nextX, nextY);
-                    }
-                }
-            }
-        }
-        
-        function drawStep(node, x, y) {
-            
-            var tile;
-
-            var titleHeight = window.TILE_DIMENSION.height / 2,
-                descWidth = window.TILE_DIMENSION.width * 2,
-                descX = 0;
-            
-            if(node.element !== -1) {
-                
-                descWidth = window.TILE_DIMENSION.width;
-                descX = window.TILE_DIMENSION.width / 2;
-                
-                tile = window.objects[node.element].clone();
-                objects.push(tile);
-                window.scene.add(tile);
-
-                new TWEEN.Tween(tile.position)
-                    .to({x : x - window.TILE_DIMENSION.width / 2, y : y - titleHeight * 3 / 2, z : 0}, 2000)
-                    .easing(TWEEN.Easing.Exponential.Out)
-                    //.onUpdate(render)
-                    .start();
-            }
-
-            var title = createTextBox(node.title, {size : 24, fontWeight : 'bold', height : titleHeight, textAlign : 'center'});
-            title.position.set(x, y, 0);
-
-            var description = createTextBox(node.desc, {width : descWidth});
-            description.position.set(x + descX, y - titleHeight * 3 / 2, 0);
-
-            node.drawn = {
-                x : x,
-                y : y
-            };
-
-            objects.push(title);
-            objects.push(description);
-            window.scene.add(title);
-            window.scene.add(description);
-        }
-        
-        /**
-         * Check if the line collides a block
-         * @param   {Number}  x    Position to check
-         * @param   {Object}  from Object where the line starts
-         * @returns {Boolean} true if collision is detected
-         */
-        function colides(x, from) {
-            
-            var actual;
-            
-            for(var i = 0; i < self.flow.steps.length; i++) {
-                actual = self.flow.steps[i];
-                
-                if(actual.drawn && actual.drawn.x === x && actual !== from) return true;
-            }
-            
-            return false;
-        }
-    };
-    
-    /**
-     * Deletes all objects related to the flow
-     */
-    this.delete = function() {
-        
-        for(var i = 0, l = objects.length; i < l; i++) {
-            
-            helper.hideObject(objects[i], false);
-        }
-        
-        objects = [];
-    };
-    
-    //Private methods
-    
-    /**
-     * Creates a single text box
-     * @param   {String} text        The text to draw
-     * @param   {Object} [params={}] Object with the parameters of the draw
-     * @returns {Object} The mesh of the textbox
-     */
-    function createTextBox(text, params) {
-        
-        if(typeof params === 'undefined') params = {};
-        
-        params = $.extend({
-            fontWeight : 'normal',
-            size : 12,
-            fontFamily : 'Arial',
-            width : window.TILE_DIMENSION.width * 2,
-            height : window.TILE_DIMENSION.height,
-            background : '#F26662',
-            textColor : '#FFFFFF',
-            textAlign : 'left'
-        }, params);
-        
-        
-        
-        var width = params.width;
-        var height = params.height;
-        var canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        
-        var texture = new THREE.Texture(canvas);
-        texture.minFilter = THREE.NearestFilter;
-        
-        var ctx = canvas.getContext('2d');
-        ctx.font = params.fontWeight + ' ' + params.size + 'px ' + params.fontFamily;
-        ctx.textAlign = params.textAlign;
-        
-        
-        ctx.fillStyle = params.background;
-        ctx.fillRect(0, 0, width, height);
-        ctx.fillStyle = params.textColor;
-        
-        var start = (params.textAlign !== 'center') ? 10 : width / 2;
-        
-        //var height = Math.abs(helper.drawText(text, 0, font, ctx, width, font)) * 2;
-        var paragraphs = text.split('\n');
-        var i, l, tempY = params.size;
-        
-        for(i = 0, l = paragraphs.length; i < l; i++) {
-            tempY = helper.drawText(paragraphs[i], start, tempY, ctx, width - 10, params.size);
-        }
-        
-        var mesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(width, height),
-            new THREE.MeshBasicMaterial({map : texture, vertexColors : THREE.FaceColors, side : THREE.FrontSide, color : 0xffffff, transparent : true, opacity : 0}));
-        
-        mesh.material.needsUpdate = true;
-        texture.needsUpdate = true;
-        
-        return mesh;
-    }
-}
 /**
  *
  * @class Camera
@@ -640,12 +224,6 @@ function Camera(position, renderer, renderFunc) {
         return focus;
     };
     
-    /**
-     * Casts a ray between the camera to the target
-     * @param   {Object} target   Vector2D target
-     * @param   {Array}  elements Array of elements expected to collide
-     * @returns {Array}  All intercepted members of elements
-     */
     this.rayCast = function(target, elements) {
         
         var raycaster = new THREE.Raycaster();
@@ -653,25 +231,6 @@ function Camera(position, renderer, renderFunc) {
         raycaster.setFromCamera(target, camera);
         
         return raycaster.intersectObjects(elements);
-    };
-    
-    /**
-     * Moves the camera to a position
-     * @param {Number} x               X coordinate
-     * @param {Number} y               Y coordinate
-     * @param {Number} z               Z coordinate
-     * @param {Number} [duration=2000] Milliseconds of the animation
-     */
-    this.move = function(x, y, z, duration) {
-        
-        var _duration = duration || 2000;
-        
-        new TWEEN.Tween(camera.position)
-        .to({x : x, y : y, z : z}, _duration)
-        .easing(TWEEN.Easing.Exponential.InOut)
-        .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
-        .start();
-        
     };
     
     // Events
@@ -724,15 +283,18 @@ var superLayers = {
 };
 
 var viewManager = new ViewManager();
+var URL = "get_plugins.php";
+//var URL = "http://52.11.156.16:3000/repo/comps";
 
 function getData() {
-    /*$.ajax({
-        url: "get_plugins.php",
+    $.ajax({
+        url: URL,
         method: "GET"
     }).success(
         function(lists) {
-            var l = JSON.parse(lists);
-            viewManager.fillTable(l);
+            //console.dir(lists);
+            //var l = JSON.parse(lists);
+            viewManager.fillTable(lists);
             $('#splash').fadeTo(2000, 0, function() {
                 $('#splash').remove();
                 init();
@@ -740,18 +302,18 @@ function getData() {
                 animate();
             });
         }
-    );*/
+    );
 
-    var l = JSON.parse(testData);
+    /*var l = JSON.parse(testData);
 
         viewManager.fillTable(l);
 
         $('#splash').fadeTo(2000, 0, function() {
                 $('#splash').remove();
-                window.init();
+                init();
                 //setTimeout( animate, 500);
-                window.animate();
-            });
+                animate();
+            });*/
 }
 /**
  * @class Represents the group of all header icons
@@ -835,7 +397,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             i, l;
         
         helper.hide('stackContainer', _duration / 2);
-        
+        helper.hide('headContainer', _duration / 2);
         //This should be moved to be called by viewer.js when we no longer use vis for this
         setTimeout(function() {    
             viewManager.transform(viewManager.targets.table); 
@@ -860,7 +422,54 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         
         self.show(_duration);
     };
-    
+    /**
+     * created by Ricardo Delgado
+     * Screen shows the head
+     * @param {Number} duration Milliseconds of fading
+     */
+    this.transformHead = function( duration ) {
+        var _duration = duration || 1000;
+        var container = document.createElement('div');
+        container.id = 'headContainer';
+        container.style.position = 'absolute';
+        container.style.opacity = 0;
+        container.style.width = '100%';
+        container.style.height = '100%';
+        container.style.zIndex = 5;
+        
+        /*var imagen = document.createElement("img");
+        imagen.id = 'iamgen'; 
+        imagen.src = "images/fermat_logo.png";
+        imagen.style.top = "50%";
+        imagen.style.left = "50%";
+        container.appendChild(imagen);*/
+        document.getElementById('container').appendChild(container);
+
+        viewManager.letAlone();
+        camera.resetPosition();
+        setTimeout(function() {
+            for(i = 0, l = objects.length; i < l; i++) {
+
+                new TWEEN.Tween(objects[i].position)
+                .to({
+                    x : positions.stack[i].position.x,
+                    y : positions.stack[i].position.y,
+                    z : positions.stack[i].position.z
+                }, _duration)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .start();
+            }
+
+           new TWEEN.Tween(this)
+                .to({}, _duration * 2)
+                .onUpdate(render)
+                .start();
+
+            self.hide(_duration);
+            $(container).fadeTo(_duration, 1);
+            
+        }, _duration);
+    };
     /**
      * Shows the headers as a fade
      * @param {Number} duration Milliseconds of fading
@@ -1098,7 +707,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     
     initialize();
     //=========================================================
-☺}
+}
 /**
  * Static object with help functions commonly used
  */
@@ -1125,45 +734,6 @@ function Helper() {
             else
                 $(el).remove();
         });
-    };
-    
-    /**
-     * Shows a material with transparency on
-     * @param {Object} material                                Material to change its opacity
-     * @param {Number} [duration=2000]                         Duration of animation
-     * @param {Object} [easing=TWEEN.Easing.Exponential.InOut] Easing of the animation
-     */
-    this.showMaterial = function(material, duration, easing) {
-        
-        if(material && typeof material.opacity !== 'undefined') {
-            
-            duration = duration || 2000;
-            easing = (typeof easing !== 'undefined') ? easing : TWEEN.Easing.Exponential.InOut;
-
-            new TWEEN.Tween(material)
-                .to({opacity : 1}, duration)
-                .easing(easing)
-                .onUpdate(function() { this.needsUpdate = true; })
-                .start();
-        }
-    };
-    
-    /**
-     * Deletes or hides the object
-     * @param {Object}  object          The mesh to hide
-     * @param {Boolean} [keep=true]     If false, delete the object from scene
-     * @param {Number}  [duration=2000] Duration of animation
-     */
-    this.hideObject = function(object, keep, duration) {
-        
-        duration = duration || 2000;
-        keep = (typeof keep === 'boolean') ? keep : true;
-        
-        new TWEEN.Tween(object.material)
-            .to({opacity : 0}, duration)
-            .onUpdate(function() { this.needsUpdate = true; })
-            .onComplete(function() { if(!keep) window.scene.remove(object); })
-            .start();
     };
 
     /**
@@ -1314,16 +884,6 @@ function Helper() {
             });
     };
     
-    /**
-     * Draws a text supporting word wrap
-     * @param   {String} text       Text to draw
-     * @param   {Number} x          X position
-     * @param   {Number} y          Y position
-     * @param   {Object} context    Canvas context
-     * @param   {Number} maxWidth   Max width of text
-     * @param   {Number} lineHeight Actual line height
-     * @returns {Number} The Y coordinate of the next line
-     */
     this.drawText = function(text, x, y, context, maxWidth, lineHeight) {
     
         var words = text.split(' ');
@@ -1336,7 +896,7 @@ function Helper() {
           if (testWidth > maxWidth && n > 0) {
             context.fillText(line, x, y);
             line = words[n] + ' ';
-            y += lineHeight;
+            y -= lineHeight;
           }
           else {
             line = testLine;
@@ -1344,38 +904,9 @@ function Helper() {
         }
         context.fillText(line, x, y);
 
-        return y + lineHeight;
-    };
-    
-    /**
-     * Searchs an element given its full name
-     * @param   {String} elementFullName Name of element in format [group]/[layer]/[name]
-     * @returns {Number} The ID of the element in the table
-     */
-    this.searchElement = function(elementFullName) {
-        
-        if(typeof elementFullName !== 'string') return -1;
-        
-        var group,
-            components = elementFullName.split('/');
-        
-        if(components.length === 3) {
-        
-            for(var i = 0, l = table.length; i < l; i++) {
-
-                group = table[i].group || window.layers[table[i].layer].super_layer;
-
-                if(group.toLowerCase() === components[0].toLowerCase() &&
-                   table[i].layer.toLowerCase() === components[1].toLowerCase() &&
-                   table[i].name.toLowerCase() === components[2].toLowerCase())
-                    return i;
-            }
-        }
-        
-        return -1;
+        return y - lineHeight;
     };
 }
-
 function Loader() {
     // reference to the object
     var that = this;
@@ -1593,393 +1124,6 @@ Timeline.prototype.show = function ( duration ) {
         $(this.container).fadeTo( _duration, 1 );
     }
 };
-var table = [],
-    helper = new Helper(),
-    camera,
-    scene = new THREE.Scene(),
-    renderer,
-    objects = [],
-    headers = null,
-    actualView = 'stack',
-    actualFlow = null;
-
-//Global constants
-var TILE_DIMENSION = {
-    width : 234,
-    height : 140
-},
-    TILE_SPACING = 20;
-
-getData();
-
-function init() {
-
-    // table
-    viewManager.drawTable();
-    
-    var dimensions = viewManager.dimensions;
-
-    // groups icons
-    headers = new Headers(dimensions.columnWidth, dimensions.superLayerMaxHeight, dimensions.groupsQtty,
-                          dimensions.layersQtty, dimensions.superLayerPosition);
-    
-    var light = new THREE.AmbientLight(0xFFFFFF);
-    scene.add( light );
-    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true});
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xffffff);
-    document.getElementById('container').appendChild(renderer.domElement);
-
-    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * TILE_DIMENSION.width),
-        renderer,
-        render);
-
-
-    //
-
-    $('#backButton').click(function() {
-        changeView(viewManager.targets.table);
-    });
-    $('#legendButton').click(function() {
-
-        var legend = document.getElementById('legend');
-
-        if (legend.style.opacity == 1) $('#legend').fadeTo(1000, 0, function() {
-            legend.style.display = 'none';
-        });
-        else {
-            legend.style.display = 'block';
-            $(legend).fadeTo(1000, 1);
-        }
-    });
-    $('#tableViewButton').click(function() {
-        if(actualView === 'stack')
-            goToView('table');
-        else
-            goToView('stack');
-    });
-    $('#container').click(onClick);
-
-    //Disabled Menu
-    //initMenu();
-
-    setTimeout(function() {goToView('table'); }, 500);
-    
-    /*setTimeout(function() {
-        var loader = new Loader();
-        loader.findThemAll();
-    }, 2000);*/
-}
-
-/**
- * Changes the actual state of the viewer
- * @param {String} name The name of the target state
- */
-function goToView(name) {
-    
-    var tableButton;
-    
-    actualView = name;
-    
-    switch(name) {
-        case 'table':
-            
-            tableButton = document.getElementById('tableViewButton');
-            var legendBtn = document.getElementById('legendButton');
-            
-            headers.transformTable();
-            legendBtn.style.display = 'block';
-            $(legendBtn).fadeTo(1000, 1);
-            
-            $(tableButton).fadeTo(1000, 0, function(){ 
-                tableButton.style.display = 'block';
-                tableButton.innerHTML = 'View Dependencies';
-            });
-            $(tableButton).fadeTo(1000, 1);
-            
-            break;
-        case 'stack':
-            
-            tableButton = document.getElementById('tableViewButton');
-            
-            headers.transformStack();
-            
-            $(tableButton).fadeTo(1000, 0, function(){ 
-                tableButton.style.display = 'block';
-                tableButton.innerHTML = 'View Table';
-            });
-            $(tableButton).fadeTo(1000, 1);
-            
-            break;
-        default:
-            actualView = 'stack';
-            break;
-    }
-}
-
-function initMenu() {
-
-    var button = document.getElementById('table');
-    button.addEventListener('click', function(event) {
-
-        changeView(viewManager.targets.table);
-
-    }, false);
-
-    button = document.getElementById('sphere');
-    button.addEventListener('click', function(event) {
-
-        changeView(viewManager.targets.sphere);
-
-    }, false);
-
-    button = document.getElementById('helix');
-    button.addEventListener('click', function(event) {
-
-        changeView(viewManager.targets.helix);
-
-    }, false);
-
-    button = document.getElementById('grid');
-    button.addEventListener('click', function(event) {
-
-        changeView(viewManager.targets.grid);
-
-    }, false);
-
-}
- 
-function changeView(targets) {
-
-    camera.enable();
-    camera.loseFocus();
-    
-    if(actualFlow) {
-        actualFlow.delete();
-        actualFlow = null;
-    }
-
-    if (targets != null)
-        viewManager.transform(targets, 2000);
-}
-
-function onElementClick(id) {
-
-    //var id = this.id;
-
-    //var image = document.getElementById('img-' + id);
-    
-
-    if (camera.getFocus() == null) {
-
-        camera.setFocus(id, 2000);
-        setTimeout(function() {
-            camera.setFocus(id, 1000);
-            $('#backButton').fadeTo(1000, 1, function() {
-                $('#backButton').show();
-            });
-        }, 3000);
-        camera.disable();
-
-        /*if (image != null) {
-
-            var handler = function() {
-                onImageClick(id, image, handler);
-            };
-
-            image.addEventListener('click', handler, true);
-        } else {}*/
-    }
-
-    function onImageClick(id, image, handler) {
-
-        image.removeEventListener('click', handler, true);
-
-        var relatedTasks = [];
-
-        for (var i = 0; i < table.length; i++) {
-            if (table[i].author == table[id].author) relatedTasks.push(i);
-        }
-
-        createSidePanel(id, image, relatedTasks);
-        createElementsPanel(relatedTasks);
-    }
-
-    function createSidePanel(id, image, relatedTasks) {
-
-        var sidePanel = document.createElement('div');
-        sidePanel.id = 'sidePanel';
-        sidePanel.style.position = 'absolute';
-        sidePanel.style.top = '0px';
-        sidePanel.style.bottom = '25%';
-        sidePanel.style.left = '0px';
-        sidePanel.style.marginTop = '50px';
-        sidePanel.style.width = '35%';
-        sidePanel.style.textAlign = 'center';
-
-        var panelImage = document.createElement('img');
-        panelImage.id = 'focusImg';
-        panelImage.src = image.src;
-        panelImage.style.position = 'relative';
-        panelImage.style.width = '50%';
-        panelImage.style.opacity = 0;
-        sidePanel.appendChild(panelImage);
-
-        var userName = document.createElement('p');
-        userName.style.opacity = 0;
-        userName.style.position = 'relative';
-        userName.style.fontWeight = 'bold';
-        userName.textContent = table[id].author;
-        sidePanel.appendChild(userName);
-
-        var realName = document.createElement('p');
-        realName.style.opacity = 0;
-        realName.style.position = 'relative';
-        realName.textContent = table[id].authorRealName;
-        sidePanel.appendChild(realName);
-
-        var email = document.createElement('p');
-        email.style.opacity = 0;
-        email.style.position = 'relative';
-        email.textContent = table[id].authorEmail;
-        sidePanel.appendChild(email);
-
-        if (relatedTasks != null && relatedTasks.length > 0) {
-
-            var tlButton = document.createElement('button');
-            tlButton.id = 'timelineButton';
-            tlButton.style.opacity = 0;
-            tlButton.style.position = 'relative';
-            tlButton.textContent = 'See Timeline';
-
-            $(tlButton).click(function() {
-                showTimeline(relatedTasks);
-            });
-
-            sidePanel.appendChild(tlButton);
-        }
-
-        $('#container').append(sidePanel);
-
-        $(renderer.domElement).fadeTo(1000, 0);
-
-        $(panelImage).fadeTo(1000, 1, function() {
-            $(userName).fadeTo(1000, 1, function() {
-                $(realName).fadeTo(1000, 1, function() {
-                    $(email).fadeTo(1000, 1, function() {
-
-                        if (tlButton != null) $(tlButton).fadeTo(1000, 1);
-
-                    });
-                });
-            });
-        });
-    }
-
-    function createElementsPanel(tasks) {
-        
-        var i, l;
-
-        var elementPanel = document.createElement('div');
-        elementPanel.id = 'elementPanel';
-        elementPanel.style.position = 'absolute';
-        elementPanel.style.top = '0px';
-        elementPanel.style.bottom = '25%';
-        elementPanel.style.right = '0px';
-        elementPanel.style.marginTop = '50px';
-        elementPanel.style.marginRight = '5%';
-        elementPanel.style.width = '60%';
-        elementPanel.style.overflowY = 'auto';
-
-
-        for (i = 0, l = tasks.length; i < l; i++) {
-
-            var clone = helper.cloneTile(tasks[i], 'task-' + tasks[i]);
-            clone.style.position = 'relative';
-            clone.style.display = 'inline-block';
-            clone.style.marginLeft = '10px';
-            clone.style.marginTop = '10px';
-            clone.style.opacity = 0;
-            elementPanel.appendChild(clone);
-
-            $(clone).fadeTo(2000, 1);
-        }
-
-        $('#container').append(elementPanel);
-
-    }
-
-    function showTimeline(tasks) {
-
-        helper.hide('sidePanel');
-        helper.hide('elementPanel');
-
-        var tlContainer = document.createElement('div');
-        tlContainer.id = 'tlContainer';
-        tlContainer.style.position = 'absolute';
-        tlContainer.style.top = '50px';
-        tlContainer.style.bottom = '50px';
-        tlContainer.style.left = '50px';
-        tlContainer.style.right = '50px';
-        tlContainer.style.overflowY = 'auto';
-        tlContainer.style.opacity = 0;
-        $('#container').append(tlContainer);
-
-        $(tlContainer).fadeTo(1000, 1);
-
-        new Timeline(tasks, tlContainer).show();
-    }
-}
-
-function onClick(e) {
-    
-    var mouse = new THREE.Vector2(0, 0),
-        clicked = [];
-    
-    if(actualView === 'table' && !camera.moving) {
-    
-        //Obtain normalized click location (-1...1)
-        mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
-        mouse.y = - ((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height) * 2 + 1;
-        
-        clicked = camera.rayCast(mouse, objects);
-        
-        if(clicked && clicked.length > 0) {
-            onElementClick(clicked[0].object.userData.id);
-        }
-    }
-}
-
-function showFlow(id) {
-    
-    //Should receive the id and the flow's name
-    
-    var tile = objects[id];
-    
-    camera.enable();
-    camera.move(tile.position.x, tile.position.y, tile.position.z + window.TILE_DIMENSION.width * 5);
-    
-    setTimeout(function() {
-        actualFlow = new ActionFlow();
-        actualFlow.draw(tile.position.x, tile.position.y);
-    }, 1500);
-}
-
-function animate() {
-
-    requestAnimationFrame(animate);
-
-    TWEEN.update();
-
-    camera.update();
-}
-
-function render() {
-
-    //renderer.render( scene, camera );
-    camera.render(renderer, scene);
-}
 function ViewManager() {
     
     this.lastTargets = null;
@@ -2410,6 +1554,9 @@ function ViewManager() {
                     font : (3.5 * scale) + 'px Arial'
                 };
             
+            if(id === 185)
+                console.log("now");
+            
             switch(state) {
                 case "concept":
                     pic.x = 80 * scale;
@@ -2658,7 +1805,7 @@ function ViewManager() {
         
         duration = duration || 2000;
         
-        //TWEEN.removeAll();
+        TWEEN.removeAll();
 
         if(goal) {
             this.lastTargets = goal;
@@ -2798,4 +1945,464 @@ function ViewManager() {
             .onUpdate(render)
             .start();
     };
+}
+var table = [],
+    helper = new Helper(),
+    camera,
+    scene = new THREE.Scene(),
+    renderer,
+    objects = [],
+    headers = null,
+    actualView = 'start',
+    stats = null;
+
+//Global constants
+var TILE_DIMENSION = {
+    width : 234,
+    height : 140
+},
+    TILE_SPACING = 20;
+
+getData();
+
+function init() {
+
+    // table
+    viewManager.drawTable();
+    
+    var dimensions = viewManager.dimensions;
+
+    // groups icons
+    headers = new Headers(dimensions.columnWidth, dimensions.superLayerMaxHeight, dimensions.groupsQtty,
+                          dimensions.layersQtty, dimensions.superLayerPosition);
+    
+    var light = new THREE.AmbientLight(0xFFFFFF);
+    scene.add( light );
+    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.domElement.style.position = 'absolute';
+    renderer.setClearColor(0xffffff);
+    document.getElementById('container').appendChild(renderer.domElement);
+
+    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * TILE_DIMENSION.width),
+        renderer,
+        render);
+
+    // uncomment for testing
+    //create_stats();
+
+    $('#backButton').click(function() {
+        changeView(viewManager.targets.table);
+    });
+
+    $('#legendButton').click(function() {
+
+        var legend = document.getElementById('legend');
+
+        if (legend.style.opacity == 1) $('#legend').fadeTo(1000, 0, function() {
+            legend.style.display = 'none';
+        });
+        else {
+            legend.style.display = 'block';
+            $(legend).fadeTo(1000, 1);
+        }
+    });
+
+    $('#browserRightButton').click(function() {
+       if ( actualView === 'start' )
+            goToView('table');
+       else if ( actualView === 'table' )
+            goToView('stack');
+    });
+    
+    $('#browserLeftButton').click(function() {
+       if ( actualView === 'start' ) ;
+       //     goToView('stack');
+       else if ( actualView === 'table' )
+            goToView('start');
+       else if ( actualView === 'stack' )
+            goToView('table');
+    });
+
+    $('#container').click(onClick);
+
+    //Disabled Menu
+    //initMenu();
+
+    setTimeout(function() {goToView('start'); }, 500);
+    
+    /*setTimeout(function() {
+        var loader = new Loader();
+        loader.findThemAll();
+    }, 2000);*/
+}
+
+/**
+ * created by Miguel Celedon
+ * modified by Ricardo Delgado
+ * Changes the actual state of the viewer
+ * @param {String} name The name of the target state
+ */
+function goToView ( current ) {
+    
+    actualView = current;
+
+    switch(current) {
+        case 'table':
+
+            modifyButtonLegend(1);
+
+            headers.transformTable();
+            
+            modifyButtonRight( 'View Dependencies', 'none');
+           
+            modifyButtonLeft( 'Start', 'block');
+
+            
+            break;
+        case 'start':
+
+           headers.transformHead();  
+
+           modifyButtonRight( 'View Table', 'block');
+
+           modifyButtonLeft( 'Book', 'none' );
+
+           modifyButtonBack(0);
+            
+           modifyButtonLegend(0);
+
+            break;
+        case 'stack':
+            
+            headers.transformStack();
+
+            modifyButtonRight( '', 'none' );
+           
+            modifyButtonLeft( 'View Table', 'block' );
+
+            modifyButtonBack(0);
+            
+            modifyButtonLegend(0);
+            
+            break;
+
+        default:
+            actualView = 'start';
+            break;
+    }
+}
+/**
+ * created by Ricardo Delgado
+ * editing text , animation and control button state
+ * @param {String} label, The button name.
+ * @param {String} view, The view button.
+ * @param {int} start, button to start the animation.
+ * @param {int} end, button to end the animation.
+ */
+function modifyButtonRight ( label, view ) {
+    
+var browserButton = document.getElementById('browserRightButton');
+    
+    browserButton.style.display=view;
+    browserButton.innerHTML = label;
+
+
+}
+/**
+ * Created by Ricardo Delgado
+ * Editing text , animation and control button state
+ * @param {String} label, The button name.
+ * @param {String} view, The view button.
+ * @param {int} start, button to start the animation.
+ * @param {int} end, button to end the animation.
+ */
+function modifyButtonLeft ( label, view ) {
+    
+var browserButton = document.getElementById('browserLeftButton');
+
+    browserButton.style.display = view;
+    browserButton.innerHTML = label;
+
+
+}
+
+/**
+ * Created by Ricardo Delgado
+ */
+function modifyButtonBack ( valor ) {
+    
+var browserButton = document.getElementById('backButton');
+
+ $(browserButton).fadeTo(1000, valor, function() {
+                $(browserButton).show();
+            });
+}
+/**
+ * Created by Ricardo Delgado
+ */
+function modifyButtonLegend ( valor ) {
+    
+var browserButton = document.getElementById('legendButton');
+
+ $(browserButton).fadeTo(1000, valor, function() {
+                $(browserButton).show();
+            });
+}
+
+
+function initMenu() {
+
+    var button = document.getElementById('table');
+    button.addEventListener('click', function(event) {
+
+        changeView(viewManager.targets.table);
+
+    }, false);
+
+    button = document.getElementById('sphere');
+    button.addEventListener('click', function(event) {
+
+        changeView(viewManager.targets.sphere);
+
+    }, false);
+
+    button = document.getElementById('helix');
+    button.addEventListener('click', function(event) {
+
+        changeView(viewManager.targets.helix);
+
+    }, false);
+
+    button = document.getElementById('grid');
+    button.addEventListener('click', function(event) {
+
+        changeView(viewManager.targets.grid);
+
+    }, false);
+
+}
+ 
+function changeView(targets) {
+
+    camera.enable();
+    camera.loseFocus();
+
+    if (targets != null)
+        viewManager.transform(targets, 2000);
+}
+
+function onElementClick(id) {
+
+    //var id = this.id;
+
+    //var image = document.getElementById('img-' + id);
+    
+
+    if (camera.getFocus() == null) {
+
+        camera.setFocus(id, 2000);
+        setTimeout(function() {
+            camera.setFocus(id, 1000);
+            modifyButtonBack(1);
+        }, 3000);
+        camera.disable();
+
+        /*if (image != null) {
+
+            var handler = function() {
+                onImageClick(id, image, handler);
+            };
+
+            image.addEventListener('click', handler, true);
+        } else {}*/
+    }
+
+    function onImageClick(id, image, handler) {
+
+        image.removeEventListener('click', handler, true);
+
+        var relatedTasks = [];
+
+        for (var i = 0; i < table.length; i++) {
+            if (table[i].author == table[id].author) relatedTasks.push(i);
+        }
+
+        createSidePanel(id, image, relatedTasks);
+        createElementsPanel(relatedTasks);
+    }
+
+    function createSidePanel(id, image, relatedTasks) {
+
+        var sidePanel = document.createElement('div');
+        sidePanel.id = 'sidePanel';
+        sidePanel.style.position = 'absolute';
+        sidePanel.style.top = '0px';
+        sidePanel.style.bottom = '25%';
+        sidePanel.style.left = '0px';
+        sidePanel.style.marginTop = '50px';
+        sidePanel.style.width = '35%';
+        sidePanel.style.textAlign = 'center';
+
+        var panelImage = document.createElement('img');
+        panelImage.id = 'focusImg';
+        panelImage.src = image.src;
+        panelImage.style.position = 'relative';
+        panelImage.style.width = '50%';
+        panelImage.style.opacity = 0;
+        sidePanel.appendChild(panelImage);
+
+        var userName = document.createElement('p');
+        userName.style.opacity = 0;
+        userName.style.position = 'relative';
+        userName.style.fontWeight = 'bold';
+        userName.textContent = table[id].author;
+        sidePanel.appendChild(userName);
+
+        var realName = document.createElement('p');
+        realName.style.opacity = 0;
+        realName.style.position = 'relative';
+        realName.textContent = table[id].authorRealName;
+        sidePanel.appendChild(realName);
+
+        var email = document.createElement('p');
+        email.style.opacity = 0;
+        email.style.position = 'relative';
+        email.textContent = table[id].authorEmail;
+        sidePanel.appendChild(email);
+
+        if (relatedTasks != null && relatedTasks.length > 0) {
+
+            var tlButton = document.createElement('button');
+            tlButton.id = 'timelineButton';
+            tlButton.style.opacity = 0;
+            tlButton.style.position = 'relative';
+            tlButton.textContent = 'See Timeline';
+
+            $(tlButton).click(function() {
+                showTimeline(relatedTasks);
+            });
+
+            sidePanel.appendChild(tlButton);
+        }
+
+        $('#container').append(sidePanel);
+
+        $(renderer.domElement).fadeTo(1000, 0);
+
+        $(panelImage).fadeTo(1000, 1, function() {
+            $(userName).fadeTo(1000, 1, function() {
+                $(realName).fadeTo(1000, 1, function() {
+                    $(email).fadeTo(1000, 1, function() {
+
+                        if (tlButton != null) $(tlButton).fadeTo(1000, 1);
+
+                    });
+                });
+            });
+        });
+    }
+
+    function createElementsPanel(tasks) {
+        
+        var i, l;
+
+        var elementPanel = document.createElement('div');
+        elementPanel.id = 'elementPanel';
+        elementPanel.style.position = 'absolute';
+        elementPanel.style.top = '0px';
+        elementPanel.style.bottom = '25%';
+        elementPanel.style.right = '0px';
+        elementPanel.style.marginTop = '50px';
+        elementPanel.style.marginRight = '5%';
+        elementPanel.style.width = '60%';
+        elementPanel.style.overflowY = 'auto';
+
+
+        for (i = 0, l = tasks.length; i < l; i++) {
+
+            var clone = helper.cloneTile(tasks[i], 'task-' + tasks[i]);
+            clone.style.position = 'relative';
+            clone.style.display = 'inline-block';
+            clone.style.marginLeft = '10px';
+            clone.style.marginTop = '10px';
+            clone.style.opacity = 0;
+            elementPanel.appendChild(clone);
+
+            $(clone).fadeTo(2000, 1);
+        }
+
+        $('#container').append(elementPanel);
+
+    }
+
+    function showTimeline(tasks) {
+
+        helper.hide('sidePanel');
+        helper.hide('elementPanel');
+
+        var tlContainer = document.createElement('div');
+        tlContainer.id = 'tlContainer';
+        tlContainer.style.position = 'absolute';
+        tlContainer.style.top = '50px';
+        tlContainer.style.bottom = '50px';
+        tlContainer.style.left = '50px';
+        tlContainer.style.right = '50px';
+        tlContainer.style.overflowY = 'auto';
+        tlContainer.style.opacity = 0;
+        $('#container').append(tlContainer);
+
+        $(tlContainer).fadeTo(1000, 1);
+
+        new Timeline(tasks, tlContainer).show();
+    }
+}
+
+function onClick(e) {
+    
+    var mouse = new THREE.Vector2(0, 0),
+        clicked = [];
+    
+    if(actualView === 'table' && !camera.moving) {
+    
+        //Obtain normalized click location (-1...1)
+        mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
+        mouse.y = - ((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height) * 2 + 1;
+        
+        clicked = camera.rayCast(mouse, objects);
+        
+        if(clicked && clicked.length > 0) {
+            onElementClick(clicked[0].object.userData.id);
+        }
+    }
+}
+
+function animate() {
+
+    requestAnimationFrame(animate);
+
+    TWEEN.update();
+
+    camera.update();
+
+    if ( stats ) stats.update();
+}
+
+function create_stats(){ 
+
+    stats = new Stats();
+    stats.setMode(0);
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.left    = '0px';
+    stats.domElement.style.top   = '0px';
+    stats.domElement.style.display  = 'block';
+    var contai = document.getElementById("container");
+    contai.appendChild(stats.domElement);
+
+    }
+
+function render() {
+
+    //renderer.render( scene, camera );
+    camera.render(renderer, scene);
 }
