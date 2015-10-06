@@ -295,6 +295,8 @@ function ViewManager() {
                 groups[list.groups[i].code].dependsOn = dependency;
             }
         }
+        console.dir(layers);
+        console.dir(groups);
 
 
         for (i = 0, l = pluginList.length; i < l; i++) {

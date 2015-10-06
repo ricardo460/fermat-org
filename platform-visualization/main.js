@@ -293,8 +293,8 @@ function getData() {
     }).success(
         function(lists) {
             //console.dir(lists);
-            //var l = JSON.parse(lists);
-            viewManager.fillTable(lists);
+            var l = JSON.parse(lists);
+            viewManager.fillTable(l);
             $('#splash').fadeTo(2000, 0, function() {
                 $('#splash').remove();
                 init();
@@ -1421,6 +1421,8 @@ function ViewManager() {
                 groups[list.groups[i].code].dependsOn = dependency;
             }
         }
+        console.dir(layers);
+        console.dir(groups);
 
 
         for (i = 0, l = pluginList.length; i < l; i++) {

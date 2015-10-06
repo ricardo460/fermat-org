@@ -18,7 +18,20 @@ function SuprlayMdl(code, name, logo, deps, order) {
     this.name = name;
     this.logo = logo;
     this.deps = [];
-    this.order = order;
+    switch (code) {
+        case 'P2P':
+            this.order = 0;
+            break;
+        case 'BCH':
+            this.order = 1;
+            break;
+        case 'OSA':
+            this.order = 2;
+            break;
+        default:
+            this.order = -1;
+            break;
+    }
     this.upd_at = new mongoose.Types.ObjectId();
 }
 
