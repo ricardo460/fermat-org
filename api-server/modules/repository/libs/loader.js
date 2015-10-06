@@ -371,7 +371,7 @@ var saveManifest = function(callback) {
                                                         if (err_lay) {
                                                             winston.log('info', err_lay.message, err_lay);
                                                             loopLayers(++j);
-                                                        } else {
+                                                        } else if (res_lay) {
                                                             var _comps = _layer.comps;
 
                                                             var loopComps = function(k) {
@@ -454,6 +454,8 @@ var saveManifest = function(callback) {
                                                                 }
                                                             };
                                                             loopComps(0);
+                                                        } else {
+                                                            loopLayers(++j);
                                                         }
                                                     });
                                             } else {
@@ -493,7 +495,7 @@ var saveManifest = function(callback) {
                                                         if (err_lay) {
                                                             winston.log('info', err_lay.message, err_lay);
                                                             loopLayers(++o);
-                                                        } else {
+                                                        } else if (res_lay) {
                                                             var _comps = _layer.comps;
 
                                                             var loopComps = function(p) {
@@ -564,6 +566,8 @@ var saveManifest = function(callback) {
                                                                 }
                                                             };
                                                             loopComps(0);
+                                                        } else {
+                                                            loopLayers(++o);
                                                         }
                                                     });
                                             } else {
