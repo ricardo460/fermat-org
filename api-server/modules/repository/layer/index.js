@@ -29,103 +29,103 @@ function getOrder(name) {
             order = 4;
             break;
         case 'engine':
-            order = 5;
-            break;
-        case 'wallet module':
             order = 6;
             break;
-        case 'sub app module':
+        case 'wallet module':
             order = 7;
             break;
-        case 'desktop module':
+        case 'sub app module':
             order = 8;
             break;
-        case 'agent':
+        case 'desktop module':
             order = 9;
             break;
-        case 'actor':
+        case 'agent':
             order = 10;
             break;
-        case 'middleware':
+        case 'actor':
             order = 11;
             break;
-        case 'request':
+        case 'middleware':
             order = 12;
             break;
-        case 'business transaction':
+        case 'request':
             order = 13;
             break;
-        case 'digital asset transaction':
+        case 'business transaction':
             order = 14;
             break;
-        case 'crypto money transaction':
+        case 'digital asset transaction':
             order = 15;
             break;
-        case 'cash money transaction':
+        case 'crypto money transaction':
             order = 16;
             break;
-        case 'bank money transaction':
+        case 'cash money transaction':
             order = 17;
             break;
-        case 'contract':
+        case 'bank money transaction':
             order = 18;
             break;
-        case 'composite wallet':
+        case 'contract':
             order = 19;
             break;
-        case 'wallet':
+        case 'composite wallet':
             order = 20;
             break;
-        case 'world':
+        case 'wallet':
             order = 21;
             break;
-        case 'identity':
+        case 'world':
             order = 22;
             break;
-        case 'actor network service':
+        case 'identity':
             order = 23;
             break;
-        case 'network service':
+        case 'actor network service':
             order = 24;
             break;
-        case 'communication':
+        case 'network service':
             order = 25;
             break;
-        case 'crypto router':
-            order = 26;
-            break;
-        case 'crypto module':
-            order = 27;
-            break;
-        case 'crypto vault':
+        case 'communication':
             order = 28;
             break;
-        case 'crypto network':
-            order = 29;
-            break;
-        case 'license':
+        case 'crypto router':
             order = 30;
             break;
-        case 'plugin':
+        case 'crypto module':
             order = 31;
             break;
-        case 'user':
+        case 'crypto vault':
             order = 32;
             break;
-        case 'hardware':
+        case 'crypto network':
             order = 33;
             break;
-        case 'platform service':
-            order = 34;
-            break;
-        case 'multi os':
+        case 'license':
             order = 35;
             break;
-        case 'android':
+        case 'plugin':
             order = 36;
             break;
-        case 'api':
+        case 'user':
             order = 37;
+            break;
+        case 'hardware':
+            order = 38;
+            break;
+        case 'platform service':
+            order = 39;
+            break;
+        case 'multi os':
+            order = 41;
+            break;
+        case 'android':
+            order = 42;
+            break;
+        case 'api':
+            order = 43;
             break;
         default:
             order = -1;
