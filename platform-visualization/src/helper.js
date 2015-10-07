@@ -26,6 +26,19 @@ function Helper() {
         });
     };
     
+    this.show = function(element, duration) {
+        
+        duration = duration || 1000;
+
+        if (typeof(element) === "string") {
+            element = document.getElementById(element);
+        }
+
+        $(element).fadeTo(duration, 1, function() {
+                $(element).show();
+            });
+    };
+    
     /**
      * Shows a material with transparency on
      * @param {Object} material                                Material to change its opacity

@@ -31,6 +31,7 @@
         "testData" : true,
         "Helper" : true,
         "getData" : true,
-        "ActionFlow" : true
+        "ActionFlow" : true,
+        "Stats" : true
     }
 }

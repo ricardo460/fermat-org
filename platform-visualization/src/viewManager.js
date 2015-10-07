@@ -9,6 +9,7 @@ function ViewManager() {
     };
     this.dimensions = {};
     
+    var self = this;
     var groupsQtty;
     var layersQtty;
     var section = [];
@@ -787,25 +788,32 @@ function ViewManager() {
     
     /**
      * Takes away all the tiles except the one with the id
-     * @param {Number} [id]            The id to let alone
+     * @param {Array}  [ids]           The IDs to let alone
      * @param {Number} [duration=2000] Duration of the animation
      */
-    this.letAlone = function(id, duration) {
+    this.letAlone = function(ids, duration) {
+        
+        if(typeof ids === 'undefined') ids = [];
+        if(typeof ids === 'number') ids = [ids];
         
         var i, _duration = duration || 2000,
-            distance = camera.getMaxDistance();
+            distance = camera.getMaxDistance(),
+            out = new THREE.Vector3(0, 0, distance);
         
         TWEEN.removeAll();
         
+        var target;
+        
         for(i = 0; i < objects.length; i++) {
             
-            if(i === id) continue;
+            if(ids.indexOf(i) !== -1) target = this.lastTargets[i].position;
+            else target = out;
             
             new TWEEN.Tween(objects[i].position)
             .to({
-                x: 0,
-                y: 0,
-                z: distance
+                x: target.x,
+                y: target.y,
+                z: target.z
             }, Math.random() * _duration + _duration)
             .easing(TWEEN.Easing.Exponential.InOut)
             .start();
