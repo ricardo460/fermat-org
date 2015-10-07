@@ -117,3 +117,24 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
         }
     });
 };
+
+/**
+ * [getPlatfrms description]
+ *
+ * @method getPlatfrms
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.getPlatfrms = function(callback) {
+    platfrmSrv.findAllPlatfrms({}, {
+        order: 1
+    }, function(err, platfrms) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, platfrms);
+        }
+    });
+};

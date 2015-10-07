@@ -25,7 +25,7 @@ function getOrder(name) {
         case 'sub app':
             order = 3;
             break;
-        case 'dektop':
+        case 'desktop':
             order = 4;
             break;
         case 'engine':
@@ -112,7 +112,7 @@ function getOrder(name) {
         case 'user':
             order = 32;
             break;
-        case 'Hardware':
+        case 'hardware':
             order = 33;
             break;
         case 'platform service':
@@ -185,6 +185,27 @@ exports.insOrUpdLayer = function(name, lang, order, callback) {
             } else {
                 return callback(null, null);
             }
+        }
+    });
+};
+
+/**
+ * [getLayers description]
+ *
+ * @method getLayers
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.getLayers = function(callback) {
+    layerSrv.findAllLayers({}, {
+        order: 1
+    }, function(err, layers) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, layers);
         }
     });
 };

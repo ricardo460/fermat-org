@@ -103,7 +103,7 @@ exports.findComps = function(query, sort, callback) {
  * @return {[type]}     [description]
  */
 exports.findAllComps = function(query, order, callback) {
-    compDao.findAndPopulateAllSchemaLst(query, order, '_platfrm_id _suprlay_id _layer_id life_cycle devs', function(err, comps) {
+    compDao.findAndPopulateAllSchemaLst(query, order, 'life_cycle devs', function(err, comps) {
         if (err) {
             callback(err, null);
         } else {

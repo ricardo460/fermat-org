@@ -75,3 +75,24 @@ exports.insOrUpdSuprlay = function(code, name, logo, deps, order, callback) {
         }
     });
 };
+
+/**
+ * [getSuprlays description]
+ *
+ * @method getSuprlays
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.getSuprlays = function(callback) {
+    suprlaySrv.findAllSuprlays({}, {
+        order: 1
+    }, function(err, suprlays) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, suprlays);
+        }
+    });
+};

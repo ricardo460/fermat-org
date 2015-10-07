@@ -2,13 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e62016d0-09ef-48b8-a76d-f19d1322f092" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platform-visualization/src/getData.js" afterPath="$PROJECT_DIR$/platform-visualization/src/getData.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/modules/repository/layer/models/layer.js" afterPath="$PROJECT_DIR$/api-server/modules/repository/layer/models/layer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platform-visualization/main.js" afterPath="$PROJECT_DIR$/platform-visualization/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/modules/repository/platform/models/platfrm.js" afterPath="$PROJECT_DIR$/api-server/modules/repository/platform/models/platfrm.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/modules/repository/superlayer/models/suprlay.js" afterPath="$PROJECT_DIR$/api-server/modules/repository/superlayer/models/suprlay.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platform-visualization/src/viewManager.js" afterPath="$PROJECT_DIR$/platform-visualization/src/viewManager.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/modules/repository/component/services/comp.js" afterPath="$PROJECT_DIR$/api-server/modules/repository/component/services/comp.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/modules/repository/index.js" afterPath="$PROJECT_DIR$/api-server/modules/repository/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/modules/repository/layer/index.js" afterPath="$PROJECT_DIR$/api-server/modules/repository/layer/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/modules/repository/platform/index.js" afterPath="$PROJECT_DIR$/api-server/modules/repository/platform/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-server/modules/repository/superlayer/index.js" afterPath="$PROJECT_DIR$/api-server/modules/repository/superlayer/index.js" />
     </list>
     <list id="50c15a60-f7d8-476c-91ee-1bad739aa365" name="New changelist" comment="" />
     <ignored path="fermat-org.iws" />
@@ -53,27 +51,21 @@
       <file leaf-file-name="viewManager.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/platform-visualization/src/viewManager.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.21348314">
-              <caret line="269" column="19" selection-start-line="269" selection-start-column="19" selection-end-line="269" selection-end-column="19" />
-              <folding />
+            <state vertical-scroll-proportion="0.25361156">
+              <caret line="337" column="6" selection-start-line="266" selection-start-column="4" selection-end-line="337" selection-end-column="6" />
+              <folding>
+                <element signature="e#521#2936#0" expanded="false" />
+                <element signature="e#2992#6327#0" expanded="false" />
+                <element signature="e#6483#9295#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="common.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/platform-visualization/common.php">
+      <file leaf-file-name="constants.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/platform-visualization/src/constants.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.64">
-              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="get_plugins.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/platform-visualization/get_plugins.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="144.52">
+            <state vertical-scroll-proportion="444.76">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
@@ -461,10 +453,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/platform-visualization/src/loader.js">
+    <entry file="file://$PROJECT_DIR$/platform-visualization/common.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="26" selection-start-line="33" selection-start-column="22" selection-end-line="33" selection-end-column="34" />
+        <state vertical-scroll-proportion="-0.64">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/platform-visualization/get_plugins.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.6272">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -477,22 +477,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/platform-visualization/common.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.64">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/platform-visualization/get_plugins.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="144.52">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/platform-visualization/src/getData.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -501,11 +485,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/platform-visualization/src/loader.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="33" column="26" selection-start-line="33" selection-start-column="22" selection-end-line="33" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/platform-visualization/src/constants.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="444.76">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/platform-visualization/src/viewManager.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.21348314">
-          <caret line="269" column="19" selection-start-line="269" selection-start-column="19" selection-end-line="269" selection-end-column="19" />
-          <folding />
+        <state vertical-scroll-proportion="0.25361156">
+          <caret line="337" column="6" selection-start-line="266" selection-start-column="4" selection-end-line="337" selection-end-column="6" />
+          <folding>
+            <element signature="e#521#2936#0" expanded="false" />
+            <element signature="e#2992#6327#0" expanded="false" />
+            <element signature="e#6483#9295#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
