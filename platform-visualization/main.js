@@ -281,18 +281,16 @@ var superLayers = {
         return size - 1;
     }
 };
-
 var viewManager = new ViewManager();
-var URL = "get_plugins.php";
-//var URL = "http://52.11.156.16:3000/repo/comps";
+//var URL = "get_plugins.php";
+var URL = "http://52.11.156.16:3000/repo/comps";
 
-function getData() {
+/*function getData() {
     $.ajax({
         url: URL,
         method: "GET"
     }).success(
         function(lists) {
-            //console.dir(lists);
             var l = JSON.parse(lists);
             viewManager.fillTable(l);
             $('#splash').fadeTo(2000, 0, function() {
@@ -303,18 +301,39 @@ function getData() {
             });
         }
     );
+}*/
 
-    /*var l = JSON.parse(testData);
-
-        viewManager.fillTable(l);
-
-        $('#splash').fadeTo(2000, 0, function() {
+function getData() {
+    $.ajax({
+        url: URL,
+        method: "GET"
+    }).success(
+        function(lists) {
+            viewManager.fillTable(lists);
+            $('#splash').fadeTo(2000, 0, function() {
                 $('#splash').remove();
                 init();
-                //setTimeout( animate, 500);
+                //setTimeout(animate, 500);
                 animate();
-            });*/
+            });
+        }
+    );
 }
+
+/*
+function getData() {
+    var l = JSON.parse(testData);
+
+    viewManager.fillTable(l);
+
+    $('#splash').fadeTo(2000, 0, function() {
+        $('#splash').remove();
+        init();
+        //setTimeout( animate, 500);
+        animate();
+    });
+}
+*/
 /**
  * @class Represents the group of all header icons
  * @param {Number} columnWidth         The number of elements that contains a column
@@ -908,8 +927,6 @@ function Helper() {
     };
 }
 function Loader() {
-    // reference to the object
-    var that = this;
 
     /**
      * [getStamp description]
@@ -931,41 +948,15 @@ function Loader() {
     }
 
     /**
-     * does an ajax request to check if repo folder exists
-     * @method folderExists
-     * @param  {Number}     index index of element
-     */
-    this.folderExists = function(index) {
-        var strIndex = "#" + index;
-        var repoDir = helper.getRepoDir(table[index]);
-        if (repoDir) {
-            $.ajax({
-                url: "get_contents.php?url=" + repoDir,
-                method: "GET"
-            }).done(function(result) {
-                var res = JSON.parse(result);
-                var found = true;
-                if (res.message && res.message == "Not Found") {
-                    found = false;
-                    if (table[index].code_level != "concept") $(strIndex).append(getStamp());
-                } else {
-                    //console.log(repoDir);
-                }
-                table[index].folder_found = found;
-            });
-        } else {
-            table[index].folder_found = false;
-            $(strIndex).append(getStamp());
-        }
-    };
-
-    /**
      * check all elements in table
      * @method findThemAll
      */
     this.findThemAll = function() {
         for (var i = 0, l = table.length; i < l; i++) {
-            that.folderExists(i);
+            if (!table[i].found && table[i].code_level == "concept") {
+                var strIndex = "#" + i;
+                $(strIndex).append(getStamp());
+            }
         }
     };
 }
@@ -1125,7 +1116,7 @@ Timeline.prototype.show = function ( duration ) {
     }
 };
 function ViewManager() {
-    
+
     this.lastTargets = null;
     this.targets = {
         table: [],
@@ -1134,18 +1125,18 @@ function ViewManager() {
         grid: []
     };
     this.dimensions = {};
-    
+
     var groupsQtty;
     var layersQtty;
     var section = [];
     var columnWidth = 0;
     var layerPosition = [];
-    
+
     var elementsByGroup = [];
     var superLayerMaxHeight = 0;
     var superLayerPosition = [];
 
-    
+
     /**
      * Pre-computes the space layout for next draw
      */
@@ -1220,7 +1211,7 @@ function ViewManager() {
             if (isSuperLayer[i]) {
 
                 if (!inSuperLayer) {
-                    actualHeight+= 3;
+                    actualHeight += 3;
 
                     if (superLayerPosition[actualSuperLayer] === undefined) {
                         superLayerPosition[actualSuperLayer] = actualHeight;
@@ -1246,12 +1237,12 @@ function ViewManager() {
             layerPosition[i] = actualHeight;
         }
     };
-    
+
     // Disabled
     this.otherViews = function() {
-        
+
         var i, j, l, vector, phi, object;
-        
+
         // sphere
 
         vector = new THREE.Vector3();
@@ -1390,8 +1381,7 @@ function ViewManager() {
      * Uses the list to fill all global data
      * @param {Object} list List returned by the server
      */
-    this.fillTable = function(list) {
-
+    /*this.fillTable = function(list) {
         var pluginList = list.plugins,
             i, l, dependency;
 
@@ -1400,30 +1390,31 @@ function ViewManager() {
             superLayers[list.superLayers[i].code].name = list.superLayers[i].name;
             superLayers[list.superLayers[i].code].index = list.superLayers[i].index;
 
-            if(list.superLayers[i].dependsOn && list.superLayers[i].dependsOn.length !== 0) {
+            if (list.superLayers[i].dependsOn && list.superLayers[i].dependsOn.length !== 0) {
                 dependency = list.superLayers[i].dependsOn.split(' ').join('').split(',');
                 superLayers[list.superLayers[i].code].dependsOn = dependency;
             }
         }
+        console.dir(superLayers);
 
         for (i = 0, l = list.layers.length; i < l; i++) {
             layers[list.layers[i].name] = {};
             layers[list.layers[i].name].index = list.layers[i].index;
             layers[list.layers[i].name].super_layer = list.layers[i].super_layer;
         }
+        console.dir(layers);
+
 
         for (i = 0, l = list.groups.length; i < l; i++) {
             groups[list.groups[i].code] = {};
             groups[list.groups[i].code].index = list.groups[i].index;
 
-            if(list.groups[i].dependsOn && list.groups[i].dependsOn.length !== 0) {
+            if (list.groups[i].dependsOn && list.groups[i].dependsOn.length !== 0) {
                 dependency = list.groups[i].dependsOn.split(' ').join('').split(',');
                 groups[list.groups[i].code].dependsOn = dependency;
             }
         }
-        console.dir(layers);
         console.dir(groups);
-
 
         for (i = 0, l = pluginList.length; i < l; i++) {
 
@@ -1455,14 +1446,144 @@ function ViewManager() {
                 code_level: data.code_level ? data.code_level.trim().toLowerCase() : undefined,
                 life_cycle: data.life_cycle
             };
-
             table.push(element);
         }
-        
+        console.dir(table);
+
+        groupsQtty = groups.size();
+        layersQtty = layers.size();
+    };*/
+
+    var getSPL = function(_id, _SPLArray) {
+        if (_id) {
+            for (var i = 0, l = _SPLArray.length; i < l; i++) {
+                if (_SPLArray[i]._id + '' == _id + '') {
+                    return _SPLArray[i];
+                }
+            }
+        } else {
+            return null;
+        }
+    };
+
+    var getBestDev = function(_devs) {
+        var dev = {};
+        if (_devs) {
+            var _dev = {};
+            dev.percnt = 0;
+            for (var i = 0, l = _devs.length; i < l; i++) {
+                _dev = _devs[i];
+                if (_dev.scope == 'implementation' && _dev.percnt >= dev.percnt) {
+                    dev.percnt = _dev.percnt;
+                    dev.usrnm = _dev.dev.usrnm;
+                    dev.name = _dev.dev.name;
+                    dev.email = _dev.dev.email;
+                    dev.avatar_url = _dev.dev.avatar_url;
+                }
+            }
+        }
+        return dev;
+    };
+
+    this.fillTable = function(list) {
+        var _suprlays = list.suprlays,
+            _platfrms = list.platfrms,
+            _layers = list.layers,
+            _comps = list.comps,
+            i, l, code, name;
+
+        for (i = 0, l = _suprlays.length; i < l; i++) {
+            code = _suprlays[i].code;
+            superLayers[code] = {};
+            superLayers[code].name = _suprlays[i].name;
+            superLayers[code].index = _suprlays[i].order;
+            //superLayers[code]._id = _suprlays[i]._id;
+            superLayers[code].dependsOn = _suprlays[i].deps;
+        }
+        console.dir(superLayers);
+
+        for (i = 0, l = _platfrms.length; i < l; i++) {
+            code = _platfrms[i].code;
+            groups[code] = {};
+            groups[code].index = _platfrms[i].order;
+            groups[code].dependsOn = _platfrms[i].deps;
+            //groups[code]._id = _platfrms[i]._id;
+        }
+        console.dir(groups);
+
+        for (i = 0, l = _layers.length; i < l; i++) {
+            name = helper.capFirstLetter(_layers[i].name);
+            layers[name] = {};
+            switch (_layers[i].name) {
+                case 'communication':
+                    layers[name].super_layer = 'P2P';
+                    break;
+                case 'multi os':
+                    layers[name].super_layer = 'OSA';
+                    break;
+                case 'android':
+                    layers[name].super_layer = 'OSA';
+                    break;
+                case 'crypto router':
+                    layers[name].super_layer = 'BCH';
+                    break;
+                case 'crypto module':
+                    layers[name].super_layer = 'BCH';
+                    break;
+                case 'crypto vault':
+                    layers[name].super_layer = 'BCH';
+                    break;
+                case 'crypto network':
+                    layers[name].super_layer = 'BCH';
+                    break;
+                default:
+                    layers[name].super_layer = false;
+                    break;
+            }
+            layers[name].index = _layers[i].order;
+            //layers[name]._id = _layers[i]._id;
+        }
+        console.dir(layers);
+
+        for (i = 0, l = _comps.length; i < l; i++) {
+
+            var _comp = _comps[i];
+
+            var _platfrm = getSPL(_comp._platfrm_id, _platfrms);
+            var _layer = getSPL(_comp._layer_id, _layers);
+
+            var layerID = _layer.order;
+            layerID = (layerID === undefined || layerID == -1) ? layers.size() : layerID;
+
+            var groupID = (_platfrm !== undefined && _platfrm !== null) ? _platfrm.order : undefined;
+            groupID = (groupID === undefined || groupID == -1) ? groups.size() : groupID;
+
+            var _author = getBestDev(_comp.devs);
+
+            var element = {
+                group: _platfrm ? _platfrm.code : undefined,
+                groupID: groupID,
+                code: helper.getCode(_comp.name),
+                name: helper.capFirstLetter(_comp.name),
+                layer: helper.capFirstLetter(_layer.name),
+                layerID: layerID,
+                type: helper.capFirstLetter(_comp.type),
+                picture: _author.avatar_url ? _author.avatar_url : undefined,
+                author: _author.usrnm ? _author.usrnm : undefined,
+                authorRealName: _author.name ? _author.name : undefined,
+                authorEmail: _author.email ? _author.email : undefined,
+                difficulty: _comp.difficulty,
+                code_level: _comp.code_level ? _comp.code_level : undefined,
+                life_cycle: _comp.life_cycle,
+                found: _comp.found
+            };
+            table.push(element);
+        }
+        console.dir(table);
         groupsQtty = groups.size();
         layersQtty = layers.size();
     };
-    
+
     /**
      * Creates a Tile
      * @param   {Number}     i ID of the tile (index in table)
@@ -1473,329 +1594,339 @@ function ViewManager() {
         var mesh,
             element = new THREE.LOD(),
             levels = [
-            ['high', 0],
-            ['medium', 1000],
-            ['small', 1800],
-            ['mini', 2300]],
+                ['high', 0],
+                ['medium', 1000],
+                ['small', 1800],
+                ['mini', 2300]
+            ],
             texture,
             tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
             tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING,
             scale = 2;
-        
-        for(var j = 0, l = levels.length; j < l; j++) {
-            
+
+        for (var j = 0, l = levels.length; j < l; j++) {
+
             texture = createTexture(id, tileWidth, tileHeight, scale);
-            
+
             mesh = new THREE.Mesh(
                 new THREE.PlaneGeometry(tileWidth, tileHeight),
-                new THREE.MeshBasicMaterial({vertexColors : THREE.FaceColors, side : THREE.FrontSide, color : 0xffffff})
+                new THREE.MeshBasicMaterial({
+                    vertexColors: THREE.FaceColors,
+                    side: THREE.FrontSide,
+                    color: 0xffffff
+                })
             );
-            mesh.userData = {id : id};
+            mesh.userData = {
+                id: id
+            };
             mesh.material.map = texture;
             mesh.material.needsUpdate = true;
             element.addLevel(mesh, levels[j][1]);
         }
-        
+
         function createTexture(id, tileWidth, tileHeight, scale) {
-            
+
             var state = table[id].code_level,
                 difficulty = Math.ceil(table[id].difficulty / 2),
                 group = table[id].group || window.layers[table[id].layer].super_layer,
                 type = table[id].type,
                 picture = table[id].picture,
                 base = 'images/tiles/';
-            
+
             var canvas = document.createElement('canvas');
             canvas.width = tileWidth * scale;
             canvas.height = tileHeight * scale;
-            
+
             var middle = canvas.width / 2;
             var ctx = canvas.getContext('2d');
             ctx.fillStyle = "#FFFFFF";
             ctx.fillRect(0, 0, tileWidth * scale, tileHeight * scale);
             ctx.textAlign = 'center';
-            
+
             var texture = new THREE.Texture(canvas);
             texture.minFilter = THREE.NearestFilter;
             texture.magFilter = THREE.LinearFilter;
-            
+
             var pic = {
-                    src : picture || base + 'buster.png',
-                    alpha : 0.8
+                    src: picture || base + 'buster.png',
+                    alpha: 0.8
                 },
                 portrait = {
-                    src : base + 'portrait/' + levels[j][0] + '/' + state + '.png',
-                    x : 0, y : 0,
-                    w : tileWidth * scale, h : tileHeight * scale
+                    src: base + 'portrait/' + levels[j][0] + '/' + state + '.png',
+                    x: 0,
+                    y: 0,
+                    w: tileWidth * scale,
+                    h: tileHeight * scale
                 },
                 groupIcon = {
-                    src : base + 'icons/group/' + levels[j][0] + '/icon_' + group + '.png',
-                    w : 28 * scale, h : 28 * scale
+                    src: base + 'icons/group/' + levels[j][0] + '/icon_' + group + '.png',
+                    w: 28 * scale,
+                    h: 28 * scale
                 },
                 typeIcon = {
-                    src : base + 'icons/type/' + levels[j][0] + '/' + type.toLowerCase() + '_logo.png',
-                    w : 28 * scale, h : 28 * scale
+                    src: base + 'icons/type/' + levels[j][0] + '/' + type.toLowerCase() + '_logo.png',
+                    w: 28 * scale,
+                    h: 28 * scale
                 },
                 ring = {
-                    src : base + 'rings/' + levels[j][0] + '/' + state + '_diff_' + difficulty + '.png'
+                    src: base + 'rings/' + levels[j][0] + '/' + state + '_diff_' + difficulty + '.png'
                 },
                 codeText = {
-                    text : table[id].code,
-                    font : (18 * scale) + "px Arial"
+                    text: table[id].code,
+                    font: (18 * scale) + "px Arial"
                 },
                 nameText = {
-                    text : table[id].name,
-                    font : (10 * scale) + 'px Arial'
+                    text: table[id].name,
+                    font: (10 * scale) + 'px Arial'
                 },
                 layerText = {
-                    text : table[id].layer,
-                    font : (6 * scale) + 'px Arial'
+                    text: table[id].layer,
+                    font: (6 * scale) + 'px Arial'
                 },
                 authorText = {
-                    text : table[id].authorRealName || table[id].author || '',
-                    font : (3.5 * scale) + 'px Arial'
+                    text: table[id].authorRealName || table[id].author || '',
+                    font: (3.5 * scale) + 'px Arial'
                 };
-            
-            if(id === 185)
+
+            if (id === 185)
                 console.log("now");
-            
-            switch(state) {
+
+            switch (state) {
                 case "concept":
                     pic.x = 80 * scale;
                     pic.y = 36 * scale;
                     pic.w = 53 * scale;
                     pic.h = 53 * scale;
-                    
+
                     groupIcon.x = 25 * scale;
                     groupIcon.y = 49 * scale;
-                    
+
                     typeIcon.x = 160 * scale;
                     typeIcon.y = 49 * scale;
-                    
+
                     ring.x = 72 * scale;
                     ring.y = 93 * scale;
                     ring.w = 68 * scale;
                     ring.h = 9 * scale;
-                    
+
                     codeText.x = middle;
                     codeText.y = 21 * scale;
-                    
+
                     nameText.x = middle;
                     nameText.y = 33 * scale;
                     nameText.font = (9 * scale) + 'px Arial';
                     nameText.color = "#000000";
-                    
+
                     layerText.x = middle;
                     layerText.y = 114 * scale;
-                    
+
                     authorText.x = middle;
                     authorText.y = 80 * scale;
-                    
+
                     break;
                 case "development":
                     pic.x = 82 * scale;
                     pic.y = 47 * scale;
                     pic.w = 53 * scale;
                     pic.h = 53 * scale;
-                    
+
                     groupIcon.x = 35 * scale;
                     groupIcon.y = 76 * scale;
-                    
+
                     typeIcon.x = 154 * scale;
                     typeIcon.y = 76 * scale;
-                    
+
                     ring.x = 66 * scale;
                     ring.y = 31 * scale;
                     ring.w = 82 * scale;
                     ring.h = 81 * scale;
-                    
+
                     codeText.x = middle;
                     codeText.y = 20 * scale;
-                    
+
                     nameText.x = middle;
                     nameText.y = 28 * scale;
                     nameText.font = (6 * scale) + 'px Arial';
-                    
+
                     layerText.x = middle;
                     layerText.y = 113 * scale;
                     layerText.color = "#F26662";
-                    
+
                     authorText.x = middle;
                     authorText.y = 88 * scale;
-                    
+
                     break;
                 case "qa":
                     pic.x = 80 * scale;
                     pic.y = 35 * scale;
                     pic.w = 53 * scale;
                     pic.h = 53 * scale;
-                    
+
                     groupIcon.x = 35 * scale;
                     groupIcon.y = 76 * scale;
-                    
+
                     typeIcon.x = 154 * scale;
                     typeIcon.y = 76 * scale;
-                    
+
                     ring.x = 68 * scale;
                     ring.y = 35 * scale;
                     ring.w = 79 * scale;
                     ring.h = 68 * scale;
-                    
+
                     codeText.x = middle;
                     codeText.y = 20 * scale;
-                    
+
                     nameText.x = middle;
                     nameText.y = 28 * scale;
                     nameText.font = (6 * scale) + 'px Arial';
-                    
+
                     layerText.x = middle;
                     layerText.y = 112 * scale;
                     layerText.color = "#FCC083";
-                    
+
                     authorText.x = middle;
                     authorText.y = 78 * scale;
-                    
+
                     break;
                 case "production":
                     pic.x = 56 * scale;
                     pic.y = 33 * scale;
                     pic.w = 53 * scale;
                     pic.h = 53 * scale;
-                    
+
                     groupIcon.x = 17 * scale;
                     groupIcon.y = 30 * scale;
-                    
+
                     typeIcon.x = 17 * scale;
                     typeIcon.y = 62 * scale;
-                    
+
                     ring.x = 25 * scale;
                     ring.y = 99 * scale;
                     ring.w = 68 * scale;
                     ring.h = 9 * scale;
-                    
+
                     codeText.x = 170 * scale;
                     codeText.y = 26 * scale;
-                    
+
                     nameText.x = 170 * scale;
                     nameText.y = 71 * scale;
                     nameText.font = (7 * scale) + 'px Arial';
                     nameText.constraint = 60 * scale;
                     nameText.lineHeight = 9 * scale;
                     nameText.wrap = true;
-                    
+
                     layerText.x = 170 * scale;
                     layerText.y = 107 * scale;
-                    
+
                     authorText.x = 82 * scale;
                     authorText.y = 77 * scale;
-                    
+
                     break;
             }
-            
-            if(state == "concept" || state == "production")
+
+            if (state == "concept" || state == "production")
                 ring.src = base + 'rings/' + levels[j][0] + '/linear_diff_' + difficulty + '.png';
-            
-            if(difficulty === 0)
+
+            if (difficulty === 0)
                 ring = {};
-            
+
             var data = [
-                    pic,
-                    portrait,
-                    groupIcon,
-                    typeIcon,
-                    ring,
-                    codeText,
-                    nameText,
-                    layerText,
-                    authorText
-                ];
-            
+                pic,
+                portrait,
+                groupIcon,
+                typeIcon,
+                ring,
+                codeText,
+                nameText,
+                layerText,
+                authorText
+            ];
+
             drawPicture(data, ctx, texture);
-            
+
             return texture;
         }
-        
+
         function drawPicture(data, ctx, texture) {
-            
+
             var image = new Image();
             var actual = data.shift();
-            
-            if(actual.src && actual.src != 'undefined') {
-            
+
+            if (actual.src && actual.src != 'undefined') {
+
                 image.onload = function() {
 
 
-                    if(actual.alpha)
+                    if (actual.alpha)
                         ctx.globalAlpha = actual.alpha;
 
                     ctx.drawImage(image, actual.x, actual.y, actual.w, actual.h);
-                    if(texture)
+                    if (texture)
                         texture.needsUpdate = true;
 
                     ctx.globalAlpha = 1;
 
-                    if(data.length !== 0) {
+                    if (data.length !== 0) {
 
-                        if(data[0].text)
+                        if (data[0].text)
                             drawText(data, ctx, texture);
                         else
                             drawPicture(data, ctx, texture);
                     }
                 };
-                
+
                 image.onerror = function() {
-                    if(data.length !== 0) {
-                        if(data[0].text)
+                    if (data.length !== 0) {
+                        if (data[0].text)
                             drawText(data, ctx, texture);
                         else
                             drawPicture(data, ctx, texture);
                     }
                 };
-                
-                image.crossOrigin="anonymous";
+
+                image.crossOrigin = "anonymous";
                 image.src = actual.src;
-            }
-            else {
-                if(data.length !== 0) {
-                    if(data[0].text)
+            } else {
+                if (data.length !== 0) {
+                    if (data[0].text)
                         drawText(data, ctx, texture);
                     else
                         drawPicture(data, ctx, texture);
                 }
             }
         }
-        
+
         function drawText(data, ctx, texture) {
-            
+
             var actual = data.shift();
-            
+
             //TODO: Set Roboto typo
-            
-            if(actual.color)
+
+            if (actual.color)
                 ctx.fillStyle = actual.color;
-            
+
             ctx.font = actual.font;
-            
-            if(actual.constraint)
-                if(actual.wrap)
+
+            if (actual.constraint)
+                if (actual.wrap)
                     helper.drawText(actual.text, actual.x, actual.y, ctx, actual.constraint, actual.lineHeight);
                 else
                     ctx.fillText(actual.text, actual.x, actual.y, actual.constraint);
             else
                 ctx.fillText(actual.text, actual.x, actual.y);
-            
-            if(texture)
+
+            if (texture)
                 texture.needsUpdate = true;
-            
+
             ctx.fillStyle = "#FFFFFF";
-            
-            if(data.length !== 0)
+
+            if (data.length !== 0)
                 drawText(data, ctx);
         }
-        
+
         return element;
     };
-    
+
     /**
      * Converts the table in another form
      * @param {Array}  goal     Member of ViewManager.targets
@@ -1804,12 +1935,12 @@ function ViewManager() {
     this.transform = function(goal, duration) {
 
         var i, l;
-        
+
         duration = duration || 2000;
-        
+
         TWEEN.removeAll();
 
-        if(goal) {
+        if (goal) {
             this.lastTargets = goal;
 
             for (i = 0; i < objects.length; i++) {
@@ -1843,31 +1974,31 @@ function ViewManager() {
                 headers.hide(duration);
             }
         }
-        
+
         new TWEEN.Tween(this)
             .to({}, duration * 2)
             .onUpdate(render)
             .start();
     };
-    
+
     /**
      * Goes back to last target set in last transform
      */
     this.rollBack = function() {
         changeView(this.lastTargets);
     };
-    
+
     /**
      * Inits and draws the table, also creates the Dimensions object
      */
     this.drawTable = function() {
-        
+
         this.preComputeLayout();
-        
+
         for (var i = 0; i < table.length; i++) {
 
             var object = this.createElement(i);
-            
+
             object.position.x = Math.random() * 80000 - 40000;
             object.position.y = Math.random() * 80000 - 40000;
             object.position.z = 80000;
@@ -1906,42 +2037,42 @@ function ViewManager() {
             this.targets.table.push(object);
 
         }
-        
+
         this.dimensions = {
-            columnWidth : columnWidth,
-            superLayerMaxHeight : superLayerMaxHeight,
-            groupsQtty : groupsQtty,
-            layersQtty : layersQtty,
-            superLayerPosition : superLayerPosition
+            columnWidth: columnWidth,
+            superLayerMaxHeight: superLayerMaxHeight,
+            groupsQtty: groupsQtty,
+            layersQtty: layersQtty,
+            superLayerPosition: superLayerPosition
         };
     };
-    
+
     /**
      * Takes away all the tiles except the one with the id
      * @param {Number} [id]            The id to let alone
      * @param {Number} [duration=2000] Duration of the animation
      */
     this.letAlone = function(id, duration) {
-        
+
         var i, _duration = duration || 2000,
             distance = camera.getMaxDistance();
-        
+
         TWEEN.removeAll();
-        
-        for(i = 0; i < objects.length; i++) {
-            
-            if(i === id) continue;
-            
+
+        for (i = 0; i < objects.length; i++) {
+
+            if (i === id) continue;
+
             new TWEEN.Tween(objects[i].position)
-            .to({
-                x: 0,
-                y: 0,
-                z: distance
-            }, Math.random() * _duration + _duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
-            .start();
+                .to({
+                    x: 0,
+                    y: 0,
+                    z: distance
+                }, Math.random() * _duration + _duration)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .start();
         }
-        
+
         new TWEEN.Tween(this)
             .to({}, _duration * 2)
             .onUpdate(render)
