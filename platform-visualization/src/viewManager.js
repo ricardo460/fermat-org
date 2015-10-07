@@ -394,6 +394,30 @@ function ViewManager() {
         }
         console.dir(groups);
 
+        layers['empty layer 0'] = {
+            index: 27,
+            super_layer: false
+        };
+        layers['empty layer 1'] = {
+            index: 5,
+            super_layer: false
+        };
+        layers['empty layer 2'] = {
+            index: 26,
+            super_layer: false
+        };
+        layers['empty layer 3'] = {
+            index: 29,
+            super_layer: false
+        };
+        layers['empty layer 4'] = {
+            index: 34,
+            super_layer: false
+        };
+        layers['empty layer 5'] = {
+            index: 40,
+            super_layer: false
+        };
         for (i = 0, l = _layers.length; i < l; i++) {
             name = helper.capFirstLetter(_layers[i].name);
             layers[name] = {};
