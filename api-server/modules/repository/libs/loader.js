@@ -6,6 +6,7 @@ var platfrmMod = require('../platform');
 var suprlayMod = require('../superlayer');
 var layerMod = require('../layer');
 var compMod = require('../component');
+var procMod = require('../process');
 var devMod = require('../developer');
 
 //var db = require('../../../db');
@@ -242,7 +243,7 @@ var parseManifest = function(callback) {
                 var fermat = {};
                 var platfrms = [];
                 var _platfrms = res_man.fermat.platforms[0].platform;
-                var i, j, layers, _layers, layer, comps, depends, _depends, depend;
+                var i, j, k, layers, _layers, layer, comps, depends, _depends, depend, steps, _steps;
                 for (i = 0; i < _platfrms.length; i++) {
                     var platfrm = {};
                     platfrm = _platfrms[i]['$'];
@@ -321,6 +322,30 @@ var parseManifest = function(callback) {
                     suprlays.push(suprlay);
                 }
                 fermat.suprlays = suprlays;
+                var procs = [];
+                var _procs = res_man.fermat.processes[0].process;
+                for (i = 0; i < _procs.length; i++) {
+                    var _proc = _procs[i]['$'];
+                    steps = [];
+                    _steps = _procs[i].steps[0].step;
+                    for (j = 0; j < _steps.length; j++) {
+                        var _step = _steps[j]['$'];
+                        _step.next = [];
+                        if (_steps[j].next) {
+                            var _next = _steps[j].next[0].step;
+                            if (_next) {
+                                for (k = 0; k < _next.length; k++) {
+                                    _step.next.push(_next[k]['$']);
+                                }
+                            }
+                        }
+                        steps.push(_step);
+                    }
+                    _proc.steps = steps;
+                    procs.push(_proc);
+                }
+                fermat.procs = procs;
+
                 callback(null, fermat);
             }
         });
@@ -347,6 +372,7 @@ var saveManifest = function(callback) {
                 if (res_load.platfrms && Array.isArray(res_load.platfrms) && res_load.suprlays && Array.isArray(res_load.suprlays)) {
                     var _platfrms = res_load.platfrms;
                     var _suprlays = res_load.suprlays;
+                    var _procs = res_load.procs;
 
                     var loopPlatfrms = function(i) {
                         if (i < _platfrms.length) {
@@ -414,7 +440,6 @@ var saveManifest = function(callback) {
                                                                                                     } else {
                                                                                                         upd_devs.push(res_compDev._id);
                                                                                                         loopDevs(++l);
-
                                                                                                     }
                                                                                                 });
                                                                                             }
@@ -577,6 +602,54 @@ var saveManifest = function(callback) {
                                             }
                                         };
                                         loopLayers(0);
+                                    }
+                                });
+                        } else {
+                            loopProcs(0);
+                        }
+                    };
+
+                    var loopProcs = function(s) {
+                        if (s < _procs.length) {
+                            var _proc = _procs[s];
+                            //platfrm, name, desc, prev, next, callback
+                            procMod.insOrUpdProc(_proc.platform ? _proc.platform.trim().toUpperCase() : null,
+                                _proc.name ? _proc.name.trim().toLowerCase() : null,
+                                _proc.description ? _proc.description.trim().toLowerCase() : null,
+                                _proc.previous ? _proc.previous.trim().toLowerCase() : null,
+                                _proc.next ? _proc.next.trim().toLowerCase() : null,
+                                function(err_proc, res_proc) {
+                                    if (err_proc) {
+                                        winston.log('info', err_proc.message, err_proc);
+                                        loopProcs(++s);
+                                    } else {
+                                        var _steps = _proc.steps;
+                                        var loopSteps = function(t) {
+                                            if (t < _steps.length) {
+                                                var _step = _steps[t];
+                                                procMod.insOrUpdStep(res_proc._id, //_proc_id
+                                                    _step.platform ? _step.platform.toUpperCase() : null, //platfrm_code
+                                                    _step.superlayer ? _step.superlayer.toUpperCase() : null, //suprlay_code
+                                                    _step.layer ? _step.layer.toLowerCase() : null, //layer_name
+                                                    _step.name ? _step.name.toLowerCase() : null, //comp_name
+                                                    _step.type ? _step.type.toLowerCase() : null, //type
+                                                    _step.title ? _step.title.toLowerCase() : null, //title
+                                                    _step.description ? _step.description.toLowerCase() : null, //description
+                                                    _step.id ? _step.id : null, //order
+                                                    _step.next ? _step.next : [], //next
+                                                    function(err_stp, res_stp) {
+                                                        if (err_stp) {
+                                                            winston.log('info', err_stp.message, err_stp);
+                                                            loopSteps(++t);
+                                                        } else {
+                                                            loopSteps(++t);
+                                                        }
+                                                    });
+                                            } else {
+                                                loopProcs(++s);
+                                            }
+                                        };
+                                        loopSteps(0);
                                     }
                                 });
                         } else {

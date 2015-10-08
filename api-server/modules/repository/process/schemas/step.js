@@ -23,7 +23,7 @@ var stepSchema = mongoose.Schema({
         type: String,
         trim: true
     },
-    description: {
+    desc: {
         type: String,
         trim: true
     },
@@ -31,9 +31,7 @@ var stepSchema = mongoose.Schema({
         type: Number,
         'default': 0
     },
-    next: [{
-        type: Number // order
-    }],
+    next: [],
     upd_at: {
         type: mongoose.Schema.Types.ObjectId,
         'default': new mongoose.Types.ObjectId()

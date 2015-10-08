@@ -16,13 +16,7 @@ exports.insertProc = function(proc_mdl, callback) {
     });
 };
 
-exports.findProcById = function(_id, callback) {
-    procDao.findAndPopulateSchemaById(_id, 'steps', function(err, proc) {
-        callback(err, proc);
-    });
-};
-
-exports.findProc = function(query, callback) {
+exports.findAndPopulateProc = function(query, callback) {
     procDao.findSchema(query, function(err, proc) {
         if (err) {
             callback(err, null);
@@ -43,9 +37,13 @@ exports.findProc = function(query, callback) {
     });
 };
 
-exports.findProcs = function(query, limit, order, callback) {
-    procDao.findAndPopulateSchemaLst(query, limit, order, 'steps', function(err, proc) {
-        callback(err, proc);
+exports.findProc = function(query, callback) {
+    procDao.findSchema(query, function(err, proc) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, proc);
+        }
     });
 };
 

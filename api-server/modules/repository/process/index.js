@@ -9,58 +9,85 @@ var layerSrv = require('../layer/services/layer');
 var compSrv = require('../component/services/comp');
 
 var findComp = function(platfrm_code, suprlay_code, layer_name, comp_name, callback) {
+    //console.dir(arguments);
     layerSrv.findLayerByName(layer_name.toLowerCase(), function(err_lay, res_lay) {
         if (err_lay) {
+            //console.dir("0");
             return callback(err_lay, null);
-        } else {
+        } else if (res_lay) {
+            //console.dir("1");
             if (platfrm_code) {
+                //console.dir("2");
                 platfrmSrv.findPlatfrmByCode(platfrm_code, function(err_pla, res_pla) {
                     if (err_pla) {
+                        //console.dir("3");
                         return callback(err_pla, null);
-                    } else {
+                    } else if (res_pla) {
+                        //console.dir("4");
                         compSrv.findComp({
                             _layer_id: res_lay._id,
                             name: comp_name,
                             _platfrm_id: res_pla._id
                         }, function(err_comp, res_comp) {
                             if (err_comp) {
+                                //console.dir("5");
                                 return callback(err_comp, null);
                             } else {
+                                //console.dir("6");
+                                //console.dir(res_comp);
                                 return callback(null, res_comp);
                             }
                         });
+                    } else {
+                        //console.dir("7");
+                        return callback(null, null);
                     }
                 });
             } else if (suprlay_code) {
+                //console.dir("8");
                 suprlaySrv.findSuprlayByCode(suprlay_code, function(err_sup, res_sup) {
                     if (err_sup) {
+                        //console.dir("9");
                         return callback(err_sup, null);
-                    } else {
+                    } else if (res_sup) {
+                        //console.dir("10");
                         compSrv.findComp({
                             _layer_id: res_lay._id,
                             name: comp_name,
                             _suprlay_id: res_sup._id
                         }, function(err_comp, res_comp) {
                             if (err_comp) {
+                                //console.dir("11");
                                 return callback(err_comp, null);
                             } else {
+                                //console.dir("12");
                                 return callback(null, res_comp);
                             }
                         });
+                    } else {
+                        //console.dir("13");
+                        return callback(null, null);
                     }
                 });
             } else {
+                //console.dir("14");
                 return callback(new Error('invalid search'), null);
             }
+        } else {
+            //console.dir("15");
+            return callback(null, null);
         }
     });
 };
 
 exports.findProcsByComp = function(platfrm_code, suprlay_code, layer_name, comp_name, callback) {
     findComp(platfrm_code, suprlay_code, layer_name, comp_name, function(err_comp, res_comp) {
+        console.dir(err_comp);
+        console.dir(res_comp);
         if (err_comp) {
             return callback(err_comp, null);
         } else {
+
             stepSrv.findSteps({
                 _comp_id: res_comp._id
             }, {}, function(err, steps) {
@@ -91,7 +118,7 @@ exports.findProcsByComp = function(platfrm_code, suprlay_code, layer_name, comp_
                             if (_procs.contains(_step._proc_id)) {
                                 loopSteps(++i);
                             } else {
-                                procSrv.findProc({
+                                procSrv.findAndPopulateProc({
                                     _id: _step._proc_id
                                 }, function(err_proc, res_proc) {
                                     if (err_proc) {
@@ -114,8 +141,9 @@ exports.findProcsByComp = function(platfrm_code, suprlay_code, layer_name, comp_
     });
 };
 
-exports.findStepsByProc = function(proc_name, callback) {
-    procSrv.findProc({
+exports.findStepsByProc = function(platfrm, proc_name, callback) {
+    procSrv.findAndPopulateProc({
+        platfrm: platfrm.toUpperCase(),
         name: proc_name.toLowerCase()
     }, function(err, res) {
         if (err) return callback(err, null);
@@ -123,10 +151,16 @@ exports.findStepsByProc = function(proc_name, callback) {
     });
 };
 
-exports.insOrUpdProc = function(name, desc, steps, callback) {
+exports.insOrUpdProc = function(platfrm, name, desc, prev, next, callback) {
+    //console.dir(arguments);
     var find_obj = {
         '$and': []
     };
+    if (platfrm) {
+        find_obj['$and'].push({
+            "platfrm": platfrm
+        });
+    }
     if (name) {
         find_obj['$and'].push({
             "name": name
@@ -141,9 +175,13 @@ exports.insOrUpdProc = function(name, desc, steps, callback) {
                 set_obj.desc = desc;
                 res_proc.desc = desc;
             }
-            if (steps != res_proc.steps) {
-                set_obj.steps = steps;
-                res_proc.steps = steps;
+            if (prev != res_proc.prev) {
+                set_obj.prev = prev;
+                res_proc.prev = prev;
+            }
+            if (next != res_proc.next) {
+                set_obj.next = next;
+                res_proc.next = next;
             }
             if (Object.keys(set_obj).length > 0) {
                 procSrv.updateProcById(res_proc._id, set_obj, function(err_upd, res_upd) {
@@ -154,7 +192,7 @@ exports.insOrUpdProc = function(name, desc, steps, callback) {
                 return callback(null, res_proc);
             }
         } else {
-            var proc = new ProcMdl(name, desc, steps);
+            var proc = new ProcMdl(platfrm, name, desc, prev, next, []);
             procSrv.insertProc(proc, function(err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
                 else return callback(null, res_ins);
@@ -163,7 +201,7 @@ exports.insOrUpdProc = function(name, desc, steps, callback) {
     });
 };
 
-exports.insOrUpdStep = function(_proc_id, platfrm_code, suprlay_code, layer_name, comp_name, type, title, description, order, next, callback) {
+exports.insOrUpdStep = function(_proc_id, platfrm_code, suprlay_code, layer_name, comp_name, type, title, desc, order, next, callback) {
     findComp(platfrm_code, suprlay_code, layer_name, comp_name, function(err_comp, res_comp) {
         if (err_comp) {
             return callback(err_comp, null);
@@ -176,21 +214,21 @@ exports.insOrUpdStep = function(_proc_id, platfrm_code, suprlay_code, layer_name
                     '_proc_id': _proc_id
                 });
             }
-            if (_comp_id) {
-                find_obj['$and'].push({
-                    '_comp_id': res_comp._id
-                });
-            }
             if (order) {
                 find_obj['$and'].push({
                     'order': order
                 });
             }
+            var _comp_id = res_comp && res_comp._id ? res_comp._id : null;
             stepSrv.findStep(find_obj, function(err_step, res_step) {
                 if (err_step) {
                     return callback(err_step, null);
                 } else if (res_step) {
                     var set_obj = {};
+                    if (_comp_id && _comp_id != res_step._comp_id) {
+                        set_obj._comp_id = _comp_id;
+                        res_step._comp_id = _comp_id;
+                    }
                     if (type && type != res_step.type) {
                         set_obj.type = type;
                         res_step.type = type;
@@ -199,9 +237,9 @@ exports.insOrUpdStep = function(_proc_id, platfrm_code, suprlay_code, layer_name
                         set_obj.title = title;
                         res_step.title = title;
                     }
-                    if (description && description != res_step.description) {
-                        set_obj.description = description;
-                        res_step.description = description;
+                    if (desc && desc != res_step.desc) {
+                        set_obj.desc = desc;
+                        res_step.desc = desc;
                     }
                     if (next && next != res_step.next) {
                         set_obj.next = next;
@@ -216,7 +254,13 @@ exports.insOrUpdStep = function(_proc_id, platfrm_code, suprlay_code, layer_name
                         return callback(null, res_step);
                     }
                 } else {
-                    var step = new StepMdl(_proc_id, _comp_id, type, title, description, order, next);
+                    var step = new StepMdl(_proc_id,
+                        res_comp ? res_comp._id : null,
+                        type,
+                        title,
+                        desc,
+                        order,
+                        next);
                     stepSrv.insertStep(step, function(err_ins, res_ins) {
                         if (err_ins) return callback(err_ins, null);
                         else return callback(null, res_ins);

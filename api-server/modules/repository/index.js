@@ -126,11 +126,12 @@ exports.updDevs = function(req, next) {
 
 exports.getProcs = function(req, next) {
     try {
+        var platfrm_code;
         if ((req.query.platform || req.query.superlayer) &&
             req.query.layer &&
             req.query.component) {
-            var platfrm_code = req.query.platform ? req.query.platform.toUpperCase() : null,
-                suprlay_code = req.query.superlayer ? req.query.superlayer.toUpperCase() : null,
+            platfrm_code = req.query.platform ? req.query.platform.toUpperCase() : null;
+            var suprlay_code = req.query.superlayer ? req.query.superlayer.toUpperCase() : null,
                 layer_name = req.query.layer ? req.query.layer.toLowerCase() : null,
                 comp_name = req.query.component ? req.query.component.toLowerCase() : null;
             procMod.findProcsByComp(platfrm_code,
@@ -143,6 +144,16 @@ exports.getProcs = function(req, next) {
                         next(null, res);
                     }
                 });
+        } else if (req.query.platform && req.query.name) {
+            platfrm_code = req.query.platform ? req.query.platform.toUpperCase() : null;
+            var name = req.query.name ? req.query.name.toLowerCase() : null;
+            procMod.findStepsByProc(platfrm_code, name, function(err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
         } else {
             next(new Error('incomplete data'), null);
         }
