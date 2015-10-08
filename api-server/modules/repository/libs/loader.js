@@ -60,22 +60,23 @@ var processComp = function(section, layer, comp, type) {
     var _authors = comp.authors && comp.authors[0] && comp.authors[0].author ? comp.authors[0].author : [];
     var _mantainers = comp.mantainers && comp.mantainers[0] && comp.mantainers[0].mantainer ? comp.mantainers[0].mantainer : [];
     var _life_cycle = comp.life_cycle && comp.life_cycle[0] && comp.life_cycle[0].status ? comp.life_cycle[0].status : [];
-    for (var i = 0; i < _authors.length; i++) {
-        var dev = {};
+    var i, dev, status;
+    for (i = 0; i < _authors.length; i++) {
+        dev = {};
         dev = _authors[i]['$'];
         dev.role = 'author';
         devs.push(dev);
     }
-    for (var i = 0; i < _mantainers.length; i++) {
-        var dev = {};
+    for (i = 0; i < _mantainers.length; i++) {
+        dev = {};
         dev = _mantainers[i]['$'];
         dev.role = 'mantainer';
         devs.push(dev);
     }
     proComp.devs = devs;
     var life_cycle = [];
-    for (var i = 0; i < _life_cycle.length; i++) {
-        var status = {};
+    for (i = 0; i < _life_cycle.length; i++) {
+        status = {};
         status = _life_cycle[i]['$'];
         life_cycle.push(status);
     }
@@ -241,15 +242,16 @@ var parseManifest = function(callback) {
                 var fermat = {};
                 var platfrms = [];
                 var _platfrms = res_man.fermat.platforms[0].platform;
-                for (var i = 0; i < _platfrms.length; i++) {
+                var i, j, layers, _layers, layer, comps, depends, _depends, depend;
+                for (i = 0; i < _platfrms.length; i++) {
                     var platfrm = {};
                     platfrm = _platfrms[i]['$'];
-                    var layers = [];
-                    var _layers = _platfrms[i].layer;
-                    for (var j = 0; j < _layers.length; j++) {
-                        var layer = {};
+                    layers = [];
+                    _layers = _platfrms[i].layer;
+                    for (j = 0; j < _layers.length; j++) {
+                        layer = {};
                         layer = _layers[j]['$'];
-                        var comps = [];
+                        comps = [];
                         if (_layers[j].plugins) {
                             comps = comps.concat(processCompList(platfrm, layer, _layers[j].plugins[0].plugin, 'plugin'));
                         }
@@ -266,11 +268,11 @@ var parseManifest = function(callback) {
                         layers.push(layer);
                     }
                     platfrm.layers = layers;
-                    var depends = [];
+                    depends = [];
                     if (_platfrms[i].dependencies) {
-                        var _depends = _platfrms[i].dependencies[0].dependency;
-                        for (var j = 0; j < _depends.length; j++) {
-                            var depend = {};
+                        _depends = _platfrms[i].dependencies[0].dependency;
+                        for (j = 0; j < _depends.length; j++) {
+                            depend = {};
                             depend = _depends[j]['$'];
                             depends.push(depend);
                         }
@@ -281,15 +283,15 @@ var parseManifest = function(callback) {
                 fermat.platfrms = platfrms;
                 var suprlays = [];
                 var _suprlays = res_man.fermat.super_layers[0].super_layer;
-                for (var i = 0; i < _suprlays.length; i++) {
+                for (i = 0; i < _suprlays.length; i++) {
                     var suprlay = {};
                     suprlay = _suprlays[i]['$'];
-                    var layers = [];
-                    var _layers = _suprlays[i].layer;
-                    for (var j = 0; j < _layers.length; j++) {
-                        var layer = {};
+                    layers = [];
+                    _layers = _suprlays[i].layer;
+                    for (j = 0; j < _layers.length; j++) {
+                        layer = {};
                         layer = _layers[j]['$'];
-                        var comps = [];
+                        comps = [];
                         if (_layers[j].plugins) {
                             comps = comps.concat(processCompList(suprlay, layer, _layers[j].plugins[0].plugin, 'plugin'));
                         }
@@ -306,11 +308,11 @@ var parseManifest = function(callback) {
                         layers.push(layer);
                     }
                     suprlay.layers = layers;
-                    var depends = [];
+                    depends = [];
                     if (_suprlays[i].dependencies) {
-                        var _depends = _suprlays[i].dependencies[0].dependency;
-                        for (var j = 0; j < _depends.length; j++) {
-                            var depend = {};
+                        _depends = _suprlays[i].dependencies[0].dependency;
+                        for (j = 0; j < _depends.length; j++) {
+                            depend = {};
                             depend = _depends[j]['$'];
                             depends.push(depend);
                         }

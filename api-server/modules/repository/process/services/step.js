@@ -139,3 +139,21 @@ exports.updateStepById = function(_id, set, callback) {
         callback(err, step);
     });
 };
+
+/**
+ * [findAndPopulateAllSteps description]
+ *
+ * @method findAndPopulateAllSteps
+ *
+ * @param  {[type]}                query    [description]
+ * @param  {[type]}                sort     [description]
+ * @param  {[type]}                path     [description]
+ * @param  {Function}              callback [description]
+ *
+ * @return {[type]}                [description]
+ */
+exports.findAndPopulateAllSteps = function(query, sort, path, callback) {
+    stepDao.findAndPopulateAllSchemaLst(query, sort, path, function(err, step) {
+        callback(err, step);
+    });
+};

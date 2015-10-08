@@ -4,6 +4,7 @@ var procMdl = require('../models/proc');
 var procSch = require('../schemas/proc');
 var stepMdl = require('../models/step');
 var stepSch = require('../schemas/step');
+var stepSrv = require('../services/step');
 var devMdl = require('../../developer/models/dev');
 var devSch = require('../../developer/schemas/dev');
 
@@ -22,19 +23,28 @@ exports.findProcById = function(_id, callback) {
 };
 
 exports.findProc = function(query, callback) {
-    procDao.findAndPopulateSchema(query, 'steps', function(err, proc) {
-        callback(err, proc);
+    procDao.findSchema(query, function(err, proc) {
+        if (err) {
+            callback(err, null);
+        } else {
+            stepSrv.findAllSteps({
+                _proc_id: proc._id
+            }, {
+                order: 1
+            }, function(err, steps) {
+                if (err) {
+                    callback(err, null);
+                } else {
+                    proc.steps = steps;
+                    callback(null, proc);
+                }
+            });
+        }
     });
 };
 
 exports.findProcs = function(query, limit, order, callback) {
     procDao.findAndPopulateSchemaLst(query, limit, order, 'steps', function(err, proc) {
-        callback(err, proc);
-    });
-};
-
-exports.findAllProcs = function(query, order, callback) {
-    procDao.findAndPopulateAllSchemaLst(query, order, 'steps', function(err, proc) {
         callback(err, proc);
     });
 };
