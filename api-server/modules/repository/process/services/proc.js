@@ -29,7 +29,35 @@ exports.findAndPopulateProc = function(query, callback) {
                 if (err) {
                     callback(err, null);
                 } else {
-                    proc.steps = steps;
+                    var _steps = [];
+                    if (steps && Array.isArray(steps)) {
+
+                        var getStep = function(i) {
+                            var _step = steps[i];
+                            var step = {};
+                            step.id = _step.order;
+                            step.title = _step.title ? _step.title : null;
+                            step.desc = _step.desc ? _step.desc : null;
+                            step.type = _step.type ? _step.type : null;
+                            step.next = _step.next ? _step.next : [];
+                            if (_step.comp) {
+                                step.name = _step.comp.name;
+                                step.layer = _step.comp._layer_id.name;
+                                if (_step.comp._platfrm_id) {
+                                    step.platfrm = _step.comp._platfrm_id.code;
+                                } else if (_step.comp._suprlay_id) {
+                                    step.suprlay = _step.comp._suprlay_id.code;
+                                }
+                            }
+                            return step;
+                        };
+
+                        for (var i = 0; i < steps.length; i++) {
+                            _steps.push(getStep(i));
+                        }
+                    }
+                    //console.dir(_steps);
+                    proc.steps = _steps;
                     callback(null, proc);
                 }
             });

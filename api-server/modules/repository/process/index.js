@@ -80,10 +80,21 @@ var findComp = function(platfrm_code, suprlay_code, layer_name, comp_name, callb
     });
 };
 
+/**
+ * [findProcsByComp description]
+ *
+ * @method findProcsByComp
+ *
+ * @param  {[type]}        platfrm_code [description]
+ * @param  {[type]}        suprlay_code [description]
+ * @param  {[type]}        layer_name   [description]
+ * @param  {[type]}        comp_name    [description]
+ * @param  {Function}      callback     [description]
+ *
+ * @return {[type]}        [description]
+ */
 exports.findProcsByComp = function(platfrm_code, suprlay_code, layer_name, comp_name, callback) {
     findComp(platfrm_code, suprlay_code, layer_name, comp_name, function(err_comp, res_comp) {
-        console.dir(err_comp);
-        console.dir(res_comp);
         if (err_comp) {
             return callback(err_comp, null);
         } else {
@@ -151,6 +162,20 @@ exports.findStepsByProc = function(platfrm, proc_name, callback) {
     });
 };
 
+/**
+ * [insOrUpdProc description]
+ *
+ * @method insOrUpdProc
+ *
+ * @param  {[type]}     platfrm  [description]
+ * @param  {[type]}     name     [description]
+ * @param  {[type]}     desc     [description]
+ * @param  {[type]}     prev     [description]
+ * @param  {Function}   next     [description]
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
 exports.insOrUpdProc = function(platfrm, name, desc, prev, next, callback) {
     //console.dir(arguments);
     var find_obj = {
@@ -201,6 +226,25 @@ exports.insOrUpdProc = function(platfrm, name, desc, prev, next, callback) {
     });
 };
 
+/**
+ * [insOrUpdStep description]
+ *
+ * @method insOrUpdStep
+ *
+ * @param  {[type]}     _proc_id     [description]
+ * @param  {[type]}     platfrm_code [description]
+ * @param  {[type]}     suprlay_code [description]
+ * @param  {[type]}     layer_name   [description]
+ * @param  {[type]}     comp_name    [description]
+ * @param  {[type]}     type         [description]
+ * @param  {[type]}     title        [description]
+ * @param  {[type]}     desc         [description]
+ * @param  {[type]}     order        [description]
+ * @param  {Function}   next         [description]
+ * @param  {Function}   callback     [description]
+ *
+ * @return {[type]}     [description]
+ */
 exports.insOrUpdStep = function(_proc_id, platfrm_code, suprlay_code, layer_name, comp_name, type, title, desc, order, next, callback) {
     findComp(platfrm_code, suprlay_code, layer_name, comp_name, function(err_comp, res_comp) {
         if (err_comp) {
@@ -215,6 +259,11 @@ exports.insOrUpdStep = function(_proc_id, platfrm_code, suprlay_code, layer_name
                 });
             }
             if (order) {
+                find_obj['$and'].push({
+                    'order': order
+                });
+            } else {
+                order = 0;
                 find_obj['$and'].push({
                     'order': order
                 });
