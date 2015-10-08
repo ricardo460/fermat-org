@@ -22,6 +22,9 @@ function Camera(position, renderer, renderFunc) {
     var focus = null;
     var self = this;
     
+    var fake = new THREE.Object3D();
+    fake.position.set(MAX_DISTANCE, MAX_DISTANCE, -MAX_DISTANCE);
+    
     camera.position.copy( position );
 
     controls.rotateSpeed = ROTATE_SPEED;
@@ -79,6 +82,9 @@ function Camera(position, renderer, renderFunc) {
 
         viewManager.letAlone(focus, duration);
         
+        objects[focus].getObjectForDistance(0).visible = true;
+        self.render(renderer, scene);
+        
         headers.hide(duration);
     
         var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1);
@@ -92,7 +98,7 @@ function Camera(position, renderer, renderFunc) {
             .start();*/
 
         new TWEEN.Tween( camera.position )
-            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration )
+            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration * 2 )
             //.easing( TWEEN.Easing.Exponential.InOut )
             .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
             .start();
@@ -116,6 +122,7 @@ function Camera(position, renderer, renderFunc) {
             $('#sidePanel').fadeTo(1000, 0, function() { $('#sidePanel').remove(); });
             $('#elementPanel').fadeTo(1000, 0, function() { $('#elementPanel').remove(); });
             $('#timelineButton').fadeTo(1000, 0, function() { $('#timelineButton').remove(); });
+            if( $('#developerButton') != null ) helper.hide($('#developerButton'), 1000);
             if( $('#tlContainer') != null ) helper.hide($('#tlContainer'), 1000);
             $(renderer.domElement).fadeTo(1000, 1);
 
@@ -174,7 +181,7 @@ function Camera(position, renderer, renderFunc) {
                 .start();*/
 
             new TWEEN.Tween( camera.position )
-                .to( { x: controls.position0.x, y: controls.position0.y, z: controls.position0.z }, Math.random() * duration + duration )
+                .to( { x: controls.position0.x, y: controls.position0.y, z: controls.position0.z }, duration )
                 //.easing( TWEEN.Easing.Exponential.InOut )
                 .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
                 .start();
@@ -205,12 +212,19 @@ function Camera(position, renderer, renderFunc) {
      */
     this.render = function ( renderer, scene ) {
         
+        var cam;
+        
         scene.traverse( function ( object ) {
 
             if ( object instanceof THREE.LOD ) {
-                object.update( camera );
+                
+                if(object.userData.flying === true) cam = fake;
+                else cam = camera;
+                
+                object.update( cam );
             }
         });
+        
         renderer.render ( scene, camera );
     };
     

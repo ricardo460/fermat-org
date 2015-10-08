@@ -438,6 +438,9 @@ function Camera(position, renderer, renderFunc) {
     var focus = null;
     var self = this;
     
+    var fake = new THREE.Object3D();
+    fake.position.set(MAX_DISTANCE, MAX_DISTANCE, -MAX_DISTANCE);
+    
     camera.position.copy( position );
 
     controls.rotateSpeed = ROTATE_SPEED;
@@ -495,6 +498,9 @@ function Camera(position, renderer, renderFunc) {
 
         viewManager.letAlone(focus, duration);
         
+        objects[focus].getObjectForDistance(0).visible = true;
+        self.render(renderer, scene);
+        
         headers.hide(duration);
     
         var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1);
@@ -508,7 +514,7 @@ function Camera(position, renderer, renderFunc) {
             .start();*/
 
         new TWEEN.Tween( camera.position )
-            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration )
+            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration * 2 )
             //.easing( TWEEN.Easing.Exponential.InOut )
             .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
             .start();
@@ -532,6 +538,7 @@ function Camera(position, renderer, renderFunc) {
             $('#sidePanel').fadeTo(1000, 0, function() { $('#sidePanel').remove(); });
             $('#elementPanel').fadeTo(1000, 0, function() { $('#elementPanel').remove(); });
             $('#timelineButton').fadeTo(1000, 0, function() { $('#timelineButton').remove(); });
+            if( $('#developerButton') != null ) helper.hide($('#developerButton'), 1000);
             if( $('#tlContainer') != null ) helper.hide($('#tlContainer'), 1000);
             $(renderer.domElement).fadeTo(1000, 1);
 
@@ -590,7 +597,7 @@ function Camera(position, renderer, renderFunc) {
                 .start();*/
 
             new TWEEN.Tween( camera.position )
-                .to( { x: controls.position0.x, y: controls.position0.y, z: controls.position0.z }, Math.random() * duration + duration )
+                .to( { x: controls.position0.x, y: controls.position0.y, z: controls.position0.z }, duration )
                 //.easing( TWEEN.Easing.Exponential.InOut )
                 .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
                 .start();
@@ -621,12 +628,19 @@ function Camera(position, renderer, renderFunc) {
      */
     this.render = function ( renderer, scene ) {
         
+        var cam;
+        
         scene.traverse( function ( object ) {
 
             if ( object instanceof THREE.LOD ) {
-                object.update( camera );
+                
+                if(object.userData.flying === true) cam = fake;
+                else cam = camera;
+                
+                object.update( cam );
             }
         });
+        
         renderer.render ( scene, camera );
     };
     
@@ -1663,7 +1677,7 @@ var table = [],
 
 //Global constants
 var TILE_DIMENSION = {
-    width : 234,
+    width : 231,
     height : 140
 },
     TILE_SPACING = 20;
@@ -1694,7 +1708,7 @@ function init() {
         render);
 
     // uncomment for testing
-    //create_stats();
+    create_stats();
 
     $('#backButton').click(function() {
         changeView(viewManager.targets.table);
@@ -1759,7 +1773,7 @@ function goToView ( current ) {
 
             headers.transformTable();
             setTimeout(function() {
-                viewManager.transform(viewManager.targets.table);
+                viewManager.transform(viewManager.targets.table, 4000);
             }, 4000);
             
             modifyButtonRight( 'View Dependencies', 'none');
@@ -1911,12 +1925,7 @@ function changeView(targets) {
 }
 
 function onElementClick(id) {
-
-    //var id = this.id;
-
-    //var image = document.getElementById('img-' + id);
     
-
     if (camera.getFocus() == null) {
 
         camera.setFocus(id, 2000);
@@ -1928,6 +1937,7 @@ function onElementClick(id) {
             
             if(table[id].author) {
                 var button = document.createElement('button');
+                button.id = 'developerButton';
                 button.className = 'actionButton';
                 button.style.position = 'absolute';
                 button.innerHTML = 'View developer';
@@ -1945,15 +1955,7 @@ function onElementClick(id) {
             
         }, 3000);
         camera.disable();
-
-        /*if (image != null) {
-
-            var handler = function() {
-                onImageClick(id, image, handler);
-            };
-
-            image.addEventListener('click', handler, true);
-        } else {}*/
+        
     }
 
     function showDeveloper(id) {
@@ -2492,6 +2494,222 @@ function ViewManager() {
         layersQtty = layers.size();
     };
     
+    this.createTexture = function(id, quality, tileWidth, tileHeight, scale) {
+
+        var state = table[id].code_level,
+            difficulty = Math.ceil(table[id].difficulty / 2),
+            group = table[id].group || window.layers[table[id].layer].super_layer,
+            type = table[id].type,
+            picture = table[id].picture,
+            base = 'images/tiles/';
+
+        var canvas = document.createElement('canvas');
+        canvas.width = tileWidth * scale;
+        canvas.height = tileHeight * scale;
+
+        var middle = canvas.width / 2;
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0, 0, tileWidth * scale, tileHeight * scale);
+        ctx.textAlign = 'center';
+
+        var texture = new THREE.Texture(canvas);
+        texture.minFilter = THREE.NearestFilter;
+        texture.magFilter = THREE.LinearFilter;
+
+        var pic = {
+                src : picture || base + 'buster.png',
+                alpha : 0.8
+            },
+            portrait = {
+                src : base + 'portrait/' + quality + '/' + state + '.png',
+                x : 0, y : 0,
+                w : tileWidth * scale, h : tileHeight * scale
+            },
+            groupIcon = {
+                src : base + 'icons/group/' + quality + '/icon_' + group + '.png',
+                w : 28 * scale, h : 28 * scale
+            },
+            typeIcon = {
+                src : base + 'icons/type/' + quality + '/' + type.toLowerCase() + '_logo.png',
+                w : 28 * scale, h : 28 * scale
+            },
+            ring = {
+                src : base + 'rings/' + quality + '/' + state + '_diff_' + difficulty + '.png'
+            },
+            codeText = {
+                text : table[id].code,
+                font : (18 * scale) + "px Arial"
+            },
+            nameText = {
+                text : table[id].name,
+                font : (10 * scale) + 'px Arial'
+            },
+            layerText = {
+                text : table[id].layer,
+                font : (6 * scale) + 'px Arial'
+            },
+            authorText = {
+                text : table[id].authorRealName || table[id].author || '',
+                font : (3.5 * scale) + 'px Arial'
+            };
+
+        switch(state) {
+            case "concept":
+                pic.x = 80 * scale;
+                pic.y = 36 * scale;
+                pic.w = 53 * scale;
+                pic.h = 53 * scale;
+
+                groupIcon.x = 25 * scale;
+                groupIcon.y = 49 * scale;
+
+                typeIcon.x = 160 * scale;
+                typeIcon.y = 49 * scale;
+
+                ring.x = 72 * scale;
+                ring.y = 93 * scale;
+                ring.w = 68 * scale;
+                ring.h = 9 * scale;
+
+                codeText.x = middle;
+                codeText.y = 21 * scale;
+
+                nameText.x = middle;
+                nameText.y = 33 * scale;
+                nameText.font = (9 * scale) + 'px Arial';
+                nameText.color = "#000000";
+
+                layerText.x = middle;
+                layerText.y = 114 * scale;
+
+                authorText.x = middle;
+                authorText.y = 80 * scale;
+
+                break;
+            case "development":
+                pic.x = 82 * scale;
+                pic.y = 47 * scale;
+                pic.w = 53 * scale;
+                pic.h = 53 * scale;
+
+                groupIcon.x = 35 * scale;
+                groupIcon.y = 76 * scale;
+
+                typeIcon.x = 154 * scale;
+                typeIcon.y = 76 * scale;
+
+                ring.x = 64.5 * scale;
+                ring.y = 30.8 * scale;
+                ring.w = 82 * scale;
+                ring.h = 81.5 * scale;
+
+                codeText.x = middle;
+                codeText.y = 20 * scale;
+
+                nameText.x = middle;
+                nameText.y = 28 * scale;
+                nameText.font = (6 * scale) + 'px Arial';
+
+                layerText.x = middle;
+                layerText.y = 113 * scale;
+                layerText.color = "#F26662";
+
+                authorText.x = middle;
+                authorText.y = 88 * scale;
+
+                break;
+            case "qa":
+                pic.x = 80 * scale;
+                pic.y = 35 * scale;
+                pic.w = 53 * scale;
+                pic.h = 53 * scale;
+
+                groupIcon.x = 35 * scale;
+                groupIcon.y = 76 * scale;
+
+                typeIcon.x = 154 * scale;
+                typeIcon.y = 76 * scale;
+
+                ring.x = 68 * scale;
+                ring.y = 34.7 * scale;
+                ring.w = 79 * scale;
+                ring.h = 68.5 * scale;
+
+                codeText.x = middle;
+                codeText.y = 20 * scale;
+
+                nameText.x = middle;
+                nameText.y = 28 * scale;
+                nameText.font = (6 * scale) + 'px Arial';
+
+                layerText.x = middle;
+                layerText.y = 112 * scale;
+                layerText.color = "#FCC083";
+
+                authorText.x = middle;
+                authorText.y = 78 * scale;
+
+                break;
+            case "production":
+                pic.x = 56 * scale;
+                pic.y = 33 * scale;
+                pic.w = 53 * scale;
+                pic.h = 53 * scale;
+
+                groupIcon.x = 17 * scale;
+                groupIcon.y = 30 * scale;
+
+                typeIcon.x = 17 * scale;
+                typeIcon.y = 62 * scale;
+
+                ring.x = 25 * scale;
+                ring.y = 99 * scale;
+                ring.w = 68 * scale;
+                ring.h = 9 * scale;
+
+                codeText.x = 170 * scale;
+                codeText.y = 26 * scale;
+
+                nameText.x = 170 * scale;
+                nameText.y = 71 * scale;
+                nameText.font = (7 * scale) + 'px Arial';
+                nameText.constraint = 60 * scale;
+                nameText.lineHeight = 9 * scale;
+                nameText.wrap = true;
+
+                layerText.x = 170 * scale;
+                layerText.y = 107 * scale;
+
+                authorText.x = 82 * scale;
+                authorText.y = 77 * scale;
+
+                break;
+        }
+
+        if(state == "concept" || state == "production")
+            ring.src = base + 'rings/' + quality + '/linear_diff_' + difficulty + '.png';
+
+        if(difficulty === 0)
+            ring = {};
+
+        var data = [
+                pic,
+                portrait,
+                groupIcon,
+                typeIcon,
+                ring,
+                codeText,
+                nameText,
+                layerText,
+                authorText
+            ];
+
+        drawPicture(data, ctx, texture);
+
+        return texture;
+    };
+    
     /**
      * Creates a Tile
      * @param   {Number}     i ID of the tile (index in table)
@@ -2513,7 +2731,10 @@ function ViewManager() {
         
         for(var j = 0, l = levels.length; j < l; j++) {
             
-            texture = createTexture(id, tileWidth, tileHeight, scale);
+            if(levels[j][0] === 'high') scale = 4;
+            else scale = 1;
+            
+            texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale);
             
             mesh = new THREE.Mesh(
                 new THREE.PlaneGeometry(tileWidth, tileHeight),
@@ -2523,300 +2744,7 @@ function ViewManager() {
             mesh.material.map = texture;
             mesh.material.needsUpdate = true;
             element.addLevel(mesh, levels[j][1]);
-        }
-        
-        function createTexture(id, tileWidth, tileHeight, scale) {
-            
-            var state = table[id].code_level,
-                difficulty = Math.ceil(table[id].difficulty / 2),
-                group = table[id].group || window.layers[table[id].layer].super_layer,
-                type = table[id].type,
-                picture = table[id].picture,
-                base = 'images/tiles/';
-            
-            var canvas = document.createElement('canvas');
-            canvas.width = tileWidth * scale;
-            canvas.height = tileHeight * scale;
-            
-            var middle = canvas.width / 2;
-            var ctx = canvas.getContext('2d');
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fillRect(0, 0, tileWidth * scale, tileHeight * scale);
-            ctx.textAlign = 'center';
-            
-            var texture = new THREE.Texture(canvas);
-            texture.minFilter = THREE.NearestFilter;
-            texture.magFilter = THREE.LinearFilter;
-            
-            var pic = {
-                    src : picture || base + 'buster.png',
-                    alpha : 0.8
-                },
-                portrait = {
-                    src : base + 'portrait/' + levels[j][0] + '/' + state + '.png',
-                    x : 0, y : 0,
-                    w : tileWidth * scale, h : tileHeight * scale
-                },
-                groupIcon = {
-                    src : base + 'icons/group/' + levels[j][0] + '/icon_' + group + '.png',
-                    w : 28 * scale, h : 28 * scale
-                },
-                typeIcon = {
-                    src : base + 'icons/type/' + levels[j][0] + '/' + type.toLowerCase() + '_logo.png',
-                    w : 28 * scale, h : 28 * scale
-                },
-                ring = {
-                    src : base + 'rings/' + levels[j][0] + '/' + state + '_diff_' + difficulty + '.png'
-                },
-                codeText = {
-                    text : table[id].code,
-                    font : (18 * scale) + "px Arial"
-                },
-                nameText = {
-                    text : table[id].name,
-                    font : (10 * scale) + 'px Arial'
-                },
-                layerText = {
-                    text : table[id].layer,
-                    font : (6 * scale) + 'px Arial'
-                },
-                authorText = {
-                    text : table[id].authorRealName || table[id].author || '',
-                    font : (3.5 * scale) + 'px Arial'
-                };
-            
-            switch(state) {
-                case "concept":
-                    pic.x = 80 * scale;
-                    pic.y = 36 * scale;
-                    pic.w = 53 * scale;
-                    pic.h = 53 * scale;
-                    
-                    groupIcon.x = 25 * scale;
-                    groupIcon.y = 49 * scale;
-                    
-                    typeIcon.x = 160 * scale;
-                    typeIcon.y = 49 * scale;
-                    
-                    ring.x = 72 * scale;
-                    ring.y = 93 * scale;
-                    ring.w = 68 * scale;
-                    ring.h = 9 * scale;
-                    
-                    codeText.x = middle;
-                    codeText.y = 21 * scale;
-                    
-                    nameText.x = middle;
-                    nameText.y = 33 * scale;
-                    nameText.font = (9 * scale) + 'px Arial';
-                    nameText.color = "#000000";
-                    
-                    layerText.x = middle;
-                    layerText.y = 114 * scale;
-                    
-                    authorText.x = middle;
-                    authorText.y = 80 * scale;
-                    
-                    break;
-                case "development":
-                    pic.x = 82 * scale;
-                    pic.y = 47 * scale;
-                    pic.w = 53 * scale;
-                    pic.h = 53 * scale;
-                    
-                    groupIcon.x = 35 * scale;
-                    groupIcon.y = 76 * scale;
-                    
-                    typeIcon.x = 154 * scale;
-                    typeIcon.y = 76 * scale;
-                    
-                    ring.x = 66 * scale;
-                    ring.y = 31 * scale;
-                    ring.w = 82 * scale;
-                    ring.h = 81 * scale;
-                    
-                    codeText.x = middle;
-                    codeText.y = 20 * scale;
-                    
-                    nameText.x = middle;
-                    nameText.y = 28 * scale;
-                    nameText.font = (6 * scale) + 'px Arial';
-                    
-                    layerText.x = middle;
-                    layerText.y = 113 * scale;
-                    layerText.color = "#F26662";
-                    
-                    authorText.x = middle;
-                    authorText.y = 88 * scale;
-                    
-                    break;
-                case "qa":
-                    pic.x = 80 * scale;
-                    pic.y = 35 * scale;
-                    pic.w = 53 * scale;
-                    pic.h = 53 * scale;
-                    
-                    groupIcon.x = 35 * scale;
-                    groupIcon.y = 76 * scale;
-                    
-                    typeIcon.x = 154 * scale;
-                    typeIcon.y = 76 * scale;
-                    
-                    ring.x = 68 * scale;
-                    ring.y = 35 * scale;
-                    ring.w = 79 * scale;
-                    ring.h = 68 * scale;
-                    
-                    codeText.x = middle;
-                    codeText.y = 20 * scale;
-                    
-                    nameText.x = middle;
-                    nameText.y = 28 * scale;
-                    nameText.font = (6 * scale) + 'px Arial';
-                    
-                    layerText.x = middle;
-                    layerText.y = 112 * scale;
-                    layerText.color = "#FCC083";
-                    
-                    authorText.x = middle;
-                    authorText.y = 78 * scale;
-                    
-                    break;
-                case "production":
-                    pic.x = 56 * scale;
-                    pic.y = 33 * scale;
-                    pic.w = 53 * scale;
-                    pic.h = 53 * scale;
-                    
-                    groupIcon.x = 17 * scale;
-                    groupIcon.y = 30 * scale;
-                    
-                    typeIcon.x = 17 * scale;
-                    typeIcon.y = 62 * scale;
-                    
-                    ring.x = 25 * scale;
-                    ring.y = 99 * scale;
-                    ring.w = 68 * scale;
-                    ring.h = 9 * scale;
-                    
-                    codeText.x = 170 * scale;
-                    codeText.y = 26 * scale;
-                    
-                    nameText.x = 170 * scale;
-                    nameText.y = 71 * scale;
-                    nameText.font = (7 * scale) + 'px Arial';
-                    nameText.constraint = 60 * scale;
-                    nameText.lineHeight = 9 * scale;
-                    nameText.wrap = true;
-                    
-                    layerText.x = 170 * scale;
-                    layerText.y = 107 * scale;
-                    
-                    authorText.x = 82 * scale;
-                    authorText.y = 77 * scale;
-                    
-                    break;
-            }
-            
-            if(state == "concept" || state == "production")
-                ring.src = base + 'rings/' + levels[j][0] + '/linear_diff_' + difficulty + '.png';
-            
-            if(difficulty === 0)
-                ring = {};
-            
-            var data = [
-                    pic,
-                    portrait,
-                    groupIcon,
-                    typeIcon,
-                    ring,
-                    codeText,
-                    nameText,
-                    layerText,
-                    authorText
-                ];
-            
-            drawPicture(data, ctx, texture);
-            
-            return texture;
-        }
-        
-        function drawPicture(data, ctx, texture) {
-            
-            var image = new Image();
-            var actual = data.shift();
-            
-            if(actual.src && actual.src != 'undefined') {
-            
-                image.onload = function() {
-
-
-                    if(actual.alpha)
-                        ctx.globalAlpha = actual.alpha;
-
-                    ctx.drawImage(image, actual.x, actual.y, actual.w, actual.h);
-                    if(texture)
-                        texture.needsUpdate = true;
-
-                    ctx.globalAlpha = 1;
-
-                    if(data.length !== 0) {
-
-                        if(data[0].text)
-                            drawText(data, ctx, texture);
-                        else
-                            drawPicture(data, ctx, texture);
-                    }
-                };
-                
-                image.onerror = function() {
-                    if(data.length !== 0) {
-                        if(data[0].text)
-                            drawText(data, ctx, texture);
-                        else
-                            drawPicture(data, ctx, texture);
-                    }
-                };
-                
-                image.crossOrigin="anonymous";
-                image.src = actual.src;
-            }
-            else {
-                if(data.length !== 0) {
-                    if(data[0].text)
-                        drawText(data, ctx, texture);
-                    else
-                        drawPicture(data, ctx, texture);
-                }
-            }
-        }
-        
-        function drawText(data, ctx, texture) {
-            
-            var actual = data.shift();
-            
-            //TODO: Set Roboto typo
-            
-            if(actual.color)
-                ctx.fillStyle = actual.color;
-            
-            ctx.font = actual.font;
-            
-            if(actual.constraint)
-                if(actual.wrap)
-                    helper.drawText(actual.text, actual.x, actual.y, ctx, actual.constraint, actual.lineHeight);
-                else
-                    ctx.fillText(actual.text, actual.x, actual.y, actual.constraint);
-            else
-                ctx.fillText(actual.text, actual.x, actual.y);
-            
-            if(texture)
-                texture.needsUpdate = true;
-            
-            ctx.fillStyle = "#FFFFFF";
-            
-            if(data.length !== 0)
-                drawText(data, ctx);
+            element.userData = {flying : false};
         }
         
         return element;
@@ -2836,20 +2764,19 @@ function ViewManager() {
         //TWEEN.removeAll();
 
         if(goal) {
+            
             this.lastTargets = goal;
-
-            for (i = 0; i < objects.length; i++) {
-
-                var object = objects[i];
-                var target = goal[i];
-
-                new TWEEN.Tween(object.position)
+            
+            var animate = function(object, target) { 
+                
+                 new TWEEN.Tween(object.position)
                     .to({
                         x: target.position.x,
                         y: target.position.y,
                         z: target.position.z
                     }, Math.random() * duration + duration)
                     .easing(TWEEN.Easing.Exponential.InOut)
+                    .onComplete(function() { object.userData.flying = false; })
                     .start();
 
                 new TWEEN.Tween(object.rotation)
@@ -2860,6 +2787,16 @@ function ViewManager() {
                     }, Math.random() * duration + duration)
                     .easing(TWEEN.Easing.Exponential.InOut)
                     .start();
+                
+            };
+
+            
+            for (i = 0; i < objects.length; i++) {
+
+                var object = objects[i];
+                var target = goal[i];
+                
+                animate(object, target);
 
             }
 
@@ -2960,19 +2897,31 @@ function ViewManager() {
         
         var target;
         
-        for(i = 0; i < objects.length; i++) {
+        var animate = function(object, target, dur) {
             
-            if(ids.indexOf(i) !== -1) target = this.lastTargets[i].position;
-            else target = out;
-            
-            new TWEEN.Tween(objects[i].position)
+            new TWEEN.Tween(object.position)
             .to({
                 x: target.x,
                 y: target.y,
                 z: target.z
-            }, Math.random() * _duration + _duration)
+            }, dur)
             .easing(TWEEN.Easing.Exponential.InOut)
+            .onComplete(function() { object.userData.flying = false; })
             .start();
+            
+        };
+        
+        for(i = 0; i < objects.length; i++) {
+            
+            if(ids.indexOf(i) !== -1) {
+                target = this.lastTargets[i].position;
+            }
+            else {
+                target = out;
+                objects[i].userData.flying = true;
+            }
+            
+            animate(objects[i], target, Math.random() * _duration + _duration);
         }
         
         new TWEEN.Tween(this)
@@ -2980,4 +2929,84 @@ function ViewManager() {
             .onUpdate(render)
             .start();
     };
+    
+    
+    //Private methods
+    function drawPicture(data, ctx, texture) {
+
+        var image = new Image();
+        var actual = data.shift();
+
+        if(actual.src && actual.src != 'undefined') {
+
+            image.onload = function() {
+
+
+                if(actual.alpha)
+                    ctx.globalAlpha = actual.alpha;
+
+                ctx.drawImage(image, actual.x, actual.y, actual.w, actual.h);
+                if(texture)
+                    texture.needsUpdate = true;
+
+                ctx.globalAlpha = 1;
+
+                if(data.length !== 0) {
+
+                    if(data[0].text)
+                        drawText(data, ctx, texture);
+                    else
+                        drawPicture(data, ctx, texture);
+                }
+            };
+
+            image.onerror = function() {
+                if(data.length !== 0) {
+                    if(data[0].text)
+                        drawText(data, ctx, texture);
+                    else
+                        drawPicture(data, ctx, texture);
+                }
+            };
+
+            image.crossOrigin="anonymous";
+            image.src = actual.src;
+        }
+        else {
+            if(data.length !== 0) {
+                if(data[0].text)
+                    drawText(data, ctx, texture);
+                else
+                    drawPicture(data, ctx, texture);
+            }
+        }
+    }
+
+    function drawText(data, ctx, texture) {
+
+        var actual = data.shift();
+
+        //TODO: Set Roboto typo
+
+        if(actual.color)
+            ctx.fillStyle = actual.color;
+
+        ctx.font = actual.font;
+
+        if(actual.constraint)
+            if(actual.wrap)
+                helper.drawText(actual.text, actual.x, actual.y, ctx, actual.constraint, actual.lineHeight);
+            else
+                ctx.fillText(actual.text, actual.x, actual.y, actual.constraint);
+        else
+            ctx.fillText(actual.text, actual.x, actual.y);
+
+        if(texture)
+            texture.needsUpdate = true;
+
+        ctx.fillStyle = "#FFFFFF";
+
+        if(data.length !== 0)
+            drawText(data, ctx);
+    }
 }

@@ -11,7 +11,7 @@ var table = [],
 
 //Global constants
 var TILE_DIMENSION = {
-    width : 234,
+    width : 231,
     height : 140
 },
     TILE_SPACING = 20;
@@ -42,7 +42,7 @@ function init() {
         render);
 
     // uncomment for testing
-    //create_stats();
+    create_stats();
 
     $('#backButton').click(function() {
         changeView(viewManager.targets.table);
@@ -107,7 +107,7 @@ function goToView ( current ) {
 
             headers.transformTable();
             setTimeout(function() {
-                viewManager.transform(viewManager.targets.table);
+                viewManager.transform(viewManager.targets.table, 4000);
             }, 4000);
             
             modifyButtonRight( 'View Dependencies', 'none');
@@ -259,12 +259,7 @@ function changeView(targets) {
 }
 
 function onElementClick(id) {
-
-    //var id = this.id;
-
-    //var image = document.getElementById('img-' + id);
     
-
     if (camera.getFocus() == null) {
 
         camera.setFocus(id, 2000);
@@ -276,6 +271,7 @@ function onElementClick(id) {
             
             if(table[id].author) {
                 var button = document.createElement('button');
+                button.id = 'developerButton';
                 button.className = 'actionButton';
                 button.style.position = 'absolute';
                 button.innerHTML = 'View developer';
@@ -293,15 +289,7 @@ function onElementClick(id) {
             
         }, 3000);
         camera.disable();
-
-        /*if (image != null) {
-
-            var handler = function() {
-                onImageClick(id, image, handler);
-            };
-
-            image.addEventListener('click', handler, true);
-        } else {}*/
+        
     }
 
     function showDeveloper(id) {
