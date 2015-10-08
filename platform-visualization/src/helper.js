@@ -26,6 +26,13 @@ function Helper() {
         });
     };
     
+    /**
+     * @author Miguel Celedon
+     *
+     * Shows an HTML element as a fade in
+     * @param {Object} element         DOMElement to show
+     * @param {Number} [duration=1000] Duration of animation
+     */
     this.show = function(element, duration) {
         
         duration = duration || 1000;

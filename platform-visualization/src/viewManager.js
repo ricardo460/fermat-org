@@ -336,6 +336,15 @@ function ViewManager() {
         layersQtty = layers.size();
     };
     
+    /**
+     * Creates the tile texture
+     * @param   {Number} id         ID in the table
+     * @param   {String} quality    The quality of the picture as folder in the images dir
+     * @param   {Number} tileWidth  Width of the tile
+     * @param   {Number} tileHeight Height of the tile
+     * @param   {Number} scale      Scale of the pictures, the bigger, the better but heavier
+     * @returns {Object} The drawn texture
+     */
     this.createTexture = function(id, quality, tileWidth, tileHeight, scale) {
 
         var state = table[id].code_level,
@@ -398,7 +407,7 @@ function ViewManager() {
 
         switch(state) {
             case "concept":
-                pic.x = 80 * scale;
+                pic.x = 79 * scale;
                 pic.y = 36 * scale;
                 pic.w = 53 * scale;
                 pic.h = 53 * scale;
@@ -430,12 +439,12 @@ function ViewManager() {
 
                 break;
             case "development":
-                pic.x = 82 * scale;
+                pic.x = 79 * scale;
                 pic.y = 47 * scale;
                 pic.w = 53 * scale;
                 pic.h = 53 * scale;
 
-                groupIcon.x = 35 * scale;
+                groupIcon.x = 25 * scale;
                 groupIcon.y = 76 * scale;
 
                 typeIcon.x = 154 * scale;
@@ -573,7 +582,7 @@ function ViewManager() {
         
         for(var j = 0, l = levels.length; j < l; j++) {
             
-            if(levels[j][0] === 'high') scale = 4;
+            if(levels[j][0] === 'high') scale = 5;
             else scale = 1;
             
             texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale);
@@ -772,8 +781,13 @@ function ViewManager() {
             .start();
     };
     
-    
     //Private methods
+    /**
+     * Draws a picture in canvas
+     * @param {Array}  data    The options of the picture
+     * @param {Object} ctx     Canvas context
+     * @param {Object} texture The texture object to update
+     */
     function drawPicture(data, ctx, texture) {
 
         var image = new Image();
@@ -824,6 +838,12 @@ function ViewManager() {
         }
     }
 
+    /**
+     * Draws a texture in canvas
+     * @param {Array}  data    Options of the texture
+     * @param {Object} ctx     Canvas Context
+     * @param {Object} texture Texture to update
+     */
     function drawText(data, ctx, texture) {
 
         var actual = data.shift();

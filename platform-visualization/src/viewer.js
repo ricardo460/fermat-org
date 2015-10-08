@@ -42,7 +42,7 @@ function init() {
         render);
 
     // uncomment for testing
-    create_stats();
+    //create_stats();
 
     $('#backButton').click(function() {
         changeView(viewManager.targets.table);
