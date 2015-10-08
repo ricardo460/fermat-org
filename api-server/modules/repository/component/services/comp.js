@@ -60,6 +60,23 @@ exports.findCompById = function(_id, callback) {
 };
 
 /**
+ * [findAndPopulateCompById description]
+ *
+ * @method findAndPopulateCompById
+ *
+ * @param  {[type]}                _id      [description]
+ * @param  {[type]}                path     [description]
+ * @param  {Function}              callback [description]
+ *
+ * @return {[type]}                [description]
+ */
+exports.findAndPopulateCompById = function(_id, path, callback) {
+    compDao.findAndPopulateSchemaById(_id, path, function(err, comp) {
+        callback(err, comp);
+    });
+};
+
+/**
  * [findComp description]
  *
  * @method findComp

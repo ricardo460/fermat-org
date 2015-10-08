@@ -6,9 +6,13 @@ var mongoose = require('mongoose');
  * @type {[type]}
  */
 var stepSchema = mongoose.Schema({
+    _proc_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Proc'
+    },
     _comp_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Layer'
+        ref: 'Comp'
     },
     type: {
         lowercase: true,
@@ -23,9 +27,12 @@ var stepSchema = mongoose.Schema({
         type: String,
         trim: true
     },
+    order: {
+        type: Number,
+        'default': 0
+    },
     next: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'CompDev'
+        type: Number // order
     }],
     upd_at: {
         type: mongoose.Schema.Types.ObjectId,

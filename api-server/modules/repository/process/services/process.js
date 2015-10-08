@@ -1,118 +1,49 @@
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
-var compDevMdl = require('../models/compDev');
-var compDevSch = require('../schemas/compDev');
-var compMdl = require('../models/comp');
-var compSch = require('../schemas/comp');
+var procMdl = require('../models/proc');
+var procSch = require('../schemas/proc');
+var stepMdl = require('../models/step');
+var stepSch = require('../schemas/step');
 var devMdl = require('../../developer/models/dev');
 var devSch = require('../../developer/schemas/dev');
 
-/**
- * [compDevDao description]
- *
- * @type {Dao}
- */
-var compDevDao = new Dao('CompDev', compDevSch, compDevMdl, 'Comp', compSch, compMdl, 'Dev', devSch, devMdl);
+var procDao = new Dao('Proc', procSch, procMdl, 'Step', stepSch, stepMdl);
 
-/**
- * [insertCompDev description]
- *
- * @method insertCompDev
- *
- * @param  {[type]}   compDev_mdl  [description]
- * @param  {Function} callback [description]
- *
- * @return {[type]}   [description]
- */
-exports.insertCompDev = function(compDev_mdl, callback) {
-    compDevDao.insertSchema(compDev_mdl, function(err, compDev) {
-        callback(err, compDev);
+exports.insertProc = function(proc_mdl, callback) {
+    procDao.insertSchema(proc_mdl, function(err, proc) {
+        callback(err, proc);
     });
 };
 
-/**
- * [findCompDevById description]
- *
- * @method findCompDevById
- *
- * @param  {[type]}        _id      [description]
- * @param  {Function}      callback [description]
- *
- * @return {[type]}        [description]
- */
-exports.findCompDevById = function(_id, callback) {
-    compDevDao.findAndPopulateSchemaById(_id, 'desc name', function(err, compDev) {
-        callback(err, compDev);
+exports.findProcById = function(_id, callback) {
+    procDao.findAndPopulateSchemaById(_id, 'steps', function(err, proc) {
+        callback(err, proc);
     });
 };
 
-/**
- * [findCompDev description]
- *
- * @method findCompDev
- *
- * @param  {[type]}    query    [description]
- * @param  {Function}  callback [description]
- *
- * @return {[type]}    [description]
- */
-exports.findCompDev = function(query, callback) {
-    compDevDao.findAndPopulateSchema(query, 'desc name', function(err, compDev) {
-        callback(err, compDev);
+exports.findProc = function(query, callback) {
+    procDao.findAndPopulateSchema(query, 'steps', function(err, proc) {
+        callback(err, proc);
     });
 };
 
-/**
- * [findCompDevs description]
- *
- * @method findCompDevs
- *
- * @param  {[type]}   query    [description]
- * @param  {[type]}   limit    [description]
- * @param  {[type]}   order    [description]
- * @param  {Function} callback [description]
- *
- * @return {[type]}   [description]
- */
-exports.findCompDevs = function(query, limit, order, callback) {
-    compDevDao.findAndPopulateSchemaLst(query, limit, order, 'desc name', function(err, compDev) {
-        callback(err, compDev);
+exports.findProcs = function(query, limit, order, callback) {
+    procDao.findAndPopulateSchemaLst(query, limit, order, 'steps', function(err, proc) {
+        callback(err, proc);
     });
 };
 
-/**
- * [findAllCompDevs description]
- *
- * @method findAllCompDevs
- *
- * @param  {[type]}    query    [description]
- * @param  {[type]}    order    [description]
- * @param  {Function}  callback [description]
- *
- * @return {[type]}    [description]
- */
-exports.findAllCompDevs = function(query, order, callback) {
-    compDevDao.findAndPopulateAllSchemaLst(query, order, 'desc name', function(err, compDev) {
-        callback(err, compDev);
+exports.findAllProcs = function(query, order, callback) {
+    procDao.findAndPopulateAllSchemaLst(query, order, 'steps', function(err, proc) {
+        callback(err, proc);
     });
 };
 
-/**
- * [updateCompDevById description]
- *
- * @method updateCompDevById
- *
- * @param  {[type]}      _id      [description]
- * @param  {[type]}      set      [description]
- * @param  {Function}    callback [description]
- *
- * @return {[type]}      [description]
- */
-exports.updateCompDevById = function(_id, set, callback) {
+exports.updateProcById = function(_id, set, callback) {
     set.upd_at = new mongoose.Types.ObjectId();
-    compDevDao.updateSchema({
+    procDao.updateSchema({
         _id: _id
-    }, set, {}, function(err, compDev) {
-        callback(err, compDev);
+    }, set, {}, function(err, proc) {
+        callback(err, proc);
     });
 };

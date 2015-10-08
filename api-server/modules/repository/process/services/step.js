@@ -1,100 +1,90 @@
-var async = require('async');
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
-var devSrv = require('../../developer/services/dev');
-var compMdl = require('../models/comp');
-var compSch = require('../schemas/comp');
-var statusMdl = require('../models/status');
-var statusSch = require('../schemas/status');
-var compDevMdl = require('../models/compDev');
-var compDevSch = require('../schemas/compDev');
-var platfrmMdl = require('../../platform/models/platfrm');
-var platfrmSch = require('../../platform/schemas/platfrm');
-var suprlayMdl = require('../../superlayer/models/suprlay');
-var suprlaySch = require('../../superlayer/schemas/suprlay');
-var layerMdl = require('../../layer/models/layer');
-var layerSch = require('../../layer/schemas/layer');
-
+var stepMdl = require('../models/step');
+var stepSch = require('../schemas/step');
+var procMdl = require('../models/proc');
+var procSch = require('../schemas/proc');
+var compMdl = require('../../component/models/comp');
+var compSch = require('../../component/schemas/comp');
+var compSrv = require('../../component/services/comp');
 
 /**
- * [compDao description]
+ * [stepDao description]
  *
  * @type {Dao}
  */
-var compDao = new Dao('Comp', compSch, compMdl, 'CompDev', compDevSch, compDevMdl,
-    'Platfrm', platfrmSch, platfrmMdl,
-    'Suprlay', suprlaySch, suprlayMdl,
-    'Layer', layerSch, layerMdl,
-    'Status', statusSch, statusMdl);
+var stepDao = new Dao('Step', stepSch, stepMdl, 'Proc', procSch, procMdl,
+    'Comp', compSch, compMdl);
 
 /**
- * [insertComp description]
+ * [insertStep description]
  *
- * @method insertComp
+ * @method insertStep
  *
- * @param  {[type]}   comp_mdl  [description]
+ * @param  {[type]}   step_mdl [description]
  * @param  {Function} callback [description]
  *
  * @return {[type]}   [description]
  */
-exports.insertComp = function(comp_mdl, callback) {
-    compDao.insertSchema(comp_mdl, function(err, comp) {
-        callback(err, comp);
+exports.insertStep = function(step_mdl, callback) {
+    stepDao.insertSchema(step_mdl, function(err, step) {
+        callback(err, step);
     });
 };
 
 /**
- * [findCompById description]
+ * [findStepById description]
  *
- * @method findCompById
+ * @method findStepById
  *
  * @param  {[type]}     _id      [description]
  * @param  {Function}   callback [description]
  *
  * @return {[type]}     [description]
  */
-exports.findCompById = function(_id, callback) {
-    compDao.findSchemaById(_id, function(err, comp) {
-        callback(err, comp);
+exports.findStepById = function(_id, callback) {
+    stepDao.findSchemaById(_id, function(err, step) {
+        callback(err, step);
     });
 };
 
 /**
- * [findComp description]
+ * [findStep description]
  *
- * @method findComp
+ * @method findStep
  *
  * @param  {[type]}   query    [description]
  * @param  {Function} callback [description]
  *
  * @return {[type]}   [description]
  */
-exports.findComp = function(query, callback) {
-    compDao.findSchema(query, function(err, comp) {
-        callback(err, comp);
+exports.findStep = function(query, callback) {
+    stepDao.findSchema(query, function(err, step) {
+        callback(err, step);
     });
 };
 
 /**
- * [findComps description]
+ * [findSteps description]
  *
- * @method findComps
+ * @method findSteps
  *
  * @param  {[type]}   query    [description]
+ * @param  {[type]}   sort     [description]
  * @param  {Function} callback [description]
  *
  * @return {[type]}   [description]
  */
-exports.findComps = function(query, sort, callback) {
-    compDao.findAllSchemaLst(query, sort, function(err, comp) {
-        callback(err, comp);
+exports.findSteps = function(query, sort, callback) {
+    stepDao.findAllSchemaLst(query, sort, function(err, step) {
+        callback(err, step);
     });
 };
 
 /**
- * [findAllComps description]
+ * [findAllSteps description]
  *
- * @method findAllComps
+ * @method findAllSteps
  *
  * @param  {[type]}     query    [description]
  * @param  {[type]}     order    [description]
@@ -102,153 +92,50 @@ exports.findComps = function(query, sort, callback) {
  *
  * @return {[type]}     [description]
  */
-exports.findAllComps = function(query, order, callback) {
-    compDao.findAndPopulateAllSchemaLst(query, order, '_platfrm_id _suprlay_id _layer_id life_cycle devs', function(err, comps) {
+exports.findAllSteps = function(query, order, callback) {
+    stepDao.findAllSchemaLst(query, order, function(err, steps) {
         if (err) {
             callback(err, null);
         } else {
-            var _comps = [];
+            var _steps = [];
 
-            var loopComps = function(i) {
-                if (i < comps.length) {
-                    var _comp = comps[i];
-                    var _compDevs = _comp.devs;
-                    var _lifeCycle = _comp.life_cycle;
-                    var _devs = [];
-
-                    var loopCompDevs = function(j) {
-                        if (j < _compDevs.length) {
-                            var _compDev = {};
-                            devSrv.findDevById(_compDevs[j].desc, function(err_dev, res_dev) {
-                                if (err_dev) {
-                                    loopCompDevs(++j);
-                                } else {
-                                    _compDev.dev = res_dev;
-                                    _compDev.role = _compDevs[j].role;
-                                    _compDev.scope = _compDevs[j].scope;
-                                    _compDev.percnt = _compDevs[j].percnt;
-                                    _devs.push(_compDev);
-                                    loopCompDevs(++j);
-                                }
-                            });
+            var loopSteps = function(i) {
+                if (i < steps.length) {
+                    var _step = steps[i];
+                    compSrv.findAndPopulateCompById(_step._comp_id, '_platfrm_id _suprlay_id _layer_id', function(err, comp) {
+                        if (err) {
+                            loopSteps(++i);
                         } else {
-                            _comp.devs = _devs;
-                            _comps.push(_comp);
-                            loopComps(++i);
+                            _step.comp = comp;
+                            _steps.push(_step);
+                            loopSteps(++i);
                         }
-                    };
-                    loopCompDevs(0);
+                    });
                 } else {
-                    callback(null, _comps);
+                    callback(null, _steps);
                 }
             };
-            loopComps(0);
+            loopSteps(0);
         }
     });
 };
 
 /**
- * [updateCompById description]
+ * [updateStepById description]
  *
- * @method updateCompById
+ * @method updateStepById
  *
- * @param  {[type]}      _id      [description]
- * @param  {[type]}      set      [description]
- * @param  {Function}    callback [description]
+ * @param  {[type]}       _id      [description]
+ * @param  {[type]}       set      [description]
+ * @param  {Function}     callback [description]
  *
- * @return {[type]}      [description]
+ * @return {[type]}       [description]
  */
-exports.updateCompById = function(_id, set, callback) {
+exports.updateStepById = function(_id, set, callback) {
     set.upd_at = new mongoose.Types.ObjectId();
-    compDao.updateSchema({
+    stepDao.updateSchema({
         _id: _id
-    }, set, {}, function(err, comp) {
-        callback(err, comp);
-    });
-};
-
-/**
- * [pushDevToCompById description]
- *
- * @method pushDevToCompById
- *
- * @param  {[type]}          _id         [description]
- * @param  {[type]}          _compDev_id [description]
- * @param  {Function}        callback    [description]
- *
- * @return {[type]}          [description]
- */
-exports.pushDevToCompById = function(_id, _compDev_id, callback) {
-    var compDev_mdl = new compDevMdl();
-    compDao.pushToArray({
-        _id: _id
-    }, 'devs', _compDev_id, {
-        multi: false
-    }, function(err, comp) {
-        callback(err, comp);
-    });
-};
-
-/**
- * [pushDevToCompById description]
- *
- * @method pushDevToCompById
- *
- * @param  {[type]}          _id         [description]
- * @param  {[type]}          _compDev_id [description]
- * @param  {Function}        callback    [description]
- *
- * @return {[type]}          [description]
- */
-exports.pullDevFromCompById = function(_id, _compDev_id, callback) {
-    compDao.pullFromArray({
-        _id: _id
-    }, 'devs', _compDev_id, {
-        multi: false
-    }, function(err, comp) {
-        callback(err, comp);
-    });
-};
-
-/**
- * [pushLifeCycleToCompById description]
- *
- * @method pushLifeCycleToCompById
- *
- * @param  {[type]}                _id        [description]
- * @param  {[type]}                _status_id [description]
- * @param  {Function}              callback   [description]
- *
- * @return {[type]}                [description]
- */
-exports.pushStatusToCompLifeCycleById = function(_id, _status_id, callback) {
-    var compDev_mdl = new compDevMdl();
-    compDao.pushToArray({
-        _id: _id
-    }, 'life_cycle', _status_id, {
-        multi: false
-    }, function(err, comp) {
-        callback(err, comp);
-    });
-};
-
-/**
- * [pullLifeCycleFromCompById description]
- *
- * @method pullLifeCycleFromCompById
- *
- * @param  {[type]}                  _id        [description]
- * @param  {[type]}                  _status_id [description]
- * @param  {Function}                callback   [description]
- *
- * @return {[type]}                  [description]
- */
-exports.pullStatusFromCompLifeCycleById = function(_id, _status_id, callback) {
-    compDao.pullFromArray({
-        _id: _id
-    }, 'life_cycle', _status_id, {
-        multi: false
-    }, function(err, comp) {
-        callback(err, comp);
+    }, set, {}, function(err, step) {
+        callback(err, step);
     });
 };

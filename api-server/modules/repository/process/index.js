@@ -6,15 +6,6 @@ var CompDevMdl = require('./models/compDev');
 var statusSrv = require('./services/status');
 var StatusMdl = require('./models/status');
 
-/**
- * [getComps description]
- *
- * @method getComps
- *
- * @param  {Function} callback [description]
- *
- * @return {[type]}   [description]
- */
 exports.getComps = function(callback) {
     compSrv.findAllComps({}, {}, function(err, comps) {
         if (err) {
@@ -25,15 +16,6 @@ exports.getComps = function(callback) {
     });
 };
 
-/**
- * [findComps description]
- *
- * @method findComps
- *
- * @param  {Function} callback [description]
- *
- * @return {[type]}   [description]
- */
 exports.findComps = function(callback) {
     compSrv.findComps({}, {}, function(err, comps) {
         if (err) {
@@ -44,25 +26,6 @@ exports.findComps = function(callback) {
     });
 };
 
-/**
- * [insOrUpdComp description]
- *
- * @method insOrUpdComp
- *
- * @param  {[type]}     _platfrm_id [description]
- * @param  {[type]}     _suprlay_id [description]
- * @param  {[type]}     _layer_id   [description]
- * @param  {[type]}     name        [description]
- * @param  {[type]}     type        [description]
- * @param  {[type]}     description [description]
- * @param  {[type]}     difficulty  [description]
- * @param  {[type]}     code_level  [description]
- * @param  {[type]}     repo_dir    [description]
- * @param  {[type]}     found       [description]
- * @param  {Function}   callback    [description]
- *
- * @return {[type]}     [description]
- */
 exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, found, callback) {
     var find_obj = {
         '$and': []
@@ -134,20 +97,6 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
     });
 };
 
-/**
- * [insOrUpdCompDev description]
- *
- * @method insOrUpdCompDev
- *
- * @param  {[type]}        _comp_id [description]
- * @param  {[type]}        _dev_id  [description]
- * @param  {[type]}        role     [description]
- * @param  {[type]}        scope    [description]
- * @param  {[type]}        percnt   [description]
- * @param  {Function}      callback [description]
- *
- * @return {[type]}        [description]
- */
 exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callback) {
     var find_obj = {
         '$and': []
@@ -199,19 +148,6 @@ exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callb
     });
 };
 
-/**
- * [insOrUpdStatus description]
- *
- * @method insOrUpdStatus
- *
- * @param  {[type]}       _comp_id [description]
- * @param  {[type]}       name     [description]
- * @param  {[type]}       target   [description]
- * @param  {[type]}       reached  [description]
- * @param  {Function}     callback [description]
- *
- * @return {[type]}       [description]
- */
 exports.insOrUpdStatus = function(_comp_id, name, target, reached, callback) {
     var find_obj = {
         '$and': []
@@ -257,18 +193,6 @@ exports.insOrUpdStatus = function(_comp_id, name, target, reached, callback) {
     });
 };
 
-/**
- * [updCompDevAndLifCyc description]
- *
- * @method updCompDevAndLifCyc
- *
- * @param  {[type]}            _comp_id   [description]
- * @param  {[type]}            devs       [description]
- * @param  {[type]}            life_cycle [description]
- * @param  {Function}          callback   [description]
- *
- * @return {[type]}            [description]
- */
 exports.updCompDevAndLifCyc = function(_comp_id, devs, life_cycle, callback) {
     compSrv.findCompById(_comp_id, function(err_comp, res_comp) {
         if (err_comp) {
