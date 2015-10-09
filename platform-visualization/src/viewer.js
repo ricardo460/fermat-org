@@ -250,7 +250,9 @@ function changeView(targets) {
     helper.show('container', 2000);
     
     if(actualFlow) {
-        actualFlow.delete();
+        for(var i = 0; i < actualFlow.length; i++) {
+            actualFlow[i].delete();
+        }
         actualFlow = null;
     }
 
@@ -287,7 +289,10 @@ function onElementClick(id) {
                 helper.show(button, 1000);
             }
             
+            getAndShowFlows(id);
+            
         }, 3000);
+        
         camera.disable();
         
     }
@@ -425,6 +430,47 @@ function onElementClick(id) {
 
         new Timeline(tasks, tlContainer).show();
     }
+    
+    function getAndShowFlows(id) {
+        
+        var button = document.createElement('button'),
+            sucesorButton = document.getElementById('developerButton') || document.getElementById('backButton'),
+            element = table[id],
+            flows;
+        
+        button.id = 'showFlows';
+        button.className = 'actionButton';
+        button.style.position = 'absolute';
+        button.innerHTML = 'Loading flows...';
+        button.style.top = '10px';
+        button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
+        button.style.zIndex = 10;
+        button.style.opacity = 0;
+        document.body.appendChild(button);
+        
+        helper.show(button, 1000);
+        
+        $.ajax({
+            url: 'http://52.11.156.16:3000/repo/procs?platform=' + (element.group || layers[element.layer].super_layer) + '&layer=' + element.layer + '&component=' + element.name,
+            method: "GET"
+        }).success(
+            function(processes) {
+                var p = processes;
+                var flows = [];
+                
+                for(var i = 0; i < p.length; i++) {
+                    
+                    flows.push(new ActionFlow(p[i]));
+                }
+                
+                button.innerHTML = 'Show Flows';
+                button.addEventListener('click', function() {
+                    showFlow(flows);
+                    helper.hide(button, 1000, false);
+                });
+            }
+        );
+    }
 }
 
 function onClick(e) {
@@ -446,18 +492,26 @@ function onClick(e) {
     }
 }
 
-function showFlow(id) {
+//Should draw ONLY one flow at a time
+function showFlow(flows) {
     
-    //Should receive the id and the flow's name
-    
-    var tile = objects[id];
+    var position = objects[camera.getFocus()].position;
     
     camera.enable();
-    camera.move(tile.position.x, tile.position.y, tile.position.z + window.TILE_DIMENSION.width * 5);
+    camera.move(position.x, position.y, position.z + window.TILE_DIMENSION.width * 5);
     
     setTimeout(function() {
-        actualFlow = new ActionFlow();
-        actualFlow.draw(tile.position.x, tile.position.y);
+        
+        actualFlow = [];
+        
+        for(var i = 0; i < flows.length; i++) {
+            actualFlow.push(flows[i]);
+            flows[i].draw(position.x, position.y);
+            
+            //Dummy, set distance between flows
+            position.x += window.TILE_DIMENSION.width * 10;
+        }
+        
     }, 1500);
 }
 
