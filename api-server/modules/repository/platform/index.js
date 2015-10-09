@@ -2,6 +2,68 @@ var platfrmSrv = require('./services/platfrm');
 var PlatfrmMdl = require('./models/platfrm');
 
 /**
+ * [getOrder description]
+ *
+ * @method getOrder
+ *
+ * @param  {[type]} code [description]
+ *
+ * @return {[type]} [description]
+ */
+function getOrder(code) {
+    var order = -1;
+    switch (code) {
+        case 'COR':
+            order = 0;
+            break;
+        case 'PIP':
+            order = 1;
+            break;
+        case 'WPD':
+            order = 2;
+            break;
+        case 'CCP':
+            order = 3;
+            break;
+        case 'CCM':
+            order = 4;
+            break;
+        case 'BNP':
+            order = 5;
+            break;
+        case 'SHP':
+            order = 6;
+            break;
+        case 'DAP':
+            order = 7;
+            break;
+        case 'MKT':
+            order = 8;
+            break;
+        case 'CSH':
+            order = 9;
+            break;
+        case 'BNK':
+            order = 10;
+            break;
+        case 'CBP':
+            order = 11;
+            break;
+        case 'CDN':
+            order = 12;
+            break;
+        case 'DPN':
+            order = 13;
+            break;
+        default:
+            order = -1;
+            break;
+    }
+    return order;
+}
+
+
+/**
  * [insOrUpdPlatfrm description]
  *
  * @method insOrUpdPlatfrm
@@ -16,6 +78,7 @@ var PlatfrmMdl = require('./models/platfrm');
  * @return {[type]}        [description]
  */
 exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
+    order = code ? getOrder(code) : null;
     platfrmSrv.findPlatfrmByCode(code, function(err_plat, res_plat) {
         if (err_plat) {
             return callback(err_plat, null);
@@ -51,6 +114,27 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
                 if (err_ins) return callback(err_ins, null);
                 else return callback(null, res_ins);
             });
+        }
+    });
+};
+
+/**
+ * [getPlatfrms description]
+ *
+ * @method getPlatfrms
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.getPlatfrms = function(callback) {
+    platfrmSrv.findAllPlatfrms({}, {
+        order: 1
+    }, function(err, platfrms) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, platfrms);
         }
     });
 };

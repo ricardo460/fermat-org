@@ -155,6 +155,7 @@ function main() {
     $output = gzencode(json_encode($result));
     
     header('Content-Encoding: gzip');
+    header("Access-Control-Allow-Origin: *");
     //header('Content-Length: '.strlen($gzipoutput));
 
     echo $output;

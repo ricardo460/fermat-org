@@ -6,12 +6,28 @@ var mongoose = require('mongoose');
  * @type {[type]}
  */
 var procSchema = mongoose.Schema({
+    platfrm: {
+        type: String,
+        uppercase: true,
+        trim: true
+    },
     name: {
         type: String,
+        lowercase: true,
         trim: true
     },
     desc: {
         type: String,
+        trim: true
+    },
+    prev: {
+        type: String,
+        lowercase: true,
+        trim: true
+    },
+    next: {
+        type: String,
+        lowercase: true,
         trim: true
     },
     steps: [{

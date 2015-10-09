@@ -1,5 +1,5 @@
 function ViewManager() {
-    
+
     this.lastTargets = null;
     this.targets = {
         table: [],
@@ -8,19 +8,19 @@ function ViewManager() {
         grid: []
     };
     this.dimensions = {};
-    
+
     var self = this;
     var groupsQtty;
     var layersQtty;
     var section = [];
     var columnWidth = 0;
     var layerPosition = [];
-    
+
     var elementsByGroup = [];
     var superLayerMaxHeight = 0;
     var superLayerPosition = [];
 
-    
+
     /**
      * Pre-computes the space layout for next draw
      */
@@ -95,7 +95,7 @@ function ViewManager() {
             if (isSuperLayer[i]) {
 
                 if (!inSuperLayer) {
-                    actualHeight+= 3;
+                    actualHeight += 3;
 
                     if (superLayerPosition[actualSuperLayer] === undefined) {
                         superLayerPosition[actualSuperLayer] = actualHeight;
@@ -121,12 +121,12 @@ function ViewManager() {
             layerPosition[i] = actualHeight;
         }
     };
-    
+
     // Disabled
     this.otherViews = function() {
-        
+
         var i, j, l, vector, phi, object;
-        
+
         // sphere
 
         vector = new THREE.Vector3();
@@ -265,8 +265,7 @@ function ViewManager() {
      * Uses the list to fill all global data
      * @param {Object} list List returned by the server
      */
-    this.fillTable = function(list) {
-
+    /*this.fillTable = function(list) {
         var pluginList = list.plugins,
             i, l, dependency;
 
@@ -275,28 +274,31 @@ function ViewManager() {
             superLayers[list.superLayers[i].code].name = list.superLayers[i].name;
             superLayers[list.superLayers[i].code].index = list.superLayers[i].index;
 
-            if(list.superLayers[i].dependsOn && list.superLayers[i].dependsOn.length !== 0) {
+            if (list.superLayers[i].dependsOn && list.superLayers[i].dependsOn.length !== 0) {
                 dependency = list.superLayers[i].dependsOn.split(' ').join('').split(',');
                 superLayers[list.superLayers[i].code].dependsOn = dependency;
             }
         }
+        console.dir(superLayers);
 
         for (i = 0, l = list.layers.length; i < l; i++) {
             layers[list.layers[i].name] = {};
             layers[list.layers[i].name].index = list.layers[i].index;
             layers[list.layers[i].name].super_layer = list.layers[i].super_layer;
         }
+        console.dir(layers);
+
 
         for (i = 0, l = list.groups.length; i < l; i++) {
             groups[list.groups[i].code] = {};
             groups[list.groups[i].code].index = list.groups[i].index;
 
-            if(list.groups[i].dependsOn && list.groups[i].dependsOn.length !== 0) {
+            if (list.groups[i].dependsOn && list.groups[i].dependsOn.length !== 0) {
                 dependency = list.groups[i].dependsOn.split(' ').join('').split(',');
                 groups[list.groups[i].code].dependsOn = dependency;
             }
         }
-
+        console.dir(groups);
 
         for (i = 0, l = pluginList.length; i < l; i++) {
 
@@ -328,14 +330,168 @@ function ViewManager() {
                 code_level: data.code_level ? data.code_level.trim().toLowerCase() : undefined,
                 life_cycle: data.life_cycle
             };
-
             table.push(element);
         }
-        
+        console.dir(table);
+
+        groupsQtty = groups.size();
+        layersQtty = layers.size();
+    };*/
+
+    var getSPL = function(_id, _SPLArray) {
+        if (_id) {
+            for (var i = 0, l = _SPLArray.length; i < l; i++) {
+                if (_SPLArray[i]._id + '' == _id + '') {
+                    return _SPLArray[i];
+                }
+            }
+        } else {
+            return null;
+        }
+    };
+
+    var getBestDev = function(_devs) {
+        var dev = {};
+        if (_devs) {
+            var _dev = {};
+            dev.percnt = 0;
+            for (var i = 0, l = _devs.length; i < l; i++) {
+                _dev = _devs[i];
+                if (_dev.scope == 'implementation' && _dev.percnt >= dev.percnt) {
+                    dev.percnt = _dev.percnt;
+                    dev.usrnm = _dev.dev.usrnm;
+                    dev.name = _dev.dev.name;
+                    dev.email = _dev.dev.email;
+                    dev.avatar_url = _dev.dev.avatar_url;
+                }
+            }
+        }
+        return dev;
+    };
+
+    this.fillTable = function(list) {
+        var _suprlays = list.suprlays,
+            _platfrms = list.platfrms,
+            _layers = list.layers,
+            _comps = list.comps,
+            i, l, code, name;
+
+        for (i = 0, l = _suprlays.length; i < l; i++) {
+            code = _suprlays[i].code;
+            superLayers[code] = {};
+            superLayers[code].name = _suprlays[i].name;
+            superLayers[code].index = _suprlays[i].order;
+            //superLayers[code]._id = _suprlays[i]._id;
+            superLayers[code].dependsOn = _suprlays[i].deps;
+        }
+        console.dir(superLayers);
+
+        for (i = 0, l = _platfrms.length; i < l; i++) {
+            code = _platfrms[i].code;
+            groups[code] = {};
+            groups[code].index = _platfrms[i].order;
+            groups[code].dependsOn = _platfrms[i].deps;
+            //groups[code]._id = _platfrms[i]._id;
+        }
+        console.dir(groups);
+
+        layers['empty layer 0'] = {
+            index: 27,
+            super_layer: false
+        };
+        layers['empty layer 1'] = {
+            index: 5,
+            super_layer: false
+        };
+        layers['empty layer 2'] = {
+            index: 26,
+            super_layer: false
+        };
+        layers['empty layer 3'] = {
+            index: 29,
+            super_layer: false
+        };
+        layers['empty layer 4'] = {
+            index: 34,
+            super_layer: false
+        };
+        layers['empty layer 5'] = {
+            index: 40,
+            super_layer: false
+        };
+        for (i = 0, l = _layers.length; i < l; i++) {
+            name = helper.capFirstLetter(_layers[i].name);
+            layers[name] = {};
+            switch (_layers[i].name) {
+                case 'communication':
+                    layers[name].super_layer = 'P2P';
+                    break;
+                case 'multi os':
+                    layers[name].super_layer = 'OSA';
+                    break;
+                case 'android':
+                    layers[name].super_layer = 'OSA';
+                    break;
+                case 'crypto router':
+                    layers[name].super_layer = 'BCH';
+                    break;
+                case 'crypto module':
+                    layers[name].super_layer = 'BCH';
+                    break;
+                case 'crypto vault':
+                    layers[name].super_layer = 'BCH';
+                    break;
+                case 'crypto network':
+                    layers[name].super_layer = 'BCH';
+                    break;
+                default:
+                    layers[name].super_layer = false;
+                    break;
+            }
+            layers[name].index = _layers[i].order;
+            //layers[name]._id = _layers[i]._id;
+        }
+        console.dir(layers);
+
+        for (i = 0, l = _comps.length; i < l; i++) {
+
+            var _comp = _comps[i];
+
+            var _platfrm = getSPL(_comp._platfrm_id, _platfrms);
+            var _layer = getSPL(_comp._layer_id, _layers);
+
+            var layerID = _layer.order;
+            layerID = (layerID === undefined || layerID == -1) ? layers.size() : layerID;
+
+            var groupID = (_platfrm !== undefined && _platfrm !== null) ? _platfrm.order : undefined;
+            groupID = (groupID === undefined || groupID == -1) ? groups.size() : groupID;
+
+            var _author = getBestDev(_comp.devs);
+
+            var element = {
+                group: _platfrm ? _platfrm.code : undefined,
+                groupID: groupID,
+                code: helper.getCode(_comp.name),
+                name: helper.capFirstLetter(_comp.name),
+                layer: helper.capFirstLetter(_layer.name),
+                layerID: layerID,
+                type: helper.capFirstLetter(_comp.type),
+                picture: _author.avatar_url ? _author.avatar_url : undefined,
+                author: _author.usrnm ? _author.usrnm : undefined,
+                authorRealName: _author.name ? _author.name : undefined,
+                authorEmail: _author.email ? _author.email : undefined,
+                difficulty: _comp.difficulty,
+                code_level: _comp.code_level ? _comp.code_level : undefined,
+                life_cycle: _comp.life_cycle,
+                found: _comp.found
+            };
+            table.push(element);
+        }
+        console.dir(table);
         groupsQtty = groups.size();
         layersQtty = layers.size();
     };
-    
+
     /**
      * Creates the tile texture
      * @param   {Number} id         ID in the table
@@ -347,6 +503,13 @@ function ViewManager() {
      */
     this.createTexture = function(id, quality, tileWidth, tileHeight, scale) {
 
+            ],
+                    vertexColors: THREE.FaceColors,
+                    side: THREE.FrontSide,
+                    color: 0xffffff
+                })
+                id: id
+            };
         var state = table[id].code_level,
             difficulty = Math.ceil(table[id].difficulty / 2),
             group = table[id].group || window.layers[table[id].layer].super_layer,
@@ -373,17 +536,21 @@ function ViewManager() {
                 alpha : 0.8
             },
             portrait = {
-                src : base + 'portrait/' + quality + '/' + state + '.png',
-                x : 0, y : 0,
-                w : tileWidth * scale, h : tileHeight * scale
+                    src: base + 'portrait/' + quality + '/' + state + '.png',
+                    x: 0,
+                    y: 0,
+                    w: tileWidth * scale,
+                    h: tileHeight * scale
             },
             groupIcon = {
                 src : base + 'icons/group/' + quality + '/icon_' + group + '.png',
-                w : 28 * scale, h : 28 * scale
+                    w: 28 * scale,
+                    h: 28 * scale
             },
             typeIcon = {
                 src : base + 'icons/type/' + quality + '/' + type.toLowerCase() + '_logo.png',
-                w : 28 * scale, h : 28 * scale
+                    w: 28 * scale,
+                    h: 28 * scale
             },
             ring = {
                 src : base + 'rings/' + quality + '/' + state + '_diff_' + difficulty + '.png'
@@ -581,12 +748,12 @@ function ViewManager() {
             scale = 2;
         
         for(var j = 0, l = levels.length; j < l; j++) {
-            
+
             if(levels[j][0] === 'high') scale = 5;
             else scale = 1;
-            
+
             texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale);
-            
+
             mesh = new THREE.Mesh(
                 new THREE.PlaneGeometry(tileWidth, tileHeight),
                 new THREE.MeshBasicMaterial({vertexColors : THREE.FaceColors, side : THREE.FrontSide, color : 0xffffff})
@@ -597,10 +764,10 @@ function ViewManager() {
             element.addLevel(mesh, levels[j][1]);
             element.userData = {flying : false};
         }
-        
+
         return element;
     };
-    
+
     /**
      * Converts the table in another form
      * @param {Array}  goal     Member of ViewManager.targets
@@ -609,12 +776,12 @@ function ViewManager() {
     this.transform = function(goal, duration) {
 
         var i, l;
-        
+
         duration = duration || 2000;
-        
+
         //TWEEN.removeAll();
 
-        if(goal) {
+        if (goal) {
             
             this.lastTargets = goal;
             
@@ -657,31 +824,31 @@ function ViewManager() {
                 headers.hide(duration);
             }
         }
-        
+
         new TWEEN.Tween(this)
             .to({}, duration * 2)
             .onUpdate(render)
             .start();
     };
-    
+
     /**
      * Goes back to last target set in last transform
      */
     this.rollBack = function() {
         changeView(this.lastTargets);
     };
-    
+
     /**
      * Inits and draws the table, also creates the Dimensions object
      */
     this.drawTable = function() {
-        
+
         this.preComputeLayout();
-        
+
         for (var i = 0; i < table.length; i++) {
 
             var object = this.createElement(i);
-            
+
             object.position.x = Math.random() * 80000 - 40000;
             object.position.y = Math.random() * 80000 - 40000;
             object.position.z = 80000;
@@ -720,16 +887,16 @@ function ViewManager() {
             this.targets.table.push(object);
 
         }
-        
+
         this.dimensions = {
-            columnWidth : columnWidth,
-            superLayerMaxHeight : superLayerMaxHeight,
-            groupsQtty : groupsQtty,
-            layersQtty : layersQtty,
-            superLayerPosition : superLayerPosition
+            columnWidth: columnWidth,
+            superLayerMaxHeight: superLayerMaxHeight,
+            groupsQtty: groupsQtty,
+            layersQtty: layersQtty,
+            superLayerPosition: superLayerPosition
         };
     };
-    
+
     /**
      * Takes away all the tiles except the one with the id
      * @param {Array}  [ids]           The IDs to let alone
@@ -739,26 +906,26 @@ function ViewManager() {
         
         if(typeof ids === 'undefined') ids = [];
         if(typeof ids === 'number') ids = [ids];
-        
+
         var i, _duration = duration || 2000,
             distance = camera.getMaxDistance(),
             out = new THREE.Vector3(0, 0, distance);
-        
+
         TWEEN.removeAll();
-        
+
         var target;
         
         var animate = function(object, target, dur) {
-            
+
             new TWEEN.Tween(object.position)
-            .to({
+                .to({
                 x: target.x,
                 y: target.y,
                 z: target.z
             }, dur)
-            .easing(TWEEN.Easing.Exponential.InOut)
+                .easing(TWEEN.Easing.Exponential.InOut)
             .onComplete(function() { object.userData.flying = false; })
-            .start();
+                .start();
             
         };
         
@@ -774,7 +941,7 @@ function ViewManager() {
             
             animate(objects[i], target, Math.random() * _duration + _duration);
         }
-        
+
         new TWEEN.Tween(this)
             .to({}, _duration * 2)
             .onUpdate(render)
