@@ -502,14 +502,7 @@ function ViewManager() {
      * @returns {Object} The drawn texture
      */
     this.createTexture = function(id, quality, tileWidth, tileHeight, scale) {
-
-            ],
-                    vertexColors: THREE.FaceColors,
-                    side: THREE.FrontSide,
-                    color: 0xffffff
-                })
-                id: id
-            };
+        
         var state = table[id].code_level,
             difficulty = Math.ceil(table[id].difficulty / 2),
             group = table[id].group || window.layers[table[id].layer].super_layer,
