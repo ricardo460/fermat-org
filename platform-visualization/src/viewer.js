@@ -16,7 +16,9 @@ var TILE_DIMENSION = {
 },
     TILE_SPACING = 20;
 
+
 getData();
+
 
 function init() {
 
@@ -41,6 +43,13 @@ function init() {
         renderer,
         render);
 
+    //init logos
+    walletLogo = new Walletlogo();
+    fermatLogo = new Fermatlogo();
+
+    walletLogo.animatestopWalletLogo();
+    fermatLogo.animatestopFarmatlogo();
+
     // uncomment for testing
     //create_stats();
 
@@ -63,11 +72,13 @@ function init() {
 
     $('#browserRightButton').click(function() {
        if ( actualView === 'start' )
+            
             goToView('table');
        else if ( actualView === 'table' )
             goToView('stack');
     });
     
+
     $('#browserLeftButton').click(function() {
        if ( actualView === 'start' ) ;
        //     goToView('stack');
@@ -88,6 +99,8 @@ function init() {
         var loader = new Loader();
         loader.findThemAll();
     }, 2000);*/
+
+    //TWEEN.removeAll();
 }
 
 /**
@@ -105,20 +118,30 @@ function goToView ( current ) {
 
             modifyButtonLegend(1);
 
-            headers.transformTable();
+            walletLogo.animateWalletLogo();
+
+            fermatLogo.animateFermatLogo();
+
+            setTimeout(function() {
+                headers.transformTable();
+            }, 4000);
+
             setTimeout(function() {
                 viewManager.transform(viewManager.targets.table);
-            }, 4000);
+            }, 6000);
             
             modifyButtonRight( 'View Dependencies', 'none');
            
             modifyButtonLeft( 'Start', 'block');
-
             
             break;
         case 'start':
 
-           headers.transformHead();  
+           headers.transformHead();
+
+           walletLogo.animatebackteWalletLogo();
+
+           fermatLogo.animatebackFermatLogo();
 
            modifyButtonRight( 'View Table', 'block');
 

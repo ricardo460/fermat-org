@@ -16,7 +16,7 @@
         <script src="common/vis.min.js"></script>
         <script src="common/stats.min.js"></script>
         
-        <img src="images/fermat_logo.png" id="splash"/>
+        <!--<img src="images/fermat_logo.png" id="splash"/>-->
         
         <button id="backButton" class="backButton" style="opacity : 0; display : none;">BACK</button>
         <button id="legendButton" style="opacity: 0; display : none;"> ? </button>

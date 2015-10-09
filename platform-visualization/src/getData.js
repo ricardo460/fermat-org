@@ -4,7 +4,7 @@ var URL = "get_plugins.php";
 //var URL = "http://52.11.156.16:3000/repo/comps";
 
 function getData() {
-    $.ajax({
+    /*$.ajax({
         url: URL,
         method: "GET"
     }).success(
@@ -19,16 +19,23 @@ function getData() {
                 animate();
             });
         }
-    );
+    );*/
+        
+    //////init source////////
+        initsource();
+        animateSource();
+    /////////////////////////
 
-    /*var l = JSON.parse(testData);
+    var l = JSON.parse(testData);
 
-        viewManager.fillTable(l);
+    viewManager.fillTable(l);
 
-        $('#splash').fadeTo(2000, 0, function() {
-                $('#splash').remove();
-                init();
-                //setTimeout( animate, 500);
-                animate();
-            });*/
+    //Simulacion pre carga y post carga de logo
+    $('#idCanvas').fadeTo(6000, 0, function() {
+        $('#idCanvas').remove();
+        TWEEN.removeAll();
+        init();
+        //setTimeout( animate, 500);
+        animate();
+    });
 }
