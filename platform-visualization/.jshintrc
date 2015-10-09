@@ -28,6 +28,10 @@
         "Timeline" : false,
         "console" : false,
         "window" : true,
-        "testData" : true
+        "testData" : true,
+        "Helper" : true,
+        "getData" : true,
+        "ActionFlow" : true,
+        "Stats" : true
     }
 }

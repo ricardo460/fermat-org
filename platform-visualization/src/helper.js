@@ -25,6 +25,65 @@ function Helper() {
                 $(el).remove();
         });
     };
+    
+    /**
+     * @author Miguel Celedon
+     *
+     * Shows an HTML element as a fade in
+     * @param {Object} element         DOMElement to show
+     * @param {Number} [duration=1000] Duration of animation
+     */
+    this.show = function(element, duration) {
+        
+        duration = duration || 1000;
+
+        if (typeof(element) === "string") {
+            element = document.getElementById(element);
+        }
+
+        $(element).fadeTo(duration, 1, function() {
+                $(element).show();
+            });
+    };
+    
+    /**
+     * Shows a material with transparency on
+     * @param {Object} material                                Material to change its opacity
+     * @param {Number} [duration=2000]                         Duration of animation
+     * @param {Object} [easing=TWEEN.Easing.Exponential.InOut] Easing of the animation
+     */
+    this.showMaterial = function(material, duration, easing) {
+        
+        if(material && typeof material.opacity !== 'undefined') {
+            
+            duration = duration || 2000;
+            easing = (typeof easing !== 'undefined') ? easing : TWEEN.Easing.Exponential.InOut;
+
+            new TWEEN.Tween(material)
+                .to({opacity : 1}, duration)
+                .easing(easing)
+                .onUpdate(function() { this.needsUpdate = true; })
+                .start();
+        }
+    };
+    
+    /**
+     * Deletes or hides the object
+     * @param {Object}  object          The mesh to hide
+     * @param {Boolean} [keep=true]     If false, delete the object from scene
+     * @param {Number}  [duration=2000] Duration of animation
+     */
+    this.hideObject = function(object, keep, duration) {
+        
+        duration = duration || 2000;
+        keep = (typeof keep === 'boolean') ? keep : true;
+        
+        new TWEEN.Tween(object.material)
+            .to({opacity : 0}, duration)
+            .onUpdate(function() { this.needsUpdate = true; })
+            .onComplete(function() { if(!keep) window.scene.remove(object); })
+            .start();
+    };
 
     /**
      * Clones a tile and *without* it's developer picture
@@ -174,6 +233,16 @@ function Helper() {
             });
     };
     
+    /**
+     * Draws a text supporting word wrap
+     * @param   {String} text       Text to draw
+     * @param   {Number} x          X position
+     * @param   {Number} y          Y position
+     * @param   {Object} context    Canvas context
+     * @param   {Number} maxWidth   Max width of text
+     * @param   {Number} lineHeight Actual line height
+     * @returns {Number} The Y coordinate of the next line
+     */
     this.drawText = function(text, x, y, context, maxWidth, lineHeight) {
     
         var words = text.split(' ');
@@ -186,7 +255,7 @@ function Helper() {
           if (testWidth > maxWidth && n > 0) {
             context.fillText(line, x, y);
             line = words[n] + ' ';
-            y -= lineHeight;
+            y += lineHeight;
           }
           else {
             line = testLine;
@@ -194,6 +263,34 @@ function Helper() {
         }
         context.fillText(line, x, y);
 
-        return y - lineHeight;
+        return y + lineHeight;
+    };
+    
+    /**
+     * Searchs an element given its full name
+     * @param   {String} elementFullName Name of element in format [group]/[layer]/[name]
+     * @returns {Number} The ID of the element in the table
+     */
+    this.searchElement = function(elementFullName) {
+        
+        if(typeof elementFullName !== 'string') return -1;
+        
+        var group,
+            components = elementFullName.split('/');
+        
+        if(components.length === 3) {
+        
+            for(var i = 0, l = table.length; i < l; i++) {
+
+                group = table[i].group || window.layers[table[i].layer].super_layer;
+
+                if(group.toLowerCase() === components[0].toLowerCase() &&
+                   table[i].layer.toLowerCase() === components[1].toLowerCase() &&
+                   table[i].name.toLowerCase() === components[2].toLowerCase())
+                    return i;
+            }
+        }
+        
+        return -1;
     };
 }

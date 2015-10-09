@@ -30,16 +30,20 @@ function Timeline ( tasks, container ) {
                 lastTarget = helper.parseDate( schedule[0].reached ),
                 lastReached = lastTarget;
             
-            tile = helper.cloneTile(tasks[i], 'timeline-' + tasks[i]);
+            var canvas = document.createElement('canvas');
+            var oldCanvas = objects[tasks[i]].children[0].material.map.image;
+            canvas.width = oldCanvas.width;
+            canvas.height = oldCanvas.height;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(oldCanvas, 0, 0);
+            
+            tile = canvas;
             tile.style.position = 'relative';
             tile.style.display = 'inline-block';
             
-            wrap = document.createElement('div');
-            wrap.appendChild( tile );
-            
             this.groups.push ( {
                 id : i,
-                content : wrap.innerHTML
+                content : tile
             });
             
             // First status marks the start point, not needed here

@@ -6,11 +6,12 @@ var table = [],
     objects = [],
     headers = null,
     actualView = 'start',
-    stats = null;
+    stats = null,
+    actualFlow = null;
 
 //Global constants
 var TILE_DIMENSION = {
-    width : 234,
+    width : 231,
     height : 140
 },
     TILE_SPACING = 20;
@@ -81,7 +82,7 @@ function init() {
     //Disabled Menu
     //initMenu();
 
-    setTimeout(function() {goToView('start'); }, 500);
+    setTimeout(function() {goToView('table'); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
@@ -90,8 +91,8 @@ function init() {
 }
 
 /**
- * created by Miguel Celedon
- * modified by Ricardo Delgado
+ * @author Miguel Celedon
+ * @lastmodifiedBy Ricardo Delgado
  * Changes the actual state of the viewer
  * @param {String} name The name of the target state
  */
@@ -105,6 +106,9 @@ function goToView ( current ) {
             modifyButtonLegend(1);
 
             headers.transformTable();
+            setTimeout(function() {
+                viewManager.transform(viewManager.targets.table, 4000);
+            }, 4000);
             
             modifyButtonRight( 'View Dependencies', 'none');
            
@@ -144,6 +148,7 @@ function goToView ( current ) {
             break;
     }
 }
+
 /**
  * created by Ricardo Delgado
  * editing text , animation and control button state
@@ -161,6 +166,7 @@ var browserButton = document.getElementById('browserRightButton');
 
 
 }
+
 /**
  * Created by Ricardo Delgado
  * Editing text , animation and control button state
@@ -190,6 +196,7 @@ var browserButton = document.getElementById('backButton');
                 $(browserButton).show();
             });
 }
+
 /**
  * Created by Ricardo Delgado
  */
@@ -239,49 +246,78 @@ function changeView(targets) {
 
     camera.enable();
     camera.loseFocus();
+    
+    helper.show('container', 2000);
+    
+    if(actualFlow) {
+        actualFlow.delete();
+        actualFlow = null;
+    }
 
     if (targets != null)
         viewManager.transform(targets, 2000);
 }
 
 function onElementClick(id) {
-
-    //var id = this.id;
-
-    //var image = document.getElementById('img-' + id);
     
-
     if (camera.getFocus() == null) {
 
         camera.setFocus(id, 2000);
+        
         setTimeout(function() {
+            
             camera.setFocus(id, 1000);
             modifyButtonBack(1);
+            
+            if(table[id].author) {
+                var button = document.createElement('button');
+                button.id = 'developerButton';
+                button.className = 'actionButton';
+                button.style.position = 'absolute';
+                button.innerHTML = 'View developer';
+                button.style.top = '10px';
+                button.style.left = (10 + document.getElementById('backButton').clientWidth + 5) + 'px';
+                button.style.zIndex = 10;
+                button.style.opacity = 0;
+
+                button.addEventListener('click', function() { showDeveloper(id); helper.hide(button, 1000, false); });
+
+                document.body.appendChild(button);
+
+                helper.show(button, 1000);
+            }
+            
         }, 3000);
         camera.disable();
-
-        /*if (image != null) {
-
-            var handler = function() {
-                onImageClick(id, image, handler);
-            };
-
-            image.addEventListener('click', handler, true);
-        } else {}*/
+        
     }
 
-    function onImageClick(id, image, handler) {
-
-        image.removeEventListener('click', handler, true);
+    function showDeveloper(id) {
 
         var relatedTasks = [];
+        
+        var image = table[id].picture;
 
+        var section = 0;
+        var center = objects[id].position;
+        
         for (var i = 0; i < table.length; i++) {
-            if (table[i].author == table[id].author) relatedTasks.push(i);
+            
+            if (table[i].author == table[id].author) {
+                relatedTasks.push(i);
+                
+                new TWEEN.Tween(objects[i].position)
+                .to({x : center.x + (section % 5) * window.TILE_DIMENSION.width, y : center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height, z : 0}, 2000)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .start();
+                
+                section += 1;
+            }
         }
-
+        
         createSidePanel(id, image, relatedTasks);
-        createElementsPanel(relatedTasks);
+        camera.enable();
+        camera.move(center.x, center.y, center.z + window.TILE_DIMENSION.width * 5);
     }
 
     function createSidePanel(id, image, relatedTasks) {
@@ -298,7 +334,7 @@ function onElementClick(id) {
 
         var panelImage = document.createElement('img');
         panelImage.id = 'focusImg';
-        panelImage.src = image.src;
+        panelImage.src = image;
         panelImage.style.position = 'relative';
         panelImage.style.width = '50%';
         panelImage.style.opacity = 0;
@@ -324,23 +360,35 @@ function onElementClick(id) {
         sidePanel.appendChild(email);
 
         if (relatedTasks != null && relatedTasks.length > 0) {
+            
+            var anyTimeline = false;
+            
+            var i, l;
+            
+            for(i = 0, l = relatedTasks.length; i < l; i++) {
+                if(table[relatedTasks[i]].life_cycle !== undefined) anyTimeline = true;
+            }
+            
+            if(anyTimeline) {
 
-            var tlButton = document.createElement('button');
-            tlButton.id = 'timelineButton';
-            tlButton.style.opacity = 0;
-            tlButton.style.position = 'relative';
-            tlButton.textContent = 'See Timeline';
+                var tlButton = document.createElement('button');
+                tlButton.className = 'actionButton';
+                tlButton.id = 'timelineButton';
+                tlButton.style.opacity = 0;
+                tlButton.style.position = 'relative';
+                tlButton.textContent = 'See Timeline';
 
-            $(tlButton).click(function() {
-                showTimeline(relatedTasks);
-            });
+                $(tlButton).click(function() {
+                    showTimeline(relatedTasks);
+                });
 
-            sidePanel.appendChild(tlButton);
+                sidePanel.appendChild(tlButton);
+            }
         }
 
         $('#container').append(sidePanel);
 
-        $(renderer.domElement).fadeTo(1000, 0);
+        //$(renderer.domElement).fadeTo(1000, 0);
 
         $(panelImage).fadeTo(1000, 1, function() {
             $(userName).fadeTo(1000, 1, function() {
@@ -353,39 +401,6 @@ function onElementClick(id) {
                 });
             });
         });
-    }
-
-    function createElementsPanel(tasks) {
-        
-        var i, l;
-
-        var elementPanel = document.createElement('div');
-        elementPanel.id = 'elementPanel';
-        elementPanel.style.position = 'absolute';
-        elementPanel.style.top = '0px';
-        elementPanel.style.bottom = '25%';
-        elementPanel.style.right = '0px';
-        elementPanel.style.marginTop = '50px';
-        elementPanel.style.marginRight = '5%';
-        elementPanel.style.width = '60%';
-        elementPanel.style.overflowY = 'auto';
-
-
-        for (i = 0, l = tasks.length; i < l; i++) {
-
-            var clone = helper.cloneTile(tasks[i], 'task-' + tasks[i]);
-            clone.style.position = 'relative';
-            clone.style.display = 'inline-block';
-            clone.style.marginLeft = '10px';
-            clone.style.marginTop = '10px';
-            clone.style.opacity = 0;
-            elementPanel.appendChild(clone);
-
-            $(clone).fadeTo(2000, 1);
-        }
-
-        $('#container').append(elementPanel);
-
     }
 
     function showTimeline(tasks) {
@@ -402,7 +417,9 @@ function onElementClick(id) {
         tlContainer.style.right = '50px';
         tlContainer.style.overflowY = 'auto';
         tlContainer.style.opacity = 0;
-        $('#container').append(tlContainer);
+        document.body.appendChild(tlContainer);
+        
+        helper.hide('container', 1000, true);
 
         $(tlContainer).fadeTo(1000, 1);
 
@@ -427,6 +444,21 @@ function onClick(e) {
             onElementClick(clicked[0].object.userData.id);
         }
     }
+}
+
+function showFlow(id) {
+    
+    //Should receive the id and the flow's name
+    
+    var tile = objects[id];
+    
+    camera.enable();
+    camera.move(tile.position.x, tile.position.y, tile.position.z + window.TILE_DIMENSION.width * 5);
+    
+    setTimeout(function() {
+        actualFlow = new ActionFlow();
+        actualFlow.draw(tile.position.x, tile.position.y);
+    }, 1500);
 }
 
 function animate() {
