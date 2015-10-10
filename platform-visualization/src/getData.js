@@ -20,22 +20,31 @@ function getData() {
             });
         }
     );*/
+
+    
+    animate();
+    setTimeout(function(){
+        var l = JSON.parse(testData);
+
+        viewManager.fillTable(l);
         
-    //////init source////////
-        initsource();
-        animateSource();
-    /////////////////////////
+        TWEEN.removeAll();
 
-    var l = JSON.parse(testData);
+        logo.animatestopWalletLogo();
+        logo.animatestopFarmatlogo();
 
-    viewManager.fillTable(l);
+        init();
+
+    }, 6000);
+    
+    //stop fade
 
     //Simulacion pre carga y post carga de logo
-    $('#idCanvas').fadeTo(6000, 0, function() {
+    /*$('#idCanvas').fadeTo(6000, 0, function() {
         $('#idCanvas').remove();
         TWEEN.removeAll();
         init();
         //setTimeout( animate, 500);
         animate();
-    });
+    });*/
 }

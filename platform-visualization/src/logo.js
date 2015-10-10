@@ -3,34 +3,46 @@
  * function create a logo (wallet) and charge your textures
  */
 
-function Walletlogo() 
-{
+function Logo(){
 
-    //Geometría del plano
-    var geometryPlano = new THREE.PlaneGeometry(995, 700);
+    //inicilizacion del logo wallet
+    var geometryPlanowallet = new THREE.PlaneGeometry(995, 700);
 
-    //Textura
     var textureWallet = new THREE.ImageUtils.loadTexture("images/walletlogo.png");
     textureWallet.minFilter = THREE.NearestFilter;
 
-    // Material y agregado la textura
-    var materialPlano = new THREE.MeshBasicMaterial({ map: textureWallet, side: THREE.FrontSide, transparent: true, opacity: 1 , color:0xffffff});
+    var materialPlanowallet = new THREE.MeshBasicMaterial({ map: textureWallet, side: THREE.FrontSide, transparent: true, opacity: 1 , color:0xffffff});
 
-    // El plano (Territorio)
-    var walletLogo = new THREE.Mesh(geometryPlano, materialPlano);
+    var walletLogo = new THREE.Mesh(geometryPlanowallet, materialPlanowallet);
 
     walletLogo.position.x = 0;
     walletLogo.position.y = 230;
     walletLogo.position.z = 63800;
     scene.add(walletLogo);
 
+
+    //inicilizacion del logo fermat
+    var geometryPlanofermat = new THREE.PlaneGeometry(950, 300);
+
+    var textureFermat = new THREE.ImageUtils.loadTexture("images/fermatlogo.png");
+    textureFermat.minFilter = THREE.NearestFilter;
+
+    var materialPlanofermat = new THREE.MeshBasicMaterial({ map: textureFermat, side: THREE.FrontSide, transparent: true, opacity: 1, color: 0xffffff});
+
+    var fermatLogo = new THREE.Mesh(geometryPlanofermat, materialPlanofermat);
+
+    fermatLogo.position.x = 0;
+    fermatLogo.position.y = -310;
+    fermatLogo.position.z = 63800;
+    scene.add(fermatLogo);
+
+    
     /**
      * @author Emmanuel Colina
      * It provides a fade to logo(wallet)
      * @param {Number} [duration=2000] Duration of the delay
      */
-    this.animatefadeWalletlogo = function (duration)
-    {
+    this.animatefadeWalletlogo = function (duration){
         var _duration = duration || 2000;
 
         tween1 = new TWEEN.Tween(walletLogo.material)
@@ -55,9 +67,8 @@ function Walletlogo()
      * @param {Number} [duration=2000] Duration of the delay
      */
 
-    this.animatestopWalletLogo = function (duration)
-    {
-        var _duration = duration || 2000;
+    this.animatestopWalletLogo = function (duration){
+        var _duration = duration || 1000;
 
         tweenstop = new TWEEN.Tween(walletLogo.material)
         .to({ opacity : 1, needsUpdate : true}, 1000)
@@ -73,12 +84,12 @@ function Walletlogo()
      * @param {Number} [duration=2000] Duration of the delay
      */
 
-    this.animateWalletLogo = function (duration){
+    this.animateWalletopenLogo = function (duration){
 
         var _duration = duration || 2000;
 
         var tween = new TWEEN.Tween(walletLogo.position)
-        tween.to({ y: 1700, z: 60000, opacity : 1, needsUpdate : true}, 2000)
+        tween.to({ y: 1640, z: 60000}, 2000)
         tween.delay( _duration )
         tween.easing(TWEEN.Easing.Exponential.InOut);
         tween.onUpdate(render)
@@ -92,52 +103,29 @@ function Walletlogo()
      * @param {Number} [duration=2000] Duration of the delay
      */
 
-    this.animatebackteWalletLogo = function (duration){
+    this.animateteWalletcloseLogo = function (duration){
 
         var _duration = duration || 2000;
 
         var tween = new TWEEN.Tween(walletLogo.position)
-        tween.to({ y: 230, z: 63800, opacity : 1, needsUpdate : true}, 2500)
+        tween.to({ y: 230, z: 63800}, 2500)
         tween.delay( _duration )
         tween.easing(TWEEN.Easing.Exponential.InOut);
         tween.onUpdate(render)
 
         tween.start();
     };
-}
 
-/**
- * @author Emmanuel Colina
- * function create a logo (fermat) and charge your textures(mirror)
- */
 
-function Fermatlogo() {
-
-    var geometryPlano = new THREE.PlaneGeometry(950, 300);
-
-    //Textura
-    var textureLogo = new THREE.ImageUtils.loadTexture("images/fermatlogo.png");
-    textureLogo.minFilter = THREE.NearestFilter;
-
-    // Material y agregado la textura
-    var materialPlano = new THREE.MeshBasicMaterial({ map: textureLogo, side: THREE.FrontSide, transparent: true, opacity: 1, color: 0xffffff});
-
-    // El plano (Territorio)
-    var fermatLogo = new THREE.Mesh(geometryPlano, materialPlano);
-
-    fermatLogo.position.x = 0;
-    fermatLogo.position.y = -310;
-    fermatLogo.position.z = 63800;
-    scene.add(fermatLogo);
-
+    
      /**
      * @author Emmanuel Colina
      * It provides a fade to logo(Farmat)
      * @param {Number} [duration=2000] Duration of the delay
      */
 
-    this.animatefadeFarmatlogo = function (duration)
-    {
+    this.animatefadeFarmatlogo = function (duration){
+
         var _duration = duration || 2000;
 
         tween1 = new TWEEN.Tween(fermatLogo.material)
@@ -163,9 +151,9 @@ function Fermatlogo() {
      * @param {Number} [duration=2000] Duration of the delay
      */
 
-    this.animatestopFarmatlogo = function (duration)
-    {
-        var _duration = duration || 2000;
+    this.animatestopFarmatlogo = function (duration){
+
+        var _duration = duration || 1000;
 
         tweenstop = new TWEEN.Tween(fermatLogo.material)
         .to({ opacity : 1, needsUpdate : true}, 1000)
@@ -181,12 +169,12 @@ function Fermatlogo() {
      * @param {Number} [duration=2000] Duration of the delay
      */
 
-    this.animateFermatLogo = function (duration){
+    this.animateFermatopenLogo = function (duration){
 
         var _duration = duration || 2000;
 
         var tween = new TWEEN.Tween(fermatLogo.position)
-        tween.to({ y: -1800, z: 60000, opacity : 1, needsUpdate : true}, 2000)
+        tween.to({ y: -1800, z: 60000}, 2000)
         tween.delay( _duration )
         tween.easing(TWEEN.Easing.Exponential.InOut);
         tween.onUpdate(render)
@@ -200,12 +188,12 @@ function Fermatlogo() {
      * @param {Number} [duration=2000] Duration of the delay
      */
 
-    this.animatebackFermatLogo = function (duration){
+    this.animateFermatcloseLogo = function (duration){
 
         var _duration = duration || 2000;
 
         var tween = new TWEEN.Tween(fermatLogo.position)
-        tween.to({ y: -310, z: 63800, opacity : 1, needsUpdate : true}, 2500)
+        tween.to({ y: -310, z: 63800}, 2500)
         tween.delay( _duration )
         tween.easing(TWEEN.Easing.Exponential.InOut);
         tween.onUpdate(render)

@@ -3,6 +3,7 @@ var table = [],
     camera,
     scene = new THREE.Scene(),
     renderer,
+    logo,
     objects = [],
     headers = null,
     actualView = 'start',
@@ -16,9 +17,31 @@ var TILE_DIMENSION = {
 },
     TILE_SPACING = 20;
 
+createScene();
 
 getData();
 
+
+function createScene(){
+
+    var light = new THREE.AmbientLight(0xFFFFFF);
+    scene.add( light );
+    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.domElement.style.position = 'absolute';
+    renderer.setClearColor(0xffffff);
+    document.getElementById('container').appendChild(renderer.domElement);
+
+    camera = new Camera(new THREE.Vector3(0, 0, 65355),
+        renderer,
+        render);
+
+    //init logo
+    logo = new Logo();
+
+    logo.animatefadeWalletlogo();
+    logo.animatefadeFarmatlogo();
+}
 
 function init() {
 
@@ -30,25 +53,6 @@ function init() {
     // groups icons
     headers = new Headers(dimensions.columnWidth, dimensions.superLayerMaxHeight, dimensions.groupsQtty,
                           dimensions.layersQtty, dimensions.superLayerPosition);
-    
-    var light = new THREE.AmbientLight(0xFFFFFF);
-    scene.add( light );
-    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true});
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xffffff);
-    document.getElementById('container').appendChild(renderer.domElement);
-
-    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * TILE_DIMENSION.width),
-        renderer,
-        render);
-
-    //init logos
-    walletLogo = new Walletlogo();
-    fermatLogo = new Fermatlogo();
-
-    walletLogo.animatestopWalletLogo();
-    fermatLogo.animatestopFarmatlogo();
 
     // uncomment for testing
     //create_stats();
@@ -93,7 +97,7 @@ function init() {
     //Disabled Menu
     //initMenu();
 
-    setTimeout(function() {goToView('table'); }, 500);
+    setTimeout(function() {goToView('start'); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
@@ -118,9 +122,9 @@ function goToView ( current ) {
 
             modifyButtonLegend(1);
 
-            walletLogo.animateWalletLogo();
+            logo.animateWalletopenLogo();
 
-            fermatLogo.animateFermatLogo();
+            logo.animateFermatopenLogo();
 
             setTimeout(function() {
                 headers.transformTable();
@@ -139,9 +143,9 @@ function goToView ( current ) {
 
            headers.transformHead();
 
-           walletLogo.animatebackteWalletLogo();
+           logo.animateteWalletcloseLogo();
 
-           fermatLogo.animatebackFermatLogo();
+           logo.animateFermatcloseLogo();
 
            modifyButtonRight( 'View Table', 'block');
 
