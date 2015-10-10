@@ -1,288 +1,10 @@
-var testFlow = 
-{
-    name : 'Nombre que describe al flujo',
-    description : 'Descripcion del proceso',
-    steps : [
-        {
-            title : 'Paso uno',
-            desc : 'Paso inicial del flujo',
-            element : 'cor/core/fermat core',               // Grupo/Layer/Nombre
-            next : [1]                                      // Una lista de indices del mismo array
-        },
-        {
-            title : 'Paso dos',
-            desc : 'Este le sigue al paso uno\ncon salto de línea',
-            element : 'ccm/reference wallet/discount wallet',
-            next : [2]
-        },
-        {
-            title : 'Paso tres',
-            desc : 'Este se bifurca en dos pasos',
-            element : 'bnp/reference wallet/bank notes',
-            next : [3, 1]
-        },
-        {
-            title : 'Paso tres punto a',
-            desc : 'Este es uno de los que sigue del 3',
-            element : 'dap/actor/asset issuer',
-            next : []
-        }
-    ]
-};
-
-/*var processes = [{
-    name: 'Generacion Asset en Wallet Factory',
-    description: '',
-    steps: [{
-        type: 'start',
-        title: 'Bitcoin Wallet',
-        desc: 'long getAvailableBalance()\nObtiene el balance actual de los bitcoins para habilitar el boton de publicar calculando el monto total de los bitcoins a necesitar para enviar los assets\nMonto Total: (Cantidad de Assets * Valor Unitario) + fee',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer: 'sub app',
-        comp: 'wallet factory',
-        next: [1]
-    }, {
-        type: 'activity',
-        title: 'Asset Issuing Transaction',
-        desc: 'void issueAsset(DigitalAsset, amount, blockchainNetworkType)\nInicia la transacción de IssueAsset pasando el DigitalAsset y la cantidad de assets a generar',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer: 'sub app',
-        comp: 'wallet factory',
-        next: [2]
-    }, {
-        type: 'activity',
-        title: 'Bitcoin Wallet',
-        desc: 'long getAvailableBalance()\nObtiene el balance actual de los bitcoins para habilitar el boton de publicar calculando el monto total de los bitcoins a necesitar para enviar los assets\nMonto Total: (Cantidad de Assets * Valor Unitario) + fee',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [3]
-    }, {
-        type: 'activity',
-        title: 'Asset CryptoVault',
-        desc: 'CryptoAddress getNewAssetVaultCryptoAddress(BlockchainAddress)\nLa asset vault entrega una direccio bitcoin que es registrada en el Address Book. Esta direccion es la Genesis Address',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [4, 5]
-    }, {
-        type: 'preparation',
-        title: 'Address Book',
-        desc: 'NA\nRegistra la GenesisAddress en el address book para detectar luego el ingreso del bitcoin',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer: null,
-        comp: 'Asset CryptoVault',
-        next: []
-    }, {
-        type: 'activity',
-        title: 'Asset Issuing Transaction',
-        desc: 'private bool isDigitalAssetComplete()\nMe aseguro que el DigitalAsset esta completo antes de generar el hash del mismo y formar el objeto DigitalAssetMetadata',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [6]
-    }, {
-        type: 'activity',
-        title: 'Outgoing Intra Actor',
-        desc: 'public String sendCrypto(String walletPublicKey, CryptoAddress destinationAddress, String op_Return, long cryptoAmount, String description, String senderPublicKey, String receptorPublicKey, Actors senderActorType, Actors receptorActorType, ReferenceWallet referenceWallet)\nHago el envio de los bitcoins a traves del Outgoing Intra Actor Transaction. El mismo va a generar una transaccion bitcoin y me va a devolver el hash de la misma. Este hash es la genesis transaction que debo ingresar en el DigitalAssetMetadata',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [7]
-    }, {
-        type: 'activity',
-        title: '',
-        desc: 'Genero y persisto el objeto DigitalAssetMetadata, que forma la "mitad" del asset',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [3, 8]
-    }, {
-        type: 'preparation',
-        title: 'cloud',
-        desc: '',
-        suprlay: null,
-        platfrm: null,
-        layer: null,
-        comp: null,
-        next: [9]
-    }, {
-        type: 'activity',
-        title: 'Incoming Crypto',
-        desc: 'NA\nDetecta la llegada de Bitcoins a la GenesisAddress y dispara el evento de IncomingCryptoDigitalAssetOnCryptoNetwork',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [10]
-    }, {
-        type: 'activity',
-        title: 'Issuer AssetWallet',
-        desc: 'bookCredit(DigitalAssetMetadata)\nGenera un credito en el book balance de la Issuer Asset Wallet y persiste el DigitalAssetMetadata en la Issuer Wallet',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [11]
-    }, {
-        type: 'activity',
-        title: 'Incoming Crypto',
-        desc: 'NA\nDetecta la llegada de Bitcoins a la GenesisAddress y dispara el evento de IncomingCryptoDigitalAssetOnBlockChain',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [12]
-    }, {
-        type: 'end',
-        title: 'Issuer AssetWallet',
-        desc: 'availableCredit(DigitalAssetMetadata)\nGenera un credito en el available balance de la Issuer Asset Wallet',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: []
-    }]
-}];*/
-
-var processes = [
-    {
-        "platfrm": "CBP",
-        "name": "connection request from customer to broker",
-        "desc": "a customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation.",
-        "prev": "list crypto brokers",
-        "next": null,
-        "steps": [
-            {
-                "id": 0,
-                "title": "select broker and submit request",
-                "desc": "the customer selects a broker from the list and submits the request to connect to him.",
-                "type": "start",
-                "next": [
-                    {
-                        "id": "1",
-                        "type": "direct call"
-                    }
-                ],
-                "name": "crypto broker community",
-                "layer": "sub app",
-                "platfrm": "CBP"
-            },
-            {
-                "id": 1,
-                "title": "route request to network service",
-                "desc": "the module routes this request to the network service to reach the selected broker.",
-                "type": "activity",
-                "next": [
-                    {
-                        "id": "2",
-                        "type": "direct call"
-                    }
-                ],
-                "name": "crypto broker community",
-                "layer": "sub app module",
-                "platfrm": "CBP"
-            },
-            {
-                "id": 2,
-                "title": "call the broker to deliver the request",
-                "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
-                "type": "activity",
-                "next": [
-                    {
-                        "id": "3",
-                        "type": "direct call"
-                    }
-                ],
-                "name": "crypto broker",
-                "layer": "actor network service",
-                "platfrm": "CBP"
-            },
-            {
-                "id": 3,
-                "title": "transport request",
-                "desc": "the request is transported through the communication layer and one of the available channels.",
-                "type": "communication",
-                "next": [
-                    {
-                        "id": "4",
-                        "type": "fermat message"
-                    }
-                ]
-            },
-            {
-                "id": 4,
-                "title": "receive the request",
-                "desc": "the network service receives the request and informs the crypto broker actor.",
-                "type": "activity",
-                "next": [
-                    {
-                        "id": "5",
-                        "type": "event"
-                    }
-                ],
-                "name": "crypto broker",
-                "layer": "actor network service",
-                "platfrm": "CBP"
-            },
-            {
-                "id": 5,
-                "title": "records the request",
-                "desc": "the request is saved and a notification for the end user is created.",
-                "type": "activity",
-                "next": [
-                    {
-                        "id": "6",
-                        "type": "direct call"
-                    }
-                ],
-                "name": "crypto broker",
-                "layer": "actor",
-                "platfrm": "CBP"
-            },
-            {
-                "id": 6,
-                "title": "records the notification",
-                "desc": "the the notification is saved and the os core library is notified.",
-                "type": "activity",
-                "next": [
-                    {
-                        "id": "7",
-                        "type": "event"
-                    }
-                ],
-                "name": "notification",
-                "layer": "middleware",
-                "platfrm": "PIP"
-            },
-            {
-                "id": 7,
-                "title": "send notification to the os",
-                "desc": "sends the notification to the os and this in turn shows it to the end user.",
-                "type": "end",
-                "next": []
-            }
-        ],
-        "upd_at": "561703221f1c2be0054fd36e",
-        "_id": "561703221f1c2be0054fd36f"
-    }
-];
-
 /**
  * Represents a flow of actions related to some tiles
  * @param   {Object}  flow The objects that describes the flow including a set of steps
  */
 function ActionFlow(flow) {
     
-    this.flow = flow || processes[0] || [];
+    this.flow = flow || [];
     var self = this;
     var objects = [];
     
@@ -942,8 +664,8 @@ function getData() {
     );
 }
 
-
-/*function getData() {
+/*
+function getData() {
     var l = JSON.parse(testData);
 
     viewManager.fillTable(l);
@@ -954,8 +676,8 @@ function getData() {
         //setTimeout( animate, 500);
         animate();
     });
-}*/
-
+}
+*/
 /**
  * @class Represents the group of all header icons
  * @param {Number} columnWidth         The number of elements that contains a column
@@ -1370,12 +1092,14 @@ function Helper() {
             el = document.getElementById(element);
         }
 
-        $(el).fadeTo(duration, 0, function() {
-            if(keep)
-                el.style.display = 'none';
-            else
-                $(el).remove();
-        });
+        if(el) {
+            $(el).fadeTo(duration, 0, function() {
+                if(keep)
+                    el.style.display = 'none';
+                else
+                    $(el).remove();
+            });
+        }
     };
     
     /**
@@ -2124,7 +1848,11 @@ function onElementClick(id) {
                 button.style.zIndex = 10;
                 button.style.opacity = 0;
 
-                button.addEventListener('click', function() { showDeveloper(id); helper.hide(button, 1000, false); });
+                button.addEventListener('click', function() {
+                    showDeveloper(id);
+                    helper.hide(button, 1000, false);
+                    helper.hide('showFlows', 1000, false);
+                });
 
                 document.body.appendChild(button);
 
@@ -2213,7 +1941,9 @@ function onElementClick(id) {
             var i, l;
             
             for(i = 0, l = relatedTasks.length; i < l; i++) {
-                if(table[relatedTasks[i]].life_cycle !== undefined) anyTimeline = true;
+                if(table[relatedTasks[i]].life_cycle !== undefined && table[relatedTasks[i]].life_cycle.length > 0) {
+                    anyTimeline = true;
+                }
             }
             
             if(anyTimeline) {
@@ -2305,11 +2035,17 @@ function onElementClick(id) {
                     flows.push(new ActionFlow(p[i]));
                 }
                 
-                button.innerHTML = 'Show Flows';
-                button.addEventListener('click', function() {
-                    showFlow(flows);
+                if(flows.length > 0) {
+                    button.innerHTML = 'Show Flows';
+                    button.addEventListener('click', function() {
+                        showFlow(flows);
+                        helper.hide(button, 1000, false);
+                        helper.hide('developerButton', 1000, false);
+                    });
+                }
+                else {
                     helper.hide(button, 1000, false);
-                });
+                }
             }
         );
     }

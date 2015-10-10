@@ -282,7 +282,11 @@ function onElementClick(id) {
                 button.style.zIndex = 10;
                 button.style.opacity = 0;
 
-                button.addEventListener('click', function() { showDeveloper(id); helper.hide(button, 1000, false); });
+                button.addEventListener('click', function() {
+                    showDeveloper(id);
+                    helper.hide(button, 1000, false);
+                    helper.hide('showFlows', 1000, false);
+                });
 
                 document.body.appendChild(button);
 
@@ -371,7 +375,9 @@ function onElementClick(id) {
             var i, l;
             
             for(i = 0, l = relatedTasks.length; i < l; i++) {
-                if(table[relatedTasks[i]].life_cycle !== undefined) anyTimeline = true;
+                if(table[relatedTasks[i]].life_cycle !== undefined && table[relatedTasks[i]].life_cycle.length > 0) {
+                    anyTimeline = true;
+                }
             }
             
             if(anyTimeline) {
@@ -463,11 +469,17 @@ function onElementClick(id) {
                     flows.push(new ActionFlow(p[i]));
                 }
                 
-                button.innerHTML = 'Show Flows';
-                button.addEventListener('click', function() {
-                    showFlow(flows);
+                if(flows.length > 0) {
+                    button.innerHTML = 'Show Flows';
+                    button.addEventListener('click', function() {
+                        showFlow(flows);
+                        helper.hide(button, 1000, false);
+                        helper.hide('developerButton', 1000, false);
+                    });
+                }
+                else {
                     helper.hide(button, 1000, false);
-                });
+                }
             }
         );
     }

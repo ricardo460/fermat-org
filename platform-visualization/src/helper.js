@@ -18,12 +18,14 @@ function Helper() {
             el = document.getElementById(element);
         }
 
-        $(el).fadeTo(duration, 0, function() {
-            if(keep)
-                el.style.display = 'none';
-            else
-                $(el).remove();
-        });
+        if(el) {
+            $(el).fadeTo(duration, 0, function() {
+                if(keep)
+                    el.style.display = 'none';
+                else
+                    $(el).remove();
+            });
+        }
     };
     
     /**
