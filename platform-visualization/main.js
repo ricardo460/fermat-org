@@ -744,7 +744,6 @@ function getData() {
             });
         }
     );*/
-
     
     animate();
     setTimeout(function(){
@@ -1527,7 +1526,6 @@ function Logo(){
     walletLogo.position.z = 63800;
     scene.add(walletLogo);
 
-
     //inicilizacion del logo fermat
     var geometryPlanofermat = new THREE.PlaneGeometry(950, 300);
 
@@ -1869,7 +1867,7 @@ var table = [],
     camera,
     scene = new THREE.Scene(),
     renderer,
-    logo,
+    logo = new Logo(),
     objects = [],
     headers = null,
     actualView = 'start',
@@ -1887,7 +1885,6 @@ createScene();
 
 getData();
 
-
 function createScene(){
 
     var light = new THREE.AmbientLight(0xFFFFFF);
@@ -1901,9 +1898,6 @@ function createScene(){
     camera = new Camera(new THREE.Vector3(0, 0, 65355),
         renderer,
         render);
-
-    //init logo//
-    logo = new Logo();
 
     logo.animatefadeWalletlogo();
     logo.animatefadeFarmatlogo();
@@ -1948,7 +1942,6 @@ function init() {
             goToView('stack');
     });
     
-
     $('#browserLeftButton').click(function() {
        if ( actualView === 'start' ) ;
        //     goToView('stack');
@@ -2056,8 +2049,6 @@ var browserButton = document.getElementById('browserRightButton');
     
     browserButton.style.display=view;
     browserButton.innerHTML = label;
-
-
 }
 
 /**
@@ -2074,8 +2065,6 @@ var browserButton = document.getElementById('browserLeftButton');
 
     browserButton.style.display = view;
     browserButton.innerHTML = label;
-
-
 }
 
 /**
@@ -2132,7 +2121,6 @@ function initMenu() {
         changeView(viewManager.targets.grid);
 
     }, false);
-
 }
  
 function changeView(targets) {

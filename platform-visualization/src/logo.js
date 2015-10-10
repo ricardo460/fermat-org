@@ -20,7 +20,6 @@ function Logo(){
     walletLogo.position.z = 63800;
     scene.add(walletLogo);
 
-
     //inicilizacion del logo fermat
     var geometryPlanofermat = new THREE.PlaneGeometry(950, 300);
 

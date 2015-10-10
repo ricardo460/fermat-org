@@ -20,7 +20,6 @@ function getData() {
             });
         }
     );*/
-
     
     animate();
     setTimeout(function(){
