@@ -27,7 +27,7 @@ function getData() {
         var l = JSON.parse(testData);
 
         viewManager.fillTable(l);
-        
+
         TWEEN.removeAll();
 
         logo.animatestopWalletLogo();
@@ -36,8 +36,6 @@ function getData() {
         init();
 
     }, 6000);
-    
-    //stop fade
 
     //Simulacion pre carga y post carga de logo
     /*$('#idCanvas').fadeTo(6000, 0, function() {

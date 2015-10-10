@@ -751,7 +751,7 @@ function getData() {
         var l = JSON.parse(testData);
 
         viewManager.fillTable(l);
-        
+
         TWEEN.removeAll();
 
         logo.animatestopWalletLogo();
@@ -760,8 +760,6 @@ function getData() {
         init();
 
     }, 6000);
-    
-    //stop fade
 
     //Simulacion pre carga y post carga de logo
     /*$('#idCanvas').fadeTo(6000, 0, function() {
@@ -1544,7 +1542,6 @@ function Logo(){
     fermatLogo.position.y = -310;
     fermatLogo.position.z = 63800;
     scene.add(fermatLogo);
-
     
     /**
      * @author Emmanuel Colina
@@ -1624,9 +1621,7 @@ function Logo(){
 
         tween.start();
     };
-
-
-    
+  
      /**
      * @author Emmanuel Colina
      * It provides a fade to logo(Farmat)
@@ -1652,7 +1647,6 @@ function Logo(){
 
         tween1.start();
     };
-
 
     /**
      * @author Emmanuel Colina
@@ -1908,7 +1902,7 @@ function createScene(){
         renderer,
         render);
 
-    //init logo
+    //init logo//
     logo = new Logo();
 
     logo.animatefadeWalletlogo();

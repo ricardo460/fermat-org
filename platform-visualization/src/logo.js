@@ -35,7 +35,6 @@ function Logo(){
     fermatLogo.position.y = -310;
     fermatLogo.position.z = 63800;
     scene.add(fermatLogo);
-
     
     /**
      * @author Emmanuel Colina
@@ -115,9 +114,7 @@ function Logo(){
 
         tween.start();
     };
-
-
-    
+  
      /**
      * @author Emmanuel Colina
      * It provides a fade to logo(Farmat)
@@ -143,7 +140,6 @@ function Logo(){
 
         tween1.start();
     };
-
 
     /**
      * @author Emmanuel Colina

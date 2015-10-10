@@ -36,7 +36,7 @@ function createScene(){
         renderer,
         render);
 
-    //init logo
+    //init logo//
     logo = new Logo();
 
     logo.animatefadeWalletlogo();
