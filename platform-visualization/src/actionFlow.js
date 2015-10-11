@@ -1,167 +1,14 @@
-var testFlow = 
-{
-    name : 'Nombre que describe al flujo',
-    description : 'Descripcion del proceso',
-    steps : [
-        {
-            title : 'Paso uno',
-            desc : 'Paso inicial del flujo',
-            element : 'cor/core/fermat core',               // Grupo/Layer/Nombre
-            next : [1]                                      // Una lista de indices del mismo array
-        },
-        {
-            title : 'Paso dos',
-            desc : 'Este le sigue al paso uno\ncon salto de línea',
-            element : 'ccm/reference wallet/discount wallet',
-            next : [2]
-        },
-        {
-            title : 'Paso tres',
-            desc : 'Este se bifurca en dos pasos',
-            element : 'bnp/reference wallet/bank notes',
-            next : [3, 1]
-        },
-        {
-            title : 'Paso tres punto a',
-            desc : 'Este es uno de los que sigue del 3',
-            element : 'dap/actor/asset issuer',
-            next : []
-        }
-    ]
-};
-
-var processes = [{
-    name: 'Generacion Asset en Wallet Factory',
-    description: '',
-    steps: [{
-        type: 'start',
-        title: 'Bitcoin Wallet',
-        desc: 'long getAvailableBalance()\nObtiene el balance actual de los bitcoins para habilitar el boton de publicar calculando el monto total de los bitcoins a necesitar para enviar los assets\nMonto Total: (Cantidad de Assets * Valor Unitario) + fee',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer: 'sub app',
-        comp: 'wallet factory',
-        next: [1]
-    }, {
-        type: 'activity',
-        title: 'Asset Issuing Transaction',
-        desc: 'void issueAsset(DigitalAsset, amount, blockchainNetworkType)\nInicia la transacción de IssueAsset pasando el DigitalAsset y la cantidad de assets a generar',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer: 'sub app',
-        comp: 'wallet factory',
-        next: [2]
-    }, {
-        type: 'activity',
-        title: 'Bitcoin Wallet',
-        desc: 'long getAvailableBalance()\nObtiene el balance actual de los bitcoins para habilitar el boton de publicar calculando el monto total de los bitcoins a necesitar para enviar los assets\nMonto Total: (Cantidad de Assets * Valor Unitario) + fee',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [3]
-    }, {
-        type: 'activity',
-        title: 'Asset CryptoVault',
-        desc: 'CryptoAddress getNewAssetVaultCryptoAddress(BlockchainAddress)\nLa asset vault entrega una direccio bitcoin que es registrada en el Address Book. Esta direccion es la Genesis Address',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [4, 5]
-    }, {
-        type: 'preparation',
-        title: 'Address Book',
-        desc: 'NA\nRegistra la GenesisAddress en el address book para detectar luego el ingreso del bitcoin',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer: null,
-        comp: 'Asset CryptoVault',
-        next: []
-    }, {
-        type: 'activity',
-        title: 'Asset Issuing Transaction',
-        desc: 'private bool isDigitalAssetComplete()\nMe aseguro que el DigitalAsset esta completo antes de generar el hash del mismo y formar el objeto DigitalAssetMetadata',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [6]
-    }, {
-        type: 'activity',
-        title: 'Outgoing Intra Actor',
-        desc: 'public String sendCrypto(String walletPublicKey, CryptoAddress destinationAddress, String op_Return, long cryptoAmount, String description, String senderPublicKey, String receptorPublicKey, Actors senderActorType, Actors receptorActorType, ReferenceWallet referenceWallet)\nHago el envio de los bitcoins a traves del Outgoing Intra Actor Transaction. El mismo va a generar una transaccion bitcoin y me va a devolver el hash de la misma. Este hash es la genesis transaction que debo ingresar en el DigitalAssetMetadata',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [7]
-    }, {
-        type: 'activity',
-        title: '',
-        desc: 'Genero y persisto el objeto DigitalAssetMetadata, que forma la "mitad" del asset',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [3, 8]
-    }, {
-        type: 'preparation',
-        title: 'cloud',
-        desc: '',
-        suprlay: null,
-        platfrm: null,
-        layer: null,
-        comp: null,
-        next: [9]
-    }, {
-        type: 'activity',
-        title: 'Incoming Crypto',
-        desc: 'NA\nDetecta la llegada de Bitcoins a la GenesisAddress y dispara el evento de IncomingCryptoDigitalAssetOnCryptoNetwork',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [10]
-    }, {
-        type: 'activity',
-        title: 'Issuer AssetWallet',
-        desc: 'bookCredit(DigitalAssetMetadata)\nGenera un credito en el book balance de la Issuer Asset Wallet y persiste el DigitalAssetMetadata en la Issuer Wallet',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [11]
-    }, {
-        type: 'activity',
-        title: 'Incoming Crypto',
-        desc: 'NA\nDetecta la llegada de Bitcoins a la GenesisAddress y dispara el evento de IncomingCryptoDigitalAssetOnBlockChain',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: [12]
-    }, {
-        type: 'end',
-        title: 'Issuer AssetWallet',
-        desc: 'availableCredit(DigitalAssetMetadata)\nGenera un credito en el available balance de la Issuer Asset Wallet',
-        suprlay: null,
-        platfrm: 'DAP',
-        layer:  'digital asset transaction',
-        comp: 'asset issuing',
-        next: []
-    }]
-}];
-
 /**
  * Represents a flow of actions related to some tiles
  * @param   {Object}  flow The objects that describes the flow including a set of steps
  */
 function ActionFlow(flow) {
     
-    this.flow = flow || processes[0] || [];
+    this.flow = flow || [];
     var self = this;
     var objects = [];
+    
+    var used = [];
     
     var i, l;
     
@@ -170,7 +17,7 @@ function ActionFlow(flow) {
         var element = self.flow.steps[i];
         
         self.flow.steps[i].element = helper.searchElement(
-            (element.platfrm || element.suprlay) + '/' + element.layer + '/' + element.comp
+            (element.platfrm || element.suprlay) + '/' + element.layer + '/' + element.name
         );
     }
     
@@ -232,7 +79,7 @@ function ActionFlow(flow) {
 
                     for(i = 0; i < childCount; i++) {
 
-                        child = self.flow.steps[root.next[i]];
+                        child = getStep(root.next[i].id);
                         isLoop = (typeof child.drawn !== 'undefined');
                         
                         
@@ -290,7 +137,16 @@ function ActionFlow(flow) {
                 descWidth = window.TILE_DIMENSION.width;
                 descX = window.TILE_DIMENSION.width / 2;
                 
-                tile = window.objects[node.element].clone();
+                if(typeof used[node.element] !== 'undefined') {
+                    tile = window.objects[node.element].clone();
+                    tile.isClone = true;
+                }
+                else {
+                    tile = window.objects[node.element];
+                    used[node.element] = true;
+                }
+                
+                
                 objects.push(tile);
                 window.scene.add(tile);
 
@@ -338,14 +194,45 @@ function ActionFlow(flow) {
         }
     };
     
+    function getStep(id) {
+        
+        var i, l, actual;
+        
+        for(i = 0, l = self.flow.steps.length; i < l; i++) {
+            
+            actual = self.flow.steps[i];
+            
+            //Should not be done, the id in 'next' and in each step should be the same type (strings)
+            if(actual.id == id) return actual;
+        }
+        
+        return null;
+    }
+    
     /**
      * Deletes all objects related to the flow
      */
     this.delete = function() {
         
+        var moveAndDelete = function(lod) {
+            
+            new TWEEN.Tween(lod.position)
+                .to({z : camera.getMaxDistance()}, 4000)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .onComplete(function() { window.scene.remove(lod); })
+                .start();
+        };
+        
         for(var i = 0, l = objects.length; i < l; i++) {
             
-            helper.hideObject(objects[i], false);
+            if(objects[i] instanceof THREE.LOD) {
+                    if(typeof objects[i].isClone !== 'undefined') {
+                        moveAndDelete(objects[i]);
+                }
+            }
+            else {
+                helper.hideObject(objects[i], false);
+            }
         }
         
         objects = [];

@@ -101,6 +101,7 @@ function Camera(position, renderer, renderFunc) {
             .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration * 2 )
             //.easing( TWEEN.Easing.Exponential.InOut )
             .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
+            .onComplete(render)
             .start();
 
         new TWEEN.Tween( camera.up )
