@@ -384,7 +384,6 @@ function ViewManager() {
             //superLayers[code]._id = _suprlays[i]._id;
             superLayers[code].dependsOn = _suprlays[i].deps;
         }
-        console.dir(superLayers);
 
         for (i = 0, l = _platfrms.length; i < l; i++) {
             code = _platfrms[i].code;
@@ -393,7 +392,6 @@ function ViewManager() {
             groups[code].dependsOn = _platfrms[i].deps;
             //groups[code]._id = _platfrms[i]._id;
         }
-        console.dir(groups);
 
         layers['empty layer 0'] = {
             index: 27,
@@ -451,7 +449,6 @@ function ViewManager() {
             layers[name].index = _layers[i].order;
             //layers[name]._id = _layers[i]._id;
         }
-        console.dir(layers);
 
         for (i = 0, l = _comps.length; i < l; i++) {
 
@@ -487,7 +484,7 @@ function ViewManager() {
             };
             table.push(element);
         }
-        console.dir(table);
+        
         groupsQtty = groups.size();
         layersQtty = layers.size();
     };
