@@ -1,30 +1,12 @@
-<!-- inside the manifest -->
-<!-- inside the platform|superlayer -->
-<!-- inside the layer -->
-<!-- inside the component -->
-<!-- processes where the component is used -->
-<processes>
 	<process name="process unique name"
-		type="start|preparation|activity|decision|loop|end"
-		title="title for this step of the process"
-		description="description of what is done in this step">
-			<next>
-				<step section="name of section"
-					layer="name of layer"
-					component="name of component"></step>
-			</next>
-	</process>
-<processes>
-
-<!-- in a file far far away from the manifest -->
-<processes>
-	<process name="process unique name">
+		description="process description">
 		<steps>
 			<step id="0"
 				type="start"
 				title="Inicio"
 				description="Paso inicial del flujo"
-				section="name of section"
+				platform="name of platform"
+				superlayer="name of superlayer"
 				layer="name of layer"
 				component="name of component">
 				<next>
@@ -35,7 +17,8 @@
 				type="preparation"
 				title="Cargar datos"
 				description="Cargar datos de base de datos o servidor"
-				section="name of section"
+				platform="name of platform"
+				superlayer="name of superlayer"
 				layer="name of layer"
 				component="name of component">
 				<next>
@@ -46,7 +29,8 @@
 				type="activity"
 				title="Procesamiento de datos"
 				description="Se procesan los datos obtenidos y se relizan un calculo"
-				section="name of section"
+				platform="name of platform"
+				superlayer="name of superlayer"
 				layer="name of layer"
 				component="name of component">
 				<next>
@@ -57,7 +41,8 @@
 				type="activity"
 				title="Procesamiento de datos"
 				description="Se procesan los datos obtenidos y se relizan un calculo"
-				section="name of section"
+				platform="name of platform"
+				superlayer="name of superlayer"
 				layer="name of layer"
 				component="name of component">
 				<next>
@@ -68,7 +53,8 @@
 				type="decision"
 				title="Condicional"
 				description="Dependiendo del resultado se toma un camino"
-				section="name of section"
+				platform="name of platform"
+				superlayer="name of superlayer"
 				layer="name of layer"
 				component="name of component">
 				<next>
@@ -80,7 +66,8 @@
 				type="loop"
 				title="Volver al inicio"
 				description="Paso inicial del flujo"
-				section="name of section"
+				platform="name of platform"
+				superlayer="name of superlayer"
 				layer="name of layer"
 				component="name of component">
 				<next>
@@ -91,7 +78,8 @@
 				type="end"
 				title="Fin del proceso"
 				description="Paso final del flujo"
-				section="name of section"
+				platform="name of platform"
+				superlayer="name of superlayer"
 				layer="name of layer"
 				component="name of component">
 				<next></next>

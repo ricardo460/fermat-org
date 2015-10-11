@@ -9,8 +9,6 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var repo = require('./routes/repo');
 
-var db = require('./db');
-
 var app = express();
 
 // view engine setup
@@ -26,6 +24,15 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(function(req, res, next) {
+    //res.header("Content-Type",'application/json');
+    res.header("Access-Control-Allow-Origin", '*');
+    res.header("Access-Control-Allow-Methods", 'GET, POST, PUT');
+    res.header("Access-Control-Allow-Headers", 'X-Requested-With, Content-Type');
+    //res.header("Access-Control-Allow-Credentials", true);
+    next();
+});
 
 app.use('/', routes);
 //app.use('/users', users);

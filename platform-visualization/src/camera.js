@@ -11,15 +11,19 @@ function Camera(position, renderer, renderFunc) {
      * private constans
      */
     var ROTATE_SPEED = 1.3,
-        MIN_DISTANCE = 500,
+        MIN_DISTANCE = 50,
         MAX_DISTANCE = 80000;
 
     /**
      * private properties
      */    
-    var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+    var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, MAX_DISTANCE );
     var controls = new THREE.TrackballControls( camera, renderer.domElement );
     var focus = null;
+    var self = this;
+    
+    var fake = new THREE.Object3D();
+    fake.position.set(MAX_DISTANCE, MAX_DISTANCE, -MAX_DISTANCE);
     
     camera.position.copy( position );
 
@@ -30,7 +34,16 @@ function Camera(position, renderer, renderFunc) {
     controls.addEventListener( 'change', renderFunc );
     controls.position0.copy( position );
     
+    // Public properties
+    this.moving = false;
+    
     // Public Methods
+    
+    /**
+     * Returns the max distance set
+     * @returns {Number} Max distance constant
+     */
+    this.getMaxDistance = function() { return MAX_DISTANCE; };
 
     /**
      * @method disable disables camera controls
@@ -48,6 +61,14 @@ function Camera(position, renderer, renderFunc) {
     };
     
     /**
+     * Returns a copy of the actual position
+     * @returns {THREE.Vector3} Actual position of the camera
+     */
+    this.getPosition = function() {
+        return camera.position.clone();
+    };
+    
+    /**
      * 
      * @method setFocus sets focus to a target given its id
      *
@@ -57,39 +78,35 @@ function Camera(position, renderer, renderFunc) {
     this.setFocus = function( id, duration ) {
         
         TWEEN.removeAll();
-        focus = id;
+        focus = parseInt(id);
+
+        viewManager.letAlone(focus, duration);
+        
+        objects[focus].getObjectForDistance(0).visible = true;
+        self.render(renderer, scene);
+        
+        headers.hide(duration);
     
-        var vec = new THREE.Vector4(0, 0, 180, 1);
-        var target = objects[ id ];
+        var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1);
+        var target = window.objects[ focus ];
 
         vec.applyMatrix4( target.matrix );
 
-        new TWEEN.Tween( controls.target )
+        /*new TWEEN.Tween( controls.target )
             .to( { x: target.position.x, y: target.position.y, z: target.position.z }, duration )
             .easing( TWEEN.Easing.Exponential.InOut )
-            .start();
+            .start();*/
 
         new TWEEN.Tween( camera.position )
-            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration )
-            .easing( TWEEN.Easing.Exponential.InOut )
+            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration * 2 )
+            //.easing( TWEEN.Easing.Exponential.InOut )
+            .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
             .start();
 
         new TWEEN.Tween( camera.up )
             .to( { x: target.up.x, y: target.up.y, z: target.up.z }, Math.random() * duration + duration )
             .easing( TWEEN.Easing.Exponential.InOut )
             .start();
-
-        headers.hide(duration);
-
-        for( var i = 0, l = objects.length; i < l; i++ ) {
-
-            if ( i == id ) continue;
-
-            new TWEEN.Tween( objects[ i ].position )
-                .to( { x: 0, y: 0, z: controls.maxDistance }, Math.random() * duration + duration )
-                .easing( TWEEN.Easing.Exponential.InOut )
-                .start();
-        }
     };
     
     /**
@@ -105,6 +122,7 @@ function Camera(position, renderer, renderFunc) {
             $('#sidePanel').fadeTo(1000, 0, function() { $('#sidePanel').remove(); });
             $('#elementPanel').fadeTo(1000, 0, function() { $('#elementPanel').remove(); });
             $('#timelineButton').fadeTo(1000, 0, function() { $('#timelineButton').remove(); });
+            if( $('#developerButton') != null ) helper.hide($('#developerButton'), 1000);
             if( $('#tlContainer') != null ) helper.hide($('#tlContainer'), 1000);
             $(renderer.domElement).fadeTo(1000, 1);
 
@@ -145,21 +163,33 @@ function Camera(position, renderer, renderFunc) {
 
             viewManager.rollBack();
 
-            new TWEEN.Tween( controls.target )
+            self.resetPosition(duration);
+        }
+    };
+    
+    /**
+     * Resets the camera position
+     * @param {Number} [duration=2000] Duration of the animation
+     */
+    this.resetPosition = function(duration) {
+        
+        duration = duration || 2000;
+        
+        /*new TWEEN.Tween( controls.target )
                 .to( { x: controls.target0.x, y: controls.target0.y, z: controls.target0.z }, Math.random() * duration + duration )
                 .easing( TWEEN.Easing.Exponential.InOut )
-                .start();
+                .start();*/
 
             new TWEEN.Tween( camera.position )
-                .to( { x: controls.position0.x, y: controls.position0.y, z: controls.position0.z }, Math.random() * duration + duration )
-                .easing( TWEEN.Easing.Exponential.InOut )
+                .to( { x: controls.position0.x, y: controls.position0.y, z: controls.position0.z }, duration )
+                //.easing( TWEEN.Easing.Exponential.InOut )
+                .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
                 .start();
 
             new TWEEN.Tween( camera.up )
                 .to( { x: 0, y: 1, z: 0 }, Math.random() * duration + duration )
                 .easing( TWEEN.Easing.Exponential.InOut )
                 .start();
-        }
     };
     
     /**
@@ -169,6 +199,7 @@ function Camera(position, renderer, renderFunc) {
      */
     this.update = function() {        
         controls.update();
+        self.moving = controls.moving;
     };
     
     /**
@@ -179,7 +210,21 @@ function Camera(position, renderer, renderFunc) {
      * @param {Scene}    scene    scene to render
      *
      */
-    this.render = function ( renderer, scene ) {        
+    this.render = function ( renderer, scene ) {
+        
+        var cam;
+        
+        scene.traverse( function ( object ) {
+
+            if ( object instanceof THREE.LOD ) {
+                
+                if(object.userData.flying === true) cam = fake;
+                else cam = camera;
+                
+                object.update( cam );
+            }
+        });
+        
         renderer.render ( scene, camera );
     };
     
@@ -191,6 +236,40 @@ function Camera(position, renderer, renderFunc) {
      */
     this.getFocus = function () { 
         return focus;
+    };
+    
+    /**
+     * Casts a ray between the camera to the target
+     * @param   {Object} target   Vector2D target
+     * @param   {Array}  elements Array of elements expected to collide
+     * @returns {Array}  All intercepted members of elements
+     */
+    this.rayCast = function(target, elements) {
+        
+        var raycaster = new THREE.Raycaster();
+        
+        raycaster.setFromCamera(target, camera);
+        
+        return raycaster.intersectObjects(elements);
+    };
+    
+    /**
+     * Moves the camera to a position
+     * @param {Number} x               X coordinate
+     * @param {Number} y               Y coordinate
+     * @param {Number} z               Z coordinate
+     * @param {Number} [duration=2000] Milliseconds of the animation
+     */
+    this.move = function(x, y, z, duration) {
+        
+        var _duration = duration || 2000;
+        
+        new TWEEN.Tween(camera.position)
+        .to({x : x, y : y, z : z}, _duration)
+        .easing(TWEEN.Easing.Exponential.InOut)
+        .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
+        .start();
+        
     };
     
     // Events

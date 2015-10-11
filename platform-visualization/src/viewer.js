@@ -1,35 +1,22 @@
 var table = [],
-    viewManager = new ViewManager(),
+    helper = new Helper(),
     camera,
     scene = new THREE.Scene(),
     renderer,
     objects = [],
-    headers = null;
+    headers = null,
+    actualView = 'start',
+    stats = null,
+    actualFlow = null;
 
-$.ajax({
-    url: "get_plugins.php",
-    method: "GET"
-}).success(
-    function(lists) {
-        var l = JSON.parse(lists);
-        viewManager.fillTable(l);
-        $('#splash').fadeTo(0, 500, function() {
-            $('#splash').remove();
-            init();
-            setTimeout(animate, 500);
-        });
-    }
-);
+//Global constants
+var TILE_DIMENSION = {
+    width : 231,
+    height : 140
+},
+    TILE_SPACING = 20;
 
-/*var l = JSON.parse(testData);
-    
-    fillTable(l);
-    
-    $('#splash').fadeTo(0, 500, function() {
-            $('#splash').remove();
-            init();
-            setTimeout( animate, 500);
-        });*/
+getData();
 
 function init() {
 
@@ -42,21 +29,25 @@ function init() {
     headers = new Headers(dimensions.columnWidth, dimensions.superLayerMaxHeight, dimensions.groupsQtty,
                           dimensions.layersQtty, dimensions.superLayerPosition);
     
-    renderer = new THREE.CSS3DRenderer();
+    var light = new THREE.AmbientLight(0xFFFFFF);
+    scene.add( light );
+    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true});
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
+    renderer.setClearColor(0xffffff);
     document.getElementById('container').appendChild(renderer.domElement);
 
-    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * 140),
+    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * TILE_DIMENSION.width),
         renderer,
         render);
 
+    // uncomment for testing
+    //create_stats();
 
-    //
-
-    $('.backButton').click(function() {
+    $('#backButton').click(function() {
         changeView(viewManager.targets.table);
     });
+
     $('#legendButton').click(function() {
 
         var legend = document.getElementById('legend');
@@ -70,11 +61,154 @@ function init() {
         }
     });
 
+    $('#browserRightButton').click(function() {
+       if ( actualView === 'start' )
+            goToView('table');
+       else if ( actualView === 'table' )
+            goToView('stack');
+    });
+    
+    $('#browserLeftButton').click(function() {
+       if ( actualView === 'start' ) ;
+       //     goToView('stack');
+       else if ( actualView === 'table' )
+            goToView('start');
+       else if ( actualView === 'stack' )
+            goToView('table');
+    });
+
+    $('#container').click(onClick);
+
     //Disabled Menu
     //initMenu();
 
-    viewManager.transform(viewManager.targets.table, 4000);
+    setTimeout(function() {goToView('table'); }, 500);
+    
+    /*setTimeout(function() {
+        var loader = new Loader();
+        loader.findThemAll();
+    }, 2000);*/
 }
+
+/**
+ * @author Miguel Celedon
+ * @lastmodifiedBy Ricardo Delgado
+ * Changes the actual state of the viewer
+ * @param {String} name The name of the target state
+ */
+function goToView ( current ) {
+    
+    actualView = current;
+
+    switch(current) {
+        case 'table':
+
+            modifyButtonLegend(1);
+
+            headers.transformTable();
+            setTimeout(function() {
+                viewManager.transform(viewManager.targets.table, 4000);
+            }, 4000);
+            
+            modifyButtonRight( 'View Dependencies', 'none');
+           
+            modifyButtonLeft( 'Start', 'block');
+
+            
+            break;
+        case 'start':
+
+           headers.transformHead();  
+
+           modifyButtonRight( 'View Table', 'block');
+
+           modifyButtonLeft( 'Book', 'none' );
+
+           modifyButtonBack(0);
+            
+           modifyButtonLegend(0);
+
+            break;
+        case 'stack':
+            
+            headers.transformStack();
+
+            modifyButtonRight( '', 'none' );
+           
+            modifyButtonLeft( 'View Table', 'block' );
+
+            modifyButtonBack(0);
+            
+            modifyButtonLegend(0);
+            
+            break;
+
+        default:
+            actualView = 'start';
+            break;
+    }
+}
+
+/**
+ * created by Ricardo Delgado
+ * editing text , animation and control button state
+ * @param {String} label, The button name.
+ * @param {String} view, The view button.
+ * @param {int} start, button to start the animation.
+ * @param {int} end, button to end the animation.
+ */
+function modifyButtonRight ( label, view ) {
+    
+var browserButton = document.getElementById('browserRightButton');
+    
+    browserButton.style.display=view;
+    browserButton.innerHTML = label;
+
+
+}
+
+/**
+ * Created by Ricardo Delgado
+ * Editing text , animation and control button state
+ * @param {String} label, The button name.
+ * @param {String} view, The view button.
+ * @param {int} start, button to start the animation.
+ * @param {int} end, button to end the animation.
+ */
+function modifyButtonLeft ( label, view ) {
+    
+var browserButton = document.getElementById('browserLeftButton');
+
+    browserButton.style.display = view;
+    browserButton.innerHTML = label;
+
+
+}
+
+/**
+ * Created by Ricardo Delgado
+ */
+function modifyButtonBack ( valor ) {
+    
+var browserButton = document.getElementById('backButton');
+
+ $(browserButton).fadeTo(1000, valor, function() {
+                $(browserButton).show();
+            });
+}
+
+/**
+ * Created by Ricardo Delgado
+ */
+function modifyButtonLegend ( valor ) {
+    
+var browserButton = document.getElementById('legendButton');
+
+ $(browserButton).fadeTo(1000, valor, function() {
+                $(browserButton).show();
+            });
+}
+
 
 function initMenu() {
 
@@ -112,50 +246,78 @@ function changeView(targets) {
 
     camera.enable();
     camera.loseFocus();
+    
+    helper.show('container', 2000);
+    
+    if(actualFlow) {
+        actualFlow.delete();
+        actualFlow = null;
+    }
 
     if (targets != null)
         viewManager.transform(targets, 2000);
 }
 
-function onElementClick() {
-
-    var id = this.id;
-
-    var image = document.getElementById('img-' + id);
-
+function onElementClick(id) {
+    
     if (camera.getFocus() == null) {
 
         camera.setFocus(id, 2000);
+        
         setTimeout(function() {
+            
             camera.setFocus(id, 1000);
-            $('#backButton').fadeTo(1000, 1, function() {
-                $('#backButton').show();
-            });
+            modifyButtonBack(1);
+            
+            if(table[id].author) {
+                var button = document.createElement('button');
+                button.id = 'developerButton';
+                button.className = 'actionButton';
+                button.style.position = 'absolute';
+                button.innerHTML = 'View developer';
+                button.style.top = '10px';
+                button.style.left = (10 + document.getElementById('backButton').clientWidth + 5) + 'px';
+                button.style.zIndex = 10;
+                button.style.opacity = 0;
+
+                button.addEventListener('click', function() { showDeveloper(id); helper.hide(button, 1000, false); });
+
+                document.body.appendChild(button);
+
+                helper.show(button, 1000);
+            }
+            
         }, 3000);
         camera.disable();
-
-        if (image != null) {
-
-            var handler = function() {
-                onImageClick(id, image, handler);
-            };
-
-            image.addEventListener('click', handler, true);
-        } else {}
+        
     }
 
-    function onImageClick(id, image, handler) {
-
-        image.removeEventListener('click', handler, true);
+    function showDeveloper(id) {
 
         var relatedTasks = [];
+        
+        var image = table[id].picture;
 
+        var section = 0;
+        var center = objects[id].position;
+        
         for (var i = 0; i < table.length; i++) {
-            if (table[i].author == table[id].author) relatedTasks.push(i);
+            
+            if (table[i].author == table[id].author) {
+                relatedTasks.push(i);
+                
+                new TWEEN.Tween(objects[i].position)
+                .to({x : center.x + (section % 5) * window.TILE_DIMENSION.width, y : center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height, z : 0}, 2000)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .start();
+                
+                section += 1;
+            }
         }
-
+        
         createSidePanel(id, image, relatedTasks);
-        createElementsPanel(relatedTasks);
+        camera.enable();
+        camera.move(center.x, center.y, center.z + window.TILE_DIMENSION.width * 5);
     }
 
     function createSidePanel(id, image, relatedTasks) {
@@ -172,7 +334,7 @@ function onElementClick() {
 
         var panelImage = document.createElement('img');
         panelImage.id = 'focusImg';
-        panelImage.src = image.src;
+        panelImage.src = image;
         panelImage.style.position = 'relative';
         panelImage.style.width = '50%';
         panelImage.style.opacity = 0;
@@ -198,23 +360,35 @@ function onElementClick() {
         sidePanel.appendChild(email);
 
         if (relatedTasks != null && relatedTasks.length > 0) {
+            
+            var anyTimeline = false;
+            
+            var i, l;
+            
+            for(i = 0, l = relatedTasks.length; i < l; i++) {
+                if(table[relatedTasks[i]].life_cycle !== undefined) anyTimeline = true;
+            }
+            
+            if(anyTimeline) {
 
-            var tlButton = document.createElement('button');
-            tlButton.id = 'timelineButton';
-            tlButton.style.opacity = 0;
-            tlButton.style.position = 'relative';
-            tlButton.textContent = 'See Timeline';
+                var tlButton = document.createElement('button');
+                tlButton.className = 'actionButton';
+                tlButton.id = 'timelineButton';
+                tlButton.style.opacity = 0;
+                tlButton.style.position = 'relative';
+                tlButton.textContent = 'See Timeline';
 
-            $(tlButton).click(function() {
-                showTimeline(relatedTasks);
-            });
+                $(tlButton).click(function() {
+                    showTimeline(relatedTasks);
+                });
 
-            sidePanel.appendChild(tlButton);
+                sidePanel.appendChild(tlButton);
+            }
         }
 
         $('#container').append(sidePanel);
 
-        $(renderer.domElement).fadeTo(1000, 0);
+        //$(renderer.domElement).fadeTo(1000, 0);
 
         $(panelImage).fadeTo(1000, 1, function() {
             $(userName).fadeTo(1000, 1, function() {
@@ -227,39 +401,6 @@ function onElementClick() {
                 });
             });
         });
-    }
-
-    function createElementsPanel(tasks) {
-        
-        var i, l;
-
-        var elementPanel = document.createElement('div');
-        elementPanel.id = 'elementPanel';
-        elementPanel.style.position = 'absolute';
-        elementPanel.style.top = '0px';
-        elementPanel.style.bottom = '25%';
-        elementPanel.style.right = '0px';
-        elementPanel.style.marginTop = '50px';
-        elementPanel.style.marginRight = '5%';
-        elementPanel.style.width = '60%';
-        elementPanel.style.overflowY = 'auto';
-
-
-        for (i = 0, l = tasks.length; i < l; i++) {
-
-            var clone = helper.cloneTile(tasks[i], 'task-' + tasks[i]);
-            clone.style.position = 'relative';
-            clone.style.display = 'inline-block';
-            clone.style.marginLeft = '10px';
-            clone.style.marginTop = '10px';
-            clone.style.opacity = 0;
-            elementPanel.appendChild(clone);
-
-            $(clone).fadeTo(2000, 1);
-        }
-
-        $('#container').append(elementPanel);
-
     }
 
     function showTimeline(tasks) {
@@ -276,12 +417,48 @@ function onElementClick() {
         tlContainer.style.right = '50px';
         tlContainer.style.overflowY = 'auto';
         tlContainer.style.opacity = 0;
-        $('#container').append(tlContainer);
+        document.body.appendChild(tlContainer);
+        
+        helper.hide('container', 1000, true);
 
         $(tlContainer).fadeTo(1000, 1);
 
         new Timeline(tasks, tlContainer).show();
     }
+}
+
+function onClick(e) {
+    
+    var mouse = new THREE.Vector2(0, 0),
+        clicked = [];
+    
+    if(actualView === 'table' && !camera.moving) {
+    
+        //Obtain normalized click location (-1...1)
+        mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
+        mouse.y = - ((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height) * 2 + 1;
+        
+        clicked = camera.rayCast(mouse, objects);
+        
+        if(clicked && clicked.length > 0) {
+            onElementClick(clicked[0].object.userData.id);
+        }
+    }
+}
+
+function showFlow(id) {
+    
+    //Should receive the id and the flow's name
+    
+    var tile = objects[id];
+    
+    camera.enable();
+    camera.move(tile.position.x, tile.position.y, tile.position.z + window.TILE_DIMENSION.width * 5);
+    
+    setTimeout(function() {
+        actualFlow = new ActionFlow();
+        actualFlow.draw(tile.position.x, tile.position.y);
+    }, 1500);
 }
 
 function animate() {
@@ -291,7 +468,22 @@ function animate() {
     TWEEN.update();
 
     camera.update();
+
+    if ( stats ) stats.update();
 }
+
+function create_stats(){ 
+
+    stats = new Stats();
+    stats.setMode(0);
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.left    = '0px';
+    stats.domElement.style.top   = '0px';
+    stats.domElement.style.display  = 'block';
+    var contai = document.getElementById("container");
+    contai.appendChild(stats.domElement);
+
+    }
 
 function render() {
 

@@ -1,5 +1,11 @@
 html, body {
 				height: 100%;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
 			}
 
 body {
@@ -103,19 +109,45 @@ a {
         color: rgba(255,255,255,1);
     }
 
-button {
-    color: rgba(127,127,127,1);
+#browserRightButton, #browserLeftButton {
+    width: 150px;
+    height: 50px;
+    border: none;
+    padding-right: 40px;
     background: transparent;
-    outline: 1px solid rgba(127,255,255,0.75);
-    border: 0px;
-    padding: 5px 10px;
+    background-repeat: no-repeat;
+    color: transparent;
     cursor: pointer;
+    opacity: 0.2;
 }
-button:hover {
-    background-color: rgba(127,127,127,0.5);
+
+#browserRightButton{
+    padding-right: 40px;
+    background-position:right;
+    background-image: url('images/browsers arrows/arrow-right.png');
 }
+
+#browserLeftButton{
+    padding-left: 40px;
+    background-position:left;
+    background-image: url('images/browsers arrows/arrow-left.png');
+}
+
+button:focus {
+    outline: 0 !important;
+}
+
+#browserRightButton:hover {
+    color: rgba(127,127,127,1); opacity: 0.9;
+}
+
+#browserLeftButton:hover {
+    color: rgba(127,127,127,1); opacity: 0.9;
+}
+
 button:active {
     color: #000000;
+    border: none;
     background-color: rgba(127,127,127,0.75);
 }
 
@@ -127,10 +159,25 @@ button:active {
 }
 
 #legendButton {
+    color: rgba(127,127,127,1);
+    background: transparent;
+    outline: 1px solid rgba(127,255,255,0.75);
+    border: 0px;
+    padding: 5px 10px;
+    cursor: pointer;
     position : fixed;
     top : 10px;
     right : 10px;
     z-index: 15;
+}
+
+#legendButton:active {
+  color: #000000;
+ background-color: rgba(127,127,127,0.75);  
+}
+
+#legendButton:hover,.backButton:hover, .actionButton:hover  {
+    background-color: rgba(127,127,127,0.5);
 }
 
 #legend {
@@ -138,11 +185,23 @@ button:active {
     top : 40px;
     right : 10px;
     z-index: 10;
+    
+}
+
+.backButton, .actionButton, #legend {
     color: rgba(127,127,127,1);
     background: transparent;
     outline: 1px solid rgba(127,255,255,0.75);
     border: 0px;
     padding: 5px 10px;
+    cursor: pointer;
+}
+
+.backButton {
+    position : fixed;
+    top : 10px;
+    left : 10px;
+    z-index: 10;
 }
 
 .colorBox {
@@ -161,6 +220,19 @@ button:active {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+#browserRightButton {
+    position : fixed;
+    right : 100px;
+    bottom : 450px;
+    z-index: 10;
+}
+#browserLeftButton {
+    position : fixed;
+    bottom : 450px;
+    left : 100px;
+    z-index: 10;
 }
 
 @keyframes loop {
