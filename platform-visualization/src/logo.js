@@ -10,12 +10,14 @@ function Logo(){
     //inicilizacion del logo wallet
     var geometryPlanoWallet = new THREE.PlaneGeometry(995, 700);
 
-    var textureWallet = new THREE.ImageUtils.loadTexture("images/walletlogo.png");
-    textureWallet.minFilter = THREE.NearestFilter;
+    //var textureWallet = new THREE.ImageUtils.loadTexture("images/walletlogo.png");
+    //textureWallet.minFilter = THREE.NearestFilter;
 
-    var materialPlanoWallet = new THREE.MeshBasicMaterial({ map: textureWallet, side: THREE.FrontSide, transparent: true, opacity: 1 , color:0xffffff});
+    var materialPlanoWallet = new THREE.MeshBasicMaterial({ side: THREE.FrontSide, transparent: true, opacity: 1 , color:0xffffff});
 
+    
     var walletLogo = new THREE.Mesh(geometryPlanoWallet, materialPlanoWallet);
+    helper.applyTexture("images/walletlogo.png", walletLogo);
 
     walletLogo.position.x = 0;
     walletLogo.position.y = 230;
@@ -25,12 +27,13 @@ function Logo(){
     //inicilizacion del logo fermat
     var geometryPlanoFermat = new THREE.PlaneGeometry(950, 300);
 
-    var textureFermat = new THREE.ImageUtils.loadTexture("images/fermatlogo.png");
-    textureFermat.minFilter = THREE.NearestFilter;
+    //var textureFermat = new THREE.ImageUtils.loadTexture("images/fermatlogo.png");
+    //textureFermat.minFilter = THREE.NearestFilter;
 
-    var materialPlanoFermat = new THREE.MeshBasicMaterial({ map: textureFermat, side: THREE.FrontSide, transparent: true, opacity: 1, color: 0xffffff});
-
+    var materialPlanoFermat = new THREE.MeshBasicMaterial({ side: THREE.FrontSide, transparent: true, opacity: 1, color: 0xffffff});
+    
     var fermatLogo = new THREE.Mesh(geometryPlanoFermat, materialPlanoFermat);
+    helper.applyTexture("images/fermatlogo.png", fermatLogo);
 
     fermatLogo.position.x = 0;
     fermatLogo.position.y = -310;
