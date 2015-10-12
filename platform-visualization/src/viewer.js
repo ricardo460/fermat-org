@@ -3,6 +3,7 @@ var table = [],
     camera,
     scene = new THREE.Scene(),
     renderer,
+    logo = new Logo(),
     objects = [],
     headers = null,
     actualView = 'start',
@@ -16,7 +17,26 @@ var TILE_DIMENSION = {
 },
     TILE_SPACING = 20;
 
+createScene();
+
 getData();
+
+function createScene(){
+
+    var light = new THREE.AmbientLight(0xFFFFFF);
+    scene.add( light );
+    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.domElement.style.position = 'absolute';
+    renderer.setClearColor(0xffffff);
+    document.getElementById('container').appendChild(renderer.domElement);
+
+    camera = new Camera(new THREE.Vector3(0, 0, 65355),
+        renderer,
+        render);
+
+    logo.startFade();
+}
 
 function init() {
 
@@ -28,18 +48,6 @@ function init() {
     // groups icons
     headers = new Headers(dimensions.columnWidth, dimensions.superLayerMaxHeight, dimensions.groupsQtty,
                           dimensions.layersQtty, dimensions.superLayerPosition);
-    
-    var light = new THREE.AmbientLight(0xFFFFFF);
-    scene.add( light );
-    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true});
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xffffff);
-    document.getElementById('container').appendChild(renderer.domElement);
-
-    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * TILE_DIMENSION.width),
-        renderer,
-        render);
 
     // uncomment for testing
     //create_stats();
@@ -63,6 +71,7 @@ function init() {
 
     $('#browserRightButton').click(function() {
        if ( actualView === 'start' )
+            
             goToView('table');
        else if ( actualView === 'table' )
             goToView('stack');
@@ -82,12 +91,14 @@ function init() {
     //Disabled Menu
     //initMenu();
 
-    setTimeout(function() {goToView('table'); }, 500);
+    setTimeout(function() {goToView('start'); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
         loader.findThemAll();
     }, 2000);*/
+
+    //TWEEN.removeAll();
 }
 
 /**
@@ -105,20 +116,26 @@ function goToView ( current ) {
 
             modifyButtonLegend(1);
 
-            headers.transformTable();
+            logo.openLogo();
+
+            setTimeout(function() {
+                headers.transformTable();
+            }, 4000);
+
             setTimeout(function() {
                 viewManager.transform(viewManager.targets.table, 4000);
-            }, 4000);
+            }, 6000);
             
             modifyButtonRight( 'View Dependencies', 'none');
            
             modifyButtonLeft( 'Start', 'block');
-
             
             break;
         case 'start':
 
-           headers.transformHead();  
+           headers.transformHead();
+
+           logo.closeLogo();
 
            modifyButtonRight( 'View Table', 'block');
 
@@ -163,8 +180,6 @@ var browserButton = document.getElementById('browserRightButton');
     
     browserButton.style.display=view;
     browserButton.innerHTML = label;
-
-
 }
 
 /**
@@ -181,8 +196,6 @@ var browserButton = document.getElementById('browserLeftButton');
 
     browserButton.style.display = view;
     browserButton.innerHTML = label;
-
-
 }
 
 /**
@@ -239,7 +252,6 @@ function initMenu() {
         changeView(viewManager.targets.grid);
 
     }, false);
-
 }
  
 function changeView(targets) {
