@@ -1,4 +1,3 @@
 api-server/**/node_modules/
 api-server/node_modules/
 platform-visualization/common.php
-platform-visualization/src/getData.js

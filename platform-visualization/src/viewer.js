@@ -35,8 +35,7 @@ function createScene(){
         renderer,
         render);
 
-    logo.animatefadeWalletlogo();
-    logo.animatefadeFarmatlogo();
+    logo.startFade();
 }
 
 function init() {
@@ -117,9 +116,7 @@ function goToView ( current ) {
 
             modifyButtonLegend(1);
 
-            logo.animateWalletopenLogo();
-
-            logo.animateFermatopenLogo();
+            logo.openLogo();
 
             setTimeout(function() {
                 headers.transformTable();
@@ -138,9 +135,7 @@ function goToView ( current ) {
 
            headers.transformHead();
 
-           logo.animateteWalletcloseLogo();
-
-           logo.animateFermatcloseLogo();
+           logo.closeLogo();
 
            modifyButtonRight( 'View Table', 'block');
 

@@ -1,28 +1,28 @@
 
 var viewManager = new ViewManager();
-var URL = "get_plugins.php";
+//var URL = "get_plugins.php";
 //var URL = "http://52.11.156.16:3000/repo/comps";
 
 function getData() {
-    /*$.ajax({
-        url: URL,
+    
+    animate();
+    
+    $.ajax({
+        url: "http://52.11.156.16:3000/repo/comps",
         method: "GET"
     }).success(
         function(lists) {
-            //console.dir(lists);
-            //var l = JSON.parse(lists);
             viewManager.fillTable(lists);
-            $('#splash').fadeTo(2000, 0, function() {
-                $('#splash').remove();
-                init();
-                //setTimeout(animate, 500);
-                animate();
-            });
-        }
-    );*/
+
+            TWEEN.removeAll();
+
+            logo.stopFade();
+
+            init();
+        });
     
-    animate();
-    setTimeout(function(){
+    
+    /*setTimeout(function(){
         var l = JSON.parse(testData);
 
         viewManager.fillTable(l);
@@ -32,9 +32,9 @@ function getData() {
         logo.animatestopWalletLogo();
         logo.animatestopFarmatlogo();
 
-        init();
+        //init();
 
-    }, 6000);
+    }, 6000);*/
 
     //Simulacion pre carga y post carga de logo
     /*$('#idCanvas').fadeTo(6000, 0, function() {

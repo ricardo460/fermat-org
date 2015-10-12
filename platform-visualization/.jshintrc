@@ -32,6 +32,10 @@
         "Helper" : true,
         "getData" : true,
         "ActionFlow" : true,
-        "Stats" : true
+        "Stats" : true,
+        "Logo" : true,
+        "logo" : true,
+        "animate" : true,
+        "init" : true
     }
 }
