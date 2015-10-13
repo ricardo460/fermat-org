@@ -20,7 +20,7 @@ var layerSchema = mongoose.Schema({
         type: String,
         uppercase: true,
         trim: true,
-        required: true
+        'default': null
     },
     order: {
         type: Number,

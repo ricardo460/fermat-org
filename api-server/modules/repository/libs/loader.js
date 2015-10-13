@@ -394,6 +394,7 @@ var saveManifest = function(callback) {
                                                 var _layer = _layers[j];
                                                 layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null,
                                                     _layer.language ? _layer.language.toLowerCase() : null,
+                                                    null,
                                                     0,
                                                     function(err_lay, res_lay) {
                                                         if (err_lay) {
@@ -517,6 +518,7 @@ var saveManifest = function(callback) {
                                                 var _layer = _layers[o];
                                                 layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null,
                                                     _layer.language ? _layer.language.toLowerCase() : null,
+                                                    res_supr.code,
                                                     0,
                                                     function(err_lay, res_lay) {
                                                         if (err_lay) {
