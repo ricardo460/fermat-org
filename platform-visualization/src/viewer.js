@@ -3,6 +3,7 @@ var table = [],
     camera,
     scene = new THREE.Scene(),
     renderer,
+    logo = new Logo(),
     objects = [],
     headers = null,
     actualView = 'start',
@@ -16,7 +17,26 @@ var TILE_DIMENSION = {
 },
     TILE_SPACING = 20;
 
+createScene();
+
 getData();
+
+function createScene(){
+
+    var light = new THREE.AmbientLight(0xFFFFFF);
+    scene.add( light );
+    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.domElement.style.position = 'absolute';
+    renderer.setClearColor(0xffffff);
+    document.getElementById('container').appendChild(renderer.domElement);
+
+    camera = new Camera(new THREE.Vector3(0, 0, 65355),
+        renderer,
+        render);
+
+    logo.startFade();
+}
 
 function init() {
 
@@ -28,18 +48,6 @@ function init() {
     // groups icons
     headers = new Headers(dimensions.columnWidth, dimensions.superLayerMaxHeight, dimensions.groupsQtty,
                           dimensions.layersQtty, dimensions.superLayerPosition);
-    
-    var light = new THREE.AmbientLight(0xFFFFFF);
-    scene.add( light );
-    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true});
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xffffff);
-    document.getElementById('container').appendChild(renderer.domElement);
-
-    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * TILE_DIMENSION.width),
-        renderer,
-        render);
 
     // uncomment for testing
     //create_stats();
@@ -63,6 +71,7 @@ function init() {
 
     $('#browserRightButton').click(function() {
        if ( actualView === 'start' )
+            
             goToView('table');
        else if ( actualView === 'table' )
             goToView('stack');
@@ -82,12 +91,14 @@ function init() {
     //Disabled Menu
     //initMenu();
 
-    setTimeout(function() {goToView('table'); }, 500);
+    setTimeout(function() {goToView('start'); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
         loader.findThemAll();
     }, 2000);*/
+
+    //TWEEN.removeAll();
 }
 
 /**
@@ -105,20 +116,26 @@ function goToView ( current ) {
 
             modifyButtonLegend(1);
 
-            headers.transformTable();
+            logo.openLogo();
+
+            setTimeout(function() {
+                headers.transformTable();
+            }, 4000);
+
             setTimeout(function() {
                 viewManager.transform(viewManager.targets.table, 4000);
-            }, 4000);
+            }, 6000);
             
             modifyButtonRight( 'View Dependencies', 'none');
            
             modifyButtonLeft( 'Start', 'block');
-
             
             break;
         case 'start':
 
-           headers.transformHead();  
+           headers.transformHead();
+
+           logo.closeLogo();
 
            modifyButtonRight( 'View Table', 'block');
 
@@ -163,8 +180,6 @@ var browserButton = document.getElementById('browserRightButton');
     
     browserButton.style.display=view;
     browserButton.innerHTML = label;
-
-
 }
 
 /**
@@ -181,8 +196,6 @@ var browserButton = document.getElementById('browserLeftButton');
 
     browserButton.style.display = view;
     browserButton.innerHTML = label;
-
-
 }
 
 /**
@@ -239,7 +252,6 @@ function initMenu() {
         changeView(viewManager.targets.grid);
 
     }, false);
-
 }
  
 function changeView(targets) {
@@ -250,7 +262,9 @@ function changeView(targets) {
     helper.show('container', 2000);
     
     if(actualFlow) {
-        actualFlow.delete();
+        for(var i = 0; i < actualFlow.length; i++) {
+            actualFlow[i].delete();
+        }
         actualFlow = null;
     }
 
@@ -280,14 +294,21 @@ function onElementClick(id) {
                 button.style.zIndex = 10;
                 button.style.opacity = 0;
 
-                button.addEventListener('click', function() { showDeveloper(id); helper.hide(button, 1000, false); });
+                button.addEventListener('click', function() {
+                    showDeveloper(id);
+                    helper.hide(button, 1000, false);
+                    helper.hide('showFlows', 1000, false);
+                });
 
                 document.body.appendChild(button);
 
                 helper.show(button, 1000);
             }
             
+            getAndShowFlows(id);
+            
         }, 3000);
+        
         camera.disable();
         
     }
@@ -366,7 +387,9 @@ function onElementClick(id) {
             var i, l;
             
             for(i = 0, l = relatedTasks.length; i < l; i++) {
-                if(table[relatedTasks[i]].life_cycle !== undefined) anyTimeline = true;
+                if(table[relatedTasks[i]].life_cycle !== undefined && table[relatedTasks[i]].life_cycle.length > 0) {
+                    anyTimeline = true;
+                }
             }
             
             if(anyTimeline) {
@@ -425,6 +448,53 @@ function onElementClick(id) {
 
         new Timeline(tasks, tlContainer).show();
     }
+    
+    function getAndShowFlows(id) {
+        
+        var button = document.createElement('button'),
+            sucesorButton = document.getElementById('developerButton') || document.getElementById('backButton'),
+            element = table[id],
+            flows;
+        
+        button.id = 'showFlows';
+        button.className = 'actionButton';
+        button.style.position = 'absolute';
+        button.innerHTML = 'Loading flows...';
+        button.style.top = '10px';
+        button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
+        button.style.zIndex = 10;
+        button.style.opacity = 0;
+        document.body.appendChild(button);
+        
+        helper.show(button, 1000);
+        
+        $.ajax({
+            url: 'http://52.11.156.16:3000/repo/procs?platform=' + (element.group || layers[element.layer].super_layer) + '&layer=' + element.layer + '&component=' + element.name,
+            method: "GET"
+        }).success(
+            function(processes) {
+                var p = processes;
+                var flows = [];
+                
+                for(var i = 0; i < p.length; i++) {
+                    
+                    flows.push(new ActionFlow(p[i]));
+                }
+                
+                if(flows.length > 0) {
+                    button.innerHTML = 'Show Flows';
+                    button.addEventListener('click', function() {
+                        showFlow(flows);
+                        helper.hide(button, 1000, false);
+                        helper.hide('developerButton', 1000, false);
+                    });
+                }
+                else {
+                    helper.hide(button, 1000, false);
+                }
+            }
+        );
+    }
 }
 
 function onClick(e) {
@@ -446,18 +516,26 @@ function onClick(e) {
     }
 }
 
-function showFlow(id) {
+//Should draw ONLY one flow at a time
+function showFlow(flows) {
     
-    //Should receive the id and the flow's name
-    
-    var tile = objects[id];
+    var position = objects[camera.getFocus()].position;
     
     camera.enable();
-    camera.move(tile.position.x, tile.position.y, tile.position.z + window.TILE_DIMENSION.width * 5);
+    camera.move(position.x, position.y, position.z + window.TILE_DIMENSION.width * 5);
     
     setTimeout(function() {
-        actualFlow = new ActionFlow();
-        actualFlow.draw(tile.position.x, tile.position.y);
+        
+        actualFlow = [];
+        
+        for(var i = 0; i < flows.length; i++) {
+            actualFlow.push(flows[i]);
+            flows[i].draw(position.x, position.y);
+            
+            //Dummy, set distance between flows
+            position.x += window.TILE_DIMENSION.width * 10;
+        }
+        
     }, 1500);
 }
 
