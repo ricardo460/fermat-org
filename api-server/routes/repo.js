@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var apicache = require('apicache').options({
-    debug: true
-}).middleware;
+var apicache = require('apicache')
+    .options({
+        debug: true
+    }).middleware;
 var repMod = require('../modules/repository');
 
 /**
@@ -25,10 +26,15 @@ router.put('/comps', function(req, res, next) {
  *
  */
 router.get('/comps', apicache('30 minutes'), function(req, res, next) {
+    //cache(req, {
+    //type: 'memory',
+    //time: 36000000
+    //}, function(error_cache, result_cache) {
     repMod.getComps(req, function(error, result) {
         if (error) res.status(200).send(error);
         else res.status(200).send(result);
     });
+    //});
 });
 
 /**
