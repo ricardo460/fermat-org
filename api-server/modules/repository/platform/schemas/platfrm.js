@@ -29,7 +29,7 @@ var platfrmSchema = mongoose.Schema({
     }],
     order: {
         type: Number,
-        'default': 0
+        'default': -1
     },
     upd_at: {
         type: mongoose.Schema.Types.ObjectId,

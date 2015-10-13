@@ -8,15 +8,23 @@ var mongoose = require('mongoose');
 var layerSchema = mongoose.Schema({
     name: {
         type: String,
+        lowercase: true,
         trim: true
     },
     lang: {
         type: String,
+        lowercase: true,
         trim: true
+    },
+    suprlay: {
+        type: String,
+        uppercase: true,
+        trim: true,
+        'default': null
     },
     order: {
         type: Number,
-        'default': 0
+        'default': -1
     },
     upd_at: {
         type: mongoose.Schema.Types.ObjectId,

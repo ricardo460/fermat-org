@@ -420,7 +420,8 @@ function ViewManager() {
         for (i = 0, l = _layers.length; i < l; i++) {
             name = helper.capFirstLetter(_layers[i].name);
             layers[name] = {};
-            switch (_layers[i].name) {
+            layers[name].super_layer = _layers[i].suprlay ? _layers[i].suprlay : false;
+            /*switch (_layers[i].name) {
                 case 'communication':
                     layers[name].super_layer = 'P2P';
                     break;
@@ -445,7 +446,7 @@ function ViewManager() {
                 default:
                     layers[name].super_layer = false;
                     break;
-            }
+            }*/
             layers[name].index = _layers[i].order;
             //layers[name]._id = _layers[i]._id;
         }

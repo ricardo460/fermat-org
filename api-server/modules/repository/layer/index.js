@@ -148,7 +148,7 @@ function getOrder(name) {
  *
  * @return {[type]}      [description]
  */
-exports.insOrUpdLayer = function(name, lang, order, callback) {
+exports.insOrUpdLayer = function(name, lang, suprlay, order, callback) {
     order = name ? getOrder(name) : null;
     layerSrv.findLayerByName(name, function(err_lay, res_lay) {
         if (err_lay) {
@@ -162,6 +162,10 @@ exports.insOrUpdLayer = function(name, lang, order, callback) {
             if (lang && lang != res_lay.lang) {
                 set_obj.lang = lang;
                 res_lay.lang = lang;
+            }
+            if (suprlay && suprlay != res_lay.suprlay) {
+                set_obj.suprlay = suprlay;
+                res_lay.suprlay = suprlay;
             }
             if (order && order != res_lay.order) {
                 set_obj.order = order;
@@ -177,7 +181,7 @@ exports.insOrUpdLayer = function(name, lang, order, callback) {
             }
         } else {
             if (name && lang) {
-                var layer = new LayerMdl(name, lang, order);
+                var layer = new LayerMdl(name, lang, suprlay ? suprlay : null, order);
                 layerSrv.insertLayer(layer, function(err_ins, res_ins) {
                     if (err_ins) return callback(err_ins, null);
                     else return callback(null, res_ins);
