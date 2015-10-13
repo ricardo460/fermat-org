@@ -57,7 +57,7 @@ function Logo(){
     
     this.closeLogo = function(duration) {
         self.closeFermatLogo(duration);
-        self.tecloseWalletLogo(duration);
+        self.closeWalletLogo(duration);
     };
     
     /**

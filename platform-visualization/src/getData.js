@@ -29,10 +29,9 @@ function getData() {
 
         TWEEN.removeAll();
 
-        logo.animatestopWalletLogo();
-        logo.animatestopFarmatlogo();
+        logo.stopFade();
 
-        //init();
+        init();
 
     }, 6000);*/
 

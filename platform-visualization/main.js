@@ -724,28 +724,28 @@ var superLayers = {
 };
 
 var viewManager = new ViewManager();
-var URL = "get_plugins.php";
+//var URL = "get_plugins.php";
 //var URL = "http://52.11.156.16:3000/repo/comps";
 
 function getData() {
+    
+    animate();
+    
     /*$.ajax({
-        url: URL,
+        url: "http://52.11.156.16:3000/repo/comps",
         method: "GET"
     }).success(
         function(lists) {
-            //console.dir(lists);
-            //var l = JSON.parse(lists);
             viewManager.fillTable(lists);
-            $('#splash').fadeTo(2000, 0, function() {
-                $('#splash').remove();
-                init();
-                //setTimeout(animate, 500);
-                animate();
-            });
-        }
-    );*/
+
+            TWEEN.removeAll();
+
+            logo.stopFade();
+
+            init();
+        });*/
     
-    animate();
+    
     setTimeout(function(){
         var l = JSON.parse(testData);
 
@@ -753,8 +753,7 @@ function getData() {
 
         TWEEN.removeAll();
 
-        logo.animatestopWalletLogo();
-        logo.animatestopFarmatlogo();
+        logo.stopFade();
 
         init();
 
@@ -1510,16 +1509,20 @@ function Loader() {
  */
 
 function Logo(){
+    
+    var self = this;
 
     //inicilizacion del logo wallet
-    var geometryPlanowallet = new THREE.PlaneGeometry(995, 700);
+    var geometryPlanoWallet = new THREE.PlaneGeometry(995, 700);
 
-    var textureWallet = new THREE.ImageUtils.loadTexture("images/walletlogo.png");
-    textureWallet.minFilter = THREE.NearestFilter;
+    //var textureWallet = new THREE.ImageUtils.loadTexture("images/walletlogo.png");
+    //textureWallet.minFilter = THREE.NearestFilter;
 
-    var materialPlanowallet = new THREE.MeshBasicMaterial({ map: textureWallet, side: THREE.FrontSide, transparent: true, opacity: 1 , color:0xffffff});
+    var materialPlanoWallet = new THREE.MeshBasicMaterial({ side: THREE.FrontSide, transparent: true, opacity: 1 , color:0xffffff});
 
-    var walletLogo = new THREE.Mesh(geometryPlanowallet, materialPlanowallet);
+    
+    var walletLogo = new THREE.Mesh(geometryPlanoWallet, materialPlanoWallet);
+    helper.applyTexture("images/walletlogo.png", walletLogo);
 
     walletLogo.position.x = 0;
     walletLogo.position.y = 230;
@@ -1527,37 +1530,56 @@ function Logo(){
     scene.add(walletLogo);
 
     //inicilizacion del logo fermat
-    var geometryPlanofermat = new THREE.PlaneGeometry(950, 300);
+    var geometryPlanoFermat = new THREE.PlaneGeometry(950, 300);
 
-    var textureFermat = new THREE.ImageUtils.loadTexture("images/fermatlogo.png");
-    textureFermat.minFilter = THREE.NearestFilter;
+    //var textureFermat = new THREE.ImageUtils.loadTexture("images/fermatlogo.png");
+    //textureFermat.minFilter = THREE.NearestFilter;
 
-    var materialPlanofermat = new THREE.MeshBasicMaterial({ map: textureFermat, side: THREE.FrontSide, transparent: true, opacity: 1, color: 0xffffff});
-
-    var fermatLogo = new THREE.Mesh(geometryPlanofermat, materialPlanofermat);
+    var materialPlanoFermat = new THREE.MeshBasicMaterial({ side: THREE.FrontSide, transparent: true, opacity: 1, color: 0xffffff});
+    
+    var fermatLogo = new THREE.Mesh(geometryPlanoFermat, materialPlanoFermat);
+    helper.applyTexture("images/fermatlogo.png", fermatLogo);
 
     fermatLogo.position.x = 0;
     fermatLogo.position.y = -310;
     fermatLogo.position.z = 63800;
     scene.add(fermatLogo);
     
+    this.startFade = function(duration) {
+        self.fadeFermatLogo(duration);
+        self.fadeWalletLogo(duration);
+    };
+    
+    this.stopFade = function(duration) {
+        self.stopFermatLogo(duration);
+        self.stopWalletLogo(duration);
+    };
+    
+    this.openLogo = function(duration) {
+        self.openFermatLogo(duration);
+        self.openWalletLogo(duration);
+    };
+    
+    this.closeLogo = function(duration) {
+        self.closeFermatLogo(duration);
+        self.closeWalletLogo(duration);
+    };
+    
     /**
      * @author Emmanuel Colina
      * It provides a fade to logo(wallet)
-     * @param {Number} [duration=2000] Duration of the delay
+     * @param {Number} [duration=2000] Duration of the animation
      */
-    this.animatefadeWalletlogo = function (duration){
+    this.fadeWalletLogo = function (duration){
         var _duration = duration || 2000;
 
-        tween1 = new TWEEN.Tween(walletLogo.material)
-        .to({ opacity : 1, needsUpdate : true}, 1000)
-        .delay( _duration )
-        .onUpdate(render)
+        var tween1 = new TWEEN.Tween(walletLogo.material)
+        .to({ opacity : 1, needsUpdate : true}, _duration)
+        .onUpdate(render);
         
-        tween2 = new TWEEN.Tween(walletLogo.material)
-        .to({ opacity : 0, needsUpdate : true}, 1000)
-        .delay( _duration )
-        .onUpdate(render)
+        var tween2 = new TWEEN.Tween(walletLogo.material)
+        .to({ opacity : 0, needsUpdate : true}, _duration)
+        .onUpdate(render);
 
         tween1.chain(tween2);
         tween2.chain(tween1);
@@ -1568,35 +1590,32 @@ function Logo(){
     /**
      * @author Emmanuel Colina
      * repaint with opacity : 1, after of THREE.removeAll();
-     * @param {Number} [duration=2000] Duration of the delay
+     * @param {Number} [duration=2000] Duration of the animation
      */
-
-    this.animatestopWalletLogo = function (duration){
+    this.stopWalletLogo = function (duration){
         var _duration = duration || 1000;
 
-        tweenstop = new TWEEN.Tween(walletLogo.material)
-        .to({ opacity : 1, needsUpdate : true}, 1000)
-        .delay( _duration )
-        .onUpdate(render)
+        var tweenstop = new TWEEN.Tween(walletLogo.material)
+        .to({ opacity : 1, needsUpdate : true}, _duration)
+        .onUpdate(render);
 
         tweenstop.start();
     };
 
     /**
      * @author Emmanuel Colina
-     * animate the logo(wallet)
+     *  the logo(wallet)
      * @param {Number} [duration=2000] Duration of the delay
      */
-
-    this.animateWalletopenLogo = function (duration){
+    this.openWalletLogo = function (duration){
 
         var _duration = duration || 2000;
 
-        var tween = new TWEEN.Tween(walletLogo.position)
-        tween.to({ y: 1640, z: 60000}, 2000)
-        tween.delay( _duration )
+        var tween = new TWEEN.Tween(walletLogo.position);
+        tween.to({ y: 1640, z: 60000}, 2000);
+        tween.delay( _duration );
         tween.easing(TWEEN.Easing.Exponential.InOut);
-        tween.onUpdate(render)
+        tween.onUpdate(render);
 
         tween.start();
     };
@@ -1606,39 +1625,35 @@ function Logo(){
      * logo(wallet) returns to the original z
      * @param {Number} [duration=2000] Duration of the delay
      */
-
-    this.animateteWalletcloseLogo = function (duration){
+    this.closeWalletLogo = function (duration){
 
         var _duration = duration || 2000;
 
-        var tween = new TWEEN.Tween(walletLogo.position)
-        tween.to({ y: 230, z: 63800}, 2500)
-        tween.delay( _duration )
+        var tween = new TWEEN.Tween(walletLogo.position);
+        tween.to({ y: 230, z: 63800}, 2500);
+        tween.delay( _duration );
         tween.easing(TWEEN.Easing.Exponential.InOut);
-        tween.onUpdate(render)
+        tween.onUpdate(render);
 
         tween.start();
     };
   
      /**
      * @author Emmanuel Colina
-     * It provides a fade to logo(Farmat)
-     * @param {Number} [duration=2000] Duration of the delay
+     * It provides a fade to logo(Fermat)
+     * @param {Number} [duration=2000] Duration of the animation
      */
-
-    this.animatefadeFarmatlogo = function (duration){
+    this.fadeFermatLogo = function (duration){
 
         var _duration = duration || 2000;
 
-        tween1 = new TWEEN.Tween(fermatLogo.material)
-        .to({ opacity : 1, needsUpdate : true}, 1000)
-        .delay( _duration )
-        .onUpdate(render)
+        var tween1 = new TWEEN.Tween(fermatLogo.material)
+        .to({ opacity : 1, needsUpdate : true}, _duration)
+        .onUpdate(render);
         
-        tween2 = new TWEEN.Tween(fermatLogo.material)
-        .to({ opacity : 0, needsUpdate : true}, 1000)
-        .delay( _duration )
-        .onUpdate(render)
+        var tween2 = new TWEEN.Tween(fermatLogo.material)
+        .to({ opacity : 0, needsUpdate : true}, _duration)
+        .onUpdate(render);
 
         tween1.chain(tween2);
         tween2.chain(tween1);
@@ -1649,36 +1664,33 @@ function Logo(){
     /**
      * @author Emmanuel Colina
      * repaint with opacity : 1, after of THREE.removeAll();
-     * @param {Number} [duration=2000] Duration of the delay
+     * @param {Number} [duration=2000] Duration of the duration
      */
-
-    this.animatestopFarmatlogo = function (duration){
+    this.stopFermatLogo = function (duration){
 
         var _duration = duration || 1000;
 
-        tweenstop = new TWEEN.Tween(fermatLogo.material)
-        .to({ opacity : 1, needsUpdate : true}, 1000)
-        .delay( _duration )
-        .onUpdate(render)
+        var tweenstop = new TWEEN.Tween(fermatLogo.material)
+        .to({ opacity : 1, needsUpdate : true}, _duration)
+        .onUpdate(render);
 
         tweenstop.start();
     };
 
     /**
      * @author Emmanuel Colina
-     * animate the logo(Fermat)
+     *  the logo(Fermat)
      * @param {Number} [duration=2000] Duration of the delay
      */
-
-    this.animateFermatopenLogo = function (duration){
+    this.openFermatLogo = function (duration){
 
         var _duration = duration || 2000;
 
-        var tween = new TWEEN.Tween(fermatLogo.position)
-        tween.to({ y: -1800, z: 60000}, 2000)
-        tween.delay( _duration )
+        var tween = new TWEEN.Tween(fermatLogo.position);
+        tween.to({ y: -1800, z: 60000}, 2000);
+        tween.delay( _duration );
         tween.easing(TWEEN.Easing.Exponential.InOut);
-        tween.onUpdate(render)
+        tween.onUpdate(render);
 
         tween.start();
     };
@@ -1688,16 +1700,15 @@ function Logo(){
      * logo(wallet) returns to the original z
      * @param {Number} [duration=2000] Duration of the delay
      */
-
-    this.animateFermatcloseLogo = function (duration){
+    this.closeFermatLogo = function (duration){
 
         var _duration = duration || 2000;
 
-        var tween = new TWEEN.Tween(fermatLogo.position)
-        tween.to({ y: -310, z: 63800}, 2500)
-        tween.delay( _duration )
+        var tween = new TWEEN.Tween(fermatLogo.position);
+        tween.to({ y: -310, z: 63800}, 2500);
+        tween.delay( _duration );
         tween.easing(TWEEN.Easing.Exponential.InOut);
-        tween.onUpdate(render)
+        tween.onUpdate(render);
 
         tween.start();
     };
@@ -1899,8 +1910,7 @@ function createScene(){
         renderer,
         render);
 
-    logo.animatefadeWalletlogo();
-    logo.animatefadeFarmatlogo();
+    logo.startFade();
 }
 
 function init() {
@@ -1981,9 +1991,7 @@ function goToView ( current ) {
 
             modifyButtonLegend(1);
 
-            logo.animateWalletopenLogo();
-
-            logo.animateFermatopenLogo();
+            logo.openLogo();
 
             setTimeout(function() {
                 headers.transformTable();
@@ -2002,9 +2010,7 @@ function goToView ( current ) {
 
            headers.transformHead();
 
-           logo.animateteWalletcloseLogo();
-
-           logo.animateFermatcloseLogo();
+           logo.closeLogo();
 
            modifyButtonRight( 'View Table', 'block');
 
