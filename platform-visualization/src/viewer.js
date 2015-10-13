@@ -42,7 +42,6 @@ function init() {
         renderer,
         render);
 
-    browserManager.createButton();
     // uncomment for testing
     //create_stats();
 
@@ -69,7 +68,7 @@ function init() {
     //Disabled Menu
     //initMenu();
 
-    setTimeout(function() {goToView('home'); }, 2000);
+    setTimeout(function() {goToView('home'); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
@@ -98,7 +97,6 @@ function goToView ( current ) {
             }, 4000);
             
             browserManager.hide_Button();
-
             
             break;
         case 'home':

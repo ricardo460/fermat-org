@@ -19,7 +19,7 @@ var URL = "http://52.11.156.16:3000/repo/comps";
         }
     );
 }*/
-
+/*
 function getData() {
     $.ajax({
         url: URL,
@@ -37,12 +37,12 @@ function getData() {
     );
 }
 
-/*
+*/
 function getData() {
     var l = JSON.parse(testData);
 
     viewManager.fillTable(l);
-
+    browserManager.createButton();
     $('#splash').fadeTo(2000, 0, function() {
         $('#splash').remove();
         init();
@@ -50,4 +50,3 @@ function getData() {
         animate();
     });
 }
-*/
