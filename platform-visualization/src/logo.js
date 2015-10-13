@@ -1,78 +1,124 @@
 /**
  * @author Emmanuel Colina
+ * @lastmodifiedBy Miguel Celedon
  * function create a logo (wallet) and charge your textures
  */
-
 function Logo(){
     
     var self = this;
 
-    //inicilizacion del logo wallet
-    var geometryPlanoWallet = new THREE.PlaneGeometry(995, 700);
-
-    //var textureWallet = new THREE.ImageUtils.loadTexture("images/walletlogo.png");
-    //textureWallet.minFilter = THREE.NearestFilter;
-
-    var materialPlanoWallet = new THREE.MeshBasicMaterial({ side: THREE.FrontSide, transparent: true, opacity: 1 , color:0xffffff});
-
+    var lowerLayer = 2000,
+        upperLayer = 30000;
     
-    var walletLogo = new THREE.Mesh(geometryPlanoWallet, materialPlanoWallet);
+    var walletClosedY = 4600,
+        walletOpenY = 15000,
+        fermatClosedY = -walletClosedY,
+        fermatOpenY = -walletOpenY;
+    
+    
+    
+    var walletLogo = createLogo(995, 700, "images/walletlogo.png", new THREE.Vector3(0, walletClosedY, upperLayer)),
+        fermatLogo = createLogo(950, 300, "images/fermatlogo.png", new THREE.Vector3(0, fermatClosedY, upperLayer));
+        
+       /* new THREE.Mesh(
+        new THREE.PlaneGeometry(995, 700),
+        new THREE.MeshBasicMaterial({ side: THREE.FrontSide, transparent: true, opacity: 0 , color:0xffffff}));
     helper.applyTexture("images/walletlogo.png", walletLogo);
 
+    walletLogo.scale.set(20, 20, 20);
     walletLogo.position.x = 0;
-    walletLogo.position.y = 230;
-    walletLogo.position.z = 63800;
+    walletLogo.position.y = walletClosedY;
+    walletLogo.position.z = upperLayer;
     scene.add(walletLogo);
-
-    //inicilizacion del logo fermat
-    var geometryPlanoFermat = new THREE.PlaneGeometry(950, 300);
-
-    //var textureFermat = new THREE.ImageUtils.loadTexture("images/fermatlogo.png");
-    //textureFermat.minFilter = THREE.NearestFilter;
-
-    var materialPlanoFermat = new THREE.MeshBasicMaterial({ side: THREE.FrontSide, transparent: true, opacity: 1, color: 0xffffff});
     
-    var fermatLogo = new THREE.Mesh(geometryPlanoFermat, materialPlanoFermat);
+    
+    var fermatLogo = new THREE.Mesh(
+        new THREE.PlaneGeometry(950, 300),
+        new THREE.MeshBasicMaterial({ side: THREE.FrontSide, transparent: true, opacity: 0, color: 0xffffff}));
     helper.applyTexture("images/fermatlogo.png", fermatLogo);
 
+    fermatLogo.scale.set(20, 20, 20);
     fermatLogo.position.x = 0;
-    fermatLogo.position.y = -310;
-    fermatLogo.position.z = 63800;
-    scene.add(fermatLogo);
+    fermatLogo.position.y = fermatClosedY;
+    fermatLogo.position.z = upperLayer;
+    scene.add(fermatLogo);*/
     
+    this.walletLogo = walletLogo;
+    this.fermatLogo = fermatLogo;
+    
+    
+    function createLogo(width, height, texture, position) {
+        
+        var mesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(width, height),
+            new THREE.MeshBasicMaterial({ side: THREE.FrontSide, transparent : true, opacity : 0, color : 0xFFFFFF}));
+        helper.applyTexture(texture, mesh);
+        
+        mesh.scale.set(20, 20, 20);
+        mesh.position.copy(position);
+        scene.add(mesh);
+        
+        return mesh;
+    }
+    
+    /**
+     * Starts the logo fade animation
+     * @param {Number} [duration=1000] The duration of the fade
+     * @author Miguel Celedon
+     */
     this.startFade = function(duration) {
-        self.fadeFermatLogo(duration);
-        self.fadeWalletLogo(duration);
+        
+        self.fadeLogo(duration, walletLogo);
+        self.fadeLogo(duration, fermatLogo);
     };
     
+    /**
+     * Stops the fade animation
+     * @param {Number} [duration=1000] The duration of the fade
+     * @author Miguel Celedon
+     */
     this.stopFade = function(duration) {
-        self.stopFermatLogo(duration);
-        self.stopWalletLogo(duration);
+        
+        self.stopFadeLogo(duration, walletLogo);
+        self.stopFadeLogo(duration, fermatLogo);
     };
     
+    /** 
+     * Opens the logo
+     * @param {Number} [duration=1000] The duration of the animation
+     * @author Miguel Celedon
+     */
     this.openLogo = function(duration) {
-        self.openFermatLogo(duration);
-        self.openWalletLogo(duration);
+        self.moveLogo(duration, walletLogo, walletOpenY, lowerLayer);
+        self.moveLogo(duration, fermatLogo, fermatOpenY, lowerLayer);
     };
     
+    /**
+     * Closes the logo
+     * @param {Number} [duration=1000] The duration of the animation
+     * @author Miguel Celedon
+     */
     this.closeLogo = function(duration) {
-        self.closeFermatLogo(duration);
-        self.tecloseWalletLogo(duration);
+        self.moveLogo(duration, walletLogo, walletClosedY, upperLayer);
+        self.moveLogo(duration, fermatLogo, fermatClosedY, upperLayer);
     };
     
     /**
      * @author Emmanuel Colina
-     * It provides a fade to logo(wallet)
+     * @lastmodifiedBy Miguel Celedon
+     *                     
+     * It provides a fade to logo
      * @param {Number} [duration=2000] Duration of the animation
+     * @param {Object} logo            The logo to animate
      */
-    this.fadeWalletLogo = function (duration){
+    this.fadeLogo = function (duration, logo){
         var _duration = duration || 2000;
 
-        var tween1 = new TWEEN.Tween(walletLogo.material)
+        var tween1 = new TWEEN.Tween(logo.material)
         .to({ opacity : 1, needsUpdate : true}, _duration)
         .onUpdate(render);
         
-        var tween2 = new TWEEN.Tween(walletLogo.material)
+        var tween2 = new TWEEN.Tween(logo.material)
         .to({ opacity : 0, needsUpdate : true}, _duration)
         .onUpdate(render);
 
@@ -84,123 +130,36 @@ function Logo(){
 
     /**
      * @author Emmanuel Colina
+     * @lastmodifiedBy Miguel Celedon
+     *                     
      * repaint with opacity : 1, after of THREE.removeAll();
      * @param {Number} [duration=2000] Duration of the animation
+     * @param {Object} logo            The Logo to stop its fade
      */
-    this.stopWalletLogo = function (duration){
+    this.stopFadeLogo = function (duration, logo){
         var _duration = duration || 1000;
 
-        var tweenstop = new TWEEN.Tween(walletLogo.material)
+        var tweenstop = new TWEEN.Tween(logo.material)
         .to({ opacity : 1, needsUpdate : true}, _duration)
-        .onUpdate(render);
-
-        tweenstop.start();
+        .onUpdate(render)
+        .start();
     };
 
     /**
      * @author Emmanuel Colina
-     *  the logo(wallet)
-     * @param {Number} [duration=2000] Duration of the delay
+     * @lastmodifiedBy Miguel Celedon
+     * Moves the logo
+     * @param {Number}     [duration=2000] Duration of the delay
+     * @param {THREE.Mesh} object          The object to move                            
+     * @param {Number}     targetY         The objetive Y position
+     * @param {Number}     targetZ         The objetive Z position
      */
-    this.openWalletLogo = function (duration){
+    this.moveLogo = function (duration, object, targetY, targetZ){
 
         var _duration = duration || 2000;
 
-        var tween = new TWEEN.Tween(walletLogo.position);
-        tween.to({ y: 1640, z: 60000}, 2000);
-        tween.delay( _duration );
-        tween.easing(TWEEN.Easing.Exponential.InOut);
-        tween.onUpdate(render);
-
-        tween.start();
-    };
-
-    /**
-     * @author Emmanuel Colina
-     * logo(wallet) returns to the original z
-     * @param {Number} [duration=2000] Duration of the delay
-     */
-    this.closeWalletLogo = function (duration){
-
-        var _duration = duration || 2000;
-
-        var tween = new TWEEN.Tween(walletLogo.position);
-        tween.to({ y: 230, z: 63800}, 2500);
-        tween.delay( _duration );
-        tween.easing(TWEEN.Easing.Exponential.InOut);
-        tween.onUpdate(render);
-
-        tween.start();
-    };
-  
-     /**
-     * @author Emmanuel Colina
-     * It provides a fade to logo(Fermat)
-     * @param {Number} [duration=2000] Duration of the animation
-     */
-    this.fadeFermatLogo = function (duration){
-
-        var _duration = duration || 2000;
-
-        var tween1 = new TWEEN.Tween(fermatLogo.material)
-        .to({ opacity : 1, needsUpdate : true}, _duration)
-        .onUpdate(render);
-        
-        var tween2 = new TWEEN.Tween(fermatLogo.material)
-        .to({ opacity : 0, needsUpdate : true}, _duration)
-        .onUpdate(render);
-
-        tween1.chain(tween2);
-        tween2.chain(tween1);
-
-        tween1.start();
-    };
-
-    /**
-     * @author Emmanuel Colina
-     * repaint with opacity : 1, after of THREE.removeAll();
-     * @param {Number} [duration=2000] Duration of the duration
-     */
-    this.stopFermatLogo = function (duration){
-
-        var _duration = duration || 1000;
-
-        var tweenstop = new TWEEN.Tween(fermatLogo.material)
-        .to({ opacity : 1, needsUpdate : true}, _duration)
-        .onUpdate(render);
-
-        tweenstop.start();
-    };
-
-    /**
-     * @author Emmanuel Colina
-     *  the logo(Fermat)
-     * @param {Number} [duration=2000] Duration of the delay
-     */
-    this.openFermatLogo = function (duration){
-
-        var _duration = duration || 2000;
-
-        var tween = new TWEEN.Tween(fermatLogo.position);
-        tween.to({ y: -1800, z: 60000}, 2000);
-        tween.delay( _duration );
-        tween.easing(TWEEN.Easing.Exponential.InOut);
-        tween.onUpdate(render);
-
-        tween.start();
-    };
-
-    /**
-     * @author Emmanuel Colina
-     * logo(wallet) returns to the original z
-     * @param {Number} [duration=2000] Duration of the delay
-     */
-    this.closeFermatLogo = function (duration){
-
-        var _duration = duration || 2000;
-
-        var tween = new TWEEN.Tween(fermatLogo.position);
-        tween.to({ y: -310, z: 63800}, 2500);
+        var tween = new TWEEN.Tween(object.position);
+        tween.to({ y: targetY, z: targetZ}, 2000);
         tween.delay( _duration );
         tween.easing(TWEEN.Easing.Exponential.InOut);
         tween.onUpdate(render);
