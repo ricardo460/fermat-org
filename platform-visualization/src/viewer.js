@@ -5,7 +5,6 @@ var table = [],
     renderer,
     browserManager = new BrowserManager(),
     objects = [],
-    browser = [],
     headers = null,
     actualView = 'home',
     stats = null,
@@ -70,7 +69,7 @@ function init() {
     //Disabled Menu
     //initMenu();
 
-    setTimeout(function() {goToView('home'); }, 500);
+    setTimeout(function() {goToView('home'); }, 2000);
     
     /*setTimeout(function() {
         var loader = new Loader();
@@ -91,7 +90,7 @@ function goToView ( current ) {
     switch(current) {
         case 'table':
 
-            browserManager.modifyButtonLegend(1);
+            browserManager.modifyButtonLegend(1,'block');
 
             headers.transformTable();
             setTimeout(function() {
@@ -108,9 +107,9 @@ function goToView ( current ) {
 
            browserManager.hide_Button();
 
-           browserManager.modifyButtonBack(0);
-            
-           browserManager.modifyButtonLegend(0);
+           browserManager.modifyButtonBack(0,'none');
+           
+           browserManager.modifyButtonLegend(0,'none');
 
             break;
         case 'stack':
@@ -119,9 +118,9 @@ function goToView ( current ) {
 
             browserManager.hide_Button();
 
-            browserManager.modifyButtonBack(0);
+            browserManager.modifyButtonBack(0,'none');
             
-            browserManager.modifyButtonLegend(0);
+            browserManager.modifyButtonLegend(0,'none');
             
             break;
 
@@ -188,7 +187,7 @@ function onElementClick(id) {
         setTimeout(function() {
             
             camera.setFocus(id, 1000);
-            browserManager.modifyButtonBack(1);
+            browserManager.modifyButtonBack(1,'block');
             
             if(table[id].author) {
                 var button = document.createElement('button');
@@ -369,7 +368,7 @@ function onClick(e) {
         }
     }
       
-      clicked = camera.rayCast(mouse, browser);
+      clicked = camera.rayCast(mouse, browserManager.navegacion_button);
         
       if (clicked && clicked.length > 0) {
 

@@ -742,7 +742,7 @@ function ViewManager() {
         
         for(var j = 0, l = levels.length; j < l; j++) {
 
-            if(levels[j][0] === 'high') scale = 5;
+            if(levels[j][0] === 'high') scale = 2;
             else scale = 1;
 
             texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale);
@@ -862,13 +862,14 @@ function ViewManager() {
             if (layers[table[i].layer].super_layer) {
 
                 object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
-
+                
                 section[row]++;
 
             } else {
 
                 //Column (X)
                 var column = table[i].groupID;
+                
                 object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
                 section[row][column]++;
