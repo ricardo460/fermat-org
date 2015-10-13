@@ -18,14 +18,23 @@ function Helper() {
             el = document.getElementById(element);
         }
 
-        $(el).fadeTo(duration, 0, function() {
-            if(keep)
-                el.style.display = 'none';
-            else
-                $(el).remove();
-        });
+        if(el) {
+            $(el).fadeTo(duration, 0, function() {
+                if(keep)
+                    el.style.display = 'none';
+                else
+                    $(el).remove();
+            });
+        }
     };
     
+    /**
+     * @author Miguel Celedon
+     *
+     * Shows an HTML element as a fade in
+     * @param {Object} element         DOMElement to show
+     * @param {Number} [duration=1000] Duration of animation
+     */
     this.show = function(element, duration) {
         
         duration = duration || 1000;
@@ -150,7 +159,7 @@ function Helper() {
             var max = (words.length < 4) ? words.length : 4;
 
             for (var i = 0; i < max; i++)
-                code += words[i].charAt(0);
+                code += words[i].charAt(0).toUpperCase();
         }
 
         return code;

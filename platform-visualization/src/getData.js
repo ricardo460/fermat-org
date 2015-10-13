@@ -34,13 +34,4 @@ function getData() {
         init();
 
     }, 6000);*/
-
-    //Simulacion pre carga y post carga de logo
-    /*$('#idCanvas').fadeTo(6000, 0, function() {
-        $('#idCanvas').remove();
-        TWEEN.removeAll();
-        init();
-        //setTimeout( animate, 500);
-        animate();
-    });*/
 }

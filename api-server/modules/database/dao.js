@@ -236,10 +236,12 @@ Dao.prototype.findAndPopulateSchemaById = function(_id, path, callback) {
         .exec(function(err, schema) {
             if (err && !schema) {
                 return callback(err, null);
-            } else {
+            } else if (schema) {
                 var model = new that.Model();
                 model.init(schema);
-                return callback(err, model);
+                return callback(null, model);
+            } else {
+                callback(null, null);
             }
         });
 };

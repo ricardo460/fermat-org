@@ -147,13 +147,15 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      * @param {Number} duration Milliseconds of fading
      */
     this.show = function (duration) {
-        var i;
+        var i, j;
         
         for (i = 0; i < objects.length; i++ ) {
-            new TWEEN.Tween(objects[i].material)
-            .to({opacity : 1, needsUpdate : true}, duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
-            .start();
+            for(j = 0; j < objects[i].levels.length; j++) {
+                new TWEEN.Tween(objects[i].levels[j].object.material)
+                .to({opacity : 1, needsUpdate : true}, duration)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .start();
+            }
         }
     };
     
@@ -162,13 +164,15 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      * @param {Number} duration Milliseconds to fade
      */
     this.hide = function (duration) {
-        var i;
+        var i, j;
         
-        for (i = 0; i < objects.length; i++) {
-            new TWEEN.Tween(objects[i].material)
-            .to({opacity : 0, needsUpdate : true}, duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
-            .start();
+        for (i = 0; i < objects.length; i++ ) {
+            for(j = 0; j < objects[i].levels.length; j++) {
+                new TWEEN.Tween(objects[i].levels[j].object.material)
+                .to({opacity : 0, needsUpdate : true}, duration)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .start();
+            }
         }
     };
     
@@ -249,12 +253,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      */
     var calculateStackPositions = function() {
         
-        /*var z = window.camera.getPosition().z - 3500,
-            dimensions = {
-                width : (objects[0]) ? objects[0].clientWidth : columnWidth * window.TILE_DIMENSION.width,
-                height : (objects[0]) ? objects[0].clientHeight : columnWidth * window.TILE_DIMENSION.width,
-            },
-            i, level = 0;*/
         var i, obj;
         
         // Dummy, send all to center
@@ -299,15 +297,31 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 dependencies[child] = dependencies[child] || [];
             }
         
-        function createHeader(src, width, height) {
+        function createHeader(group, width, height) {
             
-            var geometry = new THREE.PlaneGeometry(width, height),
-                material = new THREE.MeshBasicMaterial({transparent : true, opacity : 0}),
-                object = new THREE.Mesh(geometry, material);
+            var source,
+                levels = [
+                    ['high', 0],
+                    ['medium', 8000],
+                    ['small', 16000]],
+                i, l,
+                header = new THREE.LOD();
             
-            helper.applyTexture(src, object);
+            for(i = 0, l = levels.length; i < l; i++) {
             
-            return object;
+                source = 'images/headers/' + levels[i][0] + '/' + group + '_logo.png';
+                
+                var object = new THREE.Mesh(
+                    new THREE.PlaneGeometry(width, height),
+                    new THREE.MeshBasicMaterial({transparent : true, opacity : 0})
+                    );
+                
+                helper.applyTexture(source, object);
+                
+                header.addLevel(object, levels[i][1]);
+            }
+            
+            return header;
         }
         
         var src, width, height;
@@ -318,12 +332,10 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 headerData = window.groups[group];
                 column = headerData.index;
 
-                
-                src = 'images/headers/' + group + '_logo.png';
                 width = columnWidth * window.TILE_DIMENSION.width;
                 height = width * 443 / 1379;
 
-                object = createHeader(src, width, height);
+                object = createHeader(group, width, height);
                 
                 object.position.set(-160000,
                                     Math.random() * 320000 - 160000,
@@ -349,11 +361,10 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 headerData = window.superLayers[slayer];
                 row = superLayerPosition[headerData.index];
 
-                src = 'images/headers/' + slayer + '_logo.png';
                 width = columnWidth * window.TILE_DIMENSION.width;
                 height = width * 443 / 1379;
 
-                object = createHeader(src, width, height);
+                object = createHeader(slayer, width, height);
                 
                 object.position.set(160000,
                                     Math.random() * 320000 - 160000,
