@@ -3,10 +3,9 @@ var table = [],
     camera,
     scene = new THREE.Scene(),
     renderer,
-    browserManager = new BrowserManager(),
     objects = [],
     headers = null,
-    actualView = 'home',
+    actualView = 'start',
     stats = null,
     actualFlow = null;
 
@@ -42,7 +41,6 @@ function init() {
         renderer,
         render);
 
-    browserManager.createButton();
     // uncomment for testing
     //create_stats();
 
@@ -63,13 +61,28 @@ function init() {
         }
     });
 
+    $('#browserRightButton').click(function() {
+       if ( actualView === 'start' )
+            goToView('table');
+       else if ( actualView === 'table' )
+            goToView('stack');
+    });
+    
+    $('#browserLeftButton').click(function() {
+       if ( actualView === 'start' ) ;
+       //     goToView('stack');
+       else if ( actualView === 'table' )
+            goToView('start');
+       else if ( actualView === 'stack' )
+            goToView('table');
+    });
 
     $('#container').click(onClick);
 
     //Disabled Menu
     //initMenu();
 
-    setTimeout(function() {goToView('home'); }, 2000);
+    setTimeout(function() {goToView('table'); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
@@ -90,45 +103,112 @@ function goToView ( current ) {
     switch(current) {
         case 'table':
 
-            browserManager.modifyButtonLegend(1,'block');
+            modifyButtonLegend(1);
 
             headers.transformTable();
             setTimeout(function() {
                 viewManager.transform(viewManager.targets.table, 4000);
             }, 4000);
             
-            browserManager.hide_Button();
+            modifyButtonRight( 'View Dependencies', 'none');
+           
+            modifyButtonLeft( 'Start', 'block');
 
             
             break;
-        case 'home':
+        case 'start':
 
            headers.transformHead();  
 
-           browserManager.hide_Button();
+           modifyButtonRight( 'View Table', 'block');
 
-           browserManager.modifyButtonBack(0,'none');
-           
-           browserManager.modifyButtonLegend(0,'none');
+           modifyButtonLeft( 'Book', 'none' );
+
+           modifyButtonBack(0);
+            
+           modifyButtonLegend(0);
 
             break;
         case 'stack':
             
             headers.transformStack();
 
-            browserManager.hide_Button();
+            modifyButtonRight( '', 'none' );
+           
+            modifyButtonLeft( 'View Table', 'block' );
 
-            browserManager.modifyButtonBack(0,'none');
+            modifyButtonBack(0);
             
-            browserManager.modifyButtonLegend(0,'none');
+            modifyButtonLegend(0);
             
             break;
 
         default:
-            actualView = 'home';
+            actualView = 'start';
             break;
     }
 }
+
+/**
+ * created by Ricardo Delgado
+ * editing text , animation and control button state
+ * @param {String} label, The button name.
+ * @param {String} view, The view button.
+ * @param {int} start, button to start the animation.
+ * @param {int} end, button to end the animation.
+ */
+function modifyButtonRight ( label, view ) {
+    
+var browserButton = document.getElementById('browserRightButton');
+    
+    browserButton.style.display=view;
+    browserButton.innerHTML = label;
+
+
+}
+
+/**
+ * Created by Ricardo Delgado
+ * Editing text , animation and control button state
+ * @param {String} label, The button name.
+ * @param {String} view, The view button.
+ * @param {int} start, button to start the animation.
+ * @param {int} end, button to end the animation.
+ */
+function modifyButtonLeft ( label, view ) {
+    
+var browserButton = document.getElementById('browserLeftButton');
+
+    browserButton.style.display = view;
+    browserButton.innerHTML = label;
+
+
+}
+
+/**
+ * Created by Ricardo Delgado
+ */
+function modifyButtonBack ( valor ) {
+    
+var browserButton = document.getElementById('backButton');
+
+ $(browserButton).fadeTo(1000, valor, function() {
+                $(browserButton).show();
+            });
+}
+
+/**
+ * Created by Ricardo Delgado
+ */
+function modifyButtonLegend ( valor ) {
+    
+var browserButton = document.getElementById('legendButton');
+
+ $(browserButton).fadeTo(1000, valor, function() {
+                $(browserButton).show();
+            });
+}
+
 
 function initMenu() {
 
@@ -187,7 +267,7 @@ function onElementClick(id) {
         setTimeout(function() {
             
             camera.setFocus(id, 1000);
-            browserManager.modifyButtonBack(1,'block');
+            modifyButtonBack(1);
             
             if(table[id].author) {
                 var button = document.createElement('button');
@@ -352,34 +432,18 @@ function onClick(e) {
     var mouse = new THREE.Vector2(0, 0),
         clicked = [];
     
-    if ( !camera.moving ) {
+    if(actualView === 'table' && !camera.moving) {
     
         //Obtain normalized click location (-1...1)
         mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
         mouse.y = - ((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height) * 2 + 1;
-
-    if ( actualView === 'table' ) {
-
+        
         clicked = camera.rayCast(mouse, objects);
         
-        if (clicked && clicked.length > 0) {
-
+        if(clicked && clicked.length > 0) {
             onElementClick(clicked[0].object.userData.id);
         }
     }
-      
-      clicked = camera.rayCast(mouse, browserManager.navegacion_button);
-        
-      if (clicked && clicked.length > 0) {
-
-
-       if ( clicked[0].object.userData.state ) {
-
-      browserManager.actionButton(clicked[0].object.userData.arrow); 
-
-             }
-        }
-  }
 }
 
 function showFlow(id) {
