@@ -159,7 +159,7 @@ function Helper() {
             var max = (words.length < 4) ? words.length : 4;
 
             for (var i = 0; i < max; i++)
-                code += words[i].charAt(0);
+                code += words[i].charAt(0).toUpperCase();
         }
 
         return code;
