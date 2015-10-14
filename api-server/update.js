@@ -1,4 +1,4 @@
-var loadLib = require('./modules/repository/libs/loader');
+var loadLib = require('./modules/repository/lib/loader');
 var winston = require('winston');
 
 var _INTERVAL = 1200000;

@@ -487,7 +487,7 @@
 <error line="129" column="1" severity="warning" message="Use spaces, not tabs." source="com.jslint"/>
 <error line="129" column="1" severity="warning" message="Too many errors. (96% scanned)." source="com.jslint"/>
 </file>
-<file name="modules/repository/libs/loader.js">
+<file name="modules/repository/lib/loader.js">
 <error line="33" column="31" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
 <error line="34" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
 <error line="35" column="10" severity="warning" message="Move 'var' declarations to the top of the function." source="com.jslint"/>

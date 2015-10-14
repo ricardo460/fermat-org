@@ -1,7 +1,5 @@
 var Cache = require('./cache');
-var cache = new Cache({
-    type: 'file'
-});
+var cache = new Cache();
 
 console.dir(cache);
 

@@ -3,7 +3,7 @@ var compMod = require('./component');
 var layerMod = require('./layer');
 var suprlayMod = require('./superlayer');
 var platfrmMod = require('./platform');
-var loadLib = require('./libs/loader');
+var loadLib = require('./lib/loader');
 
 /**
  * [getComps description]

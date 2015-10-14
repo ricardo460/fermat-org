@@ -5,6 +5,7 @@ var apicache = require('apicache')
         debug: true
     }).middleware;
 var repMod = require('../modules/repository');
+var Cache = require('../lib/route-cache');
 
 /**
  * [description]
@@ -25,16 +26,29 @@ router.put('/comps', function(req, res, next) {
  * @route
  *
  */
-router.get('/comps', apicache('30 minutes'), function(req, res, next) {
-    //cache(req, {
-    //type: 'memory',
-    //time: 36000000
-    //}, function(error_cache, result_cache) {
-    repMod.getComps(req, function(error, result) {
-        if (error) res.status(200).send(error);
-        else res.status(200).send(result);
-    });
-    //});
+router.get('/comps', function(req, res, next) {
+    // creation of object cache
+    var cache = new Cache({
+        type: 'memory',
+        time: 36000000
+    }, req);
+    // we search for body in cache
+    var body = cache.getBody();
+    if (body) {
+        // we send it
+        res.status(200).send(body);
+    } else {
+        // we create it
+        repMod.getComps(req, function(error, result) {
+            if (error) {
+                res.status(200).send(error);
+            } else {
+                // we save it
+                cache.setBody(result);
+                res.status(200).send(result);
+            }
+        });
+    }
 });
 
 /**

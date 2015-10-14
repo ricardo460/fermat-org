@@ -467,11 +467,11 @@ modules/repository/layer/services/layer.js:128:1	Use spaces, not tabs.
 modules/repository/layer/services/layer.js:128:2	Missing 'use strict' statement.
 modules/repository/layer/services/layer.js:129:1	Use spaces, not tabs.
 modules/repository/layer/services/layer.js:129:1	Too many errors. (96% scanned).
-FAIL	modules/repository/libs/loader.js (4)
-modules/repository/libs/loader.js:33:31	Expected exactly one space between 'function' and '('.
-modules/repository/libs/loader.js:34:5	Missing 'use strict' statement.
-modules/repository/libs/loader.js:35:10	Move 'var' declarations to the top of the function.
-modules/repository/libs/loader.js:35:10	Stopping. (3% scanned).
+FAIL	modules/repository/lib/loader.js (4)
+modules/repository/lib/loader.js:33:31	Expected exactly one space between 'function' and '('.
+modules/repository/lib/loader.js:34:5	Missing 'use strict' statement.
+modules/repository/lib/loader.js:35:10	Move 'var' declarations to the top of the function.
+modules/repository/lib/loader.js:35:10	Stopping. (3% scanned).
 FAIL	modules/repository/index.js (27)
 modules/repository/index.js:18:28	Expected exactly one space between 'function' and '('.
 modules/repository/index.js:19:5	Missing 'use strict' statement.

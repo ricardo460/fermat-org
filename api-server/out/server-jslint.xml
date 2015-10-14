@@ -487,7 +487,7 @@
 <issue line="129" char="1" reason="Use spaces, not tabs." evidence="	layerDao.updateSchema({"/>
 <issue line="129" char="1" reason="Too many errors. (96% scanned)." evidence=""/>
 </file>
-<file name="modules/repository/libs/loader.js">
+<file name="modules/repository/lib/loader.js">
 <issue line="33" char="31" reason="Expected exactly one space between 'function' and '('." evidence="var processCompList = function(section, layer, compList, type) {"/>
 <issue line="34" char="5" reason="Missing 'use strict' statement." evidence="    var comps = [];"/>
 <issue line="35" char="10" reason="Move 'var' declarations to the top of the function." evidence="    for (var i = 0; i &lt; compList.length; i++) {"/>
