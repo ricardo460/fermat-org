@@ -38,7 +38,7 @@ function init() {
     renderer.setClearColor(0xffffff);
     document.getElementById('container').appendChild(renderer.domElement);
 
-    camera = new Camera(new THREE.Vector3(0, 0, dimensions.columnWidth * dimensions.groupsQtty * TILE_DIMENSION.width),
+    camera = new Camera(new THREE.Vector3(0, 0, 90000),
         renderer,
         render);
 

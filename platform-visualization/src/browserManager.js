@@ -45,7 +45,7 @@ this.actionButton = function ( button ) {
 
         view = views[i].bottom;
 
-    goToView(view);
+    window.goToView(view);
 
 };
 
@@ -108,11 +108,11 @@ function addButton ( button ) {
     
     if ( button === "right" ) {
 
-    posicion = { x: 23800, y: 0, z: 20000 }; j = 0;
+    posicion = { x: 38000, y: 0, z: 2000 }; j = 0;
 
     } else  {
 
-    posicion = { x: -23800, y: 0, z: -20000 }; j = 1;
+    posicion = { x: -38000, y: 0, z: -2000 }; j = 1;
 
     }
 
@@ -120,7 +120,7 @@ function addButton ( button ) {
                        posicion.y, 
                        posicion.z );
 
-    mesh.scale.set(50,50,50);
+    mesh.scale.set(70,70,70);
 
     mesh.userData = { state : true, arrow : button };
 
@@ -251,7 +251,7 @@ function label(button, view){
 
 function modifyButton (id, texture){
 
-    var visibility = -20000; 
+    var visibility = -window.camera.getMaxDistance(); 
 
     var mesh = self.navegacion_button[ id ];
 
@@ -261,18 +261,18 @@ function modifyButton (id, texture){
 
        mesh.material.needsUpdate = true;
 
-       visibility = 20000;
+       visibility = 2000;
 
     }
 
-    if ( visibility != mesh.position.z ) animateButton(mesh);
+    if ( visibility != mesh.position.z ) animateButton(mesh, 2000, visibility);
 
 }
 
-function animateButton ( mesh, duration ){
+function animateButton ( mesh, duration, target ){
 
         var _duration = duration || 2000,
-            z = mesh.position.z * -1;
+            z = target;
 
         var tween = new TWEEN.Tween(mesh.position);
         tween.to({z : z}, 2000);
