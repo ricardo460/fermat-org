@@ -739,7 +739,7 @@ function ViewManager() {
         
         for(var j = 0, l = levels.length; j < l; j++) {
 
-            if(levels[j][0] === 'high') scale = 5;
+            if(levels[j][0] === 'high') scale = 2;
             else scale = 1;
 
             texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale);
@@ -841,7 +841,7 @@ function ViewManager() {
 
             object.position.x = Math.random() * 80000 - 40000;
             object.position.y = Math.random() * 80000 - 40000;
-            object.position.z = 80000;
+            object.position.z = 80000 * 2;
             object.rotation.x = Math.random() * 180;
             object.rotation.y = Math.random() * 180;
             object.rotation.z = Math.random() * 180;
@@ -859,13 +859,14 @@ function ViewManager() {
             if (layers[table[i].layer].super_layer) {
 
                 object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
-
+                
                 section[row]++;
 
             } else {
 
                 //Column (X)
                 var column = table[i].groupID;
+                
                 object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
                 section[row][column]++;
@@ -898,7 +899,7 @@ function ViewManager() {
         if(typeof ids === 'number') ids = [ids];
 
         var i, _duration = duration || 2000,
-            distance = camera.getMaxDistance(),
+            distance = camera.getMaxDistance() * 2,
             out = new THREE.Vector3(0, 0, distance);
 
         TWEEN.removeAll();
