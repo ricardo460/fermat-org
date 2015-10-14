@@ -393,7 +393,7 @@ function ViewManager() {
             //groups[code]._id = _platfrms[i]._id;
         }
 
-        layers['empty layer 0'] = {
+        /*layers['empty layer 0'] = {
             index: 27,
             super_layer: false
         };
@@ -416,7 +416,7 @@ function ViewManager() {
         layers['empty layer 5'] = {
             index: 40,
             super_layer: false
-        };
+        };*/
         for (i = 0, l = _layers.length; i < l; i++) {
             name = helper.capFirstLetter(_layers[i].name);
             layers[name] = {};

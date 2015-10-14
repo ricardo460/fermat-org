@@ -1,5 +1,6 @@
 var dirs = [
-    'bin/*.js',
+    'bin/*',
+    'libs/**/*.js',
     'modules/**/*.js',
     'routes/**/*.js'
 ];
