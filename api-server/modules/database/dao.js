@@ -12,7 +12,7 @@ var config = require('../../config');
  * @param  {[type]} model      [description]
  * @param  {[type]} *path_ref    [description]
  * @param  {[type]} *path_schema [description]
- * @param  {[type]} *path_model  [description]
+ * @param  {[type]} *path_model  [description] 
  */
 function Dao(ref, schema, model, path_ref, path_schema, path_model,
     sec_path_ref, sec_path_schema, sec_path_model,
