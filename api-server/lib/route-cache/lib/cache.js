@@ -2,16 +2,28 @@ var fs = require('fs');
 var winston = require('winston');
 var Route = require('./route');
 
-console.log(process.cwd());
-
+/**
+ * [Cache description]
+ *
+ * @method Cache
+ *
+ * @param  {[type]} options [description]
+ */
 function Cache(options) {
-    this.type = options.type || 'memory';
-    this.time = options.time || 3600000;
+    this.type = options && options.type ? options.type : 'memory';
+    this.time = options && options.time ? options.time : 3600000;
     if (this.type === 'file') {
-        this.filename = this.filename ? process.cwd() + options.filename : process.cwd() + '/filecache.json';
+        this.filename = options && options.filename ? process.cwd() + options.filename : process.cwd() + '/filecache.json';
     }
 }
 
+/**
+ * [clear description]
+ *
+ * @method clear
+ *
+ * @return {[type]} [description]
+ */
 Cache.prototype.clear = function() {
     if (this.type === 'file') {
         fs.unlinkSync(this.filename);
@@ -21,7 +33,15 @@ Cache.prototype.clear = function() {
     return true;
 };
 
-Cache.prototype.set = function(url, body, status) {
+/**
+ * [set description]
+ *
+ * @method set
+ *
+ * @param  {[type]} url    [description]
+ * @param  {[type]} body   [description]
+ */
+Cache.prototype.set = function(url, body) {
     var cache;
     try {
         if (this.type === 'file') {
@@ -37,20 +57,20 @@ Cache.prototype.set = function(url, body, status) {
     var route;
     if (cache) {
         if (cache[url]) {
-            var routecache = new Route(cache[url].body, cache[url].status, cache[url].date, this.time);
-            if (!routecache.isValid() || routecache.status != 200 || !routecache.body) {
-                route = new Route(body, status, null, this.time);
+            var routecache = new Route(cache[url].body, cache[url].date, this.time);
+            if (!routecache.isValid() || !routecache.body) {
+                route = new Route(body, null, this.time);
                 cache[url] = route;
             } else {
                 winston.log('info', 'Route still in cache');
             }
         } else {
-            route = new Route(body, status, null, this.time);
+            route = new Route(body, null, this.time);
             cache[url] = route;
         }
     } else {
         cache = {};
-        route = new Route(body, status, null, this.time);
+        route = new Route(body, null, this.time);
         cache[url] = route;
     }
 
@@ -70,26 +90,48 @@ Cache.prototype.set = function(url, body, status) {
     }
 };
 
+/**
+ * [get description]
+ *
+ * @method get
+ *
+ * @param  {[type]} url [description]
+ *
+ * @return {[type]} [description]
+ */
 Cache.prototype.get = function(url) {
     var cache;
     try {
         if (this.type === 'file') {
             var filecache = fs.readFileSync(this.filename);
             cache = JSON.parse(filecache);
+            winston.log('info', 'Searching on file cache');
         } else {
             cache = global.memcache;
+            winston.log('info', 'Searching on memory cache');
         }
     } catch (err) {
         winston.log('info', 'Error reading or parsing file cache', err);
     }
 
     if (cache) {
+        winston.log('info', 'Retrieving from cache');
         return cache[url];
     } else {
+        winston.log('info', 'Not found in cache');
         return undefined;
     }
 };
 
+/**
+ * [del description]
+ *
+ * @method del
+ *
+ * @param  {[type]} url [description]
+ *
+ * @return {[type]} [description]
+ */
 Cache.prototype.del = function(url) {
     var cache;
     try {
@@ -127,14 +169,4 @@ Cache.prototype.del = function(url) {
     }
 };
 
-
-//global.memcache = {};
-//global.memcache.test = "hola mundo";
-//require('./test');
-//console.dir(global);
-//var route = new Route(null, null, null, null)
-//console.dir(route);
-//console.log(route.date.getTime());
-//console.log(process.cwd());
-//
 module.exports = Cache;

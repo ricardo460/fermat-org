@@ -1,11 +1,11 @@
 var dirs = [
     'bin/*',
-    'libs/**/*.js',
+    'lib/**/*.js',
     'modules/**/*.js',
     'routes/**/*.js'
 ];
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     grunt.initConfig({
         watch: {
             scripts: {
@@ -25,7 +25,12 @@ module.exports = function(grunt) {
                 src: dirs,
                 directives: { // example directives
                     node: true,
-                    todo: true
+                    todo: true,
+                    nomen: true,
+                    //vars: true,
+                    plusplus: true,
+                    stupid: true,
+                    todo: true,
                 },
                 options: {
                     edition: 'latest', // specify an edition of jslint or use 'dir/mycustom-jslint.js' for own path
@@ -36,21 +41,21 @@ module.exports = function(grunt) {
                     failOnError: false, // defaults to true
                     checkstyle: 'out/server-checkstyle.xml' // write a checkstyle-XML
                 }
-            }//,
+            } //,
             // lint your project's client code
             //client: {
-                //src: [
-                    //'client/**/*.js'
-                //],
-                //directives: {
-                    //browser: true,
-                    //predef: [
-                        //'jQuery'
-                    //]
-                //},
-                //options: {
-                    //junit: 'out/client-junit.xml'
-                //}
+            //src: [
+            //'client/**/*.js'
+            //],
+            //directives: {
+            //browser: true,
+            //predef: [
+            //'jQuery'
+            //]
+            //},
+            //options: {
+            //junit: 'out/client-junit.xml'
+            //}
             //}
         }
     });
