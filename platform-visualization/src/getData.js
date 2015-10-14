@@ -13,7 +13,7 @@ function getData() {
     }).success(
         function(lists) {
             viewManager.fillTable(lists);
-
+            browserManager.createButton();
             TWEEN.removeAll();
 
             logo.stopFade();
