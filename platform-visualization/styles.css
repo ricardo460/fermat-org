@@ -109,40 +109,9 @@ a {
         color: rgba(255,255,255,1);
     }
 
-#browserRightButton, #browserLeftButton {
-    width: 150px;
-    height: 50px;
-    border: none;
-    padding-right: 40px;
-    background: transparent;
-    background-repeat: no-repeat;
-    color: transparent;
-    cursor: pointer;
-    opacity: 0.2;
-}
-
-#browserRightButton{
-    padding-right: 40px;
-    background-position:right;
-    background-image: url('images/browsers arrows/arrow-right.png');
-}
-
-#browserLeftButton{
-    padding-left: 40px;
-    background-position:left;
-    background-image: url('images/browsers arrows/arrow-left.png');
-}
 
 button:focus {
     outline: 0 !important;
-}
-
-#browserRightButton:hover {
-    color: rgba(127,127,127,1); opacity: 0.9;
-}
-
-#browserLeftButton:hover {
-    color: rgba(127,127,127,1); opacity: 0.9;
 }
 
 button:active {
@@ -222,18 +191,6 @@ button:active {
     transform: translate(-50%, -50%);
 }
 
-#browserRightButton {
-    position : fixed;
-    right : 100px;
-    bottom : 450px;
-    z-index: 10;
-}
-#browserLeftButton {
-    position : fixed;
-    bottom : 450px;
-    left : 100px;
-    z-index: 10;
-}
 
 @keyframes loop {
     0% { opacity: 0.05; }

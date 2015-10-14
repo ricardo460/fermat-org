@@ -12,7 +12,7 @@ function Camera(position, renderer, renderFunc) {
      */
     var ROTATE_SPEED = 1.3,
         MIN_DISTANCE = 50,
-        MAX_DISTANCE = 80000;
+        MAX_DISTANCE = 90000;
 
     /**
      * private properties

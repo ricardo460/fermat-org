@@ -26,7 +26,7 @@ function getData() {
         var l = JSON.parse(testData);
 
         viewManager.fillTable(l);
-
+    browserManager.createButton();
         TWEEN.removeAll();
 
         logo.stopFade();
