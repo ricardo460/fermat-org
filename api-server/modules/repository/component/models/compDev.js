@@ -1,4 +1,3 @@
-'use strict';
 var mongoose = require('mongoose');
 
 /**
@@ -13,6 +12,7 @@ var mongoose = require('mongoose');
  * @param  {[type]}   percnt   [description]
  */
 function CompDevMdl(_comp_id, _dev_id, role, scope, percnt) {
+    'use strict';
     // always initialize all instance properties
     this._comp_id = _comp_id;
     this._dev_id = _dev_id;
@@ -32,6 +32,7 @@ function CompDevMdl(_comp_id, _dev_id, role, scope, percnt) {
  * @return {[type]} [description]
  */
 CompDevMdl.prototype.init = function (compDevSchema) {
+    'use strict';
     this._id = compDevSchema._id;
     this._comp_id = compDevSchema._comp_id;
     this._dev_id = compDevSchema._dev_id;
@@ -47,6 +48,7 @@ CompDevMdl.prototype.init = function (compDevSchema) {
  * @method setUpdate
  */
 CompDevMdl.prototype.setUpdate = function () {
+    'use strict';
     this.upd_at = new mongoose.Types.ObjectId();
 };
 

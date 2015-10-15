@@ -1,4 +1,3 @@
-'use strict';
 var mongoose = require('mongoose');
 
 /**
@@ -12,6 +11,7 @@ var mongoose = require('mongoose');
  * @param  {[type]}  reached  [description]
  */
 function StatusMdl(_comp_id, name, target, reached) {
+    'use strict';
     // always initialize all instance properties
     this._comp_id = _comp_id;
     this.name = name;
@@ -30,6 +30,7 @@ function StatusMdl(_comp_id, name, target, reached) {
  * @return {[type]} [description]
  */
 StatusMdl.prototype.init = function (statusSchema) {
+    'use strict';
     this._id = statusSchema._id;
     this._comp_id = statusSchema._comp_id;
     this.name = statusSchema.name;
@@ -44,6 +45,7 @@ StatusMdl.prototype.init = function (statusSchema) {
  * @method setUpdate
  */
 StatusMdl.prototype.setUpdate = function () {
+    'use strict';
     this.upd_at = new mongoose.Types.ObjectId();
 };
 
@@ -55,6 +57,7 @@ StatusMdl.prototype.setUpdate = function () {
  * @param  {[type]}  target [description]
  */
 StatusMdl.prototype.setTarget = function (target) {
+    'use strict';
     this.target = target ? new Date(target) : null;
     this.upd_at = new mongoose.Types.ObjectId();
 };
@@ -67,6 +70,7 @@ StatusMdl.prototype.setTarget = function (target) {
  * @param  {[type]}   reached [description]
  */
 StatusMdl.prototype.setReached = function (reached) {
+    'use strict';
     this.reached = reached ? new Date(reached) : null;
     this.upd_at = new mongoose.Types.ObjectId();
 };
@@ -79,6 +83,7 @@ StatusMdl.prototype.setReached = function (reached) {
  * @return {[type]} [description]
  */
 StatusMdl.prototype.getAge = function () {
+    'use strict';
     var diff = new Date() - this.bday;
     var diffdays = diff / 1000 / (60 * 60 * 24);
     var age = Math.floor(diffdays / 365.25);

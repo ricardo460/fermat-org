@@ -1,10 +1,10 @@
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
-var compDevMdl = require('../models/compDev');
+var CompDevMdl = require('../models/compDev');
 var compDevSch = require('../schemas/compDev');
-var compMdl = require('../models/comp');
+var CompMdl = require('../models/comp');
 var compSch = require('../schemas/comp');
-var devMdl = require('../../developer/models/dev');
+var DevMdl = require('../../developer/models/dev');
 var devSch = require('../../developer/schemas/dev');
 
 /**
@@ -12,7 +12,7 @@ var devSch = require('../../developer/schemas/dev');
  *
  * @type {Dao}
  */
-var compDevDao = new Dao('CompDev', compDevSch, compDevMdl, 'Comp', compSch, compMdl, 'Dev', devSch, devMdl);
+var compDevDao = new Dao('CompDev', compDevSch, CompDevMdl, 'Comp', compSch, CompMdl, 'Dev', devSch, DevMdl);
 
 /**
  * [insertCompDev description]
@@ -24,8 +24,9 @@ var compDevDao = new Dao('CompDev', compDevSch, compDevMdl, 'Comp', compSch, com
  *
  * @return {[type]}   [description]
  */
-exports.insertCompDev = function(compDev_mdl, callback) {
-    compDevDao.insertSchema(compDev_mdl, function(err, compDev) {
+exports.insertCompDev = function (compDev_mdl, callback) {
+    'use strict';
+    compDevDao.insertSchema(compDev_mdl, function (err, compDev) {
         callback(err, compDev);
     });
 };
@@ -40,8 +41,9 @@ exports.insertCompDev = function(compDev_mdl, callback) {
  *
  * @return {[type]}        [description]
  */
-exports.findCompDevById = function(_id, callback) {
-    compDevDao.findAndPopulateSchemaById(_id, '_dev_id _comp_id', function(err, compDev) {
+exports.findCompDevById = function (_id, callback) {
+    'use strict';
+    compDevDao.findAndPopulateSchemaById(_id, '_dev_id _comp_id', function (err, compDev) {
         callback(err, compDev);
     });
 };
@@ -56,8 +58,9 @@ exports.findCompDevById = function(_id, callback) {
  *
  * @return {[type]}    [description]
  */
-exports.findCompDev = function(query, callback) {
-    compDevDao.findAndPopulateSchema(query, '_dev_id _comp_id', function(err, compDev) {
+exports.findCompDev = function (query, callback) {
+    'use strict';
+    compDevDao.findAndPopulateSchema(query, '_dev_id _comp_id', function (err, compDev) {
         callback(err, compDev);
     });
 };
@@ -74,8 +77,9 @@ exports.findCompDev = function(query, callback) {
  *
  * @return {[type]}   [description]
  */
-exports.findCompDevs = function(query, limit, order, callback) {
-    compDevDao.findAndPopulateSchemaLst(query, limit, order, '_dev_id _comp_id', function(err, compDev) {
+exports.findCompDevs = function (query, limit, order, callback) {
+    'use strict';
+    compDevDao.findAndPopulateSchemaLst(query, limit, order, '_dev_id _comp_id', function (err, compDev) {
         callback(err, compDev);
     });
 };
@@ -91,8 +95,9 @@ exports.findCompDevs = function(query, limit, order, callback) {
  *
  * @return {[type]}    [description]
  */
-exports.findAllCompDevs = function(query, order, callback) {
-    compDevDao.findAndPopulateAllSchemaLst(query, order, '_dev_id _comp_id', function(err, compDev) {
+exports.findAllCompDevs = function (query, order, callback) {
+    'use strict';
+    compDevDao.findAndPopulateAllSchemaLst(query, order, '_dev_id _comp_id', function (err, compDev) {
         callback(err, compDev);
     });
 };
@@ -108,11 +113,12 @@ exports.findAllCompDevs = function(query, order, callback) {
  *
  * @return {[type]}      [description]
  */
-exports.updateCompDevById = function(_id, set, callback) {
+exports.updateCompDevById = function (_id, set, callback) {
+    'use strict';
     set.upd_at = new mongoose.Types.ObjectId();
     compDevDao.updateSchema({
         _id: _id
-    }, set, {}, function(err, compDev) {
+    }, set, {}, function (err, compDev) {
         callback(err, compDev);
     });
 };

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+//#!/usr/bin/env node
 
 'use strict';
 
@@ -14,33 +14,6 @@ var http = require('http');
 var update = require('../update');
 
 winston.log('info', 'Setting %s environment', config.env);
-
-/**
- * Get port from environment and store in Express.
- */
-var port = normalizePort(process.env.PORT || '3000');
-winston.log('info', 'HTTP server listening in port %s', port);
-app.set('port', port);
-
-/**
- * Create HTTP server.
- */
-
-var server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
-/**
- * Uncaught exceptions handler
- */
-process.on('uncaughtException', function (err) {
-    winston.log('info', 'Mongoose default connection error', err);
-});
 
 /**
  * Normalize a port into a number, string, or false.
@@ -59,6 +32,19 @@ function normalizePort(val) {
 
     return false;
 }
+
+/**
+ * Get port from environment and store in Express.
+ */
+var port = normalizePort(process.env.PORT || '3000');
+winston.log('info', 'HTTP server listening in port %s', port);
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
 
 /**
  * Event listener for HTTP server "error" event.
@@ -93,3 +79,19 @@ function onListening() {
     var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
     debug('Listening on ' + bind);
 }
+
+
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Uncaught exceptions handler
+ */
+process.on('uncaughtException', function (err) {
+    winston.log('info', 'Mongoose default connection error', err);
+});

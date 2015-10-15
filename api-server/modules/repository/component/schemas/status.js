@@ -1,4 +1,3 @@
-'use strict';
 var mongoose = require('mongoose');
 
 /**
@@ -38,7 +37,7 @@ var statusSchema = mongoose.Schema({
  */
 statusSchema.index({
     _comp_id: 1,
-    name: 1,
+    name: 1
 }, {
     name: "statuses_cp_indx"
 }); // schema level

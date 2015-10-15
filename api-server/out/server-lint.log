@@ -1,114 +1,19 @@
-FAIL	bin/www (2)
-bin/www:1:1	Unexpected '#'.
-bin/www:1:2	Stopping. (1% scanned).
-FAIL	lib/route-cache/lib/cache.js (7)
-lib/route-cache/lib/cache.js:30:12	Unexpected sync method: 'unlinkSync'.
-lib/route-cache/lib/cache.js:49:32	Unexpected sync method: 'readFileSync'.
-lib/route-cache/lib/cache.js:88:7	Unnecessary 'else' after disruption.
-lib/route-cache/lib/cache.js:107:32	Unexpected sync method: 'readFileSync'.
-lib/route-cache/lib/cache.js:121:7	Unnecessary 'else' after disruption.
-lib/route-cache/lib/cache.js:140:32	Unexpected sync method: 'readFileSync'.
-lib/route-cache/lib/cache.js:167:7	Unnecessary 'else' after disruption.
-FAIL	modules/repository/component/index.js (13)
-modules/repository/component/index.js:72:18	['$and'] is better written in dot notation.
-modules/repository/component/index.js:77:18	['$and'] is better written in dot notation.
-modules/repository/component/index.js:82:18	['$and'] is better written in dot notation.
-modules/repository/component/index.js:87:18	['$and'] is better written in dot notation.
-modules/repository/component/index.js:94:11	Unnecessary 'else' after disruption.
-modules/repository/component/index.js:96:30	Expected '!==' and instead saw '!='.
-modules/repository/component/index.js:100:44	Expected '!==' and instead saw '!='.
-modules/repository/component/index.js:104:42	Expected '!==' and instead saw '!='.
-modules/repository/component/index.js:108:42	Expected '!==' and instead saw '!='.
-modules/repository/component/index.js:112:38	Expected '!==' and instead saw '!='.
-modules/repository/component/index.js:116:32	Expected '!==' and instead saw '!='.
-modules/repository/component/index.js:122:34	Expected '{' and instead saw 'return'.
-modules/repository/component/index.js:122:34	Stopping. (40% scanned).
-FAIL	modules/repository/component/models/comp.js (3)
-modules/repository/component/models/comp.js:76:13	Redefinition of 'words' from line 72.
-modules/repository/component/models/comp.js:78:14	Move 'var' declarations to the top of the function.
-modules/repository/component/models/comp.js:78:14	Stopping. (72% scanned).
-FAIL	modules/repository/component/schemas/status.js (1)
-modules/repository/component/schemas/status.js:41:12	Unexpected ','.
-FAIL	modules/repository/component/services/comp.js (41)
-modules/repository/component/services/comp.js:40:30	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:41:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:41:44	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:56:32	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:57:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:57:41	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:73:43	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:74:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:74:58	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:89:28	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:90:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:90:39	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:105:29	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:106:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:106:51	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:122:32	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:123:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:123:82	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:129:37	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:136:48	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:139:78	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:133:25	Unused '_lifeCycle'.
-modules/repository/component/services/comp.js:178:34	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:179:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:182:25	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:198:37	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:199:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:199:27	A constructor name 'compDevMdl' should start with an uppercase letter.
-modules/repository/component/services/comp.js:204:16	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:199:9	Unused 'compDev_mdl'.
-modules/repository/component/services/comp.js:220:39	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:221:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:225:16	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:241:49	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:242:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:242:27	A constructor name 'compDevMdl' should start with an uppercase letter.
-modules/repository/component/services/comp.js:247:16	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:242:9	Unused 'compDev_mdl'.
-modules/repository/component/services/comp.js:263:51	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:264:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:268:16	Expected exactly one space between 'function' and '('.
-FAIL	modules/repository/component/services/compDev.js (18)
-modules/repository/component/services/compDev.js:27:33	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:28:5	Missing 'use strict' statement.
-modules/repository/component/services/compDev.js:28:50	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:43:35	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:44:5	Missing 'use strict' statement.
-modules/repository/component/services/compDev.js:44:75	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:59:31	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:60:5	Missing 'use strict' statement.
-modules/repository/component/services/compDev.js:60:73	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:77:32	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:78:5	Missing 'use strict' statement.
-modules/repository/component/services/compDev.js:78:90	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:94:35	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:95:5	Missing 'use strict' statement.
-modules/repository/component/services/compDev.js:95:86	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:111:37	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:112:5	Missing 'use strict' statement.
-modules/repository/component/services/compDev.js:115:25	Expected exactly one space between 'function' and '('.
-FAIL	modules/repository/component/services/status.js (18)
-modules/repository/component/services/status.js:25:32	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/status.js:26:5	Missing 'use strict' statement.
-modules/repository/component/services/status.js:26:48	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/status.js:41:34	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/status.js:42:5	Missing 'use strict' statement.
-modules/repository/component/services/status.js:42:43	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/status.js:57:30	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/status.js:58:5	Missing 'use strict' statement.
-modules/repository/component/services/status.js:58:64	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/status.js:75:32	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/status.js:76:5	Missing 'use strict' statement.
-modules/repository/component/services/status.js:76:81	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/status.js:92:35	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/status.js:93:5	Missing 'use strict' statement.
-modules/repository/component/services/status.js:93:77	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/status.js:109:36	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/status.js:110:5	Missing 'use strict' statement.
-modules/repository/component/services/status.js:113:25	Expected exactly one space between 'function' and '('.
+FAIL	lib/route-cache/lib/cache.js (4)
+lib/route-cache/lib/cache.js:31:12	Unexpected sync method: 'unlinkSync'.
+lib/route-cache/lib/cache.js:51:32	Unexpected sync method: 'readFileSync'.
+lib/route-cache/lib/cache.js:109:32	Unexpected sync method: 'readFileSync'.
+lib/route-cache/lib/cache.js:142:32	Unexpected sync method: 'readFileSync'.
+FAIL	modules/repository/component/index.js (10)
+modules/repository/component/index.js:83:22	['$and'] is better written in dot notation.
+modules/repository/component/index.js:88:22	['$and'] is better written in dot notation.
+modules/repository/component/index.js:93:22	['$and'] is better written in dot notation.
+modules/repository/component/index.js:98:22	['$and'] is better written in dot notation.
+modules/repository/component/index.js:178:22	['$and'] is better written in dot notation.
+modules/repository/component/index.js:183:22	['$and'] is better written in dot notation.
+modules/repository/component/index.js:188:22	['$and'] is better written in dot notation.
+modules/repository/component/index.js:193:22	['$and'] is better written in dot notation.
+modules/repository/component/index.js:252:22	['$and'] is better written in dot notation.
+modules/repository/component/index.js:257:22	['$and'] is better written in dot notation.
 FAIL	modules/repository/lib/loader.js (13)
 modules/repository/lib/loader.js:71:24	['$'] is better written in dot notation.
 modules/repository/lib/loader.js:80:31	['$'] is better written in dot notation.
@@ -130,4 +35,4 @@ modules/repository/process/index.js:271:26	['$and'] is better written in dot not
 modules/repository/process/index.js:276:26	['$and'] is better written in dot notation.
 modules/repository/process/index.js:281:26	['$and'] is better written in dot notation.
 
-# JSLint failed, 121 violations in 10.  48 files scanned.
+# JSLint failed, 32 violations in 4.  48 files scanned.

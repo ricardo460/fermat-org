@@ -1,4 +1,3 @@
-'use strict';
 var mongoose = require('mongoose');
 
 /**
@@ -17,6 +16,7 @@ var mongoose = require('mongoose');
  * @param  {[type]} repo_dir  [description]
  */
 function CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir) {
+    'use strict';
     // always initialize all instance properties
     this._platfrm_id = _platfrm_id;
     this._suprlay_id = _suprlay_id;
@@ -44,6 +44,7 @@ function CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, d
  * @return {[type]} [description]
  */
 CompMdl.prototype.init = function (compSchema) {
+    'use strict';
     this._id = compSchema._id;
     this._platfrm_id = compSchema._platfrm_id;
     this._suprlay_id = compSchema._suprlay_id;
@@ -69,26 +70,29 @@ CompMdl.prototype.init = function (compSchema) {
  * @return {[type]} [description]
  */
 CompMdl.prototype.getCode = function () {
+    'use strict';
     var words = this.name.split(" ");
     var code = "";
 
     function capFirstLetter(string) {
-        var words = string.split(" ");
+        var wrds = string.split(" ");
         var result = "";
-        for (var i = 0, l = words.length; i < l; i++) {
-            result += words[i].charAt(0).toUpperCase() + words[i].slice(1) + " ";
+        var i, l;
+        for (i = 0, l = wrds.length; i < l; i++) {
+            result += wrds[i].charAt(0).toUpperCase() + wrds[i].slice(1) + " ";
         }
         return result.trim();
     }
 
-    if (words.length == 1) { //if N = 1, use whole word or 3 first letters
+    if (words.length === 1) { //if N = 1, use whole word or 3 first letters
         code = words[0].length <= 4 ? capFirstLetter(words[0]) : capFirstLetter(words[0].slice(0, 3));
-    } else if (words.length == 2) { //if N = 2 use first cap letter, and second letter
+    } else if (words.length === 2) { //if N = 2 use first cap letter, and second letter
         code += words[0].charAt(0).toUpperCase() + words[0].charAt(1);
         code += words[1].charAt(0).toUpperCase() + words[1].charAt(1);
     } else { //if N => 3 use the N (up to 4) letters caps
         var max = (words.length < 4) ? words.length : 4;
-        for (var i = 0; i < max; i++) {
+        var i;
+        for (i = 0; i < max; i++) {
             code += words[i].charAt(0);
         }
     }
@@ -101,6 +105,7 @@ CompMdl.prototype.getCode = function () {
  * @method setUpdate
  */
 CompMdl.prototype.setUpdate = function () {
+    'use strict';
     this.upd_at = new mongoose.Types.ObjectId();
 };
 

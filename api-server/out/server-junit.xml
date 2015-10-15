@@ -1,323 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <testsuites>
   <testsuite>
-<testcase classname="bin.www" name="www:1:1">
-  <failure message="Unexpected '#'." />
-</testcase>
-<testcase classname="bin.www" name="www:1:2">
-  <failure message="Stopping. (1% scanned)." />
-</testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:30:12">
+<testcase classname="bin.www" name="www:0:0"></testcase>
+<testcase classname="lib.route_cache.index" name="index:0:0"></testcase>
+<testcase classname="lib.route_cache.lib.cache" name="cache:31:12">
   <failure message="Unexpected sync method: 'unlinkSync'." />
 </testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:49:32">
+<testcase classname="lib.route_cache.lib.cache" name="cache:51:32">
   <failure message="Unexpected sync method: 'readFileSync'." />
 </testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:88:7">
-  <failure message="Unnecessary 'else' after disruption." />
-</testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:107:32">
+<testcase classname="lib.route_cache.lib.cache" name="cache:109:32">
   <failure message="Unexpected sync method: 'readFileSync'." />
 </testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:121:7">
-  <failure message="Unnecessary 'else' after disruption." />
-</testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:140:32">
+<testcase classname="lib.route_cache.lib.cache" name="cache:142:32">
   <failure message="Unexpected sync method: 'readFileSync'." />
 </testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:167:7">
-  <failure message="Unnecessary 'else' after disruption." />
-</testcase>
-<testcase classname="lib.route_cache.index" name="index:0:0"></testcase>
 <testcase classname="lib.route_cache.lib.route" name="route:0:0"></testcase>
 <testcase classname="lib.test" name="test:0:0"></testcase>
 <testcase classname="modules.database.dao" name="dao:0:0"></testcase>
-<testcase classname="modules.repository.component.index" name="index:72:18">
+<testcase classname="modules.repository.component.index" name="index:83:22">
   <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.component.index" name="index:77:18">
+<testcase classname="modules.repository.component.index" name="index:88:22">
   <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.component.index" name="index:82:18">
+<testcase classname="modules.repository.component.index" name="index:93:22">
   <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.component.index" name="index:87:18">
+<testcase classname="modules.repository.component.index" name="index:98:22">
   <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.component.index" name="index:94:11">
-  <failure message="Unnecessary 'else' after disruption." />
+<testcase classname="modules.repository.component.index" name="index:178:22">
+  <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.component.index" name="index:96:30">
-  <failure message="Expected '!==' and instead saw '!='." />
+<testcase classname="modules.repository.component.index" name="index:183:22">
+  <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.component.index" name="index:100:44">
-  <failure message="Expected '!==' and instead saw '!='." />
+<testcase classname="modules.repository.component.index" name="index:188:22">
+  <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.component.index" name="index:104:42">
-  <failure message="Expected '!==' and instead saw '!='." />
+<testcase classname="modules.repository.component.index" name="index:193:22">
+  <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.component.index" name="index:108:42">
-  <failure message="Expected '!==' and instead saw '!='." />
+<testcase classname="modules.repository.component.index" name="index:252:22">
+  <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.component.index" name="index:112:38">
-  <failure message="Expected '!==' and instead saw '!='." />
+<testcase classname="modules.repository.component.index" name="index:257:22">
+  <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.component.index" name="index:116:32">
-  <failure message="Expected '!==' and instead saw '!='." />
-</testcase>
-<testcase classname="modules.repository.component.index" name="index:122:34">
-  <failure message="Expected '{' and instead saw 'return'." />
-</testcase>
-<testcase classname="modules.repository.component.index" name="index:122:34">
-  <failure message="Stopping. (40% scanned)." />
-</testcase>
-<testcase classname="modules.repository.component.models.comp" name="comp:76:13">
-  <failure message="Redefinition of 'words' from line 72." />
-</testcase>
-<testcase classname="modules.repository.component.models.comp" name="comp:78:14">
-  <failure message="Move 'var' declarations to the top of the function." />
-</testcase>
-<testcase classname="modules.repository.component.models.comp" name="comp:78:14">
-  <failure message="Stopping. (72% scanned)." />
-</testcase>
+<testcase classname="modules.repository.component.models.comp" name="comp:0:0"></testcase>
 <testcase classname="modules.repository.component.models.compDev" name="compDev:0:0"></testcase>
 <testcase classname="modules.repository.component.models.status" name="status:0:0"></testcase>
 <testcase classname="modules.repository.component.schemas.comp" name="comp:0:0"></testcase>
 <testcase classname="modules.repository.component.schemas.compDev" name="compDev:0:0"></testcase>
-<testcase classname="modules.repository.component.schemas.status" name="status:41:12">
-  <failure message="Unexpected ','." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:40:30">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:41:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:41:44">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:56:32">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:57:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:57:41">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:73:43">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:74:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:74:58">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:89:28">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:90:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:90:39">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:105:29">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:106:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:106:51">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:122:32">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:123:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:123:82">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:129:37">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:136:48">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:139:78">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:133:25">
-  <failure message="Unused '_lifeCycle'." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:178:34">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:179:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:182:25">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:198:37">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:199:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:199:27">
-  <failure message="A constructor name 'compDevMdl' should start with an uppercase letter." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:204:16">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:199:9">
-  <failure message="Unused 'compDev_mdl'." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:220:39">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:221:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:225:16">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:241:49">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:242:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:242:27">
-  <failure message="A constructor name 'compDevMdl' should start with an uppercase letter." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:247:16">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:242:9">
-  <failure message="Unused 'compDev_mdl'." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:263:51">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:264:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:268:16">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:27:33">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:28:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:28:50">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:43:35">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:44:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:44:75">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:59:31">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:60:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:60:73">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:77:32">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:78:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:78:90">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:94:35">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:95:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:95:86">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:111:37">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:112:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:115:25">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:25:32">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:26:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:26:48">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:41:34">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:42:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:42:43">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:57:30">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:58:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:58:64">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:75:32">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:76:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:76:81">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:92:35">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:93:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:93:77">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:109:36">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:110:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:113:25">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
+<testcase classname="modules.repository.component.schemas.status" name="status:0:0"></testcase>
+<testcase classname="modules.repository.component.services.comp" name="comp:0:0"></testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:0:0"></testcase>
+<testcase classname="modules.repository.component.services.status" name="status:0:0"></testcase>
 <testcase classname="modules.repository.developer.index" name="index:0:0"></testcase>
 <testcase classname="modules.repository.developer.models.dev" name="dev:0:0"></testcase>
 <testcase classname="modules.repository.developer.schemas.dev" name="dev:0:0"></testcase>
@@ -370,7 +109,6 @@
 <testcase classname="modules.repository.platform.models.platfrm" name="platfrm:0:0"></testcase>
 <testcase classname="modules.repository.platform.schemas.platfrm" name="platfrm:0:0"></testcase>
 <testcase classname="modules.repository.platform.services.platfrm" name="platfrm:0:0"></testcase>
-<testcase classname="modules.repository.process.models.proc" name="proc:0:0"></testcase>
 <testcase classname="modules.repository.process.index" name="index:188:22">
   <failure message="['$and'] is better written in dot notation." />
 </testcase>
@@ -386,6 +124,7 @@
 <testcase classname="modules.repository.process.index" name="index:281:26">
   <failure message="['$and'] is better written in dot notation." />
 </testcase>
+<testcase classname="modules.repository.process.models.proc" name="proc:0:0"></testcase>
 <testcase classname="modules.repository.process.models.step" name="step:0:0"></testcase>
 <testcase classname="modules.repository.process.schemas.proc" name="proc:0:0"></testcase>
 <testcase classname="modules.repository.process.schemas.step" name="step:0:0"></testcase>

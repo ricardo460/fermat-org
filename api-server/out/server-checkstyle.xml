@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <checkstyle>
 <file name="bin/www">
-<error line="1" column="1" severity="warning" message="Unexpected '#'." source="com.jslint"/>
-<error line="1" column="2" severity="warning" message="Stopping. (1% scanned)." source="com.jslint"/>
-</file>
-<file name="lib/route-cache/lib/cache.js">
-<error line="30" column="12" severity="warning" message="Unexpected sync method: 'unlinkSync'." source="com.jslint"/>
-<error line="49" column="32" severity="warning" message="Unexpected sync method: 'readFileSync'." source="com.jslint"/>
-<error line="88" column="7" severity="warning" message="Unnecessary 'else' after disruption." source="com.jslint"/>
-<error line="107" column="32" severity="warning" message="Unexpected sync method: 'readFileSync'." source="com.jslint"/>
-<error line="121" column="7" severity="warning" message="Unnecessary 'else' after disruption." source="com.jslint"/>
-<error line="140" column="32" severity="warning" message="Unexpected sync method: 'readFileSync'." source="com.jslint"/>
-<error line="167" column="7" severity="warning" message="Unnecessary 'else' after disruption." source="com.jslint"/>
 </file>
 <file name="lib/route-cache/index.js">
+</file>
+<file name="lib/route-cache/lib/cache.js">
+<error line="31" column="12" severity="warning" message="Unexpected sync method: 'unlinkSync'." source="com.jslint"/>
+<error line="51" column="32" severity="warning" message="Unexpected sync method: 'readFileSync'." source="com.jslint"/>
+<error line="109" column="32" severity="warning" message="Unexpected sync method: 'readFileSync'." source="com.jslint"/>
+<error line="142" column="32" severity="warning" message="Unexpected sync method: 'readFileSync'." source="com.jslint"/>
 </file>
 <file name="lib/route-cache/lib/route.js">
 </file>
@@ -22,24 +17,18 @@
 <file name="modules/database/dao.js">
 </file>
 <file name="modules/repository/component/index.js">
-<error line="72" column="18" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
-<error line="77" column="18" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
-<error line="82" column="18" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
-<error line="87" column="18" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
-<error line="94" column="11" severity="warning" message="Unnecessary 'else' after disruption." source="com.jslint"/>
-<error line="96" column="30" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="100" column="44" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="104" column="42" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="108" column="42" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="112" column="38" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="116" column="32" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="122" column="34" severity="warning" message="Expected '{' and instead saw 'return'." source="com.jslint"/>
-<error line="122" column="34" severity="warning" message="Stopping. (40% scanned)." source="com.jslint"/>
+<error line="83" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
+<error line="88" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
+<error line="93" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
+<error line="98" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
+<error line="178" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
+<error line="183" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
+<error line="188" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
+<error line="193" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
+<error line="252" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
+<error line="257" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
 </file>
 <file name="modules/repository/component/models/comp.js">
-<error line="76" column="13" severity="warning" message="Redefinition of 'words' from line 72." source="com.jslint"/>
-<error line="78" column="14" severity="warning" message="Move 'var' declarations to the top of the function." source="com.jslint"/>
-<error line="78" column="14" severity="warning" message="Stopping. (72% scanned)." source="com.jslint"/>
 </file>
 <file name="modules/repository/component/models/compDev.js">
 </file>
@@ -50,90 +39,12 @@
 <file name="modules/repository/component/schemas/compDev.js">
 </file>
 <file name="modules/repository/component/schemas/status.js">
-<error line="41" column="12" severity="warning" message="Unexpected ','." source="com.jslint"/>
 </file>
 <file name="modules/repository/component/services/comp.js">
-<error line="40" column="30" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="41" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="41" column="44" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="56" column="32" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="57" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="57" column="41" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="73" column="43" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="74" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="74" column="58" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="89" column="28" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="90" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="90" column="39" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="105" column="29" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="106" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="106" column="51" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="122" column="32" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="123" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="123" column="82" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="129" column="37" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="136" column="48" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="139" column="78" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="133" column="25" severity="warning" message="Unused '_lifeCycle'." source="com.jslint"/>
-<error line="178" column="34" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="179" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="182" column="25" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="198" column="37" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="199" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="199" column="27" severity="warning" message="A constructor name 'compDevMdl' should start with an uppercase letter." source="com.jslint"/>
-<error line="204" column="16" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="199" column="9" severity="warning" message="Unused 'compDev_mdl'." source="com.jslint"/>
-<error line="220" column="39" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="221" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="225" column="16" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="241" column="49" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="242" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="242" column="27" severity="warning" message="A constructor name 'compDevMdl' should start with an uppercase letter." source="com.jslint"/>
-<error line="247" column="16" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="242" column="9" severity="warning" message="Unused 'compDev_mdl'." source="com.jslint"/>
-<error line="263" column="51" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="264" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="268" column="16" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
 </file>
 <file name="modules/repository/component/services/compDev.js">
-<error line="27" column="33" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="28" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="28" column="50" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="43" column="35" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="44" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="44" column="75" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="59" column="31" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="60" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="60" column="73" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="77" column="32" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="78" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="78" column="90" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="94" column="35" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="95" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="95" column="86" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="111" column="37" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="112" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="115" column="25" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
 </file>
 <file name="modules/repository/component/services/status.js">
-<error line="25" column="32" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="26" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="26" column="48" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="41" column="34" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="42" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="42" column="43" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="57" column="30" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="58" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="58" column="64" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="75" column="32" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="76" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="76" column="81" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="92" column="35" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="93" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="93" column="77" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="109" column="36" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="110" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="113" column="25" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
 </file>
 <file name="modules/repository/developer/index.js">
 </file>
@@ -176,14 +87,14 @@
 </file>
 <file name="modules/repository/platform/services/platfrm.js">
 </file>
-<file name="modules/repository/process/models/proc.js">
-</file>
 <file name="modules/repository/process/index.js">
 <error line="188" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
 <error line="193" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
 <error line="271" column="26" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
 <error line="276" column="26" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
 <error line="281" column="26" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
+</file>
+<file name="modules/repository/process/models/proc.js">
 </file>
 <file name="modules/repository/process/models/step.js">
 </file>

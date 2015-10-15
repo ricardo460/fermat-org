@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jslint>
 <file name="bin/www">
-<issue line="1" char="1" reason="Unexpected '#'." evidence="#!/usr/bin/env node"/>
-<issue line="1" char="2" reason="Stopping. (1% scanned)." evidence=""/>
-</file>
-<file name="lib/route-cache/lib/cache.js">
-<issue line="30" char="12" reason="Unexpected sync method: 'unlinkSync'." evidence="        fs.unlinkSync(this.filename);"/>
-<issue line="49" char="32" reason="Unexpected sync method: 'readFileSync'." evidence="            var filecache = fs.readFileSync(this.filename);"/>
-<issue line="88" char="7" reason="Unnecessary 'else' after disruption." evidence="    } else {"/>
-<issue line="107" char="32" reason="Unexpected sync method: 'readFileSync'." evidence="            var filecache = fs.readFileSync(this.filename);"/>
-<issue line="121" char="7" reason="Unnecessary 'else' after disruption." evidence="    } else {"/>
-<issue line="140" char="32" reason="Unexpected sync method: 'readFileSync'." evidence="            var filecache = fs.readFileSync(this.filename);"/>
-<issue line="167" char="7" reason="Unnecessary 'else' after disruption." evidence="    } else {"/>
 </file>
 <file name="lib/route-cache/index.js">
+</file>
+<file name="lib/route-cache/lib/cache.js">
+<issue line="31" char="12" reason="Unexpected sync method: 'unlinkSync'." evidence="        fs.unlinkSync(this.filename);"/>
+<issue line="51" char="32" reason="Unexpected sync method: 'readFileSync'." evidence="            var filecache = fs.readFileSync(this.filename);"/>
+<issue line="109" char="32" reason="Unexpected sync method: 'readFileSync'." evidence="            var filecache = fs.readFileSync(this.filename);"/>
+<issue line="142" char="32" reason="Unexpected sync method: 'readFileSync'." evidence="            var filecache = fs.readFileSync(this.filename);"/>
 </file>
 <file name="lib/route-cache/lib/route.js">
 </file>
@@ -22,24 +17,18 @@
 <file name="modules/database/dao.js">
 </file>
 <file name="modules/repository/component/index.js">
-<issue line="72" char="18" reason="['$and'] is better written in dot notation." evidence="        find_obj['$and'].push({"/>
-<issue line="77" char="18" reason="['$and'] is better written in dot notation." evidence="        find_obj['$and'].push({"/>
-<issue line="82" char="18" reason="['$and'] is better written in dot notation." evidence="        find_obj['$and'].push({"/>
-<issue line="87" char="18" reason="['$and'] is better written in dot notation." evidence="        find_obj['$and'].push({"/>
-<issue line="94" char="11" reason="Unnecessary 'else' after disruption." evidence="        } else if (res_comp) {"/>
-<issue line="96" char="30" reason="Expected '!==' and instead saw '!='." evidence="            if (type &amp;&amp; type != res_comp.type) {"/>
-<issue line="100" char="44" reason="Expected '!==' and instead saw '!='." evidence="            if (description &amp;&amp; description != res_comp.description) {"/>
-<issue line="104" char="42" reason="Expected '!==' and instead saw '!='." evidence="            if (difficulty &amp;&amp; difficulty != res_comp.difficulty) {"/>
-<issue line="108" char="42" reason="Expected '!==' and instead saw '!='." evidence="            if (code_level &amp;&amp; code_level != res_comp.code_level) {"/>
-<issue line="112" char="38" reason="Expected '!==' and instead saw '!='." evidence="            if (repo_dir &amp;&amp; repo_dir != res_comp.repo_dir) {"/>
-<issue line="116" char="32" reason="Expected '!==' and instead saw '!='." evidence="            if (found &amp;&amp; found != res_comp.found) {"/>
-<issue line="122" char="34" reason="Expected '{' and instead saw 'return'." evidence="                    if (err_upd) return callback(err_upd, null);"/>
-<issue line="122" char="34" reason="Stopping. (40% scanned)." evidence=""/>
+<issue line="83" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="88" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="93" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="98" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="178" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="183" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="188" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="193" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="252" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="257" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
 </file>
 <file name="modules/repository/component/models/comp.js">
-<issue line="76" char="13" reason="Redefinition of 'words' from line 72." evidence="        var words = string.split(&quot; &quot;);"/>
-<issue line="78" char="14" reason="Move 'var' declarations to the top of the function." evidence="        for (var i = 0, l = words.length; i &lt; l; i++) {"/>
-<issue line="78" char="14" reason="Stopping. (72% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/component/models/compDev.js">
 </file>
@@ -50,90 +39,12 @@
 <file name="modules/repository/component/schemas/compDev.js">
 </file>
 <file name="modules/repository/component/schemas/status.js">
-<issue line="41" char="12" reason="Unexpected ','." evidence="    name: 1,"/>
 </file>
 <file name="modules/repository/component/services/comp.js">
-<issue line="40" char="30" reason="Expected exactly one space between 'function' and '('." evidence="exports.insertComp = function(comp_mdl, callback) {"/>
-<issue line="41" char="5" reason="Missing 'use strict' statement." evidence="    compDao.insertSchema(comp_mdl, function(err, comp) {"/>
-<issue line="41" char="44" reason="Expected exactly one space between 'function' and '('." evidence="    compDao.insertSchema(comp_mdl, function(err, comp) {"/>
-<issue line="56" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompById = function(_id, callback) {"/>
-<issue line="57" char="5" reason="Missing 'use strict' statement." evidence="    compDao.findSchemaById(_id, function(err, comp) {"/>
-<issue line="57" char="41" reason="Expected exactly one space between 'function' and '('." evidence="    compDao.findSchemaById(_id, function(err, comp) {"/>
-<issue line="73" char="43" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAndPopulateCompById = function(_id, path, callback) {"/>
-<issue line="74" char="5" reason="Missing 'use strict' statement." evidence="    compDao.findAndPopulateSchemaById(_id, path, function(err, comp) {"/>
-<issue line="74" char="58" reason="Expected exactly one space between 'function' and '('." evidence="    compDao.findAndPopulateSchemaById(_id, path, function(err, comp) {"/>
-<issue line="89" char="28" reason="Expected exactly one space between 'function' and '('." evidence="exports.findComp = function(query, callback) {"/>
-<issue line="90" char="5" reason="Missing 'use strict' statement." evidence="    compDao.findSchema(query, function(err, comp) {"/>
-<issue line="90" char="39" reason="Expected exactly one space between 'function' and '('." evidence="    compDao.findSchema(query, function(err, comp) {"/>
-<issue line="105" char="29" reason="Expected exactly one space between 'function' and '('." evidence="exports.findComps = function(query, sort, callback) {"/>
-<issue line="106" char="5" reason="Missing 'use strict' statement." evidence="    compDao.findAllSchemaLst(query, sort, function(err, comp) {"/>
-<issue line="106" char="51" reason="Expected exactly one space between 'function' and '('." evidence="    compDao.findAllSchemaLst(query, sort, function(err, comp) {"/>
-<issue line="122" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAllComps = function(query, order, callback) {"/>
-<issue line="123" char="5" reason="Missing 'use strict' statement." evidence="    compDao.findAndPopulateAllSchemaLst(query, order, 'life_cycle devs', function(err, comps) {"/>
-<issue line="123" char="82" reason="Expected exactly one space between 'function' and '('." evidence="    compDao.findAndPopulateAllSchemaLst(query, order, 'life_cycle devs', function(err, comps) {"/>
-<issue line="129" char="37" reason="Expected exactly one space between 'function' and '('." evidence="            var loopComps = function(i) {"/>
-<issue line="136" char="48" reason="Expected exactly one space between 'function' and '('." evidence="                    var loopCompDevs = function(j) {"/>
-<issue line="139" char="78" reason="Expected exactly one space between 'function' and '('." evidence="                            devSrv.findDevById(_compDevs[j]._dev_id, function(err_dev, res_dev) {"/>
-<issue line="133" char="25" reason="Unused '_lifeCycle'." evidence="                    var _lifeCycle = _comp.life_cycle;"/>
-<issue line="178" char="34" reason="Expected exactly one space between 'function' and '('." evidence="exports.updateCompById = function(_id, set, callback) {"/>
-<issue line="179" char="5" reason="Missing 'use strict' statement." evidence="    set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="182" char="25" reason="Expected exactly one space between 'function' and '('." evidence="    }, set, {}, function(err, comp) {"/>
-<issue line="198" char="37" reason="Expected exactly one space between 'function' and '('." evidence="exports.pushDevToCompById = function(_id, _compDev_id, callback) {"/>
-<issue line="199" char="5" reason="Missing 'use strict' statement." evidence="    var compDev_mdl = new compDevMdl();"/>
-<issue line="199" char="27" reason="A constructor name 'compDevMdl' should start with an uppercase letter." evidence="    var compDev_mdl = new compDevMdl();"/>
-<issue line="204" char="16" reason="Expected exactly one space between 'function' and '('." evidence="    }, function(err, comp) {"/>
-<issue line="199" char="9" reason="Unused 'compDev_mdl'." evidence="    var compDev_mdl = new compDevMdl();"/>
-<issue line="220" char="39" reason="Expected exactly one space between 'function' and '('." evidence="exports.pullDevFromCompById = function(_id, _compDev_id, callback) {"/>
-<issue line="221" char="5" reason="Missing 'use strict' statement." evidence="    compDao.pullFromArray({"/>
-<issue line="225" char="16" reason="Expected exactly one space between 'function' and '('." evidence="    }, function(err, comp) {"/>
-<issue line="241" char="49" reason="Expected exactly one space between 'function' and '('." evidence="exports.pushStatusToCompLifeCycleById = function(_id, _status_id, callback) {"/>
-<issue line="242" char="5" reason="Missing 'use strict' statement." evidence="    var compDev_mdl = new compDevMdl();"/>
-<issue line="242" char="27" reason="A constructor name 'compDevMdl' should start with an uppercase letter." evidence="    var compDev_mdl = new compDevMdl();"/>
-<issue line="247" char="16" reason="Expected exactly one space between 'function' and '('." evidence="    }, function(err, comp) {"/>
-<issue line="242" char="9" reason="Unused 'compDev_mdl'." evidence="    var compDev_mdl = new compDevMdl();"/>
-<issue line="263" char="51" reason="Expected exactly one space between 'function' and '('." evidence="exports.pullStatusFromCompLifeCycleById = function(_id, _status_id, callback) {"/>
-<issue line="264" char="5" reason="Missing 'use strict' statement." evidence="    compDao.pullFromArray({"/>
-<issue line="268" char="16" reason="Expected exactly one space between 'function' and '('." evidence="    }, function(err, comp) {"/>
 </file>
 <file name="modules/repository/component/services/compDev.js">
-<issue line="27" char="33" reason="Expected exactly one space between 'function' and '('." evidence="exports.insertCompDev = function(compDev_mdl, callback) {"/>
-<issue line="28" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.insertSchema(compDev_mdl, function(err, compDev) {"/>
-<issue line="28" char="50" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.insertSchema(compDev_mdl, function(err, compDev) {"/>
-<issue line="43" char="35" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompDevById = function(_id, callback) {"/>
-<issue line="44" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateSchemaById(_id, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="44" char="75" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateSchemaById(_id, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="59" char="31" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompDev = function(query, callback) {"/>
-<issue line="60" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateSchema(query, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="60" char="73" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateSchema(query, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="77" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompDevs = function(query, limit, order, callback) {"/>
-<issue line="78" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateSchemaLst(query, limit, order, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="78" char="90" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateSchemaLst(query, limit, order, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="94" char="35" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAllCompDevs = function(query, order, callback) {"/>
-<issue line="95" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateAllSchemaLst(query, order, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="95" char="86" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateAllSchemaLst(query, order, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="111" char="37" reason="Expected exactly one space between 'function' and '('." evidence="exports.updateCompDevById = function(_id, set, callback) {"/>
-<issue line="112" char="5" reason="Missing 'use strict' statement." evidence="    set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="115" char="25" reason="Expected exactly one space between 'function' and '('." evidence="    }, set, {}, function(err, compDev) {"/>
 </file>
 <file name="modules/repository/component/services/status.js">
-<issue line="25" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.insertStatus = function(status_mdl, callback) {"/>
-<issue line="26" char="5" reason="Missing 'use strict' statement." evidence="    statusDao.insertSchema(status_mdl, function(err, status) {"/>
-<issue line="26" char="48" reason="Expected exactly one space between 'function' and '('." evidence="    statusDao.insertSchema(status_mdl, function(err, status) {"/>
-<issue line="41" char="34" reason="Expected exactly one space between 'function' and '('." evidence="exports.findStatusById = function(_id, callback) {"/>
-<issue line="42" char="5" reason="Missing 'use strict' statement." evidence="    statusDao.findSchemaById(_id, function(err, status) {"/>
-<issue line="42" char="43" reason="Expected exactly one space between 'function' and '('." evidence="    statusDao.findSchemaById(_id, function(err, status) {"/>
-<issue line="57" char="30" reason="Expected exactly one space between 'function' and '('." evidence="exports.findStatus = function(query, callback) {"/>
-<issue line="58" char="5" reason="Missing 'use strict' statement." evidence="    statusDao.findAndPopulateSchema(query, '_comp_id', function(err, compDev) {"/>
-<issue line="58" char="64" reason="Expected exactly one space between 'function' and '('." evidence="    statusDao.findAndPopulateSchema(query, '_comp_id', function(err, compDev) {"/>
-<issue line="75" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findStatuses = function(query, limit, order, callback) {"/>
-<issue line="76" char="5" reason="Missing 'use strict' statement." evidence="    statusDao.findAndPopulateSchemaLst(query, limit, order, '_comp_id', function(err, status) {"/>
-<issue line="76" char="81" reason="Expected exactly one space between 'function' and '('." evidence="    statusDao.findAndPopulateSchemaLst(query, limit, order, '_comp_id', function(err, status) {"/>
-<issue line="92" char="35" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAllStatuses = function(query, order, callback) {"/>
-<issue line="93" char="5" reason="Missing 'use strict' statement." evidence="    statusDao.findAndPopulateAllSchemaLst(query, order, '_comp_id', function(err, status) {"/>
-<issue line="93" char="77" reason="Expected exactly one space between 'function' and '('." evidence="    statusDao.findAndPopulateAllSchemaLst(query, order, '_comp_id', function(err, status) {"/>
-<issue line="109" char="36" reason="Expected exactly one space between 'function' and '('." evidence="exports.updateStatusById = function(_id, set, callback) {"/>
-<issue line="110" char="5" reason="Missing 'use strict' statement." evidence="    set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="113" char="25" reason="Expected exactly one space between 'function' and '('." evidence="    }, set, {}, function(err, status) {"/>
 </file>
 <file name="modules/repository/developer/index.js">
 </file>
@@ -176,14 +87,14 @@
 </file>
 <file name="modules/repository/platform/services/platfrm.js">
 </file>
-<file name="modules/repository/process/models/proc.js">
-</file>
 <file name="modules/repository/process/index.js">
 <issue line="188" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
 <issue line="193" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
 <issue line="271" char="26" reason="['$and'] is better written in dot notation." evidence="                find_obj['$and'].push({"/>
 <issue line="276" char="26" reason="['$and'] is better written in dot notation." evidence="                find_obj['$and'].push({"/>
 <issue line="281" char="26" reason="['$and'] is better written in dot notation." evidence="                find_obj['$and'].push({"/>
+</file>
+<file name="modules/repository/process/models/proc.js">
 </file>
 <file name="modules/repository/process/models/step.js">
 </file>
