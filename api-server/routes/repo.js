@@ -36,7 +36,7 @@ router.get('/comps', function (req, res, next) {
     try {
         // creation of object cache
         var cache = new Cache({
-            type: 'memory',
+            type: 'file',
             time: 36000000
         }, req);
         // we search for body in cache
