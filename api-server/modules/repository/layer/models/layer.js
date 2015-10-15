@@ -1,3 +1,4 @@
+'use strict';
 var mongoose = require('mongoose');
 
 /**
@@ -28,7 +29,7 @@ function LayerMdl(name, lang, suprlay, order) {
  *
  * @return {[type]} [description]
  */
-LayerMdl.prototype.init = function(layerSchema) {
+LayerMdl.prototype.init = function (layerSchema) {
     this._id = layerSchema._id;
     this.name = layerSchema.name;
     this.lang = layerSchema.lang;
@@ -42,7 +43,7 @@ LayerMdl.prototype.init = function(layerSchema) {
  *
  * @method setUpdate
  */
-LayerMdl.prototype.setUpdate = function() {
+LayerMdl.prototype.setUpdate = function () {
     this.upd_at = new mongoose.Types.ObjectId();
 };
 

@@ -1,3 +1,4 @@
+'use strict';
 var fs = require('fs');
 var winston = require('winston');
 var Route = require('./route');
@@ -24,7 +25,7 @@ function Cache(options) {
  *
  * @return {[type]} [description]
  */
-Cache.prototype.clear = function() {
+Cache.prototype.clear = function () {
     if (this.type === 'file') {
         fs.unlinkSync(this.filename);
     } else {
@@ -41,7 +42,7 @@ Cache.prototype.clear = function() {
  * @param  {[type]} url    [description]
  * @param  {[type]} body   [description]
  */
-Cache.prototype.set = function(url, body) {
+Cache.prototype.set = function (url, body) {
     var cache;
     try {
         if (this.type === 'file') {
@@ -78,7 +79,7 @@ Cache.prototype.set = function(url, body) {
         var data = JSON.stringify(cache);
         fs.writeFile(this.filename, data, {
             flags: 'w'
-        }, function(err) {
+        }, function (err) {
             if (err) {
                 winston.log('info', 'Error reading or parsing file cache', err);
             }
@@ -99,7 +100,7 @@ Cache.prototype.set = function(url, body) {
  *
  * @return {[type]} [description]
  */
-Cache.prototype.get = function(url) {
+Cache.prototype.get = function (url) {
     var cache;
     try {
         if (this.type === 'file') {
@@ -132,7 +133,7 @@ Cache.prototype.get = function(url) {
  *
  * @return {[type]} [description]
  */
-Cache.prototype.del = function(url) {
+Cache.prototype.del = function (url) {
     var cache;
     try {
         if (this.type === 'file') {
@@ -157,7 +158,7 @@ Cache.prototype.del = function(url) {
         var data = JSON.stringify(cache);
         fs.writeFile(this.filename, data, {
             flags: 'w'
-        }, function(err) {
+        }, function (err) {
             if (err) {
                 winston.log('info', 'Error reading or parsing file cache', err);
             }

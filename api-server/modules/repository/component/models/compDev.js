@@ -1,3 +1,4 @@
+'use strict';
 var mongoose = require('mongoose');
 
 /**
@@ -30,7 +31,7 @@ function CompDevMdl(_comp_id, _dev_id, role, scope, percnt) {
  *
  * @return {[type]} [description]
  */
-CompDevMdl.prototype.init = function(compDevSchema) {
+CompDevMdl.prototype.init = function (compDevSchema) {
     this._id = compDevSchema._id;
     this._comp_id = compDevSchema._comp_id;
     this._dev_id = compDevSchema._dev_id;
@@ -45,7 +46,7 @@ CompDevMdl.prototype.init = function(compDevSchema) {
  *
  * @method setUpdate
  */
-CompDevMdl.prototype.setUpdate = function() {
+CompDevMdl.prototype.setUpdate = function () {
     this.upd_at = new mongoose.Types.ObjectId();
 };
 

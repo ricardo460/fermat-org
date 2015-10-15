@@ -1,3 +1,4 @@
+'use strict';
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var devMdl = require('../models/dev');
@@ -21,9 +22,9 @@ var devDao = new Dao('Dev', devSch, devMdl);
  * @return {[type]}   [description]
  */
 exports.insertDev = function (dev_mdl, callback) {
-	devDao.insertSchema(dev_mdl, function (err, dev) {
-		callback(err, dev);
-	});
+    devDao.insertSchema(dev_mdl, function (err, dev) {
+        callback(err, dev);
+    });
 };
 
 /**
@@ -37,9 +38,9 @@ exports.insertDev = function (dev_mdl, callback) {
  * @return {[type]}    [description]
  */
 exports.findDevById = function (_id, callback) {
-	devDao.findSchemaById(_id, function (err, dev) {
-		callback(err, dev);
-	});
+    devDao.findSchemaById(_id, function (err, dev) {
+        callback(err, dev);
+    });
 };
 
 /**
@@ -53,11 +54,11 @@ exports.findDevById = function (_id, callback) {
  * @return {[type]}       [description]
  */
 exports.findDevByEmail = function (email, callback) {
-	devDao.findSchema({
-		email: email
-	}, function (err, dev) {
-		callback(err, dev);
-	});
+    devDao.findSchema({
+        email: email
+    }, function (err, dev) {
+        callback(err, dev);
+    });
 };
 
 /**
@@ -71,11 +72,11 @@ exports.findDevByEmail = function (email, callback) {
  * @return {[type]}       [description]
  */
 exports.findDevByUsrnm = function (usrnm, callback) {
-	devDao.findSchema({
-		usrnm: usrnm
-	}, function (err, dev) {
-		callback(err, dev);
-	});
+    devDao.findSchema({
+        usrnm: usrnm
+    }, function (err, dev) {
+        callback(err, dev);
+    });
 };
 
 /**
@@ -91,9 +92,9 @@ exports.findDevByUsrnm = function (usrnm, callback) {
  * @return {[type]}   [description]
  */
 exports.findDevs = function (query, limit, order, callback) {
-	devDao.findSchemaLst(query, limit, order, function (err, dev) {
-		callback(err, dev);
-	});
+    devDao.findSchemaLst(query, limit, order, function (err, dev) {
+        callback(err, dev);
+    });
 };
 
 /**
@@ -108,9 +109,9 @@ exports.findDevs = function (query, limit, order, callback) {
  * @return {[type]}    [description]
  */
 exports.findAllDevs = function (query, order, callback) {
-	devDao.findAllSchemaLst(query, order, function (err, dev) {
-		callback(err, dev);
-	});
+    devDao.findAllSchemaLst(query, order, function (err, dev) {
+        callback(err, dev);
+    });
 };
 
 /**
@@ -125,10 +126,10 @@ exports.findAllDevs = function (query, order, callback) {
  * @return {[type]}      [description]
  */
 exports.updateDevById = function (_id, set, callback) {
-	set.upd_at = new mongoose.Types.ObjectId();
-	devDao.updateSchema({
-		_id: _id
-	}, set, {}, function (err, dev) {
-		callback(err, dev);
-	});
+    set.upd_at = new mongoose.Types.ObjectId();
+    devDao.updateSchema({
+        _id: _id
+    }, set, {}, function (err, dev) {
+        callback(err, dev);
+    });
 };

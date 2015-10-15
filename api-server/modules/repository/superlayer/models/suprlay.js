@@ -1,3 +1,4 @@
+'use strict';
 var mongoose = require('mongoose');
 
 // Constructor
@@ -32,7 +33,7 @@ function SuprlayMdl(code, name, logo, deps, order) {
  *
  * @return {[type]} [description]
  */
-SuprlayMdl.prototype.init = function(suprlaySchema) {
+SuprlayMdl.prototype.init = function (suprlaySchema) {
     this._id = suprlaySchema._id;
     this.code = suprlaySchema.code;
     this.name = suprlaySchema.name;
@@ -47,7 +48,7 @@ SuprlayMdl.prototype.init = function(suprlaySchema) {
  *
  * @method setUpdate
  */
-SuprlayMdl.prototype.setUpdate = function() {
+SuprlayMdl.prototype.setUpdate = function () {
     this.upd_at = new mongoose.Types.ObjectId();
 };
 

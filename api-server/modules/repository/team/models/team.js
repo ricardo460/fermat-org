@@ -1,3 +1,4 @@
+'use strict';
 var mongoose = require('mongoose');
 
 /**
@@ -25,7 +26,7 @@ function TeamMdl(name, descript) {
  *
  * @return {[type]} [description]
  */
-TeamMdl.prototype.init = function(teamSchema) {
+TeamMdl.prototype.init = function (teamSchema) {
     this._id = teamSchema._id;
     this.name = teamSchema.name;
     this.descript = teamSchema.descript;
@@ -38,7 +39,7 @@ TeamMdl.prototype.init = function(teamSchema) {
  *
  * @method setUpdate
  */
-TeamMdl.prototype.setUpdate = function() {
+TeamMdl.prototype.setUpdate = function () {
     this.upd_at = new mongoose.Types.ObjectId();
 };
 

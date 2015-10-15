@@ -1,3 +1,4 @@
+'use strict';
 var devSrv = require('./services/dev');
 var DevMdl = require('./models/dev');
 
@@ -18,8 +19,8 @@ var DevMdl = require('./models/dev');
  *
  * @return {[type]}    [description]
  */
-exports.insOrUpdDev = function(usrnm, email, name, bday, country, avatar_url, url, bio, callback) {
-    devSrv.findDevByUsrnm(usrnm, function(err_dev, res_dev) {
+exports.insOrUpdDev = function (usrnm, email, name, bday, country, avatar_url, url, bio, callback) {
+    devSrv.findDevByUsrnm(usrnm, function (err_dev, res_dev) {
         if (err_dev) {
             return callback(err_dev, null);
         } else if (res_dev) {
@@ -53,7 +54,7 @@ exports.insOrUpdDev = function(usrnm, email, name, bday, country, avatar_url, ur
                 res_dev.bio = bio;
             }
             if (Object.keys(set_obj).length > 0) {
-                devSrv.updateDevById(res_dev._id, set_obj, function(err_upd, res_upd) {
+                devSrv.updateDevById(res_dev._id, set_obj, function (err_upd, res_upd) {
                     if (err_upd) return callback(err_upd, null);
                     else return callback(null, res_dev);
                 });
@@ -62,7 +63,7 @@ exports.insOrUpdDev = function(usrnm, email, name, bday, country, avatar_url, ur
             }
         } else {
             var dev = new DevMdl(usrnm, email, name, bday, country, avatar_url, url, bio);
-            devSrv.insertDev(dev, function(err_ins, res_ins) {
+            devSrv.insertDev(dev, function (err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
                 else return callback(null, res_ins);
             });
@@ -79,8 +80,8 @@ exports.insOrUpdDev = function(usrnm, email, name, bday, country, avatar_url, ur
  *
  * @return {[type]}   [description]
  */
-exports.getDevs = function(callback) {
-    devSrv.findAllDevs({}, {}, function(err, devs) {
+exports.getDevs = function (callback) {
+    devSrv.findAllDevs({}, {}, function (err, devs) {
         if (err) {
             callback(err, null);
         } else {

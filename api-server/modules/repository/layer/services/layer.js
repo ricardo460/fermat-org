@@ -1,3 +1,4 @@
+'use strict';
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var layerMdl = require('../models/layer');
@@ -21,9 +22,9 @@ var layerDao = new Dao('Layer', layerSch, layerMdl);
  * @return {[type]}   [description]
  */
 exports.insertLayer = function (layer_mdl, callback) {
-	layerDao.insertSchema(layer_mdl, function (err, layer) {
-		callback(err, layer);
-	});
+    layerDao.insertSchema(layer_mdl, function (err, layer) {
+        callback(err, layer);
+    });
 };
 
 /**
@@ -37,9 +38,9 @@ exports.insertLayer = function (layer_mdl, callback) {
  * @return {[type]}    [description]
  */
 exports.findLayerById = function (_id, callback) {
-	layerDao.findSchemaById(_id, function (err, layer) {
-		callback(err, layer);
-	});
+    layerDao.findSchemaById(_id, function (err, layer) {
+        callback(err, layer);
+    });
 };
 
 /**
@@ -53,11 +54,11 @@ exports.findLayerById = function (_id, callback) {
  * @return {[type]}       [description]
  */
 exports.findLayerByLang = function (lang, callback) {
-	layerDao.findSchema({
-		lang: lang
-	}, function (err, layer) {
-		callback(err, layer);
-	});
+    layerDao.findSchema({
+        lang: lang
+    }, function (err, layer) {
+        callback(err, layer);
+    });
 };
 
 /**
@@ -71,11 +72,11 @@ exports.findLayerByLang = function (lang, callback) {
  * @return {[type]}       [description]
  */
 exports.findLayerByName = function (name, callback) {
-	layerDao.findSchema({
-		name: name
-	}, function (err, layer) {
-		callback(err, layer);
-	});
+    layerDao.findSchema({
+        name: name
+    }, function (err, layer) {
+        callback(err, layer);
+    });
 };
 
 /**
@@ -91,9 +92,9 @@ exports.findLayerByName = function (name, callback) {
  * @return {[type]}   [description]
  */
 exports.findLayers = function (query, limit, order, callback) {
-	layerDao.findSchemaLst(query, limit, order, function (err, layer) {
-		callback(err, layer);
-	});
+    layerDao.findSchemaLst(query, limit, order, function (err, layer) {
+        callback(err, layer);
+    });
 };
 
 /**
@@ -108,9 +109,9 @@ exports.findLayers = function (query, limit, order, callback) {
  * @return {[type]}    [description]
  */
 exports.findAllLayers = function (query, order, callback) {
-	layerDao.findAllSchemaLst(query, order, function (err, layer) {
-		callback(err, layer);
-	});
+    layerDao.findAllSchemaLst(query, order, function (err, layer) {
+        callback(err, layer);
+    });
 };
 
 /**
@@ -125,10 +126,10 @@ exports.findAllLayers = function (query, order, callback) {
  * @return {[type]}      [description]
  */
 exports.updateLayerById = function (_id, set, callback) {
-	set.upd_at = new mongoose.Types.ObjectId();
-	layerDao.updateSchema({
-		_id: _id
-	}, set, {}, function (err, layer) {
-		callback(err, layer);
-	});
+    set.upd_at = new mongoose.Types.ObjectId();
+    layerDao.updateSchema({
+        _id: _id
+    }, set, {}, function (err, layer) {
+        callback(err, layer);
+    });
 };

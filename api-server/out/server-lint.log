@@ -1,876 +1,470 @@
 FAIL	bin/www (2)
 bin/www:1:1	Unexpected '#'.
 bin/www:1:2	Stopping. (1% scanned).
-FAIL	lib/route-cache/index.js (16)
-lib/route-cache/index.js:4:1	Use spaces, not tabs.
-lib/route-cache/index.js:4:2	Missing 'use strict' statement.
-lib/route-cache/index.js:5:1	Use spaces, not tabs.
-lib/route-cache/index.js:5:2	Expected 'this' at column 5, not column 2.
-lib/route-cache/index.js:6:1	Use spaces, not tabs.
-lib/route-cache/index.js:6:2	Expected 'this' at column 5, not column 2.
-lib/route-cache/index.js:9:40	Expected exactly one space between 'function' and '('.
-lib/route-cache/index.js:10:1	Use spaces, not tabs.
-lib/route-cache/index.js:10:2	Missing 'use strict' statement.
-lib/route-cache/index.js:11:1	Use spaces, not tabs.
-lib/route-cache/index.js:11:2	Expected 'return' at column 5, not column 2.
-lib/route-cache/index.js:14:40	Expected exactly one space between 'function' and '('.
-lib/route-cache/index.js:15:1	Use spaces, not tabs.
-lib/route-cache/index.js:15:2	Missing 'use strict' statement.
-lib/route-cache/index.js:16:1	Use spaces, not tabs.
-lib/route-cache/index.js:16:2	Expected 'return' at column 5, not column 2.
-FAIL	lib/route-cache/lib/cache.js (22)
-lib/route-cache/lib/cache.js:13:5	Missing 'use strict' statement.
-lib/route-cache/lib/cache.js:27:33	Expected exactly one space between 'function' and '('.
-lib/route-cache/lib/cache.js:28:5	Missing 'use strict' statement.
-lib/route-cache/lib/cache.js:44:31	Expected exactly one space between 'function' and '('.
-lib/route-cache/lib/cache.js:45:5	Missing 'use strict' statement.
-lib/route-cache/lib/cache.js:48:17	Combine this with the previous 'var' statement.
-lib/route-cache/lib/cache.js:57:9	Combine this with the previous 'var' statement.
-lib/route-cache/lib/cache.js:60:17	Combine this with the previous 'var' statement.
-lib/route-cache/lib/cache.js:78:13	Combine this with the previous 'var' statement.
-lib/route-cache/lib/cache.js:81:20	Expected exactly one space between 'function' and '('.
-lib/route-cache/lib/cache.js:87:7	Unnecessary 'else' after disruption.
-lib/route-cache/lib/cache.js:102:31	Expected exactly one space between 'function' and '('.
-lib/route-cache/lib/cache.js:103:5	Missing 'use strict' statement.
-lib/route-cache/lib/cache.js:106:17	Combine this with the previous 'var' statement.
-lib/route-cache/lib/cache.js:120:7	Unnecessary 'else' after disruption.
-lib/route-cache/lib/cache.js:135:31	Expected exactly one space between 'function' and '('.
-lib/route-cache/lib/cache.js:136:5	Missing 'use strict' statement.
-lib/route-cache/lib/cache.js:139:17	Combine this with the previous 'var' statement.
-lib/route-cache/lib/cache.js:148:9	Combine this with the previous 'var' statement.
-lib/route-cache/lib/cache.js:157:13	Combine this with the previous 'var' statement.
-lib/route-cache/lib/cache.js:160:20	Expected exactly one space between 'function' and '('.
-lib/route-cache/lib/cache.js:166:7	Unnecessary 'else' after disruption.
-FAIL	lib/route-cache/lib/route.js (6)
-lib/route-cache/lib/route.js:11:5	Missing 'use strict' statement.
-lib/route-cache/lib/route.js:23:35	Expected exactly one space between 'function' and '('.
-lib/route-cache/lib/route.js:24:1	Use spaces, not tabs.
-lib/route-cache/lib/route.js:24:2	Missing 'use strict' statement.
-lib/route-cache/lib/route.js:25:9	Combine this with the previous 'var' statement.
-lib/route-cache/lib/route.js:26:9	Combine this with the previous 'var' statement.
-FAIL	modules/database/dao.js (4)
-modules/database/dao.js:24:5	Missing 'use strict' statement.
-modules/database/dao.js:51:43	Expected exactly one space between 'function' and '('.
-modules/database/dao.js:52:22	Expected '{' and instead saw 'winston'.
-modules/database/dao.js:52:22	Stopping. (12% scanned).
+FAIL	lib/route-cache/lib/route.js (2)
+lib/route-cache/lib/route.js:1:1	Use the function form of 'use strict'.
+lib/route-cache/lib/route.js:31:1	'module' was used before it was defined.
+FAIL	lib/route-cache/lib/cache.js (20)
+lib/route-cache/lib/cache.js:1:1	Use the function form of 'use strict'.
+lib/route-cache/lib/cache.js:2:10	'require' was used before it was defined.
+lib/route-cache/lib/cache.js:3:15	'require' was used before it was defined.
+lib/route-cache/lib/cache.js:4:13	'require' was used before it was defined.
+lib/route-cache/lib/cache.js:17:55	'process' was used before it was defined.
+lib/route-cache/lib/cache.js:17:90	'process' was used before it was defined.
+lib/route-cache/lib/cache.js:30:12	Unexpected sync method: 'unlinkSync'.
+lib/route-cache/lib/cache.js:32:9	'global' was used before it was defined.
+lib/route-cache/lib/cache.js:49:32	Unexpected sync method: 'readFileSync'.
+lib/route-cache/lib/cache.js:52:21	'global' was used before it was defined.
+lib/route-cache/lib/cache.js:88:7	Unnecessary 'else' after disruption.
+lib/route-cache/lib/cache.js:89:9	'global' was used before it was defined.
+lib/route-cache/lib/cache.js:107:32	Unexpected sync method: 'readFileSync'.
+lib/route-cache/lib/cache.js:111:21	'global' was used before it was defined.
+lib/route-cache/lib/cache.js:121:7	Unnecessary 'else' after disruption.
+lib/route-cache/lib/cache.js:140:32	Unexpected sync method: 'readFileSync'.
+lib/route-cache/lib/cache.js:143:21	'global' was used before it was defined.
+lib/route-cache/lib/cache.js:167:7	Unnecessary 'else' after disruption.
+lib/route-cache/lib/cache.js:168:9	'global' was used before it was defined.
+lib/route-cache/lib/cache.js:173:1	'module' was used before it was defined.
+FAIL	lib/route-cache/index.js (3)
+lib/route-cache/index.js:1:1	Use the function form of 'use strict'.
+lib/route-cache/index.js:2:13	'require' was used before it was defined.
+lib/route-cache/index.js:20:1	'module' was used before it was defined.
+FAIL	lib/test.js (4)
+lib/test.js:1:1	Use the function form of 'use strict'.
+lib/test.js:2:13	'require' was used before it was defined.
+lib/test.js:5:1	'console' was used before it was defined.
+lib/test.js:11:1	'console' was used before it was defined.
+FAIL	modules/database/dao.js (6)
+modules/database/dao.js:1:1	Use the function form of 'use strict'.
+modules/database/dao.js:2:16	'require' was used before it was defined.
+modules/database/dao.js:3:15	'require' was used before it was defined.
+modules/database/dao.js:4:14	'require' was used before it was defined.
+modules/database/dao.js:53:22	Expected '{' and instead saw 'winston'.
+modules/database/dao.js:53:22	Stopping. (13% scanned).
 FAIL	modules/repository/component/index.js (23)
-modules/repository/component/index.js:18:28	Expected exactly one space between 'function' and '('.
-modules/repository/component/index.js:19:5	Missing 'use strict' statement.
-modules/repository/component/index.js:19:42	Expected exactly one space between 'function' and '('.
-modules/repository/component/index.js:37:29	Expected exactly one space between 'function' and '('.
-modules/repository/component/index.js:38:5	Missing 'use strict' statement.
-modules/repository/component/index.js:38:39	Expected exactly one space between 'function' and '('.
-modules/repository/component/index.js:66:32	Expected exactly one space between 'function' and '('.
-modules/repository/component/index.js:67:5	Missing 'use strict' statement.
-modules/repository/component/index.js:71:18	['$and'] is better written in dot notation.
-modules/repository/component/index.js:76:18	['$and'] is better written in dot notation.
-modules/repository/component/index.js:81:18	['$and'] is better written in dot notation.
-modules/repository/component/index.js:86:18	['$and'] is better written in dot notation.
-modules/repository/component/index.js:90:40	Expected exactly one space between 'function' and '('.
-modules/repository/component/index.js:93:11	Unnecessary 'else' after disruption.
-modules/repository/component/index.js:95:30	Expected '!==' and instead saw '!='.
-modules/repository/component/index.js:99:44	Expected '!==' and instead saw '!='.
-modules/repository/component/index.js:103:42	Expected '!==' and instead saw '!='.
-modules/repository/component/index.js:107:42	Expected '!==' and instead saw '!='.
-modules/repository/component/index.js:111:38	Expected '!==' and instead saw '!='.
-modules/repository/component/index.js:115:32	Expected '!==' and instead saw '!='.
-modules/repository/component/index.js:120:71	Expected exactly one space between 'function' and '('.
-modules/repository/component/index.js:121:34	Expected '{' and instead saw 'return'.
-modules/repository/component/index.js:121:34	Stopping. (40% scanned).
-FAIL	modules/repository/component/models/comp.js (10)
-modules/repository/component/models/comp.js:20:5	Missing 'use strict' statement.
-modules/repository/component/models/comp.js:45:34	Expected exactly one space between 'function' and '('.
-modules/repository/component/models/comp.js:46:5	Missing 'use strict' statement.
-modules/repository/component/models/comp.js:70:37	Expected exactly one space between 'function' and '('.
-modules/repository/component/models/comp.js:71:5	Missing 'use strict' statement.
-modules/repository/component/models/comp.js:72:9	Combine this with the previous 'var' statement.
-modules/repository/component/models/comp.js:75:13	Redefinition of 'words' from line 71.
-modules/repository/component/models/comp.js:76:13	Combine this with the previous 'var' statement.
-modules/repository/component/models/comp.js:77:14	Move 'var' declarations to the top of the function.
-modules/repository/component/models/comp.js:77:14	Stopping. (71% scanned).
-FAIL	modules/repository/component/models/compDev.js (5)
-modules/repository/component/models/compDev.js:16:5	Missing 'use strict' statement.
-modules/repository/component/models/compDev.js:33:37	Expected exactly one space between 'function' and '('.
-modules/repository/component/models/compDev.js:34:5	Missing 'use strict' statement.
-modules/repository/component/models/compDev.js:48:42	Expected exactly one space between 'function' and '('.
-modules/repository/component/models/compDev.js:49:5	Missing 'use strict' statement.
-FAIL	modules/repository/component/models/status.js (36)
-modules/repository/component/models/status.js:14:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:15:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:15:2	Missing 'use strict' statement.
-modules/repository/component/models/status.js:16:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:16:2	Expected 'this' at column 5, not column 2.
-modules/repository/component/models/status.js:17:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:17:2	Expected 'this' at column 5, not column 2.
-modules/repository/component/models/status.js:18:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:18:2	Expected 'this' at column 5, not column 2.
-modules/repository/component/models/status.js:19:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:19:2	Expected 'this' at column 5, not column 2.
-modules/repository/component/models/status.js:31:36	Expected exactly one space between 'function' and '('.
-modules/repository/component/models/status.js:32:5	Missing 'use strict' statement.
-modules/repository/component/models/status.js:45:41	Expected exactly one space between 'function' and '('.
-modules/repository/component/models/status.js:46:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:46:2	Missing 'use strict' statement.
-modules/repository/component/models/status.js:56:41	Expected exactly one space between 'function' and '('.
-modules/repository/component/models/status.js:57:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:57:2	Missing 'use strict' statement.
-modules/repository/component/models/status.js:58:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:58:2	Expected 'this' at column 5, not column 2.
-modules/repository/component/models/status.js:68:42	Expected exactly one space between 'function' and '('.
-modules/repository/component/models/status.js:69:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:69:2	Missing 'use strict' statement.
-modules/repository/component/models/status.js:70:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:70:2	Expected 'this' at column 5, not column 2.
-modules/repository/component/models/status.js:81:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:81:2	Missing 'use strict' statement.
-modules/repository/component/models/status.js:82:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:82:2	Expected 'var' at column 5, not column 2.
-modules/repository/component/models/status.js:82:6	Combine this with the previous 'var' statement.
-modules/repository/component/models/status.js:83:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:83:2	Expected 'var' at column 5, not column 2.
-modules/repository/component/models/status.js:83:6	Combine this with the previous 'var' statement.
-modules/repository/component/models/status.js:84:1	Use spaces, not tabs.
-modules/repository/component/models/status.js:84:2	Expected 'return' at column 5, not column 2.
-FAIL	modules/repository/component/schemas/status.js (1)
-modules/repository/component/schemas/status.js:40:12	Unexpected ','.
-FAIL	modules/repository/component/services/comp.js (45)
+modules/repository/component/index.js:1:1	Use the function form of 'use strict'.
+modules/repository/component/index.js:3:15	'require' was used before it was defined.
+modules/repository/component/index.js:4:15	'require' was used before it was defined.
+modules/repository/component/index.js:5:18	'require' was used before it was defined.
+modules/repository/component/index.js:6:18	'require' was used before it was defined.
+modules/repository/component/index.js:7:17	'require' was used before it was defined.
+modules/repository/component/index.js:8:17	'require' was used before it was defined.
+modules/repository/component/index.js:19:1	'exports' was used before it was defined.
+modules/repository/component/index.js:38:1	'exports' was used before it was defined.
+modules/repository/component/index.js:67:1	'exports' was used before it was defined.
+modules/repository/component/index.js:72:18	['$and'] is better written in dot notation.
+modules/repository/component/index.js:77:18	['$and'] is better written in dot notation.
+modules/repository/component/index.js:82:18	['$and'] is better written in dot notation.
+modules/repository/component/index.js:87:18	['$and'] is better written in dot notation.
+modules/repository/component/index.js:94:11	Unnecessary 'else' after disruption.
+modules/repository/component/index.js:96:30	Expected '!==' and instead saw '!='.
+modules/repository/component/index.js:100:44	Expected '!==' and instead saw '!='.
+modules/repository/component/index.js:104:42	Expected '!==' and instead saw '!='.
+modules/repository/component/index.js:108:42	Expected '!==' and instead saw '!='.
+modules/repository/component/index.js:112:38	Expected '!==' and instead saw '!='.
+modules/repository/component/index.js:116:32	Expected '!==' and instead saw '!='.
+modules/repository/component/index.js:122:34	Expected '{' and instead saw 'return'.
+modules/repository/component/index.js:122:34	Stopping. (40% scanned).
+FAIL	modules/repository/component/models/comp.js (5)
+modules/repository/component/models/comp.js:1:1	Use the function form of 'use strict'.
+modules/repository/component/models/comp.js:2:16	'require' was used before it was defined.
+modules/repository/component/models/comp.js:76:13	Redefinition of 'words' from line 72.
+modules/repository/component/models/comp.js:78:14	Move 'var' declarations to the top of the function.
+modules/repository/component/models/comp.js:78:14	Stopping. (72% scanned).
+FAIL	modules/repository/component/models/compDev.js (3)
+modules/repository/component/models/compDev.js:1:1	Use the function form of 'use strict'.
+modules/repository/component/models/compDev.js:2:16	'require' was used before it was defined.
+modules/repository/component/models/compDev.js:54:1	'module' was used before it was defined.
+FAIL	modules/repository/component/models/status.js (3)
+modules/repository/component/models/status.js:1:1	Use the function form of 'use strict'.
+modules/repository/component/models/status.js:2:16	'require' was used before it was defined.
+modules/repository/component/models/status.js:89:1	'module' was used before it was defined.
+FAIL	modules/repository/component/schemas/comp.js (3)
+modules/repository/component/schemas/comp.js:1:1	Use the function form of 'use strict'.
+modules/repository/component/schemas/comp.js:2:16	'require' was used before it was defined.
+modules/repository/component/schemas/comp.js:91:1	'module' was used before it was defined.
+FAIL	modules/repository/component/schemas/compDev.js (3)
+modules/repository/component/schemas/compDev.js:1:1	Use the function form of 'use strict'.
+modules/repository/component/schemas/compDev.js:2:16	'require' was used before it was defined.
+modules/repository/component/schemas/compDev.js:53:1	'module' was used before it was defined.
+FAIL	modules/repository/component/schemas/status.js (4)
+modules/repository/component/schemas/status.js:1:1	Use the function form of 'use strict'.
+modules/repository/component/schemas/status.js:2:16	'require' was used before it was defined.
+modules/repository/component/schemas/status.js:41:12	Unexpected ','.
+modules/repository/component/schemas/status.js:46:1	'module' was used before it was defined.
+FAIL	modules/repository/component/services/comp.js (51)
+modules/repository/component/services/comp.js:1:13	'require' was used before it was defined.
+modules/repository/component/services/comp.js:2:16	'require' was used before it was defined.
+modules/repository/component/services/comp.js:3:11	'require' was used before it was defined.
+modules/repository/component/services/comp.js:4:14	'require' was used before it was defined.
+modules/repository/component/services/comp.js:5:15	'require' was used before it was defined.
+modules/repository/component/services/comp.js:6:15	'require' was used before it was defined.
+modules/repository/component/services/comp.js:7:17	'require' was used before it was defined.
+modules/repository/component/services/comp.js:8:17	'require' was used before it was defined.
+modules/repository/component/services/comp.js:9:18	'require' was used before it was defined.
+modules/repository/component/services/comp.js:10:18	'require' was used before it was defined.
+modules/repository/component/services/comp.js:11:18	'require' was used before it was defined.
+modules/repository/component/services/comp.js:12:18	'require' was used before it was defined.
+modules/repository/component/services/comp.js:13:18	'require' was used before it was defined.
+modules/repository/component/services/comp.js:14:18	'require' was used before it was defined.
+modules/repository/component/services/comp.js:15:16	'require' was used before it was defined.
+modules/repository/component/services/comp.js:16:16	'require' was used before it was defined.
+modules/repository/component/services/comp.js:40:1	'exports' was used before it was defined.
 modules/repository/component/services/comp.js:40:30	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/comp.js:41:5	Missing 'use strict' statement.
 modules/repository/component/services/comp.js:41:44	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:56:1	'exports' was used before it was defined.
 modules/repository/component/services/comp.js:56:32	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/comp.js:57:5	Missing 'use strict' statement.
 modules/repository/component/services/comp.js:57:41	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:73:1	'exports' was used before it was defined.
 modules/repository/component/services/comp.js:73:43	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/comp.js:74:5	Missing 'use strict' statement.
 modules/repository/component/services/comp.js:74:58	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:89:1	'exports' was used before it was defined.
 modules/repository/component/services/comp.js:89:28	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/comp.js:90:5	Missing 'use strict' statement.
 modules/repository/component/services/comp.js:90:39	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:105:1	'exports' was used before it was defined.
 modules/repository/component/services/comp.js:105:29	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/comp.js:106:5	Missing 'use strict' statement.
 modules/repository/component/services/comp.js:106:51	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:122:1	'exports' was used before it was defined.
 modules/repository/component/services/comp.js:122:32	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/comp.js:123:5	Missing 'use strict' statement.
 modules/repository/component/services/comp.js:123:82	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:129:17	Combine this with the previous 'var' statement.
 modules/repository/component/services/comp.js:129:37	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:132:25	Combine this with the previous 'var' statement.
-modules/repository/component/services/comp.js:133:25	Combine this with the previous 'var' statement.
-modules/repository/component/services/comp.js:134:25	Combine this with the previous 'var' statement.
-modules/repository/component/services/comp.js:136:25	Combine this with the previous 'var' statement.
 modules/repository/component/services/comp.js:136:48	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/comp.js:139:78	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:133:25	Unused '_lifeCycle'.
+modules/repository/component/services/comp.js:178:1	'exports' was used before it was defined.
 modules/repository/component/services/comp.js:178:34	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/comp.js:179:5	Missing 'use strict' statement.
 modules/repository/component/services/comp.js:182:25	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/comp.js:198:1	'exports' was used before it was defined.
 modules/repository/component/services/comp.js:198:37	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:199:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:199:27	A constructor name 'compDevMdl' should start with an uppercase letter.
-modules/repository/component/services/comp.js:204:16	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:199:9	Unused 'compDev_mdl'.
-modules/repository/component/services/comp.js:220:39	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:221:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:225:16	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:241:49	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:242:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:242:27	A constructor name 'compDevMdl' should start with an uppercase letter.
-modules/repository/component/services/comp.js:247:16	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:242:9	Unused 'compDev_mdl'.
-modules/repository/component/services/comp.js:263:51	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/comp.js:264:5	Missing 'use strict' statement.
-modules/repository/component/services/comp.js:268:16	Expected exactly one space between 'function' and '('.
-FAIL	modules/repository/component/services/compDev.js (18)
+modules/repository/component/services/comp.js:198:37	Too many errors. (73% scanned).
+FAIL	modules/repository/component/services/compDev.js (32)
+modules/repository/component/services/compDev.js:1:16	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:2:11	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:3:18	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:4:18	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:5:15	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:6:15	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:7:14	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:8:14	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:27:1	'exports' was used before it was defined.
 modules/repository/component/services/compDev.js:27:33	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/compDev.js:28:5	Missing 'use strict' statement.
 modules/repository/component/services/compDev.js:28:50	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:43:1	'exports' was used before it was defined.
 modules/repository/component/services/compDev.js:43:35	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/compDev.js:44:5	Missing 'use strict' statement.
 modules/repository/component/services/compDev.js:44:75	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:59:1	'exports' was used before it was defined.
 modules/repository/component/services/compDev.js:59:31	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/compDev.js:60:5	Missing 'use strict' statement.
 modules/repository/component/services/compDev.js:60:73	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:77:1	'exports' was used before it was defined.
 modules/repository/component/services/compDev.js:77:32	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/compDev.js:78:5	Missing 'use strict' statement.
 modules/repository/component/services/compDev.js:78:90	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:94:1	'exports' was used before it was defined.
 modules/repository/component/services/compDev.js:94:35	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/compDev.js:95:5	Missing 'use strict' statement.
 modules/repository/component/services/compDev.js:95:86	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:111:1	'exports' was used before it was defined.
 modules/repository/component/services/compDev.js:111:37	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/compDev.js:112:5	Missing 'use strict' statement.
 modules/repository/component/services/compDev.js:115:25	Expected exactly one space between 'function' and '('.
-FAIL	modules/repository/component/services/status.js (18)
+FAIL	modules/repository/component/services/status.js (30)
+modules/repository/component/services/status.js:1:16	'require' was used before it was defined.
+modules/repository/component/services/status.js:2:11	'require' was used before it was defined.
+modules/repository/component/services/status.js:3:17	'require' was used before it was defined.
+modules/repository/component/services/status.js:4:17	'require' was used before it was defined.
+modules/repository/component/services/status.js:5:15	'require' was used before it was defined.
+modules/repository/component/services/status.js:6:15	'require' was used before it was defined.
+modules/repository/component/services/status.js:25:1	'exports' was used before it was defined.
 modules/repository/component/services/status.js:25:32	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/status.js:26:5	Missing 'use strict' statement.
 modules/repository/component/services/status.js:26:48	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:41:1	'exports' was used before it was defined.
 modules/repository/component/services/status.js:41:34	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/status.js:42:5	Missing 'use strict' statement.
 modules/repository/component/services/status.js:42:43	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:57:1	'exports' was used before it was defined.
 modules/repository/component/services/status.js:57:30	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/status.js:58:5	Missing 'use strict' statement.
 modules/repository/component/services/status.js:58:64	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:75:1	'exports' was used before it was defined.
 modules/repository/component/services/status.js:75:32	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/status.js:76:5	Missing 'use strict' statement.
 modules/repository/component/services/status.js:76:81	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:92:1	'exports' was used before it was defined.
 modules/repository/component/services/status.js:92:35	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/status.js:93:5	Missing 'use strict' statement.
 modules/repository/component/services/status.js:93:77	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/status.js:109:1	'exports' was used before it was defined.
 modules/repository/component/services/status.js:109:36	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/status.js:110:5	Missing 'use strict' statement.
 modules/repository/component/services/status.js:113:25	Expected exactly one space between 'function' and '('.
 FAIL	modules/repository/developer/index.js (14)
-modules/repository/developer/index.js:21:31	Expected exactly one space between 'function' and '('.
-modules/repository/developer/index.js:22:5	Missing 'use strict' statement.
-modules/repository/developer/index.js:22:42	Expected exactly one space between 'function' and '('.
-modules/repository/developer/index.js:25:11	Unnecessary 'else' after disruption.
-modules/repository/developer/index.js:27:32	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:31:30	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:35:30	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:39:36	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:43:42	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:47:28	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:51:28	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:56:68	Expected exactly one space between 'function' and '('.
-modules/repository/developer/index.js:57:34	Expected '{' and instead saw 'return'.
-modules/repository/developer/index.js:57:34	Stopping. (63% scanned).
-FAIL	modules/repository/developer/models/dev.js (51)
-modules/repository/developer/models/dev.js:18:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:19:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:19:2	Missing 'use strict' statement.
-modules/repository/developer/models/dev.js:20:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:20:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:21:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:21:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:22:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:22:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:23:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:23:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:24:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:24:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:25:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:25:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:26:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:26:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:27:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:27:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:39:33	Expected exactly one space between 'function' and '('.
-modules/repository/developer/models/dev.js:40:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:40:2	Missing 'use strict' statement.
-modules/repository/developer/models/dev.js:41:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:41:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:42:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:42:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:43:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:43:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:44:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:44:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:45:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:45:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:46:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:46:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:47:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:47:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:48:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:48:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:49:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:49:2	Expected 'this' at column 5, not column 2.
-modules/repository/developer/models/dev.js:57:38	Expected exactly one space between 'function' and '('.
-modules/repository/developer/models/dev.js:58:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:58:2	Missing 'use strict' statement.
-modules/repository/developer/models/dev.js:69:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:69:2	Missing 'use strict' statement.
-modules/repository/developer/models/dev.js:70:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:70:2	Expected 'var' at column 5, not column 2.
-modules/repository/developer/models/dev.js:70:6	Combine this with the previous 'var' statement.
-modules/repository/developer/models/dev.js:71:1	Use spaces, not tabs.
-modules/repository/developer/models/dev.js:71:2	Expected 'var' at column 5, not column 2.
-modules/repository/developer/models/dev.js:71:2	Too many errors. (93% scanned).
-FAIL	modules/repository/developer/schemas/dev.js (51)
-modules/repository/developer/schemas/dev.js:9:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:9:2	Expected 'usrnm' at column 9, not column 2.
-modules/repository/developer/schemas/dev.js:10:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:10:3	Expected 'type' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:11:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:11:3	Expected 'lowercase' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:12:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:12:3	Expected 'trim' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:13:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:13:3	Expected 'required' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:14:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:15:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:15:2	Expected '}' at column 9, not column 2.
-modules/repository/developer/schemas/dev.js:16:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:16:2	Expected 'email' at column 9, not column 2.
-modules/repository/developer/schemas/dev.js:17:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:17:3	Expected 'type' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:18:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:18:3	Expected 'lowercase' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:19:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:19:3	Expected 'trim' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:20:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:20:3	Expected 'required' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:21:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:22:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:22:3	Expected 'default' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:23:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:23:2	Expected '}' at column 9, not column 2.
-modules/repository/developer/schemas/dev.js:24:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:24:2	Expected 'name' at column 9, not column 2.
-modules/repository/developer/schemas/dev.js:25:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:25:3	Expected 'type' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:26:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:26:3	Expected 'trim' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:27:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:27:3	Expected 'default' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:28:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:28:2	Expected '}' at column 9, not column 2.
-modules/repository/developer/schemas/dev.js:29:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:29:2	Expected 'bday' at column 9, not column 2.
-modules/repository/developer/schemas/dev.js:30:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:30:3	Expected 'type' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:31:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:32:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:32:3	Expected 'default' at column 13, not column 3.
-modules/repository/developer/schemas/dev.js:33:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:33:2	Expected '}' at column 9, not column 2.
-modules/repository/developer/schemas/dev.js:34:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:34:2	Expected 'location' at column 9, not column 2.
-modules/repository/developer/schemas/dev.js:35:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:35:1	Too many errors. (30% scanned).
-FAIL	modules/repository/developer/services/dev.js (51)
-modules/repository/developer/services/dev.js:24:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:24:2	Missing 'use strict' statement.
-modules/repository/developer/services/dev.js:25:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:25:3	Expected 'callback' at column 9, not column 3.
-modules/repository/developer/services/dev.js:26:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:26:2	Expected '}' at column 5, not column 2.
-modules/repository/developer/services/dev.js:40:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:40:2	Missing 'use strict' statement.
-modules/repository/developer/services/dev.js:41:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:41:3	Expected 'callback' at column 9, not column 3.
-modules/repository/developer/services/dev.js:42:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:42:2	Expected '}' at column 5, not column 2.
-modules/repository/developer/services/dev.js:56:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:56:2	Missing 'use strict' statement.
-modules/repository/developer/services/dev.js:57:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:57:3	Expected 'email' at column 9, not column 3.
-modules/repository/developer/services/dev.js:58:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:58:2	Expected '}' at column 5, not column 2.
-modules/repository/developer/services/dev.js:59:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:59:3	Expected 'callback' at column 9, not column 3.
-modules/repository/developer/services/dev.js:60:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:60:2	Expected '}' at column 5, not column 2.
-modules/repository/developer/services/dev.js:74:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:74:2	Missing 'use strict' statement.
-modules/repository/developer/services/dev.js:75:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:75:3	Expected 'usrnm' at column 9, not column 3.
-modules/repository/developer/services/dev.js:76:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:76:2	Expected '}' at column 5, not column 2.
-modules/repository/developer/services/dev.js:77:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:77:3	Expected 'callback' at column 9, not column 3.
-modules/repository/developer/services/dev.js:78:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:78:2	Expected '}' at column 5, not column 2.
-modules/repository/developer/services/dev.js:94:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:94:2	Missing 'use strict' statement.
-modules/repository/developer/services/dev.js:95:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:95:3	Expected 'callback' at column 9, not column 3.
-modules/repository/developer/services/dev.js:96:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:96:2	Expected '}' at column 5, not column 2.
-modules/repository/developer/services/dev.js:111:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:111:2	Missing 'use strict' statement.
-modules/repository/developer/services/dev.js:112:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:112:3	Expected 'callback' at column 9, not column 3.
-modules/repository/developer/services/dev.js:113:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:113:2	Expected '}' at column 5, not column 2.
-modules/repository/developer/services/dev.js:128:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:128:2	Missing 'use strict' statement.
-modules/repository/developer/services/dev.js:129:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:129:2	Expected 'devDao' at column 5, not column 2.
-modules/repository/developer/services/dev.js:130:1	Use spaces, not tabs.
-modules/repository/developer/services/dev.js:130:3	Expected '_id' at column 9, not column 3.
-modules/repository/developer/services/dev.js:130:3	Too many errors. (97% scanned).
-FAIL	modules/repository/index.js (27)
-modules/repository/index.js:18:28	Expected exactly one space between 'function' and '('.
-modules/repository/index.js:19:5	Missing 'use strict' statement.
-modules/repository/index.js:21:40	Expected exactly one space between 'function' and '('.
-modules/repository/index.js:26:48	Expected exactly one space between 'function' and '('.
-modules/repository/index.js:31:52	Expected exactly one space between 'function' and '('.
-modules/repository/index.js:36:58	Expected exactly one space between 'function' and '('.
-modules/repository/index.js:18:29	Unused 'req'.
-modules/repository/index.js:65:29	Expected exactly one space between 'function' and '('.
-modules/repository/index.js:66:5	Missing 'use strict' statement.
-modules/repository/index.js:67:35	Expected exactly one space between 'function' and '('.
-modules/repository/index.js:65:30	Unused 'req'.
-modules/repository/index.js:89:28	Expected exactly one space between 'function' and '('.
-modules/repository/index.js:90:5	Missing 'use strict' statement.
-modules/repository/index.js:91:34	Expected exactly one space between 'function' and '('.
-modules/repository/index.js:89:29	Unused 'req'.
-modules/repository/index.js:113:27	Expected exactly one space between 'function' and '('.
-modules/repository/index.js:114:5	Missing 'use strict' statement.
-modules/repository/index.js:115:33	Expected exactly one space between 'function' and '('.
-modules/repository/index.js:113:28	Unused 'req'.
-modules/repository/index.js:127:28	Expected exactly one space between 'function' and '('.
-modules/repository/index.js:128:5	Missing 'use strict' statement.
-modules/repository/index.js:131:13	Expected 'req' at column 17, not column 13.
+modules/repository/developer/index.js:1:1	Use the function form of 'use strict'.
+modules/repository/developer/index.js:2:14	'require' was used before it was defined.
+modules/repository/developer/index.js:3:14	'require' was used before it was defined.
+modules/repository/developer/index.js:22:1	'exports' was used before it was defined.
+modules/repository/developer/index.js:26:11	Unnecessary 'else' after disruption.
+modules/repository/developer/index.js:28:32	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:32:30	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:36:30	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:40:36	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:44:42	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:48:28	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:52:28	Expected '!==' and instead saw '!='.
+modules/repository/developer/index.js:58:34	Expected '{' and instead saw 'return'.
+modules/repository/developer/index.js:58:34	Stopping. (63% scanned).
+FAIL	modules/repository/developer/models/dev.js (3)
+modules/repository/developer/models/dev.js:1:1	Use the function form of 'use strict'.
+modules/repository/developer/models/dev.js:2:16	'require' was used before it was defined.
+modules/repository/developer/models/dev.js:77:1	'module' was used before it was defined.
+FAIL	modules/repository/developer/schemas/dev.js (6)
+modules/repository/developer/schemas/dev.js:1:1	Use the function form of 'use strict'.
+modules/repository/developer/schemas/dev.js:2:16	'require' was used before it was defined.
+modules/repository/developer/schemas/dev.js:96:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:98:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:100:1	Use spaces, not tabs.
+modules/repository/developer/schemas/dev.js:116:1	'module' was used before it was defined.
+FAIL	modules/repository/developer/services/dev.js (12)
+modules/repository/developer/services/dev.js:1:1	Use the function form of 'use strict'.
+modules/repository/developer/services/dev.js:2:16	'require' was used before it was defined.
+modules/repository/developer/services/dev.js:3:11	'require' was used before it was defined.
+modules/repository/developer/services/dev.js:4:14	'require' was used before it was defined.
+modules/repository/developer/services/dev.js:5:14	'require' was used before it was defined.
+modules/repository/developer/services/dev.js:24:1	'exports' was used before it was defined.
+modules/repository/developer/services/dev.js:40:1	'exports' was used before it was defined.
+modules/repository/developer/services/dev.js:56:1	'exports' was used before it was defined.
+modules/repository/developer/services/dev.js:74:1	'exports' was used before it was defined.
+modules/repository/developer/services/dev.js:94:1	'exports' was used before it was defined.
+modules/repository/developer/services/dev.js:111:1	'exports' was used before it was defined.
+modules/repository/developer/services/dev.js:128:1	'exports' was used before it was defined.
+FAIL	modules/repository/index.js (14)
+modules/repository/index.js:1:1	Use the function form of 'use strict'.
+modules/repository/index.js:2:15	'require' was used before it was defined.
+modules/repository/index.js:3:15	'require' was used before it was defined.
+modules/repository/index.js:4:16	'require' was used before it was defined.
+modules/repository/index.js:5:18	'require' was used before it was defined.
+modules/repository/index.js:6:18	'require' was used before it was defined.
+modules/repository/index.js:7:15	'require' was used before it was defined.
+modules/repository/index.js:19:1	'exports' was used before it was defined.
+modules/repository/index.js:66:1	'exports' was used before it was defined.
+modules/repository/index.js:90:1	'exports' was used before it was defined.
+modules/repository/index.js:114:1	'exports' was used before it was defined.
+modules/repository/index.js:128:1	'exports' was used before it was defined.
 modules/repository/index.js:132:13	Expected 'req' at column 17, not column 13.
-modules/repository/index.js:134:17	Combine this with the previous 'var' statement.
-modules/repository/index.js:140:36	Expected exactly one space between 'function' and '('.
-modules/repository/index.js:149:17	Combine this with the previous 'var' statement.
-modules/repository/index.js:150:65	Expected exactly one space between 'function' and '('.
-FAIL	modules/repository/layer/index.js (51)
-modules/repository/layer/index.js:14:5	Missing 'use strict' statement.
-modules/repository/layer/index.js:16:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:17:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:18:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:19:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:20:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:21:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:22:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:23:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:24:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:25:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:26:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:27:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:28:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:29:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:30:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:31:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:32:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:33:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:34:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:35:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:36:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:37:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:38:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:39:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:40:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:41:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:42:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:43:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:44:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:45:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:46:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:47:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:48:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:49:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:50:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:51:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:52:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:53:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:54:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:55:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:56:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:57:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:58:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:59:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:60:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:61:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:62:13	Expected 'order' at column 9, not column 13.
-modules/repository/layer/index.js:63:13	Expected 'break' at column 9, not column 13.
-modules/repository/layer/index.js:64:9	Expected 'case' at column 5, not column 9.
-modules/repository/layer/index.js:64:9	Too many errors. (29% scanned).
-FAIL	modules/repository/layer/models/layer.js (6)
-modules/repository/layer/models/layer.js:15:5	Missing 'use strict' statement.
-modules/repository/layer/models/layer.js:31:35	Expected exactly one space between 'function' and '('.
-modules/repository/layer/models/layer.js:32:5	Missing 'use strict' statement.
-modules/repository/layer/models/layer.js:35:40	Use the || operator.
-modules/repository/layer/models/layer.js:45:40	Expected exactly one space between 'function' and '('.
-modules/repository/layer/models/layer.js:46:5	Missing 'use strict' statement.
-FAIL	modules/repository/layer/services/layer.js (51)
-modules/repository/layer/services/layer.js:24:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:24:2	Missing 'use strict' statement.
-modules/repository/layer/services/layer.js:25:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:25:3	Expected 'callback' at column 9, not column 3.
-modules/repository/layer/services/layer.js:26:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:26:2	Expected '}' at column 5, not column 2.
-modules/repository/layer/services/layer.js:40:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:40:2	Missing 'use strict' statement.
-modules/repository/layer/services/layer.js:41:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:41:3	Expected 'callback' at column 9, not column 3.
-modules/repository/layer/services/layer.js:42:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:42:2	Expected '}' at column 5, not column 2.
-modules/repository/layer/services/layer.js:56:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:56:2	Missing 'use strict' statement.
-modules/repository/layer/services/layer.js:57:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:57:3	Expected 'lang' at column 9, not column 3.
-modules/repository/layer/services/layer.js:58:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:58:2	Expected '}' at column 5, not column 2.
-modules/repository/layer/services/layer.js:59:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:59:3	Expected 'callback' at column 9, not column 3.
-modules/repository/layer/services/layer.js:60:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:60:2	Expected '}' at column 5, not column 2.
-modules/repository/layer/services/layer.js:74:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:74:2	Missing 'use strict' statement.
-modules/repository/layer/services/layer.js:75:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:75:3	Expected 'name' at column 9, not column 3.
-modules/repository/layer/services/layer.js:76:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:76:2	Expected '}' at column 5, not column 2.
-modules/repository/layer/services/layer.js:77:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:77:3	Expected 'callback' at column 9, not column 3.
-modules/repository/layer/services/layer.js:78:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:78:2	Expected '}' at column 5, not column 2.
-modules/repository/layer/services/layer.js:94:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:94:2	Missing 'use strict' statement.
-modules/repository/layer/services/layer.js:95:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:95:3	Expected 'callback' at column 9, not column 3.
-modules/repository/layer/services/layer.js:96:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:96:2	Expected '}' at column 5, not column 2.
-modules/repository/layer/services/layer.js:111:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:111:2	Missing 'use strict' statement.
-modules/repository/layer/services/layer.js:112:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:112:3	Expected 'callback' at column 9, not column 3.
-modules/repository/layer/services/layer.js:113:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:113:2	Expected '}' at column 5, not column 2.
-modules/repository/layer/services/layer.js:128:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:128:2	Missing 'use strict' statement.
-modules/repository/layer/services/layer.js:129:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:129:2	Expected 'layerDao' at column 5, not column 2.
-modules/repository/layer/services/layer.js:130:1	Use spaces, not tabs.
-modules/repository/layer/services/layer.js:130:3	Expected '_id' at column 9, not column 3.
-modules/repository/layer/services/layer.js:130:3	Too many errors. (97% scanned).
-FAIL	modules/repository/lib/loader.js (4)
-modules/repository/lib/loader.js:33:31	Expected exactly one space between 'function' and '('.
-modules/repository/lib/loader.js:34:5	Missing 'use strict' statement.
-modules/repository/lib/loader.js:35:10	Move 'var' declarations to the top of the function.
-modules/repository/lib/loader.js:35:10	Stopping. (3% scanned).
-FAIL	modules/repository/platform/index.js (51)
-modules/repository/platform/index.js:14:5	Missing 'use strict' statement.
-modules/repository/platform/index.js:16:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:17:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:18:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:19:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:20:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:21:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:22:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:23:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:24:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:25:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:26:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:27:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:28:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:29:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:30:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:31:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:32:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:33:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:34:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:35:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:36:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:37:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:38:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:39:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:40:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:41:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:42:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:43:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:44:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:45:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:46:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:47:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:48:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:49:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:50:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:51:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:52:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:53:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:54:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:55:9	Expected 'case' at column 5, not column 9.
-modules/repository/platform/index.js:56:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:57:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:58:9	Expected 'default' at column 5, not column 9.
-modules/repository/platform/index.js:59:13	Expected 'order' at column 9, not column 13.
-modules/repository/platform/index.js:60:13	Expected 'break' at column 9, not column 13.
-modules/repository/platform/index.js:80:35	Expected exactly one space between 'function' and '('.
-modules/repository/platform/index.js:81:5	Missing 'use strict' statement.
-modules/repository/platform/index.js:82:48	Expected exactly one space between 'function' and '('.
-modules/repository/platform/index.js:85:11	Unnecessary 'else' after disruption.
-modules/repository/platform/index.js:85:11	Too many errors. (60% scanned).
-FAIL	modules/repository/platform/models/platfrm.js (31)
-modules/repository/platform/models/platfrm.js:15:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:16:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:16:2	Missing 'use strict' statement.
-modules/repository/platform/models/platfrm.js:17:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:17:2	Expected 'this' at column 5, not column 2.
-modules/repository/platform/models/platfrm.js:18:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:18:2	Expected 'this' at column 5, not column 2.
-modules/repository/platform/models/platfrm.js:19:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:19:2	Expected 'this' at column 5, not column 2.
-modules/repository/platform/models/platfrm.js:20:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:20:2	Expected 'this' at column 5, not column 2.
-modules/repository/platform/models/platfrm.js:21:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:21:2	Expected 'this' at column 5, not column 2.
-modules/repository/platform/models/platfrm.js:33:37	Expected exactly one space between 'function' and '('.
-modules/repository/platform/models/platfrm.js:34:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:34:2	Missing 'use strict' statement.
-modules/repository/platform/models/platfrm.js:35:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:35:2	Expected 'this' at column 5, not column 2.
-modules/repository/platform/models/platfrm.js:36:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:36:2	Expected 'this' at column 5, not column 2.
-modules/repository/platform/models/platfrm.js:37:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:37:2	Expected 'this' at column 5, not column 2.
-modules/repository/platform/models/platfrm.js:38:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:38:2	Expected 'this' at column 5, not column 2.
-modules/repository/platform/models/platfrm.js:39:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:39:2	Expected 'this' at column 5, not column 2.
-modules/repository/platform/models/platfrm.js:40:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:40:2	Expected 'this' at column 5, not column 2.
-modules/repository/platform/models/platfrm.js:48:42	Expected exactly one space between 'function' and '('.
-modules/repository/platform/models/platfrm.js:49:1	Use spaces, not tabs.
-modules/repository/platform/models/platfrm.js:49:2	Missing 'use strict' statement.
-FAIL	modules/repository/platform/services/platfrm.js (51)
-modules/repository/platform/services/platfrm.js:24:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:24:2	Missing 'use strict' statement.
-modules/repository/platform/services/platfrm.js:25:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:25:3	Expected 'callback' at column 9, not column 3.
-modules/repository/platform/services/platfrm.js:26:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:26:2	Expected '}' at column 5, not column 2.
-modules/repository/platform/services/platfrm.js:40:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:40:2	Missing 'use strict' statement.
-modules/repository/platform/services/platfrm.js:41:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:41:3	Expected 'callback' at column 9, not column 3.
-modules/repository/platform/services/platfrm.js:42:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:42:2	Expected '}' at column 5, not column 2.
-modules/repository/platform/services/platfrm.js:56:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:56:2	Missing 'use strict' statement.
-modules/repository/platform/services/platfrm.js:57:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:57:3	Expected 'code' at column 9, not column 3.
-modules/repository/platform/services/platfrm.js:58:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:58:2	Expected '}' at column 5, not column 2.
-modules/repository/platform/services/platfrm.js:59:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:59:3	Expected 'callback' at column 9, not column 3.
-modules/repository/platform/services/platfrm.js:60:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:60:2	Expected '}' at column 5, not column 2.
-modules/repository/platform/services/platfrm.js:74:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:74:2	Missing 'use strict' statement.
-modules/repository/platform/services/platfrm.js:75:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:75:3	Expected 'name' at column 9, not column 3.
-modules/repository/platform/services/platfrm.js:76:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:76:2	Expected '}' at column 5, not column 2.
-modules/repository/platform/services/platfrm.js:77:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:77:3	Expected 'callback' at column 9, not column 3.
-modules/repository/platform/services/platfrm.js:78:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:78:2	Expected '}' at column 5, not column 2.
-modules/repository/platform/services/platfrm.js:94:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:94:2	Missing 'use strict' statement.
-modules/repository/platform/services/platfrm.js:95:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:95:3	Expected 'callback' at column 9, not column 3.
-modules/repository/platform/services/platfrm.js:96:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:96:2	Expected '}' at column 5, not column 2.
-modules/repository/platform/services/platfrm.js:111:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:111:2	Missing 'use strict' statement.
-modules/repository/platform/services/platfrm.js:112:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:112:3	Expected 'callback' at column 9, not column 3.
-modules/repository/platform/services/platfrm.js:113:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:113:2	Expected '}' at column 5, not column 2.
-modules/repository/platform/services/platfrm.js:128:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:128:2	Missing 'use strict' statement.
-modules/repository/platform/services/platfrm.js:129:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:129:2	Expected 'platfrmDao' at column 5, not column 2.
-modules/repository/platform/services/platfrm.js:130:1	Use spaces, not tabs.
-modules/repository/platform/services/platfrm.js:130:3	Expected '_id' at column 9, not column 3.
-modules/repository/platform/services/platfrm.js:130:3	Too many errors. (97% scanned).
-FAIL	modules/repository/process/index.js (21)
-modules/repository/process/index.js:11:24	Expected exactly one space between 'function' and '('.
-modules/repository/process/index.js:13:5	Missing 'use strict' statement.
-modules/repository/process/index.js:13:64	Expected exactly one space between 'function' and '('.
-modules/repository/process/index.js:17:11	Unnecessary 'else' after disruption.
-modules/repository/process/index.js:21:68	Expected exactly one space between 'function' and '('.
-modules/repository/process/index.js:25:23	Unnecessary 'else' after disruption.
-modules/repository/process/index.js:31:36	Expected exactly one space between 'function' and '('.
-modules/repository/process/index.js:35:31	Unnecessary 'else' after disruption.
-modules/repository/process/index.js:48:68	Expected exactly one space between 'function' and '('.
-modules/repository/process/index.js:52:23	Unnecessary 'else' after disruption.
-modules/repository/process/index.js:58:36	Expected exactly one space between 'function' and '('.
-modules/repository/process/index.js:62:31	Unnecessary 'else' after disruption.
-modules/repository/process/index.js:96:35	Expected exactly one space between 'function' and '('.
-modules/repository/process/index.js:97:5	Missing 'use strict' statement.
-modules/repository/process/index.js:97:73	Expected exactly one space between 'function' and '('.
-modules/repository/process/index.js:100:11	Unnecessary 'else' after disruption.
-modules/repository/process/index.js:104:28	Expected exactly one space between 'function' and '('.
-modules/repository/process/index.js:107:19	Unnecessary 'else' after disruption.
-modules/repository/process/index.js:118:47	Expected exactly one space between 'function' and '('.
-modules/repository/process/index.js:119:30	Move 'var' declarations to the top of the function.
-modules/repository/process/index.js:119:30	Stopping. (36% scanned).
-FAIL	modules/repository/process/models/proc.js (5)
-modules/repository/process/models/proc.js:17:5	Missing 'use strict' statement.
-modules/repository/process/models/proc.js:35:34	Expected exactly one space between 'function' and '('.
-modules/repository/process/models/proc.js:36:5	Missing 'use strict' statement.
-modules/repository/process/models/proc.js:51:39	Expected exactly one space between 'function' and '('.
-modules/repository/process/models/proc.js:52:5	Missing 'use strict' statement.
-FAIL	modules/repository/process/models/step.js (5)
-modules/repository/process/models/step.js:18:5	Missing 'use strict' statement.
-modules/repository/process/models/step.js:37:34	Expected exactly one space between 'function' and '('.
-modules/repository/process/models/step.js:38:5	Missing 'use strict' statement.
-modules/repository/process/models/step.js:54:39	Expected exactly one space between 'function' and '('.
-modules/repository/process/models/step.js:55:5	Missing 'use strict' statement.
-FAIL	modules/repository/process/services/proc.js (16)
-modules/repository/process/services/proc.js:13:30	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/proc.js:14:5	Missing 'use strict' statement.
-modules/repository/process/services/proc.js:14:44	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/proc.js:19:39	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/proc.js:20:5	Missing 'use strict' statement.
-modules/repository/process/services/proc.js:20:39	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/proc.js:28:24	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/proc.js:35:29	Combine this with the previous 'var' statement.
-modules/repository/process/services/proc.js:35:47	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/proc.js:37:33	Combine this with the previous 'var' statement.
-modules/repository/process/services/proc.js:39:54	Use the || operator.
-modules/repository/process/services/proc.js:40:52	Use the || operator.
-modules/repository/process/services/proc.js:41:52	Use the || operator.
-modules/repository/process/services/proc.js:42:52	Use the || operator.
-modules/repository/process/services/proc.js:55:30	Move 'var' declarations to the top of the function.
-modules/repository/process/services/proc.js:55:30	Stopping. (64% scanned).
-FAIL	modules/repository/process/services/step.js (24)
-modules/repository/process/services/step.js:29:30	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:30:5	Missing 'use strict' statement.
-modules/repository/process/services/step.js:30:44	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:45:32	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:46:5	Missing 'use strict' statement.
-modules/repository/process/services/step.js:46:41	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:61:28	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:62:5	Missing 'use strict' statement.
-modules/repository/process/services/step.js:62:39	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:78:29	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:79:5	Missing 'use strict' statement.
-modules/repository/process/services/step.js:79:51	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:95:32	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:96:5	Missing 'use strict' statement.
-modules/repository/process/services/step.js:96:52	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:102:17	Combine this with the previous 'var' statement.
-modules/repository/process/services/step.js:102:37	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:105:114	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:134:34	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:135:5	Missing 'use strict' statement.
-modules/repository/process/services/step.js:138:25	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:155:43	Expected exactly one space between 'function' and '('.
-modules/repository/process/services/step.js:156:5	Missing 'use strict' statement.
-modules/repository/process/services/step.js:156:68	Expected exactly one space between 'function' and '('.
-FAIL	modules/repository/superlayer/index.js (24)
-modules/repository/superlayer/index.js:5:5	Missing 'use strict' statement.
-modules/repository/superlayer/index.js:7:9	Expected 'case' at column 5, not column 9.
-modules/repository/superlayer/index.js:8:13	Expected 'order' at column 9, not column 13.
-modules/repository/superlayer/index.js:9:13	Expected 'break' at column 9, not column 13.
-modules/repository/superlayer/index.js:10:9	Expected 'case' at column 5, not column 9.
-modules/repository/superlayer/index.js:11:13	Expected 'order' at column 9, not column 13.
-modules/repository/superlayer/index.js:12:13	Expected 'break' at column 9, not column 13.
-modules/repository/superlayer/index.js:13:9	Expected 'case' at column 5, not column 9.
-modules/repository/superlayer/index.js:14:13	Expected 'order' at column 9, not column 13.
-modules/repository/superlayer/index.js:15:13	Expected 'break' at column 9, not column 13.
-modules/repository/superlayer/index.js:16:9	Expected 'default' at column 5, not column 9.
-modules/repository/superlayer/index.js:17:13	Expected 'order' at column 9, not column 13.
-modules/repository/superlayer/index.js:18:13	Expected 'break' at column 9, not column 13.
-modules/repository/superlayer/index.js:38:35	Expected exactly one space between 'function' and '('.
-modules/repository/superlayer/index.js:39:5	Missing 'use strict' statement.
-modules/repository/superlayer/index.js:40:48	Expected exactly one space between 'function' and '('.
-modules/repository/superlayer/index.js:43:11	Unnecessary 'else' after disruption.
-modules/repository/superlayer/index.js:45:30	Expected '!==' and instead saw '!='.
-modules/repository/superlayer/index.js:49:30	Expected '!==' and instead saw '!='.
-modules/repository/superlayer/index.js:53:30	Expected '!==' and instead saw '!='.
-modules/repository/superlayer/index.js:57:32	Expected '!==' and instead saw '!='.
-modules/repository/superlayer/index.js:62:77	Expected exactly one space between 'function' and '('.
-modules/repository/superlayer/index.js:63:34	Expected '{' and instead saw 'return'.
-modules/repository/superlayer/index.js:63:34	Stopping. (64% scanned).
-FAIL	modules/repository/superlayer/models/suprlay.js (6)
-modules/repository/superlayer/models/suprlay.js:17:5	Missing 'use strict' statement.
-modules/repository/superlayer/models/suprlay.js:15:39	Unused 'deps'.
-modules/repository/superlayer/models/suprlay.js:35:37	Expected exactly one space between 'function' and '('.
-modules/repository/superlayer/models/suprlay.js:36:5	Missing 'use strict' statement.
-modules/repository/superlayer/models/suprlay.js:50:42	Expected exactly one space between 'function' and '('.
-modules/repository/superlayer/models/suprlay.js:51:5	Missing 'use strict' statement.
-FAIL	modules/repository/superlayer/services/suprlay.js (51)
-modules/repository/superlayer/services/suprlay.js:24:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:24:2	Missing 'use strict' statement.
-modules/repository/superlayer/services/suprlay.js:25:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:25:3	Expected 'callback' at column 9, not column 3.
-modules/repository/superlayer/services/suprlay.js:26:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:26:2	Expected '}' at column 5, not column 2.
-modules/repository/superlayer/services/suprlay.js:40:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:40:2	Missing 'use strict' statement.
-modules/repository/superlayer/services/suprlay.js:41:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:41:3	Expected 'callback' at column 9, not column 3.
-modules/repository/superlayer/services/suprlay.js:42:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:42:2	Expected '}' at column 5, not column 2.
-modules/repository/superlayer/services/suprlay.js:56:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:56:2	Missing 'use strict' statement.
-modules/repository/superlayer/services/suprlay.js:57:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:57:3	Expected 'code' at column 9, not column 3.
-modules/repository/superlayer/services/suprlay.js:58:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:58:2	Expected '}' at column 5, not column 2.
-modules/repository/superlayer/services/suprlay.js:59:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:59:3	Expected 'callback' at column 9, not column 3.
-modules/repository/superlayer/services/suprlay.js:60:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:60:2	Expected '}' at column 5, not column 2.
-modules/repository/superlayer/services/suprlay.js:74:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:74:2	Missing 'use strict' statement.
-modules/repository/superlayer/services/suprlay.js:75:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:75:3	Expected 'name' at column 9, not column 3.
-modules/repository/superlayer/services/suprlay.js:76:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:76:2	Expected '}' at column 5, not column 2.
-modules/repository/superlayer/services/suprlay.js:77:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:77:3	Expected 'callback' at column 9, not column 3.
-modules/repository/superlayer/services/suprlay.js:78:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:78:2	Expected '}' at column 5, not column 2.
-modules/repository/superlayer/services/suprlay.js:94:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:94:2	Missing 'use strict' statement.
-modules/repository/superlayer/services/suprlay.js:95:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:95:3	Expected 'callback' at column 9, not column 3.
-modules/repository/superlayer/services/suprlay.js:96:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:96:2	Expected '}' at column 5, not column 2.
-modules/repository/superlayer/services/suprlay.js:111:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:111:2	Missing 'use strict' statement.
-modules/repository/superlayer/services/suprlay.js:112:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:112:3	Expected 'callback' at column 9, not column 3.
-modules/repository/superlayer/services/suprlay.js:113:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:113:2	Expected '}' at column 5, not column 2.
-modules/repository/superlayer/services/suprlay.js:128:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:128:2	Missing 'use strict' statement.
-modules/repository/superlayer/services/suprlay.js:129:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:129:2	Expected 'suprlayDao' at column 5, not column 2.
-modules/repository/superlayer/services/suprlay.js:130:1	Use spaces, not tabs.
-modules/repository/superlayer/services/suprlay.js:130:3	Expected '_id' at column 9, not column 3.
-modules/repository/superlayer/services/suprlay.js:130:3	Too many errors. (97% scanned).
-FAIL	modules/repository/team/models/team.js (5)
-modules/repository/team/models/team.js:13:5	Missing 'use strict' statement.
-modules/repository/team/models/team.js:28:34	Expected exactly one space between 'function' and '('.
-modules/repository/team/models/team.js:29:5	Missing 'use strict' statement.
-modules/repository/team/models/team.js:41:39	Expected exactly one space between 'function' and '('.
-modules/repository/team/models/team.js:42:5	Missing 'use strict' statement.
-FAIL	modules/repository/team/services/team.js (24)
-modules/repository/team/services/team.js:25:30	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:26:5	Missing 'use strict' statement.
-modules/repository/team/services/team.js:26:44	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:41:32	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:42:5	Missing 'use strict' statement.
-modules/repository/team/services/team.js:42:60	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:57:34	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:58:5	Missing 'use strict' statement.
-modules/repository/team/services/team.js:60:24	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:77:29	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:78:5	Missing 'use strict' statement.
-modules/repository/team/services/team.js:78:75	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:94:32	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:95:5	Missing 'use strict' statement.
-modules/repository/team/services/team.js:95:71	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:111:34	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:112:5	Missing 'use strict' statement.
-modules/repository/team/services/team.js:115:25	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:131:37	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:132:5	Missing 'use strict' statement.
-modules/repository/team/services/team.js:136:16	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:152:37	Expected exactly one space between 'function' and '('.
-modules/repository/team/services/team.js:153:5	Missing 'use strict' statement.
-modules/repository/team/services/team.js:157:16	Expected exactly one space between 'function' and '('.
-FAIL	routes/index.js (4)
-routes/index.js:5:25	Expected exactly one space between 'function' and '('.
-routes/index.js:6:3	Missing 'use strict' statement.
-routes/index.js:5:26	Unused 'req'.
-routes/index.js:5:36	Unused 'next'.
-FAIL	routes/repo.js (2)
-routes/repo.js:41:13	Combine this with the previous 'var' statement.
-routes/repo.js:110:13	Combine this with the previous 'var' statement.
-FAIL	routes/users.js (4)
-routes/users.js:5:25	Expected exactly one space between 'function' and '('.
-routes/users.js:6:3	Missing 'use strict' statement.
-routes/users.js:5:26	Unused 'req'.
-routes/users.js:5:36	Unused 'next'.
+modules/repository/index.js:133:13	Expected 'req' at column 17, not column 13.
+FAIL	modules/repository/layer/index.js (11)
+modules/repository/layer/index.js:1:1	Use the function form of 'use strict'.
+modules/repository/layer/index.js:2:16	'require' was used before it was defined.
+modules/repository/layer/index.js:3:16	'require' was used before it was defined.
+modules/repository/layer/index.js:152:1	'exports' was used before it was defined.
+modules/repository/layer/index.js:157:11	Unnecessary 'else' after disruption.
+modules/repository/layer/index.js:159:30	Expected '!==' and instead saw '!='.
+modules/repository/layer/index.js:163:30	Expected '!==' and instead saw '!='.
+modules/repository/layer/index.js:167:36	Expected '!==' and instead saw '!='.
+modules/repository/layer/index.js:171:32	Expected '!==' and instead saw '!='.
+modules/repository/layer/index.js:177:34	Expected '{' and instead saw 'return'.
+modules/repository/layer/index.js:177:34	Stopping. (81% scanned).
+FAIL	modules/repository/layer/models/layer.js (4)
+modules/repository/layer/models/layer.js:1:1	Use the function form of 'use strict'.
+modules/repository/layer/models/layer.js:2:16	'require' was used before it was defined.
+modules/repository/layer/models/layer.js:36:40	Use the || operator.
+modules/repository/layer/models/layer.js:51:1	'module' was used before it was defined.
+FAIL	modules/repository/layer/schemas/layer.js (3)
+modules/repository/layer/schemas/layer.js:1:1	Use the function form of 'use strict'.
+modules/repository/layer/schemas/layer.js:2:16	'require' was used before it was defined.
+modules/repository/layer/schemas/layer.js:50:1	'module' was used before it was defined.
+FAIL	modules/repository/layer/services/layer.js (12)
+modules/repository/layer/services/layer.js:1:1	Use the function form of 'use strict'.
+modules/repository/layer/services/layer.js:2:16	'require' was used before it was defined.
+modules/repository/layer/services/layer.js:3:11	'require' was used before it was defined.
+modules/repository/layer/services/layer.js:4:16	'require' was used before it was defined.
+modules/repository/layer/services/layer.js:5:16	'require' was used before it was defined.
+modules/repository/layer/services/layer.js:24:1	'exports' was used before it was defined.
+modules/repository/layer/services/layer.js:40:1	'exports' was used before it was defined.
+modules/repository/layer/services/layer.js:56:1	'exports' was used before it was defined.
+modules/repository/layer/services/layer.js:74:1	'exports' was used before it was defined.
+modules/repository/layer/services/layer.js:94:1	'exports' was used before it was defined.
+modules/repository/layer/services/layer.js:111:1	'exports' was used before it was defined.
+modules/repository/layer/services/layer.js:128:1	'exports' was used before it was defined.
+FAIL	modules/repository/lib/loader.js (12)
+modules/repository/lib/loader.js:1:1	Use the function form of 'use strict'.
+modules/repository/lib/loader.js:3:15	'require' was used before it was defined.
+modules/repository/lib/loader.js:4:15	'require' was used before it was defined.
+modules/repository/lib/loader.js:5:19	'require' was used before it was defined.
+modules/repository/lib/loader.js:6:18	'require' was used before it was defined.
+modules/repository/lib/loader.js:7:18	'require' was used before it was defined.
+modules/repository/lib/loader.js:8:16	'require' was used before it was defined.
+modules/repository/lib/loader.js:9:15	'require' was used before it was defined.
+modules/repository/lib/loader.js:10:15	'require' was used before it was defined.
+modules/repository/lib/loader.js:11:14	'require' was used before it was defined.
+modules/repository/lib/loader.js:36:10	Move 'var' declarations to the top of the function.
+modules/repository/lib/loader.js:36:10	Stopping. (4% scanned).
+FAIL	modules/repository/platform/index.js (11)
+modules/repository/platform/index.js:1:1	Use the function form of 'use strict'.
+modules/repository/platform/index.js:2:18	'require' was used before it was defined.
+modules/repository/platform/index.js:3:18	'require' was used before it was defined.
+modules/repository/platform/index.js:81:1	'exports' was used before it was defined.
+modules/repository/platform/index.js:86:11	Unnecessary 'else' after disruption.
+modules/repository/platform/index.js:88:30	Expected '!==' and instead saw '!='.
+modules/repository/platform/index.js:92:30	Expected '!==' and instead saw '!='.
+modules/repository/platform/index.js:96:30	Expected '!==' and instead saw '!='.
+modules/repository/platform/index.js:100:32	Expected '!==' and instead saw '!='.
+modules/repository/platform/index.js:106:34	Expected '{' and instead saw 'return'.
+modules/repository/platform/index.js:106:34	Stopping. (75% scanned).
+FAIL	modules/repository/platform/models/platfrm.js (3)
+modules/repository/platform/models/platfrm.js:1:1	Use the function form of 'use strict'.
+modules/repository/platform/models/platfrm.js:2:16	'require' was used before it was defined.
+modules/repository/platform/models/platfrm.js:54:1	'module' was used before it was defined.
+FAIL	modules/repository/platform/schemas/platfrm.js (3)
+modules/repository/platform/schemas/platfrm.js:1:1	Use the function form of 'use strict'.
+modules/repository/platform/schemas/platfrm.js:2:16	'require' was used before it was defined.
+modules/repository/platform/schemas/platfrm.js:56:1	'module' was used before it was defined.
+FAIL	modules/repository/platform/services/platfrm.js (12)
+modules/repository/platform/services/platfrm.js:1:1	Use the function form of 'use strict'.
+modules/repository/platform/services/platfrm.js:2:16	'require' was used before it was defined.
+modules/repository/platform/services/platfrm.js:3:11	'require' was used before it was defined.
+modules/repository/platform/services/platfrm.js:4:18	'require' was used before it was defined.
+modules/repository/platform/services/platfrm.js:5:18	'require' was used before it was defined.
+modules/repository/platform/services/platfrm.js:24:1	'exports' was used before it was defined.
+modules/repository/platform/services/platfrm.js:40:1	'exports' was used before it was defined.
+modules/repository/platform/services/platfrm.js:56:1	'exports' was used before it was defined.
+modules/repository/platform/services/platfrm.js:74:1	'exports' was used before it was defined.
+modules/repository/platform/services/platfrm.js:94:1	'exports' was used before it was defined.
+modules/repository/platform/services/platfrm.js:111:1	'exports' was used before it was defined.
+modules/repository/platform/services/platfrm.js:128:1	'exports' was used before it was defined.
+FAIL	modules/repository/process/index.js (19)
+modules/repository/process/index.js:1:1	Use the function form of 'use strict'.
+modules/repository/process/index.js:3:15	'require' was used before it was defined.
+modules/repository/process/index.js:4:15	'require' was used before it was defined.
+modules/repository/process/index.js:5:15	'require' was used before it was defined.
+modules/repository/process/index.js:6:15	'require' was used before it was defined.
+modules/repository/process/index.js:7:18	'require' was used before it was defined.
+modules/repository/process/index.js:8:18	'require' was used before it was defined.
+modules/repository/process/index.js:9:16	'require' was used before it was defined.
+modules/repository/process/index.js:10:15	'require' was used before it was defined.
+modules/repository/process/index.js:18:11	Unnecessary 'else' after disruption.
+modules/repository/process/index.js:26:23	Unnecessary 'else' after disruption.
+modules/repository/process/index.js:36:31	Unnecessary 'else' after disruption.
+modules/repository/process/index.js:53:23	Unnecessary 'else' after disruption.
+modules/repository/process/index.js:63:31	Unnecessary 'else' after disruption.
+modules/repository/process/index.js:97:1	'exports' was used before it was defined.
+modules/repository/process/index.js:101:11	Unnecessary 'else' after disruption.
+modules/repository/process/index.js:108:19	Unnecessary 'else' after disruption.
+modules/repository/process/index.js:120:30	Move 'var' declarations to the top of the function.
+modules/repository/process/index.js:120:30	Stopping. (37% scanned).
+FAIL	modules/repository/process/models/proc.js (3)
+modules/repository/process/models/proc.js:1:1	Use the function form of 'use strict'.
+modules/repository/process/models/proc.js:2:16	'require' was used before it was defined.
+modules/repository/process/models/proc.js:57:1	'module' was used before it was defined.
+FAIL	modules/repository/process/models/step.js (3)
+modules/repository/process/models/step.js:1:1	Use the function form of 'use strict'.
+modules/repository/process/models/step.js:2:16	'require' was used before it was defined.
+modules/repository/process/models/step.js:60:1	'module' was used before it was defined.
+FAIL	modules/repository/process/schemas/proc.js (3)
+modules/repository/process/schemas/proc.js:1:1	Use the function form of 'use strict'.
+modules/repository/process/schemas/proc.js:2:16	'require' was used before it was defined.
+modules/repository/process/schemas/proc.js:57:1	'module' was used before it was defined.
+FAIL	modules/repository/process/schemas/step.js (3)
+modules/repository/process/schemas/step.js:1:1	Use the function form of 'use strict'.
+modules/repository/process/schemas/step.js:2:16	'require' was used before it was defined.
+modules/repository/process/schemas/step.js:55:1	'module' was used before it was defined.
+FAIL	modules/repository/process/services/proc.js (14)
+modules/repository/process/services/proc.js:1:1	Use the function form of 'use strict'.
+modules/repository/process/services/proc.js:2:16	'require' was used before it was defined.
+modules/repository/process/services/proc.js:3:11	'require' was used before it was defined.
+modules/repository/process/services/proc.js:4:15	'require' was used before it was defined.
+modules/repository/process/services/proc.js:5:15	'require' was used before it was defined.
+modules/repository/process/services/proc.js:6:15	'require' was used before it was defined.
+modules/repository/process/services/proc.js:7:15	'require' was used before it was defined.
+modules/repository/process/services/proc.js:8:15	'require' was used before it was defined.
+modules/repository/process/services/proc.js:9:14	'require' was used before it was defined.
+modules/repository/process/services/proc.js:10:14	'require' was used before it was defined.
+modules/repository/process/services/proc.js:14:1	'exports' was used before it was defined.
+modules/repository/process/services/proc.js:20:1	'exports' was used before it was defined.
+modules/repository/process/services/proc.js:69:1	'exports' was used before it was defined.
+modules/repository/process/services/proc.js:79:1	'exports' was used before it was defined.
+FAIL	modules/repository/process/services/step.js (17)
+modules/repository/process/services/step.js:1:1	Use the function form of 'use strict'.
+modules/repository/process/services/step.js:2:16	'require' was used before it was defined.
+modules/repository/process/services/step.js:3:11	'require' was used before it was defined.
+modules/repository/process/services/step.js:4:15	'require' was used before it was defined.
+modules/repository/process/services/step.js:5:15	'require' was used before it was defined.
+modules/repository/process/services/step.js:6:15	'require' was used before it was defined.
+modules/repository/process/services/step.js:7:15	'require' was used before it was defined.
+modules/repository/process/services/step.js:8:15	'require' was used before it was defined.
+modules/repository/process/services/step.js:9:15	'require' was used before it was defined.
+modules/repository/process/services/step.js:10:15	'require' was used before it was defined.
+modules/repository/process/services/step.js:30:1	'exports' was used before it was defined.
+modules/repository/process/services/step.js:46:1	'exports' was used before it was defined.
+modules/repository/process/services/step.js:62:1	'exports' was used before it was defined.
+modules/repository/process/services/step.js:79:1	'exports' was used before it was defined.
+modules/repository/process/services/step.js:96:1	'exports' was used before it was defined.
+modules/repository/process/services/step.js:135:1	'exports' was used before it was defined.
+modules/repository/process/services/step.js:156:1	'exports' was used before it was defined.
+FAIL	modules/repository/superlayer/index.js (5)
+modules/repository/superlayer/index.js:1:1	Use the function form of 'use strict'.
+modules/repository/superlayer/index.js:2:18	'require' was used before it was defined.
+modules/repository/superlayer/index.js:3:18	'require' was used before it was defined.
+modules/repository/superlayer/index.js:39:1	'exports' was used before it was defined.
+modules/repository/superlayer/index.js:94:1	'exports' was used before it was defined.
+FAIL	modules/repository/superlayer/models/suprlay.js (3)
+modules/repository/superlayer/models/suprlay.js:1:1	Use the function form of 'use strict'.
+modules/repository/superlayer/models/suprlay.js:2:16	'require' was used before it was defined.
+modules/repository/superlayer/models/suprlay.js:56:1	'module' was used before it was defined.
+FAIL	modules/repository/superlayer/schemas/suprlay.js (3)
+modules/repository/superlayer/schemas/suprlay.js:1:1	Use the function form of 'use strict'.
+modules/repository/superlayer/schemas/suprlay.js:2:16	'require' was used before it was defined.
+modules/repository/superlayer/schemas/suprlay.js:56:1	'module' was used before it was defined.
+FAIL	modules/repository/superlayer/services/suprlay.js (12)
+modules/repository/superlayer/services/suprlay.js:1:1	Use the function form of 'use strict'.
+modules/repository/superlayer/services/suprlay.js:2:16	'require' was used before it was defined.
+modules/repository/superlayer/services/suprlay.js:3:11	'require' was used before it was defined.
+modules/repository/superlayer/services/suprlay.js:4:18	'require' was used before it was defined.
+modules/repository/superlayer/services/suprlay.js:5:18	'require' was used before it was defined.
+modules/repository/superlayer/services/suprlay.js:24:1	'exports' was used before it was defined.
+modules/repository/superlayer/services/suprlay.js:40:1	'exports' was used before it was defined.
+modules/repository/superlayer/services/suprlay.js:56:1	'exports' was used before it was defined.
+modules/repository/superlayer/services/suprlay.js:74:1	'exports' was used before it was defined.
+modules/repository/superlayer/services/suprlay.js:94:1	'exports' was used before it was defined.
+modules/repository/superlayer/services/suprlay.js:111:1	'exports' was used before it was defined.
+modules/repository/superlayer/services/suprlay.js:128:1	'exports' was used before it was defined.
+FAIL	modules/repository/team/index.js (3)
+modules/repository/team/index.js:1:1	Use the function form of 'use strict'.
+modules/repository/team/index.js:2:15	'require' was used before it was defined.
+modules/repository/team/index.js:3:15	'require' was used before it was defined.
+FAIL	modules/repository/team/models/team.js (3)
+modules/repository/team/models/team.js:1:1	Use the function form of 'use strict'.
+modules/repository/team/models/team.js:2:16	'require' was used before it was defined.
+modules/repository/team/models/team.js:47:1	'module' was used before it was defined.
+FAIL	modules/repository/team/schemas/team.js (3)
+modules/repository/team/schemas/team.js:1:1	Use the function form of 'use strict'.
+modules/repository/team/schemas/team.js:2:16	'require' was used before it was defined.
+modules/repository/team/schemas/team.js:42:1	'module' was used before it was defined.
+FAIL	modules/repository/team/services/team.js (15)
+modules/repository/team/services/team.js:1:1	Use the function form of 'use strict'.
+modules/repository/team/services/team.js:2:16	'require' was used before it was defined.
+modules/repository/team/services/team.js:3:11	'require' was used before it was defined.
+modules/repository/team/services/team.js:4:15	'require' was used before it was defined.
+modules/repository/team/services/team.js:5:15	'require' was used before it was defined.
+modules/repository/team/services/team.js:6:14	'require' was used before it was defined.
+modules/repository/team/services/team.js:7:14	'require' was used before it was defined.
+modules/repository/team/services/team.js:26:1	'exports' was used before it was defined.
+modules/repository/team/services/team.js:42:1	'exports' was used before it was defined.
+modules/repository/team/services/team.js:58:1	'exports' was used before it was defined.
+modules/repository/team/services/team.js:78:1	'exports' was used before it was defined.
+modules/repository/team/services/team.js:95:1	'exports' was used before it was defined.
+modules/repository/team/services/team.js:112:1	'exports' was used before it was defined.
+modules/repository/team/services/team.js:132:1	'exports' was used before it was defined.
+modules/repository/team/services/team.js:153:1	'exports' was used before it was defined.
 
-# JSLint failed, 836 violations in 38.  48 files scanned.
+# JSLint failed, 423 violations in 45.  48 files scanned.

@@ -1,4 +1,4 @@
-'use strict';
+/*global require*/
 var express = require('express');
 var router = express.Router();
 var repMod = require('../modules/repository');
@@ -11,6 +11,7 @@ var Cache = require('../lib/route-cache');
  *
  */
 router.put('/comps', function (req, res, next) {
+    'use strict';
     try {
         repMod.updComps(req, function (error, result) {
             if (error) {
@@ -31,6 +32,7 @@ router.put('/comps', function (req, res, next) {
  *
  */
 router.get('/comps', function (req, res, next) {
+    'use strict';
     try {
         // creation of object cache
         var cache = new Cache({
@@ -66,6 +68,7 @@ router.get('/comps', function (req, res, next) {
  *
  */
 router.post('/comps', function (req, res, next) {
+    'use strict';
     try {
         repMod.loadComps(req, function (error, result) {
             if (error) {
@@ -86,6 +89,7 @@ router.post('/comps', function (req, res, next) {
  *
  */
 router.post('/devs', function (req, res, next) {
+    'use strict';
     try {
         repMod.updDevs(req, function (error, result) {
             if (error) {
@@ -100,6 +104,7 @@ router.post('/devs', function (req, res, next) {
 });
 
 router.get('/procs', function (req, res, next) {
+    'use strict';
     try {
         // creation of object cache
         var cache = new Cache({
@@ -129,4 +134,5 @@ router.get('/procs', function (req, res, next) {
 
 });
 
+/*global module*/
 module.exports = router;

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict';
+
 /**
  * Module dependencies.
  */
@@ -36,7 +38,7 @@ server.on('listening', onListening);
 /**
  * Uncaught exceptions handler
  */
-process.on('uncaughtException', function(err) {
+process.on('uncaughtException', function (err) {
     winston.log('info', 'Mongoose default connection error', err);
 });
 
@@ -69,16 +71,16 @@ function onError(error) {
     var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
     // handle specific listen errors with friendly messages
     switch (error.code) {
-        case 'EACCES':
-            winston.log('info', '%s requires elevated privileges', bind);
-            process.exit(1);
-            break;
-        case 'EADDRINUSE':
-            winston.log('info', '%s is already in use', bind);
-            process.exit(1);
-            break;
-        default:
-            throw error;
+    case 'EACCES':
+        winston.log('info', '%s requires elevated privileges', bind);
+        process.exit(1);
+        break;
+    case 'EADDRINUSE':
+        winston.log('info', '%s is already in use', bind);
+        process.exit(1);
+        break;
+    default:
+        throw error;
     }
 }
 

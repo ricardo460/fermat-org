@@ -1,3 +1,4 @@
+'use strict';
 /*jshint -W069 */
 var compSrv = require('./services/comp');
 var CompMdl = require('./models/comp');
@@ -15,8 +16,8 @@ var StatusMdl = require('./models/status');
  *
  * @return {[type]}   [description]
  */
-exports.getComps = function(callback) {
-    compSrv.findAllComps({}, {}, function(err, comps) {
+exports.getComps = function (callback) {
+    compSrv.findAllComps({}, {}, function (err, comps) {
         if (err) {
             callback(err, null);
         } else {
@@ -34,8 +35,8 @@ exports.getComps = function(callback) {
  *
  * @return {[type]}   [description]
  */
-exports.findComps = function(callback) {
-    compSrv.findComps({}, {}, function(err, comps) {
+exports.findComps = function (callback) {
+    compSrv.findComps({}, {}, function (err, comps) {
         if (err) {
             callback(err, null);
         } else {
@@ -63,7 +64,7 @@ exports.findComps = function(callback) {
  *
  * @return {[type]}     [description]
  */
-exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, found, callback) {
+exports.insOrUpdComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, found, callback) {
     var find_obj = {
         '$and': []
     };
@@ -87,7 +88,7 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
             'name': name
         });
     }
-    compSrv.findComp(find_obj, function(err_comp, res_comp) {
+    compSrv.findComp(find_obj, function (err_comp, res_comp) {
         if (err_comp) {
             return callback(err_comp, null);
         } else if (res_comp) {
@@ -117,7 +118,7 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
                 res_comp.found = found;
             }
             if (Object.keys(set_obj).length > 0) {
-                compSrv.updateCompById(res_comp._id, set_obj, function(err_upd, res_upd) {
+                compSrv.updateCompById(res_comp._id, set_obj, function (err_upd, res_upd) {
                     if (err_upd) return callback(err_upd, null);
                     else return callback(null, res_comp);
                 });
@@ -126,7 +127,7 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
             }
         } else {
             var comp = new CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir);
-            compSrv.insertComp(comp, function(err_ins, res_ins) {
+            compSrv.insertComp(comp, function (err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
                 else return callback(null, res_ins);
             });
@@ -148,7 +149,7 @@ exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type,
  *
  * @return {[type]}        [description]
  */
-exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callback) {
+exports.insOrUpdCompDev = function (_comp_id, _dev_id, role, scope, percnt, callback) {
     var find_obj = {
         '$and': []
     };
@@ -172,7 +173,7 @@ exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callb
             'scope': scope
         });
     }
-    compDevSrv.findCompDev(find_obj, function(err_compDev, res_compDev) {
+    compDevSrv.findCompDev(find_obj, function (err_compDev, res_compDev) {
         if (err_compDev) {
             return callback(err_compDev, null);
         } else if (res_compDev) {
@@ -182,7 +183,7 @@ exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callb
                 res_compDev.percnt = percnt;
             }
             if (Object.keys(set_obj).length > 0) {
-                compDevSrv.updateCompDevById(res_compDev._id, set_obj, function(err_upd, res_upd) {
+                compDevSrv.updateCompDevById(res_compDev._id, set_obj, function (err_upd, res_upd) {
                     if (err_upd) return callback(err_upd, null);
                     else return callback(null, res_compDev);
                 });
@@ -191,7 +192,7 @@ exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callb
             }
         } else {
             var compDev = new CompDevMdl(_comp_id, _dev_id, role, scope, percnt);
-            compDevSrv.insertCompDev(compDev, function(err_ins, res_ins) {
+            compDevSrv.insertCompDev(compDev, function (err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
                 else return callback(null, res_ins);
             });
@@ -212,7 +213,7 @@ exports.insOrUpdCompDev = function(_comp_id, _dev_id, role, scope, percnt, callb
  *
  * @return {[type]}       [description]
  */
-exports.insOrUpdStatus = function(_comp_id, name, target, reached, callback) {
+exports.insOrUpdStatus = function (_comp_id, name, target, reached, callback) {
     var find_obj = {
         '$and': []
     };
@@ -226,7 +227,7 @@ exports.insOrUpdStatus = function(_comp_id, name, target, reached, callback) {
             'name': name
         });
     }
-    statusSrv.findStatus(find_obj, function(err_status, res_status) {
+    statusSrv.findStatus(find_obj, function (err_status, res_status) {
         if (err_status) {
             return callback(err_status, null);
         } else if (res_status) {
@@ -240,7 +241,7 @@ exports.insOrUpdStatus = function(_comp_id, name, target, reached, callback) {
                 res_status.reached = reached;
             }
             if (Object.keys(set_obj).length > 0) {
-                statusSrv.updateStatusById(res_status._id, set_obj, function(err_upd, res_upd) {
+                statusSrv.updateStatusById(res_status._id, set_obj, function (err_upd, res_upd) {
                     if (err_upd) return callback(err_upd, null);
                     else return callback(null, res_status);
                 });
@@ -249,7 +250,7 @@ exports.insOrUpdStatus = function(_comp_id, name, target, reached, callback) {
             }
         } else {
             var status = new StatusMdl(_comp_id, name, target, reached);
-            statusSrv.insertStatus(status, function(err_ins, res_ins) {
+            statusSrv.insertStatus(status, function (err_ins, res_ins) {
                 if (err_ins) return callback(err_ins, null);
                 else return callback(null, res_ins);
             });
@@ -269,8 +270,8 @@ exports.insOrUpdStatus = function(_comp_id, name, target, reached, callback) {
  *
  * @return {[type]}            [description]
  */
-exports.updCompDevAndLifCyc = function(_comp_id, devs, life_cycle, callback) {
-    compSrv.findCompById(_comp_id, function(err_comp, res_comp) {
+exports.updCompDevAndLifCyc = function (_comp_id, devs, life_cycle, callback) {
+    compSrv.findCompById(_comp_id, function (err_comp, res_comp) {
         if (err_comp) {
             return callback(err_comp, null);
         } else if (res_comp) {
@@ -284,7 +285,7 @@ exports.updCompDevAndLifCyc = function(_comp_id, devs, life_cycle, callback) {
                 res_comp.life_cycle = life_cycle;
             }
             if (Object.keys(set_obj).length > 0) {
-                compSrv.updateCompById(res_comp._id, set_obj, function(err_upd, res_upd) {
+                compSrv.updateCompById(res_comp._id, set_obj, function (err_upd, res_upd) {
                     if (err_upd) return callback(err_upd, null);
                     else return callback(null, res_comp);
                 });

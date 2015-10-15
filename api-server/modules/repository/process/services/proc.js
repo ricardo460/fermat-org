@@ -1,3 +1,4 @@
+'use strict';
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var procMdl = require('../models/proc');
@@ -10,14 +11,14 @@ var devSch = require('../../developer/schemas/dev');
 
 var procDao = new Dao('Proc', procSch, procMdl, 'Step', stepSch, stepMdl);
 
-exports.insertProc = function(proc_mdl, callback) {
-    procDao.insertSchema(proc_mdl, function(err, proc) {
+exports.insertProc = function (proc_mdl, callback) {
+    procDao.insertSchema(proc_mdl, function (err, proc) {
         callback(err, proc);
     });
 };
 
-exports.findAndPopulateProc = function(query, callback) {
-    procDao.findSchema(query, function(err, proc) {
+exports.findAndPopulateProc = function (query, callback) {
+    procDao.findSchema(query, function (err, proc) {
         if (err) {
             callback(err, null);
         } else {
@@ -25,21 +26,21 @@ exports.findAndPopulateProc = function(query, callback) {
                 _proc_id: proc._id
             }, {
                 order: 1
-            }, function(err, steps) {
+            }, function (err, steps) {
                 if (err) {
                     callback(err, null);
                 } else {
                     var _steps = [];
                     if (steps && Array.isArray(steps)) {
 
-                        var getStep = function(i) {
+                        var getStep = function (i) {
                             var _step = steps[i];
                             var step = {};
                             step.id = _step.order;
-                            step.title = _step.title ? _step.title : null;
-                            step.desc = _step.desc ? _step.desc : null;
-                            step.type = _step.type ? _step.type : null;
-                            step.next = _step.next ? _step.next : [];
+                            step.title = _step.title || null;
+                            step.desc = _step.desc || null;
+                            step.type = _step.type || null;
+                            step.next = _step.next || [];
                             if (_step.comp) {
                                 step.name = _step.comp.name;
                                 step.layer = _step.comp._layer_id.name;
@@ -51,9 +52,9 @@ exports.findAndPopulateProc = function(query, callback) {
                             }
                             return step;
                         };
-
-                        for (var i = 0; i < steps.length; i++) {
-                            _steps.push(getStep(i));
+                        var j;
+                        for (j = 0; j < steps.length; j++) {
+                            _steps.push(getStep(j));
                         }
                     }
                     //console.dir(_steps);
@@ -65,8 +66,8 @@ exports.findAndPopulateProc = function(query, callback) {
     });
 };
 
-exports.findProc = function(query, callback) {
-    procDao.findSchema(query, function(err, proc) {
+exports.findProc = function (query, callback) {
+    procDao.findSchema(query, function (err, proc) {
         if (err) {
             callback(err, null);
         } else {
@@ -75,11 +76,11 @@ exports.findProc = function(query, callback) {
     });
 };
 
-exports.updateProcById = function(_id, set, callback) {
+exports.updateProcById = function (_id, set, callback) {
     set.upd_at = new mongoose.Types.ObjectId();
     procDao.updateSchema({
         _id: _id
-    }, set, {}, function(err, proc) {
+    }, set, {}, function (err, proc) {
         callback(err, proc);
     });
 };

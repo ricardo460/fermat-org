@@ -1,3 +1,4 @@
+'use strict';
 var mongoose = require('mongoose');
 
 /**
@@ -42,7 +43,7 @@ function CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, d
  *
  * @return {[type]} [description]
  */
-CompMdl.prototype.init = function(compSchema) {
+CompMdl.prototype.init = function (compSchema) {
     this._id = compSchema._id;
     this._platfrm_id = compSchema._platfrm_id;
     this._suprlay_id = compSchema._suprlay_id;
@@ -67,7 +68,7 @@ CompMdl.prototype.init = function(compSchema) {
  *
  * @return {[type]} [description]
  */
-CompMdl.prototype.getCode = function() {
+CompMdl.prototype.getCode = function () {
     var words = this.name.split(" ");
     var code = "";
 
@@ -99,7 +100,7 @@ CompMdl.prototype.getCode = function() {
  *
  * @method setUpdate
  */
-CompMdl.prototype.setUpdate = function() {
+CompMdl.prototype.setUpdate = function () {
     this.upd_at = new mongoose.Types.ObjectId();
 };
 

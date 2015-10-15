@@ -1,3 +1,4 @@
+'use strict';
 var mongoose = require('mongoose');
 
 /**
@@ -32,7 +33,7 @@ function ProcMdl(platfrm, name, desc, prev, next, steps) {
  *
  * @return {[type]} [description]
  */
-ProcMdl.prototype.init = function(procSchema) {
+ProcMdl.prototype.init = function (procSchema) {
     this._id = procSchema._id;
     this.platfrm = procSchema.platfrm;
     this.name = procSchema.name;
@@ -48,7 +49,7 @@ ProcMdl.prototype.init = function(procSchema) {
  *
  * @method setUpdate
  */
-ProcMdl.prototype.setUpdate = function() {
+ProcMdl.prototype.setUpdate = function () {
     this.upd_at = new mongoose.Types.ObjectId();
 };
 
