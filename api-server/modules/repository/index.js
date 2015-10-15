@@ -15,25 +15,26 @@ var loadLib = require('./lib/loader');
  *
  * @return {[type]}   [description]
  */
-exports.getComps = function(req, next) {
+exports.getComps = function (req, next) {
+    'use strict';
     try {
         var res = {};
-        platfrmMod.getPlatfrms(function(err, platfrms) {
+        platfrmMod.getPlatfrms(function (err, platfrms) {
             if (err) {
                 next(err, null);
             } else {
                 res.platfrms = platfrms;
-                suprlayMod.getSuprlays(function(err, suprlays) {
+                suprlayMod.getSuprlays(function (err, suprlays) {
                     if (err) {
                         next(err, null);
                     } else {
                         res.suprlays = suprlays;
-                        layerMod.getLayers(function(err, layers) {
+                        layerMod.getLayers(function (err, layers) {
                             if (err) {
                                 next(err, null);
                             } else {
                                 res.layers = layers;
-                                compMod.getComps(function(err, comps) {
+                                compMod.getComps(function (err, comps) {
                                     if (err) {
                                         next(err, null);
                                     } else {
@@ -62,9 +63,10 @@ exports.getComps = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.loadComps = function(req, next) {
+exports.loadComps = function (req, next) {
+    'use strict';
     try {
-        loadLib.loadComps(function(err, res) {
+        loadLib.loadComps(function (err, res) {
             if (err) {
                 next(err, null);
             } else {
@@ -86,9 +88,10 @@ exports.loadComps = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.updComps = function(req, next) {
+exports.updComps = function (req, next) {
+    'use strict';
     try {
-        loadLib.updComps(function(err, res) {
+        loadLib.updComps(function (err, res) {
             if (err) {
                 next(err, null);
             } else {
@@ -110,9 +113,10 @@ exports.updComps = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.updDevs = function(req, next) {
+exports.updDevs = function (req, next) {
+    'use strict';
     try {
-        loadLib.updDevs(function(err, res) {
+        loadLib.updDevs(function (err, res) {
             if (err) {
                 next(err, null);
             } else {
@@ -124,12 +128,11 @@ exports.updDevs = function(req, next) {
     }
 };
 
-exports.getProcs = function(req, next) {
+exports.getProcs = function (req, next) {
+    'use strict';
     try {
         var platfrm_code;
-        if ((req.query.platform || req.query.superlayer) &&
-            req.query.layer &&
-            req.query.component) {
+        if ((req.query.platform || req.query.superlayer) && req.query.layer && req.query.component) {
             platfrm_code = req.query.platform ? req.query.platform.toUpperCase() : null;
             var suprlay_code = req.query.superlayer ? req.query.superlayer.toUpperCase() : null,
                 layer_name = req.query.layer ? req.query.layer.toLowerCase() : null,
@@ -137,7 +140,7 @@ exports.getProcs = function(req, next) {
             procMod.findProcsByComp(platfrm_code,
                 suprlay_code,
                 layer_name,
-                comp_name, function(err, res) {
+                comp_name, function (err, res) {
                     if (err) {
                         next(err, null);
                     } else {
@@ -147,7 +150,7 @@ exports.getProcs = function(req, next) {
         } else if (req.query.platform && req.query.name) {
             platfrm_code = req.query.platform ? req.query.platform.toUpperCase() : null;
             var name = req.query.name ? req.query.name.toLowerCase() : null;
-            procMod.findStepsByProc(platfrm_code, name, function(err, res) {
+            procMod.findStepsByProc(platfrm_code, name, function (err, res) {
                 if (err) {
                     next(err, null);
                 } else {

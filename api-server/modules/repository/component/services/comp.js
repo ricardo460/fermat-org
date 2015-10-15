@@ -1,4 +1,3 @@
-var async = require('async');
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var devSrv = require('../../developer/services/dev');
@@ -6,13 +5,13 @@ var compMdl = require('../models/comp');
 var compSch = require('../schemas/comp');
 var statusMdl = require('../models/status');
 var statusSch = require('../schemas/status');
-var compDevMdl = require('../models/compDev');
+var CompDevMdl = require('../models/compDev');
 var compDevSch = require('../schemas/compDev');
-var platfrmMdl = require('../../platform/models/platfrm');
+var PlatfrmMdl = require('../../platform/models/platfrm');
 var platfrmSch = require('../../platform/schemas/platfrm');
-var suprlayMdl = require('../../superlayer/models/suprlay');
+var SuprlayMdl = require('../../superlayer/models/suprlay');
 var suprlaySch = require('../../superlayer/schemas/suprlay');
-var layerMdl = require('../../layer/models/layer');
+var LayerMdl = require('../../layer/models/layer');
 var layerSch = require('../../layer/schemas/layer');
 
 
@@ -21,10 +20,10 @@ var layerSch = require('../../layer/schemas/layer');
  *
  * @type {Dao}
  */
-var compDao = new Dao('Comp', compSch, compMdl, 'CompDev', compDevSch, compDevMdl,
-    'Platfrm', platfrmSch, platfrmMdl,
-    'Suprlay', suprlaySch, suprlayMdl,
-    'Layer', layerSch, layerMdl,
+var compDao = new Dao('Comp', compSch, compMdl, 'CompDev', compDevSch, CompDevMdl,
+    'Platfrm', platfrmSch, PlatfrmMdl,
+    'Suprlay', suprlaySch, SuprlayMdl,
+    'Layer', layerSch, LayerMdl,
     'Status', statusSch, statusMdl);
 
 /**
@@ -37,8 +36,9 @@ var compDao = new Dao('Comp', compSch, compMdl, 'CompDev', compDevSch, compDevMd
  *
  * @return {[type]}   [description]
  */
-exports.insertComp = function(comp_mdl, callback) {
-    compDao.insertSchema(comp_mdl, function(err, comp) {
+exports.insertComp = function (comp_mdl, callback) {
+    'use strict';
+    compDao.insertSchema(comp_mdl, function (err, comp) {
         callback(err, comp);
     });
 };
@@ -53,8 +53,9 @@ exports.insertComp = function(comp_mdl, callback) {
  *
  * @return {[type]}     [description]
  */
-exports.findCompById = function(_id, callback) {
-    compDao.findSchemaById(_id, function(err, comp) {
+exports.findCompById = function (_id, callback) {
+    'use strict';
+    compDao.findSchemaById(_id, function (err, comp) {
         callback(err, comp);
     });
 };
@@ -70,8 +71,9 @@ exports.findCompById = function(_id, callback) {
  *
  * @return {[type]}                [description]
  */
-exports.findAndPopulateCompById = function(_id, path, callback) {
-    compDao.findAndPopulateSchemaById(_id, path, function(err, comp) {
+exports.findAndPopulateCompById = function (_id, path, callback) {
+    'use strict';
+    compDao.findAndPopulateSchemaById(_id, path, function (err, comp) {
         callback(err, comp);
     });
 };
@@ -86,8 +88,9 @@ exports.findAndPopulateCompById = function(_id, path, callback) {
  *
  * @return {[type]}   [description]
  */
-exports.findComp = function(query, callback) {
-    compDao.findSchema(query, function(err, comp) {
+exports.findComp = function (query, callback) {
+    'use strict';
+    compDao.findSchema(query, function (err, comp) {
         callback(err, comp);
     });
 };
@@ -102,8 +105,9 @@ exports.findComp = function(query, callback) {
  *
  * @return {[type]}   [description]
  */
-exports.findComps = function(query, sort, callback) {
-    compDao.findAllSchemaLst(query, sort, function(err, comp) {
+exports.findComps = function (query, sort, callback) {
+    'use strict';
+    compDao.findAllSchemaLst(query, sort, function (err, comp) {
         callback(err, comp);
     });
 };
@@ -119,24 +123,25 @@ exports.findComps = function(query, sort, callback) {
  *
  * @return {[type]}     [description]
  */
-exports.findAllComps = function(query, order, callback) {
-    compDao.findAndPopulateAllSchemaLst(query, order, 'life_cycle devs', function(err, comps) {
+exports.findAllComps = function (query, order, callback) {
+    'use strict';
+    compDao.findAndPopulateAllSchemaLst(query, order, 'life_cycle devs', function (err, comps) {
         if (err) {
             callback(err, null);
         } else {
             var _comps = [];
 
-            var loopComps = function(i) {
+            var loopComps = function (i) {
                 if (i < comps.length) {
                     var _comp = comps[i];
                     var _compDevs = _comp.devs;
-                    var _lifeCycle = _comp.life_cycle;
+                    //var _lifeCycle = _comp.life_cycle;
                     var _devs = [];
 
-                    var loopCompDevs = function(j) {
+                    var loopCompDevs = function (j) {
                         if (j < _compDevs.length) {
                             var _compDev = {};
-                            devSrv.findDevById(_compDevs[j]._dev_id, function(err_dev, res_dev) {
+                            devSrv.findDevById(_compDevs[j]._dev_id, function (err_dev, res_dev) {
                                 if (err_dev) {
                                     loopCompDevs(++j);
                                 } else {
@@ -175,11 +180,12 @@ exports.findAllComps = function(query, order, callback) {
  *
  * @return {[type]}      [description]
  */
-exports.updateCompById = function(_id, set, callback) {
+exports.updateCompById = function (_id, set, callback) {
+    'use strict';
     set.upd_at = new mongoose.Types.ObjectId();
     compDao.updateSchema({
         _id: _id
-    }, set, {}, function(err, comp) {
+    }, set, {}, function (err, comp) {
         callback(err, comp);
     });
 };
@@ -195,13 +201,14 @@ exports.updateCompById = function(_id, set, callback) {
  *
  * @return {[type]}          [description]
  */
-exports.pushDevToCompById = function(_id, _compDev_id, callback) {
-    var compDev_mdl = new compDevMdl();
+exports.pushDevToCompById = function (_id, _compDev_id, callback) {
+    'use strict';
+    //var compDev_mdl = new CompDevMdl();
     compDao.pushToArray({
         _id: _id
     }, 'devs', _compDev_id, {
         multi: false
-    }, function(err, comp) {
+    }, function (err, comp) {
         callback(err, comp);
     });
 };
@@ -217,12 +224,13 @@ exports.pushDevToCompById = function(_id, _compDev_id, callback) {
  *
  * @return {[type]}          [description]
  */
-exports.pullDevFromCompById = function(_id, _compDev_id, callback) {
+exports.pullDevFromCompById = function (_id, _compDev_id, callback) {
+    'use strict';
     compDao.pullFromArray({
         _id: _id
     }, 'devs', _compDev_id, {
         multi: false
-    }, function(err, comp) {
+    }, function (err, comp) {
         callback(err, comp);
     });
 };
@@ -238,13 +246,14 @@ exports.pullDevFromCompById = function(_id, _compDev_id, callback) {
  *
  * @return {[type]}                [description]
  */
-exports.pushStatusToCompLifeCycleById = function(_id, _status_id, callback) {
-    var compDev_mdl = new compDevMdl();
+exports.pushStatusToCompLifeCycleById = function (_id, _status_id, callback) {
+    'use strict';
+    //var compDev_mdl = new CompDevMdl();
     compDao.pushToArray({
         _id: _id
     }, 'life_cycle', _status_id, {
         multi: false
-    }, function(err, comp) {
+    }, function (err, comp) {
         callback(err, comp);
     });
 };
@@ -260,12 +269,13 @@ exports.pushStatusToCompLifeCycleById = function(_id, _status_id, callback) {
  *
  * @return {[type]}                  [description]
  */
-exports.pullStatusFromCompLifeCycleById = function(_id, _status_id, callback) {
+exports.pullStatusFromCompLifeCycleById = function (_id, _status_id, callback) {
+    'use strict';
     compDao.pullFromArray({
         _id: _id
     }, 'life_cycle', _status_id, {
         multi: false
-    }, function(err, comp) {
+    }, function (err, comp) {
         callback(err, comp);
     });
 };

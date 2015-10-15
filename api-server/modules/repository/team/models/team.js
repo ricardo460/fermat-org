@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
  * @param  {[type]} descript [description]
  */
 function TeamMdl(name, descript) {
+    'use strict';
     // always initialize all instance properties
     this.name = name;
     this.descript = descript;
@@ -25,7 +26,8 @@ function TeamMdl(name, descript) {
  *
  * @return {[type]} [description]
  */
-TeamMdl.prototype.init = function(teamSchema) {
+TeamMdl.prototype.init = function (teamSchema) {
+    'use strict';
     this._id = teamSchema._id;
     this.name = teamSchema.name;
     this.descript = teamSchema.descript;
@@ -38,7 +40,8 @@ TeamMdl.prototype.init = function(teamSchema) {
  *
  * @method setUpdate
  */
-TeamMdl.prototype.setUpdate = function() {
+TeamMdl.prototype.setUpdate = function () {
+    'use strict';
     this.upd_at = new mongoose.Types.ObjectId();
 };
 

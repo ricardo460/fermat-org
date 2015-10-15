@@ -11,6 +11,7 @@ var mongoose = require('mongoose');
  * @param  {[type]} order   [description]
  */
 function LayerMdl(name, lang, suprlay, order) {
+    'use strict';
     // always initialize all instance properties
     this.name = name;
     this.lang = lang;
@@ -28,11 +29,12 @@ function LayerMdl(name, lang, suprlay, order) {
  *
  * @return {[type]} [description]
  */
-LayerMdl.prototype.init = function(layerSchema) {
+LayerMdl.prototype.init = function (layerSchema) {
+    'use strict';
     this._id = layerSchema._id;
     this.name = layerSchema.name;
     this.lang = layerSchema.lang;
-    this.suprlay = layerSchema.suprlay ? layerSchema.suprlay : false;
+    this.suprlay = layerSchema.suprlay || false;
     this.order = layerSchema.order;
     this.upd_at = layerSchema.upd_at;
 };
@@ -42,7 +44,8 @@ LayerMdl.prototype.init = function(layerSchema) {
  *
  * @method setUpdate
  */
-LayerMdl.prototype.setUpdate = function() {
+LayerMdl.prototype.setUpdate = function () {
+    'use strict';
     this.upd_at = new mongoose.Types.ObjectId();
 };
 

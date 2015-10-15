@@ -21,9 +21,10 @@ var platfrmDao = new Dao('Platfrm', platfrmSch, platfrmMdl);
  * @return {[type]}   [description]
  */
 exports.insertPlatfrm = function (platfrm_mdl, callback) {
-	platfrmDao.insertSchema(platfrm_mdl, function (err, platfrm) {
-		callback(err, platfrm);
-	});
+    'use strict';
+    platfrmDao.insertSchema(platfrm_mdl, function (err, platfrm) {
+        callback(err, platfrm);
+    });
 };
 
 /**
@@ -37,9 +38,10 @@ exports.insertPlatfrm = function (platfrm_mdl, callback) {
  * @return {[type]}    [description]
  */
 exports.findPlatfrmById = function (_id, callback) {
-	platfrmDao.findSchemaById(_id, function (err, platfrm) {
-		callback(err, platfrm);
-	});
+    'use strict';
+    platfrmDao.findSchemaById(_id, function (err, platfrm) {
+        callback(err, platfrm);
+    });
 };
 
 /**
@@ -53,11 +55,12 @@ exports.findPlatfrmById = function (_id, callback) {
  * @return {[type]}       [description]
  */
 exports.findPlatfrmByCode = function (code, callback) {
-	platfrmDao.findSchema({
-		code: code
-	}, function (err, platfrm) {
-		callback(err, platfrm);
-	});
+    'use strict';
+    platfrmDao.findSchema({
+        code: code
+    }, function (err, platfrm) {
+        callback(err, platfrm);
+    });
 };
 
 /**
@@ -71,11 +74,12 @@ exports.findPlatfrmByCode = function (code, callback) {
  * @return {[type]}       [description]
  */
 exports.findPlatfrmByName = function (name, callback) {
-	platfrmDao.findSchema({
-		name: name
-	}, function (err, platfrm) {
-		callback(err, platfrm);
-	});
+    'use strict';
+    platfrmDao.findSchema({
+        name: name
+    }, function (err, platfrm) {
+        callback(err, platfrm);
+    });
 };
 
 /**
@@ -91,9 +95,10 @@ exports.findPlatfrmByName = function (name, callback) {
  * @return {[type]}   [description]
  */
 exports.findPlatfrms = function (query, limit, order, callback) {
-	platfrmDao.findSchemaLst(query, limit, order, function (err, platfrm) {
-		callback(err, platfrm);
-	});
+    'use strict';
+    platfrmDao.findSchemaLst(query, limit, order, function (err, platfrm) {
+        callback(err, platfrm);
+    });
 };
 
 /**
@@ -108,9 +113,10 @@ exports.findPlatfrms = function (query, limit, order, callback) {
  * @return {[type]}    [description]
  */
 exports.findAllPlatfrms = function (query, order, callback) {
-	platfrmDao.findAllSchemaLst(query, order, function (err, platfrm) {
-		callback(err, platfrm);
-	});
+    'use strict';
+    platfrmDao.findAllSchemaLst(query, order, function (err, platfrm) {
+        callback(err, platfrm);
+    });
 };
 
 /**
@@ -125,10 +131,11 @@ exports.findAllPlatfrms = function (query, order, callback) {
  * @return {[type]}      [description]
  */
 exports.updatePlatfrmById = function (_id, set, callback) {
-	set.upd_at = new mongoose.Types.ObjectId();
-	platfrmDao.updateSchema({
-		_id: _id
-	}, set, {}, function (err, platfrm) {
-		callback(err, platfrm);
-	});
+    'use strict';
+    set.upd_at = new mongoose.Types.ObjectId();
+    platfrmDao.updateSchema({
+        _id: _id
+    }, set, {}, function (err, platfrm) {
+        callback(err, platfrm);
+    });
 };

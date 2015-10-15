@@ -1,3 +1,5 @@
+/*global require*/
+/*global module*/
 var mongoose = require('mongoose');
 
 /**

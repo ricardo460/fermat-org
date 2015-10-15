@@ -1,3 +1,4 @@
+'use strict';
 var mongoose = require('mongoose');
 
 /**
@@ -34,7 +35,7 @@ function StepMdl(_proc_id, _comp_id, type, title, desc, order, next) {
  *
  * @return {[type]} [description]
  */
-StepMdl.prototype.init = function(stepSchema) {
+StepMdl.prototype.init = function (stepSchema) {
     this._id = stepSchema._id;
     this._proc_id = stepSchema._proc_id;
     this._comp_id = stepSchema._comp_id;
@@ -51,7 +52,7 @@ StepMdl.prototype.init = function(stepSchema) {
  *
  * @method setUpdate
  */
-StepMdl.prototype.setUpdate = function() {
+StepMdl.prototype.setUpdate = function () {
     this.upd_at = new mongoose.Types.ObjectId();
 };
 

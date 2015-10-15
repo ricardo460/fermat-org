@@ -1,3 +1,4 @@
+'use strict';
 /**
  * [Route description]
  *
@@ -20,8 +21,8 @@ function Route(body, date, time) {
  *
  * @return {Boolean} [description]
  */
-Route.prototype.isValid = function() {
-	var then = new Date(this.date);
+Route.prototype.isValid = function () {
+    var then = new Date(this.date);
     var now = new Date();
     var valid = now.getTime() - then.getTime() < this.time;
     return valid;

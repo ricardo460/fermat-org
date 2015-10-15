@@ -1,935 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jslint>
 <file name="bin/www">
-<issue line="1" char="1" reason="Unexpected '#'." evidence="#!/usr/bin/env node"/>
-<issue line="1" char="2" reason="Stopping. (1% scanned)." evidence=""/>
 </file>
 <file name="lib/route-cache/index.js">
-<issue line="4" char="1" reason="Use spaces, not tabs." evidence="	this.cache = new Cache(options);"/>
-<issue line="4" char="2" reason="Missing 'use strict' statement." evidence="	this.cache = new Cache(options);"/>
-<issue line="5" char="1" reason="Use spaces, not tabs." evidence="	this.url = req.method + ' ' + req.url;"/>
-<issue line="5" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.url = req.method + ' ' + req.url;"/>
-<issue line="6" char="1" reason="Use spaces, not tabs." evidence="	this.req = req;"/>
-<issue line="6" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.req = req;"/>
-<issue line="9" char="40" reason="Expected exactly one space between 'function' and '('." evidence="RouteCache.prototype.getBody = function() {"/>
-<issue line="10" char="1" reason="Use spaces, not tabs." evidence="	this.body = this.cache.get(this.url);"/>
-<issue line="10" char="2" reason="Missing 'use strict' statement." evidence="	this.body = this.cache.get(this.url);"/>
-<issue line="11" char="1" reason="Use spaces, not tabs." evidence="	return this.body;"/>
-<issue line="11" char="2" reason="Expected 'return' at column 5, not column 2." evidence="	return this.body;"/>
-<issue line="14" char="40" reason="Expected exactly one space between 'function' and '('." evidence="RouteCache.prototype.setBody = function(body) {"/>
-<issue line="15" char="1" reason="Use spaces, not tabs." evidence="	this.body = this.cache.set(this.url, body);"/>
-<issue line="15" char="2" reason="Missing 'use strict' statement." evidence="	this.body = this.cache.set(this.url, body);"/>
-<issue line="16" char="1" reason="Use spaces, not tabs." evidence="	return this.body;"/>
-<issue line="16" char="2" reason="Expected 'return' at column 5, not column 2." evidence="	return this.body;"/>
 </file>
 <file name="lib/route-cache/lib/cache.js">
-<issue line="13" char="5" reason="Missing 'use strict' statement." evidence="    this.type = options &amp;&amp; options.type ? options.type : 'memory';"/>
-<issue line="27" char="33" reason="Expected exactly one space between 'function' and '('." evidence="Cache.prototype.clear = function() {"/>
-<issue line="28" char="5" reason="Missing 'use strict' statement." evidence="    if (this.type === 'file') {"/>
-<issue line="44" char="31" reason="Expected exactly one space between 'function' and '('." evidence="Cache.prototype.set = function(url, body) {"/>
-<issue line="45" char="5" reason="Missing 'use strict' statement." evidence="    var cache;"/>
-<issue line="48" char="17" reason="Combine this with the previous 'var' statement." evidence="            var filecache = fs.readFileSync(this.filename);"/>
-<issue line="57" char="9" reason="Combine this with the previous 'var' statement." evidence="    var route;"/>
-<issue line="60" char="17" reason="Combine this with the previous 'var' statement." evidence="            var routecache = new Route(cache[url].body, cache[url].date, this.time);"/>
-<issue line="78" char="13" reason="Combine this with the previous 'var' statement." evidence="        var data = JSON.stringify(cache);"/>
-<issue line="81" char="20" reason="Expected exactly one space between 'function' and '('." evidence="        }, function(err) {"/>
-<issue line="87" char="7" reason="Unnecessary 'else' after disruption." evidence="    } else {"/>
-<issue line="102" char="31" reason="Expected exactly one space between 'function' and '('." evidence="Cache.prototype.get = function(url) {"/>
-<issue line="103" char="5" reason="Missing 'use strict' statement." evidence="    var cache;"/>
-<issue line="106" char="17" reason="Combine this with the previous 'var' statement." evidence="            var filecache = fs.readFileSync(this.filename);"/>
-<issue line="120" char="7" reason="Unnecessary 'else' after disruption." evidence="    } else {"/>
-<issue line="135" char="31" reason="Expected exactly one space between 'function' and '('." evidence="Cache.prototype.del = function(url) {"/>
-<issue line="136" char="5" reason="Missing 'use strict' statement." evidence="    var cache;"/>
-<issue line="139" char="17" reason="Combine this with the previous 'var' statement." evidence="            var filecache = fs.readFileSync(this.filename);"/>
-<issue line="148" char="9" reason="Combine this with the previous 'var' statement." evidence="    var route;"/>
-<issue line="157" char="13" reason="Combine this with the previous 'var' statement." evidence="        var data = JSON.stringify(cache);"/>
-<issue line="160" char="20" reason="Expected exactly one space between 'function' and '('." evidence="        }, function(err) {"/>
-<issue line="166" char="7" reason="Unnecessary 'else' after disruption." evidence="    } else {"/>
+<issue line="31" char="12" reason="Unexpected sync method: 'unlinkSync'." evidence="        fs.unlinkSync(this.filename);"/>
+<issue line="51" char="32" reason="Unexpected sync method: 'readFileSync'." evidence="            var filecache = fs.readFileSync(this.filename);"/>
+<issue line="109" char="32" reason="Unexpected sync method: 'readFileSync'." evidence="            var filecache = fs.readFileSync(this.filename);"/>
+<issue line="142" char="32" reason="Unexpected sync method: 'readFileSync'." evidence="            var filecache = fs.readFileSync(this.filename);"/>
 </file>
 <file name="lib/route-cache/lib/route.js">
-<issue line="11" char="5" reason="Missing 'use strict' statement." evidence="    this.body = body || {};"/>
-<issue line="23" char="35" reason="Expected exactly one space between 'function' and '('." evidence="Route.prototype.isValid = function() {"/>
-<issue line="24" char="1" reason="Use spaces, not tabs." evidence="	var then = new Date(this.date);"/>
-<issue line="24" char="2" reason="Missing 'use strict' statement." evidence="	var then = new Date(this.date);"/>
-<issue line="25" char="9" reason="Combine this with the previous 'var' statement." evidence="    var now = new Date();"/>
-<issue line="26" char="9" reason="Combine this with the previous 'var' statement." evidence="    var valid = now.getTime() - then.getTime() &lt; this.time;"/>
 </file>
 <file name="lib/test.js">
 </file>
 <file name="modules/database/dao.js">
-<issue line="24" char="5" reason="Missing 'use strict' statement." evidence="    this.Schema = mongoose.model(ref, schema);"/>
-<issue line="51" char="43" reason="Expected exactly one space between 'function' and '('." evidence="        this.Schema.ensureIndexes(function(err, res) {"/>
-<issue line="52" char="22" reason="Expected '{' and instead saw 'winston'." evidence="            if (err) winston.log('info', 'Mongoose default connection error', err);"/>
-<issue line="52" char="22" reason="Stopping. (12% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/component/index.js">
-<issue line="18" char="28" reason="Expected exactly one space between 'function' and '('." evidence="exports.getComps = function(callback) {"/>
-<issue line="19" char="5" reason="Missing 'use strict' statement." evidence="    compSrv.findAllComps({}, {}, function(err, comps) {"/>
-<issue line="19" char="42" reason="Expected exactly one space between 'function' and '('." evidence="    compSrv.findAllComps({}, {}, function(err, comps) {"/>
-<issue line="37" char="29" reason="Expected exactly one space between 'function' and '('." evidence="exports.findComps = function(callback) {"/>
-<issue line="38" char="5" reason="Missing 'use strict' statement." evidence="    compSrv.findComps({}, {}, function(err, comps) {"/>
-<issue line="38" char="39" reason="Expected exactly one space between 'function' and '('." evidence="    compSrv.findComps({}, {}, function(err, comps) {"/>
-<issue line="66" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.insOrUpdComp = function(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, found, callback) {"/>
-<issue line="67" char="5" reason="Missing 'use strict' statement." evidence="    var find_obj = {"/>
-<issue line="71" char="18" reason="['$and'] is better written in dot notation." evidence="        find_obj['$and'].push({"/>
-<issue line="76" char="18" reason="['$and'] is better written in dot notation." evidence="        find_obj['$and'].push({"/>
-<issue line="81" char="18" reason="['$and'] is better written in dot notation." evidence="        find_obj['$and'].push({"/>
-<issue line="86" char="18" reason="['$and'] is better written in dot notation." evidence="        find_obj['$and'].push({"/>
-<issue line="90" char="40" reason="Expected exactly one space between 'function' and '('." evidence="    compSrv.findComp(find_obj, function(err_comp, res_comp) {"/>
-<issue line="93" char="11" reason="Unnecessary 'else' after disruption." evidence="        } else if (res_comp) {"/>
-<issue line="95" char="30" reason="Expected '!==' and instead saw '!='." evidence="            if (type &amp;&amp; type != res_comp.type) {"/>
-<issue line="99" char="44" reason="Expected '!==' and instead saw '!='." evidence="            if (description &amp;&amp; description != res_comp.description) {"/>
-<issue line="103" char="42" reason="Expected '!==' and instead saw '!='." evidence="            if (difficulty &amp;&amp; difficulty != res_comp.difficulty) {"/>
-<issue line="107" char="42" reason="Expected '!==' and instead saw '!='." evidence="            if (code_level &amp;&amp; code_level != res_comp.code_level) {"/>
-<issue line="111" char="38" reason="Expected '!==' and instead saw '!='." evidence="            if (repo_dir &amp;&amp; repo_dir != res_comp.repo_dir) {"/>
-<issue line="115" char="32" reason="Expected '!==' and instead saw '!='." evidence="            if (found &amp;&amp; found != res_comp.found) {"/>
-<issue line="120" char="71" reason="Expected exactly one space between 'function' and '('." evidence="                compSrv.updateCompById(res_comp._id, set_obj, function(err_upd, res_upd) {"/>
-<issue line="121" char="34" reason="Expected '{' and instead saw 'return'." evidence="                    if (err_upd) return callback(err_upd, null);"/>
-<issue line="121" char="34" reason="Stopping. (40% scanned)." evidence=""/>
+<issue line="83" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="88" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="93" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="98" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="178" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="183" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="188" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="193" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="252" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="257" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
 </file>
 <file name="modules/repository/component/models/comp.js">
-<issue line="20" char="5" reason="Missing 'use strict' statement." evidence="    this._platfrm_id = _platfrm_id;"/>
-<issue line="45" char="34" reason="Expected exactly one space between 'function' and '('." evidence="CompMdl.prototype.init = function(compSchema) {"/>
-<issue line="46" char="5" reason="Missing 'use strict' statement." evidence="    this._id = compSchema._id;"/>
-<issue line="70" char="37" reason="Expected exactly one space between 'function' and '('." evidence="CompMdl.prototype.getCode = function() {"/>
-<issue line="71" char="5" reason="Missing 'use strict' statement." evidence="    var words = this.name.split(&quot; &quot;);"/>
-<issue line="72" char="9" reason="Combine this with the previous 'var' statement." evidence="    var code = &quot;&quot;;"/>
-<issue line="75" char="13" reason="Redefinition of 'words' from line 71." evidence="        var words = string.split(&quot; &quot;);"/>
-<issue line="76" char="13" reason="Combine this with the previous 'var' statement." evidence="        var result = &quot;&quot;;"/>
-<issue line="77" char="14" reason="Move 'var' declarations to the top of the function." evidence="        for (var i = 0, l = words.length; i &lt; l; i++) {"/>
-<issue line="77" char="14" reason="Stopping. (71% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/component/models/compDev.js">
-<issue line="16" char="5" reason="Missing 'use strict' statement." evidence="    this._comp_id = _comp_id;"/>
-<issue line="33" char="37" reason="Expected exactly one space between 'function' and '('." evidence="CompDevMdl.prototype.init = function(compDevSchema) {"/>
-<issue line="34" char="5" reason="Missing 'use strict' statement." evidence="    this._id = compDevSchema._id;"/>
-<issue line="48" char="42" reason="Expected exactly one space between 'function' and '('." evidence="CompDevMdl.prototype.setUpdate = function() {"/>
-<issue line="49" char="5" reason="Missing 'use strict' statement." evidence="    this.upd_at = new mongoose.Types.ObjectId();"/>
 </file>
 <file name="modules/repository/component/models/status.js">
-<issue line="14" char="1" reason="Use spaces, not tabs." evidence="	// always initialize all instance properties"/>
-<issue line="15" char="1" reason="Use spaces, not tabs." evidence="	this._comp_id = _comp_id;"/>
-<issue line="15" char="2" reason="Missing 'use strict' statement." evidence="	this._comp_id = _comp_id;"/>
-<issue line="16" char="1" reason="Use spaces, not tabs." evidence="	this.name = name;"/>
-<issue line="16" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.name = name;"/>
-<issue line="17" char="1" reason="Use spaces, not tabs." evidence="	this.target = target ? new Date(target) : null;"/>
-<issue line="17" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.target = target ? new Date(target) : null;"/>
-<issue line="18" char="1" reason="Use spaces, not tabs." evidence="	this.reached = reached ? new Date(reached) : null;"/>
-<issue line="18" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.reached = reached ? new Date(reached) : null;"/>
-<issue line="19" char="1" reason="Use spaces, not tabs." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="19" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="31" char="36" reason="Expected exactly one space between 'function' and '('." evidence="StatusMdl.prototype.init = function(statusSchema) {"/>
-<issue line="32" char="5" reason="Missing 'use strict' statement." evidence="    this._id = statusSchema._id;"/>
-<issue line="45" char="41" reason="Expected exactly one space between 'function' and '('." evidence="StatusMdl.prototype.setUpdate = function() {"/>
-<issue line="46" char="1" reason="Use spaces, not tabs." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="46" char="2" reason="Missing 'use strict' statement." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="56" char="41" reason="Expected exactly one space between 'function' and '('." evidence="StatusMdl.prototype.setTarget = function(target) {"/>
-<issue line="57" char="1" reason="Use spaces, not tabs." evidence="	this.target = target ? new Date(target) : null;"/>
-<issue line="57" char="2" reason="Missing 'use strict' statement." evidence="	this.target = target ? new Date(target) : null;"/>
-<issue line="58" char="1" reason="Use spaces, not tabs." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="58" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="68" char="42" reason="Expected exactly one space between 'function' and '('." evidence="StatusMdl.prototype.setReached = function(reached) {"/>
-<issue line="69" char="1" reason="Use spaces, not tabs." evidence="	this.reached = reached ? new Date(reached) : null;"/>
-<issue line="69" char="2" reason="Missing 'use strict' statement." evidence="	this.reached = reached ? new Date(reached) : null;"/>
-<issue line="70" char="1" reason="Use spaces, not tabs." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="70" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="81" char="1" reason="Use spaces, not tabs." evidence="	var diff = new Date() - this.bday;"/>
-<issue line="81" char="2" reason="Missing 'use strict' statement." evidence="	var diff = new Date() - this.bday;"/>
-<issue line="82" char="1" reason="Use spaces, not tabs." evidence="	var diffdays = diff / 1000 / (60 * 60 * 24);"/>
-<issue line="82" char="2" reason="Expected 'var' at column 5, not column 2." evidence="	var diffdays = diff / 1000 / (60 * 60 * 24);"/>
-<issue line="82" char="6" reason="Combine this with the previous 'var' statement." evidence="	var diffdays = diff / 1000 / (60 * 60 * 24);"/>
-<issue line="83" char="1" reason="Use spaces, not tabs." evidence="	var age = Math.floor(diffdays / 365.25);"/>
-<issue line="83" char="2" reason="Expected 'var' at column 5, not column 2." evidence="	var age = Math.floor(diffdays / 365.25);"/>
-<issue line="83" char="6" reason="Combine this with the previous 'var' statement." evidence="	var age = Math.floor(diffdays / 365.25);"/>
-<issue line="84" char="1" reason="Use spaces, not tabs." evidence="	return age;"/>
-<issue line="84" char="2" reason="Expected 'return' at column 5, not column 2." evidence="	return age;"/>
 </file>
 <file name="modules/repository/component/schemas/comp.js">
 </file>
 <file name="modules/repository/component/schemas/compDev.js">
 </file>
 <file name="modules/repository/component/schemas/status.js">
-<issue line="40" char="12" reason="Unexpected ','." evidence="    name: 1,"/>
 </file>
 <file name="modules/repository/component/services/comp.js">
-<issue line="40" char="30" reason="Expected exactly one space between 'function' and '('." evidence="exports.insertComp = function(comp_mdl, callback) {"/>
-<issue line="41" char="5" reason="Missing 'use strict' statement." evidence="    compDao.insertSchema(comp_mdl, function(err, comp) {"/>
-<issue line="41" char="44" reason="Expected exactly one space between 'function' and '('." evidence="    compDao.insertSchema(comp_mdl, function(err, comp) {"/>
-<issue line="56" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompById = function(_id, callback) {"/>
-<issue line="57" char="5" reason="Missing 'use strict' statement." evidence="    compDao.findSchemaById(_id, function(err, comp) {"/>
-<issue line="57" char="41" reason="Expected exactly one space between 'function' and '('." evidence="    compDao.findSchemaById(_id, function(err, comp) {"/>
-<issue line="73" char="43" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAndPopulateCompById = function(_id, path, callback) {"/>
-<issue line="74" char="5" reason="Missing 'use strict' statement." evidence="    compDao.findAndPopulateSchemaById(_id, path, function(err, comp) {"/>
-<issue line="74" char="58" reason="Expected exactly one space between 'function' and '('." evidence="    compDao.findAndPopulateSchemaById(_id, path, function(err, comp) {"/>
-<issue line="89" char="28" reason="Expected exactly one space between 'function' and '('." evidence="exports.findComp = function(query, callback) {"/>
-<issue line="90" char="5" reason="Missing 'use strict' statement." evidence="    compDao.findSchema(query, function(err, comp) {"/>
-<issue line="90" char="39" reason="Expected exactly one space between 'function' and '('." evidence="    compDao.findSchema(query, function(err, comp) {"/>
-<issue line="105" char="29" reason="Expected exactly one space between 'function' and '('." evidence="exports.findComps = function(query, sort, callback) {"/>
-<issue line="106" char="5" reason="Missing 'use strict' statement." evidence="    compDao.findAllSchemaLst(query, sort, function(err, comp) {"/>
-<issue line="106" char="51" reason="Expected exactly one space between 'function' and '('." evidence="    compDao.findAllSchemaLst(query, sort, function(err, comp) {"/>
-<issue line="122" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAllComps = function(query, order, callback) {"/>
-<issue line="123" char="5" reason="Missing 'use strict' statement." evidence="    compDao.findAndPopulateAllSchemaLst(query, order, 'life_cycle devs', function(err, comps) {"/>
-<issue line="123" char="82" reason="Expected exactly one space between 'function' and '('." evidence="    compDao.findAndPopulateAllSchemaLst(query, order, 'life_cycle devs', function(err, comps) {"/>
-<issue line="129" char="17" reason="Combine this with the previous 'var' statement." evidence="            var loopComps = function(i) {"/>
-<issue line="129" char="37" reason="Expected exactly one space between 'function' and '('." evidence="            var loopComps = function(i) {"/>
-<issue line="132" char="25" reason="Combine this with the previous 'var' statement." evidence="                    var _compDevs = _comp.devs;"/>
-<issue line="133" char="25" reason="Combine this with the previous 'var' statement." evidence="                    var _lifeCycle = _comp.life_cycle;"/>
-<issue line="134" char="25" reason="Combine this with the previous 'var' statement." evidence="                    var _devs = [];"/>
-<issue line="136" char="25" reason="Combine this with the previous 'var' statement." evidence="                    var loopCompDevs = function(j) {"/>
-<issue line="136" char="48" reason="Expected exactly one space between 'function' and '('." evidence="                    var loopCompDevs = function(j) {"/>
-<issue line="139" char="78" reason="Expected exactly one space between 'function' and '('." evidence="                            devSrv.findDevById(_compDevs[j]._dev_id, function(err_dev, res_dev) {"/>
-<issue line="178" char="34" reason="Expected exactly one space between 'function' and '('." evidence="exports.updateCompById = function(_id, set, callback) {"/>
-<issue line="179" char="5" reason="Missing 'use strict' statement." evidence="    set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="182" char="25" reason="Expected exactly one space between 'function' and '('." evidence="    }, set, {}, function(err, comp) {"/>
-<issue line="198" char="37" reason="Expected exactly one space between 'function' and '('." evidence="exports.pushDevToCompById = function(_id, _compDev_id, callback) {"/>
-<issue line="199" char="5" reason="Missing 'use strict' statement." evidence="    var compDev_mdl = new compDevMdl();"/>
-<issue line="199" char="27" reason="A constructor name 'compDevMdl' should start with an uppercase letter." evidence="    var compDev_mdl = new compDevMdl();"/>
-<issue line="204" char="16" reason="Expected exactly one space between 'function' and '('." evidence="    }, function(err, comp) {"/>
-<issue line="199" char="9" reason="Unused 'compDev_mdl'." evidence="    var compDev_mdl = new compDevMdl();"/>
-<issue line="220" char="39" reason="Expected exactly one space between 'function' and '('." evidence="exports.pullDevFromCompById = function(_id, _compDev_id, callback) {"/>
-<issue line="221" char="5" reason="Missing 'use strict' statement." evidence="    compDao.pullFromArray({"/>
-<issue line="225" char="16" reason="Expected exactly one space between 'function' and '('." evidence="    }, function(err, comp) {"/>
-<issue line="241" char="49" reason="Expected exactly one space between 'function' and '('." evidence="exports.pushStatusToCompLifeCycleById = function(_id, _status_id, callback) {"/>
-<issue line="242" char="5" reason="Missing 'use strict' statement." evidence="    var compDev_mdl = new compDevMdl();"/>
-<issue line="242" char="27" reason="A constructor name 'compDevMdl' should start with an uppercase letter." evidence="    var compDev_mdl = new compDevMdl();"/>
-<issue line="247" char="16" reason="Expected exactly one space between 'function' and '('." evidence="    }, function(err, comp) {"/>
-<issue line="242" char="9" reason="Unused 'compDev_mdl'." evidence="    var compDev_mdl = new compDevMdl();"/>
-<issue line="263" char="51" reason="Expected exactly one space between 'function' and '('." evidence="exports.pullStatusFromCompLifeCycleById = function(_id, _status_id, callback) {"/>
-<issue line="264" char="5" reason="Missing 'use strict' statement." evidence="    compDao.pullFromArray({"/>
-<issue line="268" char="16" reason="Expected exactly one space between 'function' and '('." evidence="    }, function(err, comp) {"/>
 </file>
 <file name="modules/repository/component/services/compDev.js">
-<issue line="27" char="33" reason="Expected exactly one space between 'function' and '('." evidence="exports.insertCompDev = function(compDev_mdl, callback) {"/>
-<issue line="28" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.insertSchema(compDev_mdl, function(err, compDev) {"/>
-<issue line="28" char="50" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.insertSchema(compDev_mdl, function(err, compDev) {"/>
-<issue line="43" char="35" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompDevById = function(_id, callback) {"/>
-<issue line="44" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateSchemaById(_id, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="44" char="75" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateSchemaById(_id, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="59" char="31" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompDev = function(query, callback) {"/>
-<issue line="60" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateSchema(query, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="60" char="73" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateSchema(query, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="77" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompDevs = function(query, limit, order, callback) {"/>
-<issue line="78" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateSchemaLst(query, limit, order, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="78" char="90" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateSchemaLst(query, limit, order, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="94" char="35" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAllCompDevs = function(query, order, callback) {"/>
-<issue line="95" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateAllSchemaLst(query, order, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="95" char="86" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateAllSchemaLst(query, order, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="111" char="37" reason="Expected exactly one space between 'function' and '('." evidence="exports.updateCompDevById = function(_id, set, callback) {"/>
-<issue line="112" char="5" reason="Missing 'use strict' statement." evidence="    set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="115" char="25" reason="Expected exactly one space between 'function' and '('." evidence="    }, set, {}, function(err, compDev) {"/>
 </file>
 <file name="modules/repository/component/services/status.js">
-<issue line="25" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.insertStatus = function(status_mdl, callback) {"/>
-<issue line="26" char="5" reason="Missing 'use strict' statement." evidence="    statusDao.insertSchema(status_mdl, function(err, status) {"/>
-<issue line="26" char="48" reason="Expected exactly one space between 'function' and '('." evidence="    statusDao.insertSchema(status_mdl, function(err, status) {"/>
-<issue line="41" char="34" reason="Expected exactly one space between 'function' and '('." evidence="exports.findStatusById = function(_id, callback) {"/>
-<issue line="42" char="5" reason="Missing 'use strict' statement." evidence="    statusDao.findSchemaById(_id, function(err, status) {"/>
-<issue line="42" char="43" reason="Expected exactly one space between 'function' and '('." evidence="    statusDao.findSchemaById(_id, function(err, status) {"/>
-<issue line="57" char="30" reason="Expected exactly one space between 'function' and '('." evidence="exports.findStatus = function(query, callback) {"/>
-<issue line="58" char="5" reason="Missing 'use strict' statement." evidence="    statusDao.findAndPopulateSchema(query, '_comp_id', function(err, compDev) {"/>
-<issue line="58" char="64" reason="Expected exactly one space between 'function' and '('." evidence="    statusDao.findAndPopulateSchema(query, '_comp_id', function(err, compDev) {"/>
-<issue line="75" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findStatuses = function(query, limit, order, callback) {"/>
-<issue line="76" char="5" reason="Missing 'use strict' statement." evidence="    statusDao.findAndPopulateSchemaLst(query, limit, order, '_comp_id', function(err, status) {"/>
-<issue line="76" char="81" reason="Expected exactly one space between 'function' and '('." evidence="    statusDao.findAndPopulateSchemaLst(query, limit, order, '_comp_id', function(err, status) {"/>
-<issue line="92" char="35" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAllStatuses = function(query, order, callback) {"/>
-<issue line="93" char="5" reason="Missing 'use strict' statement." evidence="    statusDao.findAndPopulateAllSchemaLst(query, order, '_comp_id', function(err, status) {"/>
-<issue line="93" char="77" reason="Expected exactly one space between 'function' and '('." evidence="    statusDao.findAndPopulateAllSchemaLst(query, order, '_comp_id', function(err, status) {"/>
-<issue line="109" char="36" reason="Expected exactly one space between 'function' and '('." evidence="exports.updateStatusById = function(_id, set, callback) {"/>
-<issue line="110" char="5" reason="Missing 'use strict' statement." evidence="    set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="113" char="25" reason="Expected exactly one space between 'function' and '('." evidence="    }, set, {}, function(err, status) {"/>
 </file>
 <file name="modules/repository/developer/index.js">
-<issue line="21" char="31" reason="Expected exactly one space between 'function' and '('." evidence="exports.insOrUpdDev = function(usrnm, email, name, bday, country, avatar_url, url, bio, callback) {"/>
-<issue line="22" char="5" reason="Missing 'use strict' statement." evidence="    devSrv.findDevByUsrnm(usrnm, function(err_dev, res_dev) {"/>
-<issue line="22" char="42" reason="Expected exactly one space between 'function' and '('." evidence="    devSrv.findDevByUsrnm(usrnm, function(err_dev, res_dev) {"/>
-<issue line="25" char="11" reason="Unnecessary 'else' after disruption." evidence="        } else if (res_dev) {"/>
-<issue line="27" char="32" reason="Expected '!==' and instead saw '!='." evidence="            if (email &amp;&amp; email != res_dev.email) {"/>
-<issue line="31" char="30" reason="Expected '!==' and instead saw '!='." evidence="            if (name &amp;&amp; name != res_dev.name) {"/>
-<issue line="35" char="30" reason="Expected '!==' and instead saw '!='." evidence="            if (bday &amp;&amp; bday != res_dev.bday) {"/>
-<issue line="39" char="36" reason="Expected '!==' and instead saw '!='." evidence="            if (country &amp;&amp; country != res_dev.country) {"/>
-<issue line="43" char="42" reason="Expected '!==' and instead saw '!='." evidence="            if (avatar_url &amp;&amp; avatar_url != res_dev.avatar_url) {"/>
-<issue line="47" char="28" reason="Expected '!==' and instead saw '!='." evidence="            if (url &amp;&amp; url != res_dev.url) {"/>
-<issue line="51" char="28" reason="Expected '!==' and instead saw '!='." evidence="            if (bio &amp;&amp; bio != res_dev.bio) {"/>
-<issue line="56" char="68" reason="Expected exactly one space between 'function' and '('." evidence="                devSrv.updateDevById(res_dev._id, set_obj, function(err_upd, res_upd) {"/>
-<issue line="57" char="34" reason="Expected '{' and instead saw 'return'." evidence="                    if (err_upd) return callback(err_upd, null);"/>
-<issue line="57" char="34" reason="Stopping. (63% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/developer/models/dev.js">
-<issue line="18" char="1" reason="Use spaces, not tabs." evidence="	// always initialize all instance properties"/>
-<issue line="19" char="1" reason="Use spaces, not tabs." evidence="	this.usrnm = usrnm;"/>
-<issue line="19" char="2" reason="Missing 'use strict' statement." evidence="	this.usrnm = usrnm;"/>
-<issue line="20" char="1" reason="Use spaces, not tabs." evidence="	this.email = email;"/>
-<issue line="20" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.email = email;"/>
-<issue line="21" char="1" reason="Use spaces, not tabs." evidence="	this.name = name;"/>
-<issue line="21" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.name = name;"/>
-<issue line="22" char="1" reason="Use spaces, not tabs." evidence="	this.bday = bday;"/>
-<issue line="22" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.bday = bday;"/>
-<issue line="23" char="1" reason="Use spaces, not tabs." evidence="	this.location = location;"/>
-<issue line="23" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.location = location;"/>
-<issue line="24" char="1" reason="Use spaces, not tabs." evidence="	this.avatar_url = avatar_url;"/>
-<issue line="24" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.avatar_url = avatar_url;"/>
-<issue line="25" char="1" reason="Use spaces, not tabs." evidence="	this.url = url;"/>
-<issue line="25" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.url = url;"/>
-<issue line="26" char="1" reason="Use spaces, not tabs." evidence="	this.bio = bio;"/>
-<issue line="26" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.bio = bio;"/>
-<issue line="27" char="1" reason="Use spaces, not tabs." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="27" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="39" char="33" reason="Expected exactly one space between 'function' and '('." evidence="DevMdl.prototype.init = function(devSchema) {"/>
-<issue line="40" char="1" reason="Use spaces, not tabs." evidence="	this._id = devSchema._id;"/>
-<issue line="40" char="2" reason="Missing 'use strict' statement." evidence="	this._id = devSchema._id;"/>
-<issue line="41" char="1" reason="Use spaces, not tabs." evidence="	this.usrnm = devSchema.usrnm;"/>
-<issue line="41" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.usrnm = devSchema.usrnm;"/>
-<issue line="42" char="1" reason="Use spaces, not tabs." evidence="	this.email = devSchema.email;"/>
-<issue line="42" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.email = devSchema.email;"/>
-<issue line="43" char="1" reason="Use spaces, not tabs." evidence="	this.name = devSchema.name;"/>
-<issue line="43" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.name = devSchema.name;"/>
-<issue line="44" char="1" reason="Use spaces, not tabs." evidence="	this.bday = devSchema.bday;"/>
-<issue line="44" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.bday = devSchema.bday;"/>
-<issue line="45" char="1" reason="Use spaces, not tabs." evidence="	this.location = devSchema.location;"/>
-<issue line="45" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.location = devSchema.location;"/>
-<issue line="46" char="1" reason="Use spaces, not tabs." evidence="	this.avatar_url = devSchema.avatar_url;"/>
-<issue line="46" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.avatar_url = devSchema.avatar_url;"/>
-<issue line="47" char="1" reason="Use spaces, not tabs." evidence="	this.url = devSchema.url;"/>
-<issue line="47" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.url = devSchema.url;"/>
-<issue line="48" char="1" reason="Use spaces, not tabs." evidence="	this.bio = devSchema.bio;"/>
-<issue line="48" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.bio = devSchema.bio;"/>
-<issue line="49" char="1" reason="Use spaces, not tabs." evidence="	this.upd_at = devSchema.upd_at;"/>
-<issue line="49" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.upd_at = devSchema.upd_at;"/>
-<issue line="57" char="38" reason="Expected exactly one space between 'function' and '('." evidence="DevMdl.prototype.setUpdate = function() {"/>
-<issue line="58" char="1" reason="Use spaces, not tabs." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="58" char="2" reason="Missing 'use strict' statement." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="69" char="1" reason="Use spaces, not tabs." evidence="	var diff = new Date() - this.bday;"/>
-<issue line="69" char="2" reason="Missing 'use strict' statement." evidence="	var diff = new Date() - this.bday;"/>
-<issue line="70" char="1" reason="Use spaces, not tabs." evidence="	var diffdays = diff / 1000 / (60 * 60 * 24);"/>
-<issue line="70" char="2" reason="Expected 'var' at column 5, not column 2." evidence="	var diffdays = diff / 1000 / (60 * 60 * 24);"/>
-<issue line="70" char="6" reason="Combine this with the previous 'var' statement." evidence="	var diffdays = diff / 1000 / (60 * 60 * 24);"/>
-<issue line="71" char="1" reason="Use spaces, not tabs." evidence="	var age = Math.floor(diffdays / 365.25);"/>
-<issue line="71" char="2" reason="Expected 'var' at column 5, not column 2." evidence="	var age = Math.floor(diffdays / 365.25);"/>
-<issue line="71" char="2" reason="Too many errors. (93% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/developer/schemas/dev.js">
-<issue line="9" char="1" reason="Use spaces, not tabs." evidence="	usrnm: {"/>
-<issue line="9" char="2" reason="Expected 'usrnm' at column 9, not column 2." evidence="	usrnm: {"/>
-<issue line="10" char="1" reason="Use spaces, not tabs." evidence="		type: String,"/>
-<issue line="10" char="3" reason="Expected 'type' at column 13, not column 3." evidence="		type: String,"/>
-<issue line="11" char="1" reason="Use spaces, not tabs." evidence="		lowercase: true,"/>
-<issue line="11" char="3" reason="Expected 'lowercase' at column 13, not column 3." evidence="		lowercase: true,"/>
-<issue line="12" char="1" reason="Use spaces, not tabs." evidence="		trim: true,"/>
-<issue line="12" char="3" reason="Expected 'trim' at column 13, not column 3." evidence="		trim: true,"/>
-<issue line="13" char="1" reason="Use spaces, not tabs." evidence="		required: true"/>
-<issue line="13" char="3" reason="Expected 'required' at column 13, not column 3." evidence="		required: true"/>
-<issue line="14" char="1" reason="Use spaces, not tabs." evidence="		//validate: /^[a-zA-Z][a-zA-Z0-9\._\-]{3,14}?[a-zA-Z0-9]{0,2}$/"/>
-<issue line="15" char="1" reason="Use spaces, not tabs." evidence="	},"/>
-<issue line="15" char="2" reason="Expected '}' at column 9, not column 2." evidence="	},"/>
-<issue line="16" char="1" reason="Use spaces, not tabs." evidence="	email: {"/>
-<issue line="16" char="2" reason="Expected 'email' at column 9, not column 2." evidence="	email: {"/>
-<issue line="17" char="1" reason="Use spaces, not tabs." evidence="		type: String,"/>
-<issue line="17" char="3" reason="Expected 'type' at column 13, not column 3." evidence="		type: String,"/>
-<issue line="18" char="1" reason="Use spaces, not tabs." evidence="		lowercase: true,"/>
-<issue line="18" char="3" reason="Expected 'lowercase' at column 13, not column 3." evidence="		lowercase: true,"/>
-<issue line="19" char="1" reason="Use spaces, not tabs." evidence="		trim: true,"/>
-<issue line="19" char="3" reason="Expected 'trim' at column 13, not column 3." evidence="		trim: true,"/>
-<issue line="20" char="1" reason="Use spaces, not tabs." evidence="		required: false,"/>
-<issue line="20" char="3" reason="Expected 'required' at column 13, not column 3." evidence="		required: false,"/>
-<issue line="21" char="1" reason="Use spaces, not tabs." evidence="		//validate: /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/,"/>
-<issue line="22" char="1" reason="Use spaces, not tabs." evidence="		'default': null"/>
-<issue line="22" char="3" reason="Expected 'default' at column 13, not column 3." evidence="		'default': null"/>
-<issue line="23" char="1" reason="Use spaces, not tabs." evidence="	},"/>
-<issue line="23" char="2" reason="Expected '}' at column 9, not column 2." evidence="	},"/>
-<issue line="24" char="1" reason="Use spaces, not tabs." evidence="	name: {"/>
-<issue line="24" char="2" reason="Expected 'name' at column 9, not column 2." evidence="	name: {"/>
-<issue line="25" char="1" reason="Use spaces, not tabs." evidence="		type: String,"/>
-<issue line="25" char="3" reason="Expected 'type' at column 13, not column 3." evidence="		type: String,"/>
-<issue line="26" char="1" reason="Use spaces, not tabs." evidence="		trim: true,"/>
-<issue line="26" char="3" reason="Expected 'trim' at column 13, not column 3." evidence="		trim: true,"/>
-<issue line="27" char="1" reason="Use spaces, not tabs." evidence="		'default': null"/>
-<issue line="27" char="3" reason="Expected 'default' at column 13, not column 3." evidence="		'default': null"/>
-<issue line="28" char="1" reason="Use spaces, not tabs." evidence="	},"/>
-<issue line="28" char="2" reason="Expected '}' at column 9, not column 2." evidence="	},"/>
-<issue line="29" char="1" reason="Use spaces, not tabs." evidence="	bday: {"/>
-<issue line="29" char="2" reason="Expected 'bday' at column 9, not column 2." evidence="	bday: {"/>
-<issue line="30" char="1" reason="Use spaces, not tabs." evidence="		type: Date,"/>
-<issue line="30" char="3" reason="Expected 'type' at column 13, not column 3." evidence="		type: Date,"/>
-<issue line="31" char="1" reason="Use spaces, not tabs." evidence="		//'default': null"/>
-<issue line="32" char="1" reason="Use spaces, not tabs." evidence="		'default': new Date()"/>
-<issue line="32" char="3" reason="Expected 'default' at column 13, not column 3." evidence="		'default': new Date()"/>
-<issue line="33" char="1" reason="Use spaces, not tabs." evidence="	},"/>
-<issue line="33" char="2" reason="Expected '}' at column 9, not column 2." evidence="	},"/>
-<issue line="34" char="1" reason="Use spaces, not tabs." evidence="	location: {"/>
-<issue line="34" char="2" reason="Expected 'location' at column 9, not column 2." evidence="	location: {"/>
-<issue line="35" char="1" reason="Use spaces, not tabs." evidence="		type: String,"/>
-<issue line="35" char="1" reason="Too many errors. (30% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/developer/services/dev.js">
-<issue line="24" char="1" reason="Use spaces, not tabs." evidence="	devDao.insertSchema(dev_mdl, function (err, dev) {"/>
-<issue line="24" char="2" reason="Missing 'use strict' statement." evidence="	devDao.insertSchema(dev_mdl, function (err, dev) {"/>
-<issue line="25" char="1" reason="Use spaces, not tabs." evidence="		callback(err, dev);"/>
-<issue line="25" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, dev);"/>
-<issue line="26" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="26" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="40" char="1" reason="Use spaces, not tabs." evidence="	devDao.findSchemaById(_id, function (err, dev) {"/>
-<issue line="40" char="2" reason="Missing 'use strict' statement." evidence="	devDao.findSchemaById(_id, function (err, dev) {"/>
-<issue line="41" char="1" reason="Use spaces, not tabs." evidence="		callback(err, dev);"/>
-<issue line="41" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, dev);"/>
-<issue line="42" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="42" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="56" char="1" reason="Use spaces, not tabs." evidence="	devDao.findSchema({"/>
-<issue line="56" char="2" reason="Missing 'use strict' statement." evidence="	devDao.findSchema({"/>
-<issue line="57" char="1" reason="Use spaces, not tabs." evidence="		email: email"/>
-<issue line="57" char="3" reason="Expected 'email' at column 9, not column 3." evidence="		email: email"/>
-<issue line="58" char="1" reason="Use spaces, not tabs." evidence="	}, function (err, dev) {"/>
-<issue line="58" char="2" reason="Expected '}' at column 5, not column 2." evidence="	}, function (err, dev) {"/>
-<issue line="59" char="1" reason="Use spaces, not tabs." evidence="		callback(err, dev);"/>
-<issue line="59" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, dev);"/>
-<issue line="60" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="60" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="74" char="1" reason="Use spaces, not tabs." evidence="	devDao.findSchema({"/>
-<issue line="74" char="2" reason="Missing 'use strict' statement." evidence="	devDao.findSchema({"/>
-<issue line="75" char="1" reason="Use spaces, not tabs." evidence="		usrnm: usrnm"/>
-<issue line="75" char="3" reason="Expected 'usrnm' at column 9, not column 3." evidence="		usrnm: usrnm"/>
-<issue line="76" char="1" reason="Use spaces, not tabs." evidence="	}, function (err, dev) {"/>
-<issue line="76" char="2" reason="Expected '}' at column 5, not column 2." evidence="	}, function (err, dev) {"/>
-<issue line="77" char="1" reason="Use spaces, not tabs." evidence="		callback(err, dev);"/>
-<issue line="77" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, dev);"/>
-<issue line="78" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="78" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="94" char="1" reason="Use spaces, not tabs." evidence="	devDao.findSchemaLst(query, limit, order, function (err, dev) {"/>
-<issue line="94" char="2" reason="Missing 'use strict' statement." evidence="	devDao.findSchemaLst(query, limit, order, function (err, dev) {"/>
-<issue line="95" char="1" reason="Use spaces, not tabs." evidence="		callback(err, dev);"/>
-<issue line="95" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, dev);"/>
-<issue line="96" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="96" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="111" char="1" reason="Use spaces, not tabs." evidence="	devDao.findAllSchemaLst(query, order, function (err, dev) {"/>
-<issue line="111" char="2" reason="Missing 'use strict' statement." evidence="	devDao.findAllSchemaLst(query, order, function (err, dev) {"/>
-<issue line="112" char="1" reason="Use spaces, not tabs." evidence="		callback(err, dev);"/>
-<issue line="112" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, dev);"/>
-<issue line="113" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="113" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="128" char="1" reason="Use spaces, not tabs." evidence="	set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="128" char="2" reason="Missing 'use strict' statement." evidence="	set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="129" char="1" reason="Use spaces, not tabs." evidence="	devDao.updateSchema({"/>
-<issue line="129" char="2" reason="Expected 'devDao' at column 5, not column 2." evidence="	devDao.updateSchema({"/>
-<issue line="130" char="1" reason="Use spaces, not tabs." evidence="		_id: _id"/>
-<issue line="130" char="3" reason="Expected '_id' at column 9, not column 3." evidence="		_id: _id"/>
-<issue line="130" char="3" reason="Too many errors. (97% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/index.js">
-<issue line="18" char="28" reason="Expected exactly one space between 'function' and '('." evidence="exports.getComps = function(req, next) {"/>
-<issue line="19" char="5" reason="Missing 'use strict' statement." evidence="    try {"/>
-<issue line="21" char="40" reason="Expected exactly one space between 'function' and '('." evidence="        platfrmMod.getPlatfrms(function(err, platfrms) {"/>
-<issue line="26" char="48" reason="Expected exactly one space between 'function' and '('." evidence="                suprlayMod.getSuprlays(function(err, suprlays) {"/>
-<issue line="31" char="52" reason="Expected exactly one space between 'function' and '('." evidence="                        layerMod.getLayers(function(err, layers) {"/>
-<issue line="36" char="58" reason="Expected exactly one space between 'function' and '('." evidence="                                compMod.getComps(function(err, comps) {"/>
-<issue line="18" char="29" reason="Unused 'req'." evidence="exports.getComps = function(req, next) {"/>
-<issue line="65" char="29" reason="Expected exactly one space between 'function' and '('." evidence="exports.loadComps = function(req, next) {"/>
-<issue line="66" char="5" reason="Missing 'use strict' statement." evidence="    try {"/>
-<issue line="67" char="35" reason="Expected exactly one space between 'function' and '('." evidence="        loadLib.loadComps(function(err, res) {"/>
-<issue line="65" char="30" reason="Unused 'req'." evidence="exports.loadComps = function(req, next) {"/>
-<issue line="89" char="28" reason="Expected exactly one space between 'function' and '('." evidence="exports.updComps = function(req, next) {"/>
-<issue line="90" char="5" reason="Missing 'use strict' statement." evidence="    try {"/>
-<issue line="91" char="34" reason="Expected exactly one space between 'function' and '('." evidence="        loadLib.updComps(function(err, res) {"/>
-<issue line="89" char="29" reason="Unused 'req'." evidence="exports.updComps = function(req, next) {"/>
-<issue line="113" char="27" reason="Expected exactly one space between 'function' and '('." evidence="exports.updDevs = function(req, next) {"/>
-<issue line="114" char="5" reason="Missing 'use strict' statement." evidence="    try {"/>
-<issue line="115" char="33" reason="Expected exactly one space between 'function' and '('." evidence="        loadLib.updDevs(function(err, res) {"/>
-<issue line="113" char="28" reason="Unused 'req'." evidence="exports.updDevs = function(req, next) {"/>
-<issue line="127" char="28" reason="Expected exactly one space between 'function' and '('." evidence="exports.getProcs = function(req, next) {"/>
-<issue line="128" char="5" reason="Missing 'use strict' statement." evidence="    try {"/>
-<issue line="131" char="13" reason="Expected 'req' at column 17, not column 13." evidence="            req.query.layer &amp;&amp;"/>
-<issue line="132" char="13" reason="Expected 'req' at column 17, not column 13." evidence="            req.query.component) {"/>
-<issue line="134" char="17" reason="Combine this with the previous 'var' statement." evidence="            var suprlay_code = req.query.superlayer ? req.query.superlayer.toUpperCase() : null,"/>
-<issue line="140" char="36" reason="Expected exactly one space between 'function' and '('." evidence="                comp_name, function(err, res) {"/>
-<issue line="149" char="17" reason="Combine this with the previous 'var' statement." evidence="            var name = req.query.name ? req.query.name.toLowerCase() : null;"/>
-<issue line="150" char="65" reason="Expected exactly one space between 'function' and '('." evidence="            procMod.findStepsByProc(platfrm_code, name, function(err, res) {"/>
 </file>
 <file name="modules/repository/layer/index.js">
-<issue line="14" char="5" reason="Missing 'use strict' statement." evidence="    var order = -1;"/>
-<issue line="16" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'core':"/>
-<issue line="17" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 0;"/>
-<issue line="18" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="19" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'niche wallet':"/>
-<issue line="20" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 1;"/>
-<issue line="21" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="22" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'reference wallet':"/>
-<issue line="23" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 2;"/>
-<issue line="24" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="25" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'sub app':"/>
-<issue line="26" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 3;"/>
-<issue line="27" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="28" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'desktop':"/>
-<issue line="29" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 4;"/>
-<issue line="30" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="31" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'engine':"/>
-<issue line="32" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 6;"/>
-<issue line="33" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="34" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'wallet module':"/>
-<issue line="35" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 7;"/>
-<issue line="36" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="37" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'sub app module':"/>
-<issue line="38" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 8;"/>
-<issue line="39" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="40" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'desktop module':"/>
-<issue line="41" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 9;"/>
-<issue line="42" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="43" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'agent':"/>
-<issue line="44" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 10;"/>
-<issue line="45" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="46" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'actor':"/>
-<issue line="47" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 11;"/>
-<issue line="48" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="49" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'middleware':"/>
-<issue line="50" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 12;"/>
-<issue line="51" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="52" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'request':"/>
-<issue line="53" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 13;"/>
-<issue line="54" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="55" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'business transaction':"/>
-<issue line="56" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 14;"/>
-<issue line="57" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="58" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'digital asset transaction':"/>
-<issue line="59" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 15;"/>
-<issue line="60" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="61" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'crypto money transaction':"/>
-<issue line="62" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 16;"/>
-<issue line="63" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="64" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'cash money transaction':"/>
-<issue line="64" char="9" reason="Too many errors. (29% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/layer/models/layer.js">
-<issue line="15" char="5" reason="Missing 'use strict' statement." evidence="    this.name = name;"/>
-<issue line="31" char="35" reason="Expected exactly one space between 'function' and '('." evidence="LayerMdl.prototype.init = function(layerSchema) {"/>
-<issue line="32" char="5" reason="Missing 'use strict' statement." evidence="    this._id = layerSchema._id;"/>
-<issue line="35" char="40" reason="Use the || operator." evidence="    this.suprlay = layerSchema.suprlay ? layerSchema.suprlay : false;"/>
-<issue line="45" char="40" reason="Expected exactly one space between 'function' and '('." evidence="LayerMdl.prototype.setUpdate = function() {"/>
-<issue line="46" char="5" reason="Missing 'use strict' statement." evidence="    this.upd_at = new mongoose.Types.ObjectId();"/>
 </file>
 <file name="modules/repository/layer/schemas/layer.js">
 </file>
 <file name="modules/repository/layer/services/layer.js">
-<issue line="24" char="1" reason="Use spaces, not tabs." evidence="	layerDao.insertSchema(layer_mdl, function (err, layer) {"/>
-<issue line="24" char="2" reason="Missing 'use strict' statement." evidence="	layerDao.insertSchema(layer_mdl, function (err, layer) {"/>
-<issue line="25" char="1" reason="Use spaces, not tabs." evidence="		callback(err, layer);"/>
-<issue line="25" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, layer);"/>
-<issue line="26" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="26" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="40" char="1" reason="Use spaces, not tabs." evidence="	layerDao.findSchemaById(_id, function (err, layer) {"/>
-<issue line="40" char="2" reason="Missing 'use strict' statement." evidence="	layerDao.findSchemaById(_id, function (err, layer) {"/>
-<issue line="41" char="1" reason="Use spaces, not tabs." evidence="		callback(err, layer);"/>
-<issue line="41" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, layer);"/>
-<issue line="42" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="42" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="56" char="1" reason="Use spaces, not tabs." evidence="	layerDao.findSchema({"/>
-<issue line="56" char="2" reason="Missing 'use strict' statement." evidence="	layerDao.findSchema({"/>
-<issue line="57" char="1" reason="Use spaces, not tabs." evidence="		lang: lang"/>
-<issue line="57" char="3" reason="Expected 'lang' at column 9, not column 3." evidence="		lang: lang"/>
-<issue line="58" char="1" reason="Use spaces, not tabs." evidence="	}, function (err, layer) {"/>
-<issue line="58" char="2" reason="Expected '}' at column 5, not column 2." evidence="	}, function (err, layer) {"/>
-<issue line="59" char="1" reason="Use spaces, not tabs." evidence="		callback(err, layer);"/>
-<issue line="59" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, layer);"/>
-<issue line="60" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="60" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="74" char="1" reason="Use spaces, not tabs." evidence="	layerDao.findSchema({"/>
-<issue line="74" char="2" reason="Missing 'use strict' statement." evidence="	layerDao.findSchema({"/>
-<issue line="75" char="1" reason="Use spaces, not tabs." evidence="		name: name"/>
-<issue line="75" char="3" reason="Expected 'name' at column 9, not column 3." evidence="		name: name"/>
-<issue line="76" char="1" reason="Use spaces, not tabs." evidence="	}, function (err, layer) {"/>
-<issue line="76" char="2" reason="Expected '}' at column 5, not column 2." evidence="	}, function (err, layer) {"/>
-<issue line="77" char="1" reason="Use spaces, not tabs." evidence="		callback(err, layer);"/>
-<issue line="77" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, layer);"/>
-<issue line="78" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="78" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="94" char="1" reason="Use spaces, not tabs." evidence="	layerDao.findSchemaLst(query, limit, order, function (err, layer) {"/>
-<issue line="94" char="2" reason="Missing 'use strict' statement." evidence="	layerDao.findSchemaLst(query, limit, order, function (err, layer) {"/>
-<issue line="95" char="1" reason="Use spaces, not tabs." evidence="		callback(err, layer);"/>
-<issue line="95" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, layer);"/>
-<issue line="96" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="96" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="111" char="1" reason="Use spaces, not tabs." evidence="	layerDao.findAllSchemaLst(query, order, function (err, layer) {"/>
-<issue line="111" char="2" reason="Missing 'use strict' statement." evidence="	layerDao.findAllSchemaLst(query, order, function (err, layer) {"/>
-<issue line="112" char="1" reason="Use spaces, not tabs." evidence="		callback(err, layer);"/>
-<issue line="112" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, layer);"/>
-<issue line="113" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="113" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="128" char="1" reason="Use spaces, not tabs." evidence="	set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="128" char="2" reason="Missing 'use strict' statement." evidence="	set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="129" char="1" reason="Use spaces, not tabs." evidence="	layerDao.updateSchema({"/>
-<issue line="129" char="2" reason="Expected 'layerDao' at column 5, not column 2." evidence="	layerDao.updateSchema({"/>
-<issue line="130" char="1" reason="Use spaces, not tabs." evidence="		_id: _id"/>
-<issue line="130" char="3" reason="Expected '_id' at column 9, not column 3." evidence="		_id: _id"/>
-<issue line="130" char="3" reason="Too many errors. (97% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/lib/loader.js">
-<issue line="33" char="31" reason="Expected exactly one space between 'function' and '('." evidence="var processCompList = function(section, layer, compList, type) {"/>
-<issue line="34" char="5" reason="Missing 'use strict' statement." evidence="    var comps = [];"/>
-<issue line="35" char="10" reason="Move 'var' declarations to the top of the function." evidence="    for (var i = 0; i &lt; compList.length; i++) {"/>
-<issue line="35" char="10" reason="Stopping. (3% scanned)." evidence=""/>
+<issue line="71" char="24" reason="['$'] is better written in dot notation." evidence="        proComp = comp['$'];"/>
+<issue line="80" char="31" reason="['$'] is better written in dot notation." evidence="            dev = _authors[i]['$'];"/>
+<issue line="86" char="34" reason="['$'] is better written in dot notation." evidence="            dev = _mantainers[i]['$'];"/>
+<issue line="94" char="37" reason="['$'] is better written in dot notation." evidence="            status = _life_cycle[i]['$'];"/>
+<issue line="273" char="40" reason="['$'] is better written in dot notation." evidence="                platfrm = _platfrms[i]['$'];"/>
+<issue line="278" char="40" reason="['$'] is better written in dot notation." evidence="                    layer = _layers[j]['$'];"/>
+<issue line="301" char="46" reason="['$'] is better written in dot notation." evidence="                        depend = _depends[j]['$'];"/>
+<issue line="313" char="40" reason="['$'] is better written in dot notation." evidence="                suprlay = _suprlays[i]['$'];"/>
+<issue line="318" char="40" reason="['$'] is better written in dot notation." evidence="                    layer = _layers[j]['$'];"/>
+<issue line="341" char="46" reason="['$'] is better written in dot notation." evidence="                        depend = _depends[j]['$'];"/>
+<issue line="352" char="35" reason="['$'] is better written in dot notation." evidence="                _proc = _procs[i]['$'];"/>
+<issue line="356" char="39" reason="['$'] is better written in dot notation." evidence="                    _step = _steps[j]['$'];"/>
+<issue line="362" char="58" reason="['$'] is better written in dot notation." evidence="                                _step.next.push(_next[k]['$']);"/>
 </file>
 <file name="modules/repository/platform/index.js">
-<issue line="14" char="5" reason="Missing 'use strict' statement." evidence="    var order = -1;"/>
-<issue line="16" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'COR':"/>
-<issue line="17" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 0;"/>
-<issue line="18" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="19" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'PIP':"/>
-<issue line="20" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 1;"/>
-<issue line="21" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="22" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'WPD':"/>
-<issue line="23" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 2;"/>
-<issue line="24" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="25" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'CCP':"/>
-<issue line="26" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 3;"/>
-<issue line="27" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="28" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'CCM':"/>
-<issue line="29" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 4;"/>
-<issue line="30" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="31" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'BNP':"/>
-<issue line="32" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 5;"/>
-<issue line="33" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="34" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'SHP':"/>
-<issue line="35" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 6;"/>
-<issue line="36" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="37" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'DAP':"/>
-<issue line="38" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 7;"/>
-<issue line="39" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="40" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'MKT':"/>
-<issue line="41" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 8;"/>
-<issue line="42" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="43" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'CSH':"/>
-<issue line="44" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 9;"/>
-<issue line="45" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="46" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'BNK':"/>
-<issue line="47" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 10;"/>
-<issue line="48" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="49" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'CBP':"/>
-<issue line="50" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 11;"/>
-<issue line="51" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="52" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'CDN':"/>
-<issue line="53" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 12;"/>
-<issue line="54" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="55" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'DPN':"/>
-<issue line="56" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 13;"/>
-<issue line="57" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="58" char="9" reason="Expected 'default' at column 5, not column 9." evidence="        default:"/>
-<issue line="59" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = -1;"/>
-<issue line="60" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="80" char="35" reason="Expected exactly one space between 'function' and '('." evidence="exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {"/>
-<issue line="81" char="5" reason="Missing 'use strict' statement." evidence="    order = code ? getOrder(code) : null;"/>
-<issue line="82" char="48" reason="Expected exactly one space between 'function' and '('." evidence="    platfrmSrv.findPlatfrmByCode(code, function(err_plat, res_plat) {"/>
-<issue line="85" char="11" reason="Unnecessary 'else' after disruption." evidence="        } else if (res_plat) {"/>
-<issue line="85" char="11" reason="Too many errors. (60% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/platform/models/platfrm.js">
-<issue line="15" char="1" reason="Use spaces, not tabs." evidence="	// always initialize all instance properties"/>
-<issue line="16" char="1" reason="Use spaces, not tabs." evidence="	this.code = code;"/>
-<issue line="16" char="2" reason="Missing 'use strict' statement." evidence="	this.code = code;"/>
-<issue line="17" char="1" reason="Use spaces, not tabs." evidence="	this.name = name;"/>
-<issue line="17" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.name = name;"/>
-<issue line="18" char="1" reason="Use spaces, not tabs." evidence="	this.logo = logo;"/>
-<issue line="18" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.logo = logo;"/>
-<issue line="19" char="1" reason="Use spaces, not tabs." evidence="	this.deps = deps;"/>
-<issue line="19" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.deps = deps;"/>
-<issue line="20" char="1" reason="Use spaces, not tabs." evidence="	this.order = order;"/>
-<issue line="20" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.order = order;"/>
-<issue line="21" char="1" reason="Use spaces, not tabs." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="21" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="33" char="37" reason="Expected exactly one space between 'function' and '('." evidence="PlatfrmMdl.prototype.init = function(platfrmSchema) {"/>
-<issue line="34" char="1" reason="Use spaces, not tabs." evidence="	this._id = platfrmSchema._id;"/>
-<issue line="34" char="2" reason="Missing 'use strict' statement." evidence="	this._id = platfrmSchema._id;"/>
-<issue line="35" char="1" reason="Use spaces, not tabs." evidence="	this.code = platfrmSchema.code;"/>
-<issue line="35" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.code = platfrmSchema.code;"/>
-<issue line="36" char="1" reason="Use spaces, not tabs." evidence="	this.name = platfrmSchema.name;"/>
-<issue line="36" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.name = platfrmSchema.name;"/>
-<issue line="37" char="1" reason="Use spaces, not tabs." evidence="	this.logo = platfrmSchema.logo;"/>
-<issue line="37" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.logo = platfrmSchema.logo;"/>
-<issue line="38" char="1" reason="Use spaces, not tabs." evidence="	this.deps = platfrmSchema.deps;"/>
-<issue line="38" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.deps = platfrmSchema.deps;"/>
-<issue line="39" char="1" reason="Use spaces, not tabs." evidence="	this.order = platfrmSchema.order;"/>
-<issue line="39" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.order = platfrmSchema.order;"/>
-<issue line="40" char="1" reason="Use spaces, not tabs." evidence="	this.upd_at = platfrmSchema.upd_at;"/>
-<issue line="40" char="2" reason="Expected 'this' at column 5, not column 2." evidence="	this.upd_at = platfrmSchema.upd_at;"/>
-<issue line="48" char="42" reason="Expected exactly one space between 'function' and '('." evidence="PlatfrmMdl.prototype.setUpdate = function() {"/>
-<issue line="49" char="1" reason="Use spaces, not tabs." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="49" char="2" reason="Missing 'use strict' statement." evidence="	this.upd_at = new mongoose.Types.ObjectId();"/>
 </file>
 <file name="modules/repository/platform/schemas/platfrm.js">
 </file>
 <file name="modules/repository/platform/services/platfrm.js">
-<issue line="24" char="1" reason="Use spaces, not tabs." evidence="	platfrmDao.insertSchema(platfrm_mdl, function (err, platfrm) {"/>
-<issue line="24" char="2" reason="Missing 'use strict' statement." evidence="	platfrmDao.insertSchema(platfrm_mdl, function (err, platfrm) {"/>
-<issue line="25" char="1" reason="Use spaces, not tabs." evidence="		callback(err, platfrm);"/>
-<issue line="25" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, platfrm);"/>
-<issue line="26" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="26" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="40" char="1" reason="Use spaces, not tabs." evidence="	platfrmDao.findSchemaById(_id, function (err, platfrm) {"/>
-<issue line="40" char="2" reason="Missing 'use strict' statement." evidence="	platfrmDao.findSchemaById(_id, function (err, platfrm) {"/>
-<issue line="41" char="1" reason="Use spaces, not tabs." evidence="		callback(err, platfrm);"/>
-<issue line="41" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, platfrm);"/>
-<issue line="42" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="42" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="56" char="1" reason="Use spaces, not tabs." evidence="	platfrmDao.findSchema({"/>
-<issue line="56" char="2" reason="Missing 'use strict' statement." evidence="	platfrmDao.findSchema({"/>
-<issue line="57" char="1" reason="Use spaces, not tabs." evidence="		code: code"/>
-<issue line="57" char="3" reason="Expected 'code' at column 9, not column 3." evidence="		code: code"/>
-<issue line="58" char="1" reason="Use spaces, not tabs." evidence="	}, function (err, platfrm) {"/>
-<issue line="58" char="2" reason="Expected '}' at column 5, not column 2." evidence="	}, function (err, platfrm) {"/>
-<issue line="59" char="1" reason="Use spaces, not tabs." evidence="		callback(err, platfrm);"/>
-<issue line="59" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, platfrm);"/>
-<issue line="60" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="60" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="74" char="1" reason="Use spaces, not tabs." evidence="	platfrmDao.findSchema({"/>
-<issue line="74" char="2" reason="Missing 'use strict' statement." evidence="	platfrmDao.findSchema({"/>
-<issue line="75" char="1" reason="Use spaces, not tabs." evidence="		name: name"/>
-<issue line="75" char="3" reason="Expected 'name' at column 9, not column 3." evidence="		name: name"/>
-<issue line="76" char="1" reason="Use spaces, not tabs." evidence="	}, function (err, platfrm) {"/>
-<issue line="76" char="2" reason="Expected '}' at column 5, not column 2." evidence="	}, function (err, platfrm) {"/>
-<issue line="77" char="1" reason="Use spaces, not tabs." evidence="		callback(err, platfrm);"/>
-<issue line="77" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, platfrm);"/>
-<issue line="78" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="78" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="94" char="1" reason="Use spaces, not tabs." evidence="	platfrmDao.findSchemaLst(query, limit, order, function (err, platfrm) {"/>
-<issue line="94" char="2" reason="Missing 'use strict' statement." evidence="	platfrmDao.findSchemaLst(query, limit, order, function (err, platfrm) {"/>
-<issue line="95" char="1" reason="Use spaces, not tabs." evidence="		callback(err, platfrm);"/>
-<issue line="95" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, platfrm);"/>
-<issue line="96" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="96" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="111" char="1" reason="Use spaces, not tabs." evidence="	platfrmDao.findAllSchemaLst(query, order, function (err, platfrm) {"/>
-<issue line="111" char="2" reason="Missing 'use strict' statement." evidence="	platfrmDao.findAllSchemaLst(query, order, function (err, platfrm) {"/>
-<issue line="112" char="1" reason="Use spaces, not tabs." evidence="		callback(err, platfrm);"/>
-<issue line="112" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, platfrm);"/>
-<issue line="113" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="113" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="128" char="1" reason="Use spaces, not tabs." evidence="	set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="128" char="2" reason="Missing 'use strict' statement." evidence="	set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="129" char="1" reason="Use spaces, not tabs." evidence="	platfrmDao.updateSchema({"/>
-<issue line="129" char="2" reason="Expected 'platfrmDao' at column 5, not column 2." evidence="	platfrmDao.updateSchema({"/>
-<issue line="130" char="1" reason="Use spaces, not tabs." evidence="		_id: _id"/>
-<issue line="130" char="3" reason="Expected '_id' at column 9, not column 3." evidence="		_id: _id"/>
-<issue line="130" char="3" reason="Too many errors. (97% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/process/index.js">
-<issue line="11" char="24" reason="Expected exactly one space between 'function' and '('." evidence="var findComp = function(platfrm_code, suprlay_code, layer_name, comp_name, callback) {"/>
-<issue line="13" char="5" reason="Missing 'use strict' statement." evidence="    layerSrv.findLayerByName(layer_name.toLowerCase(), function(err_lay, res_lay) {"/>
-<issue line="13" char="64" reason="Expected exactly one space between 'function' and '('." evidence="    layerSrv.findLayerByName(layer_name.toLowerCase(), function(err_lay, res_lay) {"/>
-<issue line="17" char="11" reason="Unnecessary 'else' after disruption." evidence="        } else if (res_lay) {"/>
-<issue line="21" char="68" reason="Expected exactly one space between 'function' and '('." evidence="                platfrmSrv.findPlatfrmByCode(platfrm_code, function(err_pla, res_pla) {"/>
-<issue line="25" char="23" reason="Unnecessary 'else' after disruption." evidence="                    } else if (res_pla) {"/>
-<issue line="31" char="36" reason="Expected exactly one space between 'function' and '('." evidence="                        }, function(err_comp, res_comp) {"/>
-<issue line="35" char="31" reason="Unnecessary 'else' after disruption." evidence="                            } else {"/>
-<issue line="48" char="68" reason="Expected exactly one space between 'function' and '('." evidence="                suprlaySrv.findSuprlayByCode(suprlay_code, function(err_sup, res_sup) {"/>
-<issue line="52" char="23" reason="Unnecessary 'else' after disruption." evidence="                    } else if (res_sup) {"/>
-<issue line="58" char="36" reason="Expected exactly one space between 'function' and '('." evidence="                        }, function(err_comp, res_comp) {"/>
-<issue line="62" char="31" reason="Unnecessary 'else' after disruption." evidence="                            } else {"/>
-<issue line="96" char="35" reason="Expected exactly one space between 'function' and '('." evidence="exports.findProcsByComp = function(platfrm_code, suprlay_code, layer_name, comp_name, callback) {"/>
-<issue line="97" char="5" reason="Missing 'use strict' statement." evidence="    findComp(platfrm_code, suprlay_code, layer_name, comp_name, function(err_comp, res_comp) {"/>
-<issue line="97" char="73" reason="Expected exactly one space between 'function' and '('." evidence="    findComp(platfrm_code, suprlay_code, layer_name, comp_name, function(err_comp, res_comp) {"/>
-<issue line="100" char="11" reason="Unnecessary 'else' after disruption." evidence="        } else {"/>
-<issue line="104" char="28" reason="Expected exactly one space between 'function' and '('." evidence="            }, {}, function(err, steps) {"/>
-<issue line="107" char="19" reason="Unnecessary 'else' after disruption." evidence="                } else {"/>
-<issue line="118" char="47" reason="Expected exactly one space between 'function' and '('." evidence="                    _procs.contains = function(_id) {"/>
-<issue line="119" char="30" reason="Move 'var' declarations to the top of the function." evidence="                        for (var i = this.length - 1; i &gt;= 0; i--) {"/>
-<issue line="119" char="30" reason="Stopping. (36% scanned)." evidence=""/>
+<issue line="188" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="193" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
+<issue line="271" char="26" reason="['$and'] is better written in dot notation." evidence="                find_obj['$and'].push({"/>
+<issue line="276" char="26" reason="['$and'] is better written in dot notation." evidence="                find_obj['$and'].push({"/>
+<issue line="281" char="26" reason="['$and'] is better written in dot notation." evidence="                find_obj['$and'].push({"/>
 </file>
 <file name="modules/repository/process/models/proc.js">
-<issue line="17" char="5" reason="Missing 'use strict' statement." evidence="    this.platfrm = platfrm;"/>
-<issue line="35" char="34" reason="Expected exactly one space between 'function' and '('." evidence="ProcMdl.prototype.init = function(procSchema) {"/>
-<issue line="36" char="5" reason="Missing 'use strict' statement." evidence="    this._id = procSchema._id;"/>
-<issue line="51" char="39" reason="Expected exactly one space between 'function' and '('." evidence="ProcMdl.prototype.setUpdate = function() {"/>
-<issue line="52" char="5" reason="Missing 'use strict' statement." evidence="    this.upd_at = new mongoose.Types.ObjectId();"/>
 </file>
 <file name="modules/repository/process/models/step.js">
-<issue line="18" char="5" reason="Missing 'use strict' statement." evidence="    this._proc_id = _proc_id;"/>
-<issue line="37" char="34" reason="Expected exactly one space between 'function' and '('." evidence="StepMdl.prototype.init = function(stepSchema) {"/>
-<issue line="38" char="5" reason="Missing 'use strict' statement." evidence="    this._id = stepSchema._id;"/>
-<issue line="54" char="39" reason="Expected exactly one space between 'function' and '('." evidence="StepMdl.prototype.setUpdate = function() {"/>
-<issue line="55" char="5" reason="Missing 'use strict' statement." evidence="    this.upd_at = new mongoose.Types.ObjectId();"/>
 </file>
 <file name="modules/repository/process/schemas/proc.js">
 </file>
 <file name="modules/repository/process/schemas/step.js">
 </file>
 <file name="modules/repository/process/services/proc.js">
-<issue line="13" char="30" reason="Expected exactly one space between 'function' and '('." evidence="exports.insertProc = function(proc_mdl, callback) {"/>
-<issue line="14" char="5" reason="Missing 'use strict' statement." evidence="    procDao.insertSchema(proc_mdl, function(err, proc) {"/>
-<issue line="14" char="44" reason="Expected exactly one space between 'function' and '('." evidence="    procDao.insertSchema(proc_mdl, function(err, proc) {"/>
-<issue line="19" char="39" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAndPopulateProc = function(query, callback) {"/>
-<issue line="20" char="5" reason="Missing 'use strict' statement." evidence="    procDao.findSchema(query, function(err, proc) {"/>
-<issue line="20" char="39" reason="Expected exactly one space between 'function' and '('." evidence="    procDao.findSchema(query, function(err, proc) {"/>
-<issue line="28" char="24" reason="Expected exactly one space between 'function' and '('." evidence="            }, function(err, steps) {"/>
-<issue line="35" char="29" reason="Combine this with the previous 'var' statement." evidence="                        var getStep = function(i) {"/>
-<issue line="35" char="47" reason="Expected exactly one space between 'function' and '('." evidence="                        var getStep = function(i) {"/>
-<issue line="37" char="33" reason="Combine this with the previous 'var' statement." evidence="                            var step = {};"/>
-<issue line="39" char="54" reason="Use the || operator." evidence="                            step.title = _step.title ? _step.title : null;"/>
-<issue line="40" char="52" reason="Use the || operator." evidence="                            step.desc = _step.desc ? _step.desc : null;"/>
-<issue line="41" char="52" reason="Use the || operator." evidence="                            step.type = _step.type ? _step.type : null;"/>
-<issue line="42" char="52" reason="Use the || operator." evidence="                            step.next = _step.next ? _step.next : [];"/>
-<issue line="55" char="30" reason="Move 'var' declarations to the top of the function." evidence="                        for (var i = 0; i &lt; steps.length; i++) {"/>
-<issue line="55" char="30" reason="Stopping. (64% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/process/services/step.js">
-<issue line="29" char="30" reason="Expected exactly one space between 'function' and '('." evidence="exports.insertStep = function(step_mdl, callback) {"/>
-<issue line="30" char="5" reason="Missing 'use strict' statement." evidence="    stepDao.insertSchema(step_mdl, function(err, step) {"/>
-<issue line="30" char="44" reason="Expected exactly one space between 'function' and '('." evidence="    stepDao.insertSchema(step_mdl, function(err, step) {"/>
-<issue line="45" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findStepById = function(_id, callback) {"/>
-<issue line="46" char="5" reason="Missing 'use strict' statement." evidence="    stepDao.findSchemaById(_id, function(err, step) {"/>
-<issue line="46" char="41" reason="Expected exactly one space between 'function' and '('." evidence="    stepDao.findSchemaById(_id, function(err, step) {"/>
-<issue line="61" char="28" reason="Expected exactly one space between 'function' and '('." evidence="exports.findStep = function(query, callback) {"/>
-<issue line="62" char="5" reason="Missing 'use strict' statement." evidence="    stepDao.findSchema(query, function(err, step) {"/>
-<issue line="62" char="39" reason="Expected exactly one space between 'function' and '('." evidence="    stepDao.findSchema(query, function(err, step) {"/>
-<issue line="78" char="29" reason="Expected exactly one space between 'function' and '('." evidence="exports.findSteps = function(query, sort, callback) {"/>
-<issue line="79" char="5" reason="Missing 'use strict' statement." evidence="    stepDao.findAllSchemaLst(query, sort, function(err, step) {"/>
-<issue line="79" char="51" reason="Expected exactly one space between 'function' and '('." evidence="    stepDao.findAllSchemaLst(query, sort, function(err, step) {"/>
-<issue line="95" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAllSteps = function(query, order, callback) {"/>
-<issue line="96" char="5" reason="Missing 'use strict' statement." evidence="    stepDao.findAllSchemaLst(query, order, function(err, steps) {"/>
-<issue line="96" char="52" reason="Expected exactly one space between 'function' and '('." evidence="    stepDao.findAllSchemaLst(query, order, function(err, steps) {"/>
-<issue line="102" char="17" reason="Combine this with the previous 'var' statement." evidence="            var loopSteps = function(i) {"/>
-<issue line="102" char="37" reason="Expected exactly one space between 'function' and '('." evidence="            var loopSteps = function(i) {"/>
-<issue line="105" char="114" reason="Expected exactly one space between 'function' and '('." evidence="                    compSrv.findAndPopulateCompById(_step._comp_id, '_platfrm_id _suprlay_id _layer_id', function(err, comp) {"/>
-<issue line="134" char="34" reason="Expected exactly one space between 'function' and '('." evidence="exports.updateStepById = function(_id, set, callback) {"/>
-<issue line="135" char="5" reason="Missing 'use strict' statement." evidence="    set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="138" char="25" reason="Expected exactly one space between 'function' and '('." evidence="    }, set, {}, function(err, step) {"/>
-<issue line="155" char="43" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAndPopulateAllSteps = function(query, sort, path, callback) {"/>
-<issue line="156" char="5" reason="Missing 'use strict' statement." evidence="    stepDao.findAndPopulateAllSchemaLst(query, sort, path, function(err, step) {"/>
-<issue line="156" char="68" reason="Expected exactly one space between 'function' and '('." evidence="    stepDao.findAndPopulateAllSchemaLst(query, sort, path, function(err, step) {"/>
 </file>
 <file name="modules/repository/superlayer/index.js">
-<issue line="5" char="5" reason="Missing 'use strict' statement." evidence="    var order = -1;"/>
-<issue line="7" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'P2P':"/>
-<issue line="8" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 0;"/>
-<issue line="9" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="10" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'BCH':"/>
-<issue line="11" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 1;"/>
-<issue line="12" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="13" char="9" reason="Expected 'case' at column 5, not column 9." evidence="        case 'OSA':"/>
-<issue line="14" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = 2;"/>
-<issue line="15" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="16" char="9" reason="Expected 'default' at column 5, not column 9." evidence="        default:"/>
-<issue line="17" char="13" reason="Expected 'order' at column 9, not column 13." evidence="            order = -1;"/>
-<issue line="18" char="13" reason="Expected 'break' at column 9, not column 13." evidence="            break;"/>
-<issue line="38" char="35" reason="Expected exactly one space between 'function' and '('." evidence="exports.insOrUpdSuprlay = function(code, name, logo, deps, order, callback) {"/>
-<issue line="39" char="5" reason="Missing 'use strict' statement." evidence="    order = code ? getOrder(code) : null;"/>
-<issue line="40" char="48" reason="Expected exactly one space between 'function' and '('." evidence="    suprlaySrv.findSuprlayByCode(code, function(err_supr, res_supr) {"/>
-<issue line="43" char="11" reason="Unnecessary 'else' after disruption." evidence="        } else if (res_supr) {"/>
-<issue line="45" char="30" reason="Expected '!==' and instead saw '!='." evidence="            if (name &amp;&amp; name != res_supr.name) {"/>
-<issue line="49" char="30" reason="Expected '!==' and instead saw '!='." evidence="            if (logo &amp;&amp; logo != res_supr.logo) {"/>
-<issue line="53" char="30" reason="Expected '!==' and instead saw '!='." evidence="            if (deps &amp;&amp; deps != res_supr.deps) {"/>
-<issue line="57" char="32" reason="Expected '!==' and instead saw '!='." evidence="            if (order &amp;&amp; order != res_supr.order) {"/>
-<issue line="62" char="77" reason="Expected exactly one space between 'function' and '('." evidence="                suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function(err_upd, res_upd) {"/>
-<issue line="63" char="34" reason="Expected '{' and instead saw 'return'." evidence="                    if (err_upd) return callback(err_upd, null);"/>
-<issue line="63" char="34" reason="Stopping. (64% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/superlayer/models/suprlay.js">
-<issue line="17" char="5" reason="Missing 'use strict' statement." evidence="    this.code = code;"/>
-<issue line="15" char="39" reason="Unused 'deps'." evidence="function SuprlayMdl(code, name, logo, deps, order) {"/>
-<issue line="35" char="37" reason="Expected exactly one space between 'function' and '('." evidence="SuprlayMdl.prototype.init = function(suprlaySchema) {"/>
-<issue line="36" char="5" reason="Missing 'use strict' statement." evidence="    this._id = suprlaySchema._id;"/>
-<issue line="50" char="42" reason="Expected exactly one space between 'function' and '('." evidence="SuprlayMdl.prototype.setUpdate = function() {"/>
-<issue line="51" char="5" reason="Missing 'use strict' statement." evidence="    this.upd_at = new mongoose.Types.ObjectId();"/>
 </file>
 <file name="modules/repository/superlayer/schemas/suprlay.js">
 </file>
 <file name="modules/repository/superlayer/services/suprlay.js">
-<issue line="24" char="1" reason="Use spaces, not tabs." evidence="	suprlayDao.insertSchema(suprlay_mdl, function (err, suprlay) {"/>
-<issue line="24" char="2" reason="Missing 'use strict' statement." evidence="	suprlayDao.insertSchema(suprlay_mdl, function (err, suprlay) {"/>
-<issue line="25" char="1" reason="Use spaces, not tabs." evidence="		callback(err, suprlay);"/>
-<issue line="25" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, suprlay);"/>
-<issue line="26" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="26" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="40" char="1" reason="Use spaces, not tabs." evidence="	suprlayDao.findSchemaById(_id, function (err, suprlay) {"/>
-<issue line="40" char="2" reason="Missing 'use strict' statement." evidence="	suprlayDao.findSchemaById(_id, function (err, suprlay) {"/>
-<issue line="41" char="1" reason="Use spaces, not tabs." evidence="		callback(err, suprlay);"/>
-<issue line="41" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, suprlay);"/>
-<issue line="42" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="42" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="56" char="1" reason="Use spaces, not tabs." evidence="	suprlayDao.findSchema({"/>
-<issue line="56" char="2" reason="Missing 'use strict' statement." evidence="	suprlayDao.findSchema({"/>
-<issue line="57" char="1" reason="Use spaces, not tabs." evidence="		code: code"/>
-<issue line="57" char="3" reason="Expected 'code' at column 9, not column 3." evidence="		code: code"/>
-<issue line="58" char="1" reason="Use spaces, not tabs." evidence="	}, function (err, suprlay) {"/>
-<issue line="58" char="2" reason="Expected '}' at column 5, not column 2." evidence="	}, function (err, suprlay) {"/>
-<issue line="59" char="1" reason="Use spaces, not tabs." evidence="		callback(err, suprlay);"/>
-<issue line="59" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, suprlay);"/>
-<issue line="60" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="60" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="74" char="1" reason="Use spaces, not tabs." evidence="	suprlayDao.findSchema({"/>
-<issue line="74" char="2" reason="Missing 'use strict' statement." evidence="	suprlayDao.findSchema({"/>
-<issue line="75" char="1" reason="Use spaces, not tabs." evidence="		name: name"/>
-<issue line="75" char="3" reason="Expected 'name' at column 9, not column 3." evidence="		name: name"/>
-<issue line="76" char="1" reason="Use spaces, not tabs." evidence="	}, function (err, suprlay) {"/>
-<issue line="76" char="2" reason="Expected '}' at column 5, not column 2." evidence="	}, function (err, suprlay) {"/>
-<issue line="77" char="1" reason="Use spaces, not tabs." evidence="		callback(err, suprlay);"/>
-<issue line="77" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, suprlay);"/>
-<issue line="78" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="78" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="94" char="1" reason="Use spaces, not tabs." evidence="	suprlayDao.findSchemaLst(query, limit, order, function (err, suprlay) {"/>
-<issue line="94" char="2" reason="Missing 'use strict' statement." evidence="	suprlayDao.findSchemaLst(query, limit, order, function (err, suprlay) {"/>
-<issue line="95" char="1" reason="Use spaces, not tabs." evidence="		callback(err, suprlay);"/>
-<issue line="95" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, suprlay);"/>
-<issue line="96" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="96" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="111" char="1" reason="Use spaces, not tabs." evidence="	suprlayDao.findAllSchemaLst(query, order, function (err, suprlay) {"/>
-<issue line="111" char="2" reason="Missing 'use strict' statement." evidence="	suprlayDao.findAllSchemaLst(query, order, function (err, suprlay) {"/>
-<issue line="112" char="1" reason="Use spaces, not tabs." evidence="		callback(err, suprlay);"/>
-<issue line="112" char="3" reason="Expected 'callback' at column 9, not column 3." evidence="		callback(err, suprlay);"/>
-<issue line="113" char="1" reason="Use spaces, not tabs." evidence="	});"/>
-<issue line="113" char="2" reason="Expected '}' at column 5, not column 2." evidence="	});"/>
-<issue line="128" char="1" reason="Use spaces, not tabs." evidence="	set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="128" char="2" reason="Missing 'use strict' statement." evidence="	set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="129" char="1" reason="Use spaces, not tabs." evidence="	suprlayDao.updateSchema({"/>
-<issue line="129" char="2" reason="Expected 'suprlayDao' at column 5, not column 2." evidence="	suprlayDao.updateSchema({"/>
-<issue line="130" char="1" reason="Use spaces, not tabs." evidence="		_id: _id"/>
-<issue line="130" char="3" reason="Expected '_id' at column 9, not column 3." evidence="		_id: _id"/>
-<issue line="130" char="3" reason="Too many errors. (97% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/team/index.js">
 </file>
 <file name="modules/repository/team/models/team.js">
-<issue line="13" char="5" reason="Missing 'use strict' statement." evidence="    this.name = name;"/>
-<issue line="28" char="34" reason="Expected exactly one space between 'function' and '('." evidence="TeamMdl.prototype.init = function(teamSchema) {"/>
-<issue line="29" char="5" reason="Missing 'use strict' statement." evidence="    this._id = teamSchema._id;"/>
-<issue line="41" char="39" reason="Expected exactly one space between 'function' and '('." evidence="TeamMdl.prototype.setUpdate = function() {"/>
-<issue line="42" char="5" reason="Missing 'use strict' statement." evidence="    this.upd_at = new mongoose.Types.ObjectId();"/>
 </file>
 <file name="modules/repository/team/schemas/team.js">
 </file>
 <file name="modules/repository/team/services/team.js">
-<issue line="25" char="30" reason="Expected exactly one space between 'function' and '('." evidence="exports.insertTeam = function(team_mdl, callback) {"/>
-<issue line="26" char="5" reason="Missing 'use strict' statement." evidence="    teamDao.insertSchema(team_mdl, function(err, team) {"/>
-<issue line="26" char="44" reason="Expected exactly one space between 'function' and '('." evidence="    teamDao.insertSchema(team_mdl, function(err, team) {"/>
-<issue line="41" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findTeamById = function(_id, callback) {"/>
-<issue line="42" char="5" reason="Missing 'use strict' statement." evidence="    teamDao.findAndPopulateSchemaById(_id, 'devs', function(err, team) {"/>
-<issue line="42" char="60" reason="Expected exactly one space between 'function' and '('." evidence="    teamDao.findAndPopulateSchemaById(_id, 'devs', function(err, team) {"/>
-<issue line="57" char="34" reason="Expected exactly one space between 'function' and '('." evidence="exports.findTeamByName = function(name, callback) {"/>
-<issue line="58" char="5" reason="Missing 'use strict' statement." evidence="    teamDao.findAndPopulateSchema({"/>
-<issue line="60" char="24" reason="Expected exactly one space between 'function' and '('." evidence="    }, 'devs', function(err, team) {"/>
-<issue line="77" char="29" reason="Expected exactly one space between 'function' and '('." evidence="exports.findTeams = function(query, limit, order, callback) {"/>
-<issue line="78" char="5" reason="Missing 'use strict' statement." evidence="    teamDao.findAndPopulateSchemaLst(query, limit, order, 'devs', function(err, team) {"/>
-<issue line="78" char="75" reason="Expected exactly one space between 'function' and '('." evidence="    teamDao.findAndPopulateSchemaLst(query, limit, order, 'devs', function(err, team) {"/>
-<issue line="94" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAllTeams = function(query, order, callback) {"/>
-<issue line="95" char="5" reason="Missing 'use strict' statement." evidence="    teamDao.findAndPopulateAllSchemaLst(query, order, 'devs', function(err, team) {"/>
-<issue line="95" char="71" reason="Expected exactly one space between 'function' and '('." evidence="    teamDao.findAndPopulateAllSchemaLst(query, order, 'devs', function(err, team) {"/>
-<issue line="111" char="34" reason="Expected exactly one space between 'function' and '('." evidence="exports.updateTeamById = function(_id, set, callback) {"/>
-<issue line="112" char="5" reason="Missing 'use strict' statement." evidence="    set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="115" char="25" reason="Expected exactly one space between 'function' and '('." evidence="    }, set, {}, function(err, team) {"/>
-<issue line="131" char="37" reason="Expected exactly one space between 'function' and '('." evidence="exports.pushDevToTeamById = function(_id, _dev_id, callback) {"/>
-<issue line="132" char="5" reason="Missing 'use strict' statement." evidence="    teamDao.pushToArray({"/>
-<issue line="136" char="16" reason="Expected exactly one space between 'function' and '('." evidence="    }, function(err, team) {"/>
-<issue line="152" char="37" reason="Expected exactly one space between 'function' and '('." evidence="exports.pullDevToTeamById = function(_id, _dev_id, callback) {"/>
-<issue line="153" char="5" reason="Missing 'use strict' statement." evidence="    teamDao.pullFromArray({"/>
-<issue line="157" char="16" reason="Expected exactly one space between 'function' and '('." evidence="    }, function(err, team) {"/>
 </file>
 <file name="routes/index.js">
-<issue line="5" char="25" reason="Expected exactly one space between 'function' and '('." evidence="router.get('/', function(req, res, next) {"/>
-<issue line="6" char="3" reason="Missing 'use strict' statement." evidence="  res.render('index', { title: 'Express' });"/>
-<issue line="5" char="26" reason="Unused 'req'." evidence="router.get('/', function(req, res, next) {"/>
-<issue line="5" char="36" reason="Unused 'next'." evidence="router.get('/', function(req, res, next) {"/>
 </file>
 <file name="routes/repo.js">
-<issue line="41" char="13" reason="Combine this with the previous 'var' statement." evidence="        var body = cache.getBody();"/>
-<issue line="110" char="13" reason="Combine this with the previous 'var' statement." evidence="        var body = cache.getBody();"/>
 </file>
 <file name="routes/users.js">
-<issue line="5" char="25" reason="Expected exactly one space between 'function' and '('." evidence="router.get('/', function(req, res, next) {"/>
-<issue line="6" char="3" reason="Missing 'use strict' statement." evidence="  res.send('respond with a resource');"/>
-<issue line="5" char="26" reason="Unused 'req'." evidence="router.get('/', function(req, res, next) {"/>
-<issue line="5" char="36" reason="Unused 'next'." evidence="router.get('/', function(req, res, next) {"/>
 </file>
 </jslint>

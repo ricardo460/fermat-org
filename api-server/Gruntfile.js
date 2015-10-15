@@ -1,3 +1,5 @@
+'use strict';
+var grunt = require('grunt');
 var dirs = [
     'bin/*',
     'lib/**/*.js',
@@ -5,12 +7,12 @@ var dirs = [
     'routes/**/*.js'
 ];
 
-module.exports = function (grunt) {
+module.exports = function (jslint) {
     grunt.initConfig({
         watch: {
             scripts: {
                 files: dirs,
-                tasks: ['jshint'],
+                tasks: ['jslint'],
                 options: {
                     spawn: false,
                 },
@@ -24,13 +26,18 @@ module.exports = function (grunt) {
             server: {
                 src: dirs,
                 directives: { // example directives
+                    //predef: [
+                    //    'node'
+                    //],
+                    todo: true,
+                    this: true,
                     node: true,
-                    todo: true,
                     nomen: true,
-                    //vars: true,
+                    vars: true,
                     plusplus: true,
-                    stupid: true,
-                    todo: true,
+                    stupid: false,
+                    latedef: true,
+                    unparam: true
                 },
                 options: {
                     edition: 'latest', // specify an edition of jslint or use 'dir/mycustom-jslint.js' for own path
