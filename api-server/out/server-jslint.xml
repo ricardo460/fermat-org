@@ -4,9 +4,10 @@
 <issue line="1" char="1" reason="Unexpected '#'." evidence="#!/usr/bin/env node"/>
 <issue line="1" char="2" reason="Stopping. (1% scanned)." evidence=""/>
 </file>
-<file name="lib/route-cache/lib/route.js">
+<file name="lib/route-cache/index.js">
 <issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
-<issue line="31" char="1" reason="'module' was used before it was defined." evidence="module.exports = Route;"/>
+<issue line="2" char="13" reason="'require' was used before it was defined." evidence="var Cache = require('./lib/cache');"/>
+<issue line="20" char="1" reason="'module' was used before it was defined." evidence="module.exports = RouteCache;"/>
 </file>
 <file name="lib/route-cache/lib/cache.js">
 <issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
@@ -30,10 +31,9 @@
 <issue line="168" char="9" reason="'global' was used before it was defined." evidence="        global.memcache = cache;"/>
 <issue line="173" char="1" reason="'module' was used before it was defined." evidence="module.exports = Cache;"/>
 </file>
-<file name="lib/route-cache/index.js">
+<file name="lib/route-cache/lib/route.js">
 <issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
-<issue line="2" char="13" reason="'require' was used before it was defined." evidence="var Cache = require('./lib/cache');"/>
-<issue line="20" char="1" reason="'module' was used before it was defined." evidence="module.exports = RouteCache;"/>
+<issue line="31" char="1" reason="'module' was used before it was defined." evidence="module.exports = Route;"/>
 </file>
 <file name="lib/test.js">
 <issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
@@ -74,17 +74,17 @@
 <issue line="122" char="34" reason="Expected '{' and instead saw 'return'." evidence="                    if (err_upd) return callback(err_upd, null);"/>
 <issue line="122" char="34" reason="Stopping. (40% scanned)." evidence=""/>
 </file>
+<file name="modules/repository/component/models/compDev.js">
+<issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
+<issue line="2" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
+<issue line="54" char="1" reason="'module' was used before it was defined." evidence="module.exports = CompDevMdl;"/>
+</file>
 <file name="modules/repository/component/models/comp.js">
 <issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
 <issue line="2" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
 <issue line="76" char="13" reason="Redefinition of 'words' from line 72." evidence="        var words = string.split(&quot; &quot;);"/>
 <issue line="78" char="14" reason="Move 'var' declarations to the top of the function." evidence="        for (var i = 0, l = words.length; i &lt; l; i++) {"/>
 <issue line="78" char="14" reason="Stopping. (72% scanned)." evidence=""/>
-</file>
-<file name="modules/repository/component/models/compDev.js">
-<issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
-<issue line="2" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
-<issue line="54" char="1" reason="'module' was used before it was defined." evidence="module.exports = CompDevMdl;"/>
 </file>
 <file name="modules/repository/component/models/status.js">
 <issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
@@ -270,20 +270,6 @@
 <issue line="128" char="1" reason="'exports' was used before it was defined." evidence="exports.updateDevById = function (_id, set, callback) {"/>
 </file>
 <file name="modules/repository/index.js">
-<issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
-<issue line="2" char="15" reason="'require' was used before it was defined." evidence="var procMod = require('./process');"/>
-<issue line="3" char="15" reason="'require' was used before it was defined." evidence="var compMod = require('./component');"/>
-<issue line="4" char="16" reason="'require' was used before it was defined." evidence="var layerMod = require('./layer');"/>
-<issue line="5" char="18" reason="'require' was used before it was defined." evidence="var suprlayMod = require('./superlayer');"/>
-<issue line="6" char="18" reason="'require' was used before it was defined." evidence="var platfrmMod = require('./platform');"/>
-<issue line="7" char="15" reason="'require' was used before it was defined." evidence="var loadLib = require('./lib/loader');"/>
-<issue line="19" char="1" reason="'exports' was used before it was defined." evidence="exports.getComps = function (req, next) {"/>
-<issue line="66" char="1" reason="'exports' was used before it was defined." evidence="exports.loadComps = function (req, next) {"/>
-<issue line="90" char="1" reason="'exports' was used before it was defined." evidence="exports.updComps = function (req, next) {"/>
-<issue line="114" char="1" reason="'exports' was used before it was defined." evidence="exports.updDevs = function (req, next) {"/>
-<issue line="128" char="1" reason="'exports' was used before it was defined." evidence="exports.getProcs = function (req, next) {"/>
-<issue line="132" char="13" reason="Expected 'req' at column 17, not column 13." evidence="            req.query.layer &amp;&amp;"/>
-<issue line="133" char="13" reason="Expected 'req' at column 17, not column 13." evidence="            req.query.component) {"/>
 </file>
 <file name="modules/repository/layer/index.js">
 <issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
@@ -482,36 +468,12 @@
 <issue line="128" char="1" reason="'exports' was used before it was defined." evidence="exports.updateSuprlayById = function (_id, set, callback) {"/>
 </file>
 <file name="modules/repository/team/index.js">
-<issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
-<issue line="2" char="15" reason="'require' was used before it was defined." evidence="var teamSrv = require('./services/team');"/>
-<issue line="3" char="15" reason="'require' was used before it was defined." evidence="var TeamMdl = require('./models/team');"/>
 </file>
 <file name="modules/repository/team/models/team.js">
-<issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
-<issue line="2" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
-<issue line="47" char="1" reason="'module' was used before it was defined." evidence="module.exports = TeamMdl;"/>
 </file>
 <file name="modules/repository/team/schemas/team.js">
-<issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
-<issue line="2" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
-<issue line="42" char="1" reason="'module' was used before it was defined." evidence="module.exports = teamSchema;"/>
 </file>
 <file name="modules/repository/team/services/team.js">
-<issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
-<issue line="2" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
-<issue line="3" char="11" reason="'require' was used before it was defined." evidence="var Dao = require('../../../database/dao');"/>
-<issue line="4" char="15" reason="'require' was used before it was defined." evidence="var teamMdl = require('../models/team');"/>
-<issue line="5" char="15" reason="'require' was used before it was defined." evidence="var teamSch = require('../schemas/team');"/>
-<issue line="6" char="14" reason="'require' was used before it was defined." evidence="var devMdl = require('../../developer/models/dev');"/>
-<issue line="7" char="14" reason="'require' was used before it was defined." evidence="var devSch = require('../../developer/schemas/dev');"/>
-<issue line="26" char="1" reason="'exports' was used before it was defined." evidence="exports.insertTeam = function (team_mdl, callback) {"/>
-<issue line="42" char="1" reason="'exports' was used before it was defined." evidence="exports.findTeamById = function (_id, callback) {"/>
-<issue line="58" char="1" reason="'exports' was used before it was defined." evidence="exports.findTeamByName = function (name, callback) {"/>
-<issue line="78" char="1" reason="'exports' was used before it was defined." evidence="exports.findTeams = function (query, limit, order, callback) {"/>
-<issue line="95" char="1" reason="'exports' was used before it was defined." evidence="exports.findAllTeams = function (query, order, callback) {"/>
-<issue line="112" char="1" reason="'exports' was used before it was defined." evidence="exports.updateTeamById = function (_id, set, callback) {"/>
-<issue line="132" char="1" reason="'exports' was used before it was defined." evidence="exports.pushDevToTeamById = function (_id, _dev_id, callback) {"/>
-<issue line="153" char="1" reason="'exports' was used before it was defined." evidence="exports.pullDevToTeamById = function (_id, _dev_id, callback) {"/>
 </file>
 <file name="routes/index.js">
 </file>

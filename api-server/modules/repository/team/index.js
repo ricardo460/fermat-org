@@ -1,3 +1,3 @@
-'use strict';
+/*global require*/
 var teamSrv = require('./services/team');
 var TeamMdl = require('./models/team');

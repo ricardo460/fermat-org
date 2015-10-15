@@ -1,9 +1,10 @@
 FAIL	bin/www (2)
 bin/www:1:1	Unexpected '#'.
 bin/www:1:2	Stopping. (1% scanned).
-FAIL	lib/route-cache/lib/route.js (2)
-lib/route-cache/lib/route.js:1:1	Use the function form of 'use strict'.
-lib/route-cache/lib/route.js:31:1	'module' was used before it was defined.
+FAIL	lib/route-cache/index.js (3)
+lib/route-cache/index.js:1:1	Use the function form of 'use strict'.
+lib/route-cache/index.js:2:13	'require' was used before it was defined.
+lib/route-cache/index.js:20:1	'module' was used before it was defined.
 FAIL	lib/route-cache/lib/cache.js (20)
 lib/route-cache/lib/cache.js:1:1	Use the function form of 'use strict'.
 lib/route-cache/lib/cache.js:2:10	'require' was used before it was defined.
@@ -25,10 +26,9 @@ lib/route-cache/lib/cache.js:143:21	'global' was used before it was defined.
 lib/route-cache/lib/cache.js:167:7	Unnecessary 'else' after disruption.
 lib/route-cache/lib/cache.js:168:9	'global' was used before it was defined.
 lib/route-cache/lib/cache.js:173:1	'module' was used before it was defined.
-FAIL	lib/route-cache/index.js (3)
-lib/route-cache/index.js:1:1	Use the function form of 'use strict'.
-lib/route-cache/index.js:2:13	'require' was used before it was defined.
-lib/route-cache/index.js:20:1	'module' was used before it was defined.
+FAIL	lib/route-cache/lib/route.js (2)
+lib/route-cache/lib/route.js:1:1	Use the function form of 'use strict'.
+lib/route-cache/lib/route.js:31:1	'module' was used before it was defined.
 FAIL	lib/test.js (4)
 lib/test.js:1:1	Use the function form of 'use strict'.
 lib/test.js:2:13	'require' was used before it was defined.
@@ -65,16 +65,16 @@ modules/repository/component/index.js:112:38	Expected '!==' and instead saw '!='
 modules/repository/component/index.js:116:32	Expected '!==' and instead saw '!='.
 modules/repository/component/index.js:122:34	Expected '{' and instead saw 'return'.
 modules/repository/component/index.js:122:34	Stopping. (40% scanned).
+FAIL	modules/repository/component/models/compDev.js (3)
+modules/repository/component/models/compDev.js:1:1	Use the function form of 'use strict'.
+modules/repository/component/models/compDev.js:2:16	'require' was used before it was defined.
+modules/repository/component/models/compDev.js:54:1	'module' was used before it was defined.
 FAIL	modules/repository/component/models/comp.js (5)
 modules/repository/component/models/comp.js:1:1	Use the function form of 'use strict'.
 modules/repository/component/models/comp.js:2:16	'require' was used before it was defined.
 modules/repository/component/models/comp.js:76:13	Redefinition of 'words' from line 72.
 modules/repository/component/models/comp.js:78:14	Move 'var' declarations to the top of the function.
 modules/repository/component/models/comp.js:78:14	Stopping. (72% scanned).
-FAIL	modules/repository/component/models/compDev.js (3)
-modules/repository/component/models/compDev.js:1:1	Use the function form of 'use strict'.
-modules/repository/component/models/compDev.js:2:16	'require' was used before it was defined.
-modules/repository/component/models/compDev.js:54:1	'module' was used before it was defined.
 FAIL	modules/repository/component/models/status.js (3)
 modules/repository/component/models/status.js:1:1	Use the function form of 'use strict'.
 modules/repository/component/models/status.js:2:16	'require' was used before it was defined.
@@ -247,21 +247,6 @@ modules/repository/developer/services/dev.js:74:1	'exports' was used before it w
 modules/repository/developer/services/dev.js:94:1	'exports' was used before it was defined.
 modules/repository/developer/services/dev.js:111:1	'exports' was used before it was defined.
 modules/repository/developer/services/dev.js:128:1	'exports' was used before it was defined.
-FAIL	modules/repository/index.js (14)
-modules/repository/index.js:1:1	Use the function form of 'use strict'.
-modules/repository/index.js:2:15	'require' was used before it was defined.
-modules/repository/index.js:3:15	'require' was used before it was defined.
-modules/repository/index.js:4:16	'require' was used before it was defined.
-modules/repository/index.js:5:18	'require' was used before it was defined.
-modules/repository/index.js:6:18	'require' was used before it was defined.
-modules/repository/index.js:7:15	'require' was used before it was defined.
-modules/repository/index.js:19:1	'exports' was used before it was defined.
-modules/repository/index.js:66:1	'exports' was used before it was defined.
-modules/repository/index.js:90:1	'exports' was used before it was defined.
-modules/repository/index.js:114:1	'exports' was used before it was defined.
-modules/repository/index.js:128:1	'exports' was used before it was defined.
-modules/repository/index.js:132:13	Expected 'req' at column 17, not column 13.
-modules/repository/index.js:133:13	Expected 'req' at column 17, not column 13.
 FAIL	modules/repository/layer/index.js (11)
 modules/repository/layer/index.js:1:1	Use the function form of 'use strict'.
 modules/repository/layer/index.js:2:16	'require' was used before it was defined.
@@ -438,33 +423,5 @@ modules/repository/superlayer/services/suprlay.js:74:1	'exports' was used before
 modules/repository/superlayer/services/suprlay.js:94:1	'exports' was used before it was defined.
 modules/repository/superlayer/services/suprlay.js:111:1	'exports' was used before it was defined.
 modules/repository/superlayer/services/suprlay.js:128:1	'exports' was used before it was defined.
-FAIL	modules/repository/team/index.js (3)
-modules/repository/team/index.js:1:1	Use the function form of 'use strict'.
-modules/repository/team/index.js:2:15	'require' was used before it was defined.
-modules/repository/team/index.js:3:15	'require' was used before it was defined.
-FAIL	modules/repository/team/models/team.js (3)
-modules/repository/team/models/team.js:1:1	Use the function form of 'use strict'.
-modules/repository/team/models/team.js:2:16	'require' was used before it was defined.
-modules/repository/team/models/team.js:47:1	'module' was used before it was defined.
-FAIL	modules/repository/team/schemas/team.js (3)
-modules/repository/team/schemas/team.js:1:1	Use the function form of 'use strict'.
-modules/repository/team/schemas/team.js:2:16	'require' was used before it was defined.
-modules/repository/team/schemas/team.js:42:1	'module' was used before it was defined.
-FAIL	modules/repository/team/services/team.js (15)
-modules/repository/team/services/team.js:1:1	Use the function form of 'use strict'.
-modules/repository/team/services/team.js:2:16	'require' was used before it was defined.
-modules/repository/team/services/team.js:3:11	'require' was used before it was defined.
-modules/repository/team/services/team.js:4:15	'require' was used before it was defined.
-modules/repository/team/services/team.js:5:15	'require' was used before it was defined.
-modules/repository/team/services/team.js:6:14	'require' was used before it was defined.
-modules/repository/team/services/team.js:7:14	'require' was used before it was defined.
-modules/repository/team/services/team.js:26:1	'exports' was used before it was defined.
-modules/repository/team/services/team.js:42:1	'exports' was used before it was defined.
-modules/repository/team/services/team.js:58:1	'exports' was used before it was defined.
-modules/repository/team/services/team.js:78:1	'exports' was used before it was defined.
-modules/repository/team/services/team.js:95:1	'exports' was used before it was defined.
-modules/repository/team/services/team.js:112:1	'exports' was used before it was defined.
-modules/repository/team/services/team.js:132:1	'exports' was used before it was defined.
-modules/repository/team/services/team.js:153:1	'exports' was used before it was defined.
 
-# JSLint failed, 423 violations in 45.  48 files scanned.
+# JSLint failed, 385 violations in 40.  48 files scanned.

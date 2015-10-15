@@ -1,4 +1,5 @@
-'use strict';
+/*global require*/
+/*global exports*/
 var procMod = require('./process');
 var compMod = require('./component');
 var layerMod = require('./layer');
@@ -17,6 +18,7 @@ var loadLib = require('./lib/loader');
  * @return {[type]}   [description]
  */
 exports.getComps = function (req, next) {
+    'use strict';
     try {
         var res = {};
         platfrmMod.getPlatfrms(function (err, platfrms) {
@@ -64,6 +66,7 @@ exports.getComps = function (req, next) {
  * @return {[type]}   [description]
  */
 exports.loadComps = function (req, next) {
+    'use strict';
     try {
         loadLib.loadComps(function (err, res) {
             if (err) {
@@ -88,6 +91,7 @@ exports.loadComps = function (req, next) {
  * @return {[type]}   [description]
  */
 exports.updComps = function (req, next) {
+    'use strict';
     try {
         loadLib.updComps(function (err, res) {
             if (err) {
@@ -112,6 +116,7 @@ exports.updComps = function (req, next) {
  * @return {[type]}   [description]
  */
 exports.updDevs = function (req, next) {
+    'use strict';
     try {
         loadLib.updDevs(function (err, res) {
             if (err) {
@@ -126,11 +131,10 @@ exports.updDevs = function (req, next) {
 };
 
 exports.getProcs = function (req, next) {
+    'use strict';
     try {
         var platfrm_code;
-        if ((req.query.platform || req.query.superlayer) &&
-            req.query.layer &&
-            req.query.component) {
+        if ((req.query.platform || req.query.superlayer) && req.query.layer && req.query.component) {
             platfrm_code = req.query.platform ? req.query.platform.toUpperCase() : null;
             var suprlay_code = req.query.superlayer ? req.query.superlayer.toUpperCase() : null,
                 layer_name = req.query.layer ? req.query.layer.toLowerCase() : null,

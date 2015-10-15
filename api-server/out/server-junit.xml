@@ -7,10 +7,13 @@
 <testcase classname="bin.www" name="www:1:2">
   <failure message="Stopping. (1% scanned)." />
 </testcase>
-<testcase classname="lib.route_cache.lib.route" name="route:1:1">
+<testcase classname="lib.route_cache.index" name="index:1:1">
   <failure message="Use the function form of 'use strict'." />
 </testcase>
-<testcase classname="lib.route_cache.lib.route" name="route:31:1">
+<testcase classname="lib.route_cache.index" name="index:2:13">
+  <failure message="'require' was used before it was defined." />
+</testcase>
+<testcase classname="lib.route_cache.index" name="index:20:1">
   <failure message="'module' was used before it was defined." />
 </testcase>
 <testcase classname="lib.route_cache.lib.cache" name="cache:1:1">
@@ -73,13 +76,10 @@
 <testcase classname="lib.route_cache.lib.cache" name="cache:173:1">
   <failure message="'module' was used before it was defined." />
 </testcase>
-<testcase classname="lib.route_cache.index" name="index:1:1">
+<testcase classname="lib.route_cache.lib.route" name="route:1:1">
   <failure message="Use the function form of 'use strict'." />
 </testcase>
-<testcase classname="lib.route_cache.index" name="index:2:13">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="lib.route_cache.index" name="index:20:1">
+<testcase classname="lib.route_cache.lib.route" name="route:31:1">
   <failure message="'module' was used before it was defined." />
 </testcase>
 <testcase classname="lib.test" name="test:1:1">
@@ -181,6 +181,15 @@
 <testcase classname="modules.repository.component.index" name="index:122:34">
   <failure message="Stopping. (40% scanned)." />
 </testcase>
+<testcase classname="modules.repository.component.models.compDev" name="compDev:1:1">
+  <failure message="Use the function form of 'use strict'." />
+</testcase>
+<testcase classname="modules.repository.component.models.compDev" name="compDev:2:16">
+  <failure message="'require' was used before it was defined." />
+</testcase>
+<testcase classname="modules.repository.component.models.compDev" name="compDev:54:1">
+  <failure message="'module' was used before it was defined." />
+</testcase>
 <testcase classname="modules.repository.component.models.comp" name="comp:1:1">
   <failure message="Use the function form of 'use strict'." />
 </testcase>
@@ -195,15 +204,6 @@
 </testcase>
 <testcase classname="modules.repository.component.models.comp" name="comp:78:14">
   <failure message="Stopping. (72% scanned)." />
-</testcase>
-<testcase classname="modules.repository.component.models.compDev" name="compDev:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.component.models.compDev" name="compDev:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.models.compDev" name="compDev:54:1">
-  <failure message="'module' was used before it was defined." />
 </testcase>
 <testcase classname="modules.repository.component.models.status" name="status:1:1">
   <failure message="Use the function form of 'use strict'." />
@@ -688,48 +688,7 @@
 <testcase classname="modules.repository.developer.services.dev" name="dev:128:1">
   <failure message="'exports' was used before it was defined." />
 </testcase>
-<testcase classname="modules.repository.index" name="index:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.index" name="index:2:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.index" name="index:3:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.index" name="index:4:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.index" name="index:5:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.index" name="index:6:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.index" name="index:7:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.index" name="index:19:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.index" name="index:66:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.index" name="index:90:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.index" name="index:114:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.index" name="index:128:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.index" name="index:132:13">
-  <failure message="Expected 'req' at column 17, not column 13." />
-</testcase>
-<testcase classname="modules.repository.index" name="index:133:13">
-  <failure message="Expected 'req' at column 17, not column 13." />
-</testcase>
+<testcase classname="modules.repository.index" name="index:0:0"></testcase>
 <testcase classname="modules.repository.layer.index" name="index:1:1">
   <failure message="Use the function form of 'use strict'." />
 </testcase>
@@ -1198,78 +1157,10 @@
 <testcase classname="modules.repository.superlayer.services.suprlay" name="suprlay:128:1">
   <failure message="'exports' was used before it was defined." />
 </testcase>
-<testcase classname="modules.repository.team.index" name="index:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.team.index" name="index:2:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.index" name="index:3:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.models.team" name="team:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.team.models.team" name="team:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.models.team" name="team:47:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.schemas.team" name="team:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.team.schemas.team" name="team:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.schemas.team" name="team:42:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:3:11">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:4:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:5:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:6:14">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:7:14">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:26:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:42:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:58:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:78:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:95:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:112:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:132:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.team.services.team" name="team:153:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
+<testcase classname="modules.repository.team.index" name="index:0:0"></testcase>
+<testcase classname="modules.repository.team.models.team" name="team:0:0"></testcase>
+<testcase classname="modules.repository.team.schemas.team" name="team:0:0"></testcase>
+<testcase classname="modules.repository.team.services.team" name="team:0:0"></testcase>
 <testcase classname="routes.index" name="index:0:0"></testcase>
 <testcase classname="routes.repo" name="repo:0:0"></testcase>
 <testcase classname="routes.users" name="users:0:0"></testcase>

@@ -1,4 +1,5 @@
-'use strict';
+/*global require*/
+/*global exports*/
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var teamMdl = require('../models/team');
@@ -24,6 +25,7 @@ var teamDao = new Dao('Team', teamSch, teamMdl, 'Dev', devSch, devMdl);
  * @return {[type]}   [description]
  */
 exports.insertTeam = function (team_mdl, callback) {
+    'use strict';
     teamDao.insertSchema(team_mdl, function (err, team) {
         callback(err, team);
     });
@@ -40,6 +42,7 @@ exports.insertTeam = function (team_mdl, callback) {
  * @return {[type]}    [description]
  */
 exports.findTeamById = function (_id, callback) {
+    'use strict';
     teamDao.findAndPopulateSchemaById(_id, 'devs', function (err, team) {
         callback(err, team);
     });
@@ -56,6 +59,7 @@ exports.findTeamById = function (_id, callback) {
  * @return {[type]}       [description]
  */
 exports.findTeamByName = function (name, callback) {
+    'use strict';
     teamDao.findAndPopulateSchema({
         name: name
     }, 'devs', function (err, team) {
@@ -76,6 +80,7 @@ exports.findTeamByName = function (name, callback) {
  * @return {[type]}   [description]
  */
 exports.findTeams = function (query, limit, order, callback) {
+    'use strict';
     teamDao.findAndPopulateSchemaLst(query, limit, order, 'devs', function (err, team) {
         callback(err, team);
     });
@@ -93,6 +98,7 @@ exports.findTeams = function (query, limit, order, callback) {
  * @return {[type]}    [description]
  */
 exports.findAllTeams = function (query, order, callback) {
+    'use strict';
     teamDao.findAndPopulateAllSchemaLst(query, order, 'devs', function (err, team) {
         callback(err, team);
     });
@@ -110,6 +116,7 @@ exports.findAllTeams = function (query, order, callback) {
  * @return {[type]}      [description]
  */
 exports.updateTeamById = function (_id, set, callback) {
+    'use strict';
     set.upd_at = new mongoose.Types.ObjectId();
     teamDao.updateSchema({
         _id: _id
@@ -130,6 +137,7 @@ exports.updateTeamById = function (_id, set, callback) {
  * @return {[type]}          [description]
  */
 exports.pushDevToTeamById = function (_id, _dev_id, callback) {
+    'use strict';
     teamDao.pushToArray({
         _id: _id
     }, 'devs', _dev_id, {
@@ -151,6 +159,7 @@ exports.pushDevToTeamById = function (_id, _dev_id, callback) {
  * @return {[type]}          [description]
  */
 exports.pullDevToTeamById = function (_id, _dev_id, callback) {
+    'use strict';
     teamDao.pullFromArray({
         _id: _id
     }, 'devs', _dev_id, {
