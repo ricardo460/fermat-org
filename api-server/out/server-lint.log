@@ -1,3 +1,6 @@
+FAIL	bin/www (2)
+bin/www:1:1	Unexpected '#'.
+bin/www:1:2	Stopping. (1% scanned).
 FAIL	lib/route-cache/lib/cache.js (7)
 lib/route-cache/lib/cache.js:30:12	Unexpected sync method: 'unlinkSync'.
 lib/route-cache/lib/cache.js:49:32	Unexpected sync method: 'readFileSync'.
@@ -6,12 +9,6 @@ lib/route-cache/lib/cache.js:107:32	Unexpected sync method: 'readFileSync'.
 lib/route-cache/lib/cache.js:121:7	Unnecessary 'else' after disruption.
 lib/route-cache/lib/cache.js:140:32	Unexpected sync method: 'readFileSync'.
 lib/route-cache/lib/cache.js:167:7	Unnecessary 'else' after disruption.
-FAIL	bin/www (2)
-bin/www:1:1	Unexpected '#'.
-bin/www:1:2	Stopping. (1% scanned).
-FAIL	modules/database/dao.js (2)
-modules/database/dao.js:53:22	Expected '{' and instead saw 'winston'.
-modules/database/dao.js:53:22	Stopping. (13% scanned).
 FAIL	modules/repository/component/index.js (13)
 modules/repository/component/index.js:72:18	['$and'] is better written in dot notation.
 modules/repository/component/index.js:77:18	['$and'] is better written in dot notation.
@@ -112,45 +109,20 @@ modules/repository/component/services/status.js:93:77	Expected exactly one space
 modules/repository/component/services/status.js:109:36	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/status.js:110:5	Missing 'use strict' statement.
 modules/repository/component/services/status.js:113:25	Expected exactly one space between 'function' and '('.
-FAIL	modules/repository/developer/index.js (10)
-modules/repository/developer/index.js:26:11	Unnecessary 'else' after disruption.
-modules/repository/developer/index.js:28:32	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:32:30	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:36:30	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:40:36	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:44:42	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:48:28	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:52:28	Expected '!==' and instead saw '!='.
-modules/repository/developer/index.js:58:34	Expected '{' and instead saw 'return'.
-modules/repository/developer/index.js:58:34	Stopping. (63% scanned).
-FAIL	modules/repository/developer/schemas/dev.js (3)
-modules/repository/developer/schemas/dev.js:96:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:98:1	Use spaces, not tabs.
-modules/repository/developer/schemas/dev.js:100:1	Use spaces, not tabs.
-FAIL	modules/repository/layer/index.js (7)
-modules/repository/layer/index.js:157:11	Unnecessary 'else' after disruption.
-modules/repository/layer/index.js:159:30	Expected '!==' and instead saw '!='.
-modules/repository/layer/index.js:163:30	Expected '!==' and instead saw '!='.
-modules/repository/layer/index.js:167:36	Expected '!==' and instead saw '!='.
-modules/repository/layer/index.js:171:32	Expected '!==' and instead saw '!='.
-modules/repository/layer/index.js:177:34	Expected '{' and instead saw 'return'.
-modules/repository/layer/index.js:177:34	Stopping. (81% scanned).
-FAIL	modules/repository/layer/models/layer.js (1)
-modules/repository/layer/models/layer.js:36:40	Use the || operator.
 FAIL	modules/repository/lib/loader.js (13)
-modules/repository/lib/loader.js:66:20	['$'] is better written in dot notation.
-modules/repository/lib/loader.js:75:27	['$'] is better written in dot notation.
-modules/repository/lib/loader.js:81:30	['$'] is better written in dot notation.
-modules/repository/lib/loader.js:89:33	['$'] is better written in dot notation.
-modules/repository/lib/loader.js:261:40	['$'] is better written in dot notation.
-modules/repository/lib/loader.js:266:40	['$'] is better written in dot notation.
-modules/repository/lib/loader.js:289:46	['$'] is better written in dot notation.
-modules/repository/lib/loader.js:301:40	['$'] is better written in dot notation.
-modules/repository/lib/loader.js:306:40	['$'] is better written in dot notation.
-modules/repository/lib/loader.js:329:46	['$'] is better written in dot notation.
-modules/repository/lib/loader.js:340:35	['$'] is better written in dot notation.
-modules/repository/lib/loader.js:344:39	['$'] is better written in dot notation.
-modules/repository/lib/loader.js:350:58	['$'] is better written in dot notation.
+modules/repository/lib/loader.js:71:24	['$'] is better written in dot notation.
+modules/repository/lib/loader.js:80:31	['$'] is better written in dot notation.
+modules/repository/lib/loader.js:86:34	['$'] is better written in dot notation.
+modules/repository/lib/loader.js:94:37	['$'] is better written in dot notation.
+modules/repository/lib/loader.js:273:40	['$'] is better written in dot notation.
+modules/repository/lib/loader.js:278:40	['$'] is better written in dot notation.
+modules/repository/lib/loader.js:301:46	['$'] is better written in dot notation.
+modules/repository/lib/loader.js:313:40	['$'] is better written in dot notation.
+modules/repository/lib/loader.js:318:40	['$'] is better written in dot notation.
+modules/repository/lib/loader.js:341:46	['$'] is better written in dot notation.
+modules/repository/lib/loader.js:352:35	['$'] is better written in dot notation.
+modules/repository/lib/loader.js:356:39	['$'] is better written in dot notation.
+modules/repository/lib/loader.js:362:58	['$'] is better written in dot notation.
 FAIL	modules/repository/process/index.js (5)
 modules/repository/process/index.js:188:22	['$and'] is better written in dot notation.
 modules/repository/process/index.js:193:22	['$and'] is better written in dot notation.
@@ -158,4 +130,4 @@ modules/repository/process/index.js:271:26	['$and'] is better written in dot not
 modules/repository/process/index.js:276:26	['$and'] is better written in dot notation.
 modules/repository/process/index.js:281:26	['$and'] is better written in dot notation.
 
-# JSLint failed, 144 violations in 15.  48 files scanned.
+# JSLint failed, 121 violations in 10.  48 files scanned.

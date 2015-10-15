@@ -1,4 +1,3 @@
-'use strict';
 var mongoose = require('mongoose');
 var winston = require('winston');
 var config = require('../../config');
@@ -21,6 +20,7 @@ function Dao(ref, schema, model, path_ref, path_schema, path_model,
     frt_path_ref, frt_path_schema, frt_path_model,
     fit_path_ref, fit_path_schema, fit_path_model,
     six_path_ref, six_path_schema, six_path_model) {
+    'use strict';
     // always initialize all instance properties
     this.Schema = mongoose.model(ref, schema);
     this.Model = model;
@@ -50,7 +50,9 @@ function Dao(ref, schema, model, path_ref, path_schema, path_model,
     }
     if (config.env === 'development') {
         this.Schema.ensureIndexes(function (err, res) {
-            if (err) winston.log('info', 'Mongoose default connection error', err);
+            if (err) {
+                winston.log('info', 'Mongoose default connection error', err);
+            }
         });
     }
 }
@@ -66,20 +68,26 @@ function Dao(ref, schema, model, path_ref, path_schema, path_model,
  * @return {[type]}       [description]
  */
 Dao.prototype.findSchemaById = function (_id, callback) {
-    var that = this;
-    this.Schema.findOne({
-        '_id': _id
-    }).exec(function (err, schema) {
-        if (err) {
-            return callback(err, null);
-        } else if (schema) {
-            var model = new that.Model();
-            model.init(schema);
-            return callback(null, model);
-        } else {
-            callback(null, null);
-        }
-    });
+    'use strict';
+    try {
+        var that = this;
+        this.Schema.findOne({
+            '_id': _id
+        }).exec(function (err, schema) {
+            if (err) {
+                return callback(err, null);
+            }
+            if (schema) {
+                var model = new that.Model();
+                model.init(schema);
+                return callback(null, model);
+            }
+            return callback(null, null);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+
 };
 
 /**
@@ -93,18 +101,24 @@ Dao.prototype.findSchemaById = function (_id, callback) {
  * @return {[type]}   [description]
  */
 Dao.prototype.findSchema = function (query, callback) {
-    var that = this;
-    this.Schema.findOne(query).exec(function (err, schema) {
-        if (err) {
-            return callback(err, null);
-        } else if (schema) {
-            var model = new that.Model();
-            model.init(schema);
-            return callback(null, model);
-        } else {
+    'use strict';
+    try {
+        var that = this;
+        this.Schema.findOne(query).exec(function (err, schema) {
+            if (err) {
+                return callback(err, null);
+            }
+            if (schema) {
+                var model = new that.Model();
+                model.init(schema);
+                return callback(null, model);
+            }
             return callback(null, null);
-        }
-    });
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+
 };
 
 /**
@@ -120,23 +134,29 @@ Dao.prototype.findSchema = function (query, callback) {
  * @return {[type]}      [description]
  */
 Dao.prototype.findSchemaLst = function (query, limit, sort, callback) {
-    var that = this;
-    this.Schema.find(query)
-        .limit(limit)
-        .sort(sort)
-        .exec(function (err, schemas) {
-            if (err && !schemas) {
-                return callback(err, null);
-            } else {
-                var models = [];
-                for (var i = 0, l = schemas.length; i < l; i++) {
-                    var model = new that.Model();
+    'use strict';
+    try {
+        var that = this;
+        this.Schema.find(query)
+            .limit(limit)
+            .sort(sort)
+            .exec(function (err, schemas) {
+                if (err && !schemas) {
+                    return callback(err, null);
+                }
+                var i, l, models, model;
+                models = [];
+                for (i = 0, l = schemas.length; i < l; i++) {
+                    model = new that.Model();
                     model.init(schemas[i]);
                     models.push(model);
                 }
                 return callback(err, models);
-            }
-        });
+            });
+    } catch (err) {
+        return callback(err, null);
+    }
+
 };
 
 /**
@@ -151,22 +171,28 @@ Dao.prototype.findSchemaLst = function (query, limit, sort, callback) {
  * @return {[type]}         [description]
  */
 Dao.prototype.findAllSchemaLst = function (query, sort, callback) {
-    var that = this;
-    this.Schema.find(query)
-        .sort(sort)
-        .exec(function (err, schemas) {
-            if (err && !schemas) {
-                return callback(err, null);
-            } else {
-                var models = [];
-                for (var i = 0, l = schemas.length; i < l; i++) {
-                    var model = new that.Model();
+    'use strict';
+    try {
+        var that = this;
+        this.Schema.find(query)
+            .sort(sort)
+            .exec(function (err, schemas) {
+                if (err && !schemas) {
+                    return callback(err, null);
+                }
+                var i, l, models, model;
+                models = [];
+                for (i = 0, l = schemas.length; i < l; i++) {
+                    model = new that.Model();
                     model.init(schemas[i]);
                     models.push(model);
                 }
                 return callback(err, models);
-            }
-        });
+            });
+    } catch (err) {
+        return callback(err, null);
+    }
+
 };
 
 /**
@@ -182,13 +208,18 @@ Dao.prototype.findAllSchemaLst = function (query, sort, callback) {
  * @return {[type]}     [description]
  */
 Dao.prototype.updateSchema = function (condition, update, options, callback) {
-    this.Schema.update(condition, update, options, function (err, res) {
-        if (err && !res) {
-            return callback(err, null);
-        } else {
+    'use strict';
+    try {
+        this.Schema.update(condition, update, options, function (err, res) {
+            if (err && !res) {
+                return callback(err, null);
+            }
             return callback(err, res);
-        }
-    });
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+
 };
 
 /**
@@ -202,19 +233,25 @@ Dao.prototype.updateSchema = function (condition, update, options, callback) {
  * @return {[type]}     [description]
  */
 Dao.prototype.insertSchema = function (model, callback) {
-    var schema = new this.Schema(model);
-    var that = this;
-    schema.save(function (err, sch) {
-        if (err) {
-            return callback(err, null);
-        } else if (sch) {
-            var mdl = new that.Model();
-            mdl.init(sch);
-            return callback(null, mdl);
-        } else {
-            callback(null, null);
-        }
-    });
+    'use strict';
+    try {
+        var schema = new this.Schema(model);
+        var that = this;
+        schema.save(function (err, sch) {
+            if (err) {
+                return callback(err, null);
+            }
+            if (sch) {
+                var mdl = new that.Model();
+                mdl.init(sch);
+                return callback(null, mdl);
+            }
+            return callback(null, null);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+
 };
 
 /**
@@ -229,22 +266,28 @@ Dao.prototype.insertSchema = function (model, callback) {
  * @return {[type]}                  [description]
  */
 Dao.prototype.findAndPopulateSchemaById = function (_id, path, callback) {
-    var that = this;
-    this.Schema.findOne({
-        '_id': _id
-    })
-        .populate(path)
-        .exec(function (err, schema) {
-            if (err && !schema) {
-                return callback(err, null);
-            } else if (schema) {
-                var model = new that.Model();
-                model.init(schema);
-                return callback(null, model);
-            } else {
-                callback(null, null);
-            }
-        });
+    'use strict';
+    try {
+        var that = this;
+        this.Schema.findOne({
+            '_id': _id
+        })
+            .populate(path)
+            .exec(function (err, schema) {
+                if (err && !schema) {
+                    return callback(err, null);
+                }
+                if (schema) {
+                    var model = new that.Model();
+                    model.init(schema);
+                    return callback(null, model);
+                }
+                return callback(null, null);
+            });
+    } catch (err) {
+        return callback(err, null);
+    }
+
 };
 
 /**
@@ -259,20 +302,25 @@ Dao.prototype.findAndPopulateSchemaById = function (_id, path, callback) {
  * @return {[type]}                  [description]
  */
 Dao.prototype.findAndPopulateSchema = function (query, path, callback) {
-    var that = this;
-    this.Schema.findOne(query)
-        .populate(path)
-        .exec(function (err, schema) {
-            if (err) {
-                return callback(err, null);
-            } else if (schema) {
-                var model = new that.Model();
-                model.init(schema);
-                return callback(null, model);
-            } else {
+    'use strict';
+    try {
+        var that = this;
+        this.Schema.findOne(query)
+            .populate(path)
+            .exec(function (err, schema) {
+                if (err) {
+                    return callback(err, null);
+                }
+                if (schema) {
+                    var model = new that.Model();
+                    model.init(schema);
+                    return callback(null, model);
+                }
                 return callback(null, null);
-            }
-        });
+            });
+    } catch (err) {
+        return callback(err, null);
+    }
 };
 
 /**
@@ -287,24 +335,29 @@ Dao.prototype.findAndPopulateSchema = function (query, path, callback) {
  * @return {[type]}                  [description]
  */
 Dao.prototype.findAndPopulateSchemaLst = function (query, limit, sort, path, callback) {
-    var that = this;
-    this.Schema.find(query)
-        .limit(limit)
-        .sort(sort)
-        .populate(path)
-        .exec(function (err, schemas) {
-            if (err && !schemas) {
-                return callback(err, null);
-            } else {
-                var models = [];
-                for (var i = 0, l = schemas.length; i < l; i++) {
-                    var model = new that.Model();
+    'use strict';
+    try {
+        var that = this;
+        this.Schema.find(query)
+            .limit(limit)
+            .sort(sort)
+            .populate(path)
+            .exec(function (err, schemas) {
+                if (err && !schemas) {
+                    return callback(err, null);
+                }
+                var i, l, models, model;
+                models = [];
+                for (i = 0, l = schemas.length; i < l; i++) {
+                    model = new that.Model();
                     model.init(schemas[i]);
                     models.push(model);
                 }
                 return callback(err, models);
-            }
-        });
+            });
+    } catch (err) {
+        return callback(err, null);
+    }
 };
 
 /**
@@ -319,23 +372,29 @@ Dao.prototype.findAndPopulateSchemaLst = function (query, limit, sort, path, cal
  * @return {[type]}                  [description]
  */
 Dao.prototype.findAndPopulateAllSchemaLst = function (query, sort, path, callback) {
-    var that = this;
-    this.Schema.find(query)
-        .sort(sort)
-        .populate(path)
-        .exec(function (err, schemas) {
-            if (err && !schemas) {
-                return callback(err, null);
-            } else {
-                var models = [];
-                for (var i = 0, l = schemas.length; i < l; i++) {
-                    var model = new that.Model();
+    'use strict';
+    try {
+        var that = this;
+        this.Schema.find(query)
+            .sort(sort)
+            .populate(path)
+            .exec(function (err, schemas) {
+                if (err && !schemas) {
+                    return callback(err, null);
+                }
+                var i, l, models, model;
+                models = [];
+                for (i = 0, l = schemas.length; i < l; i++) {
+                    model = new that.Model();
                     model.init(schemas[i]);
                     models.push(model);
                 }
                 return callback(err, models);
-            }
-        });
+            });
+    } catch (err) {
+        return callback(err, null);
+    }
+
 };
 
 /**
@@ -350,13 +409,19 @@ Dao.prototype.findAndPopulateAllSchemaLst = function (query, sort, path, callbac
  * @return {[type]}                  [description]
  */
 Dao.prototype.pushToArray = function (condition, array_name, array_item, options, callback) {
-    var push = {};
-    push[array_name] = array_item;
-    this.Schema.update(condition, {
-        '$push': push
-    }, options, function (err, res) {
-        callback(err, res);
-    });
+    'use strict';
+    try {
+        var push = {};
+        push[array_name] = array_item;
+        this.Schema.update(condition, {
+            '$push': push
+        }, options, function (err, res) {
+            return callback(err, res);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+
 };
 
 /**
@@ -371,16 +436,22 @@ Dao.prototype.pushToArray = function (condition, array_name, array_item, options
  * @return {[type]}                  [description]
  */
 Dao.prototype.pullFromArray = function (condition, array_name, array_item, options, callback) {
-    var pull = {};
-    pull[array_name] = array_item;
-    this.Schema.update(condition, {
-        '$pull': pull
-        //{
-        //    'usrs': _prof_id
-        //}
-    }, options, function (err, res) {
-        callback(err, res);
-    });
+    'use strict';
+    try {
+        var pull = {};
+        pull[array_name] = array_item;
+        this.Schema.update(condition, {
+            '$pull': pull
+            //{
+            //    'usrs': _prof_id
+            //}
+        }, options, function (err, res) {
+            return callback(err, res);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+
 };
 
 /**
@@ -395,11 +466,17 @@ Dao.prototype.pullFromArray = function (condition, array_name, array_item, optio
  * @return {[type]}                  [description]
  */
 Dao.prototype.delSchemaById = function (_id, callback) {
-    this.Schema.remove({
-        _id: _id
-    }, function (err, res) {
-        callback(err, res);
-    });
+    'use strict';
+    try {
+        this.Schema.remove({
+            _id: _id
+        }, function (err, res) {
+            return callback(err, res);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+
 };
 
 // export the class

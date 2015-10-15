@@ -1,4 +1,3 @@
-'use strict';
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var devMdl = require('../models/dev');
@@ -22,6 +21,7 @@ var devDao = new Dao('Dev', devSch, devMdl);
  * @return {[type]}   [description]
  */
 exports.insertDev = function (dev_mdl, callback) {
+    'use strict';
     devDao.insertSchema(dev_mdl, function (err, dev) {
         callback(err, dev);
     });
@@ -38,6 +38,7 @@ exports.insertDev = function (dev_mdl, callback) {
  * @return {[type]}    [description]
  */
 exports.findDevById = function (_id, callback) {
+    'use strict';
     devDao.findSchemaById(_id, function (err, dev) {
         callback(err, dev);
     });
@@ -54,6 +55,7 @@ exports.findDevById = function (_id, callback) {
  * @return {[type]}       [description]
  */
 exports.findDevByEmail = function (email, callback) {
+    'use strict';
     devDao.findSchema({
         email: email
     }, function (err, dev) {
@@ -72,6 +74,7 @@ exports.findDevByEmail = function (email, callback) {
  * @return {[type]}       [description]
  */
 exports.findDevByUsrnm = function (usrnm, callback) {
+    'use strict';
     devDao.findSchema({
         usrnm: usrnm
     }, function (err, dev) {
@@ -92,6 +95,7 @@ exports.findDevByUsrnm = function (usrnm, callback) {
  * @return {[type]}   [description]
  */
 exports.findDevs = function (query, limit, order, callback) {
+    'use strict';
     devDao.findSchemaLst(query, limit, order, function (err, dev) {
         callback(err, dev);
     });
@@ -109,6 +113,7 @@ exports.findDevs = function (query, limit, order, callback) {
  * @return {[type]}    [description]
  */
 exports.findAllDevs = function (query, order, callback) {
+    'use strict';
     devDao.findAllSchemaLst(query, order, function (err, dev) {
         callback(err, dev);
     });
@@ -126,6 +131,7 @@ exports.findAllDevs = function (query, order, callback) {
  * @return {[type]}      [description]
  */
 exports.updateDevById = function (_id, set, callback) {
+    'use strict';
     set.upd_at = new mongoose.Types.ObjectId();
     devDao.updateSchema({
         _id: _id

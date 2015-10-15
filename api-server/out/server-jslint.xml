@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jslint>
-<file name="lib/route-cache/index.js">
+<file name="bin/www">
+<issue line="1" char="1" reason="Unexpected '#'." evidence="#!/usr/bin/env node"/>
+<issue line="1" char="2" reason="Stopping. (1% scanned)." evidence=""/>
 </file>
 <file name="lib/route-cache/lib/cache.js">
 <issue line="30" char="12" reason="Unexpected sync method: 'unlinkSync'." evidence="        fs.unlinkSync(this.filename);"/>
@@ -11,17 +13,13 @@
 <issue line="140" char="32" reason="Unexpected sync method: 'readFileSync'." evidence="            var filecache = fs.readFileSync(this.filename);"/>
 <issue line="167" char="7" reason="Unnecessary 'else' after disruption." evidence="    } else {"/>
 </file>
-<file name="bin/www">
-<issue line="1" char="1" reason="Unexpected '#'." evidence="#!/usr/bin/env node"/>
-<issue line="1" char="2" reason="Stopping. (1% scanned)." evidence=""/>
+<file name="lib/route-cache/index.js">
 </file>
 <file name="lib/route-cache/lib/route.js">
 </file>
 <file name="lib/test.js">
 </file>
 <file name="modules/database/dao.js">
-<issue line="53" char="22" reason="Expected '{' and instead saw 'winston'." evidence="            if (err) winston.log('info', 'Mongoose default connection error', err);"/>
-<issue line="53" char="22" reason="Stopping. (13% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/component/index.js">
 <issue line="72" char="18" reason="['$and'] is better written in dot notation." evidence="        find_obj['$and'].push({"/>
@@ -138,58 +136,37 @@
 <issue line="113" char="25" reason="Expected exactly one space between 'function' and '('." evidence="    }, set, {}, function(err, status) {"/>
 </file>
 <file name="modules/repository/developer/index.js">
-<issue line="26" char="11" reason="Unnecessary 'else' after disruption." evidence="        } else if (res_dev) {"/>
-<issue line="28" char="32" reason="Expected '!==' and instead saw '!='." evidence="            if (email &amp;&amp; email != res_dev.email) {"/>
-<issue line="32" char="30" reason="Expected '!==' and instead saw '!='." evidence="            if (name &amp;&amp; name != res_dev.name) {"/>
-<issue line="36" char="30" reason="Expected '!==' and instead saw '!='." evidence="            if (bday &amp;&amp; bday != res_dev.bday) {"/>
-<issue line="40" char="36" reason="Expected '!==' and instead saw '!='." evidence="            if (country &amp;&amp; country != res_dev.country) {"/>
-<issue line="44" char="42" reason="Expected '!==' and instead saw '!='." evidence="            if (avatar_url &amp;&amp; avatar_url != res_dev.avatar_url) {"/>
-<issue line="48" char="28" reason="Expected '!==' and instead saw '!='." evidence="            if (url &amp;&amp; url != res_dev.url) {"/>
-<issue line="52" char="28" reason="Expected '!==' and instead saw '!='." evidence="            if (bio &amp;&amp; bio != res_dev.bio) {"/>
-<issue line="58" char="34" reason="Expected '{' and instead saw 'return'." evidence="                    if (err_upd) return callback(err_upd, null);"/>
-<issue line="58" char="34" reason="Stopping. (63% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/developer/models/dev.js">
 </file>
 <file name="modules/repository/developer/schemas/dev.js">
-<issue line="96" char="1" reason="Use spaces, not tabs." evidence="	email: 1"/>
-<issue line="98" char="1" reason="Use spaces, not tabs." evidence="	unique: true"/>
-<issue line="100" char="1" reason="Use spaces, not tabs." evidence="	name: &quot;devs_email_uq_indx&quot;"/>
 </file>
 <file name="modules/repository/developer/services/dev.js">
 </file>
 <file name="modules/repository/index.js">
 </file>
 <file name="modules/repository/layer/index.js">
-<issue line="157" char="11" reason="Unnecessary 'else' after disruption." evidence="        } else if (res_lay) {"/>
-<issue line="159" char="30" reason="Expected '!==' and instead saw '!='." evidence="            if (name &amp;&amp; name != res_lay.name) {"/>
-<issue line="163" char="30" reason="Expected '!==' and instead saw '!='." evidence="            if (lang &amp;&amp; lang != res_lay.lang) {"/>
-<issue line="167" char="36" reason="Expected '!==' and instead saw '!='." evidence="            if (suprlay &amp;&amp; suprlay != res_lay.suprlay) {"/>
-<issue line="171" char="32" reason="Expected '!==' and instead saw '!='." evidence="            if (order &amp;&amp; order != res_lay.order) {"/>
-<issue line="177" char="34" reason="Expected '{' and instead saw 'return'." evidence="                    if (err_upd) return callback(err_upd, null);"/>
-<issue line="177" char="34" reason="Stopping. (81% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/layer/models/layer.js">
-<issue line="36" char="40" reason="Use the || operator." evidence="    this.suprlay = layerSchema.suprlay ? layerSchema.suprlay : false;"/>
 </file>
 <file name="modules/repository/layer/schemas/layer.js">
 </file>
 <file name="modules/repository/layer/services/layer.js">
 </file>
 <file name="modules/repository/lib/loader.js">
-<issue line="66" char="20" reason="['$'] is better written in dot notation." evidence="    proComp = comp['$'];"/>
-<issue line="75" char="27" reason="['$'] is better written in dot notation." evidence="        dev = _authors[i]['$'];"/>
-<issue line="81" char="30" reason="['$'] is better written in dot notation." evidence="        dev = _mantainers[i]['$'];"/>
-<issue line="89" char="33" reason="['$'] is better written in dot notation." evidence="        status = _life_cycle[i]['$'];"/>
-<issue line="261" char="40" reason="['$'] is better written in dot notation." evidence="                platfrm = _platfrms[i]['$'];"/>
-<issue line="266" char="40" reason="['$'] is better written in dot notation." evidence="                    layer = _layers[j]['$'];"/>
-<issue line="289" char="46" reason="['$'] is better written in dot notation." evidence="                        depend = _depends[j]['$'];"/>
-<issue line="301" char="40" reason="['$'] is better written in dot notation." evidence="                suprlay = _suprlays[i]['$'];"/>
-<issue line="306" char="40" reason="['$'] is better written in dot notation." evidence="                    layer = _layers[j]['$'];"/>
-<issue line="329" char="46" reason="['$'] is better written in dot notation." evidence="                        depend = _depends[j]['$'];"/>
-<issue line="340" char="35" reason="['$'] is better written in dot notation." evidence="                _proc = _procs[i]['$'];"/>
-<issue line="344" char="39" reason="['$'] is better written in dot notation." evidence="                    _step = _steps[j]['$'];"/>
-<issue line="350" char="58" reason="['$'] is better written in dot notation." evidence="                                _step.next.push(_next[k]['$']);"/>
+<issue line="71" char="24" reason="['$'] is better written in dot notation." evidence="        proComp = comp['$'];"/>
+<issue line="80" char="31" reason="['$'] is better written in dot notation." evidence="            dev = _authors[i]['$'];"/>
+<issue line="86" char="34" reason="['$'] is better written in dot notation." evidence="            dev = _mantainers[i]['$'];"/>
+<issue line="94" char="37" reason="['$'] is better written in dot notation." evidence="            status = _life_cycle[i]['$'];"/>
+<issue line="273" char="40" reason="['$'] is better written in dot notation." evidence="                platfrm = _platfrms[i]['$'];"/>
+<issue line="278" char="40" reason="['$'] is better written in dot notation." evidence="                    layer = _layers[j]['$'];"/>
+<issue line="301" char="46" reason="['$'] is better written in dot notation." evidence="                        depend = _depends[j]['$'];"/>
+<issue line="313" char="40" reason="['$'] is better written in dot notation." evidence="                suprlay = _suprlays[i]['$'];"/>
+<issue line="318" char="40" reason="['$'] is better written in dot notation." evidence="                    layer = _layers[j]['$'];"/>
+<issue line="341" char="46" reason="['$'] is better written in dot notation." evidence="                        depend = _depends[j]['$'];"/>
+<issue line="352" char="35" reason="['$'] is better written in dot notation." evidence="                _proc = _procs[i]['$'];"/>
+<issue line="356" char="39" reason="['$'] is better written in dot notation." evidence="                    _step = _steps[j]['$'];"/>
+<issue line="362" char="58" reason="['$'] is better written in dot notation." evidence="                                _step.next.push(_next[k]['$']);"/>
 </file>
 <file name="modules/repository/platform/index.js">
 </file>
@@ -199,14 +176,14 @@
 </file>
 <file name="modules/repository/platform/services/platfrm.js">
 </file>
+<file name="modules/repository/process/models/proc.js">
+</file>
 <file name="modules/repository/process/index.js">
 <issue line="188" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
 <issue line="193" char="22" reason="['$and'] is better written in dot notation." evidence="            find_obj['$and'].push({"/>
 <issue line="271" char="26" reason="['$and'] is better written in dot notation." evidence="                find_obj['$and'].push({"/>
 <issue line="276" char="26" reason="['$and'] is better written in dot notation." evidence="                find_obj['$and'].push({"/>
 <issue line="281" char="26" reason="['$and'] is better written in dot notation." evidence="                find_obj['$and'].push({"/>
-</file>
-<file name="modules/repository/process/models/proc.js">
 </file>
 <file name="modules/repository/process/models/step.js">
 </file>

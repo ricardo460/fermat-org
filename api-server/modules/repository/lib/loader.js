@@ -33,18 +33,22 @@ var TOKEN = '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
  */
 var getRepoDir = function (section, layer, type, comp, team) {
     'use strict';
-    var _root = "fermat",
-        _section = section ? section.toUpperCase().split(' ').join('_') : null,
-        _type = type ? type.toLowerCase().split(' ').join('_') : null,
-        _layer = layer ? layer.toLowerCase().split(' ').join('_') : null,
-        _comp = comp ? comp.toLowerCase().split(' ').join('-') : null,
-        _team = team ? team.toLowerCase().split(' ').join('-') : null;
-    if (_section && _type && _layer && _comp && _team) {
-        return _section + "/" + _type + "/" + _layer + "/" +
-            _root + "-" + _section.split('_').join('-').toLowerCase() + "-" + _type.split('_').join('-') + "-" + _layer.split('_').join('-') + "-" + _comp + "-" + _team;
+    try {
+        var _root = "fermat",
+            _section = section ? section.toUpperCase().split(' ').join('_') : null,
+            _type = type ? type.toLowerCase().split(' ').join('_') : null,
+            _layer = layer ? layer.toLowerCase().split(' ').join('_') : null,
+            _comp = comp ? comp.toLowerCase().split(' ').join('-') : null,
+            _team = team ? team.toLowerCase().split(' ').join('-') : null;
+        if (_section && _type && _layer && _comp && _team) {
+            return _section + "/" + _type + "/" + _layer + "/" +
+                _root + "-" + _section.split('_').join('-').toLowerCase() + "-" + _type.split('_').join('-') + "-" + _layer.split('_').join('-') + "-" + _comp + "-" + _team;
+        }
+        return null;
+    } catch (err) {
+        winston.log('info', err.message, err);
+        return null;
     }
-    return null;
-
 };
 
 /**
@@ -61,36 +65,41 @@ var getRepoDir = function (section, layer, type, comp, team) {
  */
 var processComp = function (section, layer, comp, type) {
     'use strict';
-    var i, dev, status, devs, _authors, _mantainers, _life_cycle, life_cycle, proComp;
-    proComp = {};
-    proComp = comp['$'];
-    proComp.type = type;
-    proComp.repo_dir = getRepoDir(section.code, layer.name, type, proComp.name, 'bitdubai');
-    devs = [];
-    _authors = comp.authors && comp.authors[0] && comp.authors[0].author ? comp.authors[0].author : [];
-    _mantainers = comp.mantainers && comp.mantainers[0] && comp.mantainers[0].mantainer ? comp.mantainers[0].mantainer : [];
-    _life_cycle = comp.life_cycle && comp.life_cycle[0] && comp.life_cycle[0].status ? comp.life_cycle[0].status : [];
-    for (i = 0; i < _authors.length; i++) {
-        dev = {};
-        dev = _authors[i]['$'];
-        dev.role = 'author';
-        devs.push(dev);
+    try {
+        var i, dev, status, devs, _authors, _mantainers, _life_cycle, life_cycle, proComp;
+        proComp = {};
+        proComp = comp['$'];
+        proComp.type = type;
+        proComp.repo_dir = getRepoDir(section.code, layer.name, type, proComp.name, 'bitdubai');
+        devs = [];
+        _authors = comp.authors && comp.authors[0] && comp.authors[0].author ? comp.authors[0].author : [];
+        _mantainers = comp.mantainers && comp.mantainers[0] && comp.mantainers[0].mantainer ? comp.mantainers[0].mantainer : [];
+        _life_cycle = comp.life_cycle && comp.life_cycle[0] && comp.life_cycle[0].status ? comp.life_cycle[0].status : [];
+        for (i = 0; i < _authors.length; i++) {
+            dev = {};
+            dev = _authors[i]['$'];
+            dev.role = 'author';
+            devs.push(dev);
+        }
+        for (i = 0; i < _mantainers.length; i++) {
+            dev = {};
+            dev = _mantainers[i]['$'];
+            dev.role = 'mantainer';
+            devs.push(dev);
+        }
+        proComp.devs = devs;
+        life_cycle = [];
+        for (i = 0; i < _life_cycle.length; i++) {
+            status = {};
+            status = _life_cycle[i]['$'];
+            life_cycle.push(status);
+        }
+        proComp.life_cycle = life_cycle;
+        return proComp;
+    } catch (err) {
+        winston.log('info', err.message, err);
+        return null;
     }
-    for (i = 0; i < _mantainers.length; i++) {
-        dev = {};
-        dev = _mantainers[i]['$'];
-        dev.role = 'mantainer';
-        devs.push(dev);
-    }
-    proComp.devs = devs;
-    life_cycle = [];
-    for (i = 0; i < _life_cycle.length; i++) {
-        status = {};
-        status = _life_cycle[i]['$'];
-        life_cycle.push(status);
-    }
-    proComp.life_cycle = life_cycle;
-    return proComp;
 };
 
 /**
@@ -107,14 +116,19 @@ var processComp = function (section, layer, comp, type) {
  */
 var processCompList = function (section, layer, compList, type) {
     'use strict';
-    var comps, comp, i;
-    comps = [];
-    for (i = 0; i < compList.length; i++) {
-        comp = {};
-        comp = processComp(section, layer, compList[i], type);
-        comps.push(comp);
+    try {
+        var comps, comp, i;
+        comps = [];
+        for (i = 0; i < compList.length; i++) {
+            comp = {};
+            comp = processComp(section, layer, compList[i], type);
+            comps.push(comp);
+        }
+        return comps;
+    } catch (err) {
+        winston.log('info', err.message, err);
+        return null;
     }
-    return comps;
 };
 
 
@@ -152,7 +166,7 @@ var doRequest = function (method, url, params, callback) {
                     'Accept': 'application/json'
                 }
             }, function (err, res, body) {
-                callback(err, body);
+                return callback(err, body);
             });
             break;
         case 'GET':
@@ -163,12 +177,12 @@ var doRequest = function (method, url, params, callback) {
                     'Accept': 'application/json'
                 }
             }, function (err, res, body) {
-                callback(err, body);
+                return callback(err, body);
             });
             break;
         }
     } catch (err) {
-        callback(err, null);
+        return callback(err, null);
     }
 };
 
@@ -189,14 +203,15 @@ var processRequestBody = function (body, callback) {
         if (reqBody.content && reqBody.encoding) {
             var content = new Buffer(reqBody.content, reqBody.encoding);
             var strCont = content.toString().split('\n').join(' ').split('\t').join(' ');
-            callback(null, strCont);
-        } else if (reqBody.login || reqBody.message || Array.isArray(reqBody)) {
-            callback(null, reqBody);
-        } else {
-            callback(new Error('body without any content'), null);
+            return callback(null, strCont);
         }
+        if (reqBody.login || reqBody.message || Array.isArray(reqBody)) {
+            return callback(null, reqBody);
+        }
+        return callback(new Error('body without any content'), null);
+
     } catch (err) {
-        callback(err, null);
+        return callback(err, null);
     }
 };
 
@@ -214,25 +229,22 @@ var getManifest = function (callback) {
     try {
         doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function (err_req, res_req) {
             if (err_req) {
-                callback(err_req, null);
-            } else {
-                processRequestBody(res_req, function (err_pro, res_pro) {
-                    if (err_pro) {
-                        callback(err_pro, null);
-                    } else {
-                        parseString(res_pro, function (err_par, res_par) {
-                            if (err_par) {
-                                callback(err_par, null);
-                            } else {
-                                callback(null, res_par);
-                            }
-                        });
-                    }
-                });
+                return callback(err_req, null);
             }
+            processRequestBody(res_req, function (err_pro, res_pro) {
+                if (err_pro) {
+                    return callback(err_pro, null);
+                }
+                parseString(res_pro, function (err_par, res_par) {
+                    if (err_par) {
+                        return callback(err_par, null);
+                    }
+                    return callback(null, res_par);
+                });
+            });
         });
     } catch (err) {
-        callback(err, null);
+        return callback(err, null);
     }
 };
 
@@ -357,11 +369,11 @@ var parseManifest = function (callback) {
                 procs.push(_proc);
             }
             fermat.procs = procs;
-            callback(null, fermat);
+            return callback(null, fermat);
 
         });
     } catch (err) {
-        callback(err, null);
+        return callback(err, null);
     }
 };
 
@@ -796,19 +808,17 @@ var getContent = function (repo_dir, callback) {
     try {
         doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/' + repo_dir, null, function (err_req, res_req) {
             if (err_req) {
-                callback(err_req, null);
-            } else {
-                processRequestBody(res_req, function (err_pro, res_pro) {
-                    if (err_pro) {
-                        callback(err_pro, null);
-                    } else {
-                        callback(null, res_pro);
-                    }
-                });
+                return callback(err_req, null);
             }
+            processRequestBody(res_req, function (err_pro, res_pro) {
+                if (err_pro) {
+                    return callback(err_pro, null);
+                }
+                return callback(null, res_pro);
+            });
         });
     } catch (err) {
-        callback(err, null);
+        return callback(err, null);
     }
 };
 
@@ -823,46 +833,50 @@ var getContent = function (repo_dir, callback) {
  */
 var updateComps = function (callback) {
     'use strict';
-    compMod.findComps(function (err_comps, res_comps) {
-        if (err_comps) {
-            return callback(err_comps, null);
-        }
-        if (res_comps && Array.isArray(res_comps)) {
-            callback(null, {
-                'update': true
-            });
+    try {
+        compMod.findComps(function (err_comps, res_comps) {
+            if (err_comps) {
+                return callback(err_comps, null);
+            }
+            if (res_comps && Array.isArray(res_comps)) {
+                callback(null, {
+                    'update': true
+                });
 
-            var loopComps = function (i) {
-                if (i < res_comps.length) {
-                    var _comp = res_comps[i];
-                    if (_comp.code_level !== 'concept') {
-                        getContent(_comp.repo_dir, function (err_dir, res_dir) {
-                            if (err_dir) {
-                                winston.log('info', err_dir.message, err_dir);
-                            } else {
-                                if (res_dir && Array.isArray(res_dir)) {
-                                    compMod.insOrUpdComp(_comp._platfrm_id, _comp._suprlay_id, _comp._layer_id, _comp.name, null, null, null, null, null, true,
-                                        function (err_upd, res_upd) {
-                                            if (err_upd) {
-                                                winston.log('info', err_upd.message, err_upd);
-                                            } else {
-                                                winston.log('info', 'updating %s...', _comp._id + '...');
-                                            }
-                                        });
+                var loopComps = function (i) {
+                    if (i < res_comps.length) {
+                        var _comp = res_comps[i];
+                        if (_comp.code_level !== 'concept') {
+                            getContent(_comp.repo_dir, function (err_dir, res_dir) {
+                                if (err_dir) {
+                                    winston.log('info', err_dir.message, err_dir);
+                                } else {
+                                    if (res_dir && Array.isArray(res_dir)) {
+                                        compMod.insOrUpdComp(_comp._platfrm_id, _comp._suprlay_id, _comp._layer_id, _comp.name, null, null, null, null, null, true,
+                                            function (err_upd, res_upd) {
+                                                if (err_upd) {
+                                                    winston.log('info', err_upd.message, err_upd);
+                                                } else {
+                                                    winston.log('info', 'updating %s...', _comp._id + '...');
+                                                }
+                                            });
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
+                        loopComps(++i);
+                    } else {
+                        winston.log('info', 'done iterating components');
+                        return;
                     }
-                    loopComps(++i);
-                } else {
-                    winston.log('info', 'done iterating components');
-                    return;
-                }
-            };
-            return loopComps(0);
-        }
-        return callback(new Error('no developers to iterate'), null);
-    });
+                };
+                return loopComps(0);
+            }
+            return callback(new Error('no developers to iterate'), null);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
 };
 
 /**
@@ -876,15 +890,19 @@ var updateComps = function (callback) {
  */
 exports.updComps = function (callback) {
     'use strict';
-    updateComps(function (err, res) {
-        if (err) {
-            return callback(err, null);
-        }
-        if (res) {
-            return callback(null, res);
-        }
-        return callback(null, null);
-    });
+    try {
+        updateComps(function (err, res) {
+            if (err) {
+                return callback(err, null);
+            }
+            if (res) {
+                return callback(null, res);
+            }
+            return callback(null, null);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
 };
 
 /**
@@ -898,15 +916,19 @@ exports.updComps = function (callback) {
  */
 exports.updDevs = function (callback) {
     'use strict';
-    updateDevs(function (err, res) {
-        if (err) {
-            return callback(err, null);
-        }
-        if (res) {
-            return callback(null, res);
-        }
-        return callback(null, null);
-    });
+    try {
+        updateDevs(function (err, res) {
+            if (err) {
+                return callback(err, null);
+            }
+            if (res) {
+                return callback(null, res);
+            }
+            return callback(null, null);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
 };
 
 /**
@@ -920,14 +942,18 @@ exports.updDevs = function (callback) {
  */
 exports.loadComps = function (callback) {
     'use strict';
-    saveManifest(function (err, res) {
-        if (err) {
-            return callback(err, null);
-        }
-        if (res) {
-            return callback(null, res);
-        }
-        return callback(null, null);
-    });
+    try {
+        saveManifest(function (err, res) {
+            if (err) {
+                return callback(err, null);
+            }
+            if (res) {
+                return callback(null, res);
+            }
+            return callback(null, null);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
 };
 /*jshint +W069 */

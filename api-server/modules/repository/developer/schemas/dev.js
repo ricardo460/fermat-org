@@ -1,4 +1,3 @@
-'use strict';
 var mongoose = require('mongoose');
 
 /**
@@ -68,6 +67,7 @@ var devSchema = mongoose.Schema({
  * @return {[type]} [description]
  */
 devSchema.methods.getAge = function () {
+    'use strict';
     var diff = new Date() - this.bday;
     var diffdays = diff / 1000 / (60 * 60 * 24);
     var age = Math.floor(diffdays / 365.25);
@@ -86,19 +86,6 @@ devSchema.index({
 }, {
     name: "devs_usrnm_uq_indx"
 });
-
-/**
- * [email description]
- *
- * @type {[type]}
- */
-/*devSchema.index({
-	email: 1
-}, {
-	unique: true
-}, {
-	name: "devs_email_uq_indx"
-}); */
 
 /**
  * [usrnm description]

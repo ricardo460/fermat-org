@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <checkstyle>
-<file name="lib/route-cache/index.js">
+<file name="bin/www">
+<error line="1" column="1" severity="warning" message="Unexpected '#'." source="com.jslint"/>
+<error line="1" column="2" severity="warning" message="Stopping. (1% scanned)." source="com.jslint"/>
 </file>
 <file name="lib/route-cache/lib/cache.js">
 <error line="30" column="12" severity="warning" message="Unexpected sync method: 'unlinkSync'." source="com.jslint"/>
@@ -11,17 +13,13 @@
 <error line="140" column="32" severity="warning" message="Unexpected sync method: 'readFileSync'." source="com.jslint"/>
 <error line="167" column="7" severity="warning" message="Unnecessary 'else' after disruption." source="com.jslint"/>
 </file>
-<file name="bin/www">
-<error line="1" column="1" severity="warning" message="Unexpected '#'." source="com.jslint"/>
-<error line="1" column="2" severity="warning" message="Stopping. (1% scanned)." source="com.jslint"/>
+<file name="lib/route-cache/index.js">
 </file>
 <file name="lib/route-cache/lib/route.js">
 </file>
 <file name="lib/test.js">
 </file>
 <file name="modules/database/dao.js">
-<error line="53" column="22" severity="warning" message="Expected '{' and instead saw 'winston'." source="com.jslint"/>
-<error line="53" column="22" severity="warning" message="Stopping. (13% scanned)." source="com.jslint"/>
 </file>
 <file name="modules/repository/component/index.js">
 <error line="72" column="18" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
@@ -138,58 +136,37 @@
 <error line="113" column="25" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
 </file>
 <file name="modules/repository/developer/index.js">
-<error line="26" column="11" severity="warning" message="Unnecessary 'else' after disruption." source="com.jslint"/>
-<error line="28" column="32" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="32" column="30" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="36" column="30" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="40" column="36" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="44" column="42" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="48" column="28" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="52" column="28" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="58" column="34" severity="warning" message="Expected '{' and instead saw 'return'." source="com.jslint"/>
-<error line="58" column="34" severity="warning" message="Stopping. (63% scanned)." source="com.jslint"/>
 </file>
 <file name="modules/repository/developer/models/dev.js">
 </file>
 <file name="modules/repository/developer/schemas/dev.js">
-<error line="96" column="1" severity="warning" message="Use spaces, not tabs." source="com.jslint"/>
-<error line="98" column="1" severity="warning" message="Use spaces, not tabs." source="com.jslint"/>
-<error line="100" column="1" severity="warning" message="Use spaces, not tabs." source="com.jslint"/>
 </file>
 <file name="modules/repository/developer/services/dev.js">
 </file>
 <file name="modules/repository/index.js">
 </file>
 <file name="modules/repository/layer/index.js">
-<error line="157" column="11" severity="warning" message="Unnecessary 'else' after disruption." source="com.jslint"/>
-<error line="159" column="30" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="163" column="30" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="167" column="36" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="171" column="32" severity="warning" message="Expected '!==' and instead saw '!='." source="com.jslint"/>
-<error line="177" column="34" severity="warning" message="Expected '{' and instead saw 'return'." source="com.jslint"/>
-<error line="177" column="34" severity="warning" message="Stopping. (81% scanned)." source="com.jslint"/>
 </file>
 <file name="modules/repository/layer/models/layer.js">
-<error line="36" column="40" severity="warning" message="Use the || operator." source="com.jslint"/>
 </file>
 <file name="modules/repository/layer/schemas/layer.js">
 </file>
 <file name="modules/repository/layer/services/layer.js">
 </file>
 <file name="modules/repository/lib/loader.js">
-<error line="66" column="20" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
-<error line="75" column="27" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
-<error line="81" column="30" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
-<error line="89" column="33" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
-<error line="261" column="40" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
-<error line="266" column="40" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
-<error line="289" column="46" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
-<error line="301" column="40" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
-<error line="306" column="40" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
-<error line="329" column="46" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
-<error line="340" column="35" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
-<error line="344" column="39" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
-<error line="350" column="58" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
+<error line="71" column="24" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
+<error line="80" column="31" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
+<error line="86" column="34" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
+<error line="94" column="37" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
+<error line="273" column="40" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
+<error line="278" column="40" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
+<error line="301" column="46" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
+<error line="313" column="40" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
+<error line="318" column="40" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
+<error line="341" column="46" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
+<error line="352" column="35" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
+<error line="356" column="39" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
+<error line="362" column="58" severity="warning" message="['$'] is better written in dot notation." source="com.jslint"/>
 </file>
 <file name="modules/repository/platform/index.js">
 </file>
@@ -199,14 +176,14 @@
 </file>
 <file name="modules/repository/platform/services/platfrm.js">
 </file>
+<file name="modules/repository/process/models/proc.js">
+</file>
 <file name="modules/repository/process/index.js">
 <error line="188" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
 <error line="193" column="22" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
 <error line="271" column="26" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
 <error line="276" column="26" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
 <error line="281" column="26" severity="warning" message="['$and'] is better written in dot notation." source="com.jslint"/>
-</file>
-<file name="modules/repository/process/models/proc.js">
 </file>
 <file name="modules/repository/process/models/step.js">
 </file>
