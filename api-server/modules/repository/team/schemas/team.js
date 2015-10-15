@@ -1,4 +1,5 @@
 /*global require*/
+/*global module*/
 var mongoose = require('mongoose');
 
 /**
@@ -39,5 +40,4 @@ teamSchema.index({
     name: "teams_cp_indx"
 });
 
-/*global module*/
 module.exports = teamSchema;

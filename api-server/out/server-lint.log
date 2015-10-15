@@ -34,13 +34,6 @@ lib/test.js:1:1	Use the function form of 'use strict'.
 lib/test.js:2:13	'require' was used before it was defined.
 lib/test.js:5:1	'console' was used before it was defined.
 lib/test.js:11:1	'console' was used before it was defined.
-FAIL	modules/database/dao.js (6)
-modules/database/dao.js:1:1	Use the function form of 'use strict'.
-modules/database/dao.js:2:16	'require' was used before it was defined.
-modules/database/dao.js:3:15	'require' was used before it was defined.
-modules/database/dao.js:4:14	'require' was used before it was defined.
-modules/database/dao.js:53:22	Expected '{' and instead saw 'winston'.
-modules/database/dao.js:53:22	Stopping. (13% scanned).
 FAIL	modules/repository/component/index.js (23)
 modules/repository/component/index.js:1:1	Use the function form of 'use strict'.
 modules/repository/component/index.js:3:15	'require' was used before it was defined.
@@ -65,16 +58,23 @@ modules/repository/component/index.js:112:38	Expected '!==' and instead saw '!='
 modules/repository/component/index.js:116:32	Expected '!==' and instead saw '!='.
 modules/repository/component/index.js:122:34	Expected '{' and instead saw 'return'.
 modules/repository/component/index.js:122:34	Stopping. (40% scanned).
-FAIL	modules/repository/component/models/compDev.js (3)
-modules/repository/component/models/compDev.js:1:1	Use the function form of 'use strict'.
-modules/repository/component/models/compDev.js:2:16	'require' was used before it was defined.
-modules/repository/component/models/compDev.js:54:1	'module' was used before it was defined.
+FAIL	modules/database/dao.js (6)
+modules/database/dao.js:1:1	Use the function form of 'use strict'.
+modules/database/dao.js:2:16	'require' was used before it was defined.
+modules/database/dao.js:3:15	'require' was used before it was defined.
+modules/database/dao.js:4:14	'require' was used before it was defined.
+modules/database/dao.js:53:22	Expected '{' and instead saw 'winston'.
+modules/database/dao.js:53:22	Stopping. (13% scanned).
 FAIL	modules/repository/component/models/comp.js (5)
 modules/repository/component/models/comp.js:1:1	Use the function form of 'use strict'.
 modules/repository/component/models/comp.js:2:16	'require' was used before it was defined.
 modules/repository/component/models/comp.js:76:13	Redefinition of 'words' from line 72.
 modules/repository/component/models/comp.js:78:14	Move 'var' declarations to the top of the function.
 modules/repository/component/models/comp.js:78:14	Stopping. (72% scanned).
+FAIL	modules/repository/component/models/compDev.js (3)
+modules/repository/component/models/compDev.js:1:1	Use the function form of 'use strict'.
+modules/repository/component/models/compDev.js:2:16	'require' was used before it was defined.
+modules/repository/component/models/compDev.js:54:1	'module' was used before it was defined.
 FAIL	modules/repository/component/models/status.js (3)
 modules/repository/component/models/status.js:1:1	Use the function form of 'use strict'.
 modules/repository/component/models/status.js:2:16	'require' was used before it was defined.
@@ -92,6 +92,39 @@ modules/repository/component/schemas/status.js:1:1	Use the function form of 'use
 modules/repository/component/schemas/status.js:2:16	'require' was used before it was defined.
 modules/repository/component/schemas/status.js:41:12	Unexpected ','.
 modules/repository/component/schemas/status.js:46:1	'module' was used before it was defined.
+FAIL	modules/repository/component/services/compDev.js (32)
+modules/repository/component/services/compDev.js:1:16	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:2:11	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:3:18	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:4:18	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:5:15	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:6:15	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:7:14	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:8:14	'require' was used before it was defined.
+modules/repository/component/services/compDev.js:27:1	'exports' was used before it was defined.
+modules/repository/component/services/compDev.js:27:33	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:28:5	Missing 'use strict' statement.
+modules/repository/component/services/compDev.js:28:50	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:43:1	'exports' was used before it was defined.
+modules/repository/component/services/compDev.js:43:35	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:44:5	Missing 'use strict' statement.
+modules/repository/component/services/compDev.js:44:75	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:59:1	'exports' was used before it was defined.
+modules/repository/component/services/compDev.js:59:31	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:60:5	Missing 'use strict' statement.
+modules/repository/component/services/compDev.js:60:73	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:77:1	'exports' was used before it was defined.
+modules/repository/component/services/compDev.js:77:32	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:78:5	Missing 'use strict' statement.
+modules/repository/component/services/compDev.js:78:90	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:94:1	'exports' was used before it was defined.
+modules/repository/component/services/compDev.js:94:35	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:95:5	Missing 'use strict' statement.
+modules/repository/component/services/compDev.js:95:86	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:111:1	'exports' was used before it was defined.
+modules/repository/component/services/compDev.js:111:37	Expected exactly one space between 'function' and '('.
+modules/repository/component/services/compDev.js:112:5	Missing 'use strict' statement.
+modules/repository/component/services/compDev.js:115:25	Expected exactly one space between 'function' and '('.
 FAIL	modules/repository/component/services/comp.js (51)
 modules/repository/component/services/comp.js:1:13	'require' was used before it was defined.
 modules/repository/component/services/comp.js:2:16	'require' was used before it was defined.
@@ -144,39 +177,6 @@ modules/repository/component/services/comp.js:182:25	Expected exactly one space 
 modules/repository/component/services/comp.js:198:1	'exports' was used before it was defined.
 modules/repository/component/services/comp.js:198:37	Expected exactly one space between 'function' and '('.
 modules/repository/component/services/comp.js:198:37	Too many errors. (73% scanned).
-FAIL	modules/repository/component/services/compDev.js (32)
-modules/repository/component/services/compDev.js:1:16	'require' was used before it was defined.
-modules/repository/component/services/compDev.js:2:11	'require' was used before it was defined.
-modules/repository/component/services/compDev.js:3:18	'require' was used before it was defined.
-modules/repository/component/services/compDev.js:4:18	'require' was used before it was defined.
-modules/repository/component/services/compDev.js:5:15	'require' was used before it was defined.
-modules/repository/component/services/compDev.js:6:15	'require' was used before it was defined.
-modules/repository/component/services/compDev.js:7:14	'require' was used before it was defined.
-modules/repository/component/services/compDev.js:8:14	'require' was used before it was defined.
-modules/repository/component/services/compDev.js:27:1	'exports' was used before it was defined.
-modules/repository/component/services/compDev.js:27:33	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:28:5	Missing 'use strict' statement.
-modules/repository/component/services/compDev.js:28:50	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:43:1	'exports' was used before it was defined.
-modules/repository/component/services/compDev.js:43:35	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:44:5	Missing 'use strict' statement.
-modules/repository/component/services/compDev.js:44:75	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:59:1	'exports' was used before it was defined.
-modules/repository/component/services/compDev.js:59:31	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:60:5	Missing 'use strict' statement.
-modules/repository/component/services/compDev.js:60:73	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:77:1	'exports' was used before it was defined.
-modules/repository/component/services/compDev.js:77:32	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:78:5	Missing 'use strict' statement.
-modules/repository/component/services/compDev.js:78:90	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:94:1	'exports' was used before it was defined.
-modules/repository/component/services/compDev.js:94:35	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:95:5	Missing 'use strict' statement.
-modules/repository/component/services/compDev.js:95:86	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:111:1	'exports' was used before it was defined.
-modules/repository/component/services/compDev.js:111:37	Expected exactly one space between 'function' and '('.
-modules/repository/component/services/compDev.js:112:5	Missing 'use strict' statement.
-modules/repository/component/services/compDev.js:115:25	Expected exactly one space between 'function' and '('.
 FAIL	modules/repository/component/services/status.js (30)
 modules/repository/component/services/status.js:1:16	'require' was used before it was defined.
 modules/repository/component/services/status.js:2:11	'require' was used before it was defined.
@@ -396,32 +396,5 @@ modules/repository/process/services/step.js:79:1	'exports' was used before it wa
 modules/repository/process/services/step.js:96:1	'exports' was used before it was defined.
 modules/repository/process/services/step.js:135:1	'exports' was used before it was defined.
 modules/repository/process/services/step.js:156:1	'exports' was used before it was defined.
-FAIL	modules/repository/superlayer/index.js (5)
-modules/repository/superlayer/index.js:1:1	Use the function form of 'use strict'.
-modules/repository/superlayer/index.js:2:18	'require' was used before it was defined.
-modules/repository/superlayer/index.js:3:18	'require' was used before it was defined.
-modules/repository/superlayer/index.js:39:1	'exports' was used before it was defined.
-modules/repository/superlayer/index.js:94:1	'exports' was used before it was defined.
-FAIL	modules/repository/superlayer/models/suprlay.js (3)
-modules/repository/superlayer/models/suprlay.js:1:1	Use the function form of 'use strict'.
-modules/repository/superlayer/models/suprlay.js:2:16	'require' was used before it was defined.
-modules/repository/superlayer/models/suprlay.js:56:1	'module' was used before it was defined.
-FAIL	modules/repository/superlayer/schemas/suprlay.js (3)
-modules/repository/superlayer/schemas/suprlay.js:1:1	Use the function form of 'use strict'.
-modules/repository/superlayer/schemas/suprlay.js:2:16	'require' was used before it was defined.
-modules/repository/superlayer/schemas/suprlay.js:56:1	'module' was used before it was defined.
-FAIL	modules/repository/superlayer/services/suprlay.js (12)
-modules/repository/superlayer/services/suprlay.js:1:1	Use the function form of 'use strict'.
-modules/repository/superlayer/services/suprlay.js:2:16	'require' was used before it was defined.
-modules/repository/superlayer/services/suprlay.js:3:11	'require' was used before it was defined.
-modules/repository/superlayer/services/suprlay.js:4:18	'require' was used before it was defined.
-modules/repository/superlayer/services/suprlay.js:5:18	'require' was used before it was defined.
-modules/repository/superlayer/services/suprlay.js:24:1	'exports' was used before it was defined.
-modules/repository/superlayer/services/suprlay.js:40:1	'exports' was used before it was defined.
-modules/repository/superlayer/services/suprlay.js:56:1	'exports' was used before it was defined.
-modules/repository/superlayer/services/suprlay.js:74:1	'exports' was used before it was defined.
-modules/repository/superlayer/services/suprlay.js:94:1	'exports' was used before it was defined.
-modules/repository/superlayer/services/suprlay.js:111:1	'exports' was used before it was defined.
-modules/repository/superlayer/services/suprlay.js:128:1	'exports' was used before it was defined.
 
-# JSLint failed, 385 violations in 40.  48 files scanned.
+# JSLint failed, 362 violations in 36.  48 files scanned.

@@ -1,4 +1,5 @@
 /*global require*/
+/*global module*/
 var mongoose = require('mongoose');
 
 /**
@@ -47,5 +48,4 @@ TeamMdl.prototype.setUpdate = function () {
 };
 
 // export the class
-/*global module*/
 module.exports = TeamMdl;

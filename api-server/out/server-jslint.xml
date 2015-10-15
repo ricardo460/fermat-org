@@ -41,14 +41,6 @@
 <issue line="5" char="1" reason="'console' was used before it was defined." evidence="console.dir(cache);"/>
 <issue line="11" char="1" reason="'console' was used before it was defined." evidence="console.dir(save);"/>
 </file>
-<file name="modules/database/dao.js">
-<issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
-<issue line="2" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
-<issue line="3" char="15" reason="'require' was used before it was defined." evidence="var winston = require('winston');"/>
-<issue line="4" char="14" reason="'require' was used before it was defined." evidence="var config = require('../../config');"/>
-<issue line="53" char="22" reason="Expected '{' and instead saw 'winston'." evidence="            if (err) winston.log('info', 'Mongoose default connection error', err);"/>
-<issue line="53" char="22" reason="Stopping. (13% scanned)." evidence=""/>
-</file>
 <file name="modules/repository/component/index.js">
 <issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
 <issue line="3" char="15" reason="'require' was used before it was defined." evidence="var compSrv = require('./services/comp');"/>
@@ -74,10 +66,13 @@
 <issue line="122" char="34" reason="Expected '{' and instead saw 'return'." evidence="                    if (err_upd) return callback(err_upd, null);"/>
 <issue line="122" char="34" reason="Stopping. (40% scanned)." evidence=""/>
 </file>
-<file name="modules/repository/component/models/compDev.js">
+<file name="modules/database/dao.js">
 <issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
 <issue line="2" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
-<issue line="54" char="1" reason="'module' was used before it was defined." evidence="module.exports = CompDevMdl;"/>
+<issue line="3" char="15" reason="'require' was used before it was defined." evidence="var winston = require('winston');"/>
+<issue line="4" char="14" reason="'require' was used before it was defined." evidence="var config = require('../../config');"/>
+<issue line="53" char="22" reason="Expected '{' and instead saw 'winston'." evidence="            if (err) winston.log('info', 'Mongoose default connection error', err);"/>
+<issue line="53" char="22" reason="Stopping. (13% scanned)." evidence=""/>
 </file>
 <file name="modules/repository/component/models/comp.js">
 <issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
@@ -85,6 +80,11 @@
 <issue line="76" char="13" reason="Redefinition of 'words' from line 72." evidence="        var words = string.split(&quot; &quot;);"/>
 <issue line="78" char="14" reason="Move 'var' declarations to the top of the function." evidence="        for (var i = 0, l = words.length; i &lt; l; i++) {"/>
 <issue line="78" char="14" reason="Stopping. (72% scanned)." evidence=""/>
+</file>
+<file name="modules/repository/component/models/compDev.js">
+<issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
+<issue line="2" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
+<issue line="54" char="1" reason="'module' was used before it was defined." evidence="module.exports = CompDevMdl;"/>
 </file>
 <file name="modules/repository/component/models/status.js">
 <issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
@@ -106,6 +106,40 @@
 <issue line="2" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
 <issue line="41" char="12" reason="Unexpected ','." evidence="    name: 1,"/>
 <issue line="46" char="1" reason="'module' was used before it was defined." evidence="module.exports = statusSchema;"/>
+</file>
+<file name="modules/repository/component/services/compDev.js">
+<issue line="1" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
+<issue line="2" char="11" reason="'require' was used before it was defined." evidence="var Dao = require('../../../database/dao');"/>
+<issue line="3" char="18" reason="'require' was used before it was defined." evidence="var compDevMdl = require('../models/compDev');"/>
+<issue line="4" char="18" reason="'require' was used before it was defined." evidence="var compDevSch = require('../schemas/compDev');"/>
+<issue line="5" char="15" reason="'require' was used before it was defined." evidence="var compMdl = require('../models/comp');"/>
+<issue line="6" char="15" reason="'require' was used before it was defined." evidence="var compSch = require('../schemas/comp');"/>
+<issue line="7" char="14" reason="'require' was used before it was defined." evidence="var devMdl = require('../../developer/models/dev');"/>
+<issue line="8" char="14" reason="'require' was used before it was defined." evidence="var devSch = require('../../developer/schemas/dev');"/>
+<issue line="27" char="1" reason="'exports' was used before it was defined." evidence="exports.insertCompDev = function(compDev_mdl, callback) {"/>
+<issue line="27" char="33" reason="Expected exactly one space between 'function' and '('." evidence="exports.insertCompDev = function(compDev_mdl, callback) {"/>
+<issue line="28" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.insertSchema(compDev_mdl, function(err, compDev) {"/>
+<issue line="28" char="50" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.insertSchema(compDev_mdl, function(err, compDev) {"/>
+<issue line="43" char="1" reason="'exports' was used before it was defined." evidence="exports.findCompDevById = function(_id, callback) {"/>
+<issue line="43" char="35" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompDevById = function(_id, callback) {"/>
+<issue line="44" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateSchemaById(_id, '_dev_id _comp_id', function(err, compDev) {"/>
+<issue line="44" char="75" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateSchemaById(_id, '_dev_id _comp_id', function(err, compDev) {"/>
+<issue line="59" char="1" reason="'exports' was used before it was defined." evidence="exports.findCompDev = function(query, callback) {"/>
+<issue line="59" char="31" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompDev = function(query, callback) {"/>
+<issue line="60" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateSchema(query, '_dev_id _comp_id', function(err, compDev) {"/>
+<issue line="60" char="73" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateSchema(query, '_dev_id _comp_id', function(err, compDev) {"/>
+<issue line="77" char="1" reason="'exports' was used before it was defined." evidence="exports.findCompDevs = function(query, limit, order, callback) {"/>
+<issue line="77" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompDevs = function(query, limit, order, callback) {"/>
+<issue line="78" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateSchemaLst(query, limit, order, '_dev_id _comp_id', function(err, compDev) {"/>
+<issue line="78" char="90" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateSchemaLst(query, limit, order, '_dev_id _comp_id', function(err, compDev) {"/>
+<issue line="94" char="1" reason="'exports' was used before it was defined." evidence="exports.findAllCompDevs = function(query, order, callback) {"/>
+<issue line="94" char="35" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAllCompDevs = function(query, order, callback) {"/>
+<issue line="95" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateAllSchemaLst(query, order, '_dev_id _comp_id', function(err, compDev) {"/>
+<issue line="95" char="86" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateAllSchemaLst(query, order, '_dev_id _comp_id', function(err, compDev) {"/>
+<issue line="111" char="1" reason="'exports' was used before it was defined." evidence="exports.updateCompDevById = function(_id, set, callback) {"/>
+<issue line="111" char="37" reason="Expected exactly one space between 'function' and '('." evidence="exports.updateCompDevById = function(_id, set, callback) {"/>
+<issue line="112" char="5" reason="Missing 'use strict' statement." evidence="    set.upd_at = new mongoose.Types.ObjectId();"/>
+<issue line="115" char="25" reason="Expected exactly one space between 'function' and '('." evidence="    }, set, {}, function(err, compDev) {"/>
 </file>
 <file name="modules/repository/component/services/comp.js">
 <issue line="1" char="13" reason="'require' was used before it was defined." evidence="var async = require('async');"/>
@@ -159,40 +193,6 @@
 <issue line="198" char="1" reason="'exports' was used before it was defined." evidence="exports.pushDevToCompById = function(_id, _compDev_id, callback) {"/>
 <issue line="198" char="37" reason="Expected exactly one space between 'function' and '('." evidence="exports.pushDevToCompById = function(_id, _compDev_id, callback) {"/>
 <issue line="198" char="37" reason="Too many errors. (73% scanned)." evidence=""/>
-</file>
-<file name="modules/repository/component/services/compDev.js">
-<issue line="1" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
-<issue line="2" char="11" reason="'require' was used before it was defined." evidence="var Dao = require('../../../database/dao');"/>
-<issue line="3" char="18" reason="'require' was used before it was defined." evidence="var compDevMdl = require('../models/compDev');"/>
-<issue line="4" char="18" reason="'require' was used before it was defined." evidence="var compDevSch = require('../schemas/compDev');"/>
-<issue line="5" char="15" reason="'require' was used before it was defined." evidence="var compMdl = require('../models/comp');"/>
-<issue line="6" char="15" reason="'require' was used before it was defined." evidence="var compSch = require('../schemas/comp');"/>
-<issue line="7" char="14" reason="'require' was used before it was defined." evidence="var devMdl = require('../../developer/models/dev');"/>
-<issue line="8" char="14" reason="'require' was used before it was defined." evidence="var devSch = require('../../developer/schemas/dev');"/>
-<issue line="27" char="1" reason="'exports' was used before it was defined." evidence="exports.insertCompDev = function(compDev_mdl, callback) {"/>
-<issue line="27" char="33" reason="Expected exactly one space between 'function' and '('." evidence="exports.insertCompDev = function(compDev_mdl, callback) {"/>
-<issue line="28" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.insertSchema(compDev_mdl, function(err, compDev) {"/>
-<issue line="28" char="50" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.insertSchema(compDev_mdl, function(err, compDev) {"/>
-<issue line="43" char="1" reason="'exports' was used before it was defined." evidence="exports.findCompDevById = function(_id, callback) {"/>
-<issue line="43" char="35" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompDevById = function(_id, callback) {"/>
-<issue line="44" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateSchemaById(_id, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="44" char="75" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateSchemaById(_id, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="59" char="1" reason="'exports' was used before it was defined." evidence="exports.findCompDev = function(query, callback) {"/>
-<issue line="59" char="31" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompDev = function(query, callback) {"/>
-<issue line="60" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateSchema(query, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="60" char="73" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateSchema(query, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="77" char="1" reason="'exports' was used before it was defined." evidence="exports.findCompDevs = function(query, limit, order, callback) {"/>
-<issue line="77" char="32" reason="Expected exactly one space between 'function' and '('." evidence="exports.findCompDevs = function(query, limit, order, callback) {"/>
-<issue line="78" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateSchemaLst(query, limit, order, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="78" char="90" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateSchemaLst(query, limit, order, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="94" char="1" reason="'exports' was used before it was defined." evidence="exports.findAllCompDevs = function(query, order, callback) {"/>
-<issue line="94" char="35" reason="Expected exactly one space between 'function' and '('." evidence="exports.findAllCompDevs = function(query, order, callback) {"/>
-<issue line="95" char="5" reason="Missing 'use strict' statement." evidence="    compDevDao.findAndPopulateAllSchemaLst(query, order, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="95" char="86" reason="Expected exactly one space between 'function' and '('." evidence="    compDevDao.findAndPopulateAllSchemaLst(query, order, '_dev_id _comp_id', function(err, compDev) {"/>
-<issue line="111" char="1" reason="'exports' was used before it was defined." evidence="exports.updateCompDevById = function(_id, set, callback) {"/>
-<issue line="111" char="37" reason="Expected exactly one space between 'function' and '('." evidence="exports.updateCompDevById = function(_id, set, callback) {"/>
-<issue line="112" char="5" reason="Missing 'use strict' statement." evidence="    set.upd_at = new mongoose.Types.ObjectId();"/>
-<issue line="115" char="25" reason="Expected exactly one space between 'function' and '('." evidence="    }, set, {}, function(err, compDev) {"/>
 </file>
 <file name="modules/repository/component/services/status.js">
 <issue line="1" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
@@ -437,35 +437,12 @@
 <issue line="156" char="1" reason="'exports' was used before it was defined." evidence="exports.findAndPopulateAllSteps = function (query, sort, path, callback) {"/>
 </file>
 <file name="modules/repository/superlayer/index.js">
-<issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
-<issue line="2" char="18" reason="'require' was used before it was defined." evidence="var suprlaySrv = require('./services/suprlay');"/>
-<issue line="3" char="18" reason="'require' was used before it was defined." evidence="var SuprlayMdl = require('./models/suprlay');"/>
-<issue line="39" char="1" reason="'exports' was used before it was defined." evidence="exports.insOrUpdSuprlay = function (code, name, logo, deps, order, callback) {"/>
-<issue line="94" char="1" reason="'exports' was used before it was defined." evidence="exports.getSuprlays = function (callback) {"/>
 </file>
 <file name="modules/repository/superlayer/models/suprlay.js">
-<issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
-<issue line="2" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
-<issue line="56" char="1" reason="'module' was used before it was defined." evidence="module.exports = SuprlayMdl;"/>
 </file>
 <file name="modules/repository/superlayer/schemas/suprlay.js">
-<issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
-<issue line="2" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
-<issue line="56" char="1" reason="'module' was used before it was defined." evidence="module.exports = suprlaySchema;"/>
 </file>
 <file name="modules/repository/superlayer/services/suprlay.js">
-<issue line="1" char="1" reason="Use the function form of 'use strict'." evidence="'use strict';"/>
-<issue line="2" char="16" reason="'require' was used before it was defined." evidence="var mongoose = require('mongoose');"/>
-<issue line="3" char="11" reason="'require' was used before it was defined." evidence="var Dao = require('../../../database/dao');"/>
-<issue line="4" char="18" reason="'require' was used before it was defined." evidence="var suprlayMdl = require('../models/suprlay');"/>
-<issue line="5" char="18" reason="'require' was used before it was defined." evidence="var suprlaySch = require('../schemas/suprlay');"/>
-<issue line="24" char="1" reason="'exports' was used before it was defined." evidence="exports.insertSuprlay = function (suprlay_mdl, callback) {"/>
-<issue line="40" char="1" reason="'exports' was used before it was defined." evidence="exports.findSuprlayById = function (_id, callback) {"/>
-<issue line="56" char="1" reason="'exports' was used before it was defined." evidence="exports.findSuprlayByCode = function (code, callback) {"/>
-<issue line="74" char="1" reason="'exports' was used before it was defined." evidence="exports.findSuprlayByName = function (name, callback) {"/>
-<issue line="94" char="1" reason="'exports' was used before it was defined." evidence="exports.findSuprlays = function (query, limit, order, callback) {"/>
-<issue line="111" char="1" reason="'exports' was used before it was defined." evidence="exports.findAllSuprlays = function (query, order, callback) {"/>
-<issue line="128" char="1" reason="'exports' was used before it was defined." evidence="exports.updateSuprlayById = function (_id, set, callback) {"/>
 </file>
 <file name="modules/repository/team/index.js">
 </file>

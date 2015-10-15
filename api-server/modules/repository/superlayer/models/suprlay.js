@@ -1,4 +1,5 @@
-'use strict';
+/*global require*/
+/*global module*/
 var mongoose = require('mongoose');
 
 // Constructor
@@ -14,6 +15,7 @@ var mongoose = require('mongoose');
  * @param  {[type]}   order [description]
  */
 function SuprlayMdl(code, name, logo, deps, order) {
+    'use strict';
     // always initialize all instance properties
     this.code = code;
     this.name = name;
@@ -34,6 +36,7 @@ function SuprlayMdl(code, name, logo, deps, order) {
  * @return {[type]} [description]
  */
 SuprlayMdl.prototype.init = function (suprlaySchema) {
+    'use strict';
     this._id = suprlaySchema._id;
     this.code = suprlaySchema.code;
     this.name = suprlaySchema.name;
@@ -49,6 +52,7 @@ SuprlayMdl.prototype.init = function (suprlaySchema) {
  * @method setUpdate
  */
 SuprlayMdl.prototype.setUpdate = function () {
+    'use strict';
     this.upd_at = new mongoose.Types.ObjectId();
 };
 

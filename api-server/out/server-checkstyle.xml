@@ -41,14 +41,6 @@
 <error line="5" column="1" severity="warning" message="'console' was used before it was defined." source="com.jslint"/>
 <error line="11" column="1" severity="warning" message="'console' was used before it was defined." source="com.jslint"/>
 </file>
-<file name="modules/database/dao.js">
-<error line="1" column="1" severity="warning" message="Use the function form of 'use strict'." source="com.jslint"/>
-<error line="2" column="16" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="3" column="15" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="4" column="14" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="53" column="22" severity="warning" message="Expected '{' and instead saw 'winston'." source="com.jslint"/>
-<error line="53" column="22" severity="warning" message="Stopping. (13% scanned)." source="com.jslint"/>
-</file>
 <file name="modules/repository/component/index.js">
 <error line="1" column="1" severity="warning" message="Use the function form of 'use strict'." source="com.jslint"/>
 <error line="3" column="15" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
@@ -74,10 +66,13 @@
 <error line="122" column="34" severity="warning" message="Expected '{' and instead saw 'return'." source="com.jslint"/>
 <error line="122" column="34" severity="warning" message="Stopping. (40% scanned)." source="com.jslint"/>
 </file>
-<file name="modules/repository/component/models/compDev.js">
+<file name="modules/database/dao.js">
 <error line="1" column="1" severity="warning" message="Use the function form of 'use strict'." source="com.jslint"/>
 <error line="2" column="16" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="54" column="1" severity="warning" message="'module' was used before it was defined." source="com.jslint"/>
+<error line="3" column="15" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
+<error line="4" column="14" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
+<error line="53" column="22" severity="warning" message="Expected '{' and instead saw 'winston'." source="com.jslint"/>
+<error line="53" column="22" severity="warning" message="Stopping. (13% scanned)." source="com.jslint"/>
 </file>
 <file name="modules/repository/component/models/comp.js">
 <error line="1" column="1" severity="warning" message="Use the function form of 'use strict'." source="com.jslint"/>
@@ -85,6 +80,11 @@
 <error line="76" column="13" severity="warning" message="Redefinition of 'words' from line 72." source="com.jslint"/>
 <error line="78" column="14" severity="warning" message="Move 'var' declarations to the top of the function." source="com.jslint"/>
 <error line="78" column="14" severity="warning" message="Stopping. (72% scanned)." source="com.jslint"/>
+</file>
+<file name="modules/repository/component/models/compDev.js">
+<error line="1" column="1" severity="warning" message="Use the function form of 'use strict'." source="com.jslint"/>
+<error line="2" column="16" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
+<error line="54" column="1" severity="warning" message="'module' was used before it was defined." source="com.jslint"/>
 </file>
 <file name="modules/repository/component/models/status.js">
 <error line="1" column="1" severity="warning" message="Use the function form of 'use strict'." source="com.jslint"/>
@@ -106,6 +106,40 @@
 <error line="2" column="16" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
 <error line="41" column="12" severity="warning" message="Unexpected ','." source="com.jslint"/>
 <error line="46" column="1" severity="warning" message="'module' was used before it was defined." source="com.jslint"/>
+</file>
+<file name="modules/repository/component/services/compDev.js">
+<error line="1" column="16" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
+<error line="2" column="11" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
+<error line="3" column="18" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
+<error line="4" column="18" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
+<error line="5" column="15" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
+<error line="6" column="15" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
+<error line="7" column="14" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
+<error line="8" column="14" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
+<error line="27" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
+<error line="27" column="33" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
+<error line="28" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
+<error line="28" column="50" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
+<error line="43" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
+<error line="43" column="35" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
+<error line="44" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
+<error line="44" column="75" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
+<error line="59" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
+<error line="59" column="31" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
+<error line="60" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
+<error line="60" column="73" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
+<error line="77" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
+<error line="77" column="32" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
+<error line="78" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
+<error line="78" column="90" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
+<error line="94" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
+<error line="94" column="35" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
+<error line="95" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
+<error line="95" column="86" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
+<error line="111" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
+<error line="111" column="37" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
+<error line="112" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
+<error line="115" column="25" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
 </file>
 <file name="modules/repository/component/services/comp.js">
 <error line="1" column="13" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
@@ -159,40 +193,6 @@
 <error line="198" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
 <error line="198" column="37" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
 <error line="198" column="37" severity="warning" message="Too many errors. (73% scanned)." source="com.jslint"/>
-</file>
-<file name="modules/repository/component/services/compDev.js">
-<error line="1" column="16" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="2" column="11" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="3" column="18" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="4" column="18" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="5" column="15" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="6" column="15" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="7" column="14" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="8" column="14" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="27" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
-<error line="27" column="33" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="28" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="28" column="50" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="43" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
-<error line="43" column="35" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="44" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="44" column="75" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="59" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
-<error line="59" column="31" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="60" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="60" column="73" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="77" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
-<error line="77" column="32" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="78" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="78" column="90" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="94" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
-<error line="94" column="35" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="95" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="95" column="86" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="111" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
-<error line="111" column="37" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
-<error line="112" column="5" severity="warning" message="Missing 'use strict' statement." source="com.jslint"/>
-<error line="115" column="25" severity="warning" message="Expected exactly one space between 'function' and '('." source="com.jslint"/>
 </file>
 <file name="modules/repository/component/services/status.js">
 <error line="1" column="16" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
@@ -437,35 +437,12 @@
 <error line="156" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
 </file>
 <file name="modules/repository/superlayer/index.js">
-<error line="1" column="1" severity="warning" message="Use the function form of 'use strict'." source="com.jslint"/>
-<error line="2" column="18" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="3" column="18" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="39" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
-<error line="94" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
 </file>
 <file name="modules/repository/superlayer/models/suprlay.js">
-<error line="1" column="1" severity="warning" message="Use the function form of 'use strict'." source="com.jslint"/>
-<error line="2" column="16" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="56" column="1" severity="warning" message="'module' was used before it was defined." source="com.jslint"/>
 </file>
 <file name="modules/repository/superlayer/schemas/suprlay.js">
-<error line="1" column="1" severity="warning" message="Use the function form of 'use strict'." source="com.jslint"/>
-<error line="2" column="16" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="56" column="1" severity="warning" message="'module' was used before it was defined." source="com.jslint"/>
 </file>
 <file name="modules/repository/superlayer/services/suprlay.js">
-<error line="1" column="1" severity="warning" message="Use the function form of 'use strict'." source="com.jslint"/>
-<error line="2" column="16" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="3" column="11" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="4" column="18" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="5" column="18" severity="warning" message="'require' was used before it was defined." source="com.jslint"/>
-<error line="24" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
-<error line="40" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
-<error line="56" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
-<error line="74" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
-<error line="94" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
-<error line="111" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
-<error line="128" column="1" severity="warning" message="'exports' was used before it was defined." source="com.jslint"/>
 </file>
 <file name="modules/repository/team/index.js">
 </file>
