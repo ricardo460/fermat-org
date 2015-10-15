@@ -1,4 +1,3 @@
-'use strict';
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var platfrmMdl = require('../models/platfrm');
@@ -22,6 +21,7 @@ var platfrmDao = new Dao('Platfrm', platfrmSch, platfrmMdl);
  * @return {[type]}   [description]
  */
 exports.insertPlatfrm = function (platfrm_mdl, callback) {
+    'use strict';
     platfrmDao.insertSchema(platfrm_mdl, function (err, platfrm) {
         callback(err, platfrm);
     });
@@ -38,6 +38,7 @@ exports.insertPlatfrm = function (platfrm_mdl, callback) {
  * @return {[type]}    [description]
  */
 exports.findPlatfrmById = function (_id, callback) {
+    'use strict';
     platfrmDao.findSchemaById(_id, function (err, platfrm) {
         callback(err, platfrm);
     });
@@ -54,6 +55,7 @@ exports.findPlatfrmById = function (_id, callback) {
  * @return {[type]}       [description]
  */
 exports.findPlatfrmByCode = function (code, callback) {
+    'use strict';
     platfrmDao.findSchema({
         code: code
     }, function (err, platfrm) {
@@ -72,6 +74,7 @@ exports.findPlatfrmByCode = function (code, callback) {
  * @return {[type]}       [description]
  */
 exports.findPlatfrmByName = function (name, callback) {
+    'use strict';
     platfrmDao.findSchema({
         name: name
     }, function (err, platfrm) {
@@ -92,6 +95,7 @@ exports.findPlatfrmByName = function (name, callback) {
  * @return {[type]}   [description]
  */
 exports.findPlatfrms = function (query, limit, order, callback) {
+    'use strict';
     platfrmDao.findSchemaLst(query, limit, order, function (err, platfrm) {
         callback(err, platfrm);
     });
@@ -109,6 +113,7 @@ exports.findPlatfrms = function (query, limit, order, callback) {
  * @return {[type]}    [description]
  */
 exports.findAllPlatfrms = function (query, order, callback) {
+    'use strict';
     platfrmDao.findAllSchemaLst(query, order, function (err, platfrm) {
         callback(err, platfrm);
     });
@@ -126,6 +131,7 @@ exports.findAllPlatfrms = function (query, order, callback) {
  * @return {[type]}      [description]
  */
 exports.updatePlatfrmById = function (_id, set, callback) {
+    'use strict';
     set.upd_at = new mongoose.Types.ObjectId();
     platfrmDao.updateSchema({
         _id: _id

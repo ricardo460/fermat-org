@@ -1,5 +1,3 @@
-/*global require*/
-/*global exports*/
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var teamMdl = require('../models/team');

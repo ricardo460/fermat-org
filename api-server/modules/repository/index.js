@@ -1,5 +1,3 @@
-/*global require*/
-/*global exports*/
 var procMod = require('./process');
 var compMod = require('./component');
 var layerMod = require('./layer');

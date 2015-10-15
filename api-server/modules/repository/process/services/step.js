@@ -1,4 +1,3 @@
-'use strict';
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var stepMdl = require('../models/step');
@@ -28,6 +27,7 @@ var stepDao = new Dao('Step', stepSch, stepMdl, 'Proc', procSch, procMdl,
  * @return {[type]}   [description]
  */
 exports.insertStep = function (step_mdl, callback) {
+    'use strict';
     stepDao.insertSchema(step_mdl, function (err, step) {
         callback(err, step);
     });
@@ -44,6 +44,7 @@ exports.insertStep = function (step_mdl, callback) {
  * @return {[type]}     [description]
  */
 exports.findStepById = function (_id, callback) {
+    'use strict';
     stepDao.findSchemaById(_id, function (err, step) {
         callback(err, step);
     });
@@ -60,6 +61,7 @@ exports.findStepById = function (_id, callback) {
  * @return {[type]}   [description]
  */
 exports.findStep = function (query, callback) {
+    'use strict';
     stepDao.findSchema(query, function (err, step) {
         callback(err, step);
     });
@@ -77,6 +79,7 @@ exports.findStep = function (query, callback) {
  * @return {[type]}   [description]
  */
 exports.findSteps = function (query, sort, callback) {
+    'use strict';
     stepDao.findAllSchemaLst(query, sort, function (err, step) {
         callback(err, step);
     });
@@ -94,6 +97,7 @@ exports.findSteps = function (query, sort, callback) {
  * @return {[type]}     [description]
  */
 exports.findAllSteps = function (query, order, callback) {
+    'use strict';
     stepDao.findAllSchemaLst(query, order, function (err, steps) {
         if (err) {
             callback(err, null);
@@ -133,6 +137,7 @@ exports.findAllSteps = function (query, order, callback) {
  * @return {[type]}       [description]
  */
 exports.updateStepById = function (_id, set, callback) {
+    'use strict';
     set.upd_at = new mongoose.Types.ObjectId();
     stepDao.updateSchema({
         _id: _id
@@ -154,6 +159,7 @@ exports.updateStepById = function (_id, set, callback) {
  * @return {[type]}                [description]
  */
 exports.findAndPopulateAllSteps = function (query, sort, path, callback) {
+    'use strict';
     stepDao.findAndPopulateAllSchemaLst(query, sort, path, function (err, step) {
         callback(err, step);
     });

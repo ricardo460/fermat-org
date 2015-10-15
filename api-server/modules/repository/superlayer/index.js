@@ -1,5 +1,3 @@
-/*global require*/
-/*global exports*/
 var suprlaySrv = require('./services/suprlay');
 var SuprlayMdl = require('./models/suprlay');
 

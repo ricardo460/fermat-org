@@ -30,6 +30,8 @@ module.exports = function (jslint) {
                     //    'node'
                     //],
                     todo: true,
+                    this: true,
+                    node: true,
                     nomen: true,
                     vars: true,
                     plusplus: true,

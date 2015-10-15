@@ -1,4 +1,3 @@
-'use strict';
 var mongoose = require('mongoose');
 
 /**
@@ -13,6 +12,7 @@ var mongoose = require('mongoose');
  * @param  {[type]}   order         [description]
  */
 function PlatfrmMdl(code, name, logo, deps, order) {
+    'use strict';
     // always initialize all instance properties
     this.code = code;
     this.name = name;
@@ -32,6 +32,7 @@ function PlatfrmMdl(code, name, logo, deps, order) {
  * @return {[type]} [description]
  */
 PlatfrmMdl.prototype.init = function (platfrmSchema) {
+    'use strict';
     this._id = platfrmSchema._id;
     this.code = platfrmSchema.code;
     this.name = platfrmSchema.name;
@@ -47,6 +48,7 @@ PlatfrmMdl.prototype.init = function (platfrmSchema) {
  * @method setUpdate
  */
 PlatfrmMdl.prototype.setUpdate = function () {
+    'use strict';
     this.upd_at = new mongoose.Types.ObjectId();
 };
 

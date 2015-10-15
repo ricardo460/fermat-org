@@ -1,4 +1,3 @@
-'use strict';
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var procMdl = require('../models/proc');
@@ -12,12 +11,14 @@ var devSch = require('../../developer/schemas/dev');
 var procDao = new Dao('Proc', procSch, procMdl, 'Step', stepSch, stepMdl);
 
 exports.insertProc = function (proc_mdl, callback) {
+    'use strict';
     procDao.insertSchema(proc_mdl, function (err, proc) {
         callback(err, proc);
     });
 };
 
 exports.findAndPopulateProc = function (query, callback) {
+    'use strict';
     procDao.findSchema(query, function (err, proc) {
         if (err) {
             callback(err, null);
@@ -67,6 +68,7 @@ exports.findAndPopulateProc = function (query, callback) {
 };
 
 exports.findProc = function (query, callback) {
+    'use strict';
     procDao.findSchema(query, function (err, proc) {
         if (err) {
             callback(err, null);
@@ -77,6 +79,7 @@ exports.findProc = function (query, callback) {
 };
 
 exports.updateProcById = function (_id, set, callback) {
+    'use strict';
     set.upd_at = new mongoose.Types.ObjectId();
     procDao.updateSchema({
         _id: _id

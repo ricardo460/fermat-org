@@ -1,62 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <testsuites>
   <testsuite>
-<testcase classname="bin.www" name="www:1:1">
-  <failure message="Unexpected '#'." />
-</testcase>
-<testcase classname="bin.www" name="www:1:2">
-  <failure message="Stopping. (1% scanned)." />
-</testcase>
-<testcase classname="lib.route_cache.index" name="index:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="lib.route_cache.index" name="index:2:13">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="lib.route_cache.index" name="index:20:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:2:10">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:3:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:4:13">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:17:55">
-  <failure message="'process' was used before it was defined." />
-</testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:17:90">
-  <failure message="'process' was used before it was defined." />
-</testcase>
+<testcase classname="lib.route_cache.index" name="index:0:0"></testcase>
 <testcase classname="lib.route_cache.lib.cache" name="cache:30:12">
   <failure message="Unexpected sync method: 'unlinkSync'." />
-</testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:32:9">
-  <failure message="'global' was used before it was defined." />
 </testcase>
 <testcase classname="lib.route_cache.lib.cache" name="cache:49:32">
   <failure message="Unexpected sync method: 'readFileSync'." />
 </testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:52:21">
-  <failure message="'global' was used before it was defined." />
-</testcase>
 <testcase classname="lib.route_cache.lib.cache" name="cache:88:7">
   <failure message="Unnecessary 'else' after disruption." />
 </testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:89:9">
-  <failure message="'global' was used before it was defined." />
-</testcase>
 <testcase classname="lib.route_cache.lib.cache" name="cache:107:32">
   <failure message="Unexpected sync method: 'readFileSync'." />
-</testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:111:21">
-  <failure message="'global' was used before it was defined." />
 </testcase>
 <testcase classname="lib.route_cache.lib.cache" name="cache:121:7">
   <failure message="Unnecessary 'else' after disruption." />
@@ -64,65 +20,22 @@
 <testcase classname="lib.route_cache.lib.cache" name="cache:140:32">
   <failure message="Unexpected sync method: 'readFileSync'." />
 </testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:143:21">
-  <failure message="'global' was used before it was defined." />
-</testcase>
 <testcase classname="lib.route_cache.lib.cache" name="cache:167:7">
   <failure message="Unnecessary 'else' after disruption." />
 </testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:168:9">
-  <failure message="'global' was used before it was defined." />
+<testcase classname="bin.www" name="www:1:1">
+  <failure message="Unexpected '#'." />
 </testcase>
-<testcase classname="lib.route_cache.lib.cache" name="cache:173:1">
-  <failure message="'module' was used before it was defined." />
+<testcase classname="bin.www" name="www:1:2">
+  <failure message="Stopping. (1% scanned)." />
 </testcase>
-<testcase classname="lib.route_cache.lib.route" name="route:1:1">
-  <failure message="Use the function form of 'use strict'." />
+<testcase classname="lib.route_cache.lib.route" name="route:0:0"></testcase>
+<testcase classname="lib.test" name="test:0:0"></testcase>
+<testcase classname="modules.database.dao" name="dao:53:22">
+  <failure message="Expected '{' and instead saw 'winston'." />
 </testcase>
-<testcase classname="lib.route_cache.lib.route" name="route:31:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="lib.test" name="test:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="lib.test" name="test:2:13">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="lib.test" name="test:5:1">
-  <failure message="'console' was used before it was defined." />
-</testcase>
-<testcase classname="lib.test" name="test:11:1">
-  <failure message="'console' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.index" name="index:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.component.index" name="index:3:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.index" name="index:4:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.index" name="index:5:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.index" name="index:6:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.index" name="index:7:17">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.index" name="index:8:17">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.index" name="index:19:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.index" name="index:38:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.index" name="index:67:1">
-  <failure message="'exports' was used before it was defined." />
+<testcase classname="modules.database.dao" name="dao:53:22">
+  <failure message="Stopping. (13% scanned)." />
 </testcase>
 <testcase classname="modules.repository.component.index" name="index:72:18">
   <failure message="['$and'] is better written in dot notation." />
@@ -163,30 +76,6 @@
 <testcase classname="modules.repository.component.index" name="index:122:34">
   <failure message="Stopping. (40% scanned)." />
 </testcase>
-<testcase classname="modules.database.dao" name="dao:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.database.dao" name="dao:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.database.dao" name="dao:3:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.database.dao" name="dao:4:14">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.database.dao" name="dao:53:22">
-  <failure message="Expected '{' and instead saw 'winston'." />
-</testcase>
-<testcase classname="modules.database.dao" name="dao:53:22">
-  <failure message="Stopping. (13% scanned)." />
-</testcase>
-<testcase classname="modules.repository.component.models.comp" name="comp:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.component.models.comp" name="comp:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
 <testcase classname="modules.repository.component.models.comp" name="comp:76:13">
   <failure message="Redefinition of 'words' from line 72." />
 </testcase>
@@ -196,200 +85,12 @@
 <testcase classname="modules.repository.component.models.comp" name="comp:78:14">
   <failure message="Stopping. (72% scanned)." />
 </testcase>
-<testcase classname="modules.repository.component.models.compDev" name="compDev:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.component.models.compDev" name="compDev:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.models.compDev" name="compDev:54:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.models.status" name="status:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.component.models.status" name="status:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.models.status" name="status:89:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.schemas.comp" name="comp:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.component.schemas.comp" name="comp:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.schemas.comp" name="comp:91:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.schemas.compDev" name="compDev:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.component.schemas.compDev" name="compDev:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.schemas.compDev" name="compDev:53:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.schemas.status" name="status:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.component.schemas.status" name="status:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
+<testcase classname="modules.repository.component.models.compDev" name="compDev:0:0"></testcase>
+<testcase classname="modules.repository.component.models.status" name="status:0:0"></testcase>
+<testcase classname="modules.repository.component.schemas.comp" name="comp:0:0"></testcase>
+<testcase classname="modules.repository.component.schemas.compDev" name="compDev:0:0"></testcase>
 <testcase classname="modules.repository.component.schemas.status" name="status:41:12">
   <failure message="Unexpected ','." />
-</testcase>
-<testcase classname="modules.repository.component.schemas.status" name="status:46:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:1:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:2:11">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:3:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:4:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:5:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:6:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:7:14">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:8:14">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:27:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:27:33">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:28:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:28:50">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:43:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:43:35">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:44:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:44:75">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:59:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:59:31">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:60:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:60:73">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:77:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:77:32">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:78:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:78:90">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:94:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:94:35">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:95:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:95:86">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:111:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:111:37">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:112:5">
-  <failure message="Missing 'use strict' statement." />
-</testcase>
-<testcase classname="modules.repository.component.services.compDev" name="compDev:115:25">
-  <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:1:13">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:3:11">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:4:14">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:5:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:6:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:7:17">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:8:17">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:9:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:10:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:11:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:12:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:13:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:14:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:15:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:16:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:40:1">
-  <failure message="'exports' was used before it was defined." />
 </testcase>
 <testcase classname="modules.repository.component.services.comp" name="comp:40:30">
   <failure message="Expected exactly one space between 'function' and '('." />
@@ -400,9 +101,6 @@
 <testcase classname="modules.repository.component.services.comp" name="comp:41:44">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:56:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
 <testcase classname="modules.repository.component.services.comp" name="comp:56:32">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
@@ -411,9 +109,6 @@
 </testcase>
 <testcase classname="modules.repository.component.services.comp" name="comp:57:41">
   <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:73:1">
-  <failure message="'exports' was used before it was defined." />
 </testcase>
 <testcase classname="modules.repository.component.services.comp" name="comp:73:43">
   <failure message="Expected exactly one space between 'function' and '('." />
@@ -424,9 +119,6 @@
 <testcase classname="modules.repository.component.services.comp" name="comp:74:58">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:89:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
 <testcase classname="modules.repository.component.services.comp" name="comp:89:28">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
@@ -436,9 +128,6 @@
 <testcase classname="modules.repository.component.services.comp" name="comp:90:39">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:105:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
 <testcase classname="modules.repository.component.services.comp" name="comp:105:29">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
@@ -447,9 +136,6 @@
 </testcase>
 <testcase classname="modules.repository.component.services.comp" name="comp:106:51">
   <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:122:1">
-  <failure message="'exports' was used before it was defined." />
 </testcase>
 <testcase classname="modules.repository.component.services.comp" name="comp:122:32">
   <failure message="Expected exactly one space between 'function' and '('." />
@@ -472,9 +158,6 @@
 <testcase classname="modules.repository.component.services.comp" name="comp:133:25">
   <failure message="Unused '_lifeCycle'." />
 </testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:178:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
 <testcase classname="modules.repository.component.services.comp" name="comp:178:34">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
@@ -484,35 +167,107 @@
 <testcase classname="modules.repository.component.services.comp" name="comp:182:25">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:198:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
 <testcase classname="modules.repository.component.services.comp" name="comp:198:37">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
-<testcase classname="modules.repository.component.services.comp" name="comp:198:37">
-  <failure message="Too many errors. (73% scanned)." />
+<testcase classname="modules.repository.component.services.comp" name="comp:199:5">
+  <failure message="Missing 'use strict' statement." />
 </testcase>
-<testcase classname="modules.repository.component.services.status" name="status:1:16">
-  <failure message="'require' was used before it was defined." />
+<testcase classname="modules.repository.component.services.comp" name="comp:199:27">
+  <failure message="A constructor name 'compDevMdl' should start with an uppercase letter." />
 </testcase>
-<testcase classname="modules.repository.component.services.status" name="status:2:11">
-  <failure message="'require' was used before it was defined." />
+<testcase classname="modules.repository.component.services.comp" name="comp:204:16">
+  <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
-<testcase classname="modules.repository.component.services.status" name="status:3:17">
-  <failure message="'require' was used before it was defined." />
+<testcase classname="modules.repository.component.services.comp" name="comp:199:9">
+  <failure message="Unused 'compDev_mdl'." />
 </testcase>
-<testcase classname="modules.repository.component.services.status" name="status:4:17">
-  <failure message="'require' was used before it was defined." />
+<testcase classname="modules.repository.component.services.comp" name="comp:220:39">
+  <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
-<testcase classname="modules.repository.component.services.status" name="status:5:15">
-  <failure message="'require' was used before it was defined." />
+<testcase classname="modules.repository.component.services.comp" name="comp:221:5">
+  <failure message="Missing 'use strict' statement." />
 </testcase>
-<testcase classname="modules.repository.component.services.status" name="status:6:15">
-  <failure message="'require' was used before it was defined." />
+<testcase classname="modules.repository.component.services.comp" name="comp:225:16">
+  <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
-<testcase classname="modules.repository.component.services.status" name="status:25:1">
-  <failure message="'exports' was used before it was defined." />
+<testcase classname="modules.repository.component.services.comp" name="comp:241:49">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.comp" name="comp:242:5">
+  <failure message="Missing 'use strict' statement." />
+</testcase>
+<testcase classname="modules.repository.component.services.comp" name="comp:242:27">
+  <failure message="A constructor name 'compDevMdl' should start with an uppercase letter." />
+</testcase>
+<testcase classname="modules.repository.component.services.comp" name="comp:247:16">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.comp" name="comp:242:9">
+  <failure message="Unused 'compDev_mdl'." />
+</testcase>
+<testcase classname="modules.repository.component.services.comp" name="comp:263:51">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.comp" name="comp:264:5">
+  <failure message="Missing 'use strict' statement." />
+</testcase>
+<testcase classname="modules.repository.component.services.comp" name="comp:268:16">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:27:33">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:28:5">
+  <failure message="Missing 'use strict' statement." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:28:50">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:43:35">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:44:5">
+  <failure message="Missing 'use strict' statement." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:44:75">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:59:31">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:60:5">
+  <failure message="Missing 'use strict' statement." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:60:73">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:77:32">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:78:5">
+  <failure message="Missing 'use strict' statement." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:78:90">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:94:35">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:95:5">
+  <failure message="Missing 'use strict' statement." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:95:86">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:111:37">
+  <failure message="Expected exactly one space between 'function' and '('." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:112:5">
+  <failure message="Missing 'use strict' statement." />
+</testcase>
+<testcase classname="modules.repository.component.services.compDev" name="compDev:115:25">
+  <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
 <testcase classname="modules.repository.component.services.status" name="status:25:32">
   <failure message="Expected exactly one space between 'function' and '('." />
@@ -523,9 +278,6 @@
 <testcase classname="modules.repository.component.services.status" name="status:26:48">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
-<testcase classname="modules.repository.component.services.status" name="status:41:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
 <testcase classname="modules.repository.component.services.status" name="status:41:34">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
@@ -534,9 +286,6 @@
 </testcase>
 <testcase classname="modules.repository.component.services.status" name="status:42:43">
   <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:57:1">
-  <failure message="'exports' was used before it was defined." />
 </testcase>
 <testcase classname="modules.repository.component.services.status" name="status:57:30">
   <failure message="Expected exactly one space between 'function' and '('." />
@@ -547,9 +296,6 @@
 <testcase classname="modules.repository.component.services.status" name="status:58:64">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
-<testcase classname="modules.repository.component.services.status" name="status:75:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
 <testcase classname="modules.repository.component.services.status" name="status:75:32">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
@@ -558,9 +304,6 @@
 </testcase>
 <testcase classname="modules.repository.component.services.status" name="status:76:81">
   <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.component.services.status" name="status:92:1">
-  <failure message="'exports' was used before it was defined." />
 </testcase>
 <testcase classname="modules.repository.component.services.status" name="status:92:35">
   <failure message="Expected exactly one space between 'function' and '('." />
@@ -571,9 +314,6 @@
 <testcase classname="modules.repository.component.services.status" name="status:93:77">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
-<testcase classname="modules.repository.component.services.status" name="status:109:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
 <testcase classname="modules.repository.component.services.status" name="status:109:36">
   <failure message="Expected exactly one space between 'function' and '('." />
 </testcase>
@@ -582,18 +322,6 @@
 </testcase>
 <testcase classname="modules.repository.component.services.status" name="status:113:25">
   <failure message="Expected exactly one space between 'function' and '('." />
-</testcase>
-<testcase classname="modules.repository.developer.index" name="index:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.developer.index" name="index:2:14">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.index" name="index:3:14">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.index" name="index:22:1">
-  <failure message="'exports' was used before it was defined." />
 </testcase>
 <testcase classname="modules.repository.developer.index" name="index:26:11">
   <failure message="Unnecessary 'else' after disruption." />
@@ -625,21 +353,7 @@
 <testcase classname="modules.repository.developer.index" name="index:58:34">
   <failure message="Stopping. (63% scanned)." />
 </testcase>
-<testcase classname="modules.repository.developer.models.dev" name="dev:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.developer.models.dev" name="dev:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.models.dev" name="dev:77:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.schemas.dev" name="dev:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.developer.schemas.dev" name="dev:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
+<testcase classname="modules.repository.developer.models.dev" name="dev:0:0"></testcase>
 <testcase classname="modules.repository.developer.schemas.dev" name="dev:96:1">
   <failure message="Use spaces, not tabs." />
 </testcase>
@@ -649,58 +363,8 @@
 <testcase classname="modules.repository.developer.schemas.dev" name="dev:100:1">
   <failure message="Use spaces, not tabs." />
 </testcase>
-<testcase classname="modules.repository.developer.schemas.dev" name="dev:116:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.services.dev" name="dev:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.developer.services.dev" name="dev:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.services.dev" name="dev:3:11">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.services.dev" name="dev:4:14">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.services.dev" name="dev:5:14">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.services.dev" name="dev:24:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.services.dev" name="dev:40:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.services.dev" name="dev:56:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.services.dev" name="dev:74:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.services.dev" name="dev:94:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.services.dev" name="dev:111:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.developer.services.dev" name="dev:128:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
+<testcase classname="modules.repository.developer.services.dev" name="dev:0:0"></testcase>
 <testcase classname="modules.repository.index" name="index:0:0"></testcase>
-<testcase classname="modules.repository.layer.index" name="index:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.layer.index" name="index:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.layer.index" name="index:3:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.layer.index" name="index:152:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
 <testcase classname="modules.repository.layer.index" name="index:157:11">
   <failure message="Unnecessary 'else' after disruption." />
 </testcase>
@@ -722,372 +386,75 @@
 <testcase classname="modules.repository.layer.index" name="index:177:34">
   <failure message="Stopping. (81% scanned)." />
 </testcase>
-<testcase classname="modules.repository.layer.models.layer" name="layer:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.layer.models.layer" name="layer:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
 <testcase classname="modules.repository.layer.models.layer" name="layer:36:40">
   <failure message="Use the || operator." />
 </testcase>
-<testcase classname="modules.repository.layer.models.layer" name="layer:51:1">
-  <failure message="'module' was used before it was defined." />
+<testcase classname="modules.repository.layer.schemas.layer" name="layer:0:0"></testcase>
+<testcase classname="modules.repository.layer.services.layer" name="layer:0:0"></testcase>
+<testcase classname="modules.repository.lib.loader" name="loader:66:20">
+  <failure message="['$'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.schemas.layer" name="layer:1:1">
-  <failure message="Use the function form of 'use strict'." />
+<testcase classname="modules.repository.lib.loader" name="loader:75:27">
+  <failure message="['$'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.schemas.layer" name="layer:2:16">
-  <failure message="'require' was used before it was defined." />
+<testcase classname="modules.repository.lib.loader" name="loader:81:30">
+  <failure message="['$'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.schemas.layer" name="layer:50:1">
-  <failure message="'module' was used before it was defined." />
+<testcase classname="modules.repository.lib.loader" name="loader:89:33">
+  <failure message="['$'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.services.layer" name="layer:1:1">
-  <failure message="Use the function form of 'use strict'." />
+<testcase classname="modules.repository.lib.loader" name="loader:261:40">
+  <failure message="['$'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.services.layer" name="layer:2:16">
-  <failure message="'require' was used before it was defined." />
+<testcase classname="modules.repository.lib.loader" name="loader:266:40">
+  <failure message="['$'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.services.layer" name="layer:3:11">
-  <failure message="'require' was used before it was defined." />
+<testcase classname="modules.repository.lib.loader" name="loader:289:46">
+  <failure message="['$'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.services.layer" name="layer:4:16">
-  <failure message="'require' was used before it was defined." />
+<testcase classname="modules.repository.lib.loader" name="loader:301:40">
+  <failure message="['$'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.services.layer" name="layer:5:16">
-  <failure message="'require' was used before it was defined." />
+<testcase classname="modules.repository.lib.loader" name="loader:306:40">
+  <failure message="['$'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.services.layer" name="layer:24:1">
-  <failure message="'exports' was used before it was defined." />
+<testcase classname="modules.repository.lib.loader" name="loader:329:46">
+  <failure message="['$'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.services.layer" name="layer:40:1">
-  <failure message="'exports' was used before it was defined." />
+<testcase classname="modules.repository.lib.loader" name="loader:340:35">
+  <failure message="['$'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.services.layer" name="layer:56:1">
-  <failure message="'exports' was used before it was defined." />
+<testcase classname="modules.repository.lib.loader" name="loader:344:39">
+  <failure message="['$'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.services.layer" name="layer:74:1">
-  <failure message="'exports' was used before it was defined." />
+<testcase classname="modules.repository.lib.loader" name="loader:350:58">
+  <failure message="['$'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.services.layer" name="layer:94:1">
-  <failure message="'exports' was used before it was defined." />
+<testcase classname="modules.repository.platform.index" name="index:0:0"></testcase>
+<testcase classname="modules.repository.platform.models.platfrm" name="platfrm:0:0"></testcase>
+<testcase classname="modules.repository.platform.schemas.platfrm" name="platfrm:0:0"></testcase>
+<testcase classname="modules.repository.platform.services.platfrm" name="platfrm:0:0"></testcase>
+<testcase classname="modules.repository.process.index" name="index:188:22">
+  <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.services.layer" name="layer:111:1">
-  <failure message="'exports' was used before it was defined." />
+<testcase classname="modules.repository.process.index" name="index:193:22">
+  <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.layer.services.layer" name="layer:128:1">
-  <failure message="'exports' was used before it was defined." />
+<testcase classname="modules.repository.process.index" name="index:271:26">
+  <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.lib.loader" name="loader:1:1">
-  <failure message="Use the function form of 'use strict'." />
+<testcase classname="modules.repository.process.index" name="index:276:26">
+  <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.lib.loader" name="loader:3:15">
-  <failure message="'require' was used before it was defined." />
+<testcase classname="modules.repository.process.index" name="index:281:26">
+  <failure message="['$and'] is better written in dot notation." />
 </testcase>
-<testcase classname="modules.repository.lib.loader" name="loader:4:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.lib.loader" name="loader:5:19">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.lib.loader" name="loader:6:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.lib.loader" name="loader:7:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.lib.loader" name="loader:8:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.lib.loader" name="loader:9:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.lib.loader" name="loader:10:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.lib.loader" name="loader:11:14">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.lib.loader" name="loader:36:10">
-  <failure message="Move 'var' declarations to the top of the function." />
-</testcase>
-<testcase classname="modules.repository.lib.loader" name="loader:36:10">
-  <failure message="Stopping. (4% scanned)." />
-</testcase>
-<testcase classname="modules.repository.platform.index" name="index:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.platform.index" name="index:2:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.index" name="index:3:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.index" name="index:81:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.index" name="index:86:11">
-  <failure message="Unnecessary 'else' after disruption." />
-</testcase>
-<testcase classname="modules.repository.platform.index" name="index:88:30">
-  <failure message="Expected '!==' and instead saw '!='." />
-</testcase>
-<testcase classname="modules.repository.platform.index" name="index:92:30">
-  <failure message="Expected '!==' and instead saw '!='." />
-</testcase>
-<testcase classname="modules.repository.platform.index" name="index:96:30">
-  <failure message="Expected '!==' and instead saw '!='." />
-</testcase>
-<testcase classname="modules.repository.platform.index" name="index:100:32">
-  <failure message="Expected '!==' and instead saw '!='." />
-</testcase>
-<testcase classname="modules.repository.platform.index" name="index:106:34">
-  <failure message="Expected '{' and instead saw 'return'." />
-</testcase>
-<testcase classname="modules.repository.platform.index" name="index:106:34">
-  <failure message="Stopping. (75% scanned)." />
-</testcase>
-<testcase classname="modules.repository.platform.models.platfrm" name="platfrm:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.platform.models.platfrm" name="platfrm:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.models.platfrm" name="platfrm:54:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.schemas.platfrm" name="platfrm:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.platform.schemas.platfrm" name="platfrm:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.schemas.platfrm" name="platfrm:56:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.services.platfrm" name="platfrm:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.platform.services.platfrm" name="platfrm:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.services.platfrm" name="platfrm:3:11">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.services.platfrm" name="platfrm:4:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.services.platfrm" name="platfrm:5:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.services.platfrm" name="platfrm:24:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.services.platfrm" name="platfrm:40:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.services.platfrm" name="platfrm:56:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.services.platfrm" name="platfrm:74:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.services.platfrm" name="platfrm:94:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.services.platfrm" name="platfrm:111:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.platform.services.platfrm" name="platfrm:128:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:3:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:4:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:5:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:6:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:7:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:8:18">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:9:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:10:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:18:11">
-  <failure message="Unnecessary 'else' after disruption." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:26:23">
-  <failure message="Unnecessary 'else' after disruption." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:36:31">
-  <failure message="Unnecessary 'else' after disruption." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:53:23">
-  <failure message="Unnecessary 'else' after disruption." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:63:31">
-  <failure message="Unnecessary 'else' after disruption." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:97:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:101:11">
-  <failure message="Unnecessary 'else' after disruption." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:108:19">
-  <failure message="Unnecessary 'else' after disruption." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:120:30">
-  <failure message="Move 'var' declarations to the top of the function." />
-</testcase>
-<testcase classname="modules.repository.process.index" name="index:120:30">
-  <failure message="Stopping. (37% scanned)." />
-</testcase>
-<testcase classname="modules.repository.process.models.proc" name="proc:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.process.models.proc" name="proc:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.models.proc" name="proc:57:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.models.step" name="step:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.process.models.step" name="step:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.models.step" name="step:60:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.schemas.proc" name="proc:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.process.schemas.proc" name="proc:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.schemas.proc" name="proc:57:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.schemas.step" name="step:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.process.schemas.step" name="step:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.schemas.step" name="step:55:1">
-  <failure message="'module' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:3:11">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:4:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:5:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:6:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:7:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:8:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:9:14">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:10:14">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:14:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:20:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:69:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.proc" name="proc:79:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:1:1">
-  <failure message="Use the function form of 'use strict'." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:2:16">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:3:11">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:4:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:5:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:6:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:7:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:8:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:9:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:10:15">
-  <failure message="'require' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:30:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:46:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:62:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:79:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:96:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:135:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
-<testcase classname="modules.repository.process.services.step" name="step:156:1">
-  <failure message="'exports' was used before it was defined." />
-</testcase>
+<testcase classname="modules.repository.process.models.proc" name="proc:0:0"></testcase>
+<testcase classname="modules.repository.process.models.step" name="step:0:0"></testcase>
+<testcase classname="modules.repository.process.schemas.proc" name="proc:0:0"></testcase>
+<testcase classname="modules.repository.process.schemas.step" name="step:0:0"></testcase>
+<testcase classname="modules.repository.process.services.proc" name="proc:0:0"></testcase>
+<testcase classname="modules.repository.process.services.step" name="step:0:0"></testcase>
 <testcase classname="modules.repository.superlayer.index" name="index:0:0"></testcase>
 <testcase classname="modules.repository.superlayer.models.suprlay" name="suprlay:0:0"></testcase>
 <testcase classname="modules.repository.superlayer.schemas.suprlay" name="suprlay:0:0"></testcase>
