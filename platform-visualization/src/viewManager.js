@@ -24,7 +24,7 @@ function ViewManager() {
     /**
      * Pre-computes the space layout for next draw
      */
-    this.preComputeLayout = function() {
+    this.preComputeLayout = function () {
 
         var section_size = [],
             superLayerHeight = 0,
@@ -76,7 +76,6 @@ function ViewManager() {
                 section_size[r]++;
                 isSuperLayer[r] = true;
             } else {
-
                 section_size[r][c]++;
 
                 if (section_size[r][c] > columnWidth) columnWidth = section_size[r][c];
@@ -123,7 +122,7 @@ function ViewManager() {
     };
 
     // Disabled
-    this.otherViews = function() {
+    this.otherViews = function () {
 
         var i, j, l, vector, phi, object;
 
@@ -176,7 +175,7 @@ function ViewManager() {
 
             for (j = 0; j < groupsQtty; j++) {
 
-                if (typeof(section[i]) == "object")
+                if (typeof (section[i]) == "object")
                     totalInRow += section[i][j];
                 else if (j === 0)
                     totalInRow += section[i];
@@ -338,7 +337,7 @@ function ViewManager() {
         layersQtty = layers.size();
     };*/
 
-    var getSPL = function(_id, _SPLArray) {
+    var getSPL = function (_id, _SPLArray) {
         if (_id) {
             for (var i = 0, l = _SPLArray.length; i < l; i++) {
                 if (_SPLArray[i]._id + '' == _id + '') {
@@ -350,7 +349,7 @@ function ViewManager() {
         }
     };
 
-    var getBestDev = function(_devs) {
+    var getBestDev = function (_devs) {
         var dev = {};
         if (_devs) {
             var _dev = {};
@@ -369,7 +368,7 @@ function ViewManager() {
         return dev;
     };
 
-    this.fillTable = function(list) {
+    this.fillTable = function (list) {
         var _suprlays = list.suprlays,
             _platfrms = list.platfrms,
             _layers = list.layers,
@@ -393,7 +392,7 @@ function ViewManager() {
             //groups[code]._id = _platfrms[i]._id;
         }
 
-        /*layers['empty layer 0'] = {
+        layers['empty layer 0'] = {
             index: 27,
             super_layer: false
         };
@@ -416,11 +415,11 @@ function ViewManager() {
         layers['empty layer 5'] = {
             index: 40,
             super_layer: false
-        };*/
+        };
         for (i = 0, l = _layers.length; i < l; i++) {
             name = helper.capFirstLetter(_layers[i].name);
             layers[name] = {};
-            layers[name].super_layer = _layers[i].suprlay ? _layers[i].suprlay : false;
+            layers[name].super_layer = _layers[i].suprlay ? _layers[i].suprlay.toUpperCase() : false;
             /*switch (_layers[i].name) {
                 case 'communication':
                     layers[name].super_layer = 'P2P';
@@ -485,7 +484,7 @@ function ViewManager() {
             };
             table.push(element);
         }
-        
+
         groupsQtty = groups.size();
         layersQtty = layers.size();
     };
@@ -499,8 +498,8 @@ function ViewManager() {
      * @param   {Number} scale      Scale of the pictures, the bigger, the better but heavier
      * @returns {Object} The drawn texture
      */
-    this.createTexture = function(id, quality, tileWidth, tileHeight, scale) {
-        
+    this.createTexture = function (id, quality, tileWidth, tileHeight, scale) {
+
         var state = table[id].code_level,
             difficulty = Math.ceil(table[id].difficulty / 2),
             group = table[id].group || window.layers[table[id].layer].super_layer,
@@ -523,237 +522,246 @@ function ViewManager() {
         texture.magFilter = THREE.LinearFilter;
 
         var pic = {
-                src : picture || base + 'buster.png',
-                alpha : 0.8
+                src: picture || base + 'buster.png',
+                alpha: 0.8
             },
             portrait = {
-                    src: base + 'portrait/' + quality + '/' + state + '.png',
-                    x: 0,
-                    y: 0,
-                    w: tileWidth * scale,
-                    h: tileHeight * scale
+                src: base + 'portrait/' + quality + '/' + state + '.png',
+                x: 0,
+                y: 0,
+                w: tileWidth * scale,
+                h: tileHeight * scale
             },
             groupIcon = {
-                src : base + 'icons/group/' + quality + '/icon_' + group + '.png',
-                    w: 28 * scale,
-                    h: 28 * scale
+                src: base + 'icons/group/' + quality + '/icon_' + group + '.png',
+                w: 28 * scale,
+                h: 28 * scale
             },
             typeIcon = {
-                src : base + 'icons/type/' + quality + '/' + type.toLowerCase() + '_logo.png',
-                    w: 28 * scale,
-                    h: 28 * scale
+                src: base + 'icons/type/' + quality + '/' + type.toLowerCase() + '_logo.png',
+                w: 28 * scale,
+                h: 28 * scale
             },
             ring = {
-                src : base + 'rings/' + quality + '/' + state + '_diff_' + difficulty + '.png'
+                src: base + 'rings/' + quality + '/' + state + '_diff_' + difficulty + '.png'
             },
             codeText = {
-                text : table[id].code,
-                font : (18 * scale) + "px Arial"
+                text: table[id].code,
+                font: (18 * scale) + "px Arial"
             },
             nameText = {
-                text : table[id].name,
-                font : (10 * scale) + 'px Arial'
+                text: table[id].name,
+                font: (10 * scale) + 'px Arial'
             },
             layerText = {
-                text : table[id].layer,
-                font : (6 * scale) + 'px Arial'
+                text: table[id].layer,
+                font: (6 * scale) + 'px Arial'
             },
             authorText = {
-                text : table[id].authorRealName || table[id].author || '',
-                font : (3.5 * scale) + 'px Arial'
+                text: table[id].authorRealName || table[id].author || '',
+                font: (3.5 * scale) + 'px Arial'
             };
 
-        switch(state) {
-            case "concept":
-                pic.x = 79 * scale;
-                pic.y = 36 * scale;
-                pic.w = 53 * scale;
-                pic.h = 53 * scale;
+        switch (state) {
+        case "concept":
+            pic.x = 79 * scale;
+            pic.y = 36 * scale;
+            pic.w = 53 * scale;
+            pic.h = 53 * scale;
 
-                groupIcon.x = 25 * scale;
-                groupIcon.y = 49 * scale;
+            groupIcon.x = 25 * scale;
+            groupIcon.y = 49 * scale;
 
-                typeIcon.x = 160 * scale;
-                typeIcon.y = 49 * scale;
+            typeIcon.x = 160 * scale;
+            typeIcon.y = 49 * scale;
 
-                ring.x = 72 * scale;
-                ring.y = 93 * scale;
-                ring.w = 68 * scale;
-                ring.h = 9 * scale;
+            ring.x = 72 * scale;
+            ring.y = 93 * scale;
+            ring.w = 68 * scale;
+            ring.h = 9 * scale;
 
-                codeText.x = middle;
-                codeText.y = 21 * scale;
+            codeText.x = middle;
+            codeText.y = 21 * scale;
 
-                nameText.x = middle;
-                nameText.y = 33 * scale;
-                nameText.font = (9 * scale) + 'px Arial';
-                nameText.color = "#000000";
+            nameText.x = middle;
+            nameText.y = 33 * scale;
+            nameText.font = (9 * scale) + 'px Arial';
+            nameText.color = "#000000";
 
-                layerText.x = middle;
-                layerText.y = 114 * scale;
+            layerText.x = middle;
+            layerText.y = 114 * scale;
 
-                authorText.x = middle;
-                authorText.y = 80 * scale;
+            authorText.x = middle;
+            authorText.y = 80 * scale;
 
-                break;
-            case "development":
-                pic.x = 79 * scale;
-                pic.y = 47 * scale;
-                pic.w = 53 * scale;
-                pic.h = 53 * scale;
+            break;
+        case "development":
+            pic.x = 79 * scale;
+            pic.y = 47 * scale;
+            pic.w = 53 * scale;
+            pic.h = 53 * scale;
 
-                groupIcon.x = 25 * scale;
-                groupIcon.y = 76 * scale;
+            groupIcon.x = 25 * scale;
+            groupIcon.y = 76 * scale;
 
-                typeIcon.x = 154 * scale;
-                typeIcon.y = 76 * scale;
+            typeIcon.x = 154 * scale;
+            typeIcon.y = 76 * scale;
 
-                ring.x = 64.5 * scale;
-                ring.y = 30.8 * scale;
-                ring.w = 82 * scale;
-                ring.h = 81.5 * scale;
+            ring.x = 64.5 * scale;
+            ring.y = 30.8 * scale;
+            ring.w = 82 * scale;
+            ring.h = 81.5 * scale;
 
-                codeText.x = middle;
-                codeText.y = 20 * scale;
+            codeText.x = middle;
+            codeText.y = 20 * scale;
 
-                nameText.x = middle;
-                nameText.y = 28 * scale;
-                nameText.font = (6 * scale) + 'px Arial';
+            nameText.x = middle;
+            nameText.y = 28 * scale;
+            nameText.font = (6 * scale) + 'px Arial';
 
-                layerText.x = middle;
-                layerText.y = 113 * scale;
-                layerText.color = "#F26662";
+            layerText.x = middle;
+            layerText.y = 113 * scale;
+            layerText.color = "#F26662";
 
-                authorText.x = middle;
-                authorText.y = 88 * scale;
+            authorText.x = middle;
+            authorText.y = 88 * scale;
 
-                break;
-            case "qa":
-                pic.x = 80 * scale;
-                pic.y = 35 * scale;
-                pic.w = 53 * scale;
-                pic.h = 53 * scale;
+            break;
+        case "qa":
+            pic.x = 80 * scale;
+            pic.y = 35 * scale;
+            pic.w = 53 * scale;
+            pic.h = 53 * scale;
 
-                groupIcon.x = 35 * scale;
-                groupIcon.y = 76 * scale;
+            groupIcon.x = 35 * scale;
+            groupIcon.y = 76 * scale;
 
-                typeIcon.x = 154 * scale;
-                typeIcon.y = 76 * scale;
+            typeIcon.x = 154 * scale;
+            typeIcon.y = 76 * scale;
 
-                ring.x = 68 * scale;
-                ring.y = 34.7 * scale;
-                ring.w = 79 * scale;
-                ring.h = 68.5 * scale;
+            ring.x = 68 * scale;
+            ring.y = 34.7 * scale;
+            ring.w = 79 * scale;
+            ring.h = 68.5 * scale;
 
-                codeText.x = middle;
-                codeText.y = 20 * scale;
+            codeText.x = middle;
+            codeText.y = 20 * scale;
 
-                nameText.x = middle;
-                nameText.y = 28 * scale;
-                nameText.font = (6 * scale) + 'px Arial';
+            nameText.x = middle;
+            nameText.y = 28 * scale;
+            nameText.font = (6 * scale) + 'px Arial';
 
-                layerText.x = middle;
-                layerText.y = 112 * scale;
-                layerText.color = "#FCC083";
+            layerText.x = middle;
+            layerText.y = 112 * scale;
+            layerText.color = "#FCC083";
 
-                authorText.x = middle;
-                authorText.y = 78 * scale;
+            authorText.x = middle;
+            authorText.y = 78 * scale;
 
-                break;
-            case "production":
-                pic.x = 56 * scale;
-                pic.y = 33 * scale;
-                pic.w = 53 * scale;
-                pic.h = 53 * scale;
+            break;
+        case "production":
+            pic.x = 56 * scale;
+            pic.y = 33 * scale;
+            pic.w = 53 * scale;
+            pic.h = 53 * scale;
 
-                groupIcon.x = 17 * scale;
-                groupIcon.y = 30 * scale;
+            groupIcon.x = 17 * scale;
+            groupIcon.y = 30 * scale;
 
-                typeIcon.x = 17 * scale;
-                typeIcon.y = 62 * scale;
+            typeIcon.x = 17 * scale;
+            typeIcon.y = 62 * scale;
 
-                ring.x = 25 * scale;
-                ring.y = 99 * scale;
-                ring.w = 68 * scale;
-                ring.h = 9 * scale;
+            ring.x = 25 * scale;
+            ring.y = 99 * scale;
+            ring.w = 68 * scale;
+            ring.h = 9 * scale;
 
-                codeText.x = 170 * scale;
-                codeText.y = 26 * scale;
+            codeText.x = 170 * scale;
+            codeText.y = 26 * scale;
 
-                nameText.x = 170 * scale;
-                nameText.y = 71 * scale;
-                nameText.font = (7 * scale) + 'px Arial';
-                nameText.constraint = 60 * scale;
-                nameText.lineHeight = 9 * scale;
-                nameText.wrap = true;
+            nameText.x = 170 * scale;
+            nameText.y = 71 * scale;
+            nameText.font = (7 * scale) + 'px Arial';
+            nameText.constraint = 60 * scale;
+            nameText.lineHeight = 9 * scale;
+            nameText.wrap = true;
 
-                layerText.x = 170 * scale;
-                layerText.y = 107 * scale;
+            layerText.x = 170 * scale;
+            layerText.y = 107 * scale;
 
-                authorText.x = 82 * scale;
-                authorText.y = 77 * scale;
+            authorText.x = 82 * scale;
+            authorText.y = 77 * scale;
 
-                break;
+            break;
         }
 
-        if(state == "concept" || state == "production")
+        if (state == "concept" || state == "production")
             ring.src = base + 'rings/' + quality + '/linear_diff_' + difficulty + '.png';
 
-        if(difficulty === 0)
+        if (difficulty === 0)
             ring = {};
 
         var data = [
-                pic,
-                portrait,
-                groupIcon,
-                typeIcon,
-                ring,
-                codeText,
-                nameText,
-                layerText,
-                authorText
-            ];
+            pic,
+            portrait,
+            groupIcon,
+            typeIcon,
+            ring,
+            codeText,
+            nameText,
+            layerText,
+            authorText
+        ];
 
         drawPicture(data, ctx, texture);
 
         return texture;
     };
-    
+
     /**
      * Creates a Tile
      * @param   {Number}     i ID of the tile (index in table)
      * @returns {DOMElement} The drawable element that represents the tile
      */
-    this.createElement = function(id) {
+    this.createElement = function (id) {
 
         var mesh,
             element = new THREE.LOD(),
             levels = [
-            ['high', 0],
-            ['medium', 1000],
-            ['small', 1800],
-            ['mini', 2300]],
+                ['high', 0],
+                ['medium', 1000],
+                ['small', 1800],
+                ['mini', 2300]
+            ],
             texture,
             tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
             tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING,
             scale = 2;
-        
-        for(var j = 0, l = levels.length; j < l; j++) {
 
-            if(levels[j][0] === 'high') scale = 5;
+        for (var j = 0, l = levels.length; j < l; j++) {
+
+            if (levels[j][0] === 'high') scale = 5;
             else scale = 1;
 
             texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale);
 
             mesh = new THREE.Mesh(
                 new THREE.PlaneGeometry(tileWidth, tileHeight),
-                new THREE.MeshBasicMaterial({vertexColors : THREE.FaceColors, side : THREE.FrontSide, color : 0xffffff})
+                new THREE.MeshBasicMaterial({
+                    vertexColors: THREE.FaceColors,
+                    side: THREE.FrontSide,
+                    color: 0xffffff
+                })
             );
-            mesh.userData = {id : id};
+            mesh.userData = {
+                id: id
+            };
             mesh.material.map = texture;
             mesh.material.needsUpdate = true;
             element.addLevel(mesh, levels[j][1]);
-            element.userData = {flying : false};
+            element.userData = {
+                flying: false
+            };
         }
 
         return element;
@@ -764,7 +772,7 @@ function ViewManager() {
      * @param {Array}  goal     Member of ViewManager.targets
      * @param {Number} duration Milliseconds of animation
      */
-    this.transform = function(goal, duration) {
+    this.transform = function (goal, duration) {
 
         var i, l;
 
@@ -773,19 +781,21 @@ function ViewManager() {
         //TWEEN.removeAll();
 
         if (goal) {
-            
+
             this.lastTargets = goal;
-            
-            var animate = function(object, target) { 
-                
-                 new TWEEN.Tween(object.position)
+
+            var animate = function (object, target) {
+
+                new TWEEN.Tween(object.position)
                     .to({
                         x: target.position.x,
                         y: target.position.y,
                         z: target.position.z
                     }, Math.random() * duration + duration)
                     .easing(TWEEN.Easing.Exponential.InOut)
-                    .onComplete(function() { object.userData.flying = false; })
+                    .onComplete(function () {
+                        object.userData.flying = false;
+                    })
                     .start();
 
                 new TWEEN.Tween(object.rotation)
@@ -796,15 +806,15 @@ function ViewManager() {
                     }, Math.random() * duration + duration)
                     .easing(TWEEN.Easing.Exponential.InOut)
                     .start();
-                
+
             };
 
-            
+
             for (i = 0; i < objects.length; i++) {
 
                 var object = objects[i];
                 var target = goal[i];
-                
+
                 animate(object, target);
 
             }
@@ -825,14 +835,14 @@ function ViewManager() {
     /**
      * Goes back to last target set in last transform
      */
-    this.rollBack = function() {
+    this.rollBack = function () {
         changeView(this.lastTargets);
     };
 
     /**
      * Inits and draws the table, also creates the Dimensions object
      */
-    this.drawTable = function() {
+    this.drawTable = function () {
 
         this.preComputeLayout();
 
@@ -893,10 +903,10 @@ function ViewManager() {
      * @param {Array}  [ids]           The IDs to let alone
      * @param {Number} [duration=2000] Duration of the animation
      */
-    this.letAlone = function(ids, duration) {
-        
-        if(typeof ids === 'undefined') ids = [];
-        if(typeof ids === 'number') ids = [ids];
+    this.letAlone = function (ids, duration) {
+
+        if (typeof ids === 'undefined') ids = [];
+        if (typeof ids === 'number') ids = [ids];
 
         var i, _duration = duration || 2000,
             distance = camera.getMaxDistance(),
@@ -905,31 +915,32 @@ function ViewManager() {
         TWEEN.removeAll();
 
         var target;
-        
-        var animate = function(object, target, dur) {
+
+        var animate = function (object, target, dur) {
 
             new TWEEN.Tween(object.position)
                 .to({
-                x: target.x,
-                y: target.y,
-                z: target.z
-            }, dur)
+                    x: target.x,
+                    y: target.y,
+                    z: target.z
+                }, dur)
                 .easing(TWEEN.Easing.Exponential.InOut)
-            .onComplete(function() { object.userData.flying = false; })
+                .onComplete(function () {
+                    object.userData.flying = false;
+                })
                 .start();
-            
+
         };
-        
-        for(i = 0; i < objects.length; i++) {
-            
-            if(ids.indexOf(i) !== -1) {
+
+        for (i = 0; i < objects.length; i++) {
+
+            if (ids.indexOf(i) !== -1) {
                 target = this.lastTargets[i].position;
-            }
-            else {
+            } else {
                 target = out;
                 objects[i].userData.flying = true;
             }
-            
+
             animate(objects[i], target, Math.random() * _duration + _duration);
         }
 
@@ -938,7 +949,7 @@ function ViewManager() {
             .onUpdate(render)
             .start();
     };
-    
+
     //Private methods
     /**
      * Draws a picture in canvas
@@ -951,44 +962,43 @@ function ViewManager() {
         var image = new Image();
         var actual = data.shift();
 
-        if(actual.src && actual.src != 'undefined') {
+        if (actual.src && actual.src != 'undefined') {
 
-            image.onload = function() {
+            image.onload = function () {
 
 
-                if(actual.alpha)
+                if (actual.alpha)
                     ctx.globalAlpha = actual.alpha;
 
                 ctx.drawImage(image, actual.x, actual.y, actual.w, actual.h);
-                if(texture)
+                if (texture)
                     texture.needsUpdate = true;
 
                 ctx.globalAlpha = 1;
 
-                if(data.length !== 0) {
+                if (data.length !== 0) {
 
-                    if(data[0].text)
+                    if (data[0].text)
                         drawText(data, ctx, texture);
                     else
                         drawPicture(data, ctx, texture);
                 }
             };
 
-            image.onerror = function() {
-                if(data.length !== 0) {
-                    if(data[0].text)
+            image.onerror = function () {
+                if (data.length !== 0) {
+                    if (data[0].text)
                         drawText(data, ctx, texture);
                     else
                         drawPicture(data, ctx, texture);
                 }
             };
 
-            image.crossOrigin="anonymous";
+            image.crossOrigin = "anonymous";
             image.src = actual.src;
-        }
-        else {
-            if(data.length !== 0) {
-                if(data[0].text)
+        } else {
+            if (data.length !== 0) {
+                if (data[0].text)
                     drawText(data, ctx, texture);
                 else
                     drawPicture(data, ctx, texture);
@@ -1008,25 +1018,25 @@ function ViewManager() {
 
         //TODO: Set Roboto typo
 
-        if(actual.color)
+        if (actual.color)
             ctx.fillStyle = actual.color;
 
         ctx.font = actual.font;
 
-        if(actual.constraint)
-            if(actual.wrap)
+        if (actual.constraint)
+            if (actual.wrap)
                 helper.drawText(actual.text, actual.x, actual.y, ctx, actual.constraint, actual.lineHeight);
             else
                 ctx.fillText(actual.text, actual.x, actual.y, actual.constraint);
         else
             ctx.fillText(actual.text, actual.x, actual.y);
 
-        if(texture)
+        if (texture)
             texture.needsUpdate = true;
 
         ctx.fillStyle = "#FFFFFF";
 
-        if(data.length !== 0)
+        if (data.length !== 0)
             drawText(data, ctx);
     }
 }
