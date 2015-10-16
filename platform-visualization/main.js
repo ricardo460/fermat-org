@@ -1796,8 +1796,8 @@ function ViewManager() {
                 section_size[r]++;
                 isSuperLayer[r] = true;
             } else {
+                console.log(r + '-' + c);
                 section_size[r][c]++;
-
                 if (section_size[r][c] > columnWidth) columnWidth = section_size[r][c];
             }
         }
@@ -2100,7 +2100,7 @@ function ViewManager() {
             superLayers[code] = {};
             superLayers[code].name = _suprlays[i].name;
             superLayers[code].index = _suprlays[i].order;
-            //superLayers[code]._id = _suprlays[i]._id;
+            superLayers[code]._id = _suprlays[i]._id;
             superLayers[code].dependsOn = _suprlays[i].deps;
         }
 
@@ -2109,100 +2109,84 @@ function ViewManager() {
             groups[code] = {};
             groups[code].index = _platfrms[i].order;
             groups[code].dependsOn = _platfrms[i].deps;
-            //groups[code]._id = _platfrms[i]._id;
+            groups[code]._id = _platfrms[i]._id;
         }
 
-        layers['empty layer 0'] = {
-            index: 27,
-            super_layer: false
-        };
-        layers['empty layer 1'] = {
-            index: 5,
-            super_layer: false
-        };
-        layers['empty layer 2'] = {
-            index: 26,
-            super_layer: false
-        };
-        layers['empty layer 3'] = {
-            index: 29,
-            super_layer: false
-        };
-        layers['empty layer 4'] = {
-            index: 34,
-            super_layer: false
-        };
-        layers['empty layer 5'] = {
-            index: 40,
-            super_layer: false
-        };
         for (i = 0, l = _layers.length; i < l; i++) {
             name = helper.capFirstLetter(_layers[i].name);
             layers[name] = {};
-            layers[name].super_layer = _layers[i].suprlay ? _layers[i].suprlay.toUpperCase() : false;
-            /*switch (_layers[i].name) {
-                case 'communication':
-                    layers[name].super_layer = 'P2P';
-                    break;
-                case 'multi os':
-                    layers[name].super_layer = 'OSA';
-                    break;
-                case 'android':
-                    layers[name].super_layer = 'OSA';
-                    break;
-                case 'crypto router':
-                    layers[name].super_layer = 'BCH';
-                    break;
-                case 'crypto module':
-                    layers[name].super_layer = 'BCH';
-                    break;
-                case 'crypto vault':
-                    layers[name].super_layer = 'BCH';
-                    break;
-                case 'crypto network':
-                    layers[name].super_layer = 'BCH';
-                    break;
-                default:
-                    layers[name].super_layer = false;
-                    break;
-            }*/
+            layers[name].super_layer = _layers[i].suprlay;
             layers[name].index = _layers[i].order;
-            //layers[name]._id = _layers[i]._id;
+            layers[name]._id = _layers[i]._id;
         }
+        layers['empty layer 0'] = {
+            index: 5,
+            super_layer: false,
+            _id: null
+        };
+        layers['empty layer 1'] = {
+            index: 26,
+            super_layer: false,
+            _id: null
+        };
+        layers['empty layer 2'] = {
+            index: 27,
+            super_layer: false,
+            _id: null
+        };
+        layers['empty layer 3'] = {
+            index: 29,
+            super_layer: false,
+            _id: null
+        };
+        layers['empty layer 4'] = {
+            index: 34,
+            super_layer: false,
+            _id: null
+        };
+        layers['empty layer 5'] = {
+            index: 40,
+            super_layer: false,
+            _id: null
+        };
 
         for (i = 0, l = _comps.length; i < l; i++) {
+            var buildElement = function (e) {
+                var _comp = _comps[e];
 
-            var _comp = _comps[i];
+                var _platfrm = getSPL(_comp._platfrm_id, _platfrms);
+                var _layer = getSPL(_comp._layer_id, _layers);
+                //console.dir(_layer);
+                var layerID = _layer.order;
+                layerID = (layerID === undefined) ? layers.size() : layerID;
 
-            var _platfrm = getSPL(_comp._platfrm_id, _platfrms);
-            var _layer = getSPL(_comp._layer_id, _layers);
+                var groupID = _platfrm ? _platfrm.order : undefined;
+                groupID = (groupID === undefined) ? groups.size() : groupID;
 
-            var layerID = _layer.order;
-            layerID = (layerID === undefined || layerID == -1) ? layers.size() : layerID;
+                var _author = getBestDev(_comp.devs);
 
-            var groupID = (_platfrm !== undefined && _platfrm !== null) ? _platfrm.order : undefined;
-            groupID = (groupID === undefined || groupID == -1) ? groups.size() : groupID;
-
-            var _author = getBestDev(_comp.devs);
-
-            var element = {
-                group: _platfrm ? _platfrm.code : undefined,
-                groupID: groupID,
-                code: helper.getCode(_comp.name),
-                name: helper.capFirstLetter(_comp.name),
-                layer: helper.capFirstLetter(_layer.name),
-                layerID: layerID,
-                type: helper.capFirstLetter(_comp.type),
-                picture: _author.avatar_url ? _author.avatar_url : undefined,
-                author: _author.usrnm ? _author.usrnm : undefined,
-                authorRealName: _author.name ? _author.name : undefined,
-                authorEmail: _author.email ? _author.email : undefined,
-                difficulty: _comp.difficulty,
-                code_level: _comp.code_level ? _comp.code_level : undefined,
-                life_cycle: _comp.life_cycle,
-                found: _comp.found
+                var element = {
+                    group: _platfrm ? _platfrm.code : undefined,
+                    groupID: groupID,
+                    code: helper.getCode(_comp.name),
+                    name: helper.capFirstLetter(_comp.name),
+                    layer: helper.capFirstLetter(_layer.name),
+                    layerID: layerID,
+                    type: helper.capFirstLetter(_comp.type),
+                    picture: _author.avatar_url ? _author.avatar_url : undefined,
+                    author: _author.usrnm ? _author.usrnm : undefined,
+                    authorRealName: _author.name ? _author.name : undefined,
+                    authorEmail: _author.email ? _author.email : undefined,
+                    difficulty: _comp.difficulty,
+                    code_level: _comp.code_level ? _comp.code_level : undefined,
+                    life_cycle: _comp.life_cycle,
+                    found: _comp.found
+                };
+                return element;
             };
-            table.push(element);
+
+
+            table.push(buildElement(i));
         }
 
         groupsQtty = groups.size();

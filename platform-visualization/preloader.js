@@ -310,7 +310,7 @@ var images = [
     './images/walletlogo.png'
 ];
 
-var loaded = 0;
+var loaded = 1;
 
 var loadImage = function (i) {
     'use strict';
