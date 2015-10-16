@@ -4,7 +4,7 @@ var table = [],
     scene = new THREE.Scene(),
     renderer,
     logo = new Logo(),
-    browserManager = new BrowserManager(),
+    browserManager,
     objects = [],
     headers = null,
     actualView = 'home',
@@ -36,6 +36,7 @@ function createScene(){
         renderer,
         render);
 
+    browserManager = new BrowserManager();
     logo.startFade();
 }
 
@@ -77,7 +78,7 @@ function init() {
     //Disabled Menu
     //initMenu();
 
-    setTimeout(function() {goToView('home'); }, 500);
+    setTimeout(function() {goToView('table'); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
@@ -426,7 +427,7 @@ function onClick(e) {
     var mouse = new THREE.Vector2(0, 0),
         clicked = [];
     
-    if ( !camera.moving ) {
+    if ( !camera.dragging ) {
     
         //Obtain normalized click location (-1...1)
         mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;

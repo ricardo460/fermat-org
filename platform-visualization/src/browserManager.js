@@ -1,22 +1,25 @@
 function BrowserManager() {
 
-   var textura = [],
-       views = [];
+    var textura = [],
+        views = [];
 
-   this.navegacion_button = [];
+    this.navegacion_button = [];
+    this.tex = textura;
 
-   var self = this;
+    var self = this;
+    
+    var wide = (Math.floor(camera.aspectRatio * 10) !== Math.floor(40/3));
+    
+    var LOWER_LAYER = 63000,
+        POSITION_X = (wide) ? 13500 : 12000,
+        SCALE = (wide) ? 70 : 40;
 
 function config_view ( _id, _left, _right, _top, _bottom ){  
 
-// Los id solo pueden ser: home, table, stack
-
+    // Los id solo pueden ser: home, table, stack
     var view = { id : _id, right : _right, left : _left, top : _top, bottom : _bottom  };
-
     views.push(view);
-
 }
-
 
 this.actionButton = function ( button ) {
     
@@ -24,29 +27,19 @@ this.actionButton = function ( button ) {
         view = "";
 
     while(views[i].id != window.actualView){
-
         i = i + 1 ;
-
     } 
 
-    if ( button === "right" ) 
-
+    if (button === "right") 
         view = views[i].right;
-
-    else if ( button === "left" ) 
-
+    else if (button === "left") 
         view = views[i].left;
-
-    else if ( button === "top" ) 
-
+    else if (button === "top") 
         view = views[i].top;
-
     else 
-
         view = views[i].bottom;
 
     window.goToView(view);
-
 };
 
 /**
@@ -76,7 +69,6 @@ this.modifyButtonLegend = function ( valor, display ) {
             });
 };
 
-
 this.createButton = function () {
 
     createTextura ( 0, "Home", "right");
@@ -103,29 +95,22 @@ function addButton ( button ) {
 
     mesh = new THREE.Mesh(
                 new THREE.PlaneGeometry( 80, 80 ),
-                new THREE.MeshBasicMaterial({map:null , side: THREE.FrontSide, transparent: true})
-            );
+                new THREE.MeshBasicMaterial({map:null , side: THREE.FrontSide, transparent: true}));
     
     if ( button === "right" ) {
-
-    posicion = { x: 38000, y: 0, z: 2000 }; j = 0;
-
-    } else  {
-
-    posicion = { x: -38000, y: 0, z: -2000 }; j = 1;
-
+        posicion = { x: POSITION_X, y: 0, z: LOWER_LAYER }; j = 0;
+    } else {
+        posicion = { x: -POSITION_X, y: 0, z: LOWER_LAYER }; j = 1;
     }
 
     mesh.position.set( posicion.x, 
                        posicion.y, 
                        posicion.z );
 
-    mesh.scale.set(70,70,70);
-
+    mesh.scale.set(SCALE,SCALE,SCALE);
     mesh.userData = { state : true, arrow : button };
-
     mesh.material.opacity = 1;
-
+    
     window.scene.add(mesh);
     
     self.navegacion_button[j] = mesh;  
@@ -141,25 +126,25 @@ function createTextura ( id, label, button) {
         fontside,
         imageside;
 
-    if ( label === "View Table" ) fontside = { font: "20px Arial", x: 50, y: 50 };
+    if ( label === "View Table" ) fontside = { font: "20px Arial", size : 20 };
 
-    else if ( label === "View Dependencies" ) fontside = { font: "20px Arial", x: 80, y: 80 };
+    else if ( label === "View Dependencies" ) fontside = { font: "14px Arial", size : 14, x: 80, y: 80 };
 
-    else if ( label == "Home") fontside = { font: "20px Arial", x: 35, y: 35 };
+    else if ( label == "Home") fontside = { font: "20px Arial", size : 20 };
 
     if ( button === "right" ) {
 
-    imageside = { x: 15 };
+        imageside = { x: 15 };
 
     } else  {
 
-    imageside = { x: 0 };
+        imageside = { x: 0 };
 
     }
 
     canvas = document.createElement('canvas');
-    canvas.width  = 80;
-    canvas.height = 80;
+    canvas.width  = 90;
+    canvas.height = 90;
 
     ctx = canvas.getContext("2d");
 
@@ -168,20 +153,18 @@ function createTextura ( id, label, button) {
 
     img.onload = function () {
 
-      ctx.font = fontside.font;
-      ctx.fillText(label, 0, 65, fontside.x , fontside.y);
-      ctx.drawImage(img, imageside.x, 0, 40, 40);
-      
-      texture = new THREE.Texture(canvas);
-      texture.needsUpdate = true;  
-      texture.minFilter = THREE.NearestFilter;
+        ctx.font = fontside.font;
+        helper.drawText(label, 0, 65, ctx, canvas.width, fontside.size);
+        ctx.drawImage(img, imageside.x, 0, 40, 40);
 
-      textura[id] = texture;
+        texture = new THREE.Texture(canvas);
+        texture.needsUpdate = true;  
+        texture.minFilter = THREE.NearestFilter;
 
+        textura[id] = texture;
      };
 
 }
-
 
 this.hide_Button = function ( ) {
 
@@ -189,21 +172,17 @@ this.hide_Button = function ( ) {
         i = 0;
 
     while(views[i].id != window.actualView){
-
-    i = i + 1 ;
-
+        i = i + 1;
     } 
 
     if( views[i].right ) {
   
-      _label = label("right", views[i].right);
+        _label = label("right", views[i].right);
 
-      modifyButton (0, _label);
-
+        modifyButton (0, _label);
     } else {
 
      modifyButton (0, null);
-
     }
 
   if( views[i].left ) {
@@ -251,18 +230,16 @@ function label(button, view){
 
 function modifyButton (id, texture){
 
-    var visibility = -window.camera.getMaxDistance(); 
+    var visibility = -window.camera.getMaxDistance() * 2; 
 
     var mesh = self.navegacion_button[ id ];
 
-    if ( texture ) {
+    if (typeof texture === 'number') {
 
-       mesh.material.map = textura[ texture ];
+        mesh.material.map = textura[ texture ];
+        mesh.material.needsUpdate = true;
 
-       mesh.material.needsUpdate = true;
-
-       visibility = 2000;
-
+        visibility = LOWER_LAYER;
     }
 
     if ( visibility != mesh.position.z ) animateButton(mesh, 2000, visibility);
