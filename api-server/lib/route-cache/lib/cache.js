@@ -11,10 +11,16 @@ var Route = require('./route');
  */
 function Cache(options) {
     'use strict';
-    this.type = options && options.type ? options.type : 'memory';
-    this.time = options && options.time ? options.time : 3600000;
-    if (this.type === 'file') {
-        this.filename = options && options.filename ? process.cwd() + options.filename : process.cwd() + '/filecache.json';
+    if (options) {
+        this.type = options.type || 'memory';
+        this.time = options.time || 3600000;
+        if (this.type === 'file') {
+            this.filename = options.filename || '/filecache.json';
+            this.filename = process.cwd() + this.filename;
+        }
+    } else {
+        this.type = 'memory';
+        this.time = 3600000;
     }
 }
 
@@ -118,8 +124,19 @@ Cache.prototype.get = function (url) {
     }
 
     if (cache) {
-        winston.log('info', 'Retrieving from cache');
-        return cache[url];
+        if (cache[url]) {
+            var routecache = new Route(cache[url].body, cache[url].date, this.time);
+            if (!routecache.isValid() || !routecache.body) {
+                winston.log('info', 'Route in cache expired');
+                return undefined;
+            } else {
+                winston.log('info', 'Route still in cache');
+                winston.log('info', 'Retrieving from cache');
+                return cache[url];
+            }
+        } else {
+            return undefined;
+        }
     }
     winston.log('info', 'Not found in cache');
     return undefined;
