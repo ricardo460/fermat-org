@@ -13,7 +13,7 @@ function getData() {
     }).success(
         function(lists) {
             viewManager.fillTable(lists);
-
+            browserManager.createButton();
             TWEEN.removeAll();
 
             logo.stopFade();
@@ -26,7 +26,7 @@ function getData() {
         var l = JSON.parse(testData);
 
         viewManager.fillTable(l);
-
+    browserManager.createButton();
         TWEEN.removeAll();
 
         logo.stopFade();

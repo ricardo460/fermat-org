@@ -7,41 +7,20 @@ function Logo(){
     
     var self = this;
 
-    var lowerLayer = 2000,
-        upperLayer = 30000;
+    var LOWER_LAYER = 63000,
+        UPPER_LAYER = 70000;
     
-    var walletClosedY = 4600,
-        walletOpenY = 15000,
-        fermatClosedY = -walletClosedY,
-        fermatOpenY = -walletOpenY;
-    
-    
-    
-    var walletLogo = createLogo(995, 700, "images/walletlogo.png", new THREE.Vector3(0, walletClosedY, upperLayer)),
-        fermatLogo = createLogo(950, 300, "images/fermatlogo.png", new THREE.Vector3(0, fermatClosedY, upperLayer));
-        
-       /* new THREE.Mesh(
-        new THREE.PlaneGeometry(995, 700),
-        new THREE.MeshBasicMaterial({ side: THREE.FrontSide, transparent: true, opacity: 0 , color:0xffffff}));
-    helper.applyTexture("images/walletlogo.png", walletLogo);
-
-    walletLogo.scale.set(20, 20, 20);
-    walletLogo.position.x = 0;
-    walletLogo.position.y = walletClosedY;
-    walletLogo.position.z = upperLayer;
-    scene.add(walletLogo);
+    var CLOSED_WALLET_Y = 2300,
+        OPEN_WALLET_Y = 6000,
+        CLOSED_FERMAT_Y = -CLOSED_WALLET_Y,
+        OPEN_FERMAT_Y = -OPEN_WALLET_Y,
+        SCALE = 10;
     
     
-    var fermatLogo = new THREE.Mesh(
-        new THREE.PlaneGeometry(950, 300),
-        new THREE.MeshBasicMaterial({ side: THREE.FrontSide, transparent: true, opacity: 0, color: 0xffffff}));
-    helper.applyTexture("images/fermatlogo.png", fermatLogo);
-
-    fermatLogo.scale.set(20, 20, 20);
-    fermatLogo.position.x = 0;
-    fermatLogo.position.y = fermatClosedY;
-    fermatLogo.position.z = upperLayer;
-    scene.add(fermatLogo);*/
+    
+    var walletLogo = createLogo(995, 700, "images/walletlogo.png", new THREE.Vector3(0, CLOSED_WALLET_Y, UPPER_LAYER)),
+        fermatLogo = createLogo(950, 300, "images/fermatlogo.png", new THREE.Vector3(0, CLOSED_FERMAT_Y, UPPER_LAYER));
+    
     
     this.walletLogo = walletLogo;
     this.fermatLogo = fermatLogo;
@@ -54,7 +33,7 @@ function Logo(){
             new THREE.MeshBasicMaterial({ side: THREE.FrontSide, transparent : true, opacity : 0, color : 0xFFFFFF}));
         helper.applyTexture(texture, mesh);
         
-        mesh.scale.set(20, 20, 20);
+        mesh.scale.set(SCALE, SCALE, SCALE);
         mesh.position.copy(position);
         scene.add(mesh);
         
@@ -89,8 +68,8 @@ function Logo(){
      * @author Miguel Celedon
      */
     this.openLogo = function(duration) {
-        self.moveLogo(duration, walletLogo, walletOpenY, lowerLayer);
-        self.moveLogo(duration, fermatLogo, fermatOpenY, lowerLayer);
+        self.moveLogo(duration, walletLogo, OPEN_WALLET_Y, LOWER_LAYER);
+        self.moveLogo(duration, fermatLogo, OPEN_FERMAT_Y, LOWER_LAYER);
     };
     
     /**
@@ -99,8 +78,8 @@ function Logo(){
      * @author Miguel Celedon
      */
     this.closeLogo = function(duration) {
-        self.moveLogo(duration, walletLogo, walletClosedY, upperLayer);
-        self.moveLogo(duration, fermatLogo, fermatClosedY, upperLayer);
+        self.moveLogo(duration, walletLogo, CLOSED_WALLET_Y, UPPER_LAYER);
+        self.moveLogo(duration, fermatLogo, CLOSED_FERMAT_Y, UPPER_LAYER);
     };
     
     /**
@@ -112,14 +91,14 @@ function Logo(){
      * @param {Object} logo            The logo to animate
      */
     this.fadeLogo = function (duration, logo){
-        var _duration = duration || 2000;
+        var _duration = duration || 1500;
 
         var tween1 = new TWEEN.Tween(logo.material)
         .to({ opacity : 1, needsUpdate : true}, _duration)
         .onUpdate(render);
         
         var tween2 = new TWEEN.Tween(logo.material)
-        .to({ opacity : 0, needsUpdate : true}, _duration)
+        .to({ opacity : 0.05, needsUpdate : true}, _duration)
         .onUpdate(render);
 
         tween1.chain(tween2);
