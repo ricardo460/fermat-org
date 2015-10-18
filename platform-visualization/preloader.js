@@ -16,22 +16,18 @@ $.ajax({
             // this will trigger your browser loading the image (and caching it)
             e.src = img;
             e.onload = function () {
-                //console.log(this.src + ' loaded!');
                 loaded++;
                 percnt = ((loaded * 100) / images.length) >> 0;
                 $("#progress-bar").width(percnt + '%');
-                //console.log(percnt + '%');
                 if (loaded >= images.length - 1) {
                     // once we get here, we are pretty much done, so redirect to the actual page
                     window.location = './home.html';
                 }
             };
             e.onerror = function () {
-                //console.log('error loading ' + this.src);
                 loaded++;
                 percnt = ((loaded * 100) / images.length) >> 0;
                 $("#progress-bar").width(percnt + '%');
-                //console.log(percnt + '%');
                 if (loaded >= images.length - 1) {
                     // once we get here, we are pretty much done, so redirect to the actual page
                     window.location = './home.html';

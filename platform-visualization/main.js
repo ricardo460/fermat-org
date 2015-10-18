@@ -952,42 +952,23 @@ var superLayers = {
         return size - 1;
     }
 };
-
 var viewManager = new ViewManager();
 //var URL = "get_plugins.php";
 //var URL = "http://52.11.156.16:3000/repo/comps";
 
 function getData() {
-    
     animate();
-    
     $.ajax({
-        url: "http://52.11.156.16:3000/repo/comps",
+        url: "http://52.11.156.16:3000/repo/comps?access_token=561fd1a5032e0c5f7e20387d",
         method: "GET"
     }).success(
-        function(lists) {
+        function (lists) {
             viewManager.fillTable(lists);
             browserManager.createButton();
             TWEEN.removeAll();
-
             logo.stopFade();
-
             init();
         });
-    
-    
-    /*setTimeout(function(){
-        var l = JSON.parse(testData);
-
-        viewManager.fillTable(l);
-    browserManager.createButton();
-        TWEEN.removeAll();
-
-        logo.stopFade();
-
-        init();
-
-    }, 6000);*/
 }
 /**
  * @class Represents the group of all header icons
@@ -2102,7 +2083,6 @@ function ViewManager() {
                 section_size[r]++;
                 isSuperLayer[r] = true;
             } else {
-                console.log(r + '-' + c);
                 section_size[r][c]++;
                 if (section_size[r][c] > columnWidth) columnWidth = section_size[r][c];
             }
@@ -2880,14 +2860,14 @@ function ViewManager() {
             if (layers[table[i].layer].super_layer) {
 
                 object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
-                
+
                 section[row]++;
 
             } else {
 
                 //Column (X)
                 var column = table[i].groupID;
-                
+
                 object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
                 section[row][column]++;
