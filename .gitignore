@@ -3,4 +3,5 @@ api-server/node_modules/
 platform-visualization/common.php
 platform-visualization/src/getData.js
 platform-visualization/main.js
+api-server/filecache.json
 sh.exe.stackdump

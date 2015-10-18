@@ -5,6 +5,38 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+
+/**
+ * BearerStrategy
+ *
+ * This strategy is used to authenticate users based on an access token (aka a
+ * bearer token).  The user must have previously authorized a client
+ * application, which is issued an access token to make requests on behalf of
+ * the authorizing user.
+ */
+var tokens = {
+    'fermat-org': {
+        access_token: "561fd1a5032e0c5f7e20387d",
+        scope: "*"
+    }
+};
+
+var BearerStrategy = require('passport-http-bearer').Strategy;
+
+passport.use(new BearerStrategy({
+    passReqToCallback: true //allows us to pass back the entire request to the callback
+}, function (req, access_token, done) {
+    try {
+        if (tokens['fermat-org'].access_token === access_token) {
+            return done(null, true, tokens['fermat-org'].scope);
+        } else {
+            return done(null, false, null);
+        }
+    } catch (err) {
+        return done(err, false, null);
+    }
+}));
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -18,6 +50,7 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(passport.initialize());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -69,6 +102,5 @@ app.use(function (err, req, res, next) {
         error: {}
     });
 });
-
 
 module.exports = app;

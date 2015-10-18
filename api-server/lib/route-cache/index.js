@@ -1,15 +1,14 @@
 var Cache = require('./lib/cache');
 
-function RouteCache(options, req) {
+function RouteCache(options) {
     'use strict';
     this.cache = new Cache(options);
-    this.url = req.method + ' ' + req.url;
-    this.req = req;
 }
 
-RouteCache.prototype.getBody = function () {
+RouteCache.prototype.getBody = function (req) {
     'use strict';
-    var route = this.cache.get(this.url);
+    var url = req.method + ' ' + req.url;
+    var route = this.cache.get(url);
     if (route) {
         this.body = route.body;
     } else {
@@ -18,9 +17,10 @@ RouteCache.prototype.getBody = function () {
     return this.body;
 };
 
-RouteCache.prototype.setBody = function (body) {
+RouteCache.prototype.setBody = function (req, body) {
     'use strict';
-    var route = this.cache.set(this.url, body);
+    var url = req.method + ' ' + req.url;
+    var route = this.cache.set(url, body);
     if (route) {
         this.body = route.body;
     } else {

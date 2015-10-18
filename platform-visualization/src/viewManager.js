@@ -76,7 +76,6 @@ function ViewManager() {
                 section_size[r]++;
                 isSuperLayer[r] = true;
             } else {
-                console.log(r + '-' + c);
                 section_size[r][c]++;
                 if (section_size[r][c] > columnWidth) columnWidth = section_size[r][c];
             }
@@ -854,14 +853,14 @@ function ViewManager() {
             if (layers[table[i].layer].super_layer) {
 
                 object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
-                
+
                 section[row]++;
 
             } else {
 
                 //Column (X)
                 var column = table[i].groupID;
-                
+
                 object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
                 section[row][column]++;
