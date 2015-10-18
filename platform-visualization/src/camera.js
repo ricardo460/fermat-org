@@ -12,7 +12,7 @@ function Camera(position, renderer, renderFunc) {
      */
     var ROTATE_SPEED = 1.3,
         MIN_DISTANCE = 50,
-        MAX_DISTANCE = 80000;
+        MAX_DISTANCE = 90000;
 
     /**
      * private properties
@@ -29,12 +29,15 @@ function Camera(position, renderer, renderFunc) {
 
     controls.rotateSpeed = ROTATE_SPEED;
     controls.noRotate = true;
+    controls.noPan = true;
     controls.minDistance = MIN_DISTANCE;
     controls.maxDistance = MAX_DISTANCE;
     controls.addEventListener( 'change', renderFunc );
     controls.position0.copy( position );
     
     // Public properties
+    this.dragging = false;
+    this.aspectRatio = camera.aspect;
     this.moving = false;
     
     // Public Methods
@@ -142,6 +145,7 @@ function Camera(position, renderer, renderFunc) {
         
         camera.aspect = innerWidth / innerHeight;
         camera.updateProjectionMatrix();
+        self.aspectRatio = camera.aspect;
 
         renderer.setSize( innerWidth, innerHeight );
 
@@ -175,6 +179,7 @@ function Camera(position, renderer, renderFunc) {
     this.resetPosition = function(duration) {
         
         duration = duration || 2000;
+        self.disable();
         
         /*new TWEEN.Tween( controls.target )
                 .to( { x: controls.target0.x, y: controls.target0.y, z: controls.target0.z }, Math.random() * duration + duration )
@@ -185,6 +190,7 @@ function Camera(position, renderer, renderFunc) {
                 .to( { x: controls.position0.x, y: controls.position0.y, z: controls.position0.z }, duration )
                 //.easing( TWEEN.Easing.Exponential.InOut )
                 .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
+                .onComplete(function() { self.enable(); controls.noPan = true; })
                 .start();
 
             new TWEEN.Tween( camera.up )
@@ -198,9 +204,14 @@ function Camera(position, renderer, renderFunc) {
      * @method update    updates camera controls  
      *
      */
-    this.update = function() {        
+    this.update = function() {
+        if(controls.noPan === true && Math.ceil(camera.position.z) !== controls.position0.z) controls.noPan = false;
+        
+        //if(self.moving)
+            //controls.enabled = false;
+        
         controls.update();
-        self.moving = controls.moving;
+        self.dragging = controls.dragging;
     };
     
     /**
