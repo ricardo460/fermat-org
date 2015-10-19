@@ -5,6 +5,7 @@ var table = [],
     renderer,
     logo = new Logo(),
     browserManager,
+    screenshotsAndroid,
     objects = [],
     headers = null,
     actualView = 'home',
@@ -38,6 +39,8 @@ function createScene(){
         render);
 
     browserManager = new BrowserManager();
+    screenshotsAndroid = new ScreenshotsAndroid();
+
     logo.startFade();
 }
 
@@ -45,6 +48,9 @@ function init() {
 
     // table
     tileManager.drawTable();
+
+    //ScreenshotsAndroid
+    screenshotsAndroid.init();
     
     var dimensions = tileManager.dimensions;
 
@@ -449,7 +455,18 @@ function onClick(e) {
         if (clicked && clicked.length > 0) {
 
             onElementClick(clicked[0].object.userData.id);
-        }
+            
+        } else { 
+            
+         clicked = camera.rayCast(mouse, screenshotsAndroid.objects.mesh);
+
+            if ( clicked && clicked.length > 0 ) {
+
+                screenshotsAndroid.change_Screenshots(clicked[0].object.userData.id)
+
+               }
+
+            }
     }
       
       clicked = camera.rayCast(mouse, browserManager.navegacion_button);
