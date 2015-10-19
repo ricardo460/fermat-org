@@ -1,5 +1,5 @@
 
-var viewManager = new ViewManager();
+var tileManager = new TileManager();
 //var URL = "get_plugins.php";
 //var URL = "http://52.11.156.16:3000/repo/comps";
 
@@ -12,8 +12,8 @@ function getData() {
         method: "GET"
     }).success(
         function(lists) {
-            viewManager.fillTable(lists);
-            browserManager.createButton();
+            tileManager.fillTable(lists);
+            window.browserManager.createButton();
             TWEEN.removeAll();
 
             logo.stopFade();
@@ -25,7 +25,7 @@ function getData() {
     /*setTimeout(function(){
         var l = JSON.parse(testData);
 
-        viewManager.fillTable(l);
+        tileManager.fillTable(l);
     browserManager.createButton();
         TWEEN.removeAll();
 

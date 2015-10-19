@@ -9,7 +9,8 @@ var table = [],
     headers = null,
     actualView = 'home',
     stats = null,
-    actualFlow = null;
+    actualFlow = null,
+    viewManager = new ViewManager();
 
 //Global constants
 var TILE_DIMENSION = {
@@ -43,9 +44,9 @@ function createScene(){
 function init() {
 
     // table
-    viewManager.drawTable();
+    tileManager.drawTable();
     
-    var dimensions = viewManager.dimensions;
+    var dimensions = tileManager.dimensions;
 
     // groups icons
     headers = new Headers(dimensions.columnWidth, dimensions.superLayerMaxHeight, dimensions.groupsQtty,
@@ -55,7 +56,7 @@ function init() {
     //create_stats();
 
     $('#backButton').click(function() {
-        changeView(viewManager.targets.table);
+        changeView(tileManager.targets.table);
     });
 
     $('#legendButton').click(function() {
@@ -97,27 +98,32 @@ function init() {
 function goToView ( current ) {
     
     actualView = current;
+    var newCenter = new THREE.Vector3(0, 0, 0);
+    var transition = 5000;
 
     switch(current) {
         case 'table':
 
+            newCenter = viewManager.translateToSection('table', newCenter);
+            
+            camera.move(newCenter.x, newCenter.y, camera.getPosition().z, transition);
             browserManager.modifyButtonLegend(1,'block');
 
             logo.openLogo();
 
-            setTimeout(function() {
+            //setTimeout(function() {
                 headers.transformTable();
-            }, 4000);
+            //}, 4000);
 
             setTimeout(function() {
-                viewManager.transform(viewManager.targets.table, 4000);
-            }, 6000);
+                tileManager.transform(tileManager.targets.table, 4000);
+            }, 2000);
             
             browserManager.hide_Button();
             
             
             break;
-        case 'home':
+        /*case 'home':
 
            headers.transformHead();
 
@@ -129,10 +135,13 @@ function goToView ( current ) {
            
            browserManager.modifyButtonLegend(0,'none');
 
-            break;
+            break;*/
         case 'stack':
+                     
+            headers.transformStack(transition);
             
-            headers.transformStack();
+            newCenter = viewManager.translateToSection('stack', newCenter);
+            camera.move(newCenter.x, newCenter.y, camera.getPosition().z, transition);
 
             browserManager.hide_Button();
 
@@ -143,7 +152,7 @@ function goToView ( current ) {
             break;
 
         default:
-            actualView = 'home';
+            goToView('table');
             break;
     }
 }
@@ -153,28 +162,28 @@ function initMenu() {
     var button = document.getElementById('table');
     button.addEventListener('click', function(event) {
 
-        changeView(viewManager.targets.table);
+        changeView(tileManager.targets.table);
 
     }, false);
 
     button = document.getElementById('sphere');
     button.addEventListener('click', function(event) {
 
-        changeView(viewManager.targets.sphere);
+        changeView(tileManager.targets.sphere);
 
     }, false);
 
     button = document.getElementById('helix');
     button.addEventListener('click', function(event) {
 
-        changeView(viewManager.targets.helix);
+        changeView(tileManager.targets.helix);
 
     }, false);
 
     button = document.getElementById('grid');
     button.addEventListener('click', function(event) {
 
-        changeView(viewManager.targets.grid);
+        changeView(tileManager.targets.grid);
 
     }, false);
 }
@@ -194,7 +203,7 @@ function changeView(targets) {
     }
 
     if (targets != null)
-        viewManager.transform(targets, 2000);
+        tileManager.transform(targets, 2000);
 }
 
 function onElementClick(id) {

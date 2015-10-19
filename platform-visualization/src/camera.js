@@ -1,3 +1,7 @@
+var ROTATE_SPEED = 1.3,
+        MIN_DISTANCE = 50,
+        MAX_DISTANCE = 90000;
+
 /**
  *
  * @class Camera
@@ -10,9 +14,6 @@ function Camera(position, renderer, renderFunc) {
     /**
      * private constans
      */
-    var ROTATE_SPEED = 1.3,
-        MIN_DISTANCE = 50,
-        MAX_DISTANCE = 90000;
 
     /**
      * private properties
