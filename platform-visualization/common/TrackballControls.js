@@ -16,7 +16,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 	// API
 
 	this.enabled = true;
-    this.moving = false;
+    this.dragging = false;
 
 	this.screen = { left: 0, top: 0, width: 0, height: 0 };
 
@@ -438,7 +438,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		event.preventDefault();
 		event.stopPropagation();
-        _this.moving = true;
+        _this.dragging = true;
 
 		if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
@@ -463,7 +463,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		event.preventDefault();
 		event.stopPropagation();
-        _this.moving = false;
+        _this.dragging = false;
 
         _state = _prevState;
 
