@@ -196,7 +196,7 @@ function Camera(position, renderer, renderFunc) {
             //TWEEN.removeAll();
             var duration = 2000;
 
-            viewManager.rollBack();
+            tileManager.rollBack();
 
             self.resetPosition(duration);
         }

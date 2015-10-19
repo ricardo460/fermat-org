@@ -35,7 +35,7 @@ function TileManager() {
         for (var key in layers) {
             if (key == "size") continue;
             
-            id = layers[key].index;
+            var id = layers[key].index;
 
             if (layers[key].super_layer) {
 
@@ -759,7 +759,7 @@ function TileManager() {
      */
     this.transform = function (goal, duration) {
 
-        var i, l;
+        var i, l, j;
 
         duration = duration || 2000;
 
@@ -799,11 +799,12 @@ function TileManager() {
 
             for(i = 0; i < elementsByGroup.length; i++) {
 
+                var k = (i + elementsByGroup.length - 1) % (elementsByGroup.length);
                 var delay = i * 500;
 
-                for(j = 0; j < elementsByGroup[i].length; j++) {
+                for(j = 0; j < elementsByGroup[k].length; j++) {
 
-                    var index = elementsByGroup[i][j];
+                    var index = elementsByGroup[k][j];
 
                     var animation = animate(objects[index], goal[index], delay);
 
@@ -824,7 +825,7 @@ function TileManager() {
             .onUpdate(render)
             .start();
         
-        screenshotsAndroid.show_Screenshots();
+        setTimeout(window.screenshotsAndroid.show_Screenshots, 4000);
     };
 
     /**
@@ -945,7 +946,7 @@ function TileManager() {
             .onUpdate(render)
             .start();
         
-        screenshotsAndroid.hide_Screenshots();
+        window.screenshotsAndroid.hide_Screenshots();
     };
 
     //Private methods
