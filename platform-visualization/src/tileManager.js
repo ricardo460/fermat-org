@@ -61,7 +61,7 @@ function TileManager() {
 
         for (var j = 0; j <= groupsQtty; j++) {
 
-            elementsByGroup.push(0);
+            elementsByGroup.push([]);
         }
 
         //Set sections sizes
@@ -71,7 +71,7 @@ function TileManager() {
             var r = table[i].layerID;
             var c = table[i].groupID;
 
-            elementsByGroup[c]++;
+            elementsByGroup[c].push(i);
 
             if (layers[table[i].layer].super_layer) {
 
@@ -141,8 +141,8 @@ function TileManager() {
 
             var radious = 300 * (g + 1);
 
-            phi = Math.acos((2 * indexes[g]) / elementsByGroup[g] - 1);
-            var theta = Math.sqrt(elementsByGroup[g] * Math.PI) * phi;
+            phi = Math.acos((2 * indexes[g]) / elementsByGroup[g].length - 1);
+            var theta = Math.sqrt(elementsByGroup[g].length * Math.PI) * phi;
 
             object = new THREE.Object3D();
 
@@ -769,39 +769,47 @@ function TileManager() {
 
             this.lastTargets = goal;
 
-            var animate = function (object, target) {
+            var animate = function(object, target, delay) { 
 
-                new TWEEN.Tween(object.position)
-                    .to({
-                        x: target.position.x,
-                        y: target.position.y,
-                        z: target.position.z
-                    }, Math.random() * duration + duration)
-                    .easing(TWEEN.Easing.Exponential.InOut)
-                    .onComplete(function () {
-                        object.userData.flying = false;
-                    })
-                    .start();
+                delay = delay || 0;
 
-                new TWEEN.Tween(object.rotation)
-                    .to({
-                        x: target.rotation.x,
-                        y: target.rotation.y,
-                        z: target.rotation.z
-                    }, Math.random() * duration + duration)
-                    .easing(TWEEN.Easing.Exponential.InOut)
-                    .start();
+                 var move = new TWEEN.Tween(object.position)
+                            .to({
+                                x: target.position.x,
+                                y: target.position.y,
+                                z: target.position.z
+                            }, Math.random() * duration + duration)
+                            .easing(TWEEN.Easing.Exponential.InOut)
+                            .delay(delay)
+                            .onComplete(function() { object.userData.flying = false; });
 
+                var rotation = new TWEEN.Tween(object.rotation)
+                                .to({
+                                    x: target.rotation.x,
+                                    y: target.rotation.y,
+                                    z: target.rotation.z
+                                }, Math.random() * duration + duration)
+                                .delay(delay)
+                                .easing(TWEEN.Easing.Exponential.InOut);
+
+                var animation = [move, rotation];
+
+                return animation;
             };
 
+            for(i = 0; i < elementsByGroup.length; i++) {
 
-            for (i = 0; i < objects.length; i++) {
+                var delay = i * 500;
 
-                var object = objects[i];
-                var target = goal[i];
+                for(j = 0; j < elementsByGroup[i].length; j++) {
 
-                animate(object, target);
+                    var index = elementsByGroup[i][j];
 
+                    var animation = animate(objects[index], goal[index], delay);
+
+                    animation[0].start();
+                    animation[1].start();
+                }
             }
 
             if (goal == this.targets.table) {
@@ -821,7 +829,7 @@ function TileManager() {
      * Goes back to last target set in last transform
      */
     this.rollBack = function () {
-        changeView(this.lastTargets);
+        window.changeView(self.lastTargets);
     };
 
     /**
