@@ -1,3 +1,7 @@
+var ROTATE_SPEED = 1.3,
+        MIN_DISTANCE = 50,
+        MAX_DISTANCE = 90000;
+
 /**
  *
  * @class Camera
@@ -10,9 +14,6 @@ function Camera(position, renderer, renderFunc) {
     /**
      * private constans
      */
-    var ROTATE_SPEED = 1.3,
-        MIN_DISTANCE = 50,
-        MAX_DISTANCE = 90000;
 
     /**
      * private properties
@@ -83,7 +84,7 @@ function Camera(position, renderer, renderFunc) {
         TWEEN.removeAll();
         focus = parseInt(id);
 
-        viewManager.letAlone(focus, duration);
+        tileManager.letAlone(focus, duration);
         
         objects[focus].getObjectForDistance(0).visible = true;
         self.render(renderer, scene);
@@ -103,6 +104,35 @@ function Camera(position, renderer, renderFunc) {
         new TWEEN.Tween( camera.position )
             .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration * 2 )
             //.easing( TWEEN.Easing.Exponential.InOut )
+            .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
+            .onComplete(render)
+            .start();
+
+        new TWEEN.Tween( camera.up )
+            .to( { x: target.up.x, y: target.up.y, z: target.up.z }, Math.random() * duration + duration )
+            .easing( TWEEN.Easing.Exponential.InOut )
+            .start();
+    };
+
+    this.setFocus_Screenshots = function( id, duration ) {
+        
+        TWEEN.removeAll();
+
+        focus = parseInt(id); 
+
+        tileManager.letAlone();
+        
+        self.render(renderer, scene);
+        
+        headers.hide(duration);
+    
+        var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1);
+        var target = screenshotsAndroid.objects.mesh[focus];
+
+        vec.applyMatrix4( target.matrix );
+
+        new TWEEN.Tween( camera.position )
+            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration * 2 )
             .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
             .onComplete(render)
             .start();
