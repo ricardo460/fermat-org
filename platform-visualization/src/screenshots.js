@@ -17,15 +17,16 @@ function ScreenshotsAndroid() {
 
    this.init = function () {
 
-     addWallet("teens");
      addWallet("publisher");
-     addWallet("kids");
+     addWallet("factory");
      addWallet("store");
 
-     addMesh (-22638,"teens"); 
-     addMesh (-22407,"publisher"); 
-     addMesh (-22176,"kids"); 
-     addMesh (-26103,"store");
+
+     addMesh (tileManager.targets.table[75].position.x,"factory"); 
+     addMesh (tileManager.targets.table[76].position.x,"publisher");
+     addMesh (tileManager.targets.table[77].position.x,"store");
+     // Plano donde se muestra el cuarto capture no tiene por qué visualizarse.
+     addMesh (Math.random() * 80000 ,"store");
    
    };
   
@@ -96,11 +97,11 @@ function ScreenshotsAndroid() {
           image,
           id;
   
-      image = new THREE.ImageUtils.loadTexture("images/screenshots android/wallet_"+wallet+"_"+i+".png");
+      image = new THREE.ImageUtils.loadTexture("images/screenshots_android/wallet_"+wallet+"_"+i+".png");
       image.needsUpdate = true;  
       image.minFilter = THREE.NearestFilter;
       
-      texture = { wallet : wallet, image : image, id : i }
+      texture = { wallet : wallet, image : image, id : i };
 
       self.objects.textura.push(texture);
 
