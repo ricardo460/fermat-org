@@ -847,6 +847,7 @@ function TileManager() {
             .to({}, duration * elementsByGroup.length)
             .onUpdate(render)
             .start();
+        screenshotsAndroid.show_Screenshots(); 
     };
 
     /**
@@ -957,6 +958,7 @@ function TileManager() {
             .to({}, _duration * 2)
             .onUpdate(render)
             .start();
+        screenshotsAndroid.hide_Screenshots();
     };
     
     //Private methods
