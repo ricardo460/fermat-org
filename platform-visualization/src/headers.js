@@ -44,10 +44,10 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         
         network = new vis.Network(container, graph.data, graph.options);
         
-        viewManager.letAlone();
-        camera.resetPosition();
+        //tileManager.letAlone();
+        //camera.resetPosition(_duration / 2);
         
-        setTimeout(function() {
+        //setTimeout(function() {
             for(i = 0, l = objects.length; i < l; i++) {
 
                 new TWEEN.Tween(objects[i].position)
@@ -60,15 +60,15 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 .start();
             }
 
-           new TWEEN.Tween(this)
+           /*new TWEEN.Tween(this)
                 .to({}, _duration * 2)
                 .onUpdate(render)
-                .start();
+                .start();*/
 
             self.hide(_duration);
-            $(container).fadeTo(_duration, 1);
+            //$(container).fadeTo(_duration * 1.5, 1);
             
-        }, _duration);
+        //}, _duration / 2);
     };
     
     /**
@@ -85,7 +85,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         helper.hide('headContainer', _duration / 2);
         //This should be moved to be called by viewer.js when we no longer use vis for this
         /*setTimeout(function() {    
-            viewManager.transform(viewManager.targets.table); 
+            tileManager.transform(tileManager.targets.table); 
         }, _duration);*/
         
         for(i = 0, l = objects.length; i < l; i++) {
@@ -119,7 +119,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         var _duration = duration || 1000;
         var i, l;
 
-        viewManager.letAlone();
+        tileManager.letAlone();
         camera.resetPosition();
         setTimeout(function() {
             for(i = 0, l = objects.length; i < l; i++) {
@@ -255,10 +255,12 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         
         var i, obj;
         
+        var center = window.viewManager.translateToSection('stack', new THREE.Vector3(0, 0, 8000));
+        
         // Dummy, send all to center
         for(i = 0; i < objects.length; i++) {
             obj = new THREE.Object3D();
-            obj.position.set(0, 0, 8000);
+            obj.position.copy(center);
             positions.stack.push(obj);
         }
         
