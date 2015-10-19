@@ -17,15 +17,15 @@ function ScreenshotsAndroid() {
 
    this.init = function () {
 
-     addWallet("Teens");
-     addWallet("Publisher");
-     addWallet("Kids");
-     addWallet("Store");
+     addWallet("teens");
+     addWallet("publisher");
+     addWallet("kids");
+     addWallet("store");
 
-     addMesh (-22638,"Teens"); 
-     addMesh (-22407,"Publisher"); 
-     addMesh (-22176,"Kids"); 
-     addMesh (-26103,"Store");
+     addMesh (-22638,"teens"); 
+     addMesh (-22407,"publisher"); 
+     addMesh (-22176,"kids"); 
+     addMesh (-26103,"store");
    
    };
   
