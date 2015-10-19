@@ -28,16 +28,18 @@ function TileManager() {
         var section_size = [],
             superLayerHeight = 0,
             isSuperLayer = [],
-            i;
+            i, id;
 
         //Initialize
         for (var key in layers) {
             if (key == "size") continue;
+            
+            id = layers[key].index;
 
             if (layers[key].super_layer) {
 
-                section.push(0);
-                section_size.push(0);
+                section[id] = 0;
+                section_size[id] = 0;
                 superLayerHeight++;
 
                 if (superLayerMaxHeight < superLayerHeight) superLayerMaxHeight = superLayerHeight;
@@ -49,8 +51,8 @@ function TileManager() {
                 for (i = 0; i < groupsQtty; i++)
                     newLayer.push(0);
 
-                section_size.push(newLayer);
-                section.push(newLayer.slice(0)); //Use a copy
+                section_size[id] = newLayer;
+                section[id] = newLayer.slice(0); //Use a copy
             }
 
             isSuperLayer.push(false);
