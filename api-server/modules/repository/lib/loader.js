@@ -346,6 +346,14 @@ var parseManifest = function (callback) {
                 suprlays.push(suprlay);
             }
             fermat.suprlays = suprlays;
+            layers = [];
+            _layers = res_man.fermat.layers[0].layer;
+            for (i = 0; i < _layers.length; i++) {
+                layer = {};
+                layer = _layers[i]['$'];
+                layers.push(layer);
+            }
+            fermat.layers = layers;
             procs = [];
             _procs = res_man.fermat.processes[0].process;
             for (i = 0; i < _procs.length; i++) {
@@ -369,6 +377,7 @@ var parseManifest = function (callback) {
                 procs.push(_proc);
             }
             fermat.procs = procs;
+
             return callback(null, fermat);
 
         });
@@ -397,6 +406,27 @@ var saveManifest = function (callback) {
                     var _platfrms = res_load.platfrms;
                     var _suprlays = res_load.suprlays;
                     var _procs = res_load.procs;
+                    var _lays = res_load.layers;
+
+                    var loopLays = function (u) {
+                        if (u < _lays.length) {
+                            var _lay = _lays[u];
+                            console.log('layer: ' + _lay.name + ' order: ' + u);
+                            layerMod.insOrUpdLayer(_lay.name ? _lay.name.trim().toLowerCase() : null,
+                                _lay.language ? _lay.language.toLowerCase() : null,
+                                _lay.super_layer ? _lay.super_layer.trim().toUpperCase() : null,
+                                u,
+                                function (err_lay, res_lay) {
+                                    if (err_lay) {
+                                        winston.log('info', err_lay.message, err_lay);
+                                    }
+                                    loopLays(++u);
+                                });
+                        } else {
+                            winston.log('info', 'done loading components');
+                            return;
+                        }
+                    }
 
                     var loopProcs = function (s) {
                         if (s < _procs.length) {
@@ -442,8 +472,7 @@ var saveManifest = function (callback) {
                                     }
                                 });
                         } else {
-                            winston.log('info', 'done loading components');
-                            return;
+                            loopLays(0);
                         }
                     };
 
@@ -467,8 +496,7 @@ var saveManifest = function (callback) {
                                                 var _layer = _layers[o];
                                                 layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null,
                                                     _layer.language ? _layer.language.toLowerCase() : null,
-                                                    res_supr.code,
-                                                    0,
+                                                    res_supr.code, -1,
                                                     function (err_lay, res_lay) {
                                                         if (err_lay) {
                                                             winston.log('info', err_lay.message, err_lay);
@@ -585,8 +613,7 @@ var saveManifest = function (callback) {
                                                 var _layer = _layers[j];
                                                 layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null,
                                                     _layer.language ? _layer.language.toLowerCase() : null,
-                                                    null,
-                                                    0,
+                                                    null, -1,
                                                     function (err_lay, res_lay) {
                                                         if (err_lay) {
                                                             winston.log('info', err_lay.message, err_lay);
