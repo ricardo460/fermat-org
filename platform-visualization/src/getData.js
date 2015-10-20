@@ -13,7 +13,7 @@ function getData() {
     }).success(
         function(lists) {
             tileManager.fillTable(lists);
-            window.browserManager.createButton();
+
             TWEEN.removeAll();
 
             logo.stopFade();
@@ -26,7 +26,7 @@ function getData() {
         var l = JSON.parse(testData);
 
         tileManager.fillTable(l);
-    browserManager.createButton();
+
         TWEEN.removeAll();
 
         logo.stopFade();
