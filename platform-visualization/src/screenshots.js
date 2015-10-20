@@ -22,11 +22,13 @@ function ScreenshotsAndroid() {
      addWallet("store");
 
 
-     addMesh (tileManager.targets.table[75].position.x,"factory"); 
-     addMesh (tileManager.targets.table[76].position.x,"publisher");
-     addMesh (tileManager.targets.table[77].position.x,"store");
+     addMesh (tileManager.targets.table[75].position.x, "factory", false); 
+     addMesh (tileManager.targets.table[76].position.x, "publisher", false);
+     addMesh (tileManager.targets.table[77].position.x, "store", false);
      // Plano donde se muestra el cuarto capture no tiene por qué visualizarse.
-     addMesh (Math.random() * 80000 ,"store");
+     // El false cuando tiene una posicion definida y true cuando no lo tiene.
+     // Eliminar cuando crezca la cantidad de las fichitas a cuatro (4)!!!  
+     addMesh (Math.random() * 80000 , "store", true);
    
    };
   
@@ -52,16 +54,19 @@ function ScreenshotsAndroid() {
 
    }
 
-   function addMesh ( Position, wallet) {
+   function addMesh ( Position, wallet, state) {
 
-      var id = self.objects.mesh.length;
+      var id = self.objects.mesh.length,
           px = Math.random() * 80000 - 40000,
           py = Math.random() * 80000 - 40000,
           pz = 80000 * 2,
           rx = Math.random() * 180,
           ry = Math.random() * 180,
           rz = Math.random() * 180,
+          z = 0,
           textura = searchWallet ( wallet, 1);
+
+          if (state) z = pz;
 
       mesh = new THREE.Mesh(
                  new THREE.PlaneGeometry( 50, 80 ),
@@ -76,7 +81,7 @@ function ScreenshotsAndroid() {
 
       mesh.scale.set(4,4,4);
 
-      var target = { x : Position, y : 2760, z : 0,
+      var target = { x : Position, y : 2760, z : z,
                      px : px, py : py, pz : pz,
                      rx : rx, ry : ry, rz : rz };
 
@@ -94,8 +99,7 @@ function ScreenshotsAndroid() {
    function addTextura ( wallet, i ) {
 
       var texture,
-          image,
-          id;
+          image;
   
       image = new THREE.ImageUtils.loadTexture("images/screenshots_android/wallet_"+wallet+"_"+i+".png");
       image.needsUpdate = true;  
