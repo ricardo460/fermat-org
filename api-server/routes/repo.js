@@ -42,8 +42,8 @@ router.put('/comps', function (req, res, next) {
 router.get('/comps', function (req, res, next) {
     'use strict';
     try {
-        passport.authenticate('bearer', function (err, access, scope) {
-            if (access) {
+        //passport.authenticate('bearer', function (err, access, scope) {
+            //if (access) {
                 // we search for body in cache
                 var body = cache.getBody(req);
                 if (body) {
@@ -61,10 +61,10 @@ router.get('/comps', function (req, res, next) {
                         }
                     });
                 }
-            } else {
-                res.status(401).send(null);
-            }
-        })(req, res, next);
+            //} else {
+                //res.status(401).send(null);
+            //}
+        //})(req, res, next);
     } catch (err) {
         next(err);
     }
