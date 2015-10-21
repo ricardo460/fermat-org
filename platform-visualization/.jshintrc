@@ -36,6 +36,10 @@
         "Logo" : true,
         "logo" : true,
         "animate" : true,
-        "init" : true
+        "init" : true,
+        "BrowserManager" : true,
+        "TileManager" : true,
+        "tileManager" : true,
+        "ScreenshotsAndroid" : true
     }
 }
