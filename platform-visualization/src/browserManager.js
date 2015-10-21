@@ -28,6 +28,11 @@ function BrowserManager() {
 
     };
 
+    this.drawMap = function ( _map ) {
+
+        window.map = _map;
+    }
+
    /**
     * @author Ricardo Delgado
     * Button changes the value back.
