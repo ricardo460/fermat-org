@@ -200,7 +200,7 @@ function BrowserManager() {
       var canvas,
           ctx,
           img = new Image(),
-          textura,
+          texture,
           fontside,
           imageside,
           label;
