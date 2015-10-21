@@ -19,8 +19,8 @@ function BrowserManager() {
 
      /**
      * @author Ricardo Delgado
-     * the button being activated
-     * @param {String} button  the button being activated
+     * Pressed button function.
+     * @param {String} view  vista a cargar
      */
     this.actionButton = function ( view ) {
 
@@ -39,8 +39,11 @@ function BrowserManager() {
        var browserButton = document.getElementById('backButton');
 
        $(browserButton).fadeTo(1000, valor, function() {
-                $(browserButton).show();
-                browserButton.style.display = display;
+
+           $(browserButton).show();
+
+           browserButton.style.display = display;
+
        });
 
    };
@@ -57,33 +60,43 @@ function BrowserManager() {
       
       $(browserButton).fadeTo(1000, valor, function() {
 
-                $(browserButton).show();
-                browserButton.style.display = display;
+            $(browserButton).show();
+
+            browserButton.style.display = display;
 
       });
   
    };
 
-
+   /**
+    * @author Ricardo Delgado
+    * inicializacion de las arrow 
+    */
    this.init = function () {
       
       
       setTimeout(function() {
 
-        loadview('table');     
+        loadview('table');
+
         loadview("stack");
 
-      }, 4500);
+      }, 5000);
 
 
    };
-
+   /**
+    * @author Ricardo Delgado
+    * Loading the necessary views and arrows according to varible map. 
+    * @param {String} view  vista a cargar
+    */
    function loadview(view){
 
       var top,
           bottom,
           right,
           left;
+
       var newCenter = new THREE.Vector3(0, 0, 0);
 
           newCenter = viewManager.translateToSection(view, newCenter);
@@ -101,9 +114,9 @@ function BrowserManager() {
 
           if ( bottom != "" ) addArrow( bottom, center, "top");*/ 
 
-          if ( right != "" ) addArrow( right, newCenter.x, "right"); 
+          if ( right !== "" ) addArrow( right, newCenter.x, "right"); 
 
-          if ( left != "" ) addArrow( left, newCenter.x, "left"); 
+          if ( left !== "" ) addArrow( left, newCenter.x, "left"); 
            
         break;
 
@@ -118,16 +131,22 @@ function BrowserManager() {
 
           if ( bottom != "" ) addArrow( bottom, center, "top"); */
 
-          if ( right != "" ) addArrow( right, newCenter.x, "right"); 
+          if ( right !== "" ) addArrow( right, newCenter.x, "right"); 
 
-          if ( left != "" ) addArrow( left, newCenter.x, "left"); 
-                     
+          if ( left !== "" ) addArrow( left, newCenter.x, "left");                     
             
-            break;
+        break;
       }
 
    }
 
+   /**
+     * @author Ricardo Delgado
+     * creacion de las flechas.
+     * @param {String}   view    view load.
+     * @param {Number}  center   camera Center.
+     * @param {String}  button   position arrow.
+     */
    function addArrow ( view, center, button ) {
 
         var mesh,
@@ -137,7 +156,7 @@ function BrowserManager() {
 
         mesh = new THREE.Mesh(
                 new THREE.PlaneGeometry( 80, 80 ),
-                new THREE.MeshBasicMaterial({map:null , side: THREE.FrontSide, transparent: true}));
+                new THREE.MeshBasicMaterial( { map:null , side: THREE.FrontSide, transparent: true } ));
     
         if ( button === "right" ) {
 
@@ -147,7 +166,7 @@ function BrowserManager() {
 
         } else {
 
-           POSITION_X = center + (POSITION_X * -1);
+           POSITION_X = center + ( POSITION_X * -1 );
 
            posicion = { x: POSITION_X, y: 0, z: z };
 
@@ -157,7 +176,7 @@ function BrowserManager() {
                           posicion.y, 
                           posicion.z );
 
-       mesh.scale.set(SCALE,SCALE,SCALE);
+       mesh.scale.set( SCALE, SCALE, SCALE );
        mesh.userData = { id : id ,arrow : button, view : view };
        mesh.material.opacity = 1;
     
@@ -165,16 +184,16 @@ function BrowserManager() {
     
        self.objects.mesh.push(mesh);
 
-       addTextura ( view, button, mesh);
+       addTextura ( view, button, mesh );
 
    }
 
    /**
      * @author Ricardo Delgado
-     * Creates textures arrows and stored in the variable textura.
-     * @param {Number}   id    position texture.
-     * @param {String}  label  texture text.
-     * @param {String} button  image to use.
+     * Creates textures arrows and stored in the variable texture.
+     * @param {String}   view    view.
+     * @param {String}  button   image to use.
+     * @param {object}   mesh    button to load texture.
      */
    function addTextura ( view, button, mesh) {
 
@@ -202,15 +221,15 @@ function BrowserManager() {
 
       }
 
-        if ( button === "right" ) {
+      if ( button === "right" ) {
 
-          imageside = { x: 15 };
+        imageside = { x: 15 };
 
-        } else  {
+      } else  {
 
-          imageside = { x: 0 };
+        imageside = { x: 0 };
 
-        }
+      }
 
         canvas = document.createElement('canvas');
         canvas.width  = 90;
@@ -224,7 +243,7 @@ function BrowserManager() {
         img.onload = function () {
 
           ctx.font = fontside.font;
-          helper.drawText(label, 0, 65, ctx, canvas.width, fontside.size);
+          helper.drawText( label, 0, 65, ctx, canvas.width, fontside.size );
           ctx.drawImage(img, imageside.x, 0, 40, 40);
 
           texture = new THREE.Texture(canvas);
@@ -240,7 +259,7 @@ function BrowserManager() {
    }
 
    /**
-     * @author Ricardo Delgado
+     * @author Ricardo Delgado.
      * Animate Button.
      * @param {Object}     mesh        Button.
      * @param {Number} [duration=2000] Duration of the animation.
