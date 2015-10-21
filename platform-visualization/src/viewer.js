@@ -24,6 +24,9 @@ createScene();
 
 getData();
 
+/**
+ * Creates the rendering environment
+ */
 function createScene(){
 
     var light = new THREE.AmbientLight(0xFFFFFF);
@@ -44,6 +47,9 @@ function createScene(){
     logo.startFade();
 }
 
+/**
+ * Starts everything after receiving the json from the server
+ */
 function init() {
 
     // table
@@ -112,14 +118,13 @@ function goToView ( current ) {
 
             newCenter = viewManager.translateToSection('table', newCenter);
             
-            camera.move(newCenter.x, newCenter.y, camera.getPosition().z, transition);
+            camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
+            camera.lockPan();
             browserManager.modifyButtonLegend(1,'block');
 
             logo.openLogo();
 
-            //setTimeout(function() {
-                headers.transformTable();
-            //}, 4000);
+            headers.transformTable();
 
             setTimeout(function() {
                 tileManager.transform(tileManager.targets.table, 4000);
@@ -129,25 +134,13 @@ function goToView ( current ) {
             
             
             break;
-        /*case 'home':
-
-           headers.transformHead();
-
-           logo.closeLogo();
-           browserManager.hide_Button();
-
-
-           browserManager.modifyButtonBack(0,'none');
-           
-           browserManager.modifyButtonLegend(0,'none');
-
-            break;*/
         case 'stack':
                      
             headers.transformStack(transition);
             
             newCenter = viewManager.translateToSection('stack', newCenter);
-            camera.move(newCenter.x, newCenter.y, camera.getPosition().z, transition);
+            camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
+            camera.lockPan();
 
             browserManager.hide_Button();
 
@@ -212,6 +205,10 @@ function changeView(targets) {
         tileManager.transform(targets, 2000);
 }
 
+/**
+ * Triggered when the user clicks a tile
+ * @param {Number} id The ID (position on table) of the element
+ */
 function onElementClick(id) {
     
     if (camera.getFocus() == null) {
@@ -437,6 +434,10 @@ function onElementClick(id) {
     }
 }
 
+/**
+ * Generic event when user clicks in 3D space
+ * @param {Object} e Event data
+ */
 function onClick(e) {
     
     var mouse = new THREE.Vector2(0, 0),

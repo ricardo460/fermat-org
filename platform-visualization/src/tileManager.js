@@ -1,3 +1,6 @@
+/**
+ * Controls how tiles behaves
+ */
 function TileManager() {
 
     this.lastTargets = null;

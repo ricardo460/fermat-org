@@ -314,6 +314,20 @@ function Camera(position, renderer, renderFunc) {
         
     };
     
+    /**
+     * Locks the panning of the camera
+     */
+    this.lockPan = function() {
+        controls.noPan = true;
+    }
+    
+    /**
+     * Unlocks the panning of the camera
+     */
+    this.unlockPan = function() {
+        controls.noPan = false;
+    }
+    
     // Events
     window.addEventListener( 'resize', this.onWindowResize, false );
     window.addEventListener( 'keydown', this.onKeyDown, false );
