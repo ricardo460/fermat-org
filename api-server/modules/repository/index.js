@@ -3,7 +3,7 @@ var compMod = require('./component');
 var layerMod = require('./layer');
 var suprlayMod = require('./superlayer');
 var platfrmMod = require('./platform');
-var loadLib = require('./lib/loader');
+var docMod = require('./doc');
 
 /**
  * [getComps description]
@@ -54,80 +54,15 @@ exports.getComps = function (req, next) {
 };
 
 /**
- * [loadComps description]
+ * [getProcs description]
  *
- * @method loadComps
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
-exports.loadComps = function (req, next) {
-    'use strict';
-    try {
-        loadLib.loadComps(function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
-    }
-};
-
-/**
- * [updComps description]
- *
- * @method updComps
+ * @method getProcs
  *
  * @param  {[type]}   req  [description]
  * @param  {Function} next [description]
  *
  * @return {[type]}   [description]
  */
-exports.updComps = function (req, next) {
-    'use strict';
-    try {
-        loadLib.updComps(function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
-    }
-};
-
-/**
- * [updDevs description]
- *
- * @method updDevs
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
-exports.updDevs = function (req, next) {
-    'use strict';
-    try {
-        loadLib.updDevs(function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
-    }
-};
-
 exports.getProcs = function (req, next) {
     'use strict';
     try {
@@ -160,6 +95,36 @@ exports.getProcs = function (req, next) {
         } else {
             next(new Error('incomplete data'), null);
         }
+    } catch (err) {
+        next(err, null);
+    }
+};
+
+exports.getReadme = function (req, next) {
+    'use strict';
+    try {
+        docMod.getReadme(function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+};
+
+exports.getBook = function (req, next) {
+    'use strict';
+    try {
+        docMod.getBook(function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
     } catch (err) {
         next(err, null);
     }

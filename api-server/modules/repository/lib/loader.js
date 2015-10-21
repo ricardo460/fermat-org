@@ -1,6 +1,8 @@
 /*jshint -W069 */
 var winston = require('winston');
 var request = require('request');
+var fs = require('fs');
+var path = require('path');
 var parseString = require('xml2js').parseString;
 var platfrmMod = require('../platform');
 var suprlayMod = require('../superlayer');
@@ -10,6 +12,7 @@ var procMod = require('../process');
 var devMod = require('../developer');
 
 //var db = require('../../../db');
+//https://github.com/bitDubai/fermat.git
 
 //var USER_AGENT = 'Miguelcldn';
 //var USER_AGENT = 'MALOTeam'
@@ -131,8 +134,6 @@ var processCompList = function (section, layer, compList, type) {
     }
 };
 
-
-
 /**
  * [doRequest description]
  *
@@ -202,8 +203,7 @@ var processRequestBody = function (body, callback) {
         var reqBody = JSON.parse(body);
         if (reqBody.content && reqBody.encoding) {
             var content = new Buffer(reqBody.content, reqBody.encoding);
-            var strCont = content.toString().split('\n').join(' ').split('\t').join(' ');
-            return callback(null, strCont);
+            return callback(null, content.toString());
         }
         if (reqBody.login || reqBody.message || Array.isArray(reqBody)) {
             return callback(null, reqBody);
@@ -212,6 +212,68 @@ var processRequestBody = function (body, callback) {
 
     } catch (err) {
         return callback(err, null);
+    }
+};
+
+/**
+ * [getReadme description]
+ *
+ * @method getReadme
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
+var getReadme = function (callback) {
+    'use strict';
+    try {
+        doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/README.md', null, function (err_req, res_req) {
+            if (err_req) {
+                return callback(err_req, null);
+            }
+            processRequestBody(res_req, function (err_pro, res_pro) {
+                if (err_pro) {
+                    return callback(err_pro, null);
+                }
+                if (res_pro) {
+                    return callback(null, res_pro);
+                }
+            });
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
+/**
+ * [saveReadme description]
+ *
+ * @method saveReadme
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
+var saveReadme = function (callback) {
+    try {
+        getReadme(function (err_red, res_red) {
+            if (err_red) {
+                return callback(err_red, null);
+            }
+            var filename = path.join(process.cwd(), 'README.md');
+            fs.writeFile(filename, res_red, {
+                flags: 'w'
+            }, function (err_sav) {
+                if (err_sav) {
+                    return callback(err_sav, null);
+                }
+                return callback(null, {
+                    save: true
+                });
+            });
+        });
+    } catch (err) {
+        callback(err, null);
     }
 };
 
@@ -235,7 +297,8 @@ var getManifest = function (callback) {
                 if (err_pro) {
                     return callback(err_pro, null);
                 }
-                parseString(res_pro, function (err_par, res_par) {
+                var strCont = res_pro.split('\n').join(' ').split('\t').join(' ');
+                parseString(strCont, function (err_par, res_par) {
                     if (err_par) {
                         return callback(err_par, null);
                     }
@@ -971,6 +1034,23 @@ exports.loadComps = function (callback) {
     'use strict';
     try {
         saveManifest(function (err, res) {
+            if (err) {
+                return callback(err, null);
+            }
+            if (res) {
+                return callback(null, res);
+            }
+            return callback(null, null);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
+exports.loadDocs = function (callback) {
+    'use strict';
+    try {
+        saveReadme(function (err, res) {
             if (err) {
                 return callback(err, null);
             }
