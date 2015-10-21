@@ -28,6 +28,11 @@ function BrowserManager() {
 
     };
 
+    this.drawMap = function ( _map ) {
+
+        window.map = _map;
+    }
+
    /**
     * @author Ricardo Delgado
     * Button changes the value back.
@@ -200,7 +205,7 @@ function BrowserManager() {
       var canvas,
           ctx,
           img = new Image(),
-          textura,
+          texture,
           fontside,
           imageside,
           label;
