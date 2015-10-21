@@ -202,14 +202,43 @@ var processRequestBody = function (body, callback) {
         var reqBody = JSON.parse(body);
         if (reqBody.content && reqBody.encoding) {
             var content = new Buffer(reqBody.content, reqBody.encoding);
-            var strCont = content.toString().split('\n').join(' ').split('\t').join(' ');
-            return callback(null, strCont);
+            return callback(null, content.toString());
         }
         if (reqBody.login || reqBody.message || Array.isArray(reqBody)) {
             return callback(null, reqBody);
         }
         return callback(new Error('body without any content'), null);
 
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
+/**
+ * [getReadme description]
+ *
+ * @method getReadme
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
+var getReadme = function (callback) {
+    'use strict';
+    try {
+        doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/README.md', null, function (err_req, res_req) {
+            if (err_req) {
+                return callback(err_req, null);
+            }
+            processRequestBody(res_req, function (err_pro, res_pro) {
+                if (res_pro) {
+                    return callback(null, res_pro);
+                }
+                if (err_pro) {
+                    return callback(err_pro, null);
+                }
+            });
+        });
     } catch (err) {
         return callback(err, null);
     }
@@ -235,7 +264,8 @@ var getManifest = function (callback) {
                 if (err_pro) {
                     return callback(err_pro, null);
                 }
-                parseString(res_pro, function (err_par, res_par) {
+                var strCont = res_pro.split('\n').join(' ').split('\t').join(' ');
+                parseString(strCont, function (err_par, res_par) {
                     if (err_par) {
                         return callback(err_par, null);
                     }
