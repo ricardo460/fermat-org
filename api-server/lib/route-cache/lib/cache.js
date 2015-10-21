@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 var winston = require('winston');
 var Route = require('./route');
 
@@ -15,8 +16,8 @@ function Cache(options) {
         this.type = options.type || 'memory';
         this.time = options.time || 3600000;
         if (this.type === 'file') {
-            this.filename = options.filename || '/filecache.json';
-            this.filename = process.cwd() + this.filename;
+            this.filename = options.filename || 'filecache.json';
+            this.filename = path.join(process.cwd(), this.filename);
         }
     } else {
         this.type = 'memory';
