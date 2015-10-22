@@ -53,6 +53,7 @@ setInterval(function () {
     case 4:
         winston.log('info', 'getting documentation');
         syncLib.getBook();
+        winston.log('info', 'documentation loaded');
         break;
     }
 }, _INTERVAL);

@@ -100,6 +100,16 @@ exports.getProcs = function (req, next) {
     }
 };
 
+/**
+ * [getReadme description]
+ *
+ * @method getReadme
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.getReadme = function (req, next) {
     'use strict';
     try {
@@ -115,6 +125,16 @@ exports.getReadme = function (req, next) {
     }
 };
 
+/**
+ * [getBook description]
+ *
+ * @method getBook
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.getBook = function (req, next) {
     'use strict';
     try {
