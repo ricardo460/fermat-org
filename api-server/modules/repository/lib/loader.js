@@ -337,12 +337,12 @@ var parseManifest = function (callback) {
             }
             fermat = {};
             platfrms = [];
-            _platfrms = res_man.fermat.platforms[0].platform;
+            _platfrms = res_man.fermat.platforms ? res_man.fermat.platforms[0].platform : [];
             for (i = 0; i < _platfrms.length; i++) {
                 platfrm = {};
                 platfrm = _platfrms[i]['$'];
                 layers = [];
-                _layers = _platfrms[i].layer;
+                _layers = _platfrms[i].layer || [];
                 for (j = 0; j < _layers.length; j++) {
                     layer = {};
                     layer = _layers[j]['$'];
@@ -377,7 +377,7 @@ var parseManifest = function (callback) {
             }
             fermat.platfrms = platfrms;
             suprlays = [];
-            _suprlays = res_man.fermat.super_layers[0].super_layer;
+            _suprlays = res_man.fermat.super_layers ? res_man.fermat.super_layers[0].super_layer : [];
             for (i = 0; i < _suprlays.length; i++) {
                 suprlay = {};
                 suprlay = _suprlays[i]['$'];
@@ -417,7 +417,7 @@ var parseManifest = function (callback) {
             }
             fermat.suprlays = suprlays;
             layers = [];
-            _layers = res_man.fermat.layers[0].layer;
+            _layers = res_man.fermat.layers ? res_man.fermat.layers[0].layer : [];
             for (i = 0; i < _layers.length; i++) {
                 layer = {};
                 layer = _layers[i]['$'];
@@ -425,11 +425,11 @@ var parseManifest = function (callback) {
             }
             fermat.layers = layers;
             procs = [];
-            _procs = res_man.fermat.processes[0].process;
+            _procs = res_man.fermat.processes ? res_man.fermat.processes[0].process : [];
             for (i = 0; i < _procs.length; i++) {
                 _proc = _procs[i]['$'];
                 steps = [];
-                _steps = _procs[i].steps[0].step;
+                _steps = _procs[i].steps ? _procs[i].steps[0].step : [];
                 for (j = 0; j < _steps.length; j++) {
                     _step = _steps[j]['$'];
                     _step.next = [];
