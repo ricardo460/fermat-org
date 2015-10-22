@@ -149,7 +149,11 @@ var processCompList = function (section, layer, compList, type) {
 var doRequest = function (method, url, params, callback) {
     'use strict';
     try {
+        var env = process.env.NODE_ENV || 'development';
         var form, i;
+        if (env === 'development') {
+            url += '?ref=develop'
+        }
         url += '?access_token=' + TOKEN;
         switch (method) {
         case 'POST':
