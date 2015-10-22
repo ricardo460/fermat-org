@@ -7,16 +7,17 @@ function getData() {
     
     animate();
     
-   /* $.ajax({
+   /*$.ajax({
         url: "http://52.11.156.16:3000/repo/comps",
         method: "GET"
     }).success(
         function(lists) {
+        
+            window.loadMap();
+            
             tileManager.fillTable(lists);
 
             TWEEN.removeAll();
-
-            browserManager.drawMap(test_map);
 
             logo.stopFade();
 
@@ -26,12 +27,12 @@ function getData() {
     
     setTimeout(function(){
         var l = JSON.parse(testData);
+        
+        window.loadMap();
 
         tileManager.fillTable(l);
 
         TWEEN.removeAll();
-
-        browserManager.drawMap(test_map);
 
         logo.stopFade();
 
