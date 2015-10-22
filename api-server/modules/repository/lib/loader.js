@@ -151,10 +151,11 @@ var doRequest = function (method, url, params, callback) {
     try {
         var env = process.env.NODE_ENV || 'development';
         var form, i;
-        if (env === 'development') {
-            url += '?ref=develop'
-        }
         url += '?access_token=' + TOKEN;
+        if (env === 'development') {
+            url += '&ref=develop'
+        }
+        winston.log('info', 'Doing request %s', url);
         switch (method) {
         case 'POST':
             form = {};
@@ -480,7 +481,6 @@ var saveManifest = function (callback) {
                     var loopLays = function (u) {
                         if (u < _lays.length) {
                             var _lay = _lays[u];
-                            console.log('layer: ' + _lay.name + ' order: ' + u);
                             layerMod.insOrUpdLayer(_lay.name ? _lay.name.trim().toLowerCase() : null,
                                 _lay.language ? _lay.language.toLowerCase() : null,
                                 _lay.super_layer ? _lay.super_layer.trim().toUpperCase() : null,
