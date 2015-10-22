@@ -8,7 +8,7 @@ var table = [],
     screenshotsAndroid,
     objects = [],
     headers = null,
-    actualView = 'home',
+    actualView,
     stats = null,
     actualFlow = null,
     viewManager = new ViewManager();
@@ -55,8 +55,11 @@ function init() {
     // table
     tileManager.drawTable();
 
-    //ScreenshotsAndroid
+    // ScreenshotsAndroid
     screenshotsAndroid.init();
+
+    // BrowserManager
+    browserManager.init();
     
     var dimensions = tileManager.dimensions;
 
@@ -91,7 +94,7 @@ function init() {
     //Disabled Menu
     //initMenu();
 
-    setTimeout(function() {goToView('table'); }, 500);
+    setTimeout(function() { goToView(window.map.load.view); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
@@ -130,8 +133,6 @@ function goToView ( current ) {
                 tileManager.transform(tileManager.targets.table, 4000);
             }, 2000);
             
-            browserManager.hide_Button();
-            
             
             break;
         case 'stack':
@@ -141,8 +142,6 @@ function goToView ( current ) {
             newCenter = viewManager.translateToSection('stack', newCenter);
             camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
             camera.lockPan();
-
-            browserManager.hide_Button();
 
             browserManager.modifyButtonBack(0,'none');
             
@@ -449,39 +448,39 @@ function onClick(e) {
         mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
         mouse.y = - ((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height) * 2 + 1;
 
-    if ( actualView === 'table' ) {
+        if ( actualView === 'table' ) {
 
-        clicked = camera.rayCast(mouse, objects);
+            clicked = camera.rayCast(mouse, objects);
         
-        if (clicked && clicked.length > 0) {
+            if (clicked && clicked.length > 0) {
 
-            onElementClick(clicked[0].object.userData.id);
+             onElementClick(clicked[0].object.userData.id);
             
-        } else { 
+            } 
+
+            else { 
             
-         clicked = camera.rayCast(mouse, screenshotsAndroid.objects.mesh);
+             clicked = camera.rayCast(mouse, screenshotsAndroid.objects.mesh);
 
-            if ( clicked && clicked.length > 0 ) {
+                if ( clicked && clicked.length > 0 ) {
 
-                screenshotsAndroid.change_Screenshots(clicked[0].object.userData.id)
+                    screenshotsAndroid.change_Screenshots(clicked[0].object.userData.id)
 
                }
 
             }
-    }
-      
-      clicked = camera.rayCast(mouse, browserManager.navegacion_button);
         
-      if (clicked && clicked.length > 0) {
+        }
+      
+        clicked = camera.rayCast(mouse, browserManager.objects.mesh);
+        
+        if (clicked && clicked.length > 0) {
 
+         browserManager.actionButton(clicked[0].object.userData.view); 
 
-       if ( clicked[0].object.userData.state ) {
-
-      browserManager.actionButton(clicked[0].object.userData.arrow); 
-
-             }
         }
   }
+
 }
 
 //Should draw ONLY one flow at a time
