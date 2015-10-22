@@ -260,7 +260,9 @@ var saveReadme = function (callback) {
             if (err_red) {
                 return callback(err_red, null);
             }
-            var filename = path.join(process.cwd(), 'README.md');
+            var env = process.env.NODE_ENV || 'development';
+
+            var filename = path.join(process.cwd(), 'cache', env, 'README.md');
             fs.writeFile(filename, res_red, {
                 flags: 'w'
             }, function (err_sav) {
