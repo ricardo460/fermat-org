@@ -60,6 +60,7 @@ var getBook = function () {
             echo('Error: Git clone failed');
             //exit(1);
         }
+        cd('./fermat');
         if (env === 'development') {
             if (exec('git branch develop').code !== 0) {
                 echo('Error: Git branch failed');
@@ -74,7 +75,7 @@ var getBook = function () {
                 //exit(1);
             }
         }
-        cd('./fermat/fermat-documentation');
+        cd('./fermat-documentation');
         winston.log('info', 'Compiling documentation');
         if (exec('asciidoctor -d book documentation.asciidoc').code !== 0) {
             echo('Error: asciidoctor book failed');
