@@ -27,9 +27,24 @@ var getBook = function () {
             exit(1);
         }
         winston.log('info', 'Pulling repository');
-        if (exec('git pull').code !== 0) {
-            echo('Error: Git pull failed');
-            exit(1);
+        if (env === 'development') {
+            if (exec('git checkout develop').code !== 0) {
+                echo('Error: Git checkout failed');
+                exit(1);
+            }
+            if (exec('git pull origin develop').code !== 0) {
+                echo('Error: Git pull failed');
+                exit(1);
+            }
+        } else {
+            if (exec('git checkout master').code !== 0) {
+                echo('Error: Git checkout failed');
+                exit(1);
+            }
+            if (exec('git pull origin master').code !== 0) {
+                echo('Error: Git pull failed');
+                exit(1);
+            }
         }
         cd('fermat-documentation');
         winston.log('info', 'Compiling documentation');
@@ -43,6 +58,20 @@ var getBook = function () {
         if (exec('git clone https://fuelusumar:21121734fractal@github.com/bitDubai/fermat.git').code !== 0) {
             echo('Error: Git clone failed');
             exit(1);
+        }
+        if (env === 'development') {
+            if (exec('git branch develop').code !== 0) {
+                echo('Error: Git branch failed');
+                exit(1);
+            }
+            if (exec('git checkout develop').code !== 0) {
+                echo('Error: Git checkout failed');
+                exit(1);
+            }
+            if (exec('git pull origin develop').code !== 0) {
+                echo('Error: Git pull failed');
+                exit(1);
+            }
         }
         cd('fermat/fermat-documentation');
         winston.log('info', 'Compiling documentation');
