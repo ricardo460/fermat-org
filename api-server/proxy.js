@@ -39,9 +39,11 @@ var starProxyServer = function () {
         var env = req.query.env || 'production';
         if (env === 'development') {
             // redirect to dev api
+            winston.log('info', 'Redirecting to dev api...');
             dev_proxy.proxyRequest(req, res);
         } else {
             // redirect to prod api
+            winston.log('info', 'Redirecting to prod api...');
             prod_proxy.proxyRequest(req, res);
         }
     }).listen(proxy_api.port);
