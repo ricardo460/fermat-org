@@ -196,7 +196,7 @@ function Camera(position, renderer, renderFunc) {
             //TWEEN.removeAll();
             var duration = 2000;
 
-            viewManager.rollBack();
+            tileManager.rollBack();
 
             self.resetPosition(duration);
         }
@@ -313,6 +313,20 @@ function Camera(position, renderer, renderFunc) {
         .start();
         
     };
+    
+    /**
+     * Locks the panning of the camera
+     */
+    this.lockPan = function() {
+        controls.noPan = true;
+    }
+    
+    /**
+     * Unlocks the panning of the camera
+     */
+    this.unlockPan = function() {
+        controls.noPan = false;
+    }
     
     // Events
     window.addEventListener( 'resize', this.onWindowResize, false );

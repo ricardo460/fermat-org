@@ -1,3 +1,6 @@
+/**
+ * Controls how tiles behaves
+ */
 function TileManager() {
 
     this.lastTargets = null;
@@ -35,7 +38,7 @@ function TileManager() {
         for (var key in layers) {
             if (key == "size") continue;
             
-            id = layers[key].index;
+            var id = layers[key].index;
 
             if (layers[key].super_layer) {
 
@@ -61,7 +64,7 @@ function TileManager() {
 
         for (var j = 0; j <= groupsQtty; j++) {
 
-            elementsByGroup.push(0);
+            elementsByGroup.push([]);
         }
 
         //Set sections sizes
@@ -71,7 +74,7 @@ function TileManager() {
             var r = table[i].layerID;
             var c = table[i].groupID;
 
-            elementsByGroup[c]++;
+            elementsByGroup[c].push(i);
 
             if (layers[table[i].layer].super_layer) {
 
@@ -141,8 +144,8 @@ function TileManager() {
 
             var radious = 300 * (g + 1);
 
-            phi = Math.acos((2 * indexes[g]) / elementsByGroup[g] - 1);
-            var theta = Math.sqrt(elementsByGroup[g] * Math.PI) * phi;
+            phi = Math.acos((2 * indexes[g]) / elementsByGroup[g].length - 1);
+            var theta = Math.sqrt(elementsByGroup[g].length * Math.PI) * phi;
 
             object = new THREE.Object3D();
 
@@ -698,6 +701,20 @@ function TileManager() {
             authorText
         ];
 
+        if ( table[id].found !== true ) {
+
+            var stamp = {
+                src: 'images/alt_not_found.png',
+                x: 0,
+                y: 0,
+                w: tileWidth * scale,
+                h: tileHeight * scale
+            };
+
+            data.push(stamp);
+
+        }
+
         drawPicture(data, ctx, texture);
 
         return texture;
@@ -759,7 +776,7 @@ function TileManager() {
      */
     this.transform = function (goal, duration) {
 
-        var i, l;
+        var i, l, j;
 
         duration = duration || 2000;
 
@@ -769,39 +786,48 @@ function TileManager() {
 
             this.lastTargets = goal;
 
-            var animate = function (object, target) {
+            var animate = function(object, target, delay) { 
 
-                new TWEEN.Tween(object.position)
-                    .to({
-                        x: target.position.x,
-                        y: target.position.y,
-                        z: target.position.z
-                    }, Math.random() * duration + duration)
-                    .easing(TWEEN.Easing.Exponential.InOut)
-                    .onComplete(function () {
-                        object.userData.flying = false;
-                    })
-                    .start();
+                delay = delay || 0;
 
-                new TWEEN.Tween(object.rotation)
-                    .to({
-                        x: target.rotation.x,
-                        y: target.rotation.y,
-                        z: target.rotation.z
-                    }, Math.random() * duration + duration)
-                    .easing(TWEEN.Easing.Exponential.InOut)
-                    .start();
+                 var move = new TWEEN.Tween(object.position)
+                            .to({
+                                x: target.position.x,
+                                y: target.position.y,
+                                z: target.position.z
+                            }, Math.random() * duration + duration)
+                            .easing(TWEEN.Easing.Exponential.InOut)
+                            .delay(delay)
+                            .onComplete(function() { object.userData.flying = false; });
 
+                var rotation = new TWEEN.Tween(object.rotation)
+                                .to({
+                                    x: target.rotation.x,
+                                    y: target.rotation.y,
+                                    z: target.rotation.z
+                                }, Math.random() * duration + duration)
+                                .delay(delay)
+                                .easing(TWEEN.Easing.Exponential.InOut);
+
+                var animation = [move, rotation];
+
+                return animation;
             };
 
+            for(i = 0; i < elementsByGroup.length; i++) {
 
-            for (i = 0; i < objects.length; i++) {
+                var k = (i + elementsByGroup.length - 1) % (elementsByGroup.length);
+                var delay = i * 500;
 
-                var object = objects[i];
-                var target = goal[i];
+                for(j = 0; j < elementsByGroup[k].length; j++) {
 
-                animate(object, target);
+                    var index = elementsByGroup[k][j];
 
+                    var animation = animate(objects[index], goal[index], delay);
+
+                    animation[0].start();
+                    animation[1].start();
+                }
             }
 
             if (goal == this.targets.table) {
@@ -815,13 +841,15 @@ function TileManager() {
             .to({}, duration * 2)
             .onUpdate(render)
             .start();
+        
+        setTimeout(window.screenshotsAndroid.show_Screenshots, 4000);
     };
 
     /**
      * Goes back to last target set in last transform
      */
     this.rollBack = function () {
-        changeView(this.lastTargets);
+        window.changeView(self.lastTargets);
     };
 
     /**
@@ -934,6 +962,8 @@ function TileManager() {
             .to({}, _duration * 2)
             .onUpdate(render)
             .start();
+        
+        window.screenshotsAndroid.hide_Screenshots();
     };
 
     //Private methods
@@ -1022,7 +1052,12 @@ function TileManager() {
 
         ctx.fillStyle = "#FFFFFF";
 
-        if (data.length !== 0)
-            drawText(data, ctx);
+        if (data.length !== 0){ 
+
+          if(data[0].text)
+            drawText(data, ctx, texture); 
+          else 
+            drawPicture(data, ctx, texture);
+        }
     }
 }
