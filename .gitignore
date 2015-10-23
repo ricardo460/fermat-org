@@ -2,10 +2,9 @@
 **/.idea/
 api-server/**/node_modules/
 api-server/cache/**/fermat/
-api-server/cache/**/fermat/filecache.json
+api-server/cache/**/filecache.json
 api-server/node_modules/
 platform-visualization/common.php
 platform-visualization/src/getData.js
 platform-visualization/main.js
-api-server/filecache.json
 sh.exe.stackdump
