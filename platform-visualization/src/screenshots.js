@@ -103,7 +103,7 @@ function ScreenshotsAndroid() {
 
       mesh.scale.set( 4, 4, 4 );
 
-      var target = { x : _position, y : 2760, z : z,
+      var target = { x : _position, y : window.tileManager.dimensions.layerPositions[3] + 240, z : z,
                      px : px, py : py, pz : pz,
                      rx : rx, ry : ry, rz : rz };
 
