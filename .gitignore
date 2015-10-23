@@ -1,11 +1,11 @@
 .idea/
 **/.idea/
+api-server/node_modules/
 api-server/**/node_modules/
 api-server/cache/production/fermat/
 api-server/cache/development/fermat/
 api-server/cache/production/filecache.json
 api-server/cache/development/filecache.json
-api-server/node_modules/
 platform-visualization/common.php
 platform-visualization/src/getData.js
 platform-visualization/main.js
