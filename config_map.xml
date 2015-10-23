@@ -1,0 +1,24 @@
+	<map name="site map"
+		>
+		<load 
+           view = "table">
+		</load>
+
+		<table 
+			top = "",
+         bottom = "",
+          right = "stack",
+           left = "">
+        </table>
+
+        <stack
+        	top = "",
+         bottom = "",
+          right = "",
+           left = "left">
+        </stack>
+
+    </map>
+
+		  
+ 

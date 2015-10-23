@@ -1,15 +1,13 @@
 /**
  * @author Ricardo Delgado
- * @lastmodifiedBy Miguel Celedon
+ * @last modified By Miguel Celedon
  * function create a Buttons Browser and charge your textures
  */
 function BrowserManager() {
 
-    var textura = [],
-        views = [];
-
-    this.navegacion_button = [];
-    this.tex = textura;
+       this.objects = {
+            mesh : []
+        };
 
     var self = this;
     
@@ -19,37 +17,15 @@ function BrowserManager() {
         POSITION_X = (wide) ? 13500 : 12000,
         SCALE = (wide) ? 70 : 40;
 
-    function config_view ( _id, _left, _right, _top, _bottom ){  
-
-        // Los id solo pueden ser: home, table, stack
-        var view = { id : _id, right : _right, left : _left, top : _top, bottom : _bottom  };
-        views.push(view);
-    }
-
      /**
      * @author Ricardo Delgado
-     * the button being activated
-     * @param {String} button  the button being activated
+     * Pressed button function.
+     * @param {String} view  vista a cargar
      */
-    this.actionButton = function ( button ) {
-    
-        var i = 0,
-        view = "";
-
-        while(views[i].id != window.actualView){
-           i = i + 1 ;
-        } 
-
-    if (button === "right") 
-           view = views[i].right;
-    else if (button === "left") 
-           view = views[i].left;
-    else if (button === "top") 
-           view = views[i].top;
-        else 
-           view = views[i].bottom;
+    this.actionButton = function ( view ) {
 
         window.goToView(view);
+
     };
 
    /**
@@ -63,11 +39,15 @@ function BrowserManager() {
        var browserButton = document.getElementById('backButton');
 
        $(browserButton).fadeTo(1000, valor, function() {
-                $(browserButton).show();
-                browserButton.style.display = display;
+
+           $(browserButton).show();
+
+           browserButton.style.display = display;
+
        });
 
-    };
+   };
+
    /**
      * @author Ricardo Delgado
      * Button changes the value legend.
@@ -80,88 +60,166 @@ function BrowserManager() {
       
       $(browserButton).fadeTo(1000, valor, function() {
 
-                $(browserButton).show();
-                browserButton.style.display = display;
+            $(browserButton).show();
+
+            browserButton.style.display = display;
 
       });
-    };
+  
+   };
 
    /**
-     * @author Ricardo Delgado
-     * Creates textures and drawings necessary for the navigation of the page.
-     */
-   this.createButton = function () {
+    * @author Ricardo Delgado
+    * inicializacion de las arrow 
+    */
+   this.init = function () {
+      
+      
+      setTimeout(function() {
 
-      createTextura ( 0, "Home", "right");
-      createTextura ( 1, "View Table", "right");
-      createTextura ( 2, "View Dependencies", "right");
-      createTextura ( 3, "Home", "left");
-      createTextura ( 4, "View Table", "left");
-      createTextura ( 5, "View Dependencies", "left");
+        loadview('table');
 
-      addButton ( "right" );
-      addButton ( "left" );
+        loadview("stack");
 
-      config_view ( "home", null, "table", null, null );
-      config_view ( "table", "home", "stack", null, null );
-      config_view ( "stack", "table", null, null, null );
+      }, 5000);
 
-    };
+
+   };
    /**
-     * @author Ricardo Delgado
-     * create and add buttons to the variable navegacion_button.
-     * @param {String}  button   button to create.
-     */
-   function addButton ( button ) {
+    * @author Ricardo Delgado
+    * Loading the necessary views and arrows according to varible map. 
+    * @param {String} view  vista a cargar
+    */
+   function loadview(view){
 
-      var mesh,
-        posicion,
-        j;
+      var top,
+          bottom,
+          right,
+          left;
 
-      mesh = new THREE.Mesh(
-                new THREE.PlaneGeometry( 80, 80 ),
-                new THREE.MeshBasicMaterial({map:null , side: THREE.FrontSide, transparent: true}));
-    
-      if ( button === "right" ) {
-        posicion = { x: POSITION_X, y: 0, z: LOWER_LAYER }; j = 0;
-    } else {
-        posicion = { x: -POSITION_X, y: 0, z: LOWER_LAYER }; j = 1;
+      var newCenter = new THREE.Vector3(0, 0, 0);
+
+          newCenter = viewManager.translateToSection(view, newCenter);
+
+      switch(view) {
+
+        case 'table':
+
+          /*top  = window.map.table.top;
+          bottom = window.map.table.bottom;*/
+          right  = window.map.table.right;
+          left   = window.map.table.left;
+          
+         /* if ( top != "" ) addArrow( top, center,"top");  
+
+          if ( bottom != "" ) addArrow( bottom, center, "top");*/ 
+
+          if ( right !== "" ) addArrow( right, newCenter.x, "right"); 
+
+          if ( left !== "" ) addArrow( left, newCenter.x, "left"); 
+           
+        break;
+
+        case 'stack':
+
+         /* top  = window.map.stack.top;
+          bottom = window.map.stack.bottom;*/
+          right  = window.map.stack.right;
+          left   = window.map.stack.left;
+          
+         /* if ( top != "" ) addArrow( top, center,"top");  
+
+          if ( bottom != "" ) addArrow( bottom, center, "top"); */
+
+          if ( right !== "" ) addArrow( right, newCenter.x, "right"); 
+
+          if ( left !== "" ) addArrow( left, newCenter.x, "left");                     
+            
+        break;
       }
 
-      mesh.position.set( posicion.x, 
-                       posicion.y, 
-                       posicion.z );
-
-    mesh.scale.set(SCALE,SCALE,SCALE);
-      mesh.userData = { state : true, arrow : button };
-      mesh.material.opacity = 1;
-    
-      window.scene.add(mesh);
-    
-      self.navegacion_button[j] = mesh;  
-
    }
+
    /**
      * @author Ricardo Delgado
-     * Creates textures arrows and stored in the variable textura.
-     * @param {Number}   id    position texture.
-     * @param {String}  label  texture text.
-     * @param {String} button  image to use.
+     * creacion de las flechas.
+     * @param {String}   view    view load.
+     * @param {Number}  center   camera Center.
+     * @param {String}  button   position arrow.
      */
-   function createTextura ( id, label, button) {
+   function addArrow ( view, center, button ) {
+
+        var mesh,
+            posicion,
+            z = 80000 * -2,
+            id = self.objects.mesh.length;
+
+        mesh = new THREE.Mesh(
+                new THREE.PlaneGeometry( 80, 80 ),
+                new THREE.MeshBasicMaterial( { map:null , side: THREE.FrontSide, transparent: true } ));
+    
+        if ( button === "right" ) {
+
+            POSITION_X = center + POSITION_X; 
+
+            posicion = { x: POSITION_X, y: 0, z: z };
+
+        } else {
+
+           POSITION_X = center + ( POSITION_X * -1 );
+
+           posicion = { x: POSITION_X, y: 0, z: z };
+
+       }
+
+       mesh.position.set( posicion.x, 
+                          posicion.y, 
+                          posicion.z );
+
+       mesh.scale.set( SCALE, SCALE, SCALE );
+       mesh.userData = { id : id ,arrow : button, view : view };
+       mesh.material.opacity = 1;
+    
+       window.scene.add(mesh);
+    
+       self.objects.mesh.push(mesh);
+
+       addTextura ( view, button, mesh );
+
+   }
+
+   /**
+     * @author Ricardo Delgado
+     * Creates textures arrows and stored in the variable texture.
+     * @param {String}   view    view.
+     * @param {String}  button   image to use.
+     * @param {object}   mesh    button to load texture.
+     */
+   function addTextura ( view, button, mesh) {
 
       var canvas,
           ctx,
           img = new Image(),
           texture,
           fontside,
-          imageside;
+          imageside,
+          label;
 
-    if ( label === "View Table" ) fontside = { font: "20px Arial", size : 20 };
+      if ( view === "table" ) {
 
-    else if ( label === "View Dependencies" ) fontside = { font: "14px Arial", size : 14, x: 80, y: 80 };
+        fontside = { font: "20px Arial", size : 20 };
 
-    else if ( label == "Home") fontside = { font: "20px Arial", size : 20 };
+        label = "View Table";
+
+      }
+
+      else if ( view === "stack" ) { 
+
+        fontside = { font: "14px Arial", size : 14, x: 70, y: 70 };
+
+        label = "View Dependencies";
+
+      }
 
       if ( button === "right" ) {
 
@@ -173,133 +231,41 @@ function BrowserManager() {
 
       }
 
-      canvas = document.createElement('canvas');
-    canvas.width  = 90;
-    canvas.height = 90;
+        canvas = document.createElement('canvas');
+        canvas.width  = 90;
+        canvas.height = 90;
 
-      ctx = canvas.getContext("2d");
+        ctx = canvas.getContext("2d");
 
-      img = new Image(); 
-      img.src = "images/browsers arrows/arrow-"+button+".png";
+        img = new Image(); 
+        img.src = "images/browsers_arrows/arrow-"+button+".png";
 
-      img.onload = function () {
+        img.onload = function () {
 
-        ctx.font = fontside.font;
-        helper.drawText(label, 0, 65, ctx, canvas.width, fontside.size);
-        ctx.drawImage(img, imageside.x, 0, 40, 40);
+          ctx.font = fontside.font;
+          helper.drawText( label, 0, 65, ctx, canvas.width, fontside.size );
+          ctx.drawImage(img, imageside.x, 0, 40, 40);
 
-        texture = new THREE.Texture(canvas);
-        texture.needsUpdate = true;  
-        texture.minFilter = THREE.NearestFilter;
+          texture = new THREE.Texture(canvas);
+          texture.needsUpdate = true;  
+          texture.minFilter = THREE.NearestFilter;
 
-        textura[id] = texture;
+          mesh.material.map = texture;
+          mesh.material.needsUpdate = true;
+
+          animate( mesh, 2500, LOWER_LAYER );
       };
 
    }
 
    /**
-     * @author Ricardo Delgado
-     * Load the texture to use with the saved settings.
-     */
-   this.hide_Button = function ( ) {
-
-      var _label,
-          i = 0;
-
-      while(views[i].id != window.actualView){
-        i = i + 1;
-      } 
-
-      if ( views[i].right ) {
-  
-        _label = label("right", views[i].right);
- 
-        modifyButton (0, _label);
-      } else {
-
-        modifyButton (0, null);
-      }
-
-     if ( views[i].left ) {
-  
-        _label = label(1, views[i].left);
-
-        modifyButton (1, _label);
-
-     } else {
-
-        modifyButton (1, null);  
-
-     }  
-
-
-   };
-
-   /**
-     * @author Ricardo Delgado
-     * Texture applied load.
-     * @param {String}   button    Button.
-     * @param {Number}   view      view load.
-     */
-   function label(button, view){
-
-   //Codigos de las textura Disponibles
-   /* 0 : home -> right, 1 : table -> right, 2 : stack -> right
-   3 : home <- left, 4 : table <- left, 5 : stack <- left
-   */ 
-
-     var id;
-
-     if ( button === "right" ) {
-
-        if ( view === "home" ) id = 0;
-
-        else if ( view === "table" ) id = 1;
-
-        else  id = 2;
-
-     } else {
-  
-        if ( view === "home" ) id = 3;
-
-        else if (view === "table" ) id = 4;
-
-        else  id = 5;
-
-     } 
-
-   return id; }
-   /**
-     * @author Ricardo Delgado
-     * Applies the appropriate changes to each button.
-     * @param {Number}    id       Button.
-     * @param {Number}  texture    id Texture.
-     */
-   function modifyButton (id, texture){
-
-    var visibility = -window.camera.getMaxDistance() * 2; 
-    
-      var mesh = self.navegacion_button[ id ];
-
-    if (typeof texture === 'number') {
-
-        mesh.material.map = textura[ texture ];
-        mesh.material.needsUpdate = true;
-
-        visibility = LOWER_LAYER;
-      }
-
-      if ( visibility != mesh.position.z ) animateButton(mesh, 2000, visibility);
-
-   }
-   /**
-     * @author Ricardo Delgado
+     * @author Ricardo Delgado.
      * Animate Button.
      * @param {Object}     mesh        Button.
      * @param {Number} [duration=2000] Duration of the animation.
      * @param {Number}     target      The objetive Z position.
      */
-   function animateButton ( mesh, duration, target ){
+   function animate ( mesh, duration, target ){
 
         var _duration = duration || 2000,
             z = target;
@@ -312,6 +278,6 @@ function BrowserManager() {
         
         tween.start();
 
-    }
+   }
 
 }
