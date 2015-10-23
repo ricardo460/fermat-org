@@ -28,17 +28,24 @@ function TileManager() {
      * Pre-computes the space layout for next draw
      */
     this.preComputeLayout = function () {
+        
+        var SUPER_LAYER_SEPARATION = 3;
 
         var section_size = [],
             superLayerHeight = 0,
             isSuperLayer = [],
-            i;
+            i, actualSuperLayerName = '';
 
         //Initialize
         for (var key in layers) {
             if (key == "size") continue;
             
             var id = layers[key].index;
+            
+            if(layers[key].super_layer !== actualSuperLayerName) {
+                superLayerHeight = 0;
+                actualSuperLayerName = layers[key].super_layer;
+            }
 
             if (layers[key].super_layer) {
 
@@ -47,10 +54,10 @@ function TileManager() {
                 superLayerHeight++;
 
                 if (superLayerMaxHeight < superLayerHeight) superLayerMaxHeight = superLayerHeight;
-            } else {
+            }
+            else {
 
                 var newLayer = [];
-                superLayerHeight = 0;
 
                 for (i = 0; i < groupsQtty; i++)
                     newLayer.push(0);
@@ -79,7 +86,7 @@ function TileManager() {
             if (layers[table[i].layer].super_layer) {
 
                 section_size[r]++;
-                isSuperLayer[r] = true;
+                isSuperLayer[r] = layers[table[i].layer].super_layer;
             } else {
                 section_size[r][c]++;
                 if (section_size[r][c] > columnWidth) columnWidth = section_size[r][c];
@@ -91,14 +98,29 @@ function TileManager() {
         var actualHeight = 0;
         var remainingSpace = superLayerMaxHeight;
         var inSuperLayer = false;
-        var actualSuperLayer = 0;
+        var actualSuperLayer = -1;
+        
+        actualSuperLayerName = false;
 
         for (i = 0; i < layersQtty; i++) {
-
+            
+            if(isSuperLayer[i] !== actualSuperLayerName) {
+                
+                actualHeight += remainingSpace + 1;
+                remainingSpace = superLayerMaxHeight;
+                
+                if(isSuperLayer[i]) {
+                    actualSuperLayer++;
+                    inSuperLayer = false;
+                }
+                
+                actualSuperLayerName = isSuperLayer[i];
+            }
+            
             if (isSuperLayer[i]) {
 
                 if (!inSuperLayer) {
-                    actualHeight += 3;
+                    actualHeight += SUPER_LAYER_SEPARATION;
 
                     if (superLayerPosition[actualSuperLayer] === undefined) {
                         superLayerPosition[actualSuperLayer] = actualHeight;
@@ -114,7 +136,6 @@ function TileManager() {
 
                     actualHeight += remainingSpace + 1;
                     remainingSpace = superLayerMaxHeight;
-                    actualSuperLayer++;
                 }
 
                 inSuperLayer = false;
@@ -403,38 +424,9 @@ function TileManager() {
             layers[name].index = _layers[i].order;
             layers[name]._id = _layers[i]._id;
         }
-        layers['empty layer 0'] = {
-            index: 5,
-            super_layer: false,
-            _id: null
-        };
-        layers['empty layer 1'] = {
-            index: 26,
-            super_layer: false,
-            _id: null
-        };
-        layers['empty layer 2'] = {
-            index: 27,
-            super_layer: false,
-            _id: null
-        };
-        layers['empty layer 3'] = {
-            index: 29,
-            super_layer: false,
-            _id: null
-        };
-        layers['empty layer 4'] = {
-            index: 34,
-            super_layer: false,
-            _id: null
-        };
-        layers['empty layer 5'] = {
-            index: 40,
-            super_layer: false,
-            _id: null
-        };
 
         for (i = 0, l = _comps.length; i < l; i++) {
+            
             var buildElement = function (e) {
                 var _comp = _comps[e];
 
@@ -858,6 +850,8 @@ function TileManager() {
     this.drawTable = function () {
 
         this.preComputeLayout();
+        
+        var layerCoordinates = [];
 
         for (var i = 0; i < table.length; i++) {
 
@@ -898,6 +892,9 @@ function TileManager() {
 
 
             object.position.y = -((layerPosition[row]) * window.TILE_DIMENSION.height) + (layersQtty * window.TILE_DIMENSION.height / 2);
+            
+            if(typeof layerCoordinates[row] === 'undefined')
+                layerCoordinates[row] = object.position.y;
 
             this.targets.table.push(object);
 
@@ -908,7 +905,8 @@ function TileManager() {
             superLayerMaxHeight: superLayerMaxHeight,
             groupsQtty: groupsQtty,
             layersQtty: layersQtty,
-            superLayerPosition: superLayerPosition
+            superLayerPosition: superLayerPosition,
+            layerPositions : layerCoordinates
         };
     };
 
