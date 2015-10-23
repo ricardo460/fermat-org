@@ -53,18 +53,21 @@ function Helper() {
      * @param {Object} material                                Material to change its opacity
      * @param {Number} [duration=2000]                         Duration of animation
      * @param {Object} [easing=TWEEN.Easing.Exponential.InOut] Easing of the animation
+     * @param {delay}  [delay=0]
      */
-    this.showMaterial = function(material, duration, easing) {
+    this.showMaterial = function(material, duration, easing, delay) {
         
         if(material && typeof material.opacity !== 'undefined') {
             
             duration = duration || 2000;
             easing = (typeof easing !== 'undefined') ? easing : TWEEN.Easing.Exponential.InOut;
+            delay = (typeof delay !== 'undefined') ? delay : 0;
 
             new TWEEN.Tween(material)
                 .to({opacity : 1}, duration)
                 .easing(easing)
                 .onUpdate(function() { this.needsUpdate = true; })
+                .delay(delay)
                 .start();
         }
     };
@@ -292,7 +295,7 @@ function Helper() {
                     return i;
             }
         }
-        
+
         return -1;
     };
 }
