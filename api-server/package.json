@@ -5,10 +5,10 @@
     "name": "Luis Fuenmayor",
     "email": "fuelusumar@gmail.com"
   },
-  "version": "1.0.1",
+  "version": "1.1.1",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=production PORT=3000 node ./bin/www"
+    "start": "sh starter.sh"
   },
   "dependencies": {
     "apicache": "0.0.12",

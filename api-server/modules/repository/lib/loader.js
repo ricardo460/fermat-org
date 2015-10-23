@@ -13,13 +13,13 @@ var devMod = require('../developer');
 
 //var db = require('../../../db');
 //https://github.com/bitDubai/fermat.git
-
+var env = process.env.NODE_ENV || 'development';
 //var USER_AGENT = 'Miguelcldn';
 //var USER_AGENT = 'MALOTeam'
-var USER_AGENT = 'fuelusumar';
+var USER_AGENT = (env === 'development') ? 'Miguelcldn' : 'fuelusumar';
 //var TOKEN = '3c12e4c95821c7c2602a47ae46faf8a0ddab4962'; // Miguelcldn    
 //var TOKEN = 'fb6c27928d83f8ea6a9565e0f008cceffee83af1'; // MALOTeam
-var TOKEN = '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
+var TOKEN = (env === 'development') ? '3c12e4c95821c7c2602a47ae46faf8a0ddab4962' : '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
 
 /**
  * [getRepoDir description]
@@ -149,8 +149,13 @@ var processCompList = function (section, layer, compList, type) {
 var doRequest = function (method, url, params, callback) {
     'use strict';
     try {
+        var env = process.env.NODE_ENV || 'development';
         var form, i;
         url += '?access_token=' + TOKEN;
+        if (env === 'development') {
+            url += '&ref=develop'
+        }
+        winston.log('info', 'Doing request %s', url);
         switch (method) {
         case 'POST':
             form = {};
@@ -224,7 +229,7 @@ var processRequestBody = function (body, callback) {
  *
  * @return {[type]}   [description]
  */
-var getReadme = function (callback) {
+/*var getReadme = function (callback) {
     'use strict';
     try {
         doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/README.md', null, function (err_req, res_req) {
@@ -243,7 +248,7 @@ var getReadme = function (callback) {
     } catch (err) {
         return callback(err, null);
     }
-};
+};*/
 
 /**
  * [saveReadme description]
@@ -254,13 +259,15 @@ var getReadme = function (callback) {
  *
  * @return {[type]}   [description]
  */
-var saveReadme = function (callback) {
+/*var saveReadme = function (callback) {
     try {
         getReadme(function (err_red, res_red) {
             if (err_red) {
                 return callback(err_red, null);
             }
-            var filename = path.join(process.cwd(), 'README.md');
+            var env = process.env.NODE_ENV || 'development';
+
+            var filename = path.join(process.cwd(), 'cache', env, 'README.md');
             fs.writeFile(filename, res_red, {
                 flags: 'w'
             }, function (err_sav) {
@@ -275,7 +282,7 @@ var saveReadme = function (callback) {
     } catch (err) {
         callback(err, null);
     }
-};
+};*/
 
 /**
  * [getManifest description]
@@ -330,12 +337,12 @@ var parseManifest = function (callback) {
             }
             fermat = {};
             platfrms = [];
-            _platfrms = res_man.fermat.platforms[0].platform;
+            _platfrms = res_man.fermat.platforms ? res_man.fermat.platforms[0].platform : [];
             for (i = 0; i < _platfrms.length; i++) {
                 platfrm = {};
                 platfrm = _platfrms[i]['$'];
                 layers = [];
-                _layers = _platfrms[i].layer;
+                _layers = _platfrms[i].layer || [];
                 for (j = 0; j < _layers.length; j++) {
                     layer = {};
                     layer = _layers[j]['$'];
@@ -370,7 +377,7 @@ var parseManifest = function (callback) {
             }
             fermat.platfrms = platfrms;
             suprlays = [];
-            _suprlays = res_man.fermat.super_layers[0].super_layer;
+            _suprlays = res_man.fermat.super_layers ? res_man.fermat.super_layers[0].super_layer : [];
             for (i = 0; i < _suprlays.length; i++) {
                 suprlay = {};
                 suprlay = _suprlays[i]['$'];
@@ -410,7 +417,7 @@ var parseManifest = function (callback) {
             }
             fermat.suprlays = suprlays;
             layers = [];
-            _layers = res_man.fermat.layers[0].layer;
+            _layers = res_man.fermat.layers ? res_man.fermat.layers[0].layer : [];
             for (i = 0; i < _layers.length; i++) {
                 layer = {};
                 layer = _layers[i]['$'];
@@ -418,11 +425,11 @@ var parseManifest = function (callback) {
             }
             fermat.layers = layers;
             procs = [];
-            _procs = res_man.fermat.processes[0].process;
+            _procs = res_man.fermat.processes ? res_man.fermat.processes[0].process : [];
             for (i = 0; i < _procs.length; i++) {
                 _proc = _procs[i]['$'];
                 steps = [];
-                _steps = _procs[i].steps[0].step;
+                _steps = _procs[i].steps ? _procs[i].steps[0].step : [];
                 for (j = 0; j < _steps.length; j++) {
                     _step = _steps[j]['$'];
                     _step.next = [];
@@ -474,7 +481,6 @@ var saveManifest = function (callback) {
                     var loopLays = function (u) {
                         if (u < _lays.length) {
                             var _lay = _lays[u];
-                            console.log('layer: ' + _lay.name + ' order: ' + u);
                             layerMod.insOrUpdLayer(_lay.name ? _lay.name.trim().toLowerCase() : null,
                                 _lay.language ? _lay.language.toLowerCase() : null,
                                 _lay.super_layer ? _lay.super_layer.trim().toUpperCase() : null,
@@ -1047,7 +1053,7 @@ exports.loadComps = function (callback) {
     }
 };
 
-exports.loadDocs = function (callback) {
+/*exports.loadDocs = function (callback) {
     'use strict';
     try {
         saveReadme(function (err, res) {
@@ -1062,5 +1068,5 @@ exports.loadDocs = function (callback) {
     } catch (err) {
         return callback(err, null);
     }
-};
+};*/
 /*jshint +W069 */

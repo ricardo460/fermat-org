@@ -16,8 +16,10 @@ function Cache(options) {
         this.type = options.type || 'memory';
         this.time = options.time || 3600000;
         if (this.type === 'file') {
-            this.filename = options.filename || 'filecache.json';
-            this.filename = path.join(process.cwd(), this.filename);
+            var env = process.env.NODE_ENV || 'development',
+                folder = path.join(process.cwd(), 'cache', env),
+                file = options.filename || 'filecache.json';
+            this.filename = path.join(folder, file);
         }
     } else {
         this.type = 'memory';
