@@ -22,19 +22,18 @@ function getData() {
             });
         });
     
-    
 /*setTimeout(function(){
         var l = JSON.parse(testData);
         
-        window.loadMap();
+        window.preLoad(function() {
+        
+                window.loadMap();
+                tileManager.fillTable(l);
 
-        tileManager.fillTable(l);
-
-        TWEEN.removeAll();
-
-        logo.stopFade();
-
-        init();
+                TWEEN.removeAll();
+                logo.stopFade();
+                init();
+            });
 
     }, 6000);*/
 }
