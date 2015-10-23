@@ -1,7 +1,7 @@
 /**
  * @author Ricardo Delgado
- * @last modified By Miguel Celedon
- * function create a Buttons Browser and charge your textures
+ * @last modified By Miguel Celedon.
+ * function create a Buttons Browser and charge your textures.
  */
 function BrowserManager() {
 
@@ -20,7 +20,7 @@ function BrowserManager() {
      /**
      * @author Ricardo Delgado
      * Pressed button function.
-     * @param {String} view  vista a cargar
+     * @param {String} view  vista a cargar.
      */
     this.actionButton = function ( view ) {
 
@@ -31,8 +31,8 @@ function BrowserManager() {
    /**
     * @author Ricardo Delgado
     * Button changes the value back.
-    * @param {Number} valor    value of opacity
-    * @param {String} display  button status
+    * @param {Number} valor    value of opacity.
+    * @param {String} display  button status.
     */
    this.modifyButtonBack = function ( valor, display ) {
     
@@ -70,7 +70,7 @@ function BrowserManager() {
 
    /**
     * @author Ricardo Delgado
-    * inicializacion de las arrow 
+    * inicializacion de las arrow .
     */
    this.init = function () {
       
@@ -88,7 +88,7 @@ function BrowserManager() {
    /**
     * @author Ricardo Delgado
     * Loading the necessary views and arrows according to varible map. 
-    * @param {String} view  vista a cargar
+    * @param {String} view  vista a cargar.
     */
    function loadview(view){
 
@@ -141,7 +141,7 @@ function BrowserManager() {
    }
 
    /**
-     * @author Ricardo Delgado
+     * @author Ricardo Delgado.
      * creacion de las flechas.
      * @param {String}   view    view load.
      * @param {Number}  center   camera Center.
@@ -189,7 +189,7 @@ function BrowserManager() {
    }
 
    /**
-     * @author Ricardo Delgado
+     * @author Ricardo Delgado.
      * Creates textures arrows and stored in the variable texture.
      * @param {String}   view    view.
      * @param {String}  button   image to use.
