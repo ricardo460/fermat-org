@@ -69,6 +69,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         //tileManager.letAlone();
         //camera.resetPosition(_duration / 2);
         drawVectornodo();
+        
+        var i, l;
 
         for (i = 0, l = objects.length; i < l; i++) {
             new TWEEN.Tween(objects[i].position)
@@ -77,7 +79,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 y : positions.stack[i].position.y,
                 z : positions.stack[i].position.z
             }, _duration)
-            .delay( _duration )
             .easing(TWEEN.Easing.Exponential.InOut)
             .onUpdate(render)
             .start();
@@ -90,7 +91,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      */
     var calculateStackPositions = function() {
         
-        var i, obj, actualpositionY, rootpositionY, rootlengthX, midpositionX, actuallengthX, positionstart;
+        var i, j, k, p, q, m, l, n, obj, actualpositionY, rootpositionY, rootlengthX, midpositionX, actuallengthX, positionstart;
         var POSITION_Z = 45000;
 
         // Dummy, send all to center
@@ -103,7 +104,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         for (j = 0; j< objects.length; j++) {
             
             //calculando Y
-            if(graph.data.nodes[j].level == 0){
+            if(graph.data.nodes[j].level === 0){
 
                for(i = 0; i < objects.length; i++){
 
@@ -118,7 +119,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                rootlengthX = dependencies[graph.data.nodes[j].id].length;
                 //obj.position.set(0, -14000, 45000); //coordenadas de entradas del root(OSA)
             }
-            else if(graph.data.nodes[j].level != 0){ //coordenadas level distinto de 0
+            else if(graph.data.nodes[j].level !== 0){ //coordenadas level distinto de 0
 
                 for(i = 0; i < objects.length; i++){
                     if(graph.data.nodes[j].id == objects[i].name){
@@ -133,10 +134,10 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                         }
 
                         //Calculando X
-                        if(positions.stack[i].position.x == 0){// Verifica si hay alguna X con valores     if1
+                        if(positions.stack[i].position.x === 0){// Verifica si hay alguna X con valores     if1
                             actuallengthX = rootlengthX;
                             positionstart = 0;
-                            if(actuallengthX % 2 != 0){ //Cantidad de Hijos impar
+                            if(actuallengthX % 2 !== 0){ //Cantidad de Hijos impar
                                 midpositionX = (rootlengthX / 2)+0.5;
                                 if(graph.data.nodes[j].level == 6){
                                     for(p = 0; p < objects.length; p++){
@@ -172,7 +173,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                                     }
                                 }
                             }
-                            else if(actuallengthX % 2 == 0){ //Cantidad de hijos par
+                            else if(actuallengthX % 2 === 0){ //Cantidad de hijos par
                                 midpositionX = actuallengthX/2;
                                 for(p = midpositionX; p >= 1; p--){
                                     positionstart = positionstart - 5000;
@@ -180,9 +181,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                                 for(l = 0; l < dependencies[graph.data.nodes[j-1].id].length; l++){
                                     for(n = 0; n < objects.length; n++){
                                         if(dependencies[graph.data.nodes[j-1].id][l] == objects[n].name){
-                                            if(positionstart == 0)
+                                            if(positionstart === 0)
                                                 positionstart = positionstart + 5000;
-                                            if(positionstart != 0){
+                                            if(positionstart !== 0){
                                                 positions.stack[n].position.x = positions.stack[n].position.x + positionstart;
                                                 for(q = 0; q < objects.length; q++){
                                                    if(graph.data.nodes[j-1].id == objects[q].name){
@@ -201,6 +202,11 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 }
             }
         }
+        
+        //Transport all headers to the stack section
+        for(i = 0; i < positions.stack.length; i++) {
+            positions.stack[i].position.copy(window.viewManager.translateToSection('stack', positions.stack[i].position));
+        }
     };
 
     /**
@@ -211,6 +217,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     var drawVectornodo = function() { 
 
         var startX, startY, endX, endY;
+        
+        var i, j, k;
 
         new TWEEN.Tween(this)
         .to({}, 12000)
