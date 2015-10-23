@@ -21,17 +21,15 @@ function getData() {
             init();
         });
     
-    
     /*setTimeout(function(){
         var l = JSON.parse(testData);
 
         viewManager.fillTable(l);
-    browserManager.createButton();
+        browserManager.createButton();
         TWEEN.removeAll();
 
         logo.stopFade();
 
         init();
-
     }, 6000);*/
 }
