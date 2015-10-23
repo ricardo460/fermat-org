@@ -36,7 +36,7 @@ exports.getBook = function (callback) {
 exports.getReadme = function (callback) {
     'use strict';
     try {
-        var readme = path.join(process.cwd(), 'README.md');
+        var readme = path.join(process.cwd(), 'fermat', 'README.md');
         winston.log('info', 'reading file ', readme);
         var readmeStr = fs.readFileSync(readme);
         return callback(null, readmeStr);

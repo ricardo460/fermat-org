@@ -36,8 +36,7 @@ var starProxyServer = function () {
 
     winston.log('info', 'Starting http server on port %s...', proxy_api.port);
     http.createServer(function (req, res) {
-        var env = req.query.env || 'production';
-        if (env === 'development') {
+        if (req.url.indexOf('env=development') > -1) {
             // redirect to dev api
             winston.log('info', 'Redirecting to dev api...');
             dev_proxy.proxyRequest(req, res);

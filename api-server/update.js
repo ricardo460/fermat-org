@@ -15,25 +15,26 @@ setInterval(function () {
     loop ++;
     switch (mod) {
     case 0:
-        winston.log('info', 'getting documentation');
+        winston.log('info', 'Getting documentation');
         syncLib.getBook();
-        winston.log('info', 'documentation loaded');
+        winston.log('info', 'Documentation loaded');
         break;
     case 1:
-        loadLib.loadDocs(function (err, res) {
+        /*loadLib.loadDocs(function (err, res) {
             if (err) {
                 winston.log('info', err.message, err);
             } else {
                 winston.log('info', 'documentation loaded', res);
             }
-        });
+        });*/
+        winston.log('info', 'Doing nothing');
         break;
     case 2:
         loadLib.loadComps(function (err, res) {
             if (err) {
                 winston.log('info', err.message, err);
             } else {
-                winston.log('info', 'components and developers loaded', res);
+                winston.log('info', 'Components and developers loaded', res);
             }
         });
         break;
@@ -42,7 +43,7 @@ setInterval(function () {
             if (err) {
                 winston.log('info', err.message, err);
             } else {
-                winston.log('info', 'components updated', res);
+                winston.log('info', 'Components updated', res);
             }
         });
         break;
@@ -51,7 +52,7 @@ setInterval(function () {
             if (err) {
                 winston.log('info', err.message, err);
             } else {
-                winston.log('info', 'developers updated', res);
+                winston.log('info', 'Developers updated', res);
             }
         });
         break;

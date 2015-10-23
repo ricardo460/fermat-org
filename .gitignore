@@ -1,7 +1,8 @@
 .idea/
 **/.idea/
 api-server/**/node_modules/
-api-server/fermat/
+api-server/cache/**/fermat/
+api-server/cache/**/fermat/filecache.json
 api-server/node_modules/
 platform-visualization/common.php
 platform-visualization/src/getData.js

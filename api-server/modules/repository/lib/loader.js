@@ -13,13 +13,13 @@ var devMod = require('../developer');
 
 //var db = require('../../../db');
 //https://github.com/bitDubai/fermat.git
-
+var env = process.env.NODE_ENV || 'development';
 //var USER_AGENT = 'Miguelcldn';
 //var USER_AGENT = 'MALOTeam'
-var USER_AGENT = 'fuelusumar';
+var USER_AGENT = (env === 'development') ? 'Miguelcldn' : 'fuelusumar';
 //var TOKEN = '3c12e4c95821c7c2602a47ae46faf8a0ddab4962'; // Miguelcldn    
 //var TOKEN = 'fb6c27928d83f8ea6a9565e0f008cceffee83af1'; // MALOTeam
-var TOKEN = '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
+var TOKEN = (env === 'development') ? '3c12e4c95821c7c2602a47ae46faf8a0ddab4962' : '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
 
 /**
  * [getRepoDir description]
@@ -229,7 +229,7 @@ var processRequestBody = function (body, callback) {
  *
  * @return {[type]}   [description]
  */
-var getReadme = function (callback) {
+/*var getReadme = function (callback) {
     'use strict';
     try {
         doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/README.md', null, function (err_req, res_req) {
@@ -248,7 +248,7 @@ var getReadme = function (callback) {
     } catch (err) {
         return callback(err, null);
     }
-};
+};*/
 
 /**
  * [saveReadme description]
@@ -259,7 +259,7 @@ var getReadme = function (callback) {
  *
  * @return {[type]}   [description]
  */
-var saveReadme = function (callback) {
+/*var saveReadme = function (callback) {
     try {
         getReadme(function (err_red, res_red) {
             if (err_red) {
@@ -282,7 +282,7 @@ var saveReadme = function (callback) {
     } catch (err) {
         callback(err, null);
     }
-};
+};*/
 
 /**
  * [getManifest description]
@@ -1053,7 +1053,7 @@ exports.loadComps = function (callback) {
     }
 };
 
-exports.loadDocs = function (callback) {
+/*exports.loadDocs = function (callback) {
     'use strict';
     try {
         saveReadme(function (err, res) {
@@ -1068,5 +1068,5 @@ exports.loadDocs = function (callback) {
     } catch (err) {
         return callback(err, null);
     }
-};
+};*/
 /*jshint +W069 */
