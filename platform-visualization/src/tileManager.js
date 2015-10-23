@@ -701,6 +701,20 @@ function TileManager() {
             authorText
         ];
 
+        if ( table[id].found !== true ) {
+
+            var stamp = {
+                src: 'images/alt_not_found.png',
+                x: 0,
+                y: 0,
+                w: tileWidth * scale,
+                h: tileHeight * scale
+            };
+
+            data.push(stamp);
+
+        }
+
         drawPicture(data, ctx, texture);
 
         return texture;
@@ -1038,7 +1052,12 @@ function TileManager() {
 
         ctx.fillStyle = "#FFFFFF";
 
-        if (data.length !== 0)
-            drawText(data, ctx);
+        if (data.length !== 0){ 
+
+          if(data[0].text)
+            drawText(data, ctx, texture); 
+          else 
+            drawPicture(data, ctx, texture);
+        }
     }
 }
