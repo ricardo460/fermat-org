@@ -1,24 +1,31 @@
-	<map name="site map"
-		>
-		<load 
-           view = "table">
-		</load>
+<?xml version="1.0" encoding="utf-8"?>
+<map>
 
-		<table 
-			top = "",
-         bottom = "",
-          right = "stack",
-           left = "">
-        </table>
+  <load_page>table</load_page>
 
-        <stack
-        	top = "",
-         bottom = "",
-          right = "",
-           left = "left">
-        </stack>
+  <view>
+  <load view ='table'></load>
+  <right action = "stack"></right>
+  </view>
 
-    </map>
+  <view>
+  <load view ='stack'></load>
+  <left action = "table"></left>
+  </view>
 
-		  
- 
+</map> 
+
+ <!-- To add an arrow just add the position of it and assign an action. 
+
+    example : 
+
+      <top action = ""></top> for a direction arrow up 
+
+      <bottom action = ""></bottom>for a direction arrow down
+
+      <left action = ""></left>for a direction arrow to left
+
+      <right action = ""></right>for a direction arrow to right
+
+ -->
+
