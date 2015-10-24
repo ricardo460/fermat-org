@@ -22,7 +22,7 @@ function loadMap() {
 
 			$('view',xml).each(function() {
 
-     			view = $(this).find('load').attr('view');
+     			view = $(this).attr('name');
 
 				var _top = $(this).find('top').attr('action'),
 
@@ -75,5 +75,17 @@ function loadMap() {
 	});
 
 }
+
+/*function loadMap(){
+
+window.map = { load : "table",
+
+		table : {top : "",bottom : "",right : "stack",left : ""},
+
+        stack : {top : "",bottom : "",right : "",left : "table"} 
+        
+            };
+
+}*/
 
 
