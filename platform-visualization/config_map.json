@@ -1,0 +1,19 @@
+{
+    "start": "table",
+    
+    "table": {
+        "top": "",
+        "bottom": "",
+        "right": "stack",
+        "left": "",
+        "section" : [0, 0]
+    },
+    
+    "stack": {
+        "top": "",
+        "bottom": "",
+        "right": "",
+        "left": "table",
+        "section" : [1, 0]
+    }
+}

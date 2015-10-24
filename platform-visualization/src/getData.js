@@ -13,12 +13,13 @@ function getData() {
         
             window.preLoad(function() {
         
-                window.loadMap();
-                tileManager.fillTable(lists);
+                window.loadMap(function() {
+                    tileManager.fillTable(lists);
 
-                TWEEN.removeAll();
-                logo.stopFade();
-                init();
+                    TWEEN.removeAll();
+                    logo.stopFade();
+                    init();
+                });
             });
         });
     
