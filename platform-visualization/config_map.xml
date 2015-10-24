@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <map>
 
-  <load_page>table</load_page>
+  <start_page>table</start_page>
 
-  <view name = "table">
-  <right action = "stack"></right>
+  <view name = "table" section = '0,0'>
+    <right action = "stack"></right>
   </view>
 
-  <view name = "stack">
-  <left action = "table"></left>
+  <view name = "stack" section = '1,0'>
+    <left action = "table"></left>
   </view>
 
 </map> 

@@ -1,9 +1,31 @@
-var map;
+var map = {};
+
+/* Map example
+{
+    start: "table",
+    table: {
+        top: "",
+        bottom: "",
+        right: "stack",
+        left: "",
+        section : [0, 0]
+    },
+    stack: {
+        top: "",
+        bottom: "",
+        right: "",
+        left: "table",
+        section : [1, 0]
+    }
+}*/
+
 /**
  * @author Ricardo Delgado
- * Load the map here.
+ * @lastmodifiedBy Miguel Celedon
+ * Load the map (XML Version)
+ * @param {Function} callback The function to call when it loads the map
  */
-function loadMap() {
+/*function loadMap(callback) {
     
 //window.map = window.test_map;
     var view,
@@ -13,79 +35,53 @@ function loadMap() {
 	    right,
 	    table,
 	    stack,
-	    load;
-
-	$(document).ready(function(){
-
-		$.get("config_map.xml",{},function(xml){ 
+	    start;
+    
+    $.get("config_map.xml",{},function(xml){ 
 
 
-			$('view',xml).each(function() {
+        $('view',xml).each(function() {
 
-     			view = $(this).attr('name');
+            view = $(this).attr('name');
 
-				var _top = $(this).find('top').attr('action'),
+            var _top = $(this).find('top').attr('action'),
+                _bottom = $(this).find('bottom').attr('action'),
+                _left = $(this).find('left').attr('action'),
+                _right = $(this).find('right').attr('action');
+            
+            var section = $(this).attr('section').split(',');
+            section[0] = parseInt(section[0]);
+            section[1] = parseInt(section[1]);
 
-   	 				_bottom = $(this).find('bottom').attr('action'),
+            top = _top || '';
+            bottom = _bottom || '';
+            left = _left || '';
+            right = _right || '';
+            
+            window.map[view] = {top : top, bottom : bottom, right : right, left : left, section : section};
 
-    				_left = $(this).find('left').attr('action'),
+        });
 
-    				_right = $(this).find('right').attr('action');
+        start = $(xml).find('start_page').text();
 
-
-				if(_top !== undefined) 
-   					top = _top;
-				else 
-			   		 top = "";
-
-				if(_bottom !== undefined) 
-			    	bottom = _bottom;
-				else 
-			    	bottom = "";
-
-				if(_left !== undefined) 
-			    	left = _left;
-				else 
-			    	left = "";
-
-				if(_right !== undefined) 
-			    	right = _right;
-				else 
-			   		 right = "";
-
-				if (view === "table") 
-					table = {top : top, bottom : bottom, right : right, left : left}; 
-
-				else if(view === "stack") 
-					stack = {top : top, bottom : bottom, right : right, left : left}; 
-
-
-			});
-
-			$('map',xml).each(function() {
-
-				load = $(this).find('load_page').text();
-
-				window.map = {load, table, stack};
-
-			});
-
-		});
-
-	});
-
-}
-
-/*function loadMap(){
-
-window.map = { load : "table",
-
-		table : {top : "",bottom : "",right : "stack",left : ""},
-
-        stack : {top : "",bottom : "",right : "",left : "table"} 
+        window.map.start = start;
         
-            };
+        callback();
+
+    });
 
 }*/
 
 
+/**
+ * @author Miguel Celedon
+ * Loads the map (json version)
+ * @param {Function} callback Function to call when finished
+ */
+function loadMap(callback){
+    
+    $.get("config_map.json", {}, function(json) {
+        window.map = json;
+        callback();
+    });
+}
