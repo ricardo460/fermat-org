@@ -3,13 +3,11 @@
 
   <load_page>table</load_page>
 
-  <view>
-  <load view ='table'></load>
+  <view name = "table">
   <right action = "stack"></right>
   </view>
 
-  <view>
-  <load view ='stack'></load>
+  <view name = "stack">
   <left action = "table"></left>
   </view>
 
