@@ -448,39 +448,14 @@ function onClick(e) {
         mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
         mouse.y = - ((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height) * 2 + 1;
 
-        if ( actualView === 'table' ) {
+        clicked = camera.rayCast(mouse, scene.children);
 
-            clicked = camera.rayCast(mouse, objects);
-        
-            if (clicked && clicked.length > 0) {
-
-             onElementClick(clicked[0].object.userData.id);
-            
-            } 
-
-            else { 
-            
-             clicked = camera.rayCast(mouse, screenshotsAndroid.objects.mesh);
-
-                if ( clicked && clicked.length > 0 ) {
-
-                    screenshotsAndroid.change_Screenshots(clicked[0].object.userData.id)
-
-               }
-
-            }
-        
-        }
-      
-        clicked = camera.rayCast(mouse, browserManager.objects.mesh);
-        
         if (clicked && clicked.length > 0) {
 
-         browserManager.actionButton(clicked[0].object.userData.view); 
+            clicked[0].object.userData.onClick(clicked[0].object);
 
         }
-  }
-
+    }
 }
 
 //Should draw ONLY one flow at a time
