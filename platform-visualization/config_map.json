@@ -3,20 +3,20 @@
 
     "titles": {
         "table": "View Table",
-        "stack": "View Dependecias"
+        "stack": "View Dependencies"
     },
     
     "table": {
-        "top": "",
-        "bottom": "",
+        "up": "",
+        "down": "",
         "right": "",
         "left": "stack",
         "section" : [0, 0]
     },
     
     "stack": {
-        "top": "",
-        "bottom": "",
+        "up": "",
+        "down": "",
         "right": "table",
         "left": "",
         "section" : [-1, 0]

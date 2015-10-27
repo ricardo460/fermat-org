@@ -3,6 +3,10 @@
 
   <start_page>table</start_page>
 
+  <titles table = "View Table" 
+          stack = "View Dependencies">
+  </titles>
+
   <view name = "table" section = '0,0'>
     <right action = "stack"></right>
   </view>
@@ -17,9 +21,9 @@
 
     example : 
 
-      <top action = ""></top> for a direction arrow up 
+      <up action = ""></up> for a direction arrow up 
 
-      <bottom action = ""></bottom>for a direction arrow down
+      <down action = ""></down>for a direction arrow down
 
       <left action = ""></left>for a direction arrow to left
 

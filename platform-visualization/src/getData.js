@@ -22,8 +22,8 @@ function getData() {
                 });
             });
         });
-/*
-setTimeout(function(){
+
+/*setTimeout(function(){
         var l = JSON.parse(testData);
         
         window.preLoad(function() {
