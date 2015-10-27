@@ -1,19 +1,25 @@
 {
     "start": "table",
+
+    "titles": {
+        "table": "View Table",
+        "stack": "View Dependecias"
+    },
     
     "table": {
         "top": "",
         "bottom": "",
-        "right": "stack",
-        "left": "",
+        "right": "",
+        "left": "stack",
         "section" : [0, 0]
     },
     
     "stack": {
         "top": "",
         "bottom": "",
-        "right": "",
-        "left": "table",
-        "section" : [1, 0]
+        "right": "table",
+        "left": "",
+        "section" : [-1, 0]
     }
+
 }
