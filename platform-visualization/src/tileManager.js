@@ -27,7 +27,7 @@ function TileManager() {
         if(window.actualView === 'table')
             window.onElementClick(target.userData.id);
     };
-
+    
 
     /**
      * Pre-computes the space layout for next draw
@@ -366,37 +366,6 @@ function TileManager() {
         groupsQtty = groups.size();
         layersQtty = layers.size();
     };*/
-
-    var getSPL = function (_id, _SPLArray) {
-        if (_id) {
-            for (var i = 0, l = _SPLArray.length; i < l; i++) {
-                if (_SPLArray[i]._id + '' == _id + '') {
-                    return _SPLArray[i];
-                }
-            }
-        } else {
-            return null;
-        }
-    };
-
-    var getBestDev = function (_devs) {
-        var dev = {};
-        if (_devs) {
-            var _dev = {};
-            dev.percnt = 0;
-            for (var i = 0, l = _devs.length; i < l; i++) {
-                _dev = _devs[i];
-                if (_dev.scope == 'implementation' && _dev.percnt >= dev.percnt) {
-                    dev.percnt = _dev.percnt;
-                    dev.usrnm = _dev.dev.usrnm;
-                    dev.name = _dev.dev.name;
-                    dev.email = _dev.dev.email;
-                    dev.avatar_url = _dev.dev.avatar_url;
-                }
-            }
-        }
-        return dev;
-    };
 
     this.fillTable = function (list) {
         var _suprlays = list.suprlays,
@@ -1061,5 +1030,36 @@ function TileManager() {
           else 
             drawPicture(data, ctx, texture);
         }
+    }
+    
+    function getSPL(_id, _SPLArray) {
+        if (_id) {
+            for (var i = 0, l = _SPLArray.length; i < l; i++) {
+                if (_SPLArray[i]._id + '' == _id + '') {
+                    return _SPLArray[i];
+                }
+            }
+        } else {
+            return null;
+        }
+    }
+
+    function getBestDev(_devs) {
+        var dev = {};
+        if (_devs) {
+            var _dev = {};
+            dev.percnt = 0;
+            for (var i = 0, l = _devs.length; i < l; i++) {
+                _dev = _devs[i];
+                if (_dev.scope == 'implementation' && _dev.percnt >= dev.percnt) {
+                    dev.percnt = _dev.percnt;
+                    dev.usrnm = _dev.dev.usrnm;
+                    dev.name = _dev.dev.name;
+                    dev.email = _dev.dev.email;
+                    dev.avatar_url = _dev.dev.avatar_url;
+                }
+            }
+        }
+        return dev;
     }
 }
