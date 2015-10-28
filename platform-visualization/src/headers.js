@@ -438,10 +438,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         };
     };
     
-
-        
-
-    
     var initialize = function() {
         
         var headerData,

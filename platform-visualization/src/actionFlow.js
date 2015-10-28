@@ -4,22 +4,15 @@
  */
 function ActionFlow(flow) {
     
+    var BOX_WIDTH = 790;
+    var BOX_HEIGHT = 172;
+    var X_OFFSET = -312; //Because lines doesn't come from the center
+    
     this.flow = flow || [];
+    
+    
     var self = this;
     var objects = [];
-    
-    var used = [];
-    
-    var i, l;
-    
-    for(i = 0, l = self.flow.steps.length; i < l; i++) {
-        
-        var element = self.flow.steps[i];
-        
-        self.flow.steps[i].element = helper.searchElement(
-            (element.platfrm || element.suprlay) + '/' + element.layer + '/' + element.name
-        );
-    }
     
     /**
      * Draws the flow
@@ -28,9 +21,7 @@ function ActionFlow(flow) {
      */
     this.draw = function(initialX, initialY) {
         
-        var title = createTextBox(self.flow.name, {
-            height : window.TILE_DIMENSION.height, size : 36, textAlign : 'center', fontWeight : 'bold'
-        });
+        var title = createTitleBox(self.flow.name, self.flow.desc);
         
         title.position.set(initialX, initialY + window.TILE_DIMENSION.height * 2, 0);
         objects.push(title);
@@ -65,10 +56,10 @@ function ActionFlow(flow) {
                     var lineGeo = new THREE.Geometry();
                     var lineMat = new THREE.LineBasicMaterial({color : 0x000000, transparent : true, opacity : 0});
 
-                    var rootPoint = new THREE.Vector3(x, y - rowHeight / 2);
+                    var rootPoint = new THREE.Vector3(x + X_OFFSET, y - rowHeight / 2);
 
                     lineGeo.vertices.push(
-                        new THREE.Vector3(x, y - rowHeight * 0.25, 0),
+                        new THREE.Vector3(x + X_OFFSET, y, -1),
                         rootPoint);
 
                     var rootLine = new THREE.Line(lineGeo, lineMat);
@@ -85,14 +76,14 @@ function ActionFlow(flow) {
                         
                         nextX = startX + i * columnWidth;
                         
-                        if(nextX !== rootPoint.x && colides(nextX, root)) {
-                            nextX += childCount * columnWidth;
-                        }
-                        
                         if(isLoop) {
                             console.log(Math.abs(nextX));
                             lineMat = new THREE.LineBasicMaterial({color : 0x888888, transparent : true, opacity : 0});
                             nextY = child.drawn.y;
+                            
+                            if(nextX !== rootPoint.x && colides(nextX, root)) {
+                                nextX += (childCount + 1) * columnWidth;
+                            }
                         }
                         else {
                             lineMat = new THREE.LineBasicMaterial({color : 0x000000, transparent : true, opacity : 0});
@@ -102,15 +93,15 @@ function ActionFlow(flow) {
                         lineGeo = new THREE.Geometry();
                         lineGeo.vertices.push(
                             rootPoint,
-                            new THREE.Vector3(nextX, rootPoint.y, 0),
-                            new THREE.Vector3(nextX, nextY + rowHeight * 0.05, 0)
+                            new THREE.Vector3(nextX + X_OFFSET, rootPoint.y, -1),
+                            new THREE.Vector3(nextX + X_OFFSET, nextY, -1)
                         );
                         
                         if(isLoop) {
-                            lineGeo.vertices[2].setY(nextY + rowHeight * 0.1);
+                            lineGeo.vertices[2].setY(nextY + rowHeight * 0.25);
                             
                             lineGeo.vertices.push(
-                                new THREE.Vector3(child.drawn.x, child.drawn.y + rowHeight * 0.1, 0)
+                                new THREE.Vector3(child.drawn.x + X_OFFSET, child.drawn.y + rowHeight * 0.25, -1)
                             );
                         }
 
@@ -126,16 +117,10 @@ function ActionFlow(flow) {
         
         function drawStep(node, x, y) {
             
-            var tile;
-
-            var titleHeight = window.TILE_DIMENSION.height / 2,
-                descWidth = window.TILE_DIMENSION.width * 2,
-                descX = 0;
+            var tile,
+                tilePosition = new THREE.Vector3(x - 108, y - 2, 1);
             
             if(node.element !== -1) {
-                
-                descWidth = window.TILE_DIMENSION.width;
-                descX = window.TILE_DIMENSION.width / 2;
                 
                 if(typeof used[node.element] !== 'undefined') {
                     tile = window.objects[node.element].clone();
@@ -146,32 +131,25 @@ function ActionFlow(flow) {
                     used[node.element] = true;
                 }
                 
-                
                 objects.push(tile);
                 window.scene.add(tile);
 
                 new TWEEN.Tween(tile.position)
-                    .to({x : x - window.TILE_DIMENSION.width / 2, y : y - titleHeight * 3 / 2, z : 0}, 2000)
+                    .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 2000)
                     .easing(TWEEN.Easing.Exponential.Out)
                     //.onUpdate(render)
                     .start();
             }
-
-            var title = createTextBox(node.title, {size : 24, fontWeight : 'bold', height : titleHeight, textAlign : 'center'});
-            title.position.set(x, y, 0);
-
-            var description = createTextBox(node.desc, {width : descWidth});
-            description.position.set(x + descX, y - titleHeight * 3 / 2, 0);
+            
+            var stepBox = createStepBox(node);
+            stepBox.position.set(x, y, 0);
+            objects.push(stepBox);
+            scene.add(stepBox);
 
             node.drawn = {
                 x : x,
                 y : y
             };
-
-            objects.push(title);
-            objects.push(description);
-            window.scene.add(title);
-            window.scene.add(description);
         }
         
         /**
@@ -193,21 +171,6 @@ function ActionFlow(flow) {
             return false;
         }
     };
-    
-    function getStep(id) {
-        
-        var i, l, actual;
-        
-        for(i = 0, l = self.flow.steps.length; i < l; i++) {
-            
-            actual = self.flow.steps[i];
-            
-            //Should not be done, the id in 'next' and in each step should be the same type (strings)
-            if(actual.id == id) return actual;
-        }
-        
-        return null;
-    }
     
     /**
      * Deletes all objects related to the flow
@@ -241,63 +204,134 @@ function ActionFlow(flow) {
     //Private methods
     
     /**
-     * Creates a single text box
-     * @param   {String} text        The text to draw
-     * @param   {Object} [params={}] Object with the parameters of the draw
-     * @returns {Object} The mesh of the textbox
+     * Creates a flow box and when texture is loaded, calls fillBox
+     * @param   {String}     src     The texture to load
+     * @param   {Function}   fillBox Function to call after load, receives context and image
+     * @returns {THREE.Mesh} The created plane with the drawed texture
+     * @author Miguel Celedon
      */
-    function createTextBox(text, params) {
+    function createFlowBox(src, fillBox) {
         
-        if(typeof params === 'undefined') params = {};
-        
-        params = $.extend({
-            fontWeight : 'normal',
-            size : 12,
-            fontFamily : 'Arial',
-            width : window.TILE_DIMENSION.width * 2,
-            height : window.TILE_DIMENSION.height,
-            background : '#F26662',
-            textColor : '#FFFFFF',
-            textAlign : 'left'
-        }, params);
-        
-        
-        
-        var width = params.width;
-        var height = params.height;
         var canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        
-        var texture = new THREE.Texture(canvas);
-        texture.minFilter = THREE.NearestFilter;
-        
+        canvas.height = BOX_HEIGHT;
+        canvas.width = BOX_WIDTH;
         var ctx = canvas.getContext('2d');
-        ctx.font = params.fontWeight + ' ' + params.size + 'px ' + params.fontFamily;
-        ctx.textAlign = params.textAlign;
+        var size = 12;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         
+        var image = document.createElement('img');
+        var texture = new THREE.Texture(canvas);
+        texture.minFilter = THREE.LinearFilter;
         
-        ctx.fillStyle = params.background;
-        ctx.fillRect(0, 0, width, height);
-        ctx.fillStyle = params.textColor;
+        ctx.font = size + 'px Arial';
         
-        var start = (params.textAlign !== 'center') ? 10 : width / 2;
+        image.onload = function() {
+            fillBox(ctx, image);
+            texture.needsUpdate = true;
+        };
         
-        //var height = Math.abs(helper.drawText(text, 0, font, ctx, width, font)) * 2;
-        var paragraphs = text.split('\n');
-        var i, l, tempY = params.size;
-        
-        for(i = 0, l = paragraphs.length; i < l; i++) {
-            tempY = helper.drawText(paragraphs[i], start, tempY, ctx, width - 10, params.size);
-        }
+        image.src = src;
         
         var mesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(width, height),
-            new THREE.MeshBasicMaterial({map : texture, vertexColors : THREE.FaceColors, side : THREE.FrontSide, color : 0xffffff, transparent : true, opacity : 0}));
-        
-        mesh.material.needsUpdate = true;
-        texture.needsUpdate = true;
+            new THREE.PlaneGeometry(BOX_WIDTH, BOX_HEIGHT),
+            new THREE.MeshBasicMaterial({color : 0xFFFFFF, map : texture, opacity : 0, transparent : true})
+        );
         
         return mesh;
+    }
+    
+    /**
+     * Creates a single step box
+     * @param {Object} node The node to draw
+     * @author Miguel Celedon
+     */
+    function createStepBox(node) {
+        
+        var fillBox = function(ctx, image) {
+            
+            ctx.drawImage(image, 0, 0);
+            
+            //ID
+            var Nodeid = (parseInt(node.id) < 10) ? '0' + node.id.toString() : node.id.toString();
+            var size = 83;
+            ctx.font = size + 'px Arial';
+            ctx.fillStyle = '#000000';
+            window.helper.drawText(Nodeid, 40, 122, ctx, 76, size);
+            ctx.fillStyle = '#FFFFFF';
+            
+            //Title
+            size = 20;
+            ctx.font = 'bold ' + size + 'px Arial';
+            window.helper.drawText(node.title, 404, 51, ctx, 274, size);
+            
+            //Description
+            size = 12;
+            ctx.font = size + 'px Arial';
+            window.helper.drawText(node.desc, 404, 96, ctx, 274, size);
+        };
+        
+        return createFlowBox('images/workflow/stepBox.png', fillBox);
+    }
+    
+    /**
+     * Creates the title box
+     * @param {String} title The title of the box
+     * @param {String} desc  The description of the whole process
+     * @author Miguel Celedon
+     */
+    function createTitleBox(title, desc) {
+        
+        var fillBox = function(ctx, image) {
+            
+            ctx.drawImage(image, 0, 0);
+            
+            //Title
+            var size = 20;
+            ctx.font = 'bold ' + size + 'px Arial';
+            window.helper.drawText(title, 190, 61, ctx, 274, size * 1.5);
+            
+            //Description
+            size = 15;
+            ctx.font = size + 'px Arial';
+            window.helper.drawText(desc, 190, 126, ctx, 550, size);
+        };
+        
+        return createFlowBox('images/workflow/titleBox.png', fillBox);
+    }
+    
+    /**
+     * Looks for the node related to that step
+     * @param   {Number} id The id of the step
+     * @returns {Object} The node found or null otherwise
+     * @author Miguel Celedon
+     */
+    function getStep(id) {
+        
+        var i, l, actual;
+        
+        for(i = 0, l = self.flow.steps.length; i < l; i++) {
+            
+            actual = self.flow.steps[i];
+            
+            //Should not be done, the id in 'next' and in each step should be the same type (strings)
+            if(actual.id == id) return actual;
+        }
+        
+        return null;
+    }
+    
+    //-----------------------------------------------------------------------------
+    var used = [];
+    
+    var i, l;
+    
+    for(i = 0, l = self.flow.steps.length; i < l; i++) {
+        
+        var element = self.flow.steps[i];
+        
+        self.flow.steps[i].element = helper.searchElement(
+            (element.platfrm || element.suprlay) + '/' + element.layer + '/' + element.name
+        );
     }
 }
