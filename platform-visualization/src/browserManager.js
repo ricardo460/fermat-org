@@ -83,9 +83,13 @@ function BrowserManager() {
           
       setTimeout(function() {
 
-        loadView('table');
+        for (var view in window.map){ 
 
-        loadView('stack');
+            if (view !== 'start')
+
+              loadView(view);
+
+         }
 
       }, 5000);
 
@@ -106,14 +110,10 @@ function BrowserManager() {
 
           newCenter = window.viewManager.translateToSection(view, newCenter);
 
-      switch(view) {
-
-        case 'table':
-
-          up    = window.map.table.up;
-          down = window.map.table.down;
-          right  = window.map.table.right;
-          left   = window.map.table.left;
+          up    = window.map[view].up;
+          down = window.map[view].down;
+          right  = window.map[view].right;
+          left   = window.map[view].left;
           
           if (up !== "") addArrow(up, newCenter.x, newCenter.y, "up");  
 
@@ -122,27 +122,6 @@ function BrowserManager() {
           if (right !== "") addArrow(right, newCenter.x, newCenter.y, "right"); 
 
           if (left !== "") addArrow(left, newCenter.x, newCenter.y, "left"); 
-           
-        break;
-
-        case 'stack':
-
-          up    = window.map.stack.up;
-          down = window.map.stack.down;
-          right  = window.map.stack.right;
-          left   = window.map.stack.left;
-          
-          if (up !== "") addArrow(up, newCenter.x, newCenter.y, "up");  
-
-          if (down !== "") addArrow(down, newCenter.x, newCenter.y, "down"); 
-
-          if (right !== "") addArrow(right, newCenter.x, newCenter.y, "right"); 
-
-          if (left !== "") addArrow(left, newCenter.x, newCenter.y, "left");                     
-            
-        break;
-
-      }
 
    }
 
@@ -295,17 +274,10 @@ function BrowserManager() {
 
         image = { x: 18, y : 25, text : 12 };
     }
+ 
 
+      label = window.map[view].title;
 
-
-    if ( view === "table") { 
-
-      label = window.map.table.title;
-    }
-    else if (view === "stack") { 
-
-      label = window.map.stack.title;
-    }
 
     text = { label : label, font: "13px Arial", size : 12 };
 
