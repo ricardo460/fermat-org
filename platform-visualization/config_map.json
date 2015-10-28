@@ -1,17 +1,13 @@
 {
     "start": "table",
-
-    "titles": {
-        "table": "View Table",
-        "stack": "View Dependencies"
-    },
     
     "table": {
         "up": "",
         "down": "",
         "right": "",
         "left": "stack",
-        "section" : [0, 0]
+        "section" : [0, 0],
+        "title" : "View Table"
     },
     
     "stack": {
@@ -19,7 +15,8 @@
         "down": "",
         "right": "table",
         "left": "",
-        "section" : [-1, 0]
+        "section" : [-1, 0],
+        "title" : "View Dependencies"
     }
 
 }

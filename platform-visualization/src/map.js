@@ -6,7 +6,7 @@ var map = {};
  * Load the map (XML Version)
  * @param {Function} callback The function to call when it loads the map
  */
- /*
+/*
 function loadMap(callback) {
     
     var view,
@@ -14,10 +14,8 @@ function loadMap(callback) {
     	down,
     	left,
 	    right,
-	    table,
-	    stack,
 	    start,
-        titles;
+        title;
     
     $.get("config_map.xml",{},function(xml){ 
 
@@ -25,6 +23,8 @@ function loadMap(callback) {
         $('view',xml).each(function() {
 
             view = $(this).attr('name');
+
+            title = $(this).attr('title');
 
             var _up = $(this).find('up').attr('action'),
                 _down = $(this).find('down').attr('action'),
@@ -40,17 +40,9 @@ function loadMap(callback) {
             left = _left || '';
             right = _right || '';
             
-            window.map[view] = {up : up, down : down, right : right, left : left, section : section};
+            window.map[view] = {up : up, down : down, right : right, left : left, section : section, title : title};
 
         });
-
-        table = $(xml).find('titles').attr('table');
-
-        stack = $(xml).find('titles').attr('stack');
-
-        titles = {table : table, stack : stack};
-
-        window.map.titles = titles;
 
         start = $(xml).find('start_page').text();
 

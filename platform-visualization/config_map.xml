@@ -3,15 +3,11 @@
 
   <start_page>table</start_page>
 
-  <titles table = "View Table" 
-          stack = "View Dependencies">
-  </titles>
-
-  <view name = "table" section = '0,0'>
+  <view name = "table" section = '0,0' title = "View Table">
     <right action = "stack"></right>
   </view>
 
-  <view name = "stack" section = '1,0'>
+  <view name = "stack" section = '1,0' title = "View Dependencies">
     <left action = "table"></left>
   </view>
 

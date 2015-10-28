@@ -77,7 +77,7 @@ function BrowserManager() {
 
    /**
     * @author Ricardo Delgado
-    * Initialization de las arrow 
+    * Initialization of the arrows
     */
    this.init = function () {
           
@@ -148,7 +148,7 @@ function BrowserManager() {
 
    /**
      * @author Ricardo Delgado
-     * creacion de las flechas.
+     * creating arrows.
      * @param {String}   view    view load.
      * @param {Number}  center   camera Center.
      * @param {String}  button   position arrow.
@@ -300,11 +300,11 @@ function BrowserManager() {
 
     if ( view === "table") { 
 
-      label = window.map.titles.table;
+      label = window.map.table.title;
     }
     else if (view === "stack") { 
 
-      label = window.map.titles.stack;
+      label = window.map.stack.title;
     }
 
     text = { label : label, font: "13px Arial", size : 12 };
