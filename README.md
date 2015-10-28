@@ -55,6 +55,7 @@ No se dejará espacio entre los paréntesis, pero sí entre signos y comas:
 ```javascript
 foo = llamada( 'hola', 30, i + 5 ); //Mal
 foo = llamada('hola',30,i+5); //Mal
+foo = llamada ('hola', 30, i + 5); //Mal
 foo = llamada('hola', 30, i + 5); //Bien
 ```
 
