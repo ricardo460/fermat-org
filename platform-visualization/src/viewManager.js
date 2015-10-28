@@ -6,7 +6,7 @@ function ViewManager() {
     
     this.translateToSection = function(sectionName, vector) {
         
-        sectionName = window.map[sectionName] || window.map.start;
+        sectionName = window.map.views[sectionName] || window.map.start;
         var section = sectionName.section || [0, 0];
         
         if(typeof section !== 'undefined') {

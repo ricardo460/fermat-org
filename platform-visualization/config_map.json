@@ -1,25 +1,26 @@
 {
     "start": "table",
 
-    "titles": {
-        "table": "View Table",
-        "stack": "View Dependecias"
-    },
+    "views":{ 
     
-    "table": {
-        "top": "",
-        "bottom": "",
-        "right": "",
-        "left": "stack",
-        "section" : [0, 0]
-    },
+        "table": {
+            "up": "",
+            "down": "",
+            "right": "",
+            "left": "stack",
+            "section" : [0, 0],
+            "title" : "View Table"
+        },
     
-    "stack": {
-        "top": "",
-        "bottom": "",
-        "right": "table",
-        "left": "",
-        "section" : [-1, 0]
+        "stack": {
+            "up": "",
+            "down": "",
+            "right": "table",
+            "left": "",
+            "section" : [-1, 0],
+            "title" : "View Dependencies"
+        }
+
     }
 
 }

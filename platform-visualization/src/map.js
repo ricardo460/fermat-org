@@ -1,41 +1,21 @@
 var map = {};
 
-/* Map example
-{
-    start: "table",
-    table: {
-        top: "",
-        bottom: "",
-        right: "stack",
-        left: "",
-        section : [0, 0]
-    },
-    stack: {
-        top: "",
-        bottom: "",
-        right: "",
-        left: "table",
-        section : [1, 0]
-    }
-}*/
-
 /**
  * @author Ricardo Delgado
  * @lastmodifiedBy Miguel Celedon
  * Load the map (XML Version)
  * @param {Function} callback The function to call when it loads the map
  */
-/*function loadMap(callback) {
+/*
+function loadMap(callback) {
     
-//window.map = window.test_map;
     var view,
-    	top,
-    	bottom,
+    	up,
+    	down,
     	left,
 	    right,
-	    table,
-	    stack,
-	    start;
+	    start,
+        title;
     
     $.get("config_map.xml",{},function(xml){ 
 
@@ -44,8 +24,10 @@ var map = {};
 
             view = $(this).attr('name');
 
-            var _top = $(this).find('top').attr('action'),
-                _bottom = $(this).find('bottom').attr('action'),
+            title = $(this).attr('title');
+
+            var _up = $(this).find('up').attr('action'),
+                _down = $(this).find('down').attr('action'),
                 _left = $(this).find('left').attr('action'),
                 _right = $(this).find('right').attr('action');
             
@@ -53,12 +35,12 @@ var map = {};
             section[0] = parseInt(section[0]);
             section[1] = parseInt(section[1]);
 
-            top = _top || '';
-            bottom = _bottom || '';
+            up = _up || '';
+            down = _down || '';
             left = _left || '';
             right = _right || '';
             
-            window.map[view] = {top : top, bottom : bottom, right : right, left : left, section : section};
+            window.map.views[view] = {up : up, down : down, right : right, left : left, section : section, title : title};
 
         });
 
