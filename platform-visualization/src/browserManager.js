@@ -83,13 +83,10 @@ function BrowserManager() {
           
       setTimeout(function() {
 
-        for (var view in window.map){ 
-
-            if (view !== 'start')
+        for (var view in window.map.views){ 
 
               loadView(view);
-
-         }
+        }
 
       }, 5000);
 
@@ -110,10 +107,10 @@ function BrowserManager() {
 
           newCenter = window.viewManager.translateToSection(view, newCenter);
 
-          up    = window.map[view].up;
-          down = window.map[view].down;
-          right  = window.map[view].right;
-          left   = window.map[view].left;
+          up    = window.map.views[view].up;
+          down = window.map.views[view].down;
+          right  = window.map.views[view].right;
+          left   = window.map.views[view].left;
           
           if (up !== "") addArrow(up, newCenter.x, newCenter.y, "up");  
 
@@ -276,7 +273,7 @@ function BrowserManager() {
     }
  
 
-      label = window.map[view].title;
+      label = window.map.views[view].title;
 
 
     text = { label : label, font: "13px Arial", size : 12 };

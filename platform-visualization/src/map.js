@@ -40,7 +40,7 @@ function loadMap(callback) {
             left = _left || '';
             right = _right || '';
             
-            window.map[view] = {up : up, down : down, right : right, left : left, section : section, title : title};
+            window.map.views[view] = {up : up, down : down, right : right, left : left, section : section, title : title};
 
         });
 

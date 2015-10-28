@@ -1,22 +1,26 @@
 {
     "start": "table",
+
+    "views":{ 
     
-    "table": {
-        "up": "",
-        "down": "",
-        "right": "",
-        "left": "stack",
-        "section" : [0, 0],
-        "title" : "View Table"
-    },
+        "table": {
+            "up": "",
+            "down": "",
+            "right": "",
+            "left": "stack",
+            "section" : [0, 0],
+            "title" : "View Table"
+        },
     
-    "stack": {
-        "up": "",
-        "down": "",
-        "right": "table",
-        "left": "",
-        "section" : [-1, 0],
-        "title" : "View Dependencies"
+        "stack": {
+            "up": "",
+            "down": "",
+            "right": "table",
+            "left": "",
+            "section" : [-1, 0],
+            "title" : "View Dependencies"
+        }
+
     }
 
 }

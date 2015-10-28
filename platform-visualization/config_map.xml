@@ -3,13 +3,17 @@
 
   <start_page>table</start_page>
 
-  <view name = "table" section = '0,0' title = "View Table">
-    <right action = "stack"></right>
-  </view>
+  <views>
 
-  <view name = "stack" section = '1,0' title = "View Dependencies">
-    <left action = "table"></left>
-  </view>
+      <view name = "table" section = '0,0' title = "View Table">
+        <right action = "stack"></right>
+      </view>
+
+      <view name = "stack" section = '1,0' title = "View Dependencies">
+        <left action = "table"></left>
+      </view>
+
+  </views>
 
 </map> 
 
