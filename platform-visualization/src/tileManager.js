@@ -807,7 +807,7 @@ function TileManager() {
             .onUpdate(render)
             .start();
         
-        setTimeout(window.screenshotsAndroid.show_Screenshots, 4000);
+        setTimeout(window.screenshotsAndroid.show, 4000);
     };
 
     /**
@@ -934,7 +934,7 @@ function TileManager() {
             .onUpdate(render)
             .start();
         
-        window.screenshotsAndroid.hide_Screenshots();
+        window.screenshotsAndroid.hide();
     };
 
     //Private methods

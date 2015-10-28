@@ -114,7 +114,7 @@ function Camera(position, renderer, renderFunc) {
             .start();
     };
 
-    this.setFocus_Screenshots = function( id, duration ) {
+    this.setFocusScreenshots = function( id, duration ) {
         
         TWEEN.removeAll();
 

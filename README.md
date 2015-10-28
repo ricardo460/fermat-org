@@ -55,6 +55,7 @@ No se dejará espacio entre los paréntesis, pero sí entre signos y comas:
 ```javascript
 foo = llamada( 'hola', 30, i + 5 ); //Mal
 foo = llamada('hola',30,i+5); //Mal
+foo = llamada ('hola', 30, i + 5); //Mal
 foo = llamada('hola', 30, i + 5); //Bien
 ```
 
@@ -72,7 +73,7 @@ function foo(varA, varB) {
 
 - __Atributos públicos:__ Los atributos públicos se crearán usando `this`.
 - __Métodos públicos en un objeto que puede repetirse:__ Si un objeto está diseñado a tener varias instancias en el código, los métodos no se crearán con `this`, sino que serán agregados al __prototipo__ y no debe tener métodos privados.
-- __Atributos privados:__ Los atributos públicos se crearán usando `var`.
+- __Atributos privados:__ Los atributos privados se crearán usando `var`.
 - __Uso de atributos públicos dentro del objeto:__ Todo objeto tendrá como atributo privado una variable llamada `self` que referencie a la variable `this` para así poder acceder seguramente a los métodos del mismo objeto (porque sabemos que `this` podría no ser lo que esperamos). A continuación el esqueleto de un objeto con todo lo que podría tener:
 
 ```javascript
