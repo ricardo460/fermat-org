@@ -1,6 +1,8 @@
 /*jshint -W069 */
 var winston = require('winston');
 var request = require('request');
+var fs = require('fs');
+var path = require('path');
 var parseString = require('xml2js').parseString;
 var platfrmMod = require('../platform');
 var suprlayMod = require('../superlayer');
@@ -10,13 +12,14 @@ var procMod = require('../process');
 var devMod = require('../developer');
 
 //var db = require('../../../db');
-
+//https://github.com/bitDubai/fermat.git
+var env = process.env.NODE_ENV || 'development';
 //var USER_AGENT = 'Miguelcldn';
 //var USER_AGENT = 'MALOTeam'
-var USER_AGENT = 'fuelusumar';
+var USER_AGENT = (env === 'development') ? 'Miguelcldn' : 'fuelusumar';
 //var TOKEN = '3c12e4c95821c7c2602a47ae46faf8a0ddab4962'; // Miguelcldn    
 //var TOKEN = 'fb6c27928d83f8ea6a9565e0f008cceffee83af1'; // MALOTeam
-var TOKEN = '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
+var TOKEN = (env === 'development') ? '3c12e4c95821c7c2602a47ae46faf8a0ddab4962' : '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
 
 /**
  * [getRepoDir description]
@@ -131,8 +134,6 @@ var processCompList = function (section, layer, compList, type) {
     }
 };
 
-
-
 /**
  * [doRequest description]
  *
@@ -148,8 +149,13 @@ var processCompList = function (section, layer, compList, type) {
 var doRequest = function (method, url, params, callback) {
     'use strict';
     try {
+        var env = process.env.NODE_ENV || 'development';
         var form, i;
         url += '?access_token=' + TOKEN;
+        if (env === 'development') {
+            url += '&ref=develop'
+        }
+        winston.log('info', 'Doing request %s', url);
         switch (method) {
         case 'POST':
             form = {};
@@ -202,8 +208,7 @@ var processRequestBody = function (body, callback) {
         var reqBody = JSON.parse(body);
         if (reqBody.content && reqBody.encoding) {
             var content = new Buffer(reqBody.content, reqBody.encoding);
-            var strCont = content.toString().split('\n').join(' ').split('\t').join(' ');
-            return callback(null, strCont);
+            return callback(null, content.toString());
         }
         if (reqBody.login || reqBody.message || Array.isArray(reqBody)) {
             return callback(null, reqBody);
@@ -214,6 +219,70 @@ var processRequestBody = function (body, callback) {
         return callback(err, null);
     }
 };
+
+/**
+ * [getReadme description]
+ *
+ * @method getReadme
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
+/*var getReadme = function (callback) {
+    'use strict';
+    try {
+        doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/README.md', null, function (err_req, res_req) {
+            if (err_req) {
+                return callback(err_req, null);
+            }
+            processRequestBody(res_req, function (err_pro, res_pro) {
+                if (err_pro) {
+                    return callback(err_pro, null);
+                }
+                if (res_pro) {
+                    return callback(null, res_pro);
+                }
+            });
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};*/
+
+/**
+ * [saveReadme description]
+ *
+ * @method saveReadme
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
+/*var saveReadme = function (callback) {
+    try {
+        getReadme(function (err_red, res_red) {
+            if (err_red) {
+                return callback(err_red, null);
+            }
+            var env = process.env.NODE_ENV || 'development';
+
+            var filename = path.join(process.cwd(), 'cache', env, 'README.md');
+            fs.writeFile(filename, res_red, {
+                flags: 'w'
+            }, function (err_sav) {
+                if (err_sav) {
+                    return callback(err_sav, null);
+                }
+                return callback(null, {
+                    save: true
+                });
+            });
+        });
+    } catch (err) {
+        callback(err, null);
+    }
+};*/
 
 /**
  * [getManifest description]
@@ -235,7 +304,8 @@ var getManifest = function (callback) {
                 if (err_pro) {
                     return callback(err_pro, null);
                 }
-                parseString(res_pro, function (err_par, res_par) {
+                var strCont = res_pro.split('\n').join(' ').split('\t').join(' ');
+                parseString(strCont, function (err_par, res_par) {
                     if (err_par) {
                         return callback(err_par, null);
                     }
@@ -267,12 +337,12 @@ var parseManifest = function (callback) {
             }
             fermat = {};
             platfrms = [];
-            _platfrms = res_man.fermat.platforms[0].platform;
+            _platfrms = res_man.fermat.platforms ? res_man.fermat.platforms[0].platform : [];
             for (i = 0; i < _platfrms.length; i++) {
                 platfrm = {};
                 platfrm = _platfrms[i]['$'];
                 layers = [];
-                _layers = _platfrms[i].layer;
+                _layers = _platfrms[i].layer || [];
                 for (j = 0; j < _layers.length; j++) {
                     layer = {};
                     layer = _layers[j]['$'];
@@ -307,7 +377,7 @@ var parseManifest = function (callback) {
             }
             fermat.platfrms = platfrms;
             suprlays = [];
-            _suprlays = res_man.fermat.super_layers[0].super_layer;
+            _suprlays = res_man.fermat.super_layers ? res_man.fermat.super_layers[0].super_layer : [];
             for (i = 0; i < _suprlays.length; i++) {
                 suprlay = {};
                 suprlay = _suprlays[i]['$'];
@@ -346,12 +416,20 @@ var parseManifest = function (callback) {
                 suprlays.push(suprlay);
             }
             fermat.suprlays = suprlays;
+            layers = [];
+            _layers = res_man.fermat.layers ? res_man.fermat.layers[0].layer : [];
+            for (i = 0; i < _layers.length; i++) {
+                layer = {};
+                layer = _layers[i]['$'];
+                layers.push(layer);
+            }
+            fermat.layers = layers;
             procs = [];
-            _procs = res_man.fermat.processes[0].process;
+            _procs = res_man.fermat.processes ? res_man.fermat.processes[0].process : [];
             for (i = 0; i < _procs.length; i++) {
                 _proc = _procs[i]['$'];
                 steps = [];
-                _steps = _procs[i].steps[0].step;
+                _steps = _procs[i].steps ? _procs[i].steps[0].step : [];
                 for (j = 0; j < _steps.length; j++) {
                     _step = _steps[j]['$'];
                     _step.next = [];
@@ -369,6 +447,7 @@ var parseManifest = function (callback) {
                 procs.push(_proc);
             }
             fermat.procs = procs;
+
             return callback(null, fermat);
 
         });
@@ -397,6 +476,26 @@ var saveManifest = function (callback) {
                     var _platfrms = res_load.platfrms;
                     var _suprlays = res_load.suprlays;
                     var _procs = res_load.procs;
+                    var _lays = res_load.layers;
+
+                    var loopLays = function (u) {
+                        if (u < _lays.length) {
+                            var _lay = _lays[u];
+                            layerMod.insOrUpdLayer(_lay.name ? _lay.name.trim().toLowerCase() : null,
+                                _lay.language ? _lay.language.toLowerCase() : null,
+                                _lay.super_layer ? _lay.super_layer.trim().toUpperCase() : null,
+                                u,
+                                function (err_lay, res_lay) {
+                                    if (err_lay) {
+                                        winston.log('info', err_lay.message, err_lay);
+                                    }
+                                    loopLays(++u);
+                                });
+                        } else {
+                            winston.log('info', 'done loading components');
+                            return;
+                        }
+                    }
 
                     var loopProcs = function (s) {
                         if (s < _procs.length) {
@@ -442,8 +541,7 @@ var saveManifest = function (callback) {
                                     }
                                 });
                         } else {
-                            winston.log('info', 'done loading components');
-                            return;
+                            loopLays(0);
                         }
                     };
 
@@ -467,8 +565,7 @@ var saveManifest = function (callback) {
                                                 var _layer = _layers[o];
                                                 layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null,
                                                     _layer.language ? _layer.language.toLowerCase() : null,
-                                                    res_supr.code,
-                                                    0,
+                                                    res_supr.code, -1,
                                                     function (err_lay, res_lay) {
                                                         if (err_lay) {
                                                             winston.log('info', err_lay.message, err_lay);
@@ -585,8 +682,7 @@ var saveManifest = function (callback) {
                                                 var _layer = _layers[j];
                                                 layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null,
                                                     _layer.language ? _layer.language.toLowerCase() : null,
-                                                    null,
-                                                    0,
+                                                    null, -1,
                                                     function (err_lay, res_lay) {
                                                         if (err_lay) {
                                                             winston.log('info', err_lay.message, err_lay);
@@ -956,4 +1052,21 @@ exports.loadComps = function (callback) {
         return callback(err, null);
     }
 };
+
+/*exports.loadDocs = function (callback) {
+    'use strict';
+    try {
+        saveReadme(function (err, res) {
+            if (err) {
+                return callback(err, null);
+            }
+            if (res) {
+                return callback(null, res);
+            }
+            return callback(null, null);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};*/
 /*jshint +W069 */

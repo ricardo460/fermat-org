@@ -5,13 +5,12 @@
     "name": "Luis Fuenmayor",
     "email": "fuelusumar@gmail.com"
   },
-  "version": "1.0.1",
+  "version": "1.1.1",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=production PORT=3000 node ./bin/www"
+    "start": "sh starter.sh"
   },
   "dependencies": {
-    "apicache": "0.0.12",
     "async": "^1.4.2",
     "body-parser": "~1.13.2",
     "color": "^0.10.1",
@@ -19,14 +18,16 @@
     "debug": "~2.2.0",
     "express": "~4.13.1",
     "fs": "0.0.2",
+    "http-proxy": "^1.12.0",
     "jade": "~1.11.0",
-    "mongoose": "^4.1.8",
+    "mongoose": "^4.2.2",
     "morgan": "~1.6.1",
     "passport": "^0.3.0",
     "passport-http-bearer": "^1.0.1",
     "request": "^2.63.0",
     "response-time": "^2.3.1",
     "serve-favicon": "~2.3.0",
+    "shelljs": "^0.5.3",
     "winston": "^1.0.1",
     "xml2js": "^0.4.12"
   }
