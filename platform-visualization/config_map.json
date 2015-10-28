@@ -1,19 +1,84 @@
 {
-    "start": "table",
+    "start": "Home",
     
-    "table": {
+    "Home": {
         "top": "",
-        "bottom": "",
-        "right": "stack",
-        "left": "",
-        "section" : [0, 0]
+        "bottom": "Learning Area",
+        "right": "Fermat Network",
+        "left": "Architecture",
+        "section" : [0, 0],
+        "status" : "open"
     },
     
-    "stack": {
+    "Learning Area": {
+        "top": "Home",
+        "bottom": "Fermat Book",
+        "right": "Read Me",
+        "left": "About Fermat",
+        "section" : [0, -5],
+        "status" : "open"
+    },
+    
+    "Fermat Book": {
+        "top": "Learning Area",
+        "bottom": "",
+        "right": "",
+        "left": "",
+        "section" : [0, -6],
+        "status" : "open"
+    },
+    
+    "Read Me": {
         "top": "",
         "bottom": "",
         "right": "",
+        "left": "Learning Area",
+        "section" : [1, -5],
+        "status" : "open"
+    },
+    
+    "About Fermat": {
+        "top": "",
+        "bottom": "",
+        "right": "Learning Area",
+        "left": "",
+        "section" : [-1, -5],
+        "status" : "open"
+    },
+    
+    "Architecture": {
+        "top": "Developers",
+        "bottom": "Workflows",
+        "right": "Home",
+        "left": "Platform Stack",
+        "section" : [-5, 0],
+        "status" : "open"
+    },
+    
+    "Platform Stack": {
+        "top": "",
+        "bottom": "",
+        "right": "Architecture",
         "left": "table",
-        "section" : [1, 0]
+        "section" : [-6, 0],
+        "status" : "open"
+    }
+    
+        "Developers": {
+        "top": "",
+        "bottom": "Architecture",
+        "right": "",
+        "left": "",
+        "section" : [-5, 1],
+        "status" : "open"
+    }
+    
+        "Fermat Network": {
+        "top": "",
+        "bottom": "",
+        "right": "",
+        "left": "Home",
+        "section" : [5, 0],
+        "status" : "closed"
     }
 }
