@@ -869,6 +869,7 @@ function TileManager() {
             if(typeof layerCoordinates[row] === 'undefined')
                 layerCoordinates[row] = object.position.y;
 
+            object.position.copy(window.viewManager.translateToSection('table', object.position));
             this.targets.table.push(object);
 
         }

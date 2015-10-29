@@ -83,14 +83,16 @@ function BrowserManager() {
           
       setTimeout(function() {
 
-        for (var view in window.map.views){ 
-
-              loadView(view);
+        for (var view in window.map.views) {
+            
+            if(window.map.views[view].enabled === true)
+                loadView(view);
         }
 
-      }, 5000);
+      }, 3000);
 
    };
+    
    /**
     * @author Ricardo Delgado
     * Loading the necessary views and arrows according to varible map. 
@@ -256,19 +258,15 @@ function BrowserManager() {
         label;
 
     if (button === "right") {  
-
         image = { x: 15, y : 0, text : 65 };
     }
     else if (button === "left") { 
-
         image = { x: 0, y : 0, text : 65 };
     }
     else if (button === "up") { 
-
         image = { x: 18, y : 0, text : 65 };
     }
     else { 
-
         image = { x: 18, y : 25, text : 12 };
     }
  

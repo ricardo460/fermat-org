@@ -115,17 +115,15 @@ function goToView ( current ) {
     actualView = current;
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
+    
+    newCenter = viewManager.translateToSection(current, newCenter);
+    camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
+    camera.lockPan();
 
     switch(current) {
         case 'table':
 
-            newCenter = viewManager.translateToSection('table', newCenter);
-            
-            camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
-            camera.lockPan();
             browserManager.modifyButtonLegend(1,'block');
-
-            logo.openLogo();
 
             headers.transformTable();
 
@@ -138,19 +136,24 @@ function goToView ( current ) {
         case 'stack':
                      
             headers.transformStack(transition);
-            
-            newCenter = viewManager.translateToSection('stack', newCenter);
-            camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
-            camera.lockPan();
 
             browserManager.modifyButtonBack(0,'none');
             
             browserManager.modifyButtonLegend(0,'none');
             
             break;
+            
+        case 'home':
+            
+            logo.stopFade(2000);
+            
+            break;
 
         default:
-            goToView('table');
+            
+            if(window.map.views[current] == null)
+                goToView(window.map.start);
+            
             break;
     }
 }
