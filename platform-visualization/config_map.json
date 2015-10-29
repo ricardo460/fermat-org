@@ -1,84 +1,106 @@
 {
-    "start": "Home",
+    "start": "home",
     
-    "Home": {
-        "top": "",
-        "bottom": "Learning Area",
-        "right": "Fermat Network",
-        "left": "Architecture",
-        "section" : [0, 0],
-        "status" : "open"
-    },
-    
-    "Learning Area": {
-        "top": "Home",
-        "bottom": "Fermat Book",
-        "right": "Read Me",
-        "left": "About Fermat",
-        "section" : [0, -5],
-        "status" : "open"
-    },
-    
-    "Fermat Book": {
-        "top": "Learning Area",
-        "bottom": "",
-        "right": "",
-        "left": "",
-        "section" : [0, -6],
-        "status" : "open"
-    },
-    
-    "Read Me": {
-        "top": "",
-        "bottom": "",
-        "right": "",
-        "left": "Learning Area",
-        "section" : [1, -5],
-        "status" : "open"
-    },
-    
-    "About Fermat": {
-        "top": "",
-        "bottom": "",
-        "right": "Learning Area",
-        "left": "",
-        "section" : [-1, -5],
-        "status" : "open"
-    },
-    
-    "Architecture": {
-        "top": "Developers",
-        "bottom": "Workflows",
-        "right": "Home",
-        "left": "Platform Stack",
-        "section" : [-5, 0],
-        "status" : "open"
-    },
-    
-    "Platform Stack": {
-        "top": "",
-        "bottom": "",
-        "right": "Architecture",
-        "left": "table",
-        "section" : [-6, 0],
-        "status" : "open"
-    },
-    
-        "Developers": {
-        "top": "",
-        "bottom": "Architecture",
-        "right": "",
-        "left": "",
-        "section" : [-5, 1],
-        "status" : "open"
-    },
-    
-        "Fermat Network": {
-        "top": "",
-        "bottom": "",
-        "right": "",
-        "left": "Home",
-        "section" : [5, 0],
-        "status" : "closed"
+    "views" : {
+        
+        "home": {
+            "up": "",
+            "down": "learn",
+            "right": "network",
+            "left": "table",
+            "section" : [0, 0],
+            "title" : "Home",
+            "enabled" : true
+        },
+
+        "learn": {
+            "up": "home",
+            "down": "book",
+            "right": "readme",
+            "left": "about",
+            "section" : [0, -5],
+            "title" : "Learning Area",
+            "enabled" : true
+        },
+
+        "book": {
+            "up": "learn",
+            "down": "",
+            "right": "",
+            "left": "",
+            "section" : [0, -6],
+            "title" : "Fermat Book",
+            "enabled" : true
+        },
+
+        "readme": {
+            "up": "",
+            "down": "",
+            "right": "",
+            "left": "learn",
+            "section" : [1, -5],
+            "title" : "Read Me",
+            "enabled" : true
+        },
+
+        "about": {
+            "up": "",
+            "down": "",
+            "right": "learn",
+            "left": "",
+            "section" : [-1, -5],
+            "title" : "About Fermat",
+            "enabled" : true
+        },
+
+        "table": {
+            "up": "developers",
+            "down": "workflows",
+            "right": "home",
+            "left": "stack",
+            "section" : [-5, 0],
+            "title" : "Architecture",
+            "enabled" : true
+        },
+
+        "stack": {
+            "up": "",
+            "down": "",
+            "right": "table",
+            "left": "",
+            "section" : [-6, 0],
+            "title" : "Platform Stack",
+            "enabled" : true
+        },
+
+        "developers": {
+            "up": "",
+            "down": "table",
+            "right": "",
+            "left": "",
+            "section" : [-5, 1],
+            "title" : "Developers",
+            "enabled" : true
+        },
+
+        "network": {
+            "up": "",
+            "down": "",
+            "right": "",
+            "left": "home",
+            "section" : [5, 0],
+            "title" : "Fermat Network",
+            "enabled" : true
+        },
+
+        "workflows": {
+            "up": "table",
+            "down": "",
+            "right": "",
+            "left": "",
+            "section" : [-5, -1],
+            "title" : "Workflows",
+            "enabled" : true
+        }
     }
 }

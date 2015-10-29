@@ -35,7 +35,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
     this.paintDependencestack = function(startX,startY,endX,endY) {
        
-        camera.resetPosition();
+        //camera.resetPosition();
 
         var material = new THREE.LineBasicMaterial({transparent : true, opacity : 0, color: 0XF26662});
 
@@ -80,9 +80,13 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 z : positions.stack[i].position.z
             }, _duration)
             .easing(TWEEN.Easing.Exponential.InOut)
-            .onUpdate(render)
             .start();
-        }      
+        }
+        
+        new TWEEN.Tween(this)
+        .to({}, duration * 2)
+        .onUpdate(render)
+        .start();
     };
 
     /**
@@ -299,40 +303,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     };
     
     /**
-     * @author Ricardo Delgado
-     * @lastmodifiedBy Miguel Celedon
-     *                     
-     * Screen shows the head
-     * @param {Number} duration Milliseconds of fading
-     */
-    this.transformHead = function( duration ) {
-        var _duration = duration || 1000;
-        var i, l;
-
-        tileManager.letAlone();
-        camera.resetPosition();
-        setTimeout(function() {
-            for(i = 0, l = objects.length; i < l; i++) {
-
-                new TWEEN.Tween(objects[i].position)
-                .to({
-                    z : window.camera.getMaxDistance()
-                }, Math.random() * _duration + _duration)
-                .easing(TWEEN.Easing.Exponential.InOut)
-                .start();
-            }
-
-           new TWEEN.Tween(this)
-                .to({}, _duration * 2)
-                .onUpdate(render)
-                .start();
-
-            self.hide(_duration);
-            
-        }, _duration);
-    };
-    
-    /**
      * Shows the headers as a fade
      * @param {Number} duration Milliseconds of fading
      */
@@ -438,10 +408,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         };
     };
     
-
-        
-
-    
     var initialize = function() {
         
         var headerData,
@@ -528,6 +494,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 object.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
                 object.name = group;         
 
+                object.position.copy(window.viewManager.translateToSection('table', object.position));
                 positions.table.push(object);
 
                 createChildren(group, headerData.dependsOn);
@@ -549,6 +516,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                                     Math.random() * 320000 - 160000,
                                     0);
                 object.name = slayer;
+                
 
                 scene.add(object);
                 objects.push(object);
@@ -559,6 +527,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 object.position.y = -(row * window.TILE_DIMENSION.height) - (superLayerMaxHeight * window.TILE_DIMENSION.height / 2) + (layersQtty * window.TILE_DIMENSION.height / 2);
                 object.name = slayer;
 
+                object.position.copy(window.viewManager.translateToSection('table', object.position));
                 positions.table.push(object);
 
                 createChildren(slayer, headerData.dependsOn);

@@ -22,7 +22,12 @@ function TileManager() {
     var elementsByGroup = [];
     var superLayerMaxHeight = 0;
     var superLayerPosition = [];
-
+    
+    var onClick = function(target) {
+        if(window.actualView === 'table')
+            window.onElementClick(target.userData.id);
+    };
+    
 
     /**
      * Pre-computes the space layout for next draw
@@ -362,37 +367,6 @@ function TileManager() {
         layersQtty = layers.size();
     };*/
 
-    var getSPL = function (_id, _SPLArray) {
-        if (_id) {
-            for (var i = 0, l = _SPLArray.length; i < l; i++) {
-                if (_SPLArray[i]._id + '' == _id + '') {
-                    return _SPLArray[i];
-                }
-            }
-        } else {
-            return null;
-        }
-    };
-
-    var getBestDev = function (_devs) {
-        var dev = {};
-        if (_devs) {
-            var _dev = {};
-            dev.percnt = 0;
-            for (var i = 0, l = _devs.length; i < l; i++) {
-                _dev = _devs[i];
-                if (_dev.scope == 'implementation' && _dev.percnt >= dev.percnt) {
-                    dev.percnt = _dev.percnt;
-                    dev.usrnm = _dev.dev.usrnm;
-                    dev.name = _dev.dev.name;
-                    dev.email = _dev.dev.email;
-                    dev.avatar_url = _dev.dev.avatar_url;
-                }
-            }
-        }
-        return dev;
-    };
-
     this.fillTable = function (list) {
         var _suprlays = list.suprlays,
             _platfrms = list.platfrms,
@@ -425,43 +399,41 @@ function TileManager() {
             layers[name]._id = _layers[i]._id;
         }
 
-        for (i = 0, l = _comps.length; i < l; i++) {
-            
-            var buildElement = function (e) {
-                var _comp = _comps[e];
+        var buildElement = function (e) {
+            var _comp = _comps[e];
 
-                var _platfrm = getSPL(_comp._platfrm_id, _platfrms);
-                var _layer = getSPL(_comp._layer_id, _layers);
-                //console.dir(_layer);
-                var layerID = _layer.order;
-                layerID = (layerID === undefined) ? layers.size() : layerID;
+            var _platfrm = getSPL(_comp._platfrm_id, _platfrms);
+            var _layer = getSPL(_comp._layer_id, _layers);
+            //console.dir(_layer);
+            var layerID = _layer.order;
+            layerID = (layerID === undefined) ? layers.size() : layerID;
 
-                var groupID = _platfrm ? _platfrm.order : undefined;
-                groupID = (groupID === undefined) ? groups.size() : groupID;
+            var groupID = _platfrm ? _platfrm.order : undefined;
+            groupID = (groupID === undefined) ? groups.size() : groupID;
 
-                var _author = getBestDev(_comp.devs);
+            var _author = getBestDev(_comp.devs);
 
-                var element = {
-                    group: _platfrm ? _platfrm.code : undefined,
-                    groupID: groupID,
-                    code: helper.getCode(_comp.name),
-                    name: helper.capFirstLetter(_comp.name),
-                    layer: helper.capFirstLetter(_layer.name),
-                    layerID: layerID,
-                    type: helper.capFirstLetter(_comp.type),
-                    picture: _author.avatar_url ? _author.avatar_url : undefined,
-                    author: _author.usrnm ? _author.usrnm : undefined,
-                    authorRealName: _author.name ? _author.name : undefined,
-                    authorEmail: _author.email ? _author.email : undefined,
-                    difficulty: _comp.difficulty,
-                    code_level: _comp.code_level ? _comp.code_level : undefined,
-                    life_cycle: _comp.life_cycle,
-                    found: _comp.found
-                };
-                return element;
+            var element = {
+                group: _platfrm ? _platfrm.code : undefined,
+                groupID: groupID,
+                code: helper.getCode(_comp.name),
+                name: helper.capFirstLetter(_comp.name),
+                layer: helper.capFirstLetter(_layer.name),
+                layerID: layerID,
+                type: helper.capFirstLetter(_comp.type),
+                picture: _author.avatar_url ? _author.avatar_url : undefined,
+                author: _author.usrnm ? _author.usrnm : undefined,
+                authorRealName: _author.name ? _author.name : undefined,
+                authorEmail: _author.email ? _author.email : undefined,
+                difficulty: _comp.difficulty,
+                code_level: _comp.code_level ? _comp.code_level : undefined,
+                life_cycle: _comp.life_cycle,
+                found: _comp.found
             };
-
-
+            return element;
+        };
+        
+        for (i = 0, l = _comps.length; i < l; i++) {
             table.push(buildElement(i));
         }
 
@@ -748,7 +720,8 @@ function TileManager() {
                 })
             );
             mesh.userData = {
-                id: id
+                id: id,
+                onClick : onClick
             };
             mesh.material.map = texture;
             mesh.material.needsUpdate = true;
@@ -834,7 +807,7 @@ function TileManager() {
             .onUpdate(render)
             .start();
         
-        setTimeout(window.screenshotsAndroid.show_Screenshots, 4000);
+        setTimeout(window.screenshotsAndroid.show, 4000);
     };
 
     /**
@@ -896,6 +869,7 @@ function TileManager() {
             if(typeof layerCoordinates[row] === 'undefined')
                 layerCoordinates[row] = object.position.y;
 
+            object.position.copy(window.viewManager.translateToSection('table', object.position));
             this.targets.table.push(object);
 
         }
@@ -961,7 +935,7 @@ function TileManager() {
             .onUpdate(render)
             .start();
         
-        window.screenshotsAndroid.hide_Screenshots();
+        window.screenshotsAndroid.hide();
     };
 
     //Private methods
@@ -1057,5 +1031,36 @@ function TileManager() {
           else 
             drawPicture(data, ctx, texture);
         }
+    }
+    
+    function getSPL(_id, _SPLArray) {
+        if (_id) {
+            for (var i = 0, l = _SPLArray.length; i < l; i++) {
+                if (_SPLArray[i]._id + '' == _id + '') {
+                    return _SPLArray[i];
+                }
+            }
+        } else {
+            return null;
+        }
+    }
+
+    function getBestDev(_devs) {
+        var dev = {};
+        if (_devs) {
+            var _dev = {};
+            dev.percnt = 0;
+            for (var i = 0, l = _devs.length; i < l; i++) {
+                _dev = _devs[i];
+                if (_dev.scope == 'implementation' && _dev.percnt >= dev.percnt) {
+                    dev.percnt = _dev.percnt;
+                    dev.usrnm = _dev.dev.usrnm;
+                    dev.name = _dev.dev.name;
+                    dev.email = _dev.dev.email;
+                    dev.avatar_url = _dev.dev.avatar_url;
+                }
+            }
+        }
+        return dev;
     }
 }

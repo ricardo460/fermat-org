@@ -6,15 +6,16 @@ function ViewManager() {
     
     this.translateToSection = function(sectionName, vector) {
         
-        sectionName = window.map[sectionName] || window.map.start;
+        sectionName = window.map.views[sectionName] || window.map.start;
         var section = sectionName.section || [0, 0];
+        var newVector = vector.clone();
         
         if(typeof section !== 'undefined') {
         
-            vector.x = vector.x + section[0] * SECTION_SIZE;
-            vector.y = vector.y + section[1] * SECTION_SIZE;
+            newVector.x = vector.x + section[0] * SECTION_SIZE;
+            newVector.y = vector.y + section[1] * SECTION_SIZE;
         }
         
-        return vector;
+        return newVector;
     };
 }
