@@ -480,9 +480,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = createHeader(group, width, height);
                 
-                object.position.set(-160000,
-                                    Math.random() * 320000 - 160000,
-                                    0);
+                object.position.copy(window.viewManager.translateToSection('table', new THREE.Vector3(-160000, Math.random() * 320000 - 160000, 0)));
                 object.name = group;
 
                 scene.add(object);
@@ -512,9 +510,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = createHeader(slayer, width, height);
                 
-                object.position.set(160000,
-                                    Math.random() * 320000 - 160000,
-                                    0);
+                object.position.copy(window.viewManager.translateToSection('table', new THREE.Vector3(-160000, Math.random() * 320000 - 160000, 0)));
+                
                 object.name = slayer;
                 
 

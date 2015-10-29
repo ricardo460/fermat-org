@@ -14,8 +14,8 @@ function BrowserManager() {
     var wide = (Math.floor(window.camera.aspectRatio * 10) !== Math.floor(40/3));
     
     var LOWER_LAYER = 63000,
-        POSITION_X = (wide) ? 13500 : 12000,
-        POSITION_Y = (wide) ? 6900 : 6100,
+        POSITION_X = (wide) ? 15000 : 12000,
+        POSITION_Y = (wide) ? 7500 : 8000,
         SCALE = (wide) ? 70 : 40;
 
     var onClick = function (target) {
@@ -80,16 +80,12 @@ function BrowserManager() {
     * Initialization of the arrows
     */
    this.init = function () {
-          
-      setTimeout(function() {
+       
+        for(var view in window.map.views) {
 
-        for (var view in window.map.views) {
-            
             if(window.map.views[view].enabled === true)
                 loadView(view);
         }
-
-      }, 3000);
 
    };
     
@@ -138,7 +134,7 @@ function BrowserManager() {
             id = self.objects.mesh.length;
 
         mesh = new THREE.Mesh(
-               new THREE.PlaneGeometry( 80, 80 ),
+               new THREE.PlaneGeometry( 60, 60 ),
                new THREE.MeshBasicMaterial( { map:null , side: THREE.FrontSide, transparent: true } ));
     
        _position = calculatePositionArrow (centerX, centerY, button);
@@ -217,8 +213,8 @@ function BrowserManager() {
           config = configTexture(view, button);
 
         canvas = document.createElement('canvas');
-        canvas.width  = 90;
-        canvas.height = 90;
+        canvas.width  = 360;
+        canvas.height = 360;
 
         ctx = canvas.getContext("2d");
 
@@ -226,19 +222,21 @@ function BrowserManager() {
         img.src = "images/browsers_arrows/arrow-"+button+".png";
 
         img.onload = function () {
+            
+            ctx.textAlign = 'center';
+            
+            ctx.font = config.text.font;
+            window.helper.drawText(config.text.label, 180, config.image.text, ctx, canvas.width, config.text.size);
+            ctx.drawImage(img, config.image.x, config.image.y, 190, 190);
 
-          ctx.font = config.text.font;
-          window.helper.drawText(config.text.label, 0, config.image.text, ctx, canvas.width, config.text.size);
-          ctx.drawImage(img, config.image.x, config.image.y, 40, 40);
+            texture = new THREE.Texture(canvas);
+            texture.needsUpdate = true;  
+            texture.minFilter = THREE.NearestFilter;
 
-          texture = new THREE.Texture(canvas);
-          texture.needsUpdate = true;  
-          texture.minFilter = THREE.NearestFilter;
+            mesh.material.map = texture;
+            mesh.material.needsUpdate = true;
 
-          mesh.material.map = texture;
-          mesh.material.needsUpdate = true;
-
-          animate(mesh, LOWER_LAYER, 3000);
+            animate(mesh, LOWER_LAYER, 3000);
 
         };
 
@@ -257,24 +255,18 @@ function BrowserManager() {
         image = {},
         label;
 
-    if (button === "right") {  
-        image = { x: 15, y : 0, text : 65 };
-    }
-    else if (button === "left") { 
-        image = { x: 0, y : 0, text : 65 };
-    }
-    else if (button === "up") { 
-        image = { x: 18, y : 0, text : 65 };
+    if (button !== "down") {  
+        image = { x: 85, y : 0, text : 238 };
     }
     else { 
-        image = { x: 18, y : 25, text : 12 };
+        image = { x: 85, y : 120, text : 108 };
     }
  
 
       label = window.map.views[view].title;
 
 
-    text = { label : label, font: "13px Arial", size : 12 };
+    text = { label : label, font: "48px Arial", size : 48 };
 
     config = { image, text };
 
@@ -295,8 +287,7 @@ function BrowserManager() {
             z = target;
 
         new TWEEN.Tween(mesh.position)
-            .to({z : z}, 2000)
-            .delay( _duration )
+            .to({z : z}, _duration)
             .easing(TWEEN.Easing.Exponential.InOut)
             .onUpdate(window.render)
             .start();

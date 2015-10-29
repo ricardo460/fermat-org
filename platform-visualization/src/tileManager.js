@@ -741,7 +741,8 @@ function TileManager() {
      */
     this.transform = function (goal, duration) {
 
-        var i, l, j;
+        var i, l, j,
+            DELAY = 500;
 
         duration = duration || 2000;
 
@@ -782,7 +783,7 @@ function TileManager() {
             for(i = 0; i < elementsByGroup.length; i++) {
 
                 var k = (i + elementsByGroup.length - 1) % (elementsByGroup.length);
-                var delay = i * 500;
+                var delay = i * DELAY;
 
                 for(j = 0; j < elementsByGroup[k].length; j++) {
 
@@ -803,7 +804,7 @@ function TileManager() {
         }
 
         new TWEEN.Tween(this)
-            .to({}, duration * 2)
+            .to({}, duration * 2 + elementsByGroup * DELAY)
             .onUpdate(render)
             .start();
         
@@ -836,6 +837,9 @@ function TileManager() {
             object.rotation.x = Math.random() * 180;
             object.rotation.y = Math.random() * 180;
             object.rotation.z = Math.random() * 180;
+            
+            object.position.copy(window.viewManager.translateToSection('table', object.position));
+            
             scene.add(object);
 
             objects.push(object);
@@ -896,7 +900,7 @@ function TileManager() {
 
         var i, _duration = duration || 2000,
             distance = camera.getMaxDistance() * 2,
-            out = new THREE.Vector3(0, 0, distance);
+            out = window.viewManager.translateToSection('table', new THREE.Vector3(0, 0, distance));
 
         TWEEN.removeAll();
 

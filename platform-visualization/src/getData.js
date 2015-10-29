@@ -11,9 +11,9 @@ function getData() {
     }).success(
         function (lists) {
         
-            window.preLoad(function() {
+            window.loadMap(function() {
         
-                window.loadMap(function() {
+                window.preLoad(function() {
                     tileManager.fillTable(lists);
 
                     TWEEN.removeAll();
