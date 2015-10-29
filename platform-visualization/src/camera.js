@@ -310,7 +310,7 @@ function Camera(position, renderer, renderFunc) {
         
         new TWEEN.Tween(camera.position)
         .to({x : x, y : y, z : z}, _duration)
-        .easing(TWEEN.Easing.Exponential.InOut)
+        .easing(TWEEN.Easing.Cubic.InOut)
         .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
         .start();
         

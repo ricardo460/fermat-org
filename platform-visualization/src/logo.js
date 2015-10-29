@@ -10,11 +10,11 @@ function Logo(){
     var LOWER_LAYER = 63000,
         UPPER_LAYER = 70000;
     
-    var CLOSED_WALLET_Y = 2300,
+    var CLOSED_WALLET_Y = 1150,
         OPEN_WALLET_Y = 6000,
         CLOSED_FERMAT_Y = -CLOSED_WALLET_Y,
         OPEN_FERMAT_Y = -OPEN_WALLET_Y,
-        SCALE = 3;
+        SCALE = 1.5;
     
     
     
