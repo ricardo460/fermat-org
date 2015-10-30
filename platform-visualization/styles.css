@@ -19,96 +19,12 @@ a {
     color: #000000;
 }
 
-#info {
-    position: absolute;
-    width: 100%;
-    color: #ffffff;
-    padding: 5px;
-    font-family: Monospace;
-    font-size: 13px;
-    font-weight: bold;
-    text-align: center;
-    z-index: 1;
-}
-
 #menu {
     position: absolute;
     bottom: 20px;
     width: 100%;
     text-align: center;
 }
-
-.element {
-    width: 120px;
-    height: 160px;
-    box-shadow: 0px 0px 12px rgba(255,255,255,0.5);
-    border: 1px solid rgba(205,205,205,0.25);
-    text-align: center;
-    cursor: default;
-}
-
-.element:hover {
-    box-shadow: 0px 0px 12px rgba(255,255,255,0.75);
-    border: 1px solid rgba(255,255,255,0.75);
-}
-
-.element p {
-    margin: 0;
-}
-
-    .element .name {
-        color: rgba(255,255,255,1);
-    }
-
-    .element .number {
-        position: absolute;
-        top: 5px;
-        right: 10px;
-        font-size: 12px;
-        color: black;
-    }
-
-    .element .symbol {
-        position: absolute;
-        top: 22px;
-        left: 0px;
-        right: 0px;
-        font-size: 25px;
-        font-weight: bold;
-        color: white;
-        text-shadow: 0 0 10px rgba(255,255,255,0.5);
-    }
-
-    .element .details {
-        position: absolute;
-        bottom: 3px;
-        left: 0px;
-        right: 0px;
-        font-size: 12px;
-        color: white;
-    }
-
-    .element .picture {
-        position: absolute;
-        top: 53px;
-        left: 40px;
-        width: 35px;
-        height: 35px;
-        border: solid 3px rgba(255,255,255,1);
-        box-shadow: 0 0 10px rgba(255,255,255,0.95);
-        opacity: 0.65;
-    }
-
-    .element .difficulty {
-        position: absolute;
-        top: 93px;
-        left: 0px;
-        right: 0px;
-        text-shadow: 0 0 10px rgba(255,255,255,0.75);
-        font-size: 14px;
-        color: rgba(255,255,255,1);
-    }
-
 
 button:focus {
     outline: 0 !important;
@@ -181,25 +97,9 @@ button:active {
     position: relative;
 }
 
-#splash {
-    position : absolute;
-    z-index: 999;
-    animation: loop 3s infinite;
-    -webkit-animation: loop 3s infinite;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-
-@keyframes loop {
-    0% { opacity: 0.05; }
-    50% { opacity: 1; }
-    100% { opacity: 0.05; }
-}
-
-@-webkit-keyframes loop {
-    0% { opacity: 0.05; }
-    50% { opacity: 1; }
-    100% { opacity: 0.05; }
+@font-face {
+    font-family: Canaro;
+    src: url('fonts/canaro.otf') format("opentype");
+    font-weight: normal;
+    font-style: normal;
 }

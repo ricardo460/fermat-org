@@ -205,29 +205,31 @@ function BrowserManager() {
      * @param {object}   mesh    button to load texture.
      */
    function addTextura (view, button, mesh) {
+       
 
-      var canvas,
-          ctx,
-          img = new Image(),
-          texture,
-          config = configTexture(view, button);
+        var canvas,
+            ctx,
+            img = new Image(),
+            texture,
+            config = configTexture(view, button);
 
         canvas = document.createElement('canvas');
-        canvas.width  = 360;
-        canvas.height = 360;
+        canvas.width  = 400;
+        canvas.height = 370;
 
         ctx = canvas.getContext("2d");
+        ctx.globalAlpha = 0.90;
 
         img = new Image(); 
         img.src = "images/browsers_arrows/arrow-"+button+".png";
 
         img.onload = function () {
-            
+
             ctx.textAlign = 'center';
-            
+
             ctx.font = config.text.font;
-            window.helper.drawText(config.text.label, 180, config.image.text, ctx, canvas.width, config.text.size);
-            ctx.drawImage(img, config.image.x, config.image.y, 190, 190);
+            window.helper.drawText(config.text.label, 200, config.image.text, ctx, canvas.width, config.text.size);
+            ctx.drawImage(img, config.image.x, config.image.y, 200, 200);
 
             texture = new THREE.Texture(canvas);
             texture.needsUpdate = true;  
@@ -256,19 +258,19 @@ function BrowserManager() {
         label;
 
     if (button !== "down") {  
-        image = { x: 85, y : 0, text : 238 };
+        image = { x: 100, y : 0, text : 238 };
     }
     else { 
-        image = { x: 85, y : 120, text : 108 };
+        image = { x: 100, y : 120, text : 108 };
     }
  
 
       label = window.map.views[view].title;
 
 
-    text = { label : label, font: "48px Arial", size : 48 };
+    text = { label : label, font: "48px Canaro, Sans-serif", size : 48 };
 
-    config = { image, text };
+    config = { image : image, text : text };
 
     return config;
 

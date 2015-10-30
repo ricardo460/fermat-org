@@ -127,7 +127,7 @@ function Camera(position, renderer, renderFunc) {
         headers.hide(duration);
     
         var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1);
-        var target = screenshotsAndroid.objects.mesh[focus];
+        var target = window.screenshotsAndroid.objects.mesh[focus];
 
         vec.applyMatrix4( target.matrix );
 
@@ -321,14 +321,14 @@ function Camera(position, renderer, renderFunc) {
      */
     this.lockPan = function() {
         controls.noPan = true;
-    }
+    };
     
     /**
      * Unlocks the panning of the camera
      */
     this.unlockPan = function() {
         controls.noPan = false;
-    }
+    };
     
     // Events
     window.addEventListener( 'resize', this.onWindowResize, false );
