@@ -29,4 +29,9 @@ RouteCache.prototype.setBody = function (req, body) {
     return this.body;
 };
 
+RouteCache.prototype.clear = function () {
+    'use strict';
+    return this.cache.clear();
+};
+
 module.exports = RouteCache;
