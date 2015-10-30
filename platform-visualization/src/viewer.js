@@ -125,10 +125,8 @@ function goToView ( current ) {
 
             browserManager.modifyButtonLegend(1,'block');
 
-            setTimeout(function() {
-                headers.transformTable();
-                tileManager.transform(tileManager.targets.table, 4000);
-            }, 2000);
+            headers.transformTable();
+            tileManager.transform(tileManager.targets.table, 4000);
             
             
             break;
