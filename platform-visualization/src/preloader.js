@@ -39,13 +39,14 @@ function preLoad(onLoadAll) {
         e.src = img;
         };
     
+    //Preload images
     $.ajax({
         url: "./images.json",
         success: function (images) {
             'use strict';
-            
+
             progressBar.max = images.length;
-            
+
             var i = 0;
 
             while (i < images.length) {
@@ -54,4 +55,10 @@ function preLoad(onLoadAll) {
             }
         }
     });
+    
+    //Preload fonts
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.font = '12px Canaro';
+    ctx.fillText('.', 0, 0);
 }
