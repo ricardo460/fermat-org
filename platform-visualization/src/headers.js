@@ -17,23 +17,17 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             table : [],
             stack : []
         },
-        arrowsPosition = {
-            origin: [],
-            stack: []
-        },
-        arrowsRotation = {
+        arrowsPositions = {
             origin: [],
             stack: []
         },
         self = this,
         graph = {},
         arrows = [];
-
-        this.dep = dependencies;
-        this.obj = objects;
-        this.pos = positions;
-        
-        this.arrows = arrows;
+    
+    this.dep = dependencies;
+    this.arrows = arrows;
+    this.arrowPositions = arrowsPositions;
 
 
     // Public method
@@ -70,9 +64,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         arrowHelper.position.y = arrowHelper.position.y - POSITION_Y;
         arrowHelper.position.z = POSITION_Z;
 
-
-        arrowsPosition.stack.push(arrowHelper.position.clone());
-        arrowsRotation.stack.push(arrowHelper.rotation.clone());
+        objectStack.position.copy(arrowHelper.position);
+        objectStack.rotation.copy(arrowHelper.rotation);
+        arrowsPositions.stack.push(objectStack);
 
         arrowHelper.line.material.opacity = 0;
         arrowHelper.line.material.transparent = true;
@@ -81,11 +75,13 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         arrowHelper.cone.material.transparent = true;
 
 
-        arrowHelper.position.set(Math.random() * 340000, Math.random() * 320000 - 160000, 0);
-        arrowHelper.rotation.set(Math.random() * 360, Math.random() * 360, Math.random() * 360);
+        var startingPosition = new THREE.Vector3(Math.random() * 340000, Math.random() * 320000 - 160000, 0);
+        arrowHelper.position.copy(viewManager.translateToSection('stack', startingPosition));
+        arrowHelper.rotation.set(Math.random() * Math.PI * 2, Math.random() * Math.PI * 2, Math.random() * Math.PI * 2);
 
-        arrowsPosition.origin.push(arrowHelper.position.clone());
-        arrowsRotation.origin.push(arrowHelper.rotation.clone());
+        objectOrigin.position.copy(arrowHelper.position);
+        objectOrigin.rotation.copy(arrowHelper.rotation);
+        arrowsPositions.origin.push(objectOrigin);
 
         scene.add(arrowHelper);
         arrows.push(arrowHelper);
@@ -146,11 +142,11 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         for (j = 0; j< objects.length; j++) {
             
             //calculando Y
-            if(graph.data.nodes[j].level === 0){
+            if(graph.nodes[j].level === 0){
 
                for(i = 0; i < objects.length; i++){
 
-                    if(graph.data.nodes[j].id == objects[i].name){ //Coordenadas de inicio level = 0
+                    if(graph.nodes[j].id == objects[i].name){ //Coordenadas de inicio level = 0
                         positions.stack[i].position.x = 0;
                         positions.stack[i].position.y = -15000;
                         positions.stack[i].position.z = POSITION_Z;
@@ -158,18 +154,18 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                     }        
                }
                rootpositionY = positions.stack[i].position.y;
-               rootlengthX = dependencies[graph.data.nodes[j].id].length;
+               rootlengthX = dependencies[graph.nodes[j].id].length;
                 //obj.position.set(0, -14000, 45000); //coordenadas de entradas del root(OSA)
             }
-            else if(graph.data.nodes[j].level !== 0){ //coordenadas level distinto de 0
+            else if(graph.nodes[j].level !== 0){ //coordenadas level distinto de 0
 
                 for(i = 0; i < objects.length; i++){
-                    if(graph.data.nodes[j].id == objects[i].name){
+                    if(graph.nodes[j].id == objects[i].name){
                         positions.stack[i].position.z = POSITION_Z;
 
                         //calculando Y
                         actualpositionY = rootpositionY;
-                        for(k = 0; k < graph.data.nodes[j].level; k++){
+                        for(k = 0; k < graph.nodes[j].level; k++){
 
                             positions.stack[i].position.y = actualpositionY + 5000;
                             actualpositionY = positions.stack[i].position.y;
@@ -181,22 +177,22 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                             positionstart = 0;
                             if(actuallengthX % 2 !== 0){ //Cantidad de Hijos impar
                                 midpositionX = (rootlengthX / 2)+0.5;
-                                if(graph.data.nodes[j].level == 6){
+                                if(graph.nodes[j].level == 6){
                                     for(p = 0; p < objects.length; p++){
-                                        if(graph.data.nodes[j].id == objects[p].name){
+                                        if(graph.nodes[j].id == objects[p].name){
                                             for(q = 0; q < objects.length; q++){
-                                               if(graph.data.nodes[j-1].id == objects[q].name){
+                                               if(graph.nodes[j-1].id == objects[q].name){
                                                     positions.stack[p].position.x = positions.stack[q].position.x;//Heredamos la X del padre para construir de ahi una nueva rama y evitar el cruces de ramas
                                                }
                                             }
                                         }
                                     }
                                 }
-                                if(actuallengthX == 1 && graph.data.nodes[j].level != 6){// un hijo
+                                if(actuallengthX == 1 && graph.nodes[j].level != 6){// un hijo
                                     for(m = 0; m < objects.length; m++){
-                                        if(graph.data.nodes[j].id == objects[m].name){
+                                        if(graph.nodes[j].id == objects[m].name){
                                             positions.stack[m].position.x = 0;
-                                            rootlengthX = dependencies[graph.data.nodes[j].id].length;
+                                            rootlengthX = dependencies[graph.nodes[j].id].length;
                                         }
                                     }
                                 }
@@ -204,12 +200,12 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                                     for(p = midpositionX; p > 1; p--){
                                         positionstart = positionstart - 5000;
                                     }
-                                    for(l = 0; l < dependencies[graph.data.nodes[j-1].id].length; l++){//l es el indice de arreglos de hijos
+                                    for(l = 0; l < dependencies[graph.nodes[j-1].id].length; l++){//l es el indice de arreglos de hijos
                                         for(n = 0; n < objects.length; n++){
-                                            if(dependencies[graph.data.nodes[j-1].id][l] == objects[n].name){
+                                            if(dependencies[graph.nodes[j-1].id][l] == objects[n].name){
                                                 positions.stack[n].position.x = positions.stack[n].position.x + positionstart;
                                                 positionstart = positionstart + 5000;
-                                                rootlengthX = dependencies[graph.data.nodes[j].id].length;
+                                                rootlengthX = dependencies[graph.nodes[j].id].length;
                                             }
                                         }
                                     }
@@ -220,20 +216,20 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                                 for(p = midpositionX; p >= 1; p--){
                                     positionstart = positionstart - 5000;
                                 }
-                                for(l = 0; l < dependencies[graph.data.nodes[j-1].id].length; l++){
+                                for(l = 0; l < dependencies[graph.nodes[j-1].id].length; l++){
                                     for(n = 0; n < objects.length; n++){
-                                        if(dependencies[graph.data.nodes[j-1].id][l] == objects[n].name){
+                                        if(dependencies[graph.nodes[j-1].id][l] == objects[n].name){
                                             if(positionstart === 0)
                                                 positionstart = positionstart + 5000;
                                             if(positionstart !== 0){
                                                 positions.stack[n].position.x = positions.stack[n].position.x + positionstart;
                                                 for(q = 0; q < objects.length; q++){
-                                                   if(graph.data.nodes[j-1].id == objects[q].name){
+                                                   if(graph.nodes[j-1].id == objects[q].name){
                                                         positions.stack[n].position.x = positions.stack[n].position.x + positions.stack[q].position.x;//Heredamos la X del padre para construir de ahi una nueva rama y evitar el cruces de ramas
                                                    }
                                                 } 
                                                 positionstart = positionstart + 5000;
-                                                rootlengthX = dependencies[graph.data.nodes[j].id].length;
+                                                rootlengthX = dependencies[graph.nodes[j].id].length;
                                             }
                                         }
                                     }      
@@ -260,37 +256,31 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
         var startX, startY, endX, endY;
         
-        var i, j, k;
-        var bandera = false;
+        var i, j;
 
         new TWEEN.Tween(this)
         .to({}, 12000)
         .onUpdate(render)
         .start();
-        //graph.data.edges.length
-        for (i = 0; i < graph.data.edges.length; i++)
+        //graph.edges.length
+        for (i = 0; i < graph.edges.length; i++)
         {   
             startX = 0;
             startY = 0;
             endX = 0;
             endY = 0;
-            if(i == 4){
-                bandera = true;
-            }
-            //Start
+            
             for (j = 0; j < objects.length; j++){
-                 if(graph.data.edges[i].from === objects[j].name){
+                
+                 if(graph.edges[i].from === objects[j].name){
                     startX = positions.stack[j].position.x;
                     startY = positions.stack[j].position.y;
                 }
-            }       
-
-            //End
-            for (k = 0; k < objects.length; k++){
-                if(graph.data.edges[i].to === objects[k].name){
-                    endX = positions.stack[k].position.x;
-                    endY = positions.stack[k].position.y;  
-                }      
+                
+                if(graph.edges[i].to === objects[j].name){
+                    endX = positions.stack[j].position.x;
+                    endY = positions.stack[j].position.y;
+                }
             }
            
             self.createArrows(startX, startY, endX, endY);             
@@ -311,20 +301,20 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         for(i = 0, l = arrows.length; i < l; i++) {
             new TWEEN.Tween(arrows[i].position)
             .to({
-                x : arrowsPosition.origin[i].x,
-                y : arrowsPosition.origin[i].y,
-                z : arrowsPosition.origin[i].z
+                x : arrowsPositions.origin[i].position.x,
+                y : arrowsPositions.origin[i].position.y,
+                z : arrowsPositions.origin[i].position.z
             }, Math.random() * _duration + _duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
+            .easing(TWEEN.Easing.Cubic.InOut)
             .start();
 
              new TWEEN.Tween(arrows[i].rotation)
             .to({
-                x : arrowsRotation.origin[i].x,
-                y : arrowsRotation.origin[i].y,
-                z : arrowsRotation.origin[i].z
+                x : arrowsPositions.origin[i].rotation.x,
+                y : arrowsPositions.origin[i].rotation.y,
+                z : arrowsPositions.origin[i].rotation.z
             }, Math.random() * _duration + _duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
+            .easing(TWEEN.Easing.Cubic.InOut)
             .start();
         }
 
@@ -348,21 +338,21 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         for(i = 0, l = arrows.length; i < l; i++) {
             new TWEEN.Tween(arrows[i].position)
             .to({
-                x : arrowsPosition.stack[i].x,
-                y : arrowsPosition.stack[i].y,
-                z : arrowsPosition.stack[i].z
+                x : arrowsPositions.stack[i].position.x,
+                y : arrowsPositions.stack[i].position.y,
+                z : arrowsPositions.stack[i].position.z
             }, Math.random() * _duration + _duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
+            .easing(TWEEN.Easing.Cubic.InOut)
             //.onUpdate(render)
             .start();
 
             new TWEEN.Tween(arrows[i].rotation)
             .to({
-                x : arrowsRotation.stack[i].x,
-                y : arrowsRotation.stack[i].y,
-                z : arrowsRotation.stack[i].z
+                x : arrowsPositions.stack[i].rotation.x,
+                y : arrowsPositions.stack[i].rotation.y,
+                z : arrowsPositions.stack[i].rotation.z
             }, Math.random() * _duration + _duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
+            .easing(TWEEN.Easing.Cubic.InOut)
             //.onUpdate(render)
             .start();
         }
@@ -462,33 +452,34 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      */
     var buildGraph = function() {
         
-        var i, j, l, data, edges = [], nodes = [], options, bandera = false, bandera2 = false;
-            level = 0;
+        var data, edges = [], nodes = [], options, level = 0, pending = {};
             
         var trace = function(root, parent, _level, _nodes, _edges) {
-                
-                var i, l, child,
-                    lookup = function(x) { return x.id == child; };
-                
-                for(i = 0, l = root.length; i < l; i++) {
-                    
-                    child = root[i];
-                    
-                    if(_level !== 0) _edges.push({from : parent, to : child});
-                    
-                    if($.grep(_nodes, lookup).length === 0)
-                    {
-                        _nodes.push({
-                            id : child,
-                            shape : 'image',
-                            image : 'images/headers/svg/' + child + '_logo.svg',
-                            level : _level
-                        });
-                    }
-                    
-                    trace(dependencies[child], child, _level + 1, _nodes, _edges);
+            
+            if(parent) pending[parent] = true;
+            
+            var i, l, child,
+                lookup = function(x) { return x.id == child; };
+
+            for(i = 0, l = root.length; i < l; i++) {
+
+                child = root[i];
+
+                if(_level !== 0) _edges.push({from : parent, to : child});
+
+                if($.grep(_nodes, lookup).length === 0)
+                {
+                    _nodes.push({
+                        id : child,
+                        image : 'images/headers/svg/' + child + '_logo.svg',
+                        level : _level
+                    });
                 }
-            };
+
+                if(pending[child] === undefined)
+                    trace(dependencies[child], child, _level + 1, _nodes, _edges);
+            }
+        };
         
         trace(dependencies.root, null, level, nodes, edges);
         
@@ -496,33 +487,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             edges : edges,
             nodes : nodes
         };
-        options = {
-            physics:{
-                hierarchicalRepulsion: {
-                  nodeDistance: 150
-                }
-              },
-            edges:{
-                color:{
-                    color : '#F26662',
-                    highlight : '#E05952',
-                    hover: '#E05952'
-                }
-            },
-            layout: {
-                hierarchical:{
-                    enabled : true,
-                    direction: 'DU',
-                    levelSeparation: 150,
-                    sortMethod : 'directed'
-                }
-            }
-        };
         
-        graph = {
-            data : data,
-            options : options
-        };
+        graph = data;
     };
     
     var initialize = function() {
