@@ -17,44 +17,81 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             table : [],
             stack : []
         },
+        arrowsPosition = {
+            origin: [],
+            stack: []
+        },
+        arrowsRotation = {
+            origin: [],
+            stack: []
+        },
         self = this,
         graph = {},
-        lines = [];
-
+        arrows = [];
 
         this.dep = dependencies;
         this.obj = objects;
         this.pos = positions;
-    
+        
+        this.arrows = arrows;
+
+
     // Public method
 
     /**
      * @author Emmanuel Colina
-     * Paint the vectors (dependences)
+     * Create the Arrows (dependences)
      */
 
-    this.paintDependencestack = function(startX,startY,endX,endY) {
-       
+    this.createArrows = function(startX,startY,endX,endY) { 
+        
+        var POSITION_X = 1700;
+        var POSITION_Y = 200;
+        var POSITION_Z = 44700;
+
         //camera.resetPosition();
 
-        var material = new THREE.LineBasicMaterial({transparent : true, opacity : 0, color: 0XF26662});
+        endY = endY - 300;
 
-        var geometry = new THREE.Geometry();
-        geometry.vertices.push(
-            
-            new THREE.Vector3( startX,startY,0 ),
-            new THREE.Vector3( endX,endY,0 )
-        );
+        var from = new THREE.Vector3( startX, startY, 0);
 
-        var line = new THREE.Line( geometry, material );
-        line.position.x = -1600;
-        line.position.z = 44700;
+        var to = new THREE.Vector3( endX, endY, 0);
 
-        scene.add( line );
-        
-        lines.push(line);
+        var direction = to.clone().sub(from);
 
-        helper.showMaterial(line.material, 3000, TWEEN.Easing.Exponential.InOut, 3000);
+        var length = direction.length();
+
+        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0XF26662, 550, 300);
+
+        var objectStack = new THREE.Object3D();
+        var objectOrigin = new THREE.Object3D();
+
+        arrowHelper.position.x = arrowHelper.position.x - POSITION_X;
+        arrowHelper.position.y = arrowHelper.position.y - POSITION_Y;
+        arrowHelper.position.z = POSITION_Z;
+
+
+        arrowsPosition.stack.push(arrowHelper.position.clone());
+        arrowsRotation.stack.push(arrowHelper.rotation.clone());
+
+        arrowHelper.line.material.opacity = 0;
+        arrowHelper.line.material.transparent = true;
+
+        arrowHelper.cone.material.opacity = 0;
+        arrowHelper.cone.material.transparent = true;
+
+
+        arrowHelper.position.set(Math.random() * 340000, Math.random() * 320000 - 160000, 0);
+        arrowHelper.rotation.set(Math.random() * 360, Math.random() * 360, Math.random() * 360);
+
+        arrowsPosition.origin.push(arrowHelper.position.clone());
+        arrowsRotation.origin.push(arrowHelper.rotation.clone());
+
+        scene.add(arrowHelper);
+        arrows.push(arrowHelper);
+
+        helper.showMaterial(arrowHelper.line.material, 3000, TWEEN.Easing.Exponential.InOut, 3000);
+        helper.showMaterial(arrowHelper.cone.material, 3000, TWEEN.Easing.Exponential.InOut, 3000);        
     };
 
     /**
@@ -69,6 +106,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         //tileManager.letAlone();
         //camera.resetPosition(_duration / 2);
         drawVectornodo();
+        self.moveToPosition();
         
         var i, l;
 
@@ -223,22 +261,25 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         var startX, startY, endX, endY;
         
         var i, j, k;
+        var bandera = false;
 
         new TWEEN.Tween(this)
         .to({}, 12000)
         .onUpdate(render)
         .start();
-
+        //graph.data.edges.length
         for (i = 0; i < graph.data.edges.length; i++)
         {   
             startX = 0;
             startY = 0;
             endX = 0;
             endY = 0;
-
+            if(i == 4){
+                bandera = true;
+            }
             //Start
             for (j = 0; j < objects.length; j++){
-                 if(graph.data.edges[i].from == objects[j].name){
+                 if(graph.data.edges[i].from === objects[j].name){
                     startX = positions.stack[j].position.x;
                     startY = positions.stack[j].position.y;
                 }
@@ -246,41 +287,116 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
             //End
             for (k = 0; k < objects.length; k++){
-                if(graph.data.edges[i].to == objects[k].name){
+                if(graph.data.edges[i].to === objects[k].name){
                     endX = positions.stack[k].position.x;
                     endY = positions.stack[k].position.y;  
                 }      
             }
-
-            self.paintDependencestack(startX, startY, endX, endY);        
+           
+            self.createArrows(startX, startY, endX, endY);             
         }
     };
 
     /**
-     * @author Miguel Celedon
+     * @author Emmanuel Colina
      *             
+     * Arranges the headers in the table
+     * @param {Number} [duration=Math.random() * 3000 + 1000] Duration of the animation
+     */
+    this.flyOut = function(duration){
+
+        var _duration = duration || Math.random() * 3000 + 1000,
+            i, l;
+
+        for(i = 0, l = arrows.length; i < l; i++) {
+            new TWEEN.Tween(arrows[i].position)
+            .to({
+                x : arrowsPosition.origin[i].x,
+                y : arrowsPosition.origin[i].y,
+                z : arrowsPosition.origin[i].z
+            }, Math.random() * _duration + _duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
+
+             new TWEEN.Tween(arrows[i].rotation)
+            .to({
+                x : arrowsRotation.origin[i].x,
+                y : arrowsRotation.origin[i].y,
+                z : arrowsRotation.origin[i].z
+            }, Math.random() * _duration + _duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
+        }
+
+        new TWEEN.Tween(this)
+        .to({}, _duration * 2)
+        .onUpdate(render)
+        .start();
+    };
+
+    /**
+     * @author Emmanuel Colina
+     *             
+     * Arranges the headers in the table
+     * @param {Number} [duration=Math.random() * 8000 + 1000] Duration of the animation
+     */
+    this.moveToPosition = function(duration){
+
+        var _duration = duration || Math.random() * 10000 + 3000,
+            i, l;
+
+        for(i = 0, l = arrows.length; i < l; i++) {
+            new TWEEN.Tween(arrows[i].position)
+            .to({
+                x : arrowsPosition.stack[i].x,
+                y : arrowsPosition.stack[i].y,
+                z : arrowsPosition.stack[i].z
+            }, Math.random() * _duration + _duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            //.onUpdate(render)
+            .start();
+
+            new TWEEN.Tween(arrows[i].rotation)
+            .to({
+                x : arrowsRotation.stack[i].x,
+                y : arrowsRotation.stack[i].y,
+                z : arrowsRotation.stack[i].z
+            }, Math.random() * _duration + _duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            //.onUpdate(render)
+            .start();
+        }
+
+        new TWEEN.Tween(this)
+        .to({}, _duration * 2)
+        .onUpdate(render)
+        .start();
+    };
+
+    /**
+     * @author Miguel Celedon
+     * @lastmodified By Emmanuel Colina          
      * Arranges the headers in the table
      * @param {Number} [duration=2000] Duration of the animation
      */
+
     this.transformTable = function(duration) {
         var _duration = duration || 4000,
             i, l;
 
-        setTimeout(function(){
-            for(i = 0; i < lines.length; i++){
-                helper.hideObject(lines[i], false, 200);
-            }
+        self.flyOut();
 
-            lines = [];
-        }, 100);
+        setTimeout(function(){
+            for(i = 0; i < arrows.length; i++){
+                helper.hideObject(arrows[i].line, false, 200);
+                helper.hideObject(arrows[i].cone, false, 200);
+            }
+            arrows = [];
+        }, 2000);
 
 
         helper.hide('stackContainer', _duration / 2);
         helper.hide('headContainer', _duration / 2);
-        //This should be moved to be called by viewer.js when we no longer use vis for this
-        /*setTimeout(function() {    
-            tileManager.transform(tileManager.targets.table); 
-        }, _duration);*/
 
         for(i = 0, l = objects.length; i < l; i++) {
             
@@ -340,12 +456,13 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     //=========================================================
     
     /**
-     * Creates the dependency graph used in vis.js
-     * @returns {Object} Object containing the data and options used in vis.js
+     * @lastmodified By Emmanuel Colina
+     * Creates the dependency graph
+     * @returns {Object} Object containing the data and options
      */
     var buildGraph = function() {
         
-        var i, l, data, edges = [], nodes = [], options,
+        var i, j, l, data, edges = [], nodes = [], options, bandera = false, bandera2 = false;
             level = 0;
             
         var trace = function(root, parent, _level, _nodes, _edges) {
