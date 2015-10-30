@@ -5,36 +5,37 @@ var tileManager = new TileManager();
 function getData() {
     animate();
     
-   $.ajax({
+ $.ajax({
         url: "http://52.11.156.16:3000/repo/comps?access_token=561fd1a5032e0c5f7e20387d",
         method: "GET"
     }).success(
         function (lists) {
         
-            window.preLoad(function() {
+            window.loadMap(function() {
         
-                window.loadMap();
-                tileManager.fillTable(lists);
+                window.preLoad(function() {
+                    tileManager.fillTable(lists);
 
-                TWEEN.removeAll();
-                logo.stopFade();
-                init();
+                    TWEEN.removeAll();
+                    logo.stopFade();
+                    init();
+                });
             });
         });
-    
-    
+
 /*setTimeout(function(){
         var l = JSON.parse(testData);
         
-        window.loadMap();
+        window.preLoad(function() {
+        
+                window.loadMap(function() {
+                    tileManager.fillTable(l);
 
-        tileManager.fillTable(l);
-
-        TWEEN.removeAll();
-
-        logo.stopFade();
-
-        init();
+                    TWEEN.removeAll();
+                    logo.stopFade();
+                    init();
+                });
+            });
 
     }, 6000);*/
 }

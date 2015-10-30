@@ -1,7 +1,14 @@
-var map;
+var map = {};
 
-//Load the map here
-function loadMap() {
+/**
+ * @author Miguel Celedon
+ * Loads the map (json version)
+ * @param {Function} callback Function to call when finished
+ */
+function loadMap(callback){
     
-    window.map = window.test_map;
+    $.get("config_map.json", {}, function(json) {
+        window.map = json;
+        callback();
+    });
 }

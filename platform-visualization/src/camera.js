@@ -114,7 +114,7 @@ function Camera(position, renderer, renderFunc) {
             .start();
     };
 
-    this.setFocus_Screenshots = function( id, duration ) {
+    this.setFocusScreenshots = function( id, duration ) {
         
         TWEEN.removeAll();
 
@@ -127,7 +127,7 @@ function Camera(position, renderer, renderFunc) {
         headers.hide(duration);
     
         var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1);
-        var target = screenshotsAndroid.objects.mesh[focus];
+        var target = window.screenshotsAndroid.objects.mesh[focus];
 
         vec.applyMatrix4( target.matrix );
 
@@ -211,15 +211,17 @@ function Camera(position, renderer, renderFunc) {
         duration = duration || 2000;
         self.disable();
         
+        var target = window.viewManager.translateToSection(window.actualView, controls.position0);
+        
         /*new TWEEN.Tween( controls.target )
                 .to( { x: controls.target0.x, y: controls.target0.y, z: controls.target0.z }, Math.random() * duration + duration )
                 .easing( TWEEN.Easing.Exponential.InOut )
                 .start();*/
 
             new TWEEN.Tween( camera.position )
-                .to( { x: controls.position0.x, y: controls.position0.y, z: controls.position0.z }, duration )
+                .to( { x: target.x, y: target.y, z: target.z }, duration )
                 //.easing( TWEEN.Easing.Exponential.InOut )
-                .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
+                .onUpdate(function(){ controls.target.set(camera.position.x, camera.position.y, 1); })
                 .onComplete(function() { self.enable(); controls.noPan = true; })
                 .start();
 
@@ -308,7 +310,7 @@ function Camera(position, renderer, renderFunc) {
         
         new TWEEN.Tween(camera.position)
         .to({x : x, y : y, z : z}, _duration)
-        .easing(TWEEN.Easing.Exponential.InOut)
+        .easing(TWEEN.Easing.Cubic.InOut)
         .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
         .start();
         
@@ -319,14 +321,14 @@ function Camera(position, renderer, renderFunc) {
      */
     this.lockPan = function() {
         controls.noPan = true;
-    }
+    };
     
     /**
      * Unlocks the panning of the camera
      */
     this.unlockPan = function() {
         controls.noPan = false;
-    }
+    };
     
     // Events
     window.addEventListener( 'resize', this.onWindowResize, false );

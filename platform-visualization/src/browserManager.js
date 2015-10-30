@@ -11,22 +11,29 @@ function BrowserManager() {
 
     var self = this;
     
-    var wide = (Math.floor(camera.aspectRatio * 10) !== Math.floor(40/3));
+    var wide = (Math.floor(window.camera.aspectRatio * 10) !== Math.floor(40/3));
     
     var LOWER_LAYER = 63000,
-        POSITION_X = (wide) ? 13500 : 12000,
+        POSITION_X = (wide) ? 15000 : 12000,
+        POSITION_Y = (wide) ? 7500 : 8000,
         SCALE = (wide) ? 70 : 40;
+
+    var onClick = function (target) {
+
+       actionButton(target.userData.view);
+
+    };
 
      /**
      * @author Ricardo Delgado
      * Pressed button function.
      * @param {String} view  vista a cargar
      */
-    this.actionButton = function ( view ) {
+    function actionButton (view) {
 
-        window.goToView(view);
+       window.goToView(view);
 
-    };
+    }
 
    /**
     * @author Ricardo Delgado
@@ -34,7 +41,7 @@ function BrowserManager() {
     * @param {Number} valor    value of opacity
     * @param {String} display  button status
     */
-   this.modifyButtonBack = function ( valor, display ) {
+   this.modifyButtonBack = function (valor, display) {
     
        var browserButton = document.getElementById('backButton');
 
@@ -54,7 +61,7 @@ function BrowserManager() {
      * @param {Number}  valor    value of opacity.
      * @param {String} display   button status.
      */
-   this.modifyButtonLegend = function ( valor, display ) {
+   this.modifyButtonLegend = function (valor, display) {
     
       var browserButton = document.getElementById('legendButton');
       
@@ -70,121 +77,123 @@ function BrowserManager() {
 
    /**
     * @author Ricardo Delgado
-    * inicializacion de las arrow 
+    * Initialization of the arrows
     */
    this.init = function () {
-      
-      
-      setTimeout(function() {
+       
+        for(var view in window.map.views) {
 
-        loadview('table');
-
-        loadview("stack");
-
-      }, 5000);
-
+            if(window.map.views[view].enabled === true)
+                loadView(view);
+        }
 
    };
+    
    /**
     * @author Ricardo Delgado
     * Loading the necessary views and arrows according to varible map. 
-    * @param {String} view  vista a cargar
+    * @param {String} view  view to load
     */
-   function loadview(view){
+   function loadView (view) {
 
-      var top,
-          bottom,
+      var up,
+          down,
           right,
           left;
 
       var newCenter = new THREE.Vector3(0, 0, 0);
 
-          newCenter = viewManager.translateToSection(view, newCenter);
+          newCenter = window.viewManager.translateToSection(view, newCenter);
 
-      switch(view) {
-
-        case 'table':
-
-          /*top  = window.map.table.top;
-          bottom = window.map.table.bottom;*/
-          right  = window.map.table.right;
-          left   = window.map.table.left;
+          up    = window.map.views[view].up;
+          down = window.map.views[view].down;
+          right  = window.map.views[view].right;
+          left   = window.map.views[view].left;
           
-         /* if ( top != "" ) addArrow( top, center,"top");  
+          if (up !== "") addArrow(up, newCenter.x, newCenter.y, "up");  
 
-          if ( bottom != "" ) addArrow( bottom, center, "top");*/ 
+          if (down !== "") addArrow(down, newCenter.x, newCenter.y, "down");
 
-          if ( right !== "" ) addArrow( right, newCenter.x, "right"); 
+          if (right !== "") addArrow(right, newCenter.x, newCenter.y, "right"); 
 
-          if ( left !== "" ) addArrow( left, newCenter.x, "left"); 
-           
-        break;
-
-        case 'stack':
-
-         /* top  = window.map.stack.top;
-          bottom = window.map.stack.bottom;*/
-          right  = window.map.stack.right;
-          left   = window.map.stack.left;
-          
-         /* if ( top != "" ) addArrow( top, center,"top");  
-
-          if ( bottom != "" ) addArrow( bottom, center, "top"); */
-
-          if ( right !== "" ) addArrow( right, newCenter.x, "right"); 
-
-          if ( left !== "" ) addArrow( left, newCenter.x, "left");                     
-            
-        break;
-      }
+          if (left !== "") addArrow(left, newCenter.x, newCenter.y, "left"); 
 
    }
 
    /**
      * @author Ricardo Delgado
-     * creacion de las flechas.
+     * creating arrows.
      * @param {String}   view    view load.
      * @param {Number}  center   camera Center.
      * @param {String}  button   position arrow.
      */
-   function addArrow ( view, center, button ) {
+   function addArrow (view, centerX, centerY, button) {
 
         var mesh,
-            posicion,
-            z = 80000 * -2,
+            _position,
             id = self.objects.mesh.length;
 
         mesh = new THREE.Mesh(
-                new THREE.PlaneGeometry( 80, 80 ),
-                new THREE.MeshBasicMaterial( { map:null , side: THREE.FrontSide, transparent: true } ));
+               new THREE.PlaneGeometry( 60, 60 ),
+               new THREE.MeshBasicMaterial( { map:null , side: THREE.FrontSide, transparent: true } ));
     
-        if ( button === "right" ) {
+       _position = calculatePositionArrow (centerX, centerY, button);
 
-            POSITION_X = center + POSITION_X; 
+       mesh.position.set( _position.x, 
+                          _position.y, 
+                          _position.z );
 
-            posicion = { x: POSITION_X, y: 0, z: z };
+       mesh.scale.set(SCALE, SCALE, SCALE);
 
-        } else {
+       mesh.userData = { 
+        id : id ,
+        arrow : button, 
+        view : view,
+        onClick : onClick };
 
-           POSITION_X = center + ( POSITION_X * -1 );
-
-           posicion = { x: POSITION_X, y: 0, z: z };
-
-       }
-
-       mesh.position.set( posicion.x, 
-                          posicion.y, 
-                          posicion.z );
-
-       mesh.scale.set( SCALE, SCALE, SCALE );
-       mesh.userData = { id : id ,arrow : button, view : view };
        mesh.material.opacity = 1;
     
        window.scene.add(mesh);
     
        self.objects.mesh.push(mesh);
 
-       addTextura ( view, button, mesh );
+       addTextura (view, button, mesh);
+
+   }
+
+   /**
+     * @author Ricardo Delgado
+     * Calculate Position Arrow .
+     * @param {Number}  center   camera Center.
+     * @param {String}  button   position arrow.
+     */
+   function calculatePositionArrow (centerX, centerY, button) {
+
+      var position = {},
+          x = centerX,
+          y = centerY,
+          z = 80000 * -2; 
+
+      if ( button === "right" ) { 
+
+          x = centerX + POSITION_X; 
+      }
+      else if ( button === "left" ) { 
+
+        x = centerX + ( POSITION_X * -1 );
+      }
+      else if ( button === "up" ) { 
+
+         y = centerY + POSITION_Y;
+      }
+      else { 
+
+         y = centerY + ( POSITION_Y * -1 );
+      }
+
+     position = { x: x, y: y, z: z };
+
+     return position;
 
    }
 
@@ -195,66 +204,75 @@ function BrowserManager() {
      * @param {String}  button   image to use.
      * @param {object}   mesh    button to load texture.
      */
-   function addTextura ( view, button, mesh) {
+   function addTextura (view, button, mesh) {
+       
 
-      var canvas,
-          ctx,
-          img = new Image(),
-          texture,
-          fontside,
-          imageside,
-          label;
-
-      if ( view === "table" ) {
-
-        fontside = { font: "20px Arial", size : 20 };
-
-        label = "View Table";
-
-      }
-
-      else if ( view === "stack" ) { 
-
-        fontside = { font: "14px Arial", size : 14, x: 70, y: 70 };
-
-        label = "View Dependencies";
-
-      }
-
-      if ( button === "right" ) {
-
-        imageside = { x: 15 };
-
-      } else  {
-
-        imageside = { x: 0 };
-
-      }
+        var canvas,
+            ctx,
+            img = new Image(),
+            texture,
+            config = configTexture(view, button);
 
         canvas = document.createElement('canvas');
-        canvas.width  = 90;
-        canvas.height = 90;
+        canvas.width  = 400;
+        canvas.height = 370;
 
         ctx = canvas.getContext("2d");
+        ctx.globalAlpha = 0.90;
 
         img = new Image(); 
         img.src = "images/browsers_arrows/arrow-"+button+".png";
 
         img.onload = function () {
 
-          ctx.font = fontside.font;
-          helper.drawText( label, 0, 65, ctx, canvas.width, fontside.size );
-          ctx.drawImage(img, imageside.x, 0, 40, 40);
+            ctx.textAlign = 'center';
 
-          texture = new THREE.Texture(canvas);
-          texture.needsUpdate = true;  
-          texture.minFilter = THREE.NearestFilter;
+            ctx.font = config.text.font;
+            window.helper.drawText(config.text.label, 200, config.image.text, ctx, canvas.width, config.text.size);
+            ctx.drawImage(img, config.image.x, config.image.y, 200, 200);
 
-          mesh.material.map = texture;
-          mesh.material.needsUpdate = true;
+            texture = new THREE.Texture(canvas);
+            texture.needsUpdate = true;  
+            texture.minFilter = THREE.NearestFilter;
 
-          animate( mesh, 2500, LOWER_LAYER );
-      };
+            mesh.material.map = texture;
+            mesh.material.needsUpdate = true;
+
+            animate(mesh, LOWER_LAYER, 3000);
+
+        };
+
+   }
+
+   /**
+     * @author Ricardo Delgado
+     * Configures all texture options.
+     * @param {String}   view    view.
+     * @param {String}  button   image to use.
+     */
+   function configTexture (view, button) {
+     
+    var config = {},
+        text = {},
+        image = {},
+        label;
+
+    if (button !== "down") {  
+        image = { x: 100, y : 0, text : 238 };
+    }
+    else { 
+        image = { x: 100, y : 120, text : 108 };
+    }
+ 
+
+      label = window.map.views[view].title;
+
+
+    text = { label : label, font: "48px Canaro, Sans-serif", size : 48 };
+
+    config = { image : image, text : text };
+
+    return config;
 
    }
 
@@ -262,21 +280,19 @@ function BrowserManager() {
      * @author Ricardo Delgado.
      * Animate Button.
      * @param {Object}     mesh        Button.
-     * @param {Number} [duration=2000] Duration of the animation.
      * @param {Number}     target      The objetive Z position.
+     * @param {Number} [duration=2000] Duration of the animation.
      */
-   function animate ( mesh, duration, target ){
+   function animate (mesh, target, duration) {
 
         var _duration = duration || 2000,
             z = target;
 
-        var tween = new TWEEN.Tween(mesh.position);
-        tween.to({z : z}, 2000);
-        tween.delay( _duration );
-        tween.easing(TWEEN.Easing.Exponential.InOut);
-        tween.onUpdate(render);
-        
-        tween.start();
+        new TWEEN.Tween(mesh.position)
+            .to({z : z}, _duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .onUpdate(window.render)
+            .start();
 
    }
 
