@@ -298,4 +298,17 @@ function Helper() {
 
         return -1;
     };
+    
+    this.getOutOfScreenPoint = function(z) {
+        
+        z = (z !== undefined) ? z : 0;
+        
+        var away = window.camera.getMaxDistance() * 4;
+        var point = new THREE.Vector3(0, 0, z);
+        
+        point.x = Math.random() * away + away * ((Math.floor(Math.random() * 10) % 2) * -1);
+        point.y = Math.random() * away + away * ((Math.floor(Math.random() * 10) % 2) * -1);
+        
+        return point;
+    };
 }

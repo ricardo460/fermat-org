@@ -174,19 +174,21 @@ function ScreenshotsAndroid() {
     this.show = function () {
 
 
-     if (action.state) { 
+        if (action.state) {
 
-      resetTexture(action.mesh);
-     }
-     else { 
+            resetTexture(action.mesh);
+        }
+        else {
+            for (var i = 0; i < self.objects.mesh.length; i++) {
 
-         for (var i = 0; i < self.objects.mesh.length; i++) { 
-
-         animate(self.objects.mesh[i], self.objects.target[i], true, 2000);
-
-         }
-     }
-
+                animate(self.objects.mesh[i], self.objects.target[i], true, 2000);
+            }
+            
+            new TWEEN.Tween(this)
+            .to({}, 4000)
+            .onUpdate(window.render)
+            .start();
+        }
     };
 
     /**
@@ -392,13 +394,11 @@ function ScreenshotsAndroid() {
         new TWEEN.Tween(mesh.position)
             .to({x : x, y : y, z : z}, Math.random() * _duration + _duration)
             .easing(TWEEN.Easing.Exponential.InOut)
-            .onUpdate(window.render)
             .start();
 
         new TWEEN.Tween(mesh.rotation)
             .to({x: rx, y: ry, z: rz}, Math.random() * duration + duration)
             .easing(TWEEN.Easing.Exponential.InOut)
-            .onUpdate(window.render) 
             .start();
 
    }

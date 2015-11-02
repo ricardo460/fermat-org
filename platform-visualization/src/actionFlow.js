@@ -6,7 +6,9 @@ function ActionFlow(flow) {
     
     var BOX_WIDTH = 790;
     var BOX_HEIGHT = 172;
-    var X_OFFSET = -312; //Because lines doesn't come from the center
+    var X_OFFSET = -312; //Because lines don't come from the center
+    var ROW_SPACING = 350;
+    var COLUMN_SPACING = 900;
     
     this.flow = flow || [];
     
@@ -27,138 +29,151 @@ function ActionFlow(flow) {
         objects.push(title);
         scene.add(title);
         
-        var columnWidth = window.TILE_DIMENSION.width * 3,
-            rowHeight = window.TILE_DIMENSION.width * 3;
-        
         new TWEEN.Tween(this)
             .to({}, 4000)
             .onUpdate(window.render)
             .start();
         
         for(i = 0, l = self.flow.steps.length; i < l; i++)
-            drawTree(self.flow.steps[i], initialX + columnWidth * i, initialY);
+            drawTree(self.flow.steps[i], initialX + COLUMN_SPACING * i, initialY);
         
         for(i = 0, l = objects.length; i < l; i++) {
             helper.showMaterial(objects[i].material);
         }
         
+    };
+    
+    //Private methods
         
-        function drawTree(root, x, y) {
-            
-            if(typeof root.drawn === 'undefined') {
-                drawStep(root, x, y);
-            
-                var childCount = root.next.length,
-                    startX = x - 0.5 * (childCount - 1) * columnWidth;
+    /**
+     * Recursively draw the flow tree
+     * @param {Object} root The root of the tree
+     * @param {Number} x    X position of the root
+     * @param {Number} y    Y position of the root
+     * @author Miguel Celedon
+     */
+    function drawTree(root, x, y) {
+        
+        if(typeof root.drawn === 'undefined') {
+            drawStep(root, x, y);
 
-                if(childCount !== 0) {
+            var childCount = root.next.length,
+                startX = x - 0.5 * (childCount - 1) * COLUMN_SPACING;
 
-                    var lineGeo = new THREE.Geometry();
-                    var lineMat = new THREE.LineBasicMaterial({color : 0x000000, transparent : true, opacity : 0});
+            if(childCount !== 0) {
 
-                    var rootPoint = new THREE.Vector3(x + X_OFFSET, y - rowHeight / 2);
+                var lineGeo = new THREE.Geometry();
+                var lineMat = new THREE.LineBasicMaterial({color : 0x000000, transparent : true, opacity : 0});
 
-                    lineGeo.vertices.push(
-                        new THREE.Vector3(x + X_OFFSET, y, -1),
-                        rootPoint);
+                var rootPoint = new THREE.Vector3(x + X_OFFSET, y - ROW_SPACING / 2);
 
-                    var rootLine = new THREE.Line(lineGeo, lineMat);
-                    objects.push(rootLine);
-                    window.scene.add(rootLine);
+                lineGeo.vertices.push(
+                    new THREE.Vector3(x + X_OFFSET, y, -1),
+                    rootPoint);
 
-                    var nextX, nextY, childLine, child, i, isLoop;
+                var rootLine = new THREE.Line(lineGeo, lineMat);
+                objects.push(rootLine);
+                window.scene.add(rootLine);
 
-                    for(i = 0; i < childCount; i++) {
+                var nextX, nextY, childLine, child, i, isLoop;
 
-                        child = getStep(root.next[i].id);
-                        isLoop = (typeof child.drawn !== 'undefined');
-                        
-                        
-                        nextX = startX + i * columnWidth;
-                        
-                        if(isLoop) {
-                            console.log(Math.abs(nextX));
-                            lineMat = new THREE.LineBasicMaterial({color : 0x888888, transparent : true, opacity : 0});
-                            nextY = child.drawn.y;
-                            
-                            if(nextX !== rootPoint.x && colides(nextX, root)) {
-                                nextX += (childCount + 1) * columnWidth;
-                            }
+                for(i = 0; i < childCount; i++) {
+
+                    child = getStep(root.next[i].id);
+                    isLoop = (typeof child.drawn !== 'undefined');
+
+
+                    nextX = startX + i * COLUMN_SPACING;
+
+                    if(isLoop) {
+                        console.log(Math.abs(nextX));
+                        lineMat = new THREE.LineBasicMaterial({color : 0x888888, transparent : true, opacity : 0});
+                        nextY = child.drawn.y;
+
+                        if(nextX !== rootPoint.x && colides(nextX, root)) {
+                            nextX += (childCount + 1) * COLUMN_SPACING;
                         }
-                        else {
-                            lineMat = new THREE.LineBasicMaterial({color : 0x000000, transparent : true, opacity : 0});
-                            nextY = y - rowHeight;
-                        }
-
-                        lineGeo = new THREE.Geometry();
-                        lineGeo.vertices.push(
-                            rootPoint,
-                            new THREE.Vector3(nextX + X_OFFSET, rootPoint.y, -1),
-                            new THREE.Vector3(nextX + X_OFFSET, nextY, -1)
-                        );
-                        
-                        if(isLoop) {
-                            lineGeo.vertices[2].setY(nextY + rowHeight * 0.25);
-                            
-                            lineGeo.vertices.push(
-                                new THREE.Vector3(child.drawn.x + X_OFFSET, child.drawn.y + rowHeight * 0.25, -1)
-                            );
-                        }
-
-                        childLine = new THREE.Line(lineGeo, lineMat);
-                        objects.push(childLine);
-                        window.scene.add(childLine);
-
-                        drawTree(child, nextX, nextY);
                     }
+                    else {
+                        lineMat = new THREE.LineBasicMaterial({color : 0x000000, transparent : true, opacity : 0});
+                        nextY = y - ROW_SPACING;
+                    }
+
+                    lineGeo = new THREE.Geometry();
+                    lineGeo.vertices.push(
+                        rootPoint,
+                        new THREE.Vector3(nextX + X_OFFSET, rootPoint.y, -1),
+                        new THREE.Vector3(nextX + X_OFFSET, nextY, -1)
+                    );
+
+                    if(isLoop) {
+                        lineGeo.vertices[2].setY(nextY + ROW_SPACING * 0.25);
+
+                        lineGeo.vertices.push(
+                            new THREE.Vector3(child.drawn.x + X_OFFSET, child.drawn.y + ROW_SPACING * 0.25, -1)
+                        );
+                    }
+
+                    childLine = new THREE.Line(lineGeo, lineMat);
+                    objects.push(childLine);
+                    window.scene.add(childLine);
+
+                    drawTree(child, nextX, nextY);
                 }
             }
         }
-        
-        function drawStep(node, x, y) {
-            
-            var tile,
-                tilePosition = new THREE.Vector3(x - 108, y - 2, 1);
-            
-            if(node.element !== -1) {
-                
-                if(typeof used[node.element] !== 'undefined') {
-                    tile = window.objects[node.element].clone();
-                    tile.isClone = true;
-                }
-                else {
-                    tile = window.objects[node.element];
-                    used[node.element] = true;
-                }
-                
-                objects.push(tile);
-                window.scene.add(tile);
+    }
 
-                new TWEEN.Tween(tile.position)
-                    .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 2000)
-                    .easing(TWEEN.Easing.Exponential.Out)
-                    //.onUpdate(render)
-                    .start();
+    /**
+     * Draws a single step
+     * @param {Object} node The information of the step
+     * @param {Number} x    X position
+     * @param {Number} y    Y position
+     */
+    function drawStep(node, x, y) {
+
+        var tile,
+            tilePosition = new THREE.Vector3(x - 108, y - 2, 1);
+
+        if(node.element !== -1) {
+
+            if(typeof used[node.element] !== 'undefined') {
+                tile = window.objects[node.element].clone();
+                tile.isClone = true;
             }
-            
-            var stepBox = createStepBox(node);
-            stepBox.position.set(x, y, 0);
-            objects.push(stepBox);
-            scene.add(stepBox);
+            else {
+                tile = window.objects[node.element];
+                used[node.element] = true;
+            }
 
-            node.drawn = {
-                x : x,
-                y : y
-            };
+            objects.push(tile);
+            window.scene.add(tile);
+
+            new TWEEN.Tween(tile.position)
+                .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 2000)
+                .easing(TWEEN.Easing.Exponential.Out)
+                //.onUpdate(render)
+                .start();
         }
-        
-        /**
-         * Check if the line collides a block
-         * @param   {Number}  x    Position to check
-         * @param   {Object}  from Object where the line starts
-         * @returns {Boolean} true if collision is detected
-         */
-        function colides(x, from) {
+
+        var stepBox = createStepBox(node);
+        stepBox.position.set(x, y, 0);
+        objects.push(stepBox);
+        scene.add(stepBox);
+
+        node.drawn = {
+            x : x,
+            y : y
+        };
+    }
+
+    /**
+     * Check if the line collides a block
+     * @param   {Number}  x    Position to check
+     * @param   {Object}  from Object where the line starts
+     * @returns {Boolean} true if collision is detected
+     */
+    function colides(x, from) {
             
             var actual;
             
@@ -170,7 +185,6 @@ function ActionFlow(flow) {
             
             return false;
         }
-    };
     
     /**
      * Deletes all objects related to the flow
@@ -201,8 +215,6 @@ function ActionFlow(flow) {
         objects = [];
     };
     
-    //Private methods
-    
     /**
      * Creates a flow box and when texture is loaded, calls fillBox
      * @param   {String}     src     The texture to load
@@ -218,7 +230,7 @@ function ActionFlow(flow) {
         var ctx = canvas.getContext('2d');
         var size = 12;
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        //ctx.fillRect(0, 0, canvas.width, canvas.height);
         
         var image = document.createElement('img');
         var texture = new THREE.Texture(canvas);
@@ -253,7 +265,9 @@ function ActionFlow(flow) {
             ctx.drawImage(image, 0, 0);
             
             //ID
-            var Nodeid = (parseInt(node.id) < 10) ? '0' + node.id.toString() : node.id.toString();
+            var Nodeid = parseInt(node.id) + 1;
+            Nodeid = (Nodeid < 10) ? '0' + Nodeid.toString() : Nodeid.toString();
+            
             var size = 83;
             ctx.font = size + 'px Arial';
             ctx.fillStyle = '#000000';
@@ -263,12 +277,12 @@ function ActionFlow(flow) {
             //Title
             size = 20;
             ctx.font = 'bold ' + size + 'px Arial';
-            window.helper.drawText(node.title, 404, 51, ctx, 274, size);
+            window.helper.drawText(node.title, 404, 51, ctx, 250, size);
             
             //Description
             size = 12;
             ctx.font = size + 'px Arial';
-            window.helper.drawText(node.desc, 404, 96, ctx, 274, size);
+            window.helper.drawText(node.desc, 404, 96, ctx, 250, size);
         };
         
         return createFlowBox('images/workflow/stepBox.png', fillBox);
