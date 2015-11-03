@@ -11,7 +11,8 @@ var table = [],
     actualView,
     stats = null,
     actualFlow = null,
-    viewManager = new ViewManager();
+    viewManager = new ViewManager(),
+    bookManager;
 
 //Global constants
 var TILE_DIMENSION = {
@@ -43,6 +44,7 @@ function createScene(){
 
     browserManager = new BrowserManager();
     screenshotsAndroid = new ScreenshotsAndroid();
+    bookManager = new BookManager();
 
     logo.startFade();
 }
@@ -60,6 +62,9 @@ function init() {
 
     // BrowserManager
     browserManager.init();
+
+    // BookManager
+    bookManager.init();
     
     var dimensions = tileManager.dimensions;
 
@@ -114,6 +119,8 @@ function goToView ( targetView ) {
     
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
+
+    if(bookManager.view === 1) bookManager.hide();
     
     newCenter = viewManager.translateToSection(targetView, newCenter);
     camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
@@ -146,6 +153,11 @@ function goToView ( targetView ) {
         case 'home':
             
             logo.stopFade(2000);
+            
+            break;
+        case 'book':
+            
+            bookManager.show();
             
             break;
 
