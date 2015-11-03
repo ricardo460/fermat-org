@@ -124,7 +124,7 @@ function goToView ( targetView ) {
             
             browserManager.modifyButtonLegend(1,'block');
 
-            tileManager.transform(tileManager.targets.table, 4000 + transition);
+            tileManager.transform(tileManager.targets.table, 3000 + transition);
             
             //Special: If coming from home, delay the animation
             if(actualView === 'home')
@@ -205,8 +205,9 @@ function changeView(targets) {
         actualFlow = null;
     }
 
-    if (targets != null)
+    if (targets != null) {
         tileManager.transform(targets, 2000);
+    }
 }
 
 /**

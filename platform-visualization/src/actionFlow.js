@@ -9,12 +9,21 @@ function ActionFlow(flow) {
     var X_OFFSET = -312; //Because lines don't come from the center
     var ROW_SPACING = 350;
     var COLUMN_SPACING = 900;
+    var HEADER_WIDTH = 804;
+    var HEADER_HEIGHT = 232;
     
     this.flow = flow || [];
     
     
     var self = this;
     var objects = [];
+    var positions = {
+        target : [],
+        origin : []
+    };
+    
+    this.objects = objects;
+    this.positions = positions;
     
     /**
      * Draws the flow
@@ -25,21 +34,25 @@ function ActionFlow(flow) {
         
         var title = createTitleBox(self.flow.name, self.flow.desc);
         
-        title.position.set(initialX, initialY + window.TILE_DIMENSION.height * 2, 0);
+        var origin = window.helper.getOutOfScreenPoint(0);
+        var target = new THREE.Vector3(initialX, initialY + window.TILE_DIMENSION.height * 2, 0);
+        positions.origin.push(origin);
+        positions.target.push(target);
+        
+        title.position.copy(origin);
+        
         objects.push(title);
         scene.add(title);
-        
-        new TWEEN.Tween(this)
-            .to({}, 4000)
-            .onUpdate(window.render)
-            .start();
         
         for(i = 0, l = self.flow.steps.length; i < l; i++)
             drawTree(self.flow.steps[i], initialX + COLUMN_SPACING * i, initialY);
         
-        for(i = 0, l = objects.length; i < l; i++) {
-            helper.showMaterial(objects[i].material);
-        }
+        new TWEEN.Tween(this)
+            .to({}, 8000)
+            .onUpdate(window.render)
+            .start();
+        
+        self.showSteps();
         
     };
     
@@ -63,15 +76,20 @@ function ActionFlow(flow) {
             if(childCount !== 0) {
 
                 var lineGeo = new THREE.Geometry();
-                var lineMat = new THREE.LineBasicMaterial({color : 0x000000, transparent : true, opacity : 0});
+                var lineMat = new THREE.LineBasicMaterial({color : 0x000000});
 
-                var rootPoint = new THREE.Vector3(x + X_OFFSET, y - ROW_SPACING / 2);
+                var rootPoint = new THREE.Vector3(x + X_OFFSET, y - ROW_SPACING / 2, -1);
 
                 lineGeo.vertices.push(
                     new THREE.Vector3(x + X_OFFSET, y, -1),
                     rootPoint);
 
                 var rootLine = new THREE.Line(lineGeo, lineMat);
+                var origin = helper.getOutOfScreenPoint(-1);
+                rootLine.position.copy(origin);
+                positions.origin.push(origin);
+                positions.target.push(new THREE.Vector3(0, 0, 0));
+                
                 objects.push(rootLine);
                 window.scene.add(rootLine);
 
@@ -86,8 +104,7 @@ function ActionFlow(flow) {
                     nextX = startX + i * COLUMN_SPACING;
 
                     if(isLoop) {
-                        console.log(Math.abs(nextX));
-                        lineMat = new THREE.LineBasicMaterial({color : 0x888888, transparent : true, opacity : 0});
+                        lineMat = new THREE.LineBasicMaterial({color : 0x888888});
                         nextY = child.drawn.y;
 
                         if(nextX !== rootPoint.x && colides(nextX, root)) {
@@ -95,7 +112,7 @@ function ActionFlow(flow) {
                         }
                     }
                     else {
-                        lineMat = new THREE.LineBasicMaterial({color : 0x000000, transparent : true, opacity : 0});
+                        lineMat = new THREE.LineBasicMaterial({color : 0x000000});
                         nextY = y - ROW_SPACING;
                     }
 
@@ -115,6 +132,12 @@ function ActionFlow(flow) {
                     }
 
                     childLine = new THREE.Line(lineGeo, lineMat);
+                    
+                    origin = helper.getOutOfScreenPoint(-1);
+                    childLine.position.copy(origin);
+                    positions.origin.push(origin);
+                    positions.target.push(new THREE.Vector3(0, 0, 0));
+                    
                     objects.push(childLine);
                     window.scene.add(childLine);
 
@@ -140,24 +163,33 @@ function ActionFlow(flow) {
             if(typeof used[node.element] !== 'undefined') {
                 tile = window.objects[node.element].clone();
                 tile.isClone = true;
+                
+                positions.origin.push(window.helper.getOutOfScreenPoint(1));
+                positions.target.push(tilePosition);
+                
+                objects.push(tile);
+                window.scene.add(tile);
             }
             else {
                 tile = window.objects[node.element];
                 used[node.element] = true;
             }
 
-            objects.push(tile);
-            window.scene.add(tile);
-
             new TWEEN.Tween(tile.position)
                 .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 2000)
-                .easing(TWEEN.Easing.Exponential.Out)
-                //.onUpdate(render)
+                .easing(TWEEN.Easing.Cubic.InOut)
                 .start();
         }
 
         var stepBox = createStepBox(node);
-        stepBox.position.set(x, y, 0);
+        
+        var origin = window.helper.getOutOfScreenPoint(0);
+        var target = new THREE.Vector3(x, y, 0);
+        positions.origin.push(origin);
+        positions.target.push(target);
+        
+        stepBox.position.copy(origin);
+        
         objects.push(stepBox);
         scene.add(stepBox);
 
@@ -191,28 +223,39 @@ function ActionFlow(flow) {
      */
     this.delete = function() {
         
-        var moveAndDelete = function(lod) {
+        var moveAndDelete = function(id) {
             
-            new TWEEN.Tween(lod.position)
-                .to({z : camera.getMaxDistance()}, 4000)
-                .easing(TWEEN.Easing.Exponential.InOut)
-                .onComplete(function() { window.scene.remove(lod); })
+            var target = positions.origin[id];
+            
+            new TWEEN.Tween(objects[id].position)
+                .to({x : target.x, y : target.y, z : target.z}, 6000)
+                .easing(TWEEN.Easing.Cubic.InOut)
+                .onComplete(function() { window.scene.remove(objects[id]); })
                 .start();
         };
         
         for(var i = 0, l = objects.length; i < l; i++) {
-            
-            if(objects[i] instanceof THREE.LOD) {
-                    if(typeof objects[i].isClone !== 'undefined') {
-                        moveAndDelete(objects[i]);
-                }
-            }
-            else {
-                helper.hideObject(objects[i], false);
-            }
+            moveAndDelete(i);
         }
         
         objects = [];
+    };
+    
+    this.showSteps = function() {
+        
+        var move = function(id) {
+            
+            var target = positions.target[id];
+            
+            new TWEEN.Tween(objects[id].position)
+                .to({x : target.x, y : target.y, z : target.z}, 4000)
+                .easing(TWEEN.Easing.Cubic.InOut)
+                .start();
+        };
+        
+        for(var i = 0, l = objects.length; i < l; i++) {
+            move(i);
+        }
     };
     
     /**
@@ -222,15 +265,14 @@ function ActionFlow(flow) {
      * @returns {THREE.Mesh} The created plane with the drawed texture
      * @author Miguel Celedon
      */
-    function createFlowBox(src, fillBox) {
+    function createFlowBox(src, fillBox, width, height) {
         
         var canvas = document.createElement('canvas');
-        canvas.height = BOX_HEIGHT;
-        canvas.width = BOX_WIDTH;
+        canvas.height = height;
+        canvas.width = width;
         var ctx = canvas.getContext('2d');
         var size = 12;
         ctx.fillStyle = '#FFFFFF';
-        //ctx.fillRect(0, 0, canvas.width, canvas.height);
         
         var image = document.createElement('img');
         var texture = new THREE.Texture(canvas);
@@ -246,8 +288,8 @@ function ActionFlow(flow) {
         image.src = src;
         
         var mesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(BOX_WIDTH, BOX_HEIGHT),
-            new THREE.MeshBasicMaterial({color : 0xFFFFFF, map : texture, opacity : 0, transparent : true})
+            new THREE.PlaneGeometry(width, height),
+            new THREE.MeshBasicMaterial({color : 0xFFFFFF, map : texture, transparent : true})
         );
         
         return mesh;
@@ -285,7 +327,7 @@ function ActionFlow(flow) {
             window.helper.drawText(node.desc, 404, 96, ctx, 250, size);
         };
         
-        return createFlowBox('images/workflow/stepBox.png', fillBox);
+        return createFlowBox('images/workflow/stepBox.png', fillBox, BOX_WIDTH, BOX_HEIGHT);
     }
     
     /**
@@ -311,7 +353,7 @@ function ActionFlow(flow) {
             window.helper.drawText(desc, 190, 126, ctx, 550, size);
         };
         
-        return createFlowBox('images/workflow/titleBox.png', fillBox);
+        return createFlowBox('images/workflow/titleBox.png', fillBox, HEADER_WIDTH, HEADER_HEIGHT);
     }
     
     /**
