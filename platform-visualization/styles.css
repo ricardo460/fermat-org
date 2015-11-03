@@ -97,6 +97,41 @@ button:active {
     position: relative;
 }
 
+#container .flipbook-viewport{
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin:auto;
+}
+
+#container .flipbook{
+    width:922px;
+    height:600px;
+    left:-461px;
+    top:-300px;
+}
+
+#container .page{
+    width:461px;
+    height:600px;
+    background-color:white;
+    background-repeat:no-repeat;
+    background-size:100% 100%;
+}
+
+#container .shadow{
+    -webkit-transition: -webkit-box-shadow 0.5s;
+    -moz-transition: -moz-box-shadow 0.5s;
+    -o-transition: -webkit-box-shadow 0.5s;
+    -ms-transition: -ms-box-shadow 0.5s;
+
+    -webkit-box-shadow:0 0 20px #ccc;
+    -moz-box-shadow:0 0 20px #ccc;
+    -o-box-shadow:0 0 20px #ccc;
+    -ms-box-shadow:0 0 20px #ccc;
+    box-shadow:0 0 20px #ccc;
+}
+
 @font-face {
     font-family: Canaro;
     src: url('fonts/canaro.otf') format("opentype");
