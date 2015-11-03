@@ -644,7 +644,7 @@ function info(msg) {
 // Non-fatal warnings that should trigger the fallback UI.
 function warn(msg) {
   if (verbosity >= WARNINGS) {
-    log('Warning: ' + msg);
+   // log('Warning: ' + msg);
     PDFJS.LogManager.notify('warn', msg);
   }
 }
@@ -33561,8 +33561,8 @@ var WorkerMessageHandler = {
         return;
       }
 
-      log('page=%d - getOperatorList: time=%dms, len=%d', pageNum,
-                              Date.now() - start, operatorList.fnArray.length);
+      /*log('page=%d - getOperatorList: time=%dms, len=%d', pageNum,
+                              Date.now() - start, operatorList.fnArray.length);*/
 
       // Filter the dependecies for fonts.
       var fonts = {};
@@ -33593,8 +33593,8 @@ var WorkerMessageHandler = {
         promise.reject(e);
       }
 
-      log('text indexing: page=%d - time=%dms',
-                      pageNum, Date.now() - start);
+     /* log('text indexing: page=%d - time=%dms',
+                      pageNum, Date.now() - start);*/
     });
   }
 };
