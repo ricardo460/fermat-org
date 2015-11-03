@@ -61,11 +61,11 @@ function init() {
     screenshotsAndroid.init();
 
     // BrowserManager
-    browserManager.init();
+    browserManager.init();            
 
     // BookManager
     bookManager.init();
-    
+
     var dimensions = tileManager.dimensions;
 
     // groups icons
@@ -120,7 +120,7 @@ function goToView ( targetView ) {
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
 
-    if(bookManager.view === 1) bookManager.hide();
+    if(bookManager.state === 1) bookManager.hide();
     
     newCenter = viewManager.translateToSection(targetView, newCenter);
     camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
@@ -157,7 +157,7 @@ function goToView ( targetView ) {
             break;
         case 'book':
             
-            bookManager.show();
+            setTimeout(function() { bookManager.createBook(); }, 3000);
             
             break;
 

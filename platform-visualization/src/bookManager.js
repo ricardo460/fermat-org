@@ -4,14 +4,14 @@
  */
 function BookManager() {
 
-    this.book;
-    this.view;//Nombre Provisionar 
+    this.state = 0;
 
     var self = this;
     
-    PDFJS.disableWorker = true;
+    window.PDFJS.disableWorker = true;
 
-    var PDFDOC, 
+    var book = null,
+        PDFDOC, 
         SCALE = 0.8,
         WIDTH = 922,
         HEIGHT = 600,
@@ -20,66 +20,51 @@ function BookManager() {
 
     this.init = function (){
 
-      addItems();
-      self.book = $('.flipbook');
-      createBook();
-      self.hide();
-    }
+      $(document).ready(function () {
+
+          window.PDFJS.getDocument(FILE).then(function (doc) {
+
+            PDFDOC = doc;
+
+          });
+
+      });
+    };
 
     this.hide = function (){
-        state(0);
-        self.view = 0; 
-    }
 
-    this.show = function (){
-      
-      setTimeout(function() { 
-        state(1);
-        self.view = 1;
-      }, 2000);
-    }
+      var flipbook = document.getElementById('flipbook');
+      helper.hide(flipbook, 1000, false); 
+      self.state = 0;
+    };
 
-    function state(valor){
-
-       $(self.book).fadeTo(3000, valor, function() {
-
-           $(self.book).show();
-
-       });
-
-    }
 
     function addItems(){
 
       var page = $('<div />'),
           flipbook = $('<div />', {"class": "flipbook"}).append(page),
-          viewport = $('<div />', {"class": "flipbook-viewport"}).append(flipbook);
+          viewport = $('<div />', {"class": "flipbook-viewport", "id": "flipbook"}).append(flipbook);
 
       $('#container').append(viewport);
+
+      book = $('.flipbook');
     }
 
-    function createBook(){ 
+    this.createBook = function (){
 
-      $(document).ready(function () {
+      addItems();
 
-          PDFJS.getDocument(FILE).then(function (doc) {
+      self.state = 1;
 
-            PDFDOC = doc;
+      configBook();
 
-            config();
+      for (var i = 1; i <= PDFDOC.numPages; i++)
+        addPage(i);
+    };
 
-            for (var i = 1; i <= PDFDOC.numPages; i++ )
+    function configBook(){
 
-                addPage(i);
-          });
-
-      });
-
-    }
-
-    function config(){
-
-      self.book.turn({
+      book.turn({
 
           width : WIDTH,
 
@@ -119,7 +104,7 @@ function BookManager() {
             'id' : 'p'+ page
             }).append(canvas);
 
-      self.book.turn("addPage", element, page);
+      book.turn("addPage", element, page);
 
     }
 
