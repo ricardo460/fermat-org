@@ -344,7 +344,6 @@ exports.insOrUpdStep = function (_proc_id, platfrm_code, suprlay_code, layer_nam
 
 exports.delAllProcs = function (callback) {
     'use strict';
-    console.log('deleting procs...');
     try {
         procSrv.delAllProcs(function (err, procs) {
             if (err) {
