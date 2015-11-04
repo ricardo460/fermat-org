@@ -479,5 +479,26 @@ Dao.prototype.delSchemaById = function (_id, callback) {
 
 };
 
+/**
+ * [delAllSchemas description]
+ *
+ * @method delAllSchemas
+ *
+ * @param  {Function}    callback [description]
+ *
+ * @return {[type]}      [description]
+ */
+Dao.prototype.delAllSchemas = function (callback) {
+    'use strict';
+    try {
+        this.Schema.remove({}, function (err, res) {
+            return callback(err, res);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+
+};
+
 // export the class
 module.exports = Dao;

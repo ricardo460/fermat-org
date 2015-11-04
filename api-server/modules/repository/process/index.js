@@ -341,4 +341,25 @@ exports.insOrUpdStep = function (_proc_id, platfrm_code, suprlay_code, layer_nam
     }
 
 };
+
+exports.delAllProcs = function (callback) {
+    'use strict';
+    console.log('deleting procs...');
+    try {
+        procSrv.delAllProcs(function (err, procs) {
+            if (err) {
+                return callback(err, null);
+            }
+            stepSrv.delAllSteps(function (err, steps) {
+                if (err) {
+                    return callback(err, null);
+                }
+                return callback(null, true);
+            });
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
 /*jshint +W069 */
