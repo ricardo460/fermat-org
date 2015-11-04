@@ -12,7 +12,7 @@ var procMod = require('../process');
 var devMod = require('../developer');
 var Cache = require('../../../lib/route-cache');
 
-var db = require('../../../db');
+//var db = require('../../../db');
 //https://github.com/bitDubai/fermat.git
 var env = process.env.NODE_ENV || 'development';
 //var USER_AGENT = 'Miguelcldn';
@@ -492,13 +492,14 @@ var saveManifest = function (callback) {
                                     }
                                     loopLays(++u);
                                 });
-                        } else {                            
-                            var cache = new Cache({
-                                type: 'file'
+                        } else {
+                            updateComps(function (err_upd, res_upd) {
+                                if (err_upd) {
+                                    winston.log('info', err_upd.message, err_upd);
+                                }
+                                winston.log('info', 'done loading components');
+                                return;
                             });
-                            cache.clear();
-                            winston.log('info', 'done loading components');
-                            return;
                         }
                     }
 
@@ -597,6 +598,8 @@ var saveManifest = function (callback) {
                                                                                 loopComps(++p);
                                                                             } else {
                                                                                 var _devs = _comp.devs;
+                                                                                var upd_devs = [];
+                                                                                var upd_life_cycle = [];
 
                                                                                 var loopDevs = function (q) {
                                                                                     if (q < _devs.length) {
@@ -613,24 +616,8 @@ var saveManifest = function (callback) {
                                                                                                             winston.log('info', err_compDev.message, err_compDev);
                                                                                                             loopDevs(++q);
                                                                                                         } else {
-                                                                                                            var _life_cycle = _comp.life_cycle;
-
-                                                                                                            var loopLifeCycle = function (r) {
-                                                                                                                if (r < _life_cycle.length) {
-                                                                                                                    var _status = _life_cycle[r];
-                                                                                                                    compMod.insOrUpdStatus(res_comp._id, _status.name, _status.target, _status.reached, function (err_sta, res_sta) {
-                                                                                                                        if (err_sta) {
-                                                                                                                            winston.log('info', err_sta.message, err_sta);
-                                                                                                                            loopLifeCycle(++r);
-                                                                                                                        } else {
-                                                                                                                            loopLifeCycle(++r);
-                                                                                                                        }
-                                                                                                                    });
-                                                                                                                } else {
-                                                                                                                    loopDevs(++q);
-                                                                                                                }
-                                                                                                            };
-                                                                                                            loopLifeCycle(0);
+                                                                                                            upd_devs.push(res_compDev._id);
+                                                                                                            loopDevs(++q);
                                                                                                         }
                                                                                                     });
                                                                                                 }
@@ -638,9 +625,33 @@ var saveManifest = function (callback) {
                                                                                         } else {
                                                                                             loopDevs(++q);
                                                                                         }
-
                                                                                     } else {
-                                                                                        loopComps(++p);
+                                                                                        var _life_cycle = _comp.life_cycle;
+
+                                                                                        var loopLifeCycle = function (r) {
+                                                                                            if (r < _life_cycle.length) {
+                                                                                                var _status = _life_cycle[r];
+                                                                                                compMod.insOrUpdStatus(res_comp._id, _status.name, _status.target, _status.reached, function (err_sta, res_sta) {
+                                                                                                    if (err_sta) {
+                                                                                                        winston.log('info', err_sta.message, err_sta);
+                                                                                                        loopLifeCycle(++r);
+                                                                                                    } else {
+                                                                                                        upd_life_cycle.push(res_sta._id);
+                                                                                                        loopLifeCycle(++r);
+                                                                                                    }
+                                                                                                });
+                                                                                            } else {
+                                                                                                compMod.updCompDevAndLifCyc(res_comp._id, upd_devs, upd_life_cycle, function (err_upd, res_upd) {
+                                                                                                    if (err_upd) {
+                                                                                                        loopComps(++p);
+                                                                                                    } else {
+                                                                                                        loopComps(++p);
+                                                                                                    }
+
+                                                                                                });
+                                                                                            }
+                                                                                        };
+                                                                                        loopLifeCycle(0);
                                                                                     }
                                                                                 };
                                                                                 loopDevs(0);
@@ -800,10 +811,12 @@ var saveManifest = function (callback) {
                     });
 
                     procMod.delAllProcs(function (err_del, res_del) {
+                        winston.log('info', 'deleting proccess...');
                         if (err_del) {
                             winston.log('info', err_del.message, err_del);
                         }
                         compMod.delAllComps(function (err_del, res_del) {
+                            winston.log('info', 'deleting components...');
                             if (err_del) {
                                 winston.log('info', err_del.message, err_del);
                             }
@@ -821,11 +834,6 @@ var saveManifest = function (callback) {
         return callback(err, null);
     }
 };
-
-saveManifest(function (err, res) {
-    if (err) console.dir(err);
-    if (res) console.dir(res);
-});
 
 /**
  * [getUser description]

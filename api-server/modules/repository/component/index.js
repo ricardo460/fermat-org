@@ -356,7 +356,6 @@ exports.updCompDevAndLifCyc = function (_comp_id, devs, life_cycle, callback) {
  */
 exports.delAllComps = function (callback) {
     'use strict';
-    console.log('deleting comps...');
     try {
         compSrv.delAllComps(function (err, comps) {
             if (err) {
