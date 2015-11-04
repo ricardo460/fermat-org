@@ -34,6 +34,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
     /**
      * @author Emmanuel Colina
+     * @lastmodifiedBy Miguel Celedon
      * Create the Arrows (dependences)
      */
 
@@ -75,7 +76,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         arrowHelper.cone.material.transparent = true;
 
 
-        var startingPosition = new THREE.Vector3(Math.random() * 340000, Math.random() * 320000 - 160000, 0);
+        var startingPosition = window.helper.getOutOfScreenPoint(0);
         arrowHelper.position.copy(viewManager.translateToSection('stack', startingPosition));
         arrowHelper.rotation.set(Math.random() * Math.PI * 2, Math.random() * Math.PI * 2, Math.random() * Math.PI * 2);
 
@@ -85,24 +86,20 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
         scene.add(arrowHelper);
         arrows.push(arrowHelper);
-
-        helper.showMaterial(arrowHelper.line.material, 3000, TWEEN.Easing.Exponential.InOut, 3000);
-        helper.showMaterial(arrowHelper.cone.material, 3000, TWEEN.Easing.Exponential.InOut, 3000);        
     };
 
     /**
      * @author Miguel Celedon
-     * @lastmodified By Emmanuel Colina
+     * @lastmodifiedBy Miguel Celedon
      * Arranges the headers by dependency
      * @param {Number} [duration=2000] Duration in milliseconds for the animation
      */
     this.transformStack = function(duration) {
         var _duration = duration || 2000;
 
-        //tileManager.letAlone();
-        //camera.resetPosition(_duration / 2);
-        drawVectornodo();
-        self.moveToPosition();
+        
+        createEdges();
+        self.moveToPosition(duration, duration / 2);
         
         var i, l;
 
@@ -249,20 +246,16 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
     /**
      * @author Emmanuel Colina
-     *             
+     * @lastmodifiedBy Miguel Celedon
      * Paint the dependences
      */
-    var drawVectornodo = function() { 
+    var createEdges = function() { 
 
         var startX, startY, endX, endY;
         
         var i, j;
-
-        new TWEEN.Tween(this)
-        .to({}, 12000)
-        .onUpdate(render)
-        .start();
-        //graph.edges.length
+        
+        
         for (i = 0; i < graph.edges.length; i++)
         {   
             startX = 0;
@@ -289,16 +282,17 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
     /**
      * @author Emmanuel Colina
-     *             
+     * @lastmodifiedBy Miguel Celedon
      * Arranges the headers in the table
-     * @param {Number} [duration=Math.random() * 3000 + 1000] Duration of the animation
+     * @param {Number} [duration=2000] Duration of the animation
      */
     this.flyOut = function(duration){
 
-        var _duration = duration || Math.random() * 3000 + 1000,
+        var _duration = duration || 2000,
             i, l;
 
         for(i = 0, l = arrows.length; i < l; i++) {
+            
             new TWEEN.Tween(arrows[i].position)
             .to({
                 x : arrowsPositions.origin[i].position.x,
@@ -316,26 +310,38 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             }, Math.random() * _duration + _duration)
             .easing(TWEEN.Easing.Cubic.InOut)
             .start();
+            
+            helper.hideObject(arrows[i].line, false, _duration);
+            helper.hideObject(arrows[i].cone, false, _duration);
         }
 
         new TWEEN.Tween(this)
         .to({}, _duration * 2)
         .onUpdate(render)
         .start();
+        
+        arrows = [];
     };
 
     /**
      * @author Emmanuel Colina
-     *             
-     * Arranges the headers in the table
-     * @param {Number} [duration=Math.random() * 8000 + 1000] Duration of the animation
+     * @lastmodifiedBy Miguel Celedon
+     *  Arranges the headers in the table
+     * @param {Number} [duration=2000] Duration of the animation
+     * @param {Number} [delay=0]       Delay of the animation
      */
-    this.moveToPosition = function(duration){
+    this.moveToPosition = function(duration, delay){
 
-        var _duration = duration || Math.random() * 10000 + 3000,
+        var _duration = duration || 2000,
             i, l;
+        
+        delay = (delay !== undefined) ? delay : 0;
 
         for(i = 0, l = arrows.length; i < l; i++) {
+            
+            helper.showMaterial(arrows[i].line.material, Math.random() * _duration + _duration, TWEEN.Easing.Exponential.InOut, delay);
+            helper.showMaterial(arrows[i].cone.material, Math.random() * _duration + _duration, TWEEN.Easing.Exponential.InOut, delay);
+            
             new TWEEN.Tween(arrows[i].position)
             .to({
                 x : arrowsPositions.stack[i].position.x,
@@ -343,7 +349,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 z : arrowsPositions.stack[i].position.z
             }, Math.random() * _duration + _duration)
             .easing(TWEEN.Easing.Cubic.InOut)
-            //.onUpdate(render)
+            .delay(delay)
             .start();
 
             new TWEEN.Tween(arrows[i].rotation)
@@ -353,69 +359,53 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 z : arrowsPositions.stack[i].rotation.z
             }, Math.random() * _duration + _duration)
             .easing(TWEEN.Easing.Cubic.InOut)
-            //.onUpdate(render)
+            .delay(delay)
             .start();
         }
-
-        new TWEEN.Tween(this)
-        .to({}, _duration * 2)
-        .onUpdate(render)
-        .start();
     };
 
     /**
      * @author Miguel Celedon
-     * @lastmodified By Emmanuel Colina          
+     * @lastmodifiedBy Miguel Celedon        
      * Arranges the headers in the table
      * @param {Number} [duration=2000] Duration of the animation
      */
 
     this.transformTable = function(duration) {
-        var _duration = duration || 4000,
+        var _duration = duration || 2000,
             i, l;
 
-        self.flyOut();
+        self.flyOut();        
 
-        setTimeout(function(){
-            for(i = 0; i < arrows.length; i++){
-                helper.hideObject(arrows[i].line, false, 200);
-                helper.hideObject(arrows[i].cone, false, 200);
-            }
-            arrows = [];
-        }, 2000);
-
-
-        helper.hide('stackContainer', _duration / 2);
-        helper.hide('headContainer', _duration / 2);
-
-        for(i = 0, l = objects.length; i < l; i++) {
-            
-            new TWEEN.Tween(objects[i].position)
-            .to({
-                x : positions.table[i].position.x,
-                y : positions.table[i].position.y,
-                z : positions.table[i].position.z
-            }, Math.random() * _duration + _duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
-            .start();
-        }
+        self.showHeaders(_duration);
         
         new TWEEN.Tween(this)
-            .to({}, duration * 2)
+            .to({}, _duration * 2)
             .onUpdate(render)
             .start();
         
-        self.show(_duration);
+        self.showHeaders(_duration);
     };
     
     /**
      * Shows the headers as a fade
      * @param {Number} duration Milliseconds of fading
      */
-    this.show = function (duration) {
+    this.showHeaders = function (duration) {
         var i, j;
         
         for (i = 0; i < objects.length; i++ ) {
+            
+            new TWEEN.Tween(objects[i].position)
+            .to({
+                x : positions.table[i].position.x,
+                y : positions.table[i].position.y,
+                z : positions.table[i].position.z
+            }, duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
+            
+            
             for(j = 0; j < objects[i].levels.length; j++) {
                 new TWEEN.Tween(objects[i].levels[j].object.material)
                 .to({opacity : 1, needsUpdate : true}, duration)
@@ -429,11 +419,21 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      * Hides the headers (but donesn't delete them)
      * @param {Number} duration Milliseconds to fade
      */
-    this.hide = function (duration) {
-        var i, j;
+    this.hideHeaders = function (duration) {
+        var i, j,
+            position;
         
         for (i = 0; i < objects.length; i++ ) {
+            
+            position = window.helper.getOutOfScreenPoint(0);
+            
+            new TWEEN.Tween(objects[i].position)
+            .to({x : position.x, y : position.y, z : position.z}, duration)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .start();
+            
             for(j = 0; j < objects[i].levels.length; j++) {
+                
                 new TWEEN.Tween(objects[i].levels[j].object.material)
                 .to({opacity : 0, needsUpdate : true}, duration)
                 .easing(TWEEN.Easing.Exponential.InOut)
@@ -446,7 +446,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     //=========================================================
     
     /**
-     * @lastmodified By Emmanuel Colina
+     * @author Miguel Celedon
+     * @lastmodifiedBy Miguel Celedon
      * Creates the dependency graph
      * @returns {Object} Object containing the data and options
      */
@@ -563,7 +564,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = createHeader(group, width, height);
                 
-                object.position.copy(window.viewManager.translateToSection('table', new THREE.Vector3(-160000, Math.random() * 320000 - 160000, 0)));
+                object.position.copy(window.viewManager.translateToSection('table', window.helper.getOutOfScreenPoint(0)));
                 object.name = group;
 
                 scene.add(object);
@@ -593,7 +594,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = createHeader(slayer, width, height);
                 
-                object.position.copy(window.viewManager.translateToSection('table', new THREE.Vector3(-160000, Math.random() * 320000 - 160000, 0)));
+                object.position.copy(window.viewManager.translateToSection('table', window.helper.getOutOfScreenPoint(0)));
                 
                 object.name = slayer;
                 

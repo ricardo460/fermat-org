@@ -11,7 +11,8 @@ var table = [],
     actualView,
     stats = null,
     actualFlow = null,
-    viewManager = new ViewManager();
+    viewManager = new ViewManager(),
+    bookManager;
 
 //Global constants
 var TILE_DIMENSION = {
@@ -31,7 +32,7 @@ function createScene(){
 
     var light = new THREE.AmbientLight(0xFFFFFF);
     scene.add( light );
-    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true});
+    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true, alpha : true});
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
     renderer.setClearColor(0xffffff);
@@ -43,6 +44,7 @@ function createScene(){
 
     browserManager = new BrowserManager();
     screenshotsAndroid = new ScreenshotsAndroid();
+    bookManager = new BookManager();
 
     logo.startFade();
 }
@@ -59,8 +61,11 @@ function init() {
     screenshotsAndroid.init();
 
     // BrowserManager
-    browserManager.init();
-    
+    browserManager.init();            
+
+    // BookManager
+    bookManager.init();
+
     var dimensions = tileManager.dimensions;
 
     // groups icons
@@ -110,24 +115,29 @@ function init() {
  * Changes the actual state of the viewer
  * @param {String} name The name of the target state
  */
-function goToView ( current ) {
+function goToView ( targetView ) {
     
-    actualView = current;
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
+
+    if(bookManager.state === 1) bookManager.hide();
     
-    newCenter = viewManager.translateToSection(current, newCenter);
+    newCenter = viewManager.translateToSection(targetView, newCenter);
     camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
     camera.lockPan();
 
-    switch(current) {
+    switch(targetView) {
         case 'table':
-
+            
             browserManager.modifyButtonLegend(1,'block');
 
-            headers.transformTable();
-            tileManager.transform(tileManager.targets.table, 4000);
+            tileManager.transform(tileManager.targets.table, 3000 + transition);
             
+            //Special: If coming from home, delay the animation
+            if(actualView === 'home')
+                transition = transition + 3000;
+            
+            headers.transformTable(transition);
             
             break;
         case 'stack':
@@ -145,14 +155,21 @@ function goToView ( current ) {
             logo.stopFade(2000);
             
             break;
+        case 'book':
+            
+            setTimeout(function() { bookManager.createBook(); }, 3000);
+            
+            break;
 
         default:
             
-            if(window.map.views[current] == null)
+            if(window.map.views[targetView] == null)
                 goToView(window.map.start);
             
             break;
     }
+    
+    actualView = targetView;
 }
 
 function initMenu() {
@@ -200,8 +217,9 @@ function changeView(targets) {
         actualFlow = null;
     }
 
-    if (targets != null)
+    if (targets != null) {
         tileManager.transform(targets, 2000);
+    }
 }
 
 /**
@@ -418,7 +436,7 @@ function onElementClick(id) {
                 }
                 
                 if(flows.length > 0) {
-                    button.innerHTML = 'Show Flows';
+                    button.innerHTML = 'Show Workflows';
                     button.addEventListener('click', function() {
                         showFlow(flows);
                         helper.hide(button, 1000, false);
