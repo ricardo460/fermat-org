@@ -10,6 +10,7 @@ var layerMod = require('../layer');
 var compMod = require('../component');
 var procMod = require('../process');
 var devMod = require('../developer');
+var Cache = require('../../../lib/route-cache');
 
 var db = require('../../../db');
 //https://github.com/bitDubai/fermat.git
@@ -491,7 +492,11 @@ var saveManifest = function (callback) {
                                     }
                                     loopLays(++u);
                                 });
-                        } else {
+                        } else {                            
+                            var cache = new Cache({
+                                type: 'file'
+                            });
+                            cache.clear();
                             winston.log('info', 'done loading components');
                             return;
                         }
