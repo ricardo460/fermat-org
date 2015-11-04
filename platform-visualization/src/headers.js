@@ -17,44 +17,77 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             table : [],
             stack : []
         },
+        arrowsPositions = {
+            origin: [],
+            stack: []
+        },
         self = this,
         graph = {},
-        lines = [];
-
-
-        this.dep = dependencies;
-        this.obj = objects;
-        this.pos = positions;
+        arrows = [];
     
+    this.dep = dependencies;
+    this.arrows = arrows;
+    this.arrowPositions = arrowsPositions;
+
+
     // Public method
 
     /**
      * @author Emmanuel Colina
-     * Paint the vectors (dependences)
+     * Create the Arrows (dependences)
      */
 
-    this.paintDependencestack = function(startX,startY,endX,endY) {
-       
+    this.createArrows = function(startX,startY,endX,endY) { 
+        
+        var POSITION_X = 1700;
+        var POSITION_Y = 200;
+        var POSITION_Z = 44700;
+
         //camera.resetPosition();
 
-        var material = new THREE.LineBasicMaterial({transparent : true, opacity : 0, color: 0XF26662});
+        endY = endY - 300;
 
-        var geometry = new THREE.Geometry();
-        geometry.vertices.push(
-            
-            new THREE.Vector3( startX,startY,0 ),
-            new THREE.Vector3( endX,endY,0 )
-        );
+        var from = new THREE.Vector3( startX, startY, 0);
 
-        var line = new THREE.Line( geometry, material );
-        line.position.x = -1600;
-        line.position.z = 44700;
+        var to = new THREE.Vector3( endX, endY, 0);
 
-        scene.add( line );
-        
-        lines.push(line);
+        var direction = to.clone().sub(from);
 
-        helper.showMaterial(line.material, 3000, TWEEN.Easing.Exponential.InOut, 3000);
+        var length = direction.length();
+
+        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0XF26662, 550, 300);
+
+        var objectStack = new THREE.Object3D();
+        var objectOrigin = new THREE.Object3D();
+
+        arrowHelper.position.x = arrowHelper.position.x - POSITION_X;
+        arrowHelper.position.y = arrowHelper.position.y - POSITION_Y;
+        arrowHelper.position.z = POSITION_Z;
+
+        objectStack.position.copy(arrowHelper.position);
+        objectStack.rotation.copy(arrowHelper.rotation);
+        arrowsPositions.stack.push(objectStack);
+
+        arrowHelper.line.material.opacity = 0;
+        arrowHelper.line.material.transparent = true;
+
+        arrowHelper.cone.material.opacity = 0;
+        arrowHelper.cone.material.transparent = true;
+
+
+        var startingPosition = new THREE.Vector3(Math.random() * 340000, Math.random() * 320000 - 160000, 0);
+        arrowHelper.position.copy(viewManager.translateToSection('stack', startingPosition));
+        arrowHelper.rotation.set(Math.random() * Math.PI * 2, Math.random() * Math.PI * 2, Math.random() * Math.PI * 2);
+
+        objectOrigin.position.copy(arrowHelper.position);
+        objectOrigin.rotation.copy(arrowHelper.rotation);
+        arrowsPositions.origin.push(objectOrigin);
+
+        scene.add(arrowHelper);
+        arrows.push(arrowHelper);
+
+        helper.showMaterial(arrowHelper.line.material, 3000, TWEEN.Easing.Exponential.InOut, 3000);
+        helper.showMaterial(arrowHelper.cone.material, 3000, TWEEN.Easing.Exponential.InOut, 3000);        
     };
 
     /**
@@ -69,6 +102,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         //tileManager.letAlone();
         //camera.resetPosition(_duration / 2);
         drawVectornodo();
+        self.moveToPosition();
         
         var i, l;
 
@@ -108,11 +142,11 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         for (j = 0; j< objects.length; j++) {
             
             //calculando Y
-            if(graph.data.nodes[j].level === 0){
+            if(graph.nodes[j].level === 0){
 
                for(i = 0; i < objects.length; i++){
 
-                    if(graph.data.nodes[j].id == objects[i].name){ //Coordenadas de inicio level = 0
+                    if(graph.nodes[j].id == objects[i].name){ //Coordenadas de inicio level = 0
                         positions.stack[i].position.x = 0;
                         positions.stack[i].position.y = -15000;
                         positions.stack[i].position.z = POSITION_Z;
@@ -120,18 +154,18 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                     }        
                }
                rootpositionY = positions.stack[i].position.y;
-               rootlengthX = dependencies[graph.data.nodes[j].id].length;
+               rootlengthX = dependencies[graph.nodes[j].id].length;
                 //obj.position.set(0, -14000, 45000); //coordenadas de entradas del root(OSA)
             }
-            else if(graph.data.nodes[j].level !== 0){ //coordenadas level distinto de 0
+            else if(graph.nodes[j].level !== 0){ //coordenadas level distinto de 0
 
                 for(i = 0; i < objects.length; i++){
-                    if(graph.data.nodes[j].id == objects[i].name){
+                    if(graph.nodes[j].id == objects[i].name){
                         positions.stack[i].position.z = POSITION_Z;
 
                         //calculando Y
                         actualpositionY = rootpositionY;
-                        for(k = 0; k < graph.data.nodes[j].level; k++){
+                        for(k = 0; k < graph.nodes[j].level; k++){
 
                             positions.stack[i].position.y = actualpositionY + 5000;
                             actualpositionY = positions.stack[i].position.y;
@@ -143,22 +177,22 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                             positionstart = 0;
                             if(actuallengthX % 2 !== 0){ //Cantidad de Hijos impar
                                 midpositionX = (rootlengthX / 2)+0.5;
-                                if(graph.data.nodes[j].level == 6){
+                                if(graph.nodes[j].level == 6){
                                     for(p = 0; p < objects.length; p++){
-                                        if(graph.data.nodes[j].id == objects[p].name){
+                                        if(graph.nodes[j].id == objects[p].name){
                                             for(q = 0; q < objects.length; q++){
-                                               if(graph.data.nodes[j-1].id == objects[q].name){
+                                               if(graph.nodes[j-1].id == objects[q].name){
                                                     positions.stack[p].position.x = positions.stack[q].position.x;//Heredamos la X del padre para construir de ahi una nueva rama y evitar el cruces de ramas
                                                }
                                             }
                                         }
                                     }
                                 }
-                                if(actuallengthX == 1 && graph.data.nodes[j].level != 6){// un hijo
+                                if(actuallengthX == 1 && graph.nodes[j].level != 6){// un hijo
                                     for(m = 0; m < objects.length; m++){
-                                        if(graph.data.nodes[j].id == objects[m].name){
+                                        if(graph.nodes[j].id == objects[m].name){
                                             positions.stack[m].position.x = 0;
-                                            rootlengthX = dependencies[graph.data.nodes[j].id].length;
+                                            rootlengthX = dependencies[graph.nodes[j].id].length;
                                         }
                                     }
                                 }
@@ -166,12 +200,12 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                                     for(p = midpositionX; p > 1; p--){
                                         positionstart = positionstart - 5000;
                                     }
-                                    for(l = 0; l < dependencies[graph.data.nodes[j-1].id].length; l++){//l es el indice de arreglos de hijos
+                                    for(l = 0; l < dependencies[graph.nodes[j-1].id].length; l++){//l es el indice de arreglos de hijos
                                         for(n = 0; n < objects.length; n++){
-                                            if(dependencies[graph.data.nodes[j-1].id][l] == objects[n].name){
+                                            if(dependencies[graph.nodes[j-1].id][l] == objects[n].name){
                                                 positions.stack[n].position.x = positions.stack[n].position.x + positionstart;
                                                 positionstart = positionstart + 5000;
-                                                rootlengthX = dependencies[graph.data.nodes[j].id].length;
+                                                rootlengthX = dependencies[graph.nodes[j].id].length;
                                             }
                                         }
                                     }
@@ -182,20 +216,20 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                                 for(p = midpositionX; p >= 1; p--){
                                     positionstart = positionstart - 5000;
                                 }
-                                for(l = 0; l < dependencies[graph.data.nodes[j-1].id].length; l++){
+                                for(l = 0; l < dependencies[graph.nodes[j-1].id].length; l++){
                                     for(n = 0; n < objects.length; n++){
-                                        if(dependencies[graph.data.nodes[j-1].id][l] == objects[n].name){
+                                        if(dependencies[graph.nodes[j-1].id][l] == objects[n].name){
                                             if(positionstart === 0)
                                                 positionstart = positionstart + 5000;
                                             if(positionstart !== 0){
                                                 positions.stack[n].position.x = positions.stack[n].position.x + positionstart;
                                                 for(q = 0; q < objects.length; q++){
-                                                   if(graph.data.nodes[j-1].id == objects[q].name){
+                                                   if(graph.nodes[j-1].id == objects[q].name){
                                                         positions.stack[n].position.x = positions.stack[n].position.x + positions.stack[q].position.x;//Heredamos la X del padre para construir de ahi una nueva rama y evitar el cruces de ramas
                                                    }
                                                 } 
                                                 positionstart = positionstart + 5000;
-                                                rootlengthX = dependencies[graph.data.nodes[j].id].length;
+                                                rootlengthX = dependencies[graph.nodes[j].id].length;
                                             }
                                         }
                                     }      
@@ -222,65 +256,137 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
         var startX, startY, endX, endY;
         
-        var i, j, k;
+        var i, j;
 
         new TWEEN.Tween(this)
         .to({}, 12000)
         .onUpdate(render)
         .start();
-
-        for (i = 0; i < graph.data.edges.length; i++)
+        //graph.edges.length
+        for (i = 0; i < graph.edges.length; i++)
         {   
             startX = 0;
             startY = 0;
             endX = 0;
             endY = 0;
-
-            //Start
+            
             for (j = 0; j < objects.length; j++){
-                 if(graph.data.edges[i].from == objects[j].name){
+                
+                 if(graph.edges[i].from === objects[j].name){
                     startX = positions.stack[j].position.x;
                     startY = positions.stack[j].position.y;
                 }
-            }       
-
-            //End
-            for (k = 0; k < objects.length; k++){
-                if(graph.data.edges[i].to == objects[k].name){
-                    endX = positions.stack[k].position.x;
-                    endY = positions.stack[k].position.y;  
-                }      
+                
+                if(graph.edges[i].to === objects[j].name){
+                    endX = positions.stack[j].position.x;
+                    endY = positions.stack[j].position.y;
+                }
             }
-
-            self.paintDependencestack(startX, startY, endX, endY);        
+           
+            self.createArrows(startX, startY, endX, endY);             
         }
     };
 
     /**
-     * @author Miguel Celedon
+     * @author Emmanuel Colina
      *             
+     * Arranges the headers in the table
+     * @param {Number} [duration=Math.random() * 3000 + 1000] Duration of the animation
+     */
+    this.flyOut = function(duration){
+
+        var _duration = duration || Math.random() * 3000 + 1000,
+            i, l;
+
+        for(i = 0, l = arrows.length; i < l; i++) {
+            new TWEEN.Tween(arrows[i].position)
+            .to({
+                x : arrowsPositions.origin[i].position.x,
+                y : arrowsPositions.origin[i].position.y,
+                z : arrowsPositions.origin[i].position.z
+            }, Math.random() * _duration + _duration)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .start();
+
+             new TWEEN.Tween(arrows[i].rotation)
+            .to({
+                x : arrowsPositions.origin[i].rotation.x,
+                y : arrowsPositions.origin[i].rotation.y,
+                z : arrowsPositions.origin[i].rotation.z
+            }, Math.random() * _duration + _duration)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .start();
+        }
+
+        new TWEEN.Tween(this)
+        .to({}, _duration * 2)
+        .onUpdate(render)
+        .start();
+    };
+
+    /**
+     * @author Emmanuel Colina
+     *             
+     * Arranges the headers in the table
+     * @param {Number} [duration=Math.random() * 8000 + 1000] Duration of the animation
+     */
+    this.moveToPosition = function(duration){
+
+        var _duration = duration || Math.random() * 10000 + 3000,
+            i, l;
+
+        for(i = 0, l = arrows.length; i < l; i++) {
+            new TWEEN.Tween(arrows[i].position)
+            .to({
+                x : arrowsPositions.stack[i].position.x,
+                y : arrowsPositions.stack[i].position.y,
+                z : arrowsPositions.stack[i].position.z
+            }, Math.random() * _duration + _duration)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            //.onUpdate(render)
+            .start();
+
+            new TWEEN.Tween(arrows[i].rotation)
+            .to({
+                x : arrowsPositions.stack[i].rotation.x,
+                y : arrowsPositions.stack[i].rotation.y,
+                z : arrowsPositions.stack[i].rotation.z
+            }, Math.random() * _duration + _duration)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            //.onUpdate(render)
+            .start();
+        }
+
+        new TWEEN.Tween(this)
+        .to({}, _duration * 2)
+        .onUpdate(render)
+        .start();
+    };
+
+    /**
+     * @author Miguel Celedon
+     * @lastmodified By Emmanuel Colina          
      * Arranges the headers in the table
      * @param {Number} [duration=2000] Duration of the animation
      */
+
     this.transformTable = function(duration) {
         var _duration = duration || 4000,
             i, l;
 
-        setTimeout(function(){
-            for(i = 0; i < lines.length; i++){
-                helper.hideObject(lines[i], false, 200);
-            }
+        self.flyOut();
 
-            lines = [];
-        }, 100);
+        setTimeout(function(){
+            for(i = 0; i < arrows.length; i++){
+                helper.hideObject(arrows[i].line, false, 200);
+                helper.hideObject(arrows[i].cone, false, 200);
+            }
+            arrows = [];
+        }, 2000);
 
 
         helper.hide('stackContainer', _duration / 2);
         helper.hide('headContainer', _duration / 2);
-        //This should be moved to be called by viewer.js when we no longer use vis for this
-        /*setTimeout(function() {    
-            tileManager.transform(tileManager.targets.table); 
-        }, _duration);*/
 
         for(i = 0, l = objects.length; i < l; i++) {
             
@@ -340,38 +446,40 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     //=========================================================
     
     /**
-     * Creates the dependency graph used in vis.js
-     * @returns {Object} Object containing the data and options used in vis.js
+     * @lastmodified By Emmanuel Colina
+     * Creates the dependency graph
+     * @returns {Object} Object containing the data and options
      */
     var buildGraph = function() {
         
-        var i, l, data, edges = [], nodes = [], options,
-            level = 0;
+        var data, edges = [], nodes = [], options, level = 0, pending = {};
             
         var trace = function(root, parent, _level, _nodes, _edges) {
-                
-                var i, l, child,
-                    lookup = function(x) { return x.id == child; };
-                
-                for(i = 0, l = root.length; i < l; i++) {
-                    
-                    child = root[i];
-                    
-                    if(_level !== 0) _edges.push({from : parent, to : child});
-                    
-                    if($.grep(_nodes, lookup).length === 0)
-                    {
-                        _nodes.push({
-                            id : child,
-                            shape : 'image',
-                            image : 'images/headers/svg/' + child + '_logo.svg',
-                            level : _level
-                        });
-                    }
-                    
-                    trace(dependencies[child], child, _level + 1, _nodes, _edges);
+            
+            if(parent) pending[parent] = true;
+            
+            var i, l, child,
+                lookup = function(x) { return x.id == child; };
+
+            for(i = 0, l = root.length; i < l; i++) {
+
+                child = root[i];
+
+                if(_level !== 0) _edges.push({from : parent, to : child});
+
+                if($.grep(_nodes, lookup).length === 0)
+                {
+                    _nodes.push({
+                        id : child,
+                        image : 'images/headers/svg/' + child + '_logo.svg',
+                        level : _level
+                    });
                 }
-            };
+
+                if(pending[child] === undefined)
+                    trace(dependencies[child], child, _level + 1, _nodes, _edges);
+            }
+        };
         
         trace(dependencies.root, null, level, nodes, edges);
         
@@ -379,33 +487,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             edges : edges,
             nodes : nodes
         };
-        options = {
-            physics:{
-                hierarchicalRepulsion: {
-                  nodeDistance: 150
-                }
-              },
-            edges:{
-                color:{
-                    color : '#F26662',
-                    highlight : '#E05952',
-                    hover: '#E05952'
-                }
-            },
-            layout: {
-                hierarchical:{
-                    enabled : true,
-                    direction: 'DU',
-                    levelSeparation: 150,
-                    sortMethod : 'directed'
-                }
-            }
-        };
         
-        graph = {
-            data : data,
-            options : options
-        };
+        graph = data;
     };
     
     var initialize = function() {
