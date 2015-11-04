@@ -11,7 +11,7 @@ var compMod = require('../component');
 var procMod = require('../process');
 var devMod = require('../developer');
 
-//var db = require('../../../db');
+var db = require('../../../db');
 //https://github.com/bitDubai/fermat.git
 var env = process.env.NODE_ENV || 'development';
 //var USER_AGENT = 'Miguelcldn';
@@ -773,6 +773,7 @@ var saveManifest = function (callback) {
                                                                 }
                                                             };
                                                             loopComps(0);
+
                                                         } else {
                                                             loopLayers(++j);
                                                         }
@@ -792,17 +793,34 @@ var saveManifest = function (callback) {
                     callback(null, {
                         'save': true
                     });
-                    return loopPlatfrms(0);
+
+                    procMod.delAllProcs(function (err_del, res_del) {
+                        if (err_del) {
+                            winston.log('info', err_del.message, err_del);
+                        }
+                        compMod.delAllComps(function (err_del, res_del) {
+                            if (err_del) {
+                                winston.log('info', err_del.message, err_del);
+                            }
+                            return loopPlatfrms(0);
+                        });
+                    });
+                } else {
+                    return callback(null, {
+                        'save': false
+                    });
                 }
-                return callback(null, {
-                    'save': false
-                });
             }
         });
     } catch (err) {
         return callback(err, null);
     }
 };
+
+saveManifest(function (err, res) {
+    if (err) console.dir(err);
+    if (res) console.dir(res);
+});
 
 /**
  * [getUser description]

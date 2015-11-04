@@ -120,3 +120,19 @@ exports.updateStatusById = function (_id, set, callback) {
         callback(err, status);
     });
 };
+
+/**
+ * [delAllStatuses description]
+ *
+ * @method delAllStatuses
+ *
+ * @param  {Function}     callback [description]
+ *
+ * @return {[type]}       [description]
+ */
+exports.delAllStatuses = function (callback) {
+    'use strict';
+    statusDao.delAllSchemas(function (err, comp) {
+        callback(err, comp);
+    });
+};
