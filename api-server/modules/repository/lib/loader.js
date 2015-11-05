@@ -303,7 +303,7 @@ var getManifest = function (callback) {
         file = path.join(cwd, '../../../cache/', env, '/fermat/FermatManifest.xml'),
         exist = fs.lstatSync(file);
 
-        if(exist){
+        if(exist.isFile()){
             winston.log('info', 'Read Cache FermatManifest.xml %s', file);
             fs.readFile(file, function(err_read, res_read) {
                 if (err_read) {
@@ -957,17 +957,30 @@ var updateDevs = function (callback) {
 var getContent = function (repo_dir, callback) {
     'use strict';
     try {
-        doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/' + repo_dir, null, function (err_req, res_req) {
-            if (err_req) {
-                return callback(err_req, null);
-            }
-            processRequestBody(res_req, function (err_pro, res_pro) {
-                if (err_pro) {
-                    return callback(err_pro, null);
+
+        var cwd = process.cwd(),
+        env = process.env.NODE_ENV || 'development',
+        dir = path.join(cwd, '../../../cache/', env, '/fermat/',repo_dir),
+        exist = fs.lstatSync(dir);
+
+        if(exist.isDirectory()){
+            winston.log('info', 'Read Cache Directory %s', dir);
+            return callback(null, []);
+        }
+        else{
+            doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/' + repo_dir, null, function (err_req, res_req) {
+                if (err_req) {
+                    return callback(err_req, null);
                 }
-                return callback(null, res_pro);
+                console.log(res_req);
+                processRequestBody(res_req, function (err_pro, res_pro) {
+                    if (err_pro) {
+                        return callback(err_pro, null);
+                    }
+                    return callback(null, res_pro);
+                });
             });
-        });
+        }
     } catch (err) {
         return callback(err, null);
     }
