@@ -297,27 +297,51 @@ var processRequestBody = function (body, callback) {
 var getManifest = function (callback) {
     'use strict';
     try {
-        doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function (err_req, res_req) {
-            if (err_req) {
-                return callback(err_req, null);
-            }
-            processRequestBody(res_req, function (err_pro, res_pro) {
-                if (err_pro) {
-                    return callback(err_pro, null);
+
+        var cwd = process.cwd(),
+        env = process.env.NODE_ENV || 'development',
+        file = path.join(cwd, '../../../cache/', env, '/fermat/FermatManifest.xml'),
+        exist = fs.lstatSync(file);
+
+        if(exist){
+            winston.log('info', 'Read Cache FermatManifest.xml %s', file);
+            fs.readFile(file, function(err_read, res_read) {
+                if (err_read) {
+                    return callback(err_read, null);
                 }
-                var strCont = res_pro.split('\n').join(' ').split('\t').join(' ');
-                parseString(strCont, function (err_par, res_par) {
+                parseString(res_read, function (err_par, res_par) {
                     if (err_par) {
                         return callback(err_par, null);
                     }
                     return callback(null, res_par);
                 });
             });
-        });
+        }
+        else{
+            doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function (err_req, res_req) {
+                if (err_req) {
+                    return callback(err_req, null);
+                }
+                processRequestBody(res_req, function (err_pro, res_pro) {
+                    if (err_pro) {
+                        return callback(err_pro, null);
+                    }
+                    var strCont = res_pro.split('\n').join(' ').split('\t').join(' ');
+                    parseString(strCont, function (err_par, res_par) {
+                        if (err_par) {
+                            return callback(err_par, null);
+                        }
+                        return callback(null, res_par);
+                    });
+                });
+            });
+        }
     } catch (err) {
         return callback(err, null);
     }
 };
+
+
 
 /**
  * [parseManifest description]
