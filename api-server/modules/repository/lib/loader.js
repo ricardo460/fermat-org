@@ -300,7 +300,7 @@ var getManifest = function (callback) {
 
         var cwd = process.cwd(),
         env = process.env.NODE_ENV || 'development',
-        file = path.join(cwd, '../../../cache/', env, '/fermat/FermatManifest.xml'),
+        file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.xml'),
         exist = fs.lstatSync(file);
 
         if(exist.isFile()){
@@ -960,7 +960,7 @@ var getContent = function (repo_dir, callback) {
 
         var cwd = process.cwd(),
         env = process.env.NODE_ENV || 'development',
-        dir = path.join(cwd, '../../../cache/', env, '/fermat/',repo_dir),
+        dir = path.join(cwd, 'cache', env, 'fermat',repo_dir),
         exist = fs.lstatSync(dir);
 
         if(exist.isDirectory()){
