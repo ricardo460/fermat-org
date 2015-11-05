@@ -423,7 +423,7 @@ function onElementClick(id) {
         helper.show(button, 1000);
         
         $.ajax({
-            url: 'http://52.11.156.16:3000/repo/procs?platform=' + (element.group || layers[element.layer].super_layer) + '&layer=' + element.layer + '&component=' + element.name,
+            url: 'http://52.11.156.16:3000/repo/procs?platform=' + (element.group || element.superLayer) + '&layer=' + element.layer + '&component=' + element.name,
             method: "GET"
         }).success(
             function(processes) {

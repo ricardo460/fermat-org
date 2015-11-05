@@ -412,13 +412,16 @@ function TileManager() {
             groupID = (groupID === undefined) ? groups.size() : groupID;
 
             var _author = getBestDev(_comp.devs);
+            
+            _layer = helper.capFirstLetter(_layer.name);
 
             var element = {
                 group: _platfrm ? _platfrm.code : undefined,
                 groupID: groupID,
+                superLayer : layers[_layer].super_layer,
                 code: helper.getCode(_comp.name),
                 name: helper.capFirstLetter(_comp.name),
-                layer: helper.capFirstLetter(_layer.name),
+                layer: _layer,
                 layerID: layerID,
                 type: helper.capFirstLetter(_comp.type),
                 picture: _author.avatar_url ? _author.avatar_url : undefined,
