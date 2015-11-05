@@ -10,8 +10,8 @@ function BookManager() {
     
     window.PDFJS.disableWorker = true;
 
-    var book = null,
-        PDFDOC, 
+    var BOOK = null,
+        PDFDOC = null, 
         SCALE = 0.8,
         WIDTH = 922,
         HEIGHT = 600,
@@ -33,8 +33,10 @@ function BookManager() {
 
     this.hide = function (){
 
-      var flipbook = document.getElementById('flipbook');
-      helper.hide(flipbook, 1000, false); 
+      var flipbook = document.getElementById('flipbook'),
+          pager = document.getElementById('pager');
+      window.helper.hide(flipbook, 1000, false);
+      window.helper.hide(pager, 1000, false); 
       self.state = 0;
     };
 
@@ -43,11 +45,14 @@ function BookManager() {
 
       var page = $('<div />'),
           flipbook = $('<div />', {"class": "flipbook"}).append(page),
-          viewport = $('<div />', {"class": "flipbook-viewport", "id": "flipbook"}).append(flipbook);
+          viewport = $('<div />', {"class": "flipbook-viewport", "id": "flipbook"}).append(flipbook),
+          pager = $('<div />', {"id": "pager"});
+
+      $('body').append(pager);
 
       $('#container').append(viewport);
 
-      book = $('.flipbook');
+      BOOK = $('.flipbook');
     }
 
     this.createBook = function (){
@@ -59,12 +64,14 @@ function BookManager() {
       configBook();
 
       for (var i = 1; i <= PDFDOC.numPages; i++)
-        addPage(i);
+        addPage(i); 
+
+      ConfigPager();
     };
 
     function configBook(){
 
-      book.turn({
+      BOOK.turn({
 
           width : WIDTH,
 
@@ -79,6 +86,14 @@ function BookManager() {
           acceleration: true
       });
 
+    }
+
+    function ConfigPager(){
+
+      var pager = document.getElementById('pager');
+          pager.style.top = (200 + document.getElementById('flipbook').clientHeight) + 'px';
+
+      elementPager();
     }
 
     function addPage(page){
@@ -97,18 +112,18 @@ function BookManager() {
 
       ctx = canvas.getContext("2d");
 
-      renderPage(page, canvas, ctx);
+      renderPage(page, ctx);
 
       element = $('<div />', { 
             "class": _class,
             'id' : 'p'+ page
             }).append(canvas);
 
-      book.turn("addPage", element, page);
+      BOOK.turn("addPage", element, page);
 
     }
 
-    function renderPage(num, canvas, ctx){
+    function renderPage(num, ctx){
 
       var viewport,
           renderContext;
@@ -127,6 +142,75 @@ function BookManager() {
       });
     }
 
+    function elementPager(){
+
+      var pager = $('#pager').append('<div id = "pagerBook"><ul></ul></div>'),
+          pages = parseInt( BOOK.turn("pages") ),
+          nav,
+          _width;
+
+      _width = (pages * 30) + 50;
+      pager.css('width', _width + "px");
+
+      nav = $('#pagerBook');
+      nav.append('<li id = "prev_page"><a href = "#">&lt;-</a></li>');
+
+      for (var i=1; i < pages + 1; i++){
+
+        nav.append('<li class = "li_page" id = "page_'+ i +'"><a href = "#" rel = "'+ i +'">'+ i +'</a></li>');
+      }
+      
+      nav.append('<li id = "next_page"><a href="#">-&gt;</a></li>');
+
+      actionPager();
+
+    }
+
+    function actionPager(){
+
+      $(".li_page a").click(function() {
+
+        var rel = $(this).attr("rel");
+
+        BOOK.turn("page", rel);
+
+      });
+
+      $("#prev_page a").click(function() {
+
+       BOOK.turn("previous");
+
+      });
+
+      $("#next_page a").click(function() {
+
+        BOOK.turn("next");
+
+      });
+
+      BOOK.bind("turned", function(event, page){
+
+        $(".li_page").removeClass('active');
+
+        $("#page_" + page).addClass('active');
+
+        if (page %2 === 0 && page > 1) {
+
+          var sig = parseInt(page) + 1;
+
+          $("#page_" + sig).addClass('active');
+          
+        }
+        else {
+          var sig = parseInt(page) - 1;
+          $("#page_" + sig).addClass('active');
+        }
+
+      }); 
+
+      $("#page_1").addClass('active');
+
+    }
 
 
 }

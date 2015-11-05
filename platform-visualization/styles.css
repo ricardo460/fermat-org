@@ -132,6 +132,35 @@ button:active {
     box-shadow:0 0 20px #ccc;
 }
 
+ #pager {
+  width:auto;
+  position: relative;
+  margin: .7em auto;
+ }
+ 
+ #pagerBook li {
+  list-style:none;
+  padding:0; margin:0;
+  float:left;
+  width:24px;
+  height:14px;
+  background:#b0b0b0;
+  text-align:center;
+  font-size:11px;
+  line-height:14px;
+  vertical-align:middle;
+  margin-right:5px;
+  overflow: hidden;
+ }
+
+ #pagerBook li:hover, #pagerBook li.active {
+  background:#919191;
+ }
+
+ #pagerBook li a{display:block; color:#666}
+ 
+ #pagerBook li {float:left}
+
 @font-face {
     font-family: Canaro;
     src: url('fonts/canaro.otf') format("opentype");
