@@ -3,10 +3,6 @@
  * Version 1 
  */
 function BookManager() {
-
-    this.state = 0;
-
-    var self = this;
     
     window.PDFJS.disableWorker = true;
 
@@ -29,17 +25,23 @@ function BookManager() {
           });
 
       });
+
     };
 
     this.hide = function (){
 
       var flipbook = document.getElementById('flipbook'),
-          pager = document.getElementById('pager');
-      window.helper.hide(flipbook, 1000, false);
-      window.helper.hide(pager, 1000, false); 
-      self.state = 0;
-    };
+          pager = document.getElementById('pager'),
+          positionHide = {x: Math.random() * 5000, y: Math.random() * 5000};
+      
+      animatePager(pager, positionHide);
+      animateBook(flipbook, positionHide);
 
+      window.helper.hide(flipbook, 2000, false);
+      window.helper.hide(pager, 2000, false); 
+
+
+    };
 
     function addItems(){
 
@@ -53,13 +55,12 @@ function BookManager() {
       $('#container').append(viewport);
 
       BOOK = $('.flipbook');
+
     }
 
     this.createBook = function (){
 
       addItems();
-
-      self.state = 1;
 
       configBook();
 
@@ -67,6 +68,9 @@ function BookManager() {
         addPage(i); 
 
       ConfigPager();
+
+      positionBook();
+
     };
 
     function configBook(){
@@ -86,14 +90,6 @@ function BookManager() {
           acceleration: true
       });
 
-    }
-
-    function ConfigPager(){
-
-      var pager = document.getElementById('pager');
-          pager.style.top = (200 + document.getElementById('flipbook').clientHeight) + 'px';
-
-      elementPager();
     }
 
     function addPage(page){
@@ -155,7 +151,7 @@ function BookManager() {
       nav = $('#pagerBook');
       nav.append('<li id = "prev_page"><a href = "#">&lt;-</a></li>');
 
-      for (var i=1; i < pages + 1; i++){
+      for (var i = 1; i < pages + 1; i++){
 
         nav.append('<li class = "li_page" id = "page_'+ i +'"><a href = "#" rel = "'+ i +'">'+ i +'</a></li>');
       }
@@ -194,15 +190,17 @@ function BookManager() {
 
         $("#page_" + page).addClass('active');
 
+        var sig = 1;
+
         if (page %2 === 0 && page > 1) {
 
-          var sig = parseInt(page) + 1;
+          sig = parseInt(page) + 1;
 
           $("#page_" + sig).addClass('active');
           
         }
         else {
-          var sig = parseInt(page) - 1;
+          sig = parseInt(page) - 1;
           $("#page_" + sig).addClass('active');
         }
 
@@ -212,5 +210,68 @@ function BookManager() {
 
     }
 
+    function positionBook(){
+
+      var element = document.getElementById('flipbook');
+
+      var positionShow = {x : window.innerWidth / 2, y : window.innerHeight / 2};
+
+      element.style.left = Math.random() * 5000 + 'px';
+      element.style.top = Math.random() * 5000 + 'px';
+
+      setTimeout(function() {
+        animateBook(element, positionShow);
+      }, 1500);
+
+    }
+
+    function ConfigPager(){
+
+      var element = document.getElementById('pager'),
+          positionShow = {y : ((HEIGHT / 2) + (window.innerHeight / 2))};
+
+      element.style.top = Math.random() * 5000 + 'px';
+
+      setTimeout(function() {
+        animatePager(element, positionShow);
+      }, 1500);
+
+      elementPager();
+    }
+
+    function animateBook (element, target, duration) {
+
+      var _duration = duration || 3000,
+          position = {x : element.getBoundingClientRect().left, y : element.getBoundingClientRect().top};
+
+      new TWEEN.Tween(position)
+          .to({x : target.x, y : target.y}, _duration)
+          .easing(TWEEN.Easing.Exponential.InOut)
+          .onUpdate(update)
+          .start();
+
+      function update() {
+        element.style.left = position.x + 'px';
+        element.style.top = position.y + 'px';
+      }
+
+    }
+
+    function animatePager (element, target, duration) {
+
+      var _duration = duration || 3000,
+          position = { x : 0, y : element.getBoundingClientRect().top};
+
+      new TWEEN.Tween(position)
+          .to({y : target.y}, _duration)
+          .easing(TWEEN.Easing.Exponential.InOut)
+          .onUpdate(update)
+          .start();
+
+      function update() {
+        element.style.top = position.y + 'px';
+      }
+
+    }
 
 }
