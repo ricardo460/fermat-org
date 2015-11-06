@@ -120,7 +120,7 @@ function goToView ( targetView ) {
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
 
-    if(bookManager.state === 1) bookManager.hide();
+    if(actualView === "book") bookManager.hide();
     
     newCenter = viewManager.translateToSection(targetView, newCenter);
     camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
