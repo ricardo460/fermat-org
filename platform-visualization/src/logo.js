@@ -14,12 +14,12 @@ function Logo(){
         OPEN_WALLET_Y = 6000,
         CLOSED_FERMAT_Y = -CLOSED_WALLET_Y,
         OPEN_FERMAT_Y = -OPEN_WALLET_Y,
-        SCALE = 1.5;
+        SCALE = 4;
     
     
     
-    var walletLogo = createLogo(2667, 2667, "images/walletlogo.png", new THREE.Vector3(0, CLOSED_WALLET_Y, UPPER_LAYER)),
-        fermatLogo = createLogo(2667, 714, "images/fermatlogo.png", new THREE.Vector3(0, CLOSED_FERMAT_Y, UPPER_LAYER));
+    var walletLogo = createLogo(824, 824, "images/walletlogo.png", new THREE.Vector3(0, CLOSED_WALLET_Y, UPPER_LAYER)),
+        fermatLogo = createLogo(1058, 241, "images/fermatlogo.png", new THREE.Vector3(0, CLOSED_FERMAT_Y, UPPER_LAYER));
     
     
     this.walletLogo = walletLogo;

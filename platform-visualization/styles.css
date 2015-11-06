@@ -97,6 +97,70 @@ button:active {
     position: relative;
 }
 
+#container .flipbook-viewport{
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin:auto;
+}
+
+#container .flipbook{
+    width:922px;
+    height:600px;
+    left:-461px;
+    top:-300px;
+}
+
+#container .page{
+    width:461px;
+    height:600px;
+    background-color:white;
+    background-repeat:no-repeat;
+    background-size:100% 100%;
+}
+
+#container .shadow{
+    -webkit-transition: -webkit-box-shadow 0.5s;
+    -moz-transition: -moz-box-shadow 0.5s;
+    -o-transition: -webkit-box-shadow 0.5s;
+    -ms-transition: -ms-box-shadow 0.5s;
+
+    -webkit-box-shadow:0 0 20px #ccc;
+    -moz-box-shadow:0 0 20px #ccc;
+    -o-box-shadow:0 0 20px #ccc;
+    -ms-box-shadow:0 0 20px #ccc;
+    box-shadow:0 0 20px #ccc;
+}
+
+ #pager {
+  width:auto;
+  position: relative;
+  margin: .7em auto;
+ }
+ 
+ #pagerBook li {
+  list-style:none;
+  padding:0; margin:0;
+  float:left;
+  width:24px;
+  height:14px;
+  background:#b0b0b0;
+  text-align:center;
+  font-size:11px;
+  line-height:14px;
+  vertical-align:middle;
+  margin-right:5px;
+  overflow: hidden;
+ }
+
+ #pagerBook li:hover, #pagerBook li.active {
+  background:#919191;
+ }
+
+ #pagerBook li a{display:block; color:#666}
+ 
+ #pagerBook li {float:left}
+
 @font-face {
     font-family: Canaro;
     src: url('fonts/canaro.otf') format("opentype");
