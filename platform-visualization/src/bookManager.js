@@ -11,7 +11,7 @@ function BookManager() {
         SCALE = 0.8,
         WIDTH = 922,
         HEIGHT = 600,
-        FILE = "images/threejs.pdf";
+        FILE = "images/fermat-book.pdf";
 
 
     this.init = function (){
