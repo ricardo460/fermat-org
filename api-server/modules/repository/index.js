@@ -4,6 +4,7 @@ var layerMod = require('./layer');
 var suprlayMod = require('./superlayer');
 var platfrmMod = require('./platform');
 var docMod = require('./doc');
+var devMod = require('./developer');
 
 /**
  * [getComps description]
@@ -149,3 +150,18 @@ exports.getBook = function (req, next) {
         next(err, null);
     }
 };
+
+exports.getDevs = function(req, next){
+    'use strict';
+    try {
+        devMod.getDevs(function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+}
