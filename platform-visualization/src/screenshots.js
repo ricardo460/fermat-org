@@ -25,18 +25,18 @@ function ScreenshotsAndroid() {
     */
     this.init = function () {
 
-     addWallet('publisher');
-     addWallet('factory');
-     addWallet('store');
+        addWallet('publisher');
+        addWallet('factory');
+        addWallet('store');
 
 
-     addMesh (window.tileManager.targets.table[75].position.x, 'factory', false); 
-     addMesh (window.tileManager.targets.table[76].position.x, 'publisher', false);
-     addMesh (window.tileManager.targets.table[77].position.x, 'store', false);
-     // Plano donde se muestra el cuarto capture no tiene por qué visualizarse.
-     // El false cuando tiene una posicion definida y true cuando no lo tiene.
-     // Eliminar cuando crezca la cantidad de las fichitas a cuatro (4)!!!  
-     addMesh (Math.random() * 80000 , 'store', true);
+        addMesh (window.tileManager.targets.table[75].position.x, 'factory', false); 
+        addMesh (window.tileManager.targets.table[76].position.x, 'publisher', false);
+        addMesh (window.tileManager.targets.table[77].position.x, 'store', false);
+        // Plano donde se muestra el cuarto capture no tiene por qué visualizarse.
+        // El false cuando tiene una posicion definida y true cuando no lo tiene.
+        // Eliminar cuando crezca la cantidad de las fichitas a cuatro (4)!!!  
+        addMesh (Math.random() * 80000 , 'store', true);
 
     };
 
@@ -185,7 +185,7 @@ function ScreenshotsAndroid() {
             }
             
             new TWEEN.Tween(this)
-            .to({}, 4000)
+            .to({}, self.objects.mesh.length * 2 * 2000)
             .onUpdate(window.render)
             .start();
         }

@@ -120,7 +120,7 @@ function goToView ( targetView ) {
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
 
-    if(bookManager.state === 1) bookManager.hide();
+    if(actualView === "book") bookManager.hide();
     
     newCenter = viewManager.translateToSection(targetView, newCenter);
     camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
@@ -423,7 +423,7 @@ function onElementClick(id) {
         helper.show(button, 1000);
         
         $.ajax({
-            url: 'http://52.11.156.16:3000/repo/procs?platform=' + (element.group || layers[element.layer].super_layer) + '&layer=' + element.layer + '&component=' + element.name,
+            url: 'http://52.11.156.16:3000/repo/procs?platform=' + (element.group || element.superLayer) + '&layer=' + element.layer + '&component=' + element.name,
             method: "GET"
         }).success(
             function(processes) {
