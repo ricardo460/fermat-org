@@ -83,13 +83,15 @@ function Camera(position, renderer, renderFunc) {
         
         TWEEN.removeAll();
         focus = parseInt(id);
+        
+        duration = duration || 3000;
 
         tileManager.letAlone(focus, duration);
         
         objects[focus].getObjectForDistance(0).visible = true;
         self.render(renderer, scene);
         
-        headers.hide(duration);
+        headers.hideHeaders(duration);
     
         var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1);
         var target = window.objects[ focus ];
@@ -102,7 +104,7 @@ function Camera(position, renderer, renderFunc) {
             .start();*/
 
         new TWEEN.Tween( camera.position )
-            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration * 2 )
+            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration)
             //.easing( TWEEN.Easing.Exponential.InOut )
             .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
             .onComplete(render)
@@ -124,7 +126,7 @@ function Camera(position, renderer, renderFunc) {
         
         self.render(renderer, scene);
         
-        headers.hide(duration);
+        headers.hideHeaders(duration);
     
         var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1);
         var target = window.screenshotsAndroid.objects.mesh[focus];

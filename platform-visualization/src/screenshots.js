@@ -25,18 +25,18 @@ function ScreenshotsAndroid() {
     */
     this.init = function () {
 
-     addWallet('publisher');
-     addWallet('factory');
-     addWallet('store');
+        addWallet('publisher');
+        addWallet('factory');
+        addWallet('store');
 
 
-     addMesh (window.tileManager.targets.table[75].position.x, 'factory', false); 
-     addMesh (window.tileManager.targets.table[76].position.x, 'publisher', false);
-     addMesh (window.tileManager.targets.table[77].position.x, 'store', false);
-     // Plano donde se muestra el cuarto capture no tiene por qué visualizarse.
-     // El false cuando tiene una posicion definida y true cuando no lo tiene.
-     // Eliminar cuando crezca la cantidad de las fichitas a cuatro (4)!!!  
-     addMesh (Math.random() * 80000 , 'store', true);
+        addMesh (window.tileManager.targets.table[75].position.x, 'factory', false); 
+        addMesh (window.tileManager.targets.table[76].position.x, 'publisher', false);
+        addMesh (window.tileManager.targets.table[77].position.x, 'store', false);
+        // Plano donde se muestra el cuarto capture no tiene por qué visualizarse.
+        // El false cuando tiene una posicion definida y true cuando no lo tiene.
+        // Eliminar cuando crezca la cantidad de las fichitas a cuatro (4)!!!  
+        addMesh (Math.random() * 80000 , 'store', true);
 
     };
 
@@ -174,19 +174,21 @@ function ScreenshotsAndroid() {
     this.show = function () {
 
 
-     if (action.state) { 
+        if (action.state) {
 
-      resetTexture(action.mesh);
-     }
-     else { 
+            resetTexture(action.mesh);
+        }
+        else {
+            for (var i = 0; i < self.objects.mesh.length; i++) {
 
-         for (var i = 0; i < self.objects.mesh.length; i++) { 
-
-         animate(self.objects.mesh[i], self.objects.target[i], true, 2000);
-
-         }
-     }
-
+                animate(self.objects.mesh[i], self.objects.target[i], true, 2000);
+            }
+            
+            new TWEEN.Tween(this)
+            .to({}, self.objects.mesh.length * 2 * 2000)
+            .onUpdate(window.render)
+            .start();
+        }
     };
 
     /**
@@ -392,13 +394,11 @@ function ScreenshotsAndroid() {
         new TWEEN.Tween(mesh.position)
             .to({x : x, y : y, z : z}, Math.random() * _duration + _duration)
             .easing(TWEEN.Easing.Exponential.InOut)
-            .onUpdate(window.render)
             .start();
 
         new TWEEN.Tween(mesh.rotation)
             .to({x: rx, y: ry, z: rz}, Math.random() * duration + duration)
             .easing(TWEEN.Easing.Exponential.InOut)
-            .onUpdate(window.render) 
             .start();
 
    }

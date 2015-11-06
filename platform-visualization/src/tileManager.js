@@ -412,13 +412,16 @@ function TileManager() {
             groupID = (groupID === undefined) ? groups.size() : groupID;
 
             var _author = getBestDev(_comp.devs);
+            
+            _layer = helper.capFirstLetter(_layer.name);
 
             var element = {
                 group: _platfrm ? _platfrm.code : undefined,
                 groupID: groupID,
+                superLayer : layers[_layer].super_layer,
                 code: helper.getCode(_comp.name),
                 name: helper.capFirstLetter(_comp.name),
-                layer: helper.capFirstLetter(_layer.name),
+                layer: _layer,
                 layerID: layerID,
                 type: helper.capFirstLetter(_comp.type),
                 picture: _author.avatar_url ? _author.avatar_url : undefined,
@@ -465,8 +468,10 @@ function TileManager() {
 
         var middle = canvas.width / 2;
         var ctx = canvas.getContext('2d');
+        ctx.globalAlpha = 0;
         ctx.fillStyle = "#FFFFFF";
-        ctx.fillRect(0, 0, tileWidth * scale, tileHeight * scale);
+        //ctx.fillRect(0, 0, tileWidth * scale, tileHeight * scale);
+        ctx.globalAlpha = 1;
         ctx.textAlign = 'center';
 
         var texture = new THREE.Texture(canvas);
@@ -716,7 +721,8 @@ function TileManager() {
                 new THREE.MeshBasicMaterial({
                     vertexColors: THREE.FaceColors,
                     side: THREE.FrontSide,
-                    color: 0xffffff
+                    color: 0xffffff,
+                    transparent : true
                 })
             );
             mesh.userData = {
@@ -797,9 +803,9 @@ function TileManager() {
             }
 
             if (goal == this.targets.table) {
-                headers.show(duration);
+                headers.showHeaders(duration);
             } else {
-                headers.hide(duration);
+                headers.hideHeaders(duration);
             }
         }
 
@@ -808,7 +814,7 @@ function TileManager() {
             .onUpdate(render)
             .start();
         
-        setTimeout(window.screenshotsAndroid.show, 4000);
+        setTimeout(window.screenshotsAndroid.show, duration);
     };
 
     /**
