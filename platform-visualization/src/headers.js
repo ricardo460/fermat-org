@@ -383,8 +383,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             .to({}, _duration * 2)
             .onUpdate(render)
             .start();
-        
-        self.showHeaders(_duration);
     };
     
     /**
@@ -393,9 +391,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      */
     this.showHeaders = function (duration) {
         var i, j;
-        
+           
         for (i = 0; i < objects.length; i++ ) {
-            
+
             new TWEEN.Tween(objects[i].position)
             .to({
                 x : positions.table[i].position.x,
@@ -404,8 +402,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             }, duration)
             .easing(TWEEN.Easing.Exponential.InOut)
             .start();
-            
-            
+
+
             for(j = 0; j < objects[i].levels.length; j++) {
                 new TWEEN.Tween(objects[i].levels[j].object.material)
                 .to({opacity : 1, needsUpdate : true}, duration)

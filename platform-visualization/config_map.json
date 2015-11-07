@@ -17,7 +17,7 @@
             "up": "home",
             "down": "book",
             "right": "readme",
-            "left": "about",
+            "left": "whitepaper",
             "section" : [0, -5],
             "title" : "Learning Area",
             "enabled" : true
@@ -40,17 +40,17 @@
             "left": "learn",
             "section" : [1, -5],
             "title" : "Read Me",
-            "enabled" : true
+            "enabled" : false
         },
 
-        "about": {
+        "whitepaper": {
             "up": "",
             "down": "",
             "right": "learn",
             "left": "",
             "section" : [-1, -5],
-            "title" : "About Fermat",
-            "enabled" : true
+            "title" : "Fermat White Paper",
+            "enabled" : false
         },
 
         "table": {
@@ -80,7 +80,7 @@
             "left": "",
             "section" : [-5, 1],
             "title" : "Developers",
-            "enabled" : true
+            "enabled" : false
         },
 
         "network": {
@@ -90,7 +90,7 @@
             "left": "home",
             "section" : [5, 0],
             "title" : "Fermat Network",
-            "enabled" : true
+            "enabled" : false
         },
 
         "workflows": {
@@ -100,7 +100,7 @@
             "left": "",
             "section" : [-5, -1],
             "title" : "Workflows",
-            "enabled" : true
+            "enabled" : false
         }
     }
 }
