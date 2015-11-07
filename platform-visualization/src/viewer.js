@@ -129,7 +129,7 @@ function goToView ( targetView ) {
     switch(targetView) {
         case 'table':
             
-            browserManager.modifyButtonLegend(1,'block');
+            browserManager.modifyButtonLegend(1, 'block');
 
             tileManager.transform(tileManager.targets.table, 3000 + transition);
             
