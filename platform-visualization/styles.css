@@ -105,9 +105,9 @@ button:active {
 }
 
 .flipbook{
-  width:960px;
-  height:600px;
-  left:-461px;
+  width:1160px;
+  height:700px;
+  left:-575px;
   top:-300px;
 }
 
@@ -142,28 +142,9 @@ button:active {
   left:475px;
 }
 
-.flipbook .depth{
-  background-image:url(images/book/pages-depth.png);
-  position:absolute;
-  top:7px;
-  width:16px;
-  height:590px;
-}
-
-.flipbook .front-side .depth{
-  left:4px;
-  background-position:0 0;
-}
-
-.flipbook .back-side .depth{
-  right:4px;
-  background-position:right 0;
-}
-
-
 .flipbook .hard{
-  width:480px;
-  height:600px;
+  width:580px;
+  height:700px;
   background-color:white;
   -webkit-box-shadow:none;
   -moz-box-shadow:none;
@@ -174,8 +155,8 @@ button:active {
 
 
 .flipbook .own-size{
-  width:460px;
-  height:582px;
+  width:560px;
+  height:682px;
   background-color:white;
   overflow:hidden;
 }
