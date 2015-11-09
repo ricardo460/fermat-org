@@ -54,14 +54,14 @@ function BookManager() {
     this.hide = function (){
 
       	var flipbook = document.getElementById('flipbook-viewport'),
-          	pager = document.getElementById('pager'),
-          	positionHide = {x: Math.random() * 5000, y: Math.random() * 5000};
+          	positionHide = {x: (Math.random() + 1) * 5000, y: (Math.random() + 1) * 5000};
+          	//pager = document.getElementById('pager');
       
-      	animatePager(pager, positionHide);
+    	//animatePager(pager, positionHide);
       	animateBook(flipbook, positionHide);
 
       	window.helper.hide(flipbook, 2000, false);
-      	window.helper.hide(pager, 2000, false); 
+        //window.helper.hide(pager, 2000, false); 
     };
 
     function configBook(){
