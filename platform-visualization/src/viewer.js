@@ -63,9 +63,6 @@ function init() {
     // BrowserManager
     browserManager.init();            
 
-    // BookManager
-    bookManager.init();
-
     var dimensions = tileManager.dimensions;
 
     // groups icons
@@ -116,11 +113,11 @@ function init() {
  * @param {String} name The name of the target state
  */
 function goToView ( targetView ) {
-    
+
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
 
-    if(actualView === "book") bookManager.hide();
+    if(actualView === "book" || actualView === "readme" || actualView === "whitepaper") bookManager.hide();
     
     newCenter = viewManager.translateToSection(targetView, newCenter);
     camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
@@ -129,7 +126,7 @@ function goToView ( targetView ) {
     switch(targetView) {
         case 'table':
             
-            browserManager.modifyButtonLegend(1,'block');
+            browserManager.modifyButtonLegend(1, 'block');
 
             tileManager.transform(tileManager.targets.table, 3000 + transition);
             
@@ -157,10 +154,19 @@ function goToView ( targetView ) {
             break;
         case 'book':
             
-            setTimeout(function() { bookManager.createBook(); }, 3000);
+            bookManager.createBook(targetView); 
             
             break;
-
+        case 'readme':
+            
+            bookManager.createBook(targetView); 
+            
+            break;
+        case 'whitepaper':
+            
+            bookManager.createBook(targetView); 
+            
+            break;
         default:
             
             if(window.map.views[targetView] == null)

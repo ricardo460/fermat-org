@@ -11,6 +11,7 @@ function TileManager() {
         grid: []
     };
     this.dimensions = {};
+    this.elementsByGroup = [];
 
     var self = this;
     var groupsQtty;
@@ -18,8 +19,7 @@ function TileManager() {
     var section = [];
     var columnWidth = 0;
     var layerPosition = [];
-
-    var elementsByGroup = [];
+    
     var superLayerMaxHeight = 0;
     var superLayerPosition = [];
     
@@ -76,7 +76,7 @@ function TileManager() {
 
         for (var j = 0; j <= groupsQtty; j++) {
 
-            elementsByGroup.push([]);
+            self.elementsByGroup.push([]);
         }
 
         //Set sections sizes
@@ -86,13 +86,14 @@ function TileManager() {
             var r = table[i].layerID;
             var c = table[i].groupID;
 
-            elementsByGroup[c].push(i);
+            self.elementsByGroup[c].push(i);
 
             if (layers[table[i].layer].super_layer) {
 
                 section_size[r]++;
                 isSuperLayer[r] = layers[table[i].layer].super_layer;
             } else {
+                
                 section_size[r][c]++;
                 if (section_size[r][c] > columnWidth) columnWidth = section_size[r][c];
             }
@@ -170,8 +171,8 @@ function TileManager() {
 
             var radious = 300 * (g + 1);
 
-            phi = Math.acos((2 * indexes[g]) / elementsByGroup[g].length - 1);
-            var theta = Math.sqrt(elementsByGroup[g].length * Math.PI) * phi;
+            phi = Math.acos((2 * indexes[g]) / self.elementsByGroup[g].length - 1);
+            var theta = Math.sqrt(self.elementsByGroup[g].length * Math.PI) * phi;
 
             object = new THREE.Object3D();
 
@@ -786,14 +787,14 @@ function TileManager() {
                 return animation;
             };
 
-            for(i = 0; i < elementsByGroup.length; i++) {
+            for(i = 0; i < self.elementsByGroup.length; i++) {
 
-                var k = (i + elementsByGroup.length - 1) % (elementsByGroup.length);
+                var k = (i + self.elementsByGroup.length - 1) % (self.elementsByGroup.length);
                 var delay = i * DELAY;
 
-                for(j = 0; j < elementsByGroup[k].length; j++) {
+                for(j = 0; j < self.elementsByGroup[k].length; j++) {
 
-                    var index = elementsByGroup[k][j];
+                    var index = self.elementsByGroup[k][j];
 
                     var animation = animate(objects[index], goal[index], delay);
 
@@ -802,15 +803,18 @@ function TileManager() {
                 }
             }
 
-            if (goal == this.targets.table) {
-                headers.showHeaders(duration);
-            } else {
-                headers.hideHeaders(duration);
+            if(window.actualView === 'table') {
+                
+                if (goal == this.targets.table) {
+                    headers.showHeaders(duration);
+                } else {
+                    headers.hideHeaders(duration);
+                }
             }
         }
 
         new TWEEN.Tween(this)
-            .to({}, duration * 2 + elementsByGroup * DELAY)
+            .to({}, duration * 2 + self.elementsByGroup * DELAY)
             .onUpdate(render)
             .start();
         
@@ -821,6 +825,7 @@ function TileManager() {
      * Goes back to last target set in last transform
      */
     this.rollBack = function () {
+        
         window.changeView(self.lastTargets);
     };
 

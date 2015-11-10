@@ -198,7 +198,8 @@ function Camera(position, renderer, renderFunc) {
             //TWEEN.removeAll();
             var duration = 2000;
 
-            tileManager.rollBack();
+            if(window.actualView === 'table')
+                tileManager.rollBack();
 
             self.resetPosition(duration);
         }

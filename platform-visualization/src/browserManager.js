@@ -94,31 +94,25 @@ function BrowserManager() {
     * Loading the necessary views and arrows according to varible map. 
     * @param {String} view  view to load
     */
-   function loadView (view) {
+    function loadView (view) {
+        
+        var directions = ['up', 'down', 'right', 'left'];
 
-      var up,
-          down,
-          right,
-          left;
+        var newCenter = new THREE.Vector3(0, 0, 0);
+        newCenter = window.viewManager.translateToSection(view, newCenter);
+        
+        var dir = '';
 
-      var newCenter = new THREE.Vector3(0, 0, 0);
+        for(var i = 0; i < directions.length; i++) {
+            
+            //Get up, down, left and right views
+            dir = window.map.views[view][directions[i]];
+            
+            if(dir !== '' && window.map.views[dir].enabled === true)
+                addArrow(dir, newCenter.x, newCenter.y, directions[i]);
+        }
 
-          newCenter = window.viewManager.translateToSection(view, newCenter);
-
-          up    = window.map.views[view].up;
-          down = window.map.views[view].down;
-          right  = window.map.views[view].right;
-          left   = window.map.views[view].left;
-          
-          if (up !== "") addArrow(up, newCenter.x, newCenter.y, "up");  
-
-          if (down !== "") addArrow(down, newCenter.x, newCenter.y, "down");
-
-          if (right !== "") addArrow(right, newCenter.x, newCenter.y, "right"); 
-
-          if (left !== "") addArrow(left, newCenter.x, newCenter.y, "left"); 
-
-   }
+    }
 
    /**
      * @author Ricardo Delgado
