@@ -130,6 +130,24 @@ exports.updateProcById = function (_id, set, callback) {
 };
 
 /**
+ * [findAllProcs description]
+ *
+ * @method findAllProcs
+ *
+ * @param  {[type]}    query    [description]
+ * @param  {[type]}    order    [description]
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.findAllProcs = function (query, order, callback) {
+    'use strict';
+    procDao.findAllSchemaLst(query, order, function (err, dev) {
+        callback(err, dev);
+    });
+};
+
+/**
  * [delAllProcs description]
  *
  * @method delAllProcs
