@@ -6,48 +6,64 @@ function BookManager() {
     
     window.PDFJS.disableWorker = true;
 
+    var viewBook = {
+
+    		book : { 
+    			file : "images/book/fermat-book.pdf",
+    			coverInit : "",
+    			backCoverInit : "images/book/backCover.png",
+    			coverEnd : "",
+    			backCoverEnd : "images/book/backCover.png"
+    		},
+    		readme : { 
+    			file : "images/book/fermat-book.pdf",
+    			coverInit : "",
+    			backCoverInit : "images/book/backCover.png",
+    			coverEnd : "",
+    			backCoverEnd : "images/book/backCover.png"
+    		},
+    		whitepaper : { 
+    			file : "images/book/fermat-book.pdf",
+    			coverInit : "",
+    			backCoverInit : "images/book/backCover.png",
+    			coverEnd : "",
+    			backCoverEnd : "images/book/backCover.png"
+    		}
+    	};
+
     var BOOK = null,
-        PDFDOC = null, 
         SCALE = 0.85,
         WIDTH = 1160,
         HEIGHT = 700,
-        FILE = "images/fermat-book.pdf";
+        DOC = null;
 
 
-    this.init = function (){
+    this.createBook = function (load){
 
-      $(document).ready(function () {
+    	window.PDFJS.getDocument(viewBook[load].file).then(function (doc) {
 
-          window.PDFJS.getDocument(FILE).then(function (doc) {
+	        DOC = doc;
+	        
+	      	addItems();
 
-            PDFDOC = doc;
+	      	configBook();
+	        
+	        coverPage(load);
 
-          });
+	     	for (var i = 1; i <= DOC.numPages; i++)
+	       		addPage(i); 
 
-      });
+	    	backCoverPage(load);
 
-    };
+	      	actionbook();
 
-    this.createBook = function (){
-        
-      	addItems();
+	    	//addElementPager();
 
-      	configBook();
-        
-        coverPage();
+	      	//ConfigPager();
 
-     	for (var i = 1; i <= PDFDOC.numPages; i++)
-       		addPage(i); 
+	      	positionBook();
 
-    	backCoverPage();
-
-      	actionbook();
-
-    	//addElementPager();
-
-      	//ConfigPager();
-
-      	positionBook();
+      	});
 
     };
 
@@ -62,6 +78,7 @@ function BookManager() {
 
       	window.helper.hide(flipbook, 2000, false);
         //window.helper.hide(pager, 2000, false); 
+        DOC = null;
     };
 
     function configBook(){
@@ -80,7 +97,7 @@ function BookManager() {
 
           	autoCenter: false,
 
-          	acceleration: true,
+          	acceleration: true
 
       	});
 
@@ -122,7 +139,7 @@ function BookManager() {
       	nav.append('<li id = "next_page"><a href="#">-&gt;</a></li>');
     }
     
-    function coverPage(){
+    function coverPage(load){
         
         var _class,
         	cover,
@@ -143,32 +160,32 @@ function BookManager() {
 		backCover = $('<div />', { 
 						"class": _class,
 						"id" : 'p'+ 2,
-						"style" : "background-image:url(images/book/backCover.png)"
+						"style" : "background-image:url("+viewBook[load].backCoverInit+")"
 						}).append(depth);
 
 		BOOK.turn("addPage", backCover, 2);
         
     }
     
-    function backCoverPage(){
+    function backCoverPage(load){
 
-		var page = PDFDOC.numPages + 1,
-			  _class,
-			  cover,
-			  backCover,
-			  depth = $('<div />', {"class": "depth"});
+		var page = DOC.numPages + 1,
+			_class,
+			cover,
+			backCover,
+			depth = $('<div />', {"class": "depth"});
 
 		_class = "hard fixed back-side cb";
 
 		backCover = $('<div />', { 
 						"class": _class,
 						"id" : 'p' + page,
-						"style" : "background-image:url(images/book/backCover.png)"
+						"style" : "background-image:url("+viewBook[load].backCoverEnd+")"
 						}).append(depth);
 
 		BOOK.turn("addPage", backCover, page); 
 
-		page = PDFDOC.numPages + 2;
+		page = DOC.numPages + 2;
 
 		_class = "hard";
 
@@ -184,7 +201,7 @@ function BookManager() {
 
       	var canvas,
           	ctx,
-         	  element,
+         	element,
           	_class = "own-size",
           	newPage = page + 2;
 
@@ -210,7 +227,7 @@ function BookManager() {
       	var viewport,
           	renderContext;
 
-     	PDFDOC.getPage(num).then(function (page){
+     	DOC.getPage(num).then(function (page){
 
           	viewport = page.getViewport(SCALE);
 
