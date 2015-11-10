@@ -40,7 +40,7 @@
             "left": "learn",
             "section" : [1, -5],
             "title" : "Read Me",
-            "enabled" : false
+            "enabled" : true
         },
 
         "whitepaper": {
@@ -50,7 +50,7 @@
             "left": "",
             "section" : [-1, -5],
             "title" : "Fermat White Paper",
-            "enabled" : false
+            "enabled" : true
         },
 
         "table": {
