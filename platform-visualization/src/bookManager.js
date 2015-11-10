@@ -1,65 +1,84 @@
 /**
  * @author Ricardo Delgado
- * Version 1 
+ * Version 2
  */
 function BookManager() {
     
     window.PDFJS.disableWorker = true;
 
+    var viewBook = {
+
+    		book : { 
+    			file : "images/book/fermat-book.pdf",
+    			coverInit : "",
+    			backCoverInit : "images/book/backCover.png",
+    			coverEnd : "",
+    			backCoverEnd : "images/book/backCover.png"
+    		},
+    		readme : { 
+    			file : "images/book/fermat-book.pdf",
+    			coverInit : "",
+    			backCoverInit : "images/book/backCover.png",
+    			coverEnd : "",
+    			backCoverEnd : "images/book/backCover.png"
+    		},
+    		whitepaper : { 
+    			file : "images/book/fermat-book.pdf",
+    			coverInit : "",
+    			backCoverInit : "images/book/backCover.png",
+    			coverEnd : "",
+    			backCoverEnd : "images/book/backCover.png"
+    		}
+    	};
+
     var BOOK = null,
-        PDFDOC = null, 
-        SCALE = 0.8,
-        WIDTH = 960,
-        HEIGHT = 600,
-        FILE = "images/fermat-book.pdf";
+        SCALE = 0.85,
+        WIDTH = 1160,
+        HEIGHT = 700,
+        DOC = null;
 
 
-    this.init = function (){
+    this.createBook = function (load){
 
-      $(document).ready(function () {
+    	window.PDFJS.getDocument(viewBook[load].file).then(function (doc) {
 
-          window.PDFJS.getDocument(FILE).then(function (doc) {
+	        DOC = doc;
+	        
+	      	addItems();
 
-            PDFDOC = doc;
+	      	configBook();
+	        
+	        coverPage(load);
 
-          });
+	     	for (var i = 1; i <= DOC.numPages; i++)
+	       		addPage(i); 
 
-      });
+	    	backCoverPage(load);
 
-    };
+	      	actionbook();
 
-    this.createBook = function (){
-        
-      	addItems();
+	    	//addElementPager();
 
-      	configBook();
-        
-        coverPage();
+	      	//ConfigPager();
 
-     	for (var i = 1; i <= PDFDOC.numPages; i++)
-       		addPage(i); 
+	      	positionBook();
 
-    	backCoverPage();
-
-    	addElementPager();
-
-      	ConfigPager();
-
-      	positionBook();
+      	});
 
     };
 
     this.hide = function (){
 
       	var flipbook = document.getElementById('flipbook-viewport'),
-          	pager = document.getElementById('pager'),
-          	positionHide = {x: Math.random() * 5000, y: Math.random() * 5000};
+          	positionHide = {x: (Math.random() + 1) * 5000, y: (Math.random() + 1) * 5000};
+          	//pager = document.getElementById('pager');
       
-      	animatePager(pager, positionHide);
+    	//animatePager(pager, positionHide);
       	animateBook(flipbook, positionHide);
 
       	window.helper.hide(flipbook, 2000, false);
-      	window.helper.hide(pager, 2000, false); 
+        //window.helper.hide(pager, 2000, false); 
+        DOC = null;
     };
 
     function configBook(){
@@ -76,9 +95,10 @@ function BookManager() {
 
           	gradients: true,
 
-          	autoCenter: true,
+          	autoCenter: false,
 
           	acceleration: true
+
       	});
 
     }
@@ -87,10 +107,10 @@ function BookManager() {
 
       	var page = $('<div />'),
           	flipbook = $('<div />', {"class": "flipbook"}).append(page),
-          	viewport = $('<div />', {"class": "flipbook-viewport", "id": "flipbook-viewport"}).append(flipbook),
-          	pager = $('<div />', {"id": "pager"});
+          	viewport = $('<div />', {"class": "flipbook-viewport", "id": "flipbook-viewport"}).append(flipbook);
+          	//pager = $('<div />', {"id": "pager"});
 
-      	$('body').append(pager);
+      	//$('body').append(pager);
 
       	$('#container').append(viewport);
 
@@ -119,7 +139,7 @@ function BookManager() {
       	nav.append('<li id = "next_page"><a href="#">-&gt;</a></li>');
     }
     
-    function coverPage(){
+    function coverPage(load){
         
         var _class,
         	cover,
@@ -140,16 +160,16 @@ function BookManager() {
 		backCover = $('<div />', { 
 						"class": _class,
 						"id" : 'p'+ 2,
-						"style" : "background-image:url(images/book/backCover.png)"
+						"style" : "background-image:url("+viewBook[load].backCoverInit+")"
 						}).append(depth);
 
 		BOOK.turn("addPage", backCover, 2);
         
     }
     
-    function backCoverPage(){
+    function backCoverPage(load){
 
-		var page = PDFDOC.numPages + 1,
+		var page = DOC.numPages + 1,
 			_class,
 			cover,
 			backCover,
@@ -160,12 +180,12 @@ function BookManager() {
 		backCover = $('<div />', { 
 						"class": _class,
 						"id" : 'p' + page,
-						"style" : "background-image:url(images/book/backCover.png)"
+						"style" : "background-image:url("+viewBook[load].backCoverEnd+")"
 						}).append(depth);
 
 		BOOK.turn("addPage", backCover, page); 
 
-		page = PDFDOC.numPages + 2;
+		page = DOC.numPages + 2;
 
 		_class = "hard";
 
@@ -177,7 +197,6 @@ function BookManager() {
 		BOOK.turn("addPage", cover, page);
 	}
 
-
     function addPage(page){
 
       	var canvas,
@@ -187,8 +206,8 @@ function BookManager() {
           	newPage = page + 2;
 
       	canvas = document.createElement('canvas');
-      	canvas.width  = 460;
-      	canvas.height = 582;
+      	canvas.width  = 560;
+      	canvas.height = 682;
 
       	ctx = canvas.getContext("2d");
 
@@ -208,7 +227,7 @@ function BookManager() {
       	var viewport,
           	renderContext;
 
-     	PDFDOC.getPage(num).then(function (page){
+     	DOC.getPage(num).then(function (page){
 
           	viewport = page.getViewport(SCALE);
 
@@ -243,7 +262,7 @@ function BookManager() {
 
 		});
 
-		$("#page_1").addClass('active');
+		/*$("#page_1").addClass('active');
 
      	$(".li_page a").click(function() {
 
@@ -263,19 +282,13 @@ function BookManager() {
 
         	BOOK.turn("next");
 
-      	});
+      	});*/
 
       	BOOK.bind("turned", function(event, page){
-
-			if (page==2 || page==3) {
-				BOOK.turn('peel', 'br');
-			}
-
-			updateDepth();
 				
-			BOOK.turn('center');
+			//BOOK.turn('center');
 
-        	$(".li_page").removeClass('active');
+      /*  	$(".li_page").removeClass('active');
 
         	$("#page_" + page).addClass('active');
 
@@ -291,71 +304,37 @@ function BookManager() {
         	else {
           		sig = parseInt(page) - 1;
           		$("#page_" + sig).addClass('active');
-        	}
+        	}*/
 
       	});
 
       	BOOK.bind("turning", function(event, page, view) {
 				
-				if (page>=2)
-					$('.flipbook .cp').addClass('fixed');
-				else
-					$('.flipbook .cp').removeClass('fixed');
+			if (page >= 2)
+				$('.flipbook .cp').addClass('fixed');
+			else
+				$('.flipbook .cp').removeClass('fixed');
 
-				if (page<BOOK.turn('pages'))
-					$('.flipbook .cb').addClass('fixed');
-				else
-					$('.flipbook .cb').removeClass('fixed');
+			if (page < BOOK.turn('pages'))
+				$('.flipbook .cb').addClass('fixed');
+			else
+				$('.flipbook .cb').removeClass('fixed');
 		  
 		}); 
 
-		BOOK.bind("end", function(event, pageObj) {
-
-				updateDepth(); 
-		}); 
-
     }
-
-    function updateDepth(newPage) {
-
-		var page = BOOK.turn('page'),
-			pages = BOOK.turn('pages'),
-			depthWidth = 16 * Math.min(1, page * 2 / pages);
-
-		newPage = newPage || page;
-
-		if (newPage > 3)
-			$('.flipbook .cp .depth').css({
-				width: depthWidth,
-				left: 20 - depthWidth
-			});
-		else
-			$('.flipbook .cp .depth').css({width: 0});
-
-			depthWidth = 16 * Math.min(1, (pages - page) * 2 / pages);
-
-		if (newPage < pages - 3)
-			$('.flipbook .cb .depth').css({
-				width: depthWidth,
-				right: 20 - depthWidth
-			});
-		else
-			$('.flipbook .cb .depth').css({width: 0});
-
-	}
 
 	function ConfigPager(){
 
       	var element = document.getElementById('pager'),
           	positionShow = {y : ((HEIGHT / 2) + (window.innerHeight / 2))};
 
-      	element.style.top = Math.random() * 5000 + 'px';
+      	element.style.top = (Math.random() + 1) * 3000 + 'px';
 
       	setTimeout(function() {
         	animatePager(element, positionShow);
       	}, 1500);
 
-      	actionbook();
     }
 
 	function positionBook(){
@@ -364,8 +343,8 @@ function BookManager() {
 
 	    var positionShow = {x : window.innerWidth / 2, y : window.innerHeight / 2};
 
-	    element.style.left = Math.random() * 5000 + 'px';
-	    element.style.top = Math.random() * 5000 + 'px';
+	    element.style.left = (Math.random() + 1) * 3000 + 'px';
+	    element.style.top = (Math.random() + 1) * 3000 + 'px';
 
 	    setTimeout(function() {
 	      animateBook(element, positionShow);
