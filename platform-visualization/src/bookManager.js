@@ -16,14 +16,14 @@ function BookManager() {
     			backCoverEnd : "images/book/backCover.png"
     		},
     		readme : { 
-    			file : "images/book/fermat-book.pdf",
+    			file : "images/book/fermat-readme.pdf",
     			coverInit : "",
     			backCoverInit : "images/book/backCover.png",
     			coverEnd : "",
     			backCoverEnd : "images/book/backCover.png"
     		},
     		whitepaper : { 
-    			file : "images/book/fermat-book.pdf",
+    			file : "images/book/fermat-whitepaper.pdf",
     			coverInit : "",
     			backCoverInit : "images/book/backCover.png",
     			coverEnd : "",
@@ -32,7 +32,7 @@ function BookManager() {
     	};
 
     var BOOK = null,
-        SCALE = 0.85,
+        SCALE = 0.7,
         WIDTH = 1160,
         HEIGHT = 700,
         DOC = null;
@@ -169,7 +169,7 @@ function BookManager() {
     
     function backCoverPage(load){
 
-		var page = DOC.numPages + 1,
+		var page = DOC.numPages + 3,
 			_class,
 			cover,
 			backCover,
@@ -185,7 +185,7 @@ function BookManager() {
 
 		BOOK.turn("addPage", backCover, page); 
 
-		page = DOC.numPages + 2;
+		page = DOC.numPages + 4;
 
 		_class = "hard";
 
