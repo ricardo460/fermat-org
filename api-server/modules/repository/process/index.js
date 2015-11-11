@@ -341,4 +341,112 @@ exports.insOrUpdStep = function (_proc_id, platfrm_code, suprlay_code, layer_nam
     }
 
 };
+
+/**
+ * [getAllProces description]
+ *
+ * @method getAllProces
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.getAllProces = function (callback) {
+    'use strict'; 
+    try {
+        procSrv.findAllProcs({}, {}, function (err, procs) {
+            if (err) {
+                return callback(err, null);
+            }
+
+            var loopProcs = function(j){
+
+                if (j < procs.length) {
+
+                    var _proc = procs[j];
+
+                    stepSrv.findSteps({
+                        _proc_id: _proc._id
+                    }, {}, function (err, steps) {
+
+                        if (err) {
+                            return callback(err, null);
+                        }
+                        var _procs = [];
+                        var _steps = [];
+                        /**
+                         * [contains description]
+                         *
+                         * @method contains
+                         *
+                         * @param  {[type]} _id [description]
+                         *
+                         * @return {[type]} [description]
+                         */
+                        _procs.contains = function (_id) {
+                            var i;
+                            for (i = this.length - 1; i >= 0; i--) {
+                                if (this[i]._id + ' ' === _id + ' ') {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        };
+                        var loopSteps = function (i) {
+                            if (i < steps.length) {
+                                var _step = steps[i];
+                                if (_procs.contains(_step._proc_id)) {
+                                    loopSteps(++i);
+                                } else {
+                                    procSrv.findAndPopulateProc({
+                                        _id: _step._proc_id
+                                    }, function (err_proc, res_proc) {
+                                        if (err_proc) {
+                                            loopSteps(++i);
+                                        } else {
+                                            _procs.push(res_proc);
+                                            _steps = res_proc.steps;
+                                            loopSteps(++i);
+                                        }
+                                    });
+                                }
+                            } else {
+                                procs[j].steps = _steps; 
+                                loopProcs(++j);
+                            }
+                        };
+                        loopSteps(0);
+                    });
+
+                }else{
+                    return callback(null, procs);
+                }
+            }
+            loopProcs(0);
+
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
+exports.delAllProcs = function (callback) {
+    'use strict';
+    try {
+        procSrv.delAllProcs(function (err, procs) {
+            if (err) {
+                return callback(err, null);
+            }
+            stepSrv.delAllSteps(function (err, steps) {
+                if (err) {
+                    return callback(err, null);
+                }
+                return callback(null, true);
+            });
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
 /*jshint +W069 */

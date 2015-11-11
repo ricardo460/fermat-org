@@ -36,12 +36,16 @@ function Cache(options) {
  */
 Cache.prototype.clear = function () {
     'use strict';
+    try {
     if (this.type === 'file') {
         fs.unlinkSync(this.filename);
     } else {
         global.memcache = {};
     }
     return true;
+    } catch(err) {
+        winston.log('info', 'Error deleting file cache', err);
+    }
 };
 
 /**

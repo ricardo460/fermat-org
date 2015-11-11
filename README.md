@@ -42,14 +42,21 @@ if(condicion)
   
   ...
 
-/*Si el if tiene una sola línea pero tiene else, se dibujará con llaves, los else irán en la línea de abajo,
+/*Si el if tiene una sola línea pero tiene else, y el else tiene varias, se dibujará con llaves, los else irán en la línea de abajo,
 algunos editores tienen problemas si el else se pone en la misma linea que donde se cierra  */
 if(condicion) {
   accion();
 }
 else {
   otraAccion();
+  masAcciones();
 }
+
+//Si en caso contrario, ambos if y else tienen una sola línea, no hay problema con dejarlos sin llaves
+if(condicion)
+  accion();
+else
+  otraAccion();
 ```
 No se dejará espacio entre los paréntesis, pero sí entre signos y comas:
 ```javascript

@@ -10,6 +10,16 @@ var devSch = require('../../developer/schemas/dev');
 
 var procDao = new Dao('Proc', procSch, procMdl, 'Step', stepSch, stepMdl);
 
+/**
+ * [insertProc description]
+ *
+ * @method insertProc
+ *
+ * @param  {[type]}   proc_mdl [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.insertProc = function (proc_mdl, callback) {
     'use strict';
     procDao.insertSchema(proc_mdl, function (err, proc) {
@@ -17,6 +27,16 @@ exports.insertProc = function (proc_mdl, callback) {
     });
 };
 
+/**
+ * [findAndPopulateProc description]
+ *
+ * @method findAndPopulateProc
+ *
+ * @param  {[type]}            query    [description]
+ * @param  {Function}          callback [description]
+ *
+ * @return {[type]}            [description]
+ */
 exports.findAndPopulateProc = function (query, callback) {
     'use strict';
     procDao.findSchema(query, function (err, proc) {
@@ -67,6 +87,16 @@ exports.findAndPopulateProc = function (query, callback) {
     });
 };
 
+/**
+ * [findProc description]
+ *
+ * @method findProc
+ *
+ * @param  {[type]}   query    [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.findProc = function (query, callback) {
     'use strict';
     procDao.findSchema(query, function (err, proc) {
@@ -78,6 +108,17 @@ exports.findProc = function (query, callback) {
     });
 };
 
+/**
+ * [updateProcById description]
+ *
+ * @method updateProcById
+ *
+ * @param  {[type]}       _id      [description]
+ * @param  {[type]}       set      [description]
+ * @param  {Function}     callback [description]
+ *
+ * @return {[type]}       [description]
+ */
 exports.updateProcById = function (_id, set, callback) {
     'use strict';
     set.upd_at = new mongoose.Types.ObjectId();
@@ -85,5 +126,39 @@ exports.updateProcById = function (_id, set, callback) {
         _id: _id
     }, set, {}, function (err, proc) {
         callback(err, proc);
+    });
+};
+
+/**
+ * [findAllProcs description]
+ *
+ * @method findAllProcs
+ *
+ * @param  {[type]}    query    [description]
+ * @param  {[type]}    order    [description]
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.findAllProcs = function (query, order, callback) {
+    'use strict';
+    procDao.findAllSchemaLst(query, order, function (err, dev) {
+        callback(err, dev);
+    });
+};
+
+/**
+ * [delAllProcs description]
+ *
+ * @method delAllProcs
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.delAllProcs = function (callback) {
+    'use strict';
+    procDao.delAllSchemas(function (err, comp) {
+        callback(err, comp);
     });
 };

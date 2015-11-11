@@ -279,3 +279,19 @@ exports.pullStatusFromCompLifeCycleById = function (_id, _status_id, callback) {
         callback(err, comp);
     });
 };
+
+/**
+ * [delAllComps description]
+ *
+ * @method delAllComps
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.delAllComps = function (callback) {
+    'use strict';
+    compDao.delAllSchemas(function (err, comp) {
+        callback(err, comp);
+    });
+};

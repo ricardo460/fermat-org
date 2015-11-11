@@ -1,7 +1,20 @@
-#P2P rendering description
+#Fermat Network Rendering Description
 
-In this document, we will describe how fermat.org by client and server side will get the necessary 
-data in order to render the P2P network at the nearest real-time as possible.
+In this document, we describe how the Fermat.org site will render the Fermat Network. How the data flows from the server to browsers in order to produce the visualizations.
+
+As the Fermat Network is a complex creature, many different views are going to be provided in order to navigate through this complexity.
+
+## View List
+
+1. **Online Node Network** : This view provides a geo-localized view of online Nodes in the Fermat Network.
+2. **Node and connected Network Clients"** : In this view, a single Network Node is present, and all connected Network Clients are rendered.
+3. **Node Catalog** : This is a geo-localized view of all nodes, both online and offline, present on the distributed Node Calaog.
+4. 
+
+
+MIGUEL :ya te voy a completar la lista.
+
+
 
 ##P2P user experience
 In this section we describe what exactly is expected in the P2P view.
@@ -10,9 +23,9 @@ In the P2P view, the user will enter in a free-moving space where he or she can 
 that conforms it and lines interconecting them as they are in ther network.
 
 The curren types of nodes are:
-- *Servers*: Denoted by a server sprite, it's a niche where several devices will connect and will
+- *Network Nodes*: Denoted by a server sprite, it's a niche where several devices will connect and will
 work as intermediaries between devices and other servers.
-- *Mobile Device*: Denoted as a smartphone sprite, it's a handset that connects to a server and
+- *Network Clients*: Denoted as a smartphone sprite, it's a handset that connects to a server and
 includes others nodes inside:
     - *Network Services*: Denoted with **[What?]**, it works as endpoints of connections
     between the devices, a Network Services connects with its counterpart in another
