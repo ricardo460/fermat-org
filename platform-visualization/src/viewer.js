@@ -95,13 +95,8 @@ function init() {
 
     //Disabled Menu
     //initMenu();
-
-    var view = window.location.hash.slice(1);
-
-    if(view === "") 
-    view = window.map.start;
     
-    setTimeout(function() { goToView(view); }, 500);
+    setTimeout(function() { goToView(window.location.hash.slice(1)); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
