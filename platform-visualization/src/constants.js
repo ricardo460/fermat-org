@@ -3,7 +3,7 @@ var test_map = {load : "table",table : {top : "",bottom : "",right : "stack",lef
 var testFlow = [
     {
         "platfrm": "CBP",
-        "name": "connection request from customer to broker",
+        "name": "CBP connection request from customer to broker",
         "desc": "a customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation.",
         "prev": "list crypto brokers",
         "next": null,
@@ -56,7 +56,503 @@ var testFlow = [
         ],
         "upd_at": "5629db8be934756e08c9751a",
         "_id": "5629db8be934756e08c9751b"
-    }
+    },
+    {
+        "platfrm": "OSA",
+        "name": "OSA connection request from customer to broker",
+        "desc": "a customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation.",
+        "prev": "list crypto brokers",
+        "next": null,
+        "steps": [
+            {
+                "id": 0,
+                "title": "select broker and submit request",
+                "desc": "the customer selects a broker from the list and submits the request to connect to him.",
+                "type": "start",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 1,
+                "title": "route request to network service",
+                "desc": "the module routes this request to the network service to reach the selected broker.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "2",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app module",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 2,
+                "title": "call the broker to deliver the request",
+                "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker",
+                "layer": "actor network service",
+                "platfrm": "CBP"
+            }
+        ],
+        "upd_at": "5629db8be934756e08c9751a",
+        "_id": "5629db8be934756e08c9751b"
+    },
+    {
+        "platfrm": "BNK",
+        "name": "BNK connection request from customer to broker",
+        "desc": "a customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation.",
+        "prev": "list crypto brokers",
+        "next": null,
+        "steps": [
+            {
+                "id": 0,
+                "title": "select broker and submit request",
+                "desc": "the customer selects a broker from the list and submits the request to connect to him.",
+                "type": "start",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 1,
+                "title": "route request to network service",
+                "desc": "the module routes this request to the network service to reach the selected broker.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "2",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app module",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 2,
+                "title": "call the broker to deliver the request",
+                "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker",
+                "layer": "actor network service",
+                "platfrm": "CBP"
+            }
+        ],
+        "upd_at": "5629db8be934756e08c9751a",
+        "_id": "5629db8be934756e08c9751b"
+    },
+    {
+        "platfrm": "BCH",
+        "name": "BCH connection request from customer to broker",
+        "desc": "a customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation.",
+        "prev": "list crypto brokers",
+        "next": null,
+        "steps": [
+            {
+                "id": 0,
+                "title": "select broker and submit request",
+                "desc": "the customer selects a broker from the list and submits the request to connect to him.",
+                "type": "start",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 1,
+                "title": "route request to network service",
+                "desc": "the module routes this request to the network service to reach the selected broker.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "2",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app module",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 2,
+                "title": "call the broker to deliver the request",
+                "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker",
+                "layer": "actor network service",
+                "platfrm": "CBP"
+            }
+        ],
+        "upd_at": "5629db8be934756e08c9751a",
+        "_id": "5629db8be934756e08c9751b"
+    },
+    {
+        "platfrm": "Emmanuel",
+        "name": "Emmanuel connection request from customer to broker",
+        "desc": "a customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation.",
+        "prev": "list crypto brokers",
+        "next": null,
+        "steps": [
+            {
+                "id": 0,
+                "title": "select broker and submit request",
+                "desc": "the customer selects a broker from the list and submits the request to connect to him.",
+                "type": "start",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 1,
+                "title": "route request to network service",
+                "desc": "the module routes this request to the network service to reach the selected broker.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "2",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app module",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 2,
+                "title": "call the broker to deliver the request",
+                "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker",
+                "layer": "actor network service",
+                "platfrm": "CBP"
+            }
+        ],
+        "upd_at": "5629db8be934756e08c9751a",
+        "_id": "5629db8be934756e08c9751b"
+    },
+    {
+        "platfrm": "Emmanuel",
+        "name": "Emmanuel connection request from customer to broker",
+        "desc": "a customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation.",
+        "prev": "list crypto brokers",
+        "next": null,
+        "steps": [
+            {
+                "id": 0,
+                "title": "select broker and submit request",
+                "desc": "the customer selects a broker from the list and submits the request to connect to him.",
+                "type": "start",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 1,
+                "title": "route request to network service",
+                "desc": "the module routes this request to the network service to reach the selected broker.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "2",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app module",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 2,
+                "title": "call the broker to deliver the request",
+                "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker",
+                "layer": "actor network service",
+                "platfrm": "CBP"
+            }
+        ],
+        "upd_at": "5629db8be934756e08c9751a",
+        "_id": "5629db8be934756e08c9751b"
+    },
+    {
+        "platfrm": "Emmanuel",
+        "name": "Emmanuel connection request from customer to broker",
+        "desc": "a customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation.",
+        "prev": "list crypto brokers",
+        "next": null,
+        "steps": [
+            {
+                "id": 0,
+                "title": "select broker and submit request",
+                "desc": "the customer selects a broker from the list and submits the request to connect to him.",
+                "type": "start",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 1,
+                "title": "route request to network service",
+                "desc": "the module routes this request to the network service to reach the selected broker.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "2",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app module",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 2,
+                "title": "call the broker to deliver the request",
+                "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker",
+                "layer": "actor network service",
+                "platfrm": "CBP"
+            }
+        ],
+        "upd_at": "5629db8be934756e08c9751a",
+        "_id": "5629db8be934756e08c9751b"
+    },
+    {
+        "platfrm": "Emmanuel",
+        "name": "Emmanuel connection request from customer to broker",
+        "desc": "a customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation.",
+        "prev": "list crypto brokers",
+        "next": null,
+        "steps": [
+            {
+                "id": 0,
+                "title": "select broker and submit request",
+                "desc": "the customer selects a broker from the list and submits the request to connect to him.",
+                "type": "start",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 1,
+                "title": "route request to network service",
+                "desc": "the module routes this request to the network service to reach the selected broker.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "2",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app module",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 2,
+                "title": "call the broker to deliver the request",
+                "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker",
+                "layer": "actor network service",
+                "platfrm": "CBP"
+            }
+        ],
+        "upd_at": "5629db8be934756e08c9751a",
+        "_id": "5629db8be934756e08c9751b"
+    },
+    {
+    	"platfrm":"CBP",
+    	"name":"connection request from customer to broker",
+    	"desc":"a customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation.",
+    	"prev":"list crypto brokers",
+    	"next":null,
+    	"steps":[
+    		{	"id":0,
+    			"title":"select broker and submit request",
+    			"desc":"the customer selects a broker from the list and submits the request to connect to him.",
+    			"type":"start",
+    			"next":[
+    				{
+    					"type":"direct call",
+    					"id":"1"
+    				}],
+    			"name":"crypto broker community",
+    			"layer":"sub app",
+    			"platfrm":"CBP"
+    		},
+    		{	"id":1,
+    			"title":"route request to network service",
+    			"desc":"the module routes this request to the network service to reach the selected broker.",
+    			"type":"activity",
+    			"next":[
+    				{
+    					"type":"direct call",
+    					"id":"2"
+    				}],
+    			"name":"crypto broker community",
+    			"layer":"sub app module",
+    			"platfrm":"CBP"
+    		},
+    		{	"id":2,
+    			"title":"call the broker to deliver the request",
+    			"desc":"the network service places a call to the broker and then it delivers the request via the fermat network.",
+    			"type":"activity",
+    			"next":[
+    				{
+    					"type":"direct call",
+    					"id":"3"
+    				}],
+    			"name":"crypto broker",
+    			"layer":"actor network service",
+    			"platfrm":"CBP"
+    		},
+    		{	"id":3,
+    			"title":"transport request",
+    			"desc":"the request is transported through the communication layer and one of the available channels.",
+    			"type":"communication",
+    			"next":[
+    				{
+    					"type":"fermat message",
+    					"id":"4"
+    				}]
+    		},
+    		{	"id":4,
+    			"title":"receive the request",
+    			"desc":"the network service receives the request and informs the crypto broker actor.",
+    			"type":"activity",
+    			"next":[
+    				{
+    					"type":"event",
+    					"id":"5"
+    				}],
+    			"name":"crypto broker",
+    			"layer":"actor network service",
+    			"platfrm":"CBP"
+    		},
+    		{
+    			"id":5,
+    			"title":"records the request",
+    			"desc":"the request is saved and a notification for the end user is created.",
+    			"type":"activity",
+    			"next":[
+    				{
+    					"type":"direct call",
+    					"id":"6"
+    				}],
+    			"name":"crypto broker",
+    			"layer":"actor",
+    			"platfrm":"CBP"
+    		},
+    		{	
+    			"id":6,"title":"records the notification",
+    			"desc":"the the notification is saved and the os core library is notified.",
+    			"type":"activity",
+    			"next":[
+    				{
+    					"type":"event",
+    					"id":"7"
+    				}],
+    			"name":"notification",
+    			"layer":"middleware",
+    			"platfrm":"PIP"
+    		},
+    		{
+    			"id":7,
+    			"title":"send notification to the os",
+    			"desc":"sends the notification to the os and this in turn shows it to the end user.",
+    			"type":"end",
+    			"next":[]
+    			}],
+    		"upd_at":"5644cb909ed4922d0ff43788","_id":"5644cb909ed4922d0ff43789"}
 ];
 
 
