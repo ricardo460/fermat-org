@@ -533,18 +533,25 @@ function getHeaderFLowAndPosition() {
     var position;
     var indice = 1;
 
-    $.ajax({
+    /*$.ajax({
         url: 'http://52.11.156.16:3000/v1/repo/procs/',
         method: "GET"
     }).success(
         function(processes) {
-            var p = processes;
+            //var p = processes;
+            var p = testFlow;
             
             for(var i = 0; i < p.length; i++){
                 headerFlow.push(new ActionFlow(p[i])); 
             }
         }
-    );
+    );*/
+    
+    var p = testFlow;
+            
+    for(var i = 0; i < p.length; i++){
+        headerFlow.push(new ActionFlow(p[i])); 
+    }
 
     if (headerFlow.length === 1) {
 
@@ -556,7 +563,6 @@ function getHeaderFLowAndPosition() {
 
         positionHeaderFlow.push(position);
     }
-
     else if (headerFlow.length === 2) {
         var positionx = -675000;
 
