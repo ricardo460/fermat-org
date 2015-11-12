@@ -117,7 +117,8 @@ function goToView ( targetView ) {
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
 
-    if(actualView === "book" || actualView === "readme" || actualView === "whitepaper") bookManager.hide();
+    if(actualView === "book" || actualView === "readme" || actualView === "whitepaper") 
+        bookManager.hide();
     
     newCenter = viewManager.translateToSection(targetView, newCenter);
     camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
@@ -153,15 +154,9 @@ function goToView ( targetView ) {
             
             break;
         case 'book':
-            
-            bookManager.createBook(targetView); 
-            
-            break;
+                       
         case 'readme':
-            
-            bookManager.createBook(targetView); 
-            
-            break;
+                       
         case 'whitepaper':
             
             bookManager.createBook(targetView); 
