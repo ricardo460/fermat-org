@@ -180,6 +180,8 @@ function goToView ( targetView ) {
         case 'readme':
                        
         case 'whitepaper':
+            bookManager.createBook(targetView);
+            
         case 'workflows':
 
             getHeaderFLowAndPosition();
@@ -533,163 +535,155 @@ function getHeaderFLowAndPosition() {
     var position;
     var indice = 1;
 
-    /*$.ajax({
+    $.ajax({
         url: 'http://52.11.156.16:3000/v1/repo/procs/',
         method: "GET"
     }).success(
         function(processes) {
-            //var p = processes;
-            var p = testFlow;
+            var p = processes;
             
             for(var i = 0; i < p.length; i++){
                 headerFlow.push(new ActionFlow(p[i])); 
             }
-        }
-    );*/
-    
-    var p = testFlow;
             
-    for(var i = 0; i < p.length; i++){
-        headerFlow.push(new ActionFlow(p[i])); 
-    }
-
-    if (headerFlow.length === 1) {
-
-        position = new THREE.Vector3();
-
-        position.x = -675000;
-        position.y = -135000;
-        position.z = 0;
-
-        positionHeaderFlow.push(position);
-    }
-    else if (headerFlow.length === 2) {
-        var positionx = -675000;
-
-        positionx = positionx - 500;
-
-        for (var k = 0; k < headerFlow.length; k++) {
-
-            position = new THREE.Vector3();
-
-            position.x = positionx;
-            position.y = -135000;
-            position.z = 0;
-            positionHeaderFlow.push(position);
-
-            positionx = positionx + 1000;
-        }
-
-    }
-    else if (headerFlow.length > 2) {
-
-        var sqrt, round, column, row, initialY, count, raizC, raizC2;
-        count = 0;
-        round = 0;
-        column = 0;
-
-        //calculamos columnas y filas
-
-
-        if((Math.sqrt(headerFlow.length) % 1) !== 0) {
-
-            for(var r = headerFlow.length; r < headerFlow.length * 2; r++){
-
-                if((Math.sqrt(r) % 1) === 0){
-
-                    raizC = r;
-                    sqrt = Math.sqrt(raizC);
-
-                    for(var l = raizC - 1; l > 0; l--){ 
-
-                        if((Math.sqrt(l) % 1) === 0){
-
-                            raizC2 = l;
-                            break;
-                        }
-                        count = count + 1;
-                    }
-                    count = count / 2;
-
-                    for(var f = raizC2 + 1; f <= raizC2 + count; f++){
-                        if(headerFlow.length === f) {
-                            row = sqrt - 1;
-                            column = sqrt;
-                        }
-                    }
-                    for(var t = raizC - 1; t >= raizC - count; t--){
-                        if(headerFlow.length === t) {
-                            row = column = sqrt ;
-                        }
-                    }
-                }
-                if(row !== 0  && column !== 0){
-                    break;
-                }
-            }
-        }
-        else{
-            row = column = Math.sqrt(headerFlow.length);
-        }
-
-        count = 0;
-        var positionY = POSITION_Y;  
-
-        //calculando Y
-        for(var p = 0; p < row; p++) { 
-
-            if(p === 0)
-                positionY = positionY + 250;
-            else
-                positionY = positionY + 500;
-        }
-        
-        for(y = 0; y < row; y++){ //filas
-
-            var positionX = POSITION_X;
-
-            for(m = 0; m < column; m++) { 
-
-                if(m===0)
-                    positionX = positionX - 500;
-                else
-                    positionX = positionX - 1000;
-            }
-            //calculando X
-            for(x = 0; x < column; x++){  //columnas              
+            if (headerFlow.length === 1) {
 
                 position = new THREE.Vector3();
 
-                position.y = positionY;
+                position.x = -675000;
+                position.y = -135000;
+                position.z = 0;
 
-                position.x = positionX;
+                positionHeaderFlow.push(position);
+            }
+            else if (headerFlow.length === 2) {
+                var positionx = -675000;
 
-                if(count < headerFlow.length){
+                positionx = positionx - 500;
 
+                for (var k = 0; k < headerFlow.length; k++) {
+
+                    position = new THREE.Vector3();
+
+                    position.x = positionx;
+                    position.y = -135000;
+                    position.z = 0;
                     positionHeaderFlow.push(position);
-                    count = count + 1;
+
+                    positionx = positionx + 1000;
                 }
 
-                if((positionX + 500) === POSITION_X) {
-                    positionX = positionX + 1000;
+            }
+            else if (headerFlow.length > 2) {
+
+                var sqrt, round, column, row, initialY, count, raizC, raizC2;
+                count = 0;
+                round = 0;
+                column = 0;
+
+                //calculamos columnas y filas
+
+
+                if((Math.sqrt(headerFlow.length) % 1) !== 0) {
+
+                    for(var r = headerFlow.length; r < headerFlow.length * 2; r++){
+
+                        if((Math.sqrt(r) % 1) === 0){
+
+                            raizC = r;
+                            sqrt = Math.sqrt(raizC);
+
+                            for(var l = raizC - 1; l > 0; l--){ 
+
+                                if((Math.sqrt(l) % 1) === 0){
+
+                                    raizC2 = l;
+                                    break;
+                                }
+                                count = count + 1;
+                            }
+                            count = count / 2;
+
+                            for(var f = raizC2 + 1; f <= raizC2 + count; f++){
+                                if(headerFlow.length === f) {
+                                    row = sqrt - 1;
+                                    column = sqrt;
+                                }
+                            }
+                            for(var t = raizC - 1; t >= raizC - count; t--){
+                                if(headerFlow.length === t) {
+                                    row = column = sqrt ;
+                                }
+                            }
+                        }
+                        if(row !== 0  && column !== 0){
+                            break;
+                        }
+                    }
                 }
-                else
-                    positionX = positionX + 1000;
+                else{
+                    row = column = Math.sqrt(headerFlow.length);
+                }
+
+                count = 0;
+                var positionY = POSITION_Y;  
+
+                //calculando Y
+                for(var p = 0; p < row; p++) { 
+
+                    if(p === 0)
+                        positionY = positionY + 250;
+                    else
+                        positionY = positionY + 500;
+                }
+
+                for(y = 0; y < row; y++){ //filas
+
+                    var positionX = POSITION_X;
+
+                    for(m = 0; m < column; m++) { 
+
+                        if(m===0)
+                            positionX = positionX - 500;
+                        else
+                            positionX = positionX - 1000;
+                    }
+                    //calculando X
+                    for(x = 0; x < column; x++){  //columnas              
+
+                        position = new THREE.Vector3();
+
+                        position.y = positionY;
+
+                        position.x = positionX;
+
+                        if(count < headerFlow.length){
+
+                            positionHeaderFlow.push(position);
+                            count = count + 1;
+                        }
+
+                        if((positionX + 500) === POSITION_X) {
+                            positionX = positionX + 1000;
+                        }
+                        else
+                            positionX = positionX + 1000;
+                    }
+
+                    if((positionY - 250) === POSITION_Y) {
+                        positionY = positionY - 500;
+                    }
+                    else
+                        positionY = positionY - 500;     
+                }      
             }
 
-            if((positionY - 250) === POSITION_Y) {
-                positionY = positionY - 500;
+            for (var j = 0; j < headerFlow.length; j++){
+
+                headerFlow[j].draw(positionHeaderFlow[j].x, positionHeaderFlow[j].y, positionHeaderFlow[j].z, indice, j);
             }
-            else
-                positionY = positionY - 500;     
-        }      
-    }
-
-    for (var j = 0; j < headerFlow.length; j++){
-
-        headerFlow[j].draw(positionHeaderFlow[j].x, positionHeaderFlow[j].y, positionHeaderFlow[j].z, indice, j);
-    }
-    
+        }
+    );
 }
 
 /**
