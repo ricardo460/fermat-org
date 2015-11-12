@@ -80,7 +80,7 @@
             "left": "",
             "section" : [-5, 1],
             "title" : "Developers",
-            "enabled" : true
+            "enabled" : false
         },
 
         "network": {
@@ -90,7 +90,7 @@
             "left": "home",
             "section" : [5, 0],
             "title" : "Fermat Network",
-            "enabled" : true
+            "enabled" : false
         },
 
         "workflows": {
