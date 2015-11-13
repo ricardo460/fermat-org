@@ -31,6 +31,7 @@ function ActionFlow(flow) {
     this.objects = objects;
     this.positions = positions;
 
+
     /**
      * Draws the flow
      * @lastmodifiedBy Emmanuel Colina
@@ -38,6 +39,7 @@ function ActionFlow(flow) {
      * @param   {Number}  initialY Position where to start
      */
     this.draw = function(initialX, initialY, initialZ, indice, id) {
+        
 
         var title = createTitleBox(self.flow.name, self.flow.desc);
         
@@ -68,6 +70,10 @@ function ActionFlow(flow) {
         }
 
         if (indice === 1){
+            new TWEEN.Tween(this)
+                .to({}, 8000)
+                .onUpdate(window.render)
+                .start();
             self.showStepsFlow();
         }
     };
@@ -82,6 +88,8 @@ function ActionFlow(flow) {
         var i, _duration = 2000,
             distance = camera.getMaxDistance() * 2,
             out = window.viewManager.translateToSection('workflows', new THREE.Vector3(0, 0, distance));
+
+        //TWEEN.removeAll();
 
         var target;
 
@@ -107,6 +115,11 @@ function ActionFlow(flow) {
             objects[i].userData.flying = true;
             animate(objects[i], target, Math.random() * _duration + _duration);
         }
+
+        new TWEEN.Tween(this)
+            .to({}, _duration * 2)
+            .onUpdate(render)
+            .start();
     };
 
      /**
@@ -322,7 +335,7 @@ function ActionFlow(flow) {
             var target = positions.target[id];
             
             new TWEEN.Tween(objects[id].position)
-                .to({x : target.x, y : target.y, z : target.z}, 4000)
+                .to({x : target.x, y : target.y, z : 80000}, 4000)
                 .easing(TWEEN.Easing.Cubic.InOut)
                 .start();
         };

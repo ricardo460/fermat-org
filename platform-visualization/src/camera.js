@@ -170,6 +170,7 @@ function Camera(position, renderer, renderFunc) {
             .start();
     };
 
+    
     /**
      *
      * @method loseFocus    loses focus from target
