@@ -90,7 +90,7 @@ function init() {
 
                 changeViewWorkFlows();
 
-                getHeaderFLowAndPosition();
+                getHeaderFLow();
 
             }, 4000);
             
@@ -184,7 +184,7 @@ function goToView ( targetView ) {
             break;
         case 'workflows':
 
-            getHeaderFLowAndPosition();
+            getHeaderFLow();
 
             break;
 
@@ -511,7 +511,7 @@ function onElementClickHeaderFlow(id) {
 
         setTimeout(function() {
             for (var i = 0; i < headerFlow[id].flow.steps.length; i++) {
-                headerFlow[id].drawTree(headerFlow[id].flow.steps[i], headerFlow[id].positions.target[0].x + 900 * i, headerFlow[id].positions.target[0].y - 211, 80000);
+                headerFlow[id].drawTree(headerFlow[id].flow.steps[i], headerFlow[id].positions.target[0].x + 900 * i, headerFlow[id].positions.target[0].y - 211, 0);
             }
             headerFlow[id].showStepsFlow();
         }, 3000);
@@ -522,55 +522,36 @@ function onElementClickHeaderFlow(id) {
 
 /**
  * @author Emmanuel Colina
- * Get the headers flows
+ * Calculate the headers flows
  */
 
-function getHeaderFLowAndPosition() {
-    
-    var POSITION_X = -673500;
-    var POSITION_Y = -136500;
+function calculatePositionHeaderFLow(headerFlow) {
+
     var position;
     var indice = 1;
-
-    $.ajax({
-        url: 'http://52.11.156.16:3000/v1/repo/procs/',
-        method: "GET"
-    }).success(
-        function(processes) {
-            var p = processes;
-            
-            for(var i = 0; i < p.length; i++){
-                headerFlow.push(new ActionFlow(p[i])); 
-            }
-        }
-    );
+    
+    var center = new THREE.Vector3(0, 0, 0);
+    center = viewManager.translateToSection('workflows', center);
 
     if (headerFlow.length === 1) {
 
-        position = new THREE.Vector3();
-
-        position.x = -675000;
-        position.y = -135000;
-        position.z = 0;
-
-        positionHeaderFlow.push(position);
+        positionHeaderFlow.push(center);
     }
 
     else if (headerFlow.length === 2) {
-        var positionx = -675000;
 
-        positionx = positionx - 500;
+        center.x = center.x - 500;
 
         for (var k = 0; k < headerFlow.length; k++) {
 
             position = new THREE.Vector3();
 
-            position.x = positionx;
-            position.y = -135000;
-            position.z = 0;
+            position.x = center.x;
+            position.y = center.y;
+        
             positionHeaderFlow.push(position);
 
-            positionx = positionx + 1000;
+            center.x = center.x + 1000;
         }
 
     }
@@ -582,7 +563,6 @@ function getHeaderFLowAndPosition() {
         column = 0;
 
         //calculamos columnas y filas
-
 
         if((Math.sqrt(headerFlow.length) % 1) !== 0) {
 
@@ -626,7 +606,7 @@ function getHeaderFLowAndPosition() {
         }
 
         count = 0;
-        var positionY = POSITION_Y;  
+        var positionY = center.y - 1500;  
 
         //calculando Y
         for(var p = 0; p < row; p++) { 
@@ -639,7 +619,7 @@ function getHeaderFLowAndPosition() {
         
         for(y = 0; y < row; y++){ //filas
 
-            var positionX = POSITION_X;
+            var positionX = center.x + 1500;
 
             for(m = 0; m < column; m++) { 
 
@@ -663,14 +643,14 @@ function getHeaderFLowAndPosition() {
                     count = count + 1;
                 }
 
-                if((positionX + 500) === POSITION_X) {
+                if((positionX + 500) === center.x + 1500) {
                     positionX = positionX + 1000;
                 }
                 else
                     positionX = positionX + 1000;
             }
 
-            if((positionY - 250) === POSITION_Y) {
+            if((positionY - 250) === center.y - 1500) {
                 positionY = positionY - 500;
             }
             else
@@ -682,7 +662,28 @@ function getHeaderFLowAndPosition() {
 
         headerFlow[j].draw(positionHeaderFlow[j].x, positionHeaderFlow[j].y, positionHeaderFlow[j].z, indice, j);
     }
-    
+}
+
+/**
+ * @author Emmanuel Colina
+ * Get the headers flows
+ */
+
+function getHeaderFLow() {
+
+    $.ajax({
+        url: 'http://52.11.156.16:3000/v1/repo/procs/',
+        method: "GET"
+    }).success(
+        function(processes) {
+            var p = processes;
+            
+            for(var i = 0; i < p.length; i++){
+                headerFlow.push(new ActionFlow(p[i])); 
+            }
+            calculatePositionHeaderFLow(headerFlow);
+        }
+    );
 }
 
 /**
