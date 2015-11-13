@@ -262,6 +262,7 @@ function ActionFlow(flow) {
      * @param   {Object}  from Object where the line starts
      * @returns {Boolean} true if collision is detected
      */
+
     function colides(x, from) {
             
             var actual;
@@ -278,6 +279,7 @@ function ActionFlow(flow) {
     /**
      * Deletes all objects related to the flow
      */
+     
     this.delete = function() {
         
         var moveAndDelete = function(id) {

@@ -175,6 +175,7 @@ function Camera(position, renderer, renderFunc) {
      * @method loseFocus    loses focus from target
      *
      */
+     
     this.loseFocus = function() {
         
         if ( focus != null ) {

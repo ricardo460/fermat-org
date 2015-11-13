@@ -274,6 +274,7 @@ function changeView(targets) {
  * Triggered when the user clicks a tile
  * @param {Number} id The ID (position on table) of the element
  */
+ 
 function onElementClick(id) {
     
     if (camera.getFocus() == null) {
