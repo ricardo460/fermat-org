@@ -1,6 +1,6 @@
 /**
  * @author Ricardo Delgado
- * Version 2
+ * Create, modify and read all the necessary elements to create magazines.
  */
 function BookManager() {
     
@@ -8,90 +8,99 @@ function BookManager() {
 
     var viewBook = {
 
-    		book : { 
-    			file : "images/book/fermat-book.pdf",
-    			coverInit : "",
-    			backCoverInit : "images/book/backCover.png",
-    			coverEnd : "",
-    			backCoverEnd : "images/book/backCover.png"
-    		},
-    		readme : { 
-    			file : "images/book/fermat-readme.pdf",
-    			coverInit : "",
-    			backCoverInit : "images/book/backCover.png",
-    			coverEnd : "",
-    			backCoverEnd : "images/book/backCover.png"
-    		},
-    		whitepaper : { 
-    			file : "images/book/fermat-whitepaper.pdf",
-    			coverInit : "",
-    			backCoverInit : "images/book/backCover.png",
-    			coverEnd : "",
-    			backCoverEnd : "images/book/backCover.png"
-    		}
+	       book : { 
+	           file : "images/book/fermat-book.pdf",
+	           coverInit : "images/book/coverBook.png",
+	           backCoverInit : "images/book/backCoverInit.png",
+               coverEnd : "images/book/coverBackbook.png",
+               backCoverEnd : "images/book/backCoverEnd.png",
+               scale : 0.7
+            },
+               readme : { 
+               file : "images/book/fermat-readme.pdf",
+               coverInit : "images/book/coverBook.png",
+               backCoverInit : "images/book/backCoverInit.png",
+               coverEnd : "images/book/coverBackbook.png",
+               backCoverEnd : "images/book/backCoverEnd.png",
+               scale : 0.64
+            },
+               whitepaper : { 
+               file : "images/book/fermat-whitepaper.pdf",
+               coverInit : "images/book/coverBook.png",
+               backCoverInit : "images/book/backCoverInit.png",
+               coverEnd : "images/book/coverBackbook.png",
+               backCoverEnd : "images/book/backCoverEnd.png",
+               scale : 0.7
+	        }
     	};
 
     var BOOK = null,
-        SCALE = 0.7,
+        SCALE = null,
         WIDTH = 1160,
         HEIGHT = 700,
         DOC = null;
-
-
+    /**
+     * @author Ricardo Delgado
+     * Creates and starts all the functions for creating magazine.
+     * @param {String} load  Name of the magazine to create.
+     */
     this.createBook = function (load){
 
     	window.PDFJS.getDocument(viewBook[load].file).then(function (doc) {
 
-	        DOC = doc;
+	       DOC = doc;
+
+	       SCALE = viewBook[load].scale;
 	        
-	      	addItems();
+           addItems();
 
-	      	configBook();
-	        
-	        coverPage(load);
+           configBook();
 
-	     	for (var i = 1; i <= DOC.numPages; i++)
-	       		addPage(i); 
+           coverPage(load);
 
-	    	backCoverPage(load);
+           for (var i = 1; i <= DOC.numPages; i++)
+                addPage(i); 
 
-	      	actionbook();
+           backCoverPage(load);
 
-	    	//addElementPager();
+           actionbook();
 
-	      	//ConfigPager();
-
-	      	positionBook();
+           positionBook();
 
       	});
 
     };
-
+    /**
+     * @author Ricardo Delgado
+     * Encourages and removes the magazine.
+     */
     this.hide = function (){
 
       	var flipbook = document.getElementById('flipbook-viewport'),
           	positionHide = {x: (Math.random() + 1) * 5000, y: (Math.random() + 1) * 5000};
           	//pager = document.getElementById('pager');
       
-    	//animatePager(pager, positionHide);
+    		//animatePager(pager, positionHide);
       	animateBook(flipbook, positionHide);
 
       	window.helper.hide(flipbook, 2000, false);
         //window.helper.hide(pager, 2000, false); 
         DOC = null;
     };
-
+    
+    /**
+     * @author Ricardo Delgado
+     * Start adding all the settings for the magazine.
+     */
     function configBook(){
 
       	BOOK.turn({
           
-		  	duration: 1000,
-
           	width : WIDTH,
 
           	height : HEIGHT,
 
-          	elevation: 50,
+          	elevation: 80,
 
           	gradients: true,
 
@@ -103,6 +112,10 @@ function BookManager() {
 
     }
 
+    /**
+     * @author Ricardo Delgado
+     * Creates all the elements (div) needed to magazine.
+     */
     function addItems(){
 
       	var page = $('<div />'),
@@ -117,71 +130,55 @@ function BookManager() {
       	BOOK = $('.flipbook');
 
     }
-
-    function addElementPager(){
-
-      	var pager = $('#pager').append('<div id = "pagerBook"><ul></ul></div>'),
-         	pages = parseInt( BOOK.turn("pages") ),
-          	nav,
-          	_width;
-
-      	_width = (pages * 30) + 50;
-      	pager.css('width', _width + "px");
-
-      	nav = $('#pagerBook');
-      	nav.append('<li id = "prev_page"><a href = "#">&lt;-</a></li>');
-
-      	for (var i = 1; i < pages + 1; i++){
-
-        	nav.append('<li class = "li_page" id = "page_'+ i +'"><a href = "#" rel = "'+ i +'">'+ i +'</a></li>');
-      	}
-      
-      	nav.append('<li id = "next_page"><a href="#">-&gt;</a></li>');
-    }
     
+    /**
+     * @author Ricardo Delgado
+     * Creates and adds the cover and inside cover of the magazine.
+     * @param {String} load  Name of the magazine to create.
+     */    
     function coverPage(load){
         
         var _class,
-        	cover,
-        	backCover,
-        	depth = $('<div />', {"class": "depth"});
+            cover,
+            backCover;
 
         _class = "hard";
 
         cover = $('<div />', { 
 					"class": _class,
-					"id" : 'p'+ 1
+					"id" : 'p'+ 1,
+                    "style" : "background-image:url("+viewBook[load].coverInit+")"
 					});
 
 		BOOK.turn("addPage", cover, 1);
-
-		_class = "hard front-side cp";
 
 		backCover = $('<div />', { 
 						"class": _class,
 						"id" : 'p'+ 2,
 						"style" : "background-image:url("+viewBook[load].backCoverInit+")"
-						}).append(depth);
+						});
 
 		BOOK.turn("addPage", backCover, 2);
         
     }
     
+    /**
+     * @author Ricardo Delgado
+     * Creates and adds the counter-cover and internal cover of the magazine.
+     * @param {String} load  Name of the magazine to create.
+     */  
     function backCoverPage(load){
 
 		var page = DOC.numPages + 3,
-			_class,
+			_class = "hard fixed",
 			cover,
-			backCover,
-			depth = $('<div />', {"class": "depth"});
-
-		_class = "hard fixed back-side cb";
+			backCover;
 
 		backCover = $('<div />', { 
 						"class": _class,
-						"id" : 'p' + page,
+						"id" : 'pn',
 						"style" : "background-image:url("+viewBook[load].backCoverEnd+")"
-						}).append(depth);
+						});
 
 		BOOK.turn("addPage", backCover, page); 
 
@@ -191,12 +188,18 @@ function BookManager() {
 
 		cover = $('<div />', { 
 					"class": _class,
-					"id" : 'p' + page
+					"id" : 'pf',
+                    "style" : "background-image:url("+viewBook[load].coverEnd+")"
 					});
 
 		BOOK.turn("addPage", cover, page);
 	}
 
+    /**
+     * @author Ricardo Delgado
+     * Creates and adds all pages of pdf.
+     * @param {Numer} page  Number of the page to add.
+     */  
     function addPage(page){
 
       	var canvas,
@@ -221,7 +224,13 @@ function BookManager() {
       	BOOK.turn("addPage", element, newPage);
 
     }
-
+    
+    /**
+     * @author Ricardo Delgado
+     * Read and add PDF page to canvas.
+     * @param {Numer} num   Page number reading.
+     * @param {Object} ctx  CTX of canvas.
+     */  
     function renderPage(num, ctx){
 
       	var viewport,
@@ -240,51 +249,57 @@ function BookManager() {
 
       	});
     }
-
+    
+    /**
+     * @author Ricardo Delgado
+     * Add the special features of the magazine.
+     */ 
     function actionbook(){
 
     	$(document).keydown(function(e){
 
-			var previous = 37, next = 39, esc = 27;
+			var esc = 27;
 
 			switch (e.keyCode) {
-				case previous:
 
-					BOOK.turn('previous');
+            case esc:
 
-				break;
-				case next:
+                zoomHandle(-1);
 
-					BOOK.turn('next');
-
-				break;
-                case esc:
-
-                    zoomHandle(-1);
-
-                break;
+            break;
+                    
 			}
 
 		});
 
         BOOK.bind("turning", function(event, page, view) {
-				
-			if (page >= 2)
-				$('.flipbook .cp').addClass('fixed');
-			else
-				$('.flipbook .cp').removeClass('fixed');
 
-			if (page < BOOK.turn('pages'))
-				$('.flipbook .cb').addClass('fixed');
-			else
-				$('.flipbook .cb').removeClass('fixed');
+      	     var book = $(this);
+				
+			 if (page >= 2){
+				$('#p2').addClass('fixed');
+			 }
+             else{
+                $('#p2').removeClass('fixed');
+             }
+
+             if (page < book.turn('pages')){
+                $('#pn').addClass('fixed');
+             }
+             else{
+                $('#pn').removeClass('fixed');
+             }
 		  
 		}); 
 
         ConfigZoom();
 
     }
-
+    
+    /**
+     * @author Ricardo Delgado
+     * Believes zoom settings magazine.
+     */ 
     function ConfigZoom(){
 
         var flipbook = document.getElementById("flipbook-viewport");
@@ -306,7 +321,11 @@ function BookManager() {
             return false;
         }
     }
-
+    
+    /**
+     * @author Ricardo Delgado
+     * Zoom determines the value received.
+     */ 
     function zoomHandle(delta) {
 
         if (BOOK.data().zoomIn){ 
@@ -319,7 +338,11 @@ function BookManager() {
         }
 
     }
-
+    
+    /**
+     * @author Ricardo Delgado
+     * Zooming magazine.
+     */ 
     function zoomThis() {
 
         var element = document.getElementById('flipbook-viewport');
@@ -333,7 +356,11 @@ function BookManager() {
         BOOK.turn('disable', true);
             
     }
-
+        
+    /**
+     * @author Ricardo Delgado
+     * Remove the magazine zoom.
+     */ 
     function zoomOut() {
 
         var element = document.getElementById('flipbook-viewport');
@@ -347,9 +374,12 @@ function BookManager() {
         BOOK.turn('resize');
         BOOK.turn('disable', false);
     }
-
-
-	function ConfigPager(){
+    
+    /**
+     * @author Ricardo Delgado
+     * Calculates the position of the paged for animation.
+     */ 
+	function positionPager(){
 
       	var element = document.getElementById('pager'),
           	positionShow = {y : ((HEIGHT / 2) + (window.innerHeight / 2))};
@@ -361,7 +391,11 @@ function BookManager() {
       	}, 1500);
 
     }
-
+    
+    /**
+     * @author Ricardo Delgado
+     * Calculates the position of the magazine for animation.
+     */ 
 	function positionBook(){
 
       	var element = document.getElementById('flipbook-viewport');
@@ -375,7 +409,14 @@ function BookManager() {
 	      animateBook(element, positionShow);
 	    }, 1500);
     }
-
+    
+    /**
+     * @author Ricardo Delgado
+     * Makes the entry or exit animation magazine.
+     * @param {Object} element         elemento.
+     * @param {Array}  target          The objetive position.
+     * @param {Number} [duration=3000] Duration of the animation.
+     */ 
     function animateBook (element, target, duration) {
 
       var _duration = duration || 3000,
@@ -393,7 +434,14 @@ function BookManager() {
       }
 
     }
-
+    
+    /**
+     * @author Ricardo Delgado
+     * Performs the animation output or paged enters.
+     * @param {Object} element         Element.
+     * @param {Array}  target          The objetive position.
+     * @param {Number} [duration=3000] Duration of the animation.
+     */ 
     function animatePager (element, target, duration) {
 
       var _duration = duration || 3000,
