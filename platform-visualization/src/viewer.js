@@ -187,6 +187,10 @@ function goToView ( targetView ) {
             getHeaderFLowAndPosition();
 
             break;
+            
+            bookManager.createBook(targetView); 
+            
+            break;
         default:
             
             if(window.map.views[targetView] == null)
@@ -645,7 +649,7 @@ function getHeaderFLowAndPosition() {
                             positionX = positionX - 1000;
                     }
                     //calculando X
-                    for(x = 0; x < column; x++){  //columnas
+                    for(x = 0; x < column; x++){  //columnas              
 
                         position = new THREE.Vector3();
 
