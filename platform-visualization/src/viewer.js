@@ -12,9 +12,8 @@ var table = [],
     stats = null,
     actualFlow = null,
     viewManager = new ViewManager(),
-    bookManager,
-    headerFlow = [],
-    positionHeaderFlow = [];
+    bookManager;
+
 //Global constants
 var TILE_DIMENSION = {
     width : 231,
@@ -77,25 +76,7 @@ function init() {
     //create_stats();
 
     $('#backButton').click(function() {
-        if (window.actualView === "table") {
-            changeView(tileManager.targets.table);
-        }
-        if (window.actualView === "workflows") {
-
-            var duration = 6000;
-
-            camera.resetPosition(duration);
-
-            setTimeout(function() {
-
-                changeViewWorkFlows();
-
-                getHeaderFLowAndPosition();
-
-            }, 4000);
-            
-            changeView(tileManager.targets.table);
-        }    
+        changeView(tileManager.targets.table);
     });
 
     $('#legendButton').click(function() {
@@ -130,7 +111,6 @@ function init() {
 
 /**
  * @author Miguel Celedon
- * @lastmodifiedBy Emmanuel Colina
  * @lastmodifiedBy Ricardo Delgado
  * Changes the actual state of the viewer
  * @param {String} name The name of the target state
@@ -149,7 +129,7 @@ function goToView ( targetView ) {
     switch(targetView) {
         case 'table':
             
-            browserManager.modifyButtonLegend(1,'block');
+            browserManager.modifyButtonLegend(1, 'block');
 
             tileManager.transform(tileManager.targets.table, 3000 + transition);
             
@@ -158,8 +138,6 @@ function goToView ( targetView ) {
                 transition = transition + 3000;
             
             headers.transformTable(transition);
-
-            changeViewWorkFlows();
             
             break;
         case 'stack':
@@ -181,11 +159,6 @@ function goToView ( targetView ) {
             
             setTimeout(function() { bookManager.createBook(); }, 3000);
             
-            break;
-        case 'workflows':
-
-            getHeaderFLowAndPosition();
-
             break;
 
         default:
@@ -229,28 +202,7 @@ function initMenu() {
 
     }, false);
 }
-
-/**
- * @author Emmanuel Colina
- * Changes the actual view to table
- */
-
-function changeViewWorkFlows() {
-    var _duration = 2000;
-    if(headerFlow){
-        for(var i = 0; i < headerFlow.length; i++) {
-            headerFlow[i].delete();
-            helper.hideObject(headerFlow[i].objects[0], false, _duration);
-        }
-    }
-    for(var j = 0; j < testFlow.length; j++) {
-        for (var k = 0; k < testFlow[j].steps.length; k++) {
-            testFlow[j].steps[k].drawn = undefined;
-        }
-    }
-    headerFlow = [];
-}
-
+ 
 function changeView(targets) {
 
     camera.enable();
@@ -311,7 +263,8 @@ function onElementClick(id) {
             
         }, 3000);
         
-        camera.disable();   
+        camera.disable();
+        
     }
 
     function showDeveloper(id) {
@@ -499,193 +452,6 @@ function onElementClick(id) {
 }
 
 /**
- * @author Emmanuel Colina
- * 
- */
-
-function onElementClickHeaderFlow(id) {
-
-    if (camera.getFocus() == null) {
-
-        camera.setFocusHeaderFlow(id, 1000, headerFlow);
-
-        setTimeout(function() {
-            for (var i = 0; i < headerFlow[id].flow.steps.length; i++) {
-                headerFlow[id].drawTree(headerFlow[id].flow.steps[i], headerFlow[id].positions.target[0].x + 900 * i, headerFlow[id].positions.target[0].y - 211, 80000);
-            }
-            headerFlow[id].showStepsFlow();
-        }, 3000);
-
-        browserManager.modifyButtonBack(1,'block');
-    }
-}
-
-/**
- * @author Emmanuel Colina
- * Get the headers flows
- */
-
-function getHeaderFLowAndPosition() {
-    
-    var POSITION_X = -673500;
-    var POSITION_Y = -136500;
-    var position;
-    var indice = 1;
-
-    $.ajax({
-        url: 'http://52.11.156.16:3000/v1/repo/procs/',
-        method: "GET"
-    }).success(
-        function(processes) {
-            var p = processes;
-            
-            for(var i = 0; i < p.length; i++){
-                headerFlow.push(new ActionFlow(p[i])); 
-            }
-        }
-    );
-
-    if (headerFlow.length === 1) {
-
-        position = new THREE.Vector3();
-
-        position.x = -675000;
-        position.y = -135000;
-        position.z = 0;
-
-        positionHeaderFlow.push(position);
-    }
-
-    else if (headerFlow.length === 2) {
-        var positionx = -675000;
-
-        positionx = positionx - 500;
-
-        for (var k = 0; k < headerFlow.length; k++) {
-
-            position = new THREE.Vector3();
-
-            position.x = positionx;
-            position.y = -135000;
-            position.z = 0;
-            positionHeaderFlow.push(position);
-
-            positionx = positionx + 1000;
-        }
-
-    }
-    else if (headerFlow.length > 2) {
-
-        var sqrt, round, column, row, initialY, count, raizC, raizC2;
-        count = 0;
-        round = 0;
-        column = 0;
-
-        //calculamos columnas y filas
-
-
-        if((Math.sqrt(headerFlow.length) % 1) !== 0) {
-
-            for(var r = headerFlow.length; r < headerFlow.length * 2; r++){
-
-                if((Math.sqrt(r) % 1) === 0){
-
-                    raizC = r;
-                    sqrt = Math.sqrt(raizC);
-
-                    for(var l = raizC - 1; l > 0; l--){ 
-
-                        if((Math.sqrt(l) % 1) === 0){
-
-                            raizC2 = l;
-                            break;
-                        }
-                        count = count + 1;
-                    }
-                    count = count / 2;
-
-                    for(var f = raizC2 + 1; f <= raizC2 + count; f++){
-                        if(headerFlow.length === f) {
-                            row = sqrt - 1;
-                            column = sqrt;
-                        }
-                    }
-                    for(var t = raizC - 1; t >= raizC - count; t--){
-                        if(headerFlow.length === t) {
-                            row = column = sqrt ;
-                        }
-                    }
-                }
-                if(row !== 0  && column !== 0){
-                    break;
-                }
-            }
-        }
-        else{
-            row = column = Math.sqrt(headerFlow.length);
-        }
-
-        count = 0;
-        var positionY = POSITION_Y;  
-
-        //calculando Y
-        for(var p = 0; p < row; p++) { 
-
-            if(p === 0)
-                positionY = positionY + 250;
-            else
-                positionY = positionY + 500;
-        }
-        
-        for(y = 0; y < row; y++){ //filas
-
-            var positionX = POSITION_X;
-
-            for(m = 0; m < column; m++) { 
-
-                if(m===0)
-                    positionX = positionX - 500;
-                else
-                    positionX = positionX - 1000;
-            }
-            //calculando X
-            for(x = 0; x < column; x++){  //columnas              
-
-                position = new THREE.Vector3();
-
-                position.y = positionY;
-
-                position.x = positionX;
-
-                if(count < headerFlow.length){
-
-                    positionHeaderFlow.push(position);
-                    count = count + 1;
-                }
-
-                if((positionX + 500) === POSITION_X) {
-                    positionX = positionX + 1000;
-                }
-                else
-                    positionX = positionX + 1000;
-            }
-
-            if((positionY - 250) === POSITION_Y) {
-                positionY = positionY - 500;
-            }
-            else
-                positionY = positionY - 500;     
-        }      
-    }
-
-    for (var j = 0; j < headerFlow.length; j++){
-
-        headerFlow[j].draw(positionHeaderFlow[j].x, positionHeaderFlow[j].y, positionHeaderFlow[j].z, indice, j);
-    }
-    
-}
-
-/**
  * Generic event when user clicks in 3D space
  * @param {Object} e Event data
  */
@@ -714,8 +480,7 @@ function onClick(e) {
 function showFlow(flows) {
     
     var position = objects[camera.getFocus()].position;
-    var indice = 0;
-
+    
     camera.enable();
     camera.move(position.x, position.y, position.z + window.TILE_DIMENSION.width * 5);
     
@@ -725,7 +490,7 @@ function showFlow(flows) {
         
         for(var i = 0; i < flows.length; i++) {
             actualFlow.push(flows[i]);
-            flows[i].draw(position.x, position.y, 0, indice, i);
+            flows[i].draw(position.x, position.y);
             
             //Dummy, set distance between flows
             position.x += window.TILE_DIMENSION.width * 10;

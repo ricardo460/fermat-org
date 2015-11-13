@@ -16,40 +16,26 @@ function ActionFlow(flow) {
     
     
     var self = this;
-
     var objects = [];
     var positions = {
         target : [],
         origin : []
     };
     
-    var onClick = function(target) {
-        if(window.actualView === 'workflows')
-            window.onElementClickHeaderFlow(target.userData.id);
-    };
-
     this.objects = objects;
     this.positions = positions;
-
-
+    
     /**
      * Draws the flow
-     * @lastmodifiedBy Emmanuel Colina
      * @param   {Number}  initialX Position where to start
      * @param   {Number}  initialY Position where to start
      */
-    this.draw = function(initialX, initialY, initialZ, indice, id) {
+    this.draw = function(initialX, initialY) {
         
-
         var title = createTitleBox(self.flow.name, self.flow.desc);
         
         var origin = window.helper.getOutOfScreenPoint(0);
-        var target = new THREE.Vector3(initialX, initialY + window.TILE_DIMENSION.height * 2, initialZ);
-
-        title.userData = {
-                id: id,
-                onClick : onClick
-        };
+        var target = new THREE.Vector3(initialX, initialY + window.TILE_DIMENSION.height * 2, 0);
         positions.origin.push(origin);
         positions.target.push(target);
         
@@ -57,83 +43,32 @@ function ActionFlow(flow) {
         
         objects.push(title);
         scene.add(title);
-
-        if (indice === 0){
-            for(i = 0, l = self.flow.steps.length; i < l; i++){
-                self.drawTree(self.flow.steps[i], initialX + COLUMN_SPACING * i, initialY, 0);
-            }
-            new TWEEN.Tween(this)
-                .to({}, 8000)
-                .onUpdate(window.render)
-                .start();
-            self.showSteps();
-        }
-
-        if (indice === 1){
-            new TWEEN.Tween(this)
-                .to({}, 8000)
-                .onUpdate(window.render)
-                .start();
-            self.showStepsFlow();
-        }
-    };
-
-    /**
-     * Takes away all the tiles except the one with the id
-     * @author Emmanuel Colina
-     */
-
-    this.letAloneHeaderFlow = function() {
         
-        var i, _duration = 2000,
-            distance = camera.getMaxDistance() * 2,
-            out = window.viewManager.translateToSection('workflows', new THREE.Vector3(0, 0, distance));
-
-        //TWEEN.removeAll();
-
-        var target;
-
-        var animate = function (object, target, dur) {
-
-            new TWEEN.Tween(object.position)
-                .to({
-                    x: target.x,
-                    y: target.y,
-                    z: target.z
-                }, dur)
-                .easing(TWEEN.Easing.Exponential.InOut)
-                .onComplete(function () {
-                    object.userData.flying = false;
-                })
-                .start();
-
-        };
-
-        for (i = 0; i < objects.length; i++) {
-
-            target = out;
-            objects[i].userData.flying = true;
-            animate(objects[i], target, Math.random() * _duration + _duration);
-        }
-
+        for(i = 0, l = self.flow.steps.length; i < l; i++)
+            drawTree(self.flow.steps[i], initialX + COLUMN_SPACING * i, initialY);
+        
         new TWEEN.Tween(this)
-            .to({}, _duration * 2)
-            .onUpdate(render)
+            .to({}, 8000)
+            .onUpdate(window.render)
             .start();
+        
+        self.showSteps();
+        
     };
-
-     /**
+    
+    //Private methods
+        
+    /**
      * Recursively draw the flow tree
      * @param {Object} root The root of the tree
      * @param {Number} x    X position of the root
      * @param {Number} y    Y position of the root
      * @author Miguel Celedon
      */
-
-    this.drawTree = function(root, x, y, z) {
+    function drawTree(root, x, y) {
         
         if(typeof root.drawn === 'undefined') {
-            drawStep(root, x, y, z);
+            drawStep(root, x, y);
 
             var childCount = root.next.length,
                 startX = x - 0.5 * (childCount - 1) * COLUMN_SPACING;
@@ -158,7 +93,7 @@ function ActionFlow(flow) {
                 objects.push(rootLine);
                 window.scene.add(rootLine);
 
-                var nextX, nextY, childLine, child, i, isLoop, nextZ = z;
+                var nextX, nextY, childLine, child, i, isLoop;
 
                 for(i = 0; i < childCount; i++) {
 
@@ -198,8 +133,6 @@ function ActionFlow(flow) {
 
                     childLine = new THREE.Line(lineGeo, lineMat);
                     
-                    //childLine.position.z = 80000;
-
                     origin = helper.getOutOfScreenPoint(-1);
                     childLine.position.copy(origin);
                     positions.origin.push(origin);
@@ -208,13 +141,11 @@ function ActionFlow(flow) {
                     objects.push(childLine);
                     window.scene.add(childLine);
 
-                    self.drawTree(child, nextX, nextY, nextZ);
+                    drawTree(child, nextX, nextY);
                 }
             }
         }
-    };
-
-    //Private methods
+    }
 
     /**
      * Draws a single step
@@ -222,11 +153,10 @@ function ActionFlow(flow) {
      * @param {Number} x    X position
      * @param {Number} y    Y position
      */
-    function drawStep(node, x, y, _z) {
+    function drawStep(node, x, y) {
 
-        var z = _z || 0;
         var tile,
-            tilePosition = new THREE.Vector3(x - 108, y - 2, z + 1);
+            tilePosition = new THREE.Vector3(x - 108, y - 2, 1);
 
         if(node.element !== -1) {
 
@@ -254,7 +184,7 @@ function ActionFlow(flow) {
         var stepBox = createStepBox(node);
         
         var origin = window.helper.getOutOfScreenPoint(0);
-        var target = new THREE.Vector3(x, y, z);
+        var target = new THREE.Vector3(x, y, 0);
         positions.origin.push(origin);
         positions.target.push(target);
         
@@ -310,7 +240,7 @@ function ActionFlow(flow) {
         
         objects = [];
     };
-
+    
     this.showSteps = function() {
         
         var move = function(id) {
@@ -319,23 +249,6 @@ function ActionFlow(flow) {
             
             new TWEEN.Tween(objects[id].position)
                 .to({x : target.x, y : target.y, z : target.z}, 4000)
-                .easing(TWEEN.Easing.Cubic.InOut)
-                .start();
-        };
-        
-        for(var i = 0, l = objects.length; i < l; i++) {
-            move(i);
-        }
-    };
-
-    this.showStepsFlow = function() {
-        
-        var move = function(id) {
-            
-            var target = positions.target[id];
-            
-            new TWEEN.Tween(objects[id].position)
-                .to({x : target.x, y : target.y, z : 80000}, 4000)
                 .easing(TWEEN.Easing.Cubic.InOut)
                 .start();
         };
