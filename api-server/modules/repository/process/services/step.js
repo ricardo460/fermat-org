@@ -164,3 +164,19 @@ exports.findAndPopulateAllSteps = function (query, sort, path, callback) {
         callback(err, step);
     });
 };
+
+/**
+ * [delAllSteps description]
+ *
+ * @method delAllSteps
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.delAllSteps = function (callback) {
+    'use strict';
+    stepDao.delAllSchemas(function (err, comp) {
+        callback(err, comp);
+    });
+};

@@ -1,6 +1,8 @@
+var winston = require('winston');
 var loadLib = require('./modules/repository/lib/loader');
 var syncLib = require('./modules/repository/lib/syncer');
-var winston = require('winston');
+var Cache = require('./lib/route-cache');
+var cache = new Cache({type: 'file'});
 
 var _INTERVAL = 720000;
 
@@ -20,13 +22,6 @@ setInterval(function () {
         winston.log('info', 'Documentation loaded');
         break;
     case 1:
-        /*loadLib.loadDocs(function (err, res) {
-            if (err) {
-                winston.log('info', err.message, err);
-            } else {
-                winston.log('info', 'documentation loaded', res);
-            }
-        });*/
         winston.log('info', 'Doing nothing');
         break;
     case 2:
@@ -35,6 +30,7 @@ setInterval(function () {
                 winston.log('info', err.message, err);
             } else {
                 winston.log('info', 'Components and developers loaded', res);
+                cache.clear();
             }
         });
         break;
@@ -44,6 +40,7 @@ setInterval(function () {
                 winston.log('info', err.message, err);
             } else {
                 winston.log('info', 'Components updated', res);
+                cache.clear();
             }
         });
         break;
@@ -53,6 +50,7 @@ setInterval(function () {
                 winston.log('info', err.message, err);
             } else {
                 winston.log('info', 'Developers updated', res);
+                cache.clear();
             }
         });
         break;

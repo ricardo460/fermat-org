@@ -82,9 +82,7 @@ function BrowserManager() {
    this.init = function () {
        
         for(var view in window.map.views) {
-
-            if(window.map.views[view].enabled === true)
-                loadView(view);
+            loadView(view);
         }
 
    };
@@ -101,6 +99,9 @@ function BrowserManager() {
         var newCenter = new THREE.Vector3(0, 0, 0);
         newCenter = window.viewManager.translateToSection(view, newCenter);
         
+        if(window.map.views[view].enabled !== true)
+            showSign(newCenter);
+        
         var dir = '';
 
         for(var i = 0; i < directions.length; i++) {
@@ -108,10 +109,26 @@ function BrowserManager() {
             //Get up, down, left and right views
             dir = window.map.views[view][directions[i]];
             
-            if(dir !== '' && window.map.views[dir].enabled === true)
+            if(dir !== '')
                 addArrow(dir, newCenter.x, newCenter.y, directions[i]);
         }
 
+    }
+    
+    function showSign(center) {
+        
+        var newCenter = center.clone();
+        newCenter.z = LOWER_LAYER;
+        
+        //Create placeholder for now
+        var sign = new THREE.Mesh(
+            new THREE.PlaneGeometry(8000, 6000),
+            new THREE.MeshBasicMaterial({color : 0xAAAAAA})
+        );
+        
+        sign.position.copy(newCenter);
+        
+        window.scene.add(sign);
     }
 
    /**

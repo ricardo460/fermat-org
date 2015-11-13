@@ -4,6 +4,8 @@ var layerMod = require('./layer');
 var suprlayMod = require('./superlayer');
 var platfrmMod = require('./platform');
 var docMod = require('./doc');
+var devMod = require('./developer');
+
 
 /**
  * [getComps description]
@@ -54,8 +56,8 @@ exports.getComps = function (req, next) {
 };
 
 /**
- * [getProcs description]
- *
+ * Function to List Process filter by   
+ * 
  * @method getProcs
  *
  * @param  {[type]}   req  [description]
@@ -93,7 +95,14 @@ exports.getProcs = function (req, next) {
                 }
             });
         } else {
-            next(new Error('incomplete data'), null);
+            
+            procMod.getAllProces(function(err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
         }
     } catch (err) {
         next(err, null);
@@ -149,3 +158,18 @@ exports.getBook = function (req, next) {
         next(err, null);
     }
 };
+
+exports.getDevs = function(req, next){
+    'use strict';
+    try {
+        devMod.getDevs(function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+}

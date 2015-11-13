@@ -344,4 +344,38 @@ exports.updCompDevAndLifCyc = function (_comp_id, devs, life_cycle, callback) {
         return callback(err, null);
     }
 };
+
+/**
+ * [delAllComps description]
+ *
+ * @method delAllComps
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.delAllComps = function (callback) {
+    'use strict';
+    try {
+        compSrv.delAllComps(function (err, comps) {
+            if (err) {
+                return callback(err, null);
+            }
+            compDevSrv.delAllCompDevs(function (err, comp_devs) {
+                if (err) {
+                    return callback(err, null);
+                }
+                statusSrv.delAllStatuses(function (err, statuses) {
+                    if (err) {
+                        return callback(err, null);
+                    }
+                    return callback(null, true);
+                });
+            });
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
 /*jshint +W069 */
