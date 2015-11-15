@@ -7,23 +7,27 @@ As the Fermat Network is a complex creature, many different views are going to b
 ## View List
 
 1. **Online Node Network** : This view provides a geo-localized view of online Nodes in the Fermat Network.
-2. **Node and connected Network Clients"** : In this view, a single Network Node is present, and all connected Network Clients are rendered.
+
+2. **Nodes and connected Network Clients** : In this view, a single Network Node is present, and all connected Network Clients are rendered.
+
 3. **Node Catalog** : This is a geo-localized view of all nodes, both online and offline, present on the distributed Node Calaog.
+
 4. **Actor Catalog** : This is a geo-localized view of all actors, both online and offline, present on the distributed Actor Calaog.
+
 5. **Network Services** : This view shows all online network services online on one Network Client. When the Network Service is an Actor Network Service, it also shows the actors associated with each of them.
+
 6. **Wallets** : This view show all wallets and their type linked to one Network Client. Each wallet shows its balance and currency. 
+
 7. **Social Network** : This view shows the connections between Actors within the system. 
+
 8. **Private Networks** : This view shows the private networks created by users.
 
 
-## User Experience
+## Basic Elements
 
-In this section we describe what exactly is expected in each view.
+In these views, users will enter in a free-moving space where they can see sprites and lines interconecting them.
 
-In these views, the user will enter in a free-moving space where he or she can see the nodes
-that conforms it and lines interconecting them as they are in ther network.
-
-The curren types of nodes are:
+### Sprite Categories
 
 - **Network Nodes** : Denoted by a sprite for each type of node and the operating system. It's a niche where several Network Clients will connect and will work as intermediaries between each other. The type of nodes are: home computer, server, smart phone, tablet, etc. Operating systems might be: Windows, Linux, OSx, Android, etc.
 
@@ -31,12 +35,29 @@ The curren types of nodes are:
 
 - **Network Services** : Denoted with a sprite for each type: Network Service or Actor Network Service. A Network Services connects with its counterpart in another device.
     
-- **Actor** : Denoted with a sprite for each Actor Type (Developer, Crypto Broker, etc). 
+- **Actors** : Denoted with a sprite for each Actor Type (Developer, Crypto Broker, etc). 
 
-- **Wallet** : Denoted with a sprite for each Wallet Type.
+- **Wallets** : Denoted with a sprite for each Wallet Type.
 
-        
-As it seems, there are several types of nodes, and a node can have child nodes which are in a sub-network inside the parent node. 
+As it seems, there are several sprite categories. 
+
+### Types of Relationships
+
+- **Connected to** : For example, a Network Client is _connected to_ a Network Node.
+- **Running at** : For example, a Network Service is _running at_ a Network Client.
+- **Living at** : For example, an Actor is _living at_ a Network Client.
+- **Installed at** : For example, a Wallet is _installed at_ a Network Client.
+- **Interconnected** : For example, an Actor is _interconnected_ with another Actor when one sent a _connection request_ and the other one accepted it.
+
+All relationships are rendered with lines, but depending on their category different techniques (arrow, dots, dashes, etc.) are applied to distinguish between each other. 
+
+## User Experience
+
+In this section we describe what exactly is expected in each view.
+
+### Online Node Network
+
+
 
 
 
