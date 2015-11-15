@@ -51,7 +51,7 @@ As it seems, there are several sprite categories.
 
 - **Installed at** : For example, a Wallet is _installed at_ a Network Client.
 
-- **Interconnected** : For example, an Actor is _interconnected_ with another Actor when one sent a _connection request_ and the other one accepted it.
+- **Interconnected** : For example, an Actor is _interconnected_ with another Actor when one of them sent to the other a _connection request_ and the other party accepted it.
 
 All relationships are rendered with lines, but depending on their category different techniques (arrow, dots, dashes, etc.) are applied to distinguish between each other. 
 
