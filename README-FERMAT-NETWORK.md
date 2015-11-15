@@ -9,39 +9,39 @@ As the Fermat Network is a complex creature, many different views are going to b
 1. **Online Node Network** : This view provides a geo-localized view of online Nodes in the Fermat Network.
 2. **Node and connected Network Clients"** : In this view, a single Network Node is present, and all connected Network Clients are rendered.
 3. **Node Catalog** : This is a geo-localized view of all nodes, both online and offline, present on the distributed Node Calaog.
-4. 
+4. **Actor Catalog** : This is a geo-localized view of all actors, both online and offline, present on the distributed Actor Calaog.
+5. **Network Services** : This view shows all online network services online on one Network Client. When the Network Service is an Actor Network Service, it also shows the actors associated with each of them.
+6. **Wallets** : This view show all wallets and their type linked to one Network Client. Each wallet shows its balance and currency. 
+7. **Social Network** : This view shows the connections between Actors within the system. 
+8. **Private Networks** : This view shows the private networks created by users.
 
 
-MIGUEL :ya te voy a completar la lista.
+## User Experience
 
+In this section we describe what exactly is expected in each view.
 
-
-##P2P user experience
-In this section we describe what exactly is expected in the P2P view.
-
-In the P2P view, the user will enter in a free-moving space where he or she can see the nodes
+In these views, the user will enter in a free-moving space where he or she can see the nodes
 that conforms it and lines interconecting them as they are in ther network.
 
 The curren types of nodes are:
-- *Network Nodes*: Denoted by a server sprite, it's a niche where several devices will connect and will
-work as intermediaries between devices and other servers.
-- *Network Clients*: Denoted as a smartphone sprite, it's a handset that connects to a server and
-includes others nodes inside:
-    - *Network Services*: Denoted with **[What?]**, it works as endpoints of connections
-    between the devices, a Network Services connects with its counterpart in another
-    device.
-        - *Plug-in*: Denoted with a shuffle. The smallest component in the network(?)
-    - *Actor Network Services*: Denoted with **[What?]**, it's a Network Service which is used
-    by Actor-type plugins, whose act like entities.
-        - *Actor Plug-in*: Denoted with a person sprite. Plug-ins that works as identities inside
-        a device.
 
-*(Who contains the wallet? The mobile device?)*
+- **Network Nodes** : Denoted by a sprite for each type of node and the operating system. It's a niche where several Network Clients will connect and will work as intermediaries between each other. The type of nodes are: home computer, server, smart phone, tablet, etc. Operating systems might be: Windows, Linux, OSx, Android, etc.
+
+- **Network Clients** : Denoted as a sprite for each type of device and its operating system. Device type might be: smart phone, pc, tablet, etc. 
+
+- **Network Services** : Denoted with a sprite for each type: Network Service or Actor Network Service. A Network Services connects with its counterpart in another device.
+    
+- **Actor** : Denoted with a sprite for each Actor Type (Developer, Crypto Broker, etc). 
+
+- **Wallet** : Denoted with a sprite for each Wallet Type.
+
         
-As it seems, there are several types of nodes, and a node can have child nodes which are in a sub-
-network inside the parent node. So, for example, in the first view the user will see the servers and
-mobile devices, if he or she clicks in a mobile devices everything else will flyout and he or she will
-see the children Network Services inside that device. *Is this right?*
+As it seems, there are several types of nodes, and a node can have child nodes which are in a sub-network inside the parent node. 
+
+
+
+# MIGUEL: VOY POR ACA
+
 
 ##The challenge
 As the P2P is expected to be so large, and being updated and larger every time, it's not feasible
