@@ -44,9 +44,13 @@ As it seems, there are several sprite categories.
 ### Types of Relationships
 
 - **Connected to** : For example, a Network Client is _connected to_ a Network Node.
+
 - **Running at** : For example, a Network Service is _running at_ a Network Client.
+
 - **Living at** : For example, an Actor is _living at_ a Network Client.
+
 - **Installed at** : For example, a Wallet is _installed at_ a Network Client.
+
 - **Interconnected** : For example, an Actor is _interconnected_ with another Actor when one sent a _connection request_ and the other one accepted it.
 
 All relationships are rendered with lines, but depending on their category different techniques (arrow, dots, dashes, etc.) are applied to distinguish between each other. 
@@ -55,9 +59,9 @@ All relationships are rendered with lines, but depending on their category diffe
 
 In this section we describe what exactly is expected in each view.
 
-### Online Node Network
-
-
+### Online Network Nodes
+ 
+This view will render all the online Network Nodes. 
 
 
 
