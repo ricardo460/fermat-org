@@ -1,4 +1,4 @@
-#Fermat Network Rendering Description
+#Fermat Network Rendering
 
 In this document, we describe how the Fermat.org site will render the Fermat Network. How the data flows from the server to browsers in order to produce the visualizations.
 
