@@ -1,12 +1,12 @@
 html, body {
-				height: 100%;
+                height: 100%;
                 -webkit-touch-callout: none;
                 -webkit-user-select: none;
                 -khtml-user-select: none;
                 -moz-user-select: none;
                 -ms-user-select: none;
                 user-select: none;
-			}
+            }
 
 body {
     background-color: #ffffff;
@@ -97,69 +97,88 @@ button:active {
     position: relative;
 }
 
-#container .flipbook-viewport{
+.flipbook-viewport{
     position:absolute;
     top:50%;
     left:50%;
     margin:auto;
 }
 
-#container .flipbook{
-    width:922px;
-    height:600px;
-    left:-461px;
-    top:-300px;
+.flipbook{
+  width:1160px;
+  height:700px;
+  left:-575px;
+  top:-300px;
 }
 
-#container .page{
-    width:461px;
-    height:600px;
-    background-color:white;
-    background-repeat:no-repeat;
-    background-size:100% 100%;
+.flipbook{
+  -webkit-transition: -webkit-transform 3s;
+  -moz-transition: -moz-transform 3s;
+  -ms-transition: -ms-transform 3s;
+  -o-transition: -o-transform 3s;
+  transition: transform 3s;
 }
 
-#container .shadow{
-    -webkit-transition: -webkit-box-shadow 0.5s;
-    -moz-transition: -moz-box-shadow 0.5s;
-    -o-transition: -webkit-box-shadow 0.5s;
-    -ms-transition: -ms-box-shadow 0.5s;
 
-    -webkit-box-shadow:0 0 20px #ccc;
-    -moz-box-shadow:0 0 20px #ccc;
-    -o-box-shadow:0 0 20px #ccc;
-    -ms-box-shadow:0 0 20px #ccc;
-    box-shadow:0 0 20px #ccc;
+.flipbook .shadow{
+  -webkit-transition: -webkit-box-shadow 0.5s;
+  -moz-transition: -moz-box-shadow 0.5s;
+  -o-transition: -webkit-box-shadow 0.5s;
+  -ms-transition: -ms-box-shadow 0.5s;
+
+  -webkit-box-shadow:0 0 10px #999;
+  -moz-box-shadow:0 0 10px #999;
+  -ms-box-shadow:0 0 10px #999;
+  -o-box-shadow:0 0 10px #999;
+  box-shadow:0 0 10px #999;
 }
 
- #pager {
-  width:auto;
-  position: relative;
-  margin: .7em auto;
- }
- 
- #pagerBook li {
-  list-style:none;
-  padding:0; margin:0;
-  float:left;
-  width:24px;
-  height:14px;
-  background:#b0b0b0;
-  text-align:center;
-  font-size:11px;
-  line-height:14px;
-  vertical-align:middle;
-  margin-right:5px;
-  overflow: hidden;
- }
+.flipbook .page{
+  -webkit-box-shadow:0 0 20px rgba(0,0,0,0.2);
+  -moz-box-shadow:0 0 20px rgba(0,0,0,0.2);
+  -ms-box-shadow:0 0 20px rgba(0,0,0,0.2);
+  -o-box-shadow:0 0 20px rgba(0,0,0,0.2);
+  box-shadow:0 0 20px rgba(0,0,0,0.2);
+}
 
- #pagerBook li:hover, #pagerBook li.active {
-  background:#919191;
- }
+.flipbook .hard{
+  width:580px;
+  height:700px;
+  background-color:white;
+  -webkit-box-shadow:none;
+  -moz-box-shadow:none;
+  -ms-box-shadow:none;
+  box-shadow:none;
+}
+#p1, #p2, #pn, #pf{
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+}
 
- #pagerBook li a{display:block; color:#666}
- 
- #pagerBook li {float:left}
+.flipbook .own-size{
+  width:560px;
+  height:682px;
+  background-color:white;
+  overflow:hidden;
+}
+
+.flipbook .even{
+  background:-webkit-gradient(linear, left top, right top, color-stop(0.95, #fff), color-stop(1, #dadada));
+  background-image:-webkit-linear-gradient(left, #fff 95%, #dadada 100%);
+  background-image:-moz-linear-gradient(left, #fff 95%, #dadada 100%);
+  background-image:-ms-linear-gradient(left, #fff 95%, #dadada 100%);
+  background-image:-o-linear-gradient(left, #fff 95%, #dadada 100%);
+  background-image:linear-gradient(left, #fff 95%, #dadada 100%);
+}
+
+.flipbook .odd{
+  background:-webkit-gradient(linear, right top, left top, color-stop(0.95, #fff), color-stop(1, #cacaca));
+  background-image:-webkit-linear-gradient(right, #fff 95%, #cacaca 100%);
+  background-image:-moz-linear-gradient(right, #fff 95%, #cacaca 100%);
+  background-image:-ms-linear-gradient(right, #fff 95%, #cacaca 100%);
+  background-image:-o-linear-gradient(right, #fff 95%, #cacaca 100%);
+  background-image:linear-gradient(right, #fff 95%, #cacaca 100%);
+}
 
 @font-face {
     font-family: Canaro;
