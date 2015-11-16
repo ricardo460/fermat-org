@@ -115,15 +115,23 @@ function BrowserManager() {
 
     }
     
+    /**
+     * Shows a sign in the given position
+     * @author Miguel Celedon
+     * @param {THREE.Vector3} center Center of the sign
+     */
     function showSign(center) {
         
         var newCenter = center.clone();
         newCenter.z = LOWER_LAYER;
         
+        var texture = THREE.ImageUtils.loadTexture('images/sign.png');
+        texture.minFilter = THREE.NearestFilter;
+        
         //Create placeholder for now
         var sign = new THREE.Mesh(
             new THREE.PlaneGeometry(8000, 6000),
-            new THREE.MeshBasicMaterial({color : 0xAAAAAA})
+            new THREE.MeshBasicMaterial({color : 0xFFFFFF, map : texture})
         );
         
         sign.position.copy(newCenter);
