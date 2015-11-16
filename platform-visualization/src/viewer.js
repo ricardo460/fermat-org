@@ -64,9 +64,6 @@ function init() {
     // BrowserManager
     browserManager.init();            
 
-    // BookManager
-    bookManager.init();
-
     var dimensions = tileManager.dimensions;
 
     // groups icons
@@ -117,8 +114,8 @@ function init() {
 
     //Disabled Menu
     //initMenu();
-
-    setTimeout(function() { goToView(window.map.start); }, 500);
+    
+    setTimeout(function() { goToView(window.location.hash.slice(1)); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
@@ -136,11 +133,12 @@ function init() {
  * @param {String} name The name of the target state
  */
 function goToView ( targetView ) {
-    
+
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
 
-    if(actualView === "book") bookManager.hide();
+    if(actualView === "book" || actualView === "readme" || actualView === "whitepaper") 
+        bookManager.hide();
     
     newCenter = viewManager.translateToSection(targetView, newCenter);
     camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
@@ -178,16 +176,21 @@ function goToView ( targetView ) {
             
             break;
         case 'book':
+                       
+        case 'readme':
+                       
+        case 'whitepaper':
+            bookManager.createBook(targetView);
             
-            setTimeout(function() { bookManager.createBook(); }, 3000);
-            
-            break;
         case 'workflows':
 
             getHeaderFLow();
 
             break;
-
+            
+            bookManager.createBook(targetView); 
+            
+            break;
         default:
             
             if(window.map.views[targetView] == null)
@@ -274,7 +277,6 @@ function changeView(targets) {
  * Triggered when the user clicks a tile
  * @param {Number} id The ID (position on table) of the element
  */
- 
 function onElementClick(id) {
     
     if (camera.getFocus() == null) {
@@ -691,6 +693,7 @@ function getHeaderFLow() {
  * Generic event when user clicks in 3D space
  * @param {Object} e Event data
  */
+ 
 function onClick(e) {
     
     var mouse = new THREE.Vector2(0, 0),
