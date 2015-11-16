@@ -1,12 +1,12 @@
 html, body {
-				height: 100%;
+                height: 100%;
                 -webkit-touch-callout: none;
                 -webkit-user-select: none;
                 -khtml-user-select: none;
                 -moz-user-select: none;
                 -ms-user-select: none;
                 user-select: none;
-			}
+            }
 
 body {
     background-color: #ffffff;
@@ -111,6 +111,14 @@ button:active {
   top:-300px;
 }
 
+.flipbook{
+  -webkit-transition: -webkit-transform 3s;
+  -moz-transition: -moz-transform 3s;
+  -ms-transition: -ms-transform 3s;
+  -o-transition: -o-transform 3s;
+  transition: transform 3s;
+}
+
 
 .flipbook .shadow{
   -webkit-transition: -webkit-box-shadow 0.5s;
@@ -133,15 +141,6 @@ button:active {
   box-shadow:0 0 20px rgba(0,0,0,0.2);
 }
 
-
-.flipbook .p1 .side{
-  width:5px;
-  height:600px;
-  position:absolute;
-  top:0;
-  left:475px;
-}
-
 .flipbook .hard{
   width:580px;
   height:700px;
@@ -151,8 +150,10 @@ button:active {
   -ms-box-shadow:none;
   box-shadow:none;
 }
-
-
+#p1, #p2, #pn, #pf{
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+}
 
 .flipbook .own-size{
   width:560px;
@@ -178,50 +179,6 @@ button:active {
   background-image:-o-linear-gradient(right, #fff 95%, #cacaca 100%);
   background-image:linear-gradient(right, #fff 95%, #cacaca 100%);
 }
-
-
-.ie8 .flipbook .even,
-.ie9 .flipbook .even{
-  background-image:url(images/book/gradient-page-left.jpg);
-  background-position:right top;
-  background-repeat:repeat-y;
-}
-
-.ie8 .flipbook .odd,
-.ie9 .flipbook .odd{
-  background-image:url(images/book/gradient-page-right.jpg);
-  background-position:left top;
-  background-repeat:repeat-y;
-}
-
- #pager {
-  width:auto;
-  position: relative;
-  margin: .7em auto;
- }
- 
- #pagerBook li {
-  list-style:none;
-  padding:0; margin:0;
-  float:left;
-  width:24px;
-  height:14px;
-  background:#b0b0b0;
-  text-align:center;
-  font-size:11px;
-  line-height:14px;
-  vertical-align:middle;
-  margin-right:5px;
-  overflow: hidden;
- }
-
- #pagerBook li:hover, #pagerBook li.active {
-  background:#919191;
- }
-
- #pagerBook li a{display:block; color:#666}
- 
- #pagerBook li {float:left}
 
 @font-face {
     font-family: Canaro;

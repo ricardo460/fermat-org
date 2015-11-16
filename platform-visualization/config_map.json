@@ -100,7 +100,7 @@
             "left": "",
             "section" : [-5, -1],
             "title" : "Workflows",
-            "enabled" : false
+            "enabled" : true
         }
     }
 }

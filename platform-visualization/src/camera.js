@@ -144,12 +144,38 @@ function Camera(position, renderer, renderFunc) {
             .easing( TWEEN.Easing.Exponential.InOut )
             .start();
     };
-    
+
+    this.setFocusHeaderFlow = function(id, duration, headerFlow) {
+
+        var POSITION_Z = 2600;
+        var POSITION_Y = -850;
+
+        focus = parseInt(id);
+
+        for (var i = 0; i < headerFlow.length ; i++) {
+            if(id !== i)
+                headerFlow[i].letAloneHeaderFlow();
+        }
+        self.render(renderer, scene);
+
+        var vec = new THREE.Vector4(0, POSITION_Y, POSITION_Z, 1);
+        var target = headerFlow[id].objects[0];
+
+        vec.applyMatrix4( target.matrix );
+
+        new TWEEN.Tween( camera.position )
+            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration * 2 )
+            .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
+            .onComplete(render)
+            .start();
+    };
+
     /**
      *
      * @method loseFocus    loses focus from target
      *
      */
+     
     this.loseFocus = function() {
         
         if ( focus != null ) {
@@ -198,8 +224,7 @@ function Camera(position, renderer, renderFunc) {
             //TWEEN.removeAll();
             var duration = 2000;
 
-            if(window.actualView === 'table')
-                tileManager.rollBack();
+            tileManager.rollBack();
 
             self.resetPosition(duration);
         }
