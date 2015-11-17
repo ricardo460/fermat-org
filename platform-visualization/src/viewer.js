@@ -11,8 +11,8 @@ var table = [],
     actualView,
     stats = null,
     actualFlow = null,
-    viewManager = new ViewManager(),
-    bookManager,
+    viewManager = null,
+    magazine = null;
     headerFlow = [],
     positionHeaderFlow = [];
 //Global constants
@@ -43,10 +43,6 @@ function createScene(){
         renderer,
         render);
 
-    browserManager = new BrowserManager();
-    screenshotsAndroid = new ScreenshotsAndroid();
-    bookManager = new BookManager();
-
     logo.startFade();
 }
 
@@ -54,6 +50,13 @@ function createScene(){
  * Starts everything after receiving the json from the server
  */
 function init() {
+
+    browserManager = new BrowserManager();
+    screenshotsAndroid = new ScreenshotsAndroid();
+    magazine = new Magazine();
+    
+    //View Manager
+    viewManager = new ViewManager();
 
     // table
     tileManager.drawTable();
@@ -136,70 +139,22 @@ function goToView ( targetView ) {
 
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
-
-    if(actualView === "book" || actualView === "readme" || actualView === "whitepaper") 
-        bookManager.hide();
     
     newCenter = viewManager.translateToSection(targetView, newCenter);
     camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
     camera.lockPan();
-
-    switch(targetView) {
-        case 'table':
-            
-            browserManager.modifyButtonLegend(1,'block');
-
-            tileManager.transform(tileManager.targets.table, 3000 + transition);
-            
-            //Special: If coming from home, delay the animation
-            if(actualView === 'home')
-                transition = transition + 3000;
-            
-            headers.transformTable(transition);
-
-            changeViewWorkFlows();
-            
-            break;
-        case 'stack':
-                     
-            headers.transformStack(transition);
-
-            browserManager.modifyButtonBack(0,'none');
-            
-            browserManager.modifyButtonLegend(0,'none');
-            
-            break;
-            
-        case 'home':
-            
-            logo.stopFade(2000);
-            
-            break;
-        case 'book':
-                       
-        case 'readme':
-                       
-        case 'whitepaper':
-            bookManager.createBook(targetView);
-            
-        case 'workflows':
-
-            getHeaderFLow();
-
-            break;
-            
-            bookManager.createBook(targetView); 
-            
-            break;
-        default:
-            
-            if(window.map.views[targetView] == null)
-                goToView(window.map.start);
-            
-            break;
-    }
     
-    actualView = targetView;
+    if(window.map.views[targetView] != null) {
+        viewManager.views[targetView].enter();
+        
+        if(actualView)
+            viewManager.views[actualView].exit();
+        
+        actualView = targetView;
+    }
+    else {
+        goToView(window.map.start);
+    }
 }
 
 function initMenu() {
@@ -244,11 +199,6 @@ function changeViewWorkFlows() {
         for(var i = 0; i < headerFlow.length; i++) {
             headerFlow[i].delete();
             helper.hideObject(headerFlow[i].objects[0], false, _duration);
-        }
-    }
-    for(var j = 0; j < testFlow.length; j++) {
-        for (var k = 0; k < testFlow[j].steps.length; k++) {
-            testFlow[j].steps[k].drawn = undefined;
         }
     }
     headerFlow = [];
@@ -517,7 +467,7 @@ function onElementClickHeaderFlow(id) {
                 headerFlow[id].drawTree(headerFlow[id].flow.steps[i], headerFlow[id].positions.target[0].x + 900 * i, headerFlow[id].positions.target[0].y - 211, 0);
             }
             headerFlow[id].showStepsFlow();
-        }, 3000);
+        }, 1000);
 
         browserManager.modifyButtonBack(1,'block');
     }
