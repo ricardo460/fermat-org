@@ -104,7 +104,7 @@ function ViewManager() {
                     setTimeout(function() {
                         window.changeViewWorkFlows();
                         window.getHeaderFLow();
-                    }, 4000);
+                    }, 1000);
                 };
                 
                 break;

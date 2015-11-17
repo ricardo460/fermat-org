@@ -467,7 +467,7 @@ function onElementClickHeaderFlow(id) {
                 headerFlow[id].drawTree(headerFlow[id].flow.steps[i], headerFlow[id].positions.target[0].x + 900 * i, headerFlow[id].positions.target[0].y - 211, 0);
             }
             headerFlow[id].showStepsFlow();
-        }, 3000);
+        }, 1000);
 
         browserManager.modifyButtonBack(1,'block');
     }
