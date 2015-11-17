@@ -12,7 +12,7 @@ var table = [],
     stats = null,
     actualFlow = null,
     viewManager = new ViewManager(),
-    bookManager;
+    Magazine;
 
 //Global constants
 var TILE_DIMENSION = {
@@ -44,7 +44,7 @@ function createScene(){
 
     browserManager = new BrowserManager();
     screenshotsAndroid = new ScreenshotsAndroid();
-    bookManager = new BookManager();
+    magazine = new Magazine();
 
     logo.startFade();
 }
@@ -118,7 +118,7 @@ function goToView ( targetView ) {
     var transition = 5000;
 
     if(actualView === "book" || actualView === "readme" || actualView === "whitepaper") 
-        bookManager.hide();
+        magazine.remove();
     
     newCenter = viewManager.translateToSection(targetView, newCenter);
     camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
@@ -159,7 +159,7 @@ function goToView ( targetView ) {
                        
         case 'whitepaper':
             
-            bookManager.createBook(targetView); 
+            magazine.init(targetView); 
             
             break;
         default:
