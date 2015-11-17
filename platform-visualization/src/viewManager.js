@@ -31,6 +31,7 @@ function ViewManager() {
     /**
      * Creates the structure of the transition functions depending of the view
      * @author Miguel Celedon
+     * @lastmodifiedBy Emmanuel Colina
      * @param   {String} view The name of the view to process
      * @returns {Object} An object containing all the possible functions that can be called
      */
@@ -95,6 +96,15 @@ function ViewManager() {
             case 'workflows':
                 enter = function() {
                     window.getHeaderFLow();
+                };
+
+                reset = function() {
+                    window.tileManager.rollBack();
+
+                    setTimeout(function() {
+                        window.changeViewWorkFlows();
+                        window.getHeaderFLow();
+                    }, 4000);
                 };
                 
                 break;
