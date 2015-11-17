@@ -14,7 +14,7 @@ function Magazine() {
                coverFrontInside : "images/magazine/book/cover-front-inside.png",
                coverBack : "images/magazine/book/cover-back.png",
                coverBackInside : "images/magazine/book/cover-front-inside.png",
-               scale : 0.87
+               scale : 0.835
             },
 	       readme : { 
                file : "images/magazine/readme/fermat-readme.pdf",
@@ -22,7 +22,7 @@ function Magazine() {
                coverFrontInside : "images/magazine/readme/cover-front-inside.png",
                coverBack : "images/magazine/readme/cover-back.png",
                coverBackInside : "images/magazine/readme/cover-back-inside.png",
-               scale : 0.64
+               scale : 0.56
             },
 	       whitepaper : { 
                file : "images/magazine/whitepaper/fermat-whitepaper.pdf",
@@ -30,14 +30,14 @@ function Magazine() {
                coverFrontInside : "images/magazine/whitepaper/cover-front-inside.jpg",
                coverBack : "images/magazine/whitepaper/cover-back.jpg",
                coverBackInside : "images/magazine/whitepaper/cover-back-inside.jpg",
-               scale : 0.7
+               scale : 0.58
 	        }
     	};
 
     var MAGAZINE = null,
         SCALE = null,
-        WIDTH = 1160,
-        HEIGHT = 700,
+        WIDTH = 960,
+        HEIGHT = 650,
         DOC = null;
     
     /**
@@ -211,8 +211,8 @@ function Magazine() {
           	newPage = page + 2;
 
       	canvas = document.createElement('canvas');
-      	canvas.width  = 560;
-      	canvas.height = 682;
+      	canvas.width  = 460;
+      	canvas.height = 630;
 
       	ctx = canvas.getContext("2d");
 
@@ -260,11 +260,14 @@ function Magazine() {
 
     	$(document).keydown(function(e){
 
-			var esc = 27;
+			var ESC = 27;
 
 			switch (e.keyCode) {
 
-            case esc:
+            case ESC:
+                    
+                if (!MAGAZINE.data().zoomIn)
+                    MAGAZINE.turn("page", 1);
 
                 zoomHandle(-1);
 
@@ -276,7 +279,7 @@ function Magazine() {
 
         MAGAZINE.bind("turning", function(event, page, view) {
 
-      	     var book = $(this);
+      	     var magazine = $(this);
 				
 			 if (page >= 2){
 				$('#p2').addClass('fixed');
@@ -285,7 +288,7 @@ function Magazine() {
                 $('#p2').removeClass('fixed');
              }
 
-             if (page < book.turn('pages')){
+             if (page < magazine.turn('pages')){
                 $('#pn').addClass('fixed');
              }
              else{
@@ -348,7 +351,7 @@ function Magazine() {
     function zoomThis() {
 
         var element = document.getElementById('flipbook-viewport');
-        var positionShow = {x : window.innerWidth / 2, y : (window.innerHeight / 2) - 50};
+        var positionShow = {x : window.innerWidth * 0.53, y : (window.innerHeight * 0.50) - 50};
         animateMagazine(element, positionShow, 2500);
 
         MAGAZINE.transform(
@@ -366,7 +369,7 @@ function Magazine() {
     function zoomOut() {
 
         var element = document.getElementById('flipbook-viewport');
-        var positionShow = {x : window.innerWidth / 2, y : (window.innerHeight / 2)};
+        var positionShow = {x : window.innerWidth * 0.53, y : (window.innerHeight * 0.5)};
         animateMagazine(element, positionShow, 2500);
 
         MAGAZINE.transform(
@@ -402,7 +405,7 @@ function Magazine() {
 
       	var element = document.getElementById('flipbook-viewport');
 
-	    var positionShow = {x : window.innerWidth / 2, y : window.innerHeight / 2};
+	    var positionShow = {x : window.innerWidth * 0.53, y : window.innerHeight * 0.50};
 
 	    element.style.left = (Math.random() + 1) * 3000 + 'px';
 	    element.style.top = (Math.random() + 1) * 3000 + 'px';
