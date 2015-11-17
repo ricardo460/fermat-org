@@ -100,13 +100,13 @@ button:active {
 .flipbook-viewport{
     position:absolute;
     top:50%;
-    left:53%;
+    left:50%;
     margin:auto;
 }
 
 .flipbook{
-  width:960px;
-  height:650px;
+  width:1160px;
+  height:700px;
   left:-575px;
   top:-300px;
 }
@@ -142,8 +142,8 @@ button:active {
 }
 
 .flipbook .hard{
-  width:480px;
-  height:650px;
+  width:580px;
+  height:700px;
   background-color:white;
   -webkit-box-shadow:none;
   -moz-box-shadow:none;
@@ -156,8 +156,8 @@ button:active {
 }
 
 .flipbook .own-size{
-  width:460px;
-  height:630px;
+  width:560px;
+  height:682px;
   background-color:white;
   overflow:hidden;
 }

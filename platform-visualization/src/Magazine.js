@@ -14,7 +14,7 @@ function Magazine() {
                coverFrontInside : "images/magazine/book/cover-front-inside.png",
                coverBack : "images/magazine/book/cover-back.png",
                coverBackInside : "images/magazine/book/cover-front-inside.png",
-               scale : 0.835
+               scale : 0.87
             },
 	       readme : { 
                file : "images/magazine/readme/fermat-readme.pdf",
@@ -22,7 +22,7 @@ function Magazine() {
                coverFrontInside : "images/magazine/readme/cover-front-inside.png",
                coverBack : "images/magazine/readme/cover-back.png",
                coverBackInside : "images/magazine/readme/cover-back-inside.png",
-               scale : 0.56
+               scale : 0.64
             },
 	       whitepaper : { 
                file : "images/magazine/whitepaper/fermat-whitepaper.pdf",
@@ -30,14 +30,14 @@ function Magazine() {
                coverFrontInside : "images/magazine/whitepaper/cover-front-inside.jpg",
                coverBack : "images/magazine/whitepaper/cover-back.jpg",
                coverBackInside : "images/magazine/whitepaper/cover-back-inside.jpg",
-               scale : 0.58
+               scale : 0.7
 	        }
     	};
 
     var MAGAZINE = null,
         SCALE = null,
-        WIDTH = 960,
-        HEIGHT = 650,
+        WIDTH = 1160,
+        HEIGHT = 700,
         DOC = null;
     
     /**
@@ -106,7 +106,7 @@ function Magazine() {
 
           	gradients: true,
 
-          	autoCenter: false,
+          	autoCenter: true,
 
           	acceleration: true
 
@@ -211,8 +211,8 @@ function Magazine() {
           	newPage = page + 2;
 
       	canvas = document.createElement('canvas');
-      	canvas.width  = 460;
-      	canvas.height = 630;
+      	canvas.width  = 560;
+      	canvas.height = 682;
 
       	ctx = canvas.getContext("2d");
 
@@ -351,7 +351,7 @@ function Magazine() {
     function zoomThis() {
 
         var element = document.getElementById('flipbook-viewport');
-        var positionShow = {x : window.innerWidth * 0.53, y : (window.innerHeight * 0.50) - 50};
+        var positionShow = {x : window.innerWidth * 0.5, y : (window.innerHeight * 0.5) - 50};
         animateMagazine(element, positionShow, 2500);
 
         MAGAZINE.transform(
@@ -369,7 +369,7 @@ function Magazine() {
     function zoomOut() {
 
         var element = document.getElementById('flipbook-viewport');
-        var positionShow = {x : window.innerWidth * 0.53, y : (window.innerHeight * 0.5)};
+        var positionShow = {x : window.innerWidth * 0.5, y : (window.innerHeight * 0.5)};
         animateMagazine(element, positionShow, 2500);
 
         MAGAZINE.transform(
@@ -405,7 +405,7 @@ function Magazine() {
 
       	var element = document.getElementById('flipbook-viewport');
 
-	    var positionShow = {x : window.innerWidth * 0.53, y : window.innerHeight * 0.50};
+	    var positionShow = {x : window.innerWidth * 0.5, y : window.innerHeight * 0.5};
 
 	    element.style.left = (Math.random() + 1) * 3000 + 'px';
 	    element.style.top = (Math.random() + 1) * 3000 + 'px';
