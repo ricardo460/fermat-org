@@ -41,75 +41,78 @@ function ViewManager() {
         var actions = {},
             enter = null, exit = null, reset = null;
         
-        switch(view) {
-                    
-            case 'table':
-                enter = function() {
+        if(window.map.views[view].enabled === true) {
+        
+            switch(view) {
 
-                    window.browserManager.modifyButtonLegend(1,'block');
+                case 'table':
+                    enter = function() {
 
-                    window.tileManager.transform(window.tileManager.targets.table, 3000 + transition);
+                        window.browserManager.modifyButtonLegend(1,'block');
 
-                    //Special: If coming from home, delay the animation
-                    if(window.actualView === 'home')
-                        transition = transition + 3000;
+                        window.tileManager.transform(window.tileManager.targets.table, 3000 + transition);
 
-                    window.headers.transformTable(transition);
+                        //Special: If coming from home, delay the animation
+                        if(window.actualView === 'home')
+                            transition = transition + 3000;
 
-                    window.changeViewWorkFlows();
-                };
-                
-                reset = function() {
-                    window.tileManager.rollBack();
-                };
+                        window.headers.transformTable(transition);
 
-                break;
-            case 'stack':
-                enter = function() {
-                    
-                    window.headers.transformStack(transition);
-
-                    window.browserManager.modifyButtonBack(0,'none');
-
-                    window.browserManager.modifyButtonLegend(0,'none');
-                };
-                
-                break;
-            case 'home':
-                enter = function() {
-                    logo.stopFade(2000);
-                };
-                
-                break;
-            case 'book':
-            case 'readme':
-            case 'whitepaper':
-                enter = function() {
-                    window.magazine.init(view);
-                };
-                
-                exit = function() {
-                    window.magazine.remove();
-                };
-                
-                break;
-            case 'workflows':
-                enter = function() {
-                    window.getHeaderFLow();
-                };
-
-                reset = function() {
-                    window.tileManager.rollBack();
-
-                    setTimeout(function() {
                         window.changeViewWorkFlows();
+                    };
+
+                    reset = function() {
+                        window.tileManager.rollBack();
+                    };
+
+                    break;
+                case 'stack':
+                    enter = function() {
+
+                        window.headers.transformStack(transition);
+
+                        window.browserManager.modifyButtonBack(0,'none');
+
+                        window.browserManager.modifyButtonLegend(0,'none');
+                    };
+
+                    break;
+                case 'home':
+                    enter = function() {
+                        logo.stopFade(2000);
+                    };
+
+                    break;
+                case 'book':
+                case 'readme':
+                case 'whitepaper':
+                    enter = function() {
+                        window.magazine.init(view);
+                    };
+
+                    exit = function() {
+                        window.magazine.remove();
+                    };
+
+                    break;
+                case 'workflows':
+                    enter = function() {
                         window.getHeaderFLow();
-                    }, 1000);
-                };
-                
-                break;
-            default:
-                break;
+                    };
+
+                    reset = function() {
+                        window.tileManager.rollBack();
+
+                        setTimeout(function() {
+                            window.changeViewWorkFlows();
+                            window.getHeaderFLow();
+                        }, 1000);
+                    };
+
+                    break;
+                default:
+                    break;
+            }
         }
         
         actions = {
