@@ -11,8 +11,8 @@ var table = [],
     actualView,
     stats = null,
     actualFlow = null,
-    viewManager,
-    bookManager,
+    viewManager = null,
+    magazine = null;
     headerFlow = [],
     positionHeaderFlow = [];
 //Global constants
@@ -43,10 +43,6 @@ function createScene(){
         renderer,
         render);
 
-    browserManager = new BrowserManager();
-    screenshotsAndroid = new ScreenshotsAndroid();
-    bookManager = new BookManager();
-
     logo.startFade();
 }
 
@@ -54,6 +50,10 @@ function createScene(){
  * Starts everything after receiving the json from the server
  */
 function init() {
+
+    browserManager = new BrowserManager();
+    screenshotsAndroid = new ScreenshotsAndroid();
+    magazine = new Magazine();
     
     //View Manager
     viewManager = new ViewManager();

@@ -84,11 +84,11 @@ function ViewManager() {
             case 'readme':
             case 'whitepaper':
                 enter = function() {
-                    window.bookManager.createBook(view);
+                    window.magazine.init(view);
                 };
                 
                 exit = function() {
-                    window.bookManager.hide();
+                    window.magazine.remove();
                 };
                 
                 break;
