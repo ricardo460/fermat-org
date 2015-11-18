@@ -5,6 +5,8 @@ var suprlayMod = require('./superlayer');
 var platfrmMod = require('./platform');
 var docMod = require('./doc');
 var devMod = require('./developer');
+var loadMod = require('./lib/loader');
+var syncMod = require('./lib/syncer');
 
 
 /**
@@ -159,10 +161,95 @@ exports.getBook = function (req, next) {
     }
 };
 
+/**
+ * [getDevs description]
+ *
+ * @method getDevs
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.getDevs = function(req, next){
     'use strict';
     try {
         devMod.getDevs(function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+}
+
+/**
+ * [loadComps description]
+ *
+ * @method loadComps
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.loadComps = function(req, next){
+    'use strict';
+    try {
+        loadMod.loadComps(function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+}
+
+/**
+ * [updComps description]
+ *
+ * @method updComps
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.updComps = function(req, next){
+    'use strict';
+    try {
+        loadMod.updComps(function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+}
+
+/**
+ * [updComps description]
+ *
+ * @method updComps
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.updBook = function(req, next){
+    'use strict';
+    try {
+        syncMod.getBook(function (err, res) {
             if (err) {
                 next(err, null);
             } else {

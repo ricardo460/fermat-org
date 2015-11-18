@@ -2,9 +2,11 @@
 /*global module*/
 var express = require('express');
 var passport = require('passport');
+var winston = require('winston');
 var router = express.Router();
 var repMod = require('../../modules/repository');
 var Cache = require('../../lib/route-cache');
+
 
 // creation of object cache
 var cache = new Cache({
@@ -18,20 +20,41 @@ var cache = new Cache({
  * @route
  *
  */
-/*router.put('/comps', function (req, res, next) {
+router.get('/comps/reload', function (req, res, next) {
     'use strict';
     try {
-        repMod.updComps(req, function (error, result) {
+
+        repMod.updBook(req, function (error, result) { 
+                       
             if (error) {
-                res.status(200).send(error);
+                //res.status(200).send(error);
+                winston.log('info', 'Error: ', error);
             } else {
-                res.status(200).send(result);
+                repMod.loadComps(req, function (error, res) {         
+                    if (error) {
+                        winston.log('info', 'Error: ', error);
+                    } else {
+                        cache.clear();
+                        repMod.updComps(req, function (error, result) {
+                            if (error) {
+                                winston.log('info', 'Error: ', error);
+                                //res.status(200).send(error);
+                            } else {
+                                //res.status(200).send(result);
+                                winston.log('info', 'Success updating');
+                            }
+                        });
+                    }
+                }); 
             }
         });
+        res.status(200).send({'message': 'Updated Database' });
+
     } catch (err) {
         next(err);
     }
-});*/
+});
+
 
 /**
  * [description]
@@ -106,48 +129,6 @@ router.get('/devs', function (req, res, next) {
         next(err);
     }
 });
-
-/**
- * [description]
- *
- * @route
- *
- */
-/*router.post('/comps', function (req, res, next) {
-    'use strict';
-    try {
-        repMod.loadComps(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
-            } else {
-                res.status(200).send(result);
-            }
-        });
-    } catch (err) {
-        next(err);
-    }
-});*/
-
-/**
- * [description]
- *
- * @route
- *
- */
-/*router.post('/devs', function (req, res, next) {
-    'use strict';
-    try {
-        repMod.updDevs(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
-            } else {
-                res.status(200).send(result);
-            }
-        });
-    } catch (err) {
-        next(err);
-    }
-});*/
 
 /**
  * [description]
