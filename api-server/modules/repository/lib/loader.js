@@ -297,7 +297,6 @@ var processRequestBody = function (body, callback) {
 var getManifest = function (callback) {
     'use strict';
     try {
-
         var cwd = process.cwd(),
         env = process.env.NODE_ENV || 'development',
         file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.xml'),
@@ -972,7 +971,6 @@ var getContent = function (repo_dir, callback) {
                 if (err_req) {
                     return callback(err_req, null);
                 }
-                console.log(res_req);
                 processRequestBody(res_req, function (err_pro, res_pro) {
                     if (err_pro) {
                         return callback(err_pro, null);
@@ -1031,7 +1029,7 @@ var updateComps = function (callback) {
                         loopComps(++i);
                     } else {
                         winston.log('info', 'done iterating components');
-                        return;
+                        return callback(null, true);
                     }
                 };
                 return loopComps(0);
