@@ -6,6 +6,12 @@ function Magazine() {
     
     window.PDFJS.disableWorker = true;
 
+    var MAGAZINE = null,
+        SCALE = null,
+        WIDTH = window.innerWidth * 0.63,
+        HEIGHT = window.innerHeight * 0.72,
+        DOC = null;
+
     var viewMagazine = {
 
 	       book : { 
@@ -14,7 +20,7 @@ function Magazine() {
                coverFrontInside : "images/magazine/book/cover-front-inside.png",
                coverBack : "images/magazine/book/cover-back.png",
                coverBackInside : "images/magazine/book/cover-front-inside.png",
-               scale : 0.87
+               scale : ((WIDTH * 0.482) * 0.0015)
             },
 	       readme : { 
                file : "images/magazine/readme/fermat-readme.pdf",
@@ -22,7 +28,7 @@ function Magazine() {
                coverFrontInside : "images/magazine/readme/cover-front-inside.png",
                coverBack : "images/magazine/readme/cover-back.png",
                coverBackInside : "images/magazine/readme/cover-back-inside.png",
-               scale : 0.64
+               scale : ((WIDTH * 0.482) * 0.00112)
             },
 	       whitepaper : { 
                file : "images/magazine/whitepaper/fermat-whitepaper.pdf",
@@ -30,15 +36,9 @@ function Magazine() {
                coverFrontInside : "images/magazine/whitepaper/cover-front-inside.jpg",
                coverBack : "images/magazine/whitepaper/cover-back.jpg",
                coverBackInside : "images/magazine/whitepaper/cover-back-inside.jpg",
-               scale : 0.7
+               scale : ((WIDTH * 0.482) * 0.00118)
 	        }
     	};
-
-    var MAGAZINE = null,
-        SCALE = null,
-        WIDTH = 1160,
-        HEIGHT = 700,
-        DOC = null;
     
     /**
      * @author Ricardo Delgado
@@ -54,6 +54,8 @@ function Magazine() {
 	       SCALE = viewMagazine[load].scale;
 	        
            addItems();
+
+           addCss();
 
            configMagazine();
 
@@ -88,6 +90,7 @@ function Magazine() {
       	window.helper.hide(flipbook, 2000, false);
         //window.helper.hide(pager, 2000, false); 
         DOC = null;
+    
     };
     
     /**
@@ -106,7 +109,7 @@ function Magazine() {
 
           	gradients: true,
 
-          	autoCenter: true,
+          	autoCenter: false,
 
           	acceleration: true
 
@@ -130,6 +133,27 @@ function Magazine() {
       	$('#container').append(viewport);
 
       	MAGAZINE = $('.flipbook');
+
+    }
+
+    function addCss(){
+
+    	$('.flipbook').css({
+					    "width": WIDTH,
+					    "height": HEIGHT,
+						"left": (WIDTH * 0.49) * -1,
+						"top": (HEIGHT * 0.43) * -1
+						    });
+
+        $('.flipbook .hard').css({
+        				"width": WIDTH * 0.5,
+					    "height": HEIGHT
+        					});
+
+        $('.flipbook .own-size').css({
+        				"width": WIDTH * 0.482,
+					    "height": HEIGHT - 18
+        					});
 
     }
     
@@ -211,8 +235,8 @@ function Magazine() {
           	newPage = page + 2;
 
       	canvas = document.createElement('canvas');
-      	canvas.width  = 560;
-      	canvas.height = 682;
+      	canvas.width  = WIDTH * 0.482;
+      	canvas.height = HEIGHT - 18;
 
       	ctx = canvas.getContext("2d");
 
@@ -250,6 +274,7 @@ function Magazine() {
           	page.render(renderContext);
 
       	});
+  
     }
     
     /**
@@ -325,6 +350,7 @@ function Magazine() {
 
             return false;
         }
+   
     }
     
     /**
@@ -355,7 +381,7 @@ function Magazine() {
         animateMagazine(element, positionShow, 2500);
 
         MAGAZINE.transform(
-                'scale('+1.35+', '+1.35+')');
+                'scale('+1.33+', '+1.33+')');
         MAGAZINE.data().zoomIn = true;
         MAGAZINE.turn('resize');
         MAGAZINE.turn('disable', true);
@@ -378,6 +404,7 @@ function Magazine() {
         MAGAZINE.data().zoomIn = false;
         MAGAZINE.turn('resize');
         MAGAZINE.turn('disable', false);
+    
     }
     
     /**
@@ -413,6 +440,7 @@ function Magazine() {
 	    setTimeout(function() {
 	      animateMagazine(element, positionShow);
 	    }, 1500);
+    
     }
     
     /**
