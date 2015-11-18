@@ -4,42 +4,23 @@ In this document, we describe how the Fermat.org site will render the Fermat Net
 
 As the Fermat Network is a complex creature, many different views are going to be provided in order to navigate through this complexity.
 
-## View List
-
-1. **Online Node Network** : This view provides a geo-localized view of online Nodes in the Fermat Network.
-
-2. **Nodes and connected Network Clients** : In this view, a single Network Node is present, and all connected Network Clients are rendered.
-
-3. **Node Catalog** : This is a geo-localized view of all nodes, both online and offline, present on the distributed Node Calaog.
-
-4. **Actor Catalog** : This is a geo-localized view of all actors, both online and offline, present on the distributed Actor Calaog.
-
-5. **Network Services** : This view shows all online network services online on one Network Client. When the Network Service is an Actor Network Service, it also shows the actors associated with each of them.
-
-6. **Wallets** : This view show all wallets and their type linked to one Network Client. Each wallet shows its balance and currency. 
-
-7. **Social Network** : This view shows the connections between Actors within the system. 
-
-8. **Private Networks** : This view shows the private networks created by users.
-
-
 ## Basic Elements
 
-In these views, users will enter in a free-moving space where they can see sprites and lines interconecting them.
+Here is the list of the basic elements that conforms the diferents views explained in the next section. The list shows the hierarchy, meaning that one type of sprite contains its sub-levels.
 
 ### Sprite Categories
 
 - **Network Nodes** : Denoted by a sprite for each type of node and the operating system. It's a niche where several Network Clients will connect and will work as intermediaries between each other. The type of nodes are: home computer, server, smart phone, tablet, etc. Operating systems might be: Windows, Linux, OSx, Android, etc.
 
-- **Network Clients** : Denoted as a sprite for each type of device and its operating system. Device type might be: smart phone, pc, tablet, etc. 
+    - **Network Clients** : Denoted as a sprite for each type of device and its operating system. Device type might be: smart phone, pc, tablet, etc. 
 
-- **Network Services** : Denoted with a sprite for each type: Network Service or Actor Network Service. A Network Services connects with its counterpart in another device.
+        - **Network Services** : Denoted with a sprite representing each type: Network Service or Actor Network Service. A Network Services connects with its counterpart in another device.
     
-- **Actors** : Denoted with a sprite for each Actor Type (Developer, Crypto Broker, etc). 
+        - **Actors** : Denoted with a sprite for each Actor Type (Developer, Crypto Broker, etc). 
 
-- **Wallets** : Denoted with a sprite for each Wallet Type.
+        - **Wallets** : Denoted with a sprite for each Wallet Type.
 
-As it seems, there are several sprite categories. 
+As it seems, there are several sprite categories, so there must be a way to identify each one.
 
 ### Types of Relationships
 
@@ -54,6 +35,24 @@ As it seems, there are several sprite categories.
 - **Interconnected** : For example, an Actor is _interconnected_ with another Actor when one of them sent to the other a _connection request_ and the other party accepted it.
 
 All relationships are rendered with lines, but depending on their category different techniques (arrow, dots, dashes, etc.) are applied to distinguish between each other. 
+
+## View List
+
+1. **Online Node Network** : This view provides a geo-localized view of online Nodes in the Fermat Network. **[What if geo-loc is disabled?]**
+
+2. **Nodes and connected Network Clients** : In this view, a single Network Node is present, and all connected Network Clients are rendered.
+
+3. **Node Catalog** : This is a geo-localized view of all nodes, both online and offline, present on the distributed Node Catalog **[What is a Node and Actor Catalog?]**.
+
+4. **Actor Catalog** : This is a geo-localized view of all actors, both online and offline, present on the distributed Actor Catalog.
+
+5. **Network Services** : This view shows all online network services online on one Network Client. When the Network Service is an Actor Network Service, it also shows the actors associated with each of them.
+
+6. **Wallets** : This view show all wallets and their type linked to one Network Client. Each wallet shows its balance and currency. 
+
+7. **Social Network** : This view shows the connections between Actors within the system. 
+
+8. **Private Networks** : This view shows the private networks created by users **[Private network of what? Node Networks?]**.
 
 ## User Experience
 
