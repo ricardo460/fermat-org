@@ -8,8 +8,8 @@ function Magazine() {
 
     var MAGAZINE = null,
         SCALE = null,
-        WIDTH = window.innerWidth * 0.63,
-        HEIGHT = window.innerHeight * 0.72,
+        WIDTH = window.innerWidth * 0.62,
+        HEIGHT = (WIDTH * 0.5) * 1.21,
         DOC = null;
 
     var viewMagazine = {
@@ -20,7 +20,7 @@ function Magazine() {
                coverFrontInside : "images/magazine/book/cover-front-inside.png",
                coverBack : "images/magazine/book/cover-back.png",
                coverBackInside : "images/magazine/book/cover-front-inside.png",
-               scale : ((WIDTH * 0.482) * 0.0015)
+               scale : ((WIDTH * 0.482) * 0.00154)
             },
 	       readme : { 
                file : "images/magazine/readme/fermat-readme.pdf",
@@ -28,7 +28,7 @@ function Magazine() {
                coverFrontInside : "images/magazine/readme/cover-front-inside.png",
                coverBack : "images/magazine/readme/cover-back.png",
                coverBackInside : "images/magazine/readme/cover-back-inside.png",
-               scale : ((WIDTH * 0.482) * 0.00112)
+               scale : ((WIDTH * 0.482) * 0.00114)
             },
 	       whitepaper : { 
                file : "images/magazine/whitepaper/fermat-whitepaper.pdf",
@@ -36,7 +36,7 @@ function Magazine() {
                coverFrontInside : "images/magazine/whitepaper/cover-front-inside.jpg",
                coverBack : "images/magazine/whitepaper/cover-back.jpg",
                coverBackInside : "images/magazine/whitepaper/cover-back-inside.jpg",
-               scale : ((WIDTH * 0.482) * 0.00118)
+               scale : ((WIDTH * 0.482) * 0.0012)
 	        }
     	};
     
@@ -136,13 +136,17 @@ function Magazine() {
 
     }
 
+    /**
+     * @author Ricardo Delgado
+     * It sets the dimensions of the elements.
+     */
     function addCss(){
 
     	$('.flipbook').css({
 					    "width": WIDTH,
 					    "height": HEIGHT,
 						"left": (WIDTH * 0.49) * -1,
-						"top": (HEIGHT * 0.43) * -1
+						"top": (HEIGHT * 0.44) * -1
 						    });
 
         $('.flipbook .hard').css({
@@ -381,7 +385,7 @@ function Magazine() {
         animateMagazine(element, positionShow, 2500);
 
         MAGAZINE.transform(
-                'scale('+1.33+', '+1.33+')');
+                'scale('+1.3+', '+1.3+')');
         MAGAZINE.data().zoomIn = true;
         MAGAZINE.turn('resize');
         MAGAZINE.turn('disable', true);
@@ -399,7 +403,7 @@ function Magazine() {
         animateMagazine(element, positionShow, 2500);
 
         MAGAZINE.transform(
-                'translate('+0+'px, '+20+'px)' +
+                
                 'scale('+1+', '+1+')');
         MAGAZINE.data().zoomIn = false;
         MAGAZINE.turn('resize');
