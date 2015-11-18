@@ -8,14 +8,14 @@ function Magazine() {
 
     var MAGAZINE = null,
         SCALE = null,
-        WIDTH = window.innerWidth * 0.62,
+        WIDTH = window.innerWidth * 0.64,
         HEIGHT = (WIDTH * 0.5) * 1.21,
         DOC = null;
 
     var viewMagazine = {
 
 	       book : { 
-	           file : "images/magazine/book/fermat-book.pdf",
+	           file : "books/fermat-book.pdf",
                coverFront : "images/magazine/book/cover-front.png",
                coverFrontInside : "images/magazine/book/cover-front-inside.png",
                coverBack : "images/magazine/book/cover-back.png",
@@ -23,7 +23,7 @@ function Magazine() {
                scale : ((WIDTH * 0.482) * 0.00154)
             },
 	       readme : { 
-               file : "images/magazine/readme/fermat-readme.pdf",
+               file : "books/fermat-readme.pdf",
                coverFront : "images/magazine/readme/cover-front.png",
                coverFrontInside : "images/magazine/readme/cover-front-inside.png",
                coverBack : "images/magazine/readme/cover-back.png",
@@ -31,7 +31,7 @@ function Magazine() {
                scale : ((WIDTH * 0.482) * 0.00114)
             },
 	       whitepaper : { 
-               file : "images/magazine/whitepaper/fermat-whitepaper.pdf",
+               file : "books/fermat-whitepaper.pdf",
                coverFront : "images/magazine/whitepaper/cover-front.jpg",
                coverFrontInside : "images/magazine/whitepaper/cover-front-inside.jpg",
                coverBack : "images/magazine/whitepaper/cover-back.jpg",
@@ -60,9 +60,12 @@ function Magazine() {
            configMagazine();
 
            coverPage(load);
-
+           
            for (var i = 1; i <= DOC.numPages; i++)
                 addPage(i); 
+            
+           if(DOC.numPages % 2 !== 0)
+               addPageExtra();
 
            backCoverPage(load);
 
@@ -146,7 +149,7 @@ function Magazine() {
 					    "width": WIDTH,
 					    "height": HEIGHT,
 						"left": (WIDTH * 0.49) * -1,
-						"top": (HEIGHT * 0.44) * -1
+						"top": (HEIGHT * 0.40) * -1
 						    });
 
         $('.flipbook .hard').css({
@@ -199,7 +202,7 @@ function Magazine() {
      */  
     function backCoverPage(load){
 
-		var page = DOC.numPages + 3,
+		var page = MAGAZINE.turn('pages') + 1,
 			_class = "hard fixed",
 			cover,
 			backCover;
@@ -212,7 +215,7 @@ function Magazine() {
 
 		MAGAZINE.turn("addPage", backCover, page); 
 
-		page = DOC.numPages + 4;
+		page = MAGAZINE.turn('pages') + 1;
 
 		_class = "hard";
 
@@ -245,6 +248,30 @@ function Magazine() {
       	ctx = canvas.getContext("2d");
 
       	renderPage(page, ctx);
+
+      	element = $('<div />', { 
+            		"class": _class,
+            		'id' : 'p'+ newPage
+           			}).append(canvas);
+
+      	MAGAZINE.turn("addPage", element, newPage);
+
+    }
+    
+    /**
+     * @author Ricardo Delgado
+     * Creates and adds an extra page magazine.
+     */  
+    function addPageExtra(){
+
+      	var canvas,
+         	element,
+          	_class = "own-size",
+          	newPage = MAGAZINE.turn('pages') + 1;
+
+      	canvas = document.createElement('canvas');
+      	canvas.width  = WIDTH * 0.482;
+      	canvas.height = HEIGHT - 18;
 
       	element = $('<div />', { 
             		"class": _class,
@@ -297,7 +324,7 @@ function Magazine() {
                     
                 if (!MAGAZINE.data().zoomIn)
                     MAGAZINE.turn("page", 1);
-
+                    
                 zoomHandle(-1);
 
             break;
