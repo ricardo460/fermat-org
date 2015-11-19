@@ -218,4 +218,40 @@ router.get('/book', function (req, res, next) {
     }
 });
 
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {:type book, readme, paper
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.get('/docs/:type', function (req, res, next) {
+    'use strict';
+    try {
+
+        var type = req.param('type');
+
+        if(type !== 'book' && type !== 'readme' && type !== 'paper'){
+            return res.status(422).send({ message:'Bad Parameters' });       
+        }
+        repMod.getDocs(req, function (error, result) {
+
+            if (error) {
+                res.status(200).send(error);
+            } else {
+                
+                res.sendfile(result.pdfFile);
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+
+
 module.exports = router;

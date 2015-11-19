@@ -162,6 +162,56 @@ exports.getBook = function (req, next) {
 };
 
 /**
+ * [getDocs description]
+ *
+ * @method getBook
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.getDocs = function (req, next) {
+    'use strict';
+    try {
+        var type = req.param('type');
+        console.log('en getDocs');
+        console.log(type);
+        if(type == 'book'){
+            docMod.getBookPdf(function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+
+        }else if (type == 'readme'){
+            console.log(type);
+            docMod.getReadmePdf(function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+
+        }else if (type == 'paper'){
+            docMod.getPaperPdf(function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+        }
+        
+    } catch (err) {
+        next(err, null);
+    }
+};
+
+/**
  * [getDevs description]
  *
  * @method getDevs
