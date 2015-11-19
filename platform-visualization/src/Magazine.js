@@ -15,7 +15,7 @@ function Magazine() {
     var viewMagazine = {
 
 	       book : { 
-	           file : "books/fermat-book.pdf",
+	           file : "books/fermat-book-big.pdf",
                coverFront : "images/magazine/book/cover-front.jpg",
                coverFrontInside : "images/magazine/book/cover-front-inside.jpg",
                coverBack : "images/magazine/book/cover-back.jpg",
@@ -23,7 +23,7 @@ function Magazine() {
                scale : ((WIDTH * 0.482) * 0.00154)
             },
 	       readme : { 
-               file : "books/fermat-readme.pdf",
+               file : "books/fermat-readme-big.pdf",
                coverFront : "images/magazine/readme/cover-front.png",
                coverFrontInside : "images/magazine/readme/cover-front-inside.png",
                coverBack : "images/magazine/readme/cover-back.png",
@@ -31,12 +31,12 @@ function Magazine() {
                scale : ((WIDTH * 0.482) * 0.00114)
             },
 	       whitepaper : { 
-               file : "books/fermat-whitepaper.pdf",
+               file : "books/fermat-whitepaper-big.pdf",
                coverFront : "images/magazine/whitepaper/cover-front.jpg",
                coverFrontInside : "images/magazine/whitepaper/cover-front-inside.jpg",
                coverBack : "images/magazine/whitepaper/cover-back.jpg",
                coverBackInside : "images/magazine/whitepaper/cover-back-inside.jpg",
-               scale : ((WIDTH * 0.482) * 0.0012)
+               scale : ((WIDTH * 0.482) * 0.00114)
 	        }
     	};
     
@@ -64,7 +64,7 @@ function Magazine() {
            for (var i = 1; i <= DOC.numPages; i++)
                 addPage(i); 
             
-           if(DOC.numPages % 2 !== 0)
+           if (DOC.numPages % 2 !== 0)
                addPageExtra();
 
            backCoverPage(load);
@@ -85,13 +85,11 @@ function Magazine() {
 
       	var flipbook = document.getElementById('flipbook-viewport'),
           	positionHide = {x: (Math.random() + 1) * 5000, y: (Math.random() + 1) * 5000};
-          	//pager = document.getElementById('pager');
-      
-    		//animatePager(pager, positionHide);
+
       	animateMagazine(flipbook, positionHide);
 
       	window.helper.hide(flipbook, 2000, false);
-        //window.helper.hide(pager, 2000, false); 
+
         DOC = null;
     
     };
@@ -129,9 +127,6 @@ function Magazine() {
       	var page = $('<div />'),
           	flipbook = $('<div />', {"class": "flipbook"}).append(page),
           	viewport = $('<div />', {"class": "flipbook-viewport", "id": "flipbook-viewport"}).append(flipbook);
-          	//pager = $('<div />', {"id": "pager"});
-
-      	//$('body').append(pager);
 
       	$('#container').append(viewport);
 
@@ -442,23 +437,6 @@ function Magazine() {
     
     /**
      * @author Ricardo Delgado
-     * Calculates the position of the paged for animation.
-     */ 
-	function positionPager(){
-
-      	var element = document.getElementById('pager'),
-          	positionShow = {y : ((HEIGHT / 2) + (window.innerHeight / 2))};
-
-      	element.style.top = (Math.random() + 1) * 3000 + 'px';
-
-      	setTimeout(function() {
-        	animatePager(element, positionShow);
-      	}, 1500);
-
-    }
-    
-    /**
-     * @author Ricardo Delgado
      * Calculates the position of the magazine for animation.
      */ 
 	function positionMagazine(){
@@ -501,27 +479,4 @@ function Magazine() {
 
     }
     
-    /**
-     * @author Ricardo Delgado
-     * Performs the animation output or paged enters.
-     * @param {Object} element         Element.
-     * @param {Array}  target          The objetive position.
-     * @param {Number} [duration=3000] Duration of the animation.
-     */ 
-    function animatePager (element, target, duration) {
-
-      var _duration = duration || 3000,
-          position = { x : 0, y : element.getBoundingClientRect().top};
-
-      new TWEEN.Tween(position)
-          .to({y : target.y}, _duration)
-          .easing(TWEEN.Easing.Exponential.InOut)
-          .onUpdate(update)
-          .start();
-
-      function update() {
-        element.style.top = position.y + 'px';
-      }
-
-    }
 }
