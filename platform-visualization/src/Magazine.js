@@ -16,10 +16,10 @@ function Magazine() {
 
 	       book : { 
 	           file : "books/fermat-book.pdf",
-               coverFront : "images/magazine/book/cover-front.png",
-               coverFrontInside : "images/magazine/book/cover-front-inside.png",
-               coverBack : "images/magazine/book/cover-back.png",
-               coverBackInside : "images/magazine/book/cover-front-inside.png",
+               coverFront : "images/magazine/book/cover-front.jpg",
+               coverFrontInside : "images/magazine/book/cover-front-inside.jpg",
+               coverBack : "images/magazine/book/cover-back.jpg",
+               coverBackInside : "images/magazine/book/cover-back-inside.jpg",
                scale : ((WIDTH * 0.482) * 0.00154)
             },
 	       readme : { 
@@ -322,8 +322,10 @@ function Magazine() {
 
             case ESC:
                     
-                if (!MAGAZINE.data().zoomIn)
-                    MAGAZINE.turn("page", 1);
+                if (!MAGAZINE.data().zoomIn){
+                    MAGAZINE.turn("page", 2);
+                    MAGAZINE.turn("previous");
+                }
                     
                 zoomHandle(-1);
 
@@ -408,11 +410,11 @@ function Magazine() {
     function zoomThis() {
 
         var element = document.getElementById('flipbook-viewport');
-        var positionShow = {x : window.innerWidth * 0.5, y : (window.innerHeight * 0.5) - 50};
+        var positionShow = {x : window.innerWidth * 0.5, y : (window.innerHeight * 0.5) - 60};
         animateMagazine(element, positionShow, 2500);
 
         MAGAZINE.transform(
-                'scale('+1.3+', '+1.3+')');
+                'scale('+1.25+', '+1.25+')');
         MAGAZINE.data().zoomIn = true;
         MAGAZINE.turn('resize');
         MAGAZINE.turn('disable', true);
