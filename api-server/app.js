@@ -39,7 +39,6 @@ passport.use(new BearerStrategy({
 }));
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var repo = require('./routes/repo');
 var v1 = require('./routes/v1');
 
@@ -70,7 +69,6 @@ app.use(function (req, res, next) {
 });
 
 app.use('/', routes);
-//app.use('/users', users);
 app.use('/repo', repo);
 app.use('/v1', v1);
 
