@@ -60,6 +60,10 @@ function ViewManager() {
 
                         window.changeViewWorkFlows();
                     };
+                    
+                    exit = function() {
+                        window.tileManager.rollBack();
+                    }
 
                     reset = function() {
                         window.tileManager.rollBack();
