@@ -61,7 +61,7 @@ exports.getBookPdf = function (callback) {
         var book = path.join(process.cwd(), 'cache', env, 'fermat', 'fermat-documentation', 'documentation.html');
         winston.log('info', 'reading file ', book);
         var html = fs.readFileSync(book, 'utf8');        
-        pdf.create(html).toFile('./cache/'+env+'/files/book.pdf', function(err, res) {
+        pdf.create(html,{ timeout: 90000} ).toFile('./cache/'+env+'/files/book.pdf', function(err, res) {
           if (err) return callback(err, null);
           console.log('en el success');
           var resp = { pdfFile:res.filename  };

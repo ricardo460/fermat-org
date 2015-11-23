@@ -175,8 +175,6 @@ exports.getDocs = function (req, next) {
     'use strict';
     try {
         var type = req.param('type');
-        console.log('en getDocs');
-        console.log(type);
         if(type == 'book'){
             docMod.getBookPdf(function (err, res) {
                 if (err) {
@@ -187,7 +185,6 @@ exports.getDocs = function (req, next) {
             });
 
         }else if (type == 'readme'){
-            console.log(type);
             docMod.getReadmePdf(function (err, res) {
                 if (err) {
                     next(err, null);
