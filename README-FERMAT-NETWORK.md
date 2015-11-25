@@ -54,11 +54,12 @@ All relationships are rendered with lines, but depending on their category diffe
 This view provides a geo-localized view of online Nodes in the
 Fermat Network. **[What if geo-loc is disabled?]**
 
-This is the starting view, all Network Nodes will be drawn here in a map. The
-geolocalized maps will be a plane mapamundi and having *country resolution*: all nodes in a
-country will be inside that country, but the state/city won't be taken into account.
+This is the starting view, all Network Nodes will be drawn here in a map. The geolocalized maps
+will be a plane mapamundi and having *country resolution*: all nodes in a country will be inside that
+country, but the state/city won't be taken into account.
 
-If the user clicks in a Network Node, the map will fade out while this node goes to the center position of the screen and will enter in the (2) view.
+If the user clicks in a Network Node, the map will fade out while this node goes to the center
+position of the screen and will enter in the (2) view.
 
 > [Discussion]
 
@@ -117,14 +118,17 @@ network of what? Node Networks?]**.
 ## The challenge
 
 As the P2P is expected to be so large, and being updated and larger every time, it's not feasible
-to obtain the whole P2P data in a single json document, so and ajax call is not possible because it
-expects a complete json document to be received, and we need a continuous data traffic to 
-render the network in real-time with the server.
+to obtain the whole P2P data in a single json document, so an single ajax call is not possible
+because it expects a complete json document to be received, and we need a continuous data
+traffic to render the network in real-time with the server.
 
 ## The solution
 
 To maintain a bidirectional communication between client and server, we are going to use
 websockets (https://html.spec.whatwg.org/multipage/comms.html#network)
+
+> Miguel: If the data about the P2P network is considered sensitive then there must be a
+security layer in the data transfer to encrypt the transmission.
 
 ## Server-side process
 
@@ -134,10 +138,15 @@ The most common structure of data that must be sent for every node should be:
 
 ```javascript
 {
-    id : [ID_STRING],
-    type : ["node" | "client" | "nservice" | "actor" | "wallet"]
+    id : ID_STRING,
+    type : ("node" | "client" | "nservice" | "actor" | "wallet")
     ady : [
-        //ID of the adyadencies
+        //array of the adyadencies
+        {
+            id : ID_STRING,
+            linkType : ("living" | "connected" | "running" | "installed" | "interconnected")
+        }
+        //...
     ]
 }
 ```
@@ -147,43 +156,42 @@ For each type the structure will change adding other properties:
 - For `type = "node"`:
 
     ```javascript
-    {
-        subType = ("pc" | "server" | "phone" | ...),
-        os = ("windows" | "linux" | "osx" | "android" | ...)
-    }
+        subType : ("pc" | "server" | "phone" | ...),
+        os : ("windows" | "linux" | "osx" | "android" | ...)
+    ```
+    
+    Furthermore, the adyacencies here uses more data to describe the connections, as connections
+    between clients is made through network nodes and comes from its Network Services that lies
+    inside such client to its counterpart in the other side, so the adyacencies use this extra
+    data:
+    
+    ```javascript
+        from : NSERVICE_ID_STRING
     ```
 
 - For `type = "client"`:
 
     ```javascript
-    {
-        subType = ("pc" | "phone" | "server" | ...)
-    }
+        subType : ("pc" | "phone" | "server" | ...)
     ```
     
 - For `type = "nservice"`:
 
     ```javascript
-    {
-        subType = NSERVICE_TYPE_STRING
-    }
+        subType : NSERVICE_TYPE_STRING
     ```
 
 - For `type = "actor"`:
 
     ```javascript
-    {
         subType : TYPE_STRING
-    }
     ```
     
 - For `type = "wallet"`:
 
     ```javascript
-    {
         currency : CURRENCY_NUMBER,
-        symbol : CURR_SYMBOL_CHAR,
+        symbol : CURR_SYMBOL_STRING,
         balance : BALANCE_NUMBER
-    }
     ```
 ## Client-side process
