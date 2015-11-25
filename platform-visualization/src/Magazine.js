@@ -6,39 +6,39 @@ function Magazine() {
     
     window.PDFJS.disableWorker = true;
 
+    var MAGAZINE = null,
+        SCALE = null,
+        WIDTH = window.innerWidth * 0.64,
+        HEIGHT = (WIDTH * 0.5) * 1.21,
+        DOC = null;
+
     var viewMagazine = {
 
 	       book : { 
-	           file : "images/magazine/book/fermat-book.pdf",
-               coverFront : "images/magazine/book/cover-front.png",
-               coverFrontInside : "images/magazine/book/cover-front-inside.png",
-               coverBack : "images/magazine/book/cover-back.png",
-               coverBackInside : "images/magazine/book/cover-front-inside.png",
-               scale : 0.87
+	           file : "books/fermat-book-big.pdf",
+               coverFront : "images/magazine/book/cover-front.jpg",
+               coverFrontInside : "images/magazine/book/cover-front-inside.jpg",
+               coverBack : "images/magazine/book/cover-back.jpg",
+               coverBackInside : "images/magazine/book/cover-back-inside.jpg",
+               scale : ((WIDTH * 0.482) * 0.00154)
             },
 	       readme : { 
-               file : "images/magazine/readme/fermat-readme.pdf",
+               file : "books/fermat-readme-big.pdf",
                coverFront : "images/magazine/readme/cover-front.png",
                coverFrontInside : "images/magazine/readme/cover-front-inside.png",
                coverBack : "images/magazine/readme/cover-back.png",
                coverBackInside : "images/magazine/readme/cover-back-inside.png",
-               scale : 0.64
+               scale : ((WIDTH * 0.482) * 0.00114)
             },
 	       whitepaper : { 
-               file : "images/magazine/whitepaper/fermat-whitepaper.pdf",
+               file : "books/fermat-whitepaper-big.pdf",
                coverFront : "images/magazine/whitepaper/cover-front.jpg",
                coverFrontInside : "images/magazine/whitepaper/cover-front-inside.jpg",
                coverBack : "images/magazine/whitepaper/cover-back.jpg",
                coverBackInside : "images/magazine/whitepaper/cover-back-inside.jpg",
-               scale : 0.7
+               scale : ((WIDTH * 0.482) * 0.00114)
 	        }
     	};
-
-    var MAGAZINE = null,
-        SCALE = null,
-        WIDTH = 1160,
-        HEIGHT = 700,
-        DOC = null;
     
     /**
      * @author Ricardo Delgado
@@ -55,12 +55,17 @@ function Magazine() {
 	        
            addItems();
 
+           addCss();
+
            configMagazine();
 
            coverPage(load);
-
+           
            for (var i = 1; i <= DOC.numPages; i++)
                 addPage(i); 
+            
+           if (DOC.numPages % 2 !== 0)
+               addPageExtra();
 
            backCoverPage(load);
 
@@ -80,14 +85,13 @@ function Magazine() {
 
       	var flipbook = document.getElementById('flipbook-viewport'),
           	positionHide = {x: (Math.random() + 1) * 5000, y: (Math.random() + 1) * 5000};
-          	//pager = document.getElementById('pager');
-      
-    		//animatePager(pager, positionHide);
+
       	animateMagazine(flipbook, positionHide);
 
       	window.helper.hide(flipbook, 2000, false);
-        //window.helper.hide(pager, 2000, false); 
+
         DOC = null;
+    
     };
     
     /**
@@ -106,7 +110,7 @@ function Magazine() {
 
           	gradients: true,
 
-          	autoCenter: true,
+          	autoCenter: false,
 
           	acceleration: true
 
@@ -123,13 +127,35 @@ function Magazine() {
       	var page = $('<div />'),
           	flipbook = $('<div />', {"class": "flipbook"}).append(page),
           	viewport = $('<div />', {"class": "flipbook-viewport", "id": "flipbook-viewport"}).append(flipbook);
-          	//pager = $('<div />', {"id": "pager"});
-
-      	//$('body').append(pager);
 
       	$('#container').append(viewport);
 
       	MAGAZINE = $('.flipbook');
+
+    }
+
+    /**
+     * @author Ricardo Delgado
+     * It sets the dimensions of the elements.
+     */
+    function addCss(){
+
+    	$('.flipbook').css({
+					    "width": WIDTH,
+					    "height": HEIGHT,
+						"left": (WIDTH * 0.49) * -1,
+						"top": (HEIGHT * 0.40) * -1
+						    });
+
+        $('.flipbook .hard').css({
+        				"width": WIDTH * 0.5,
+					    "height": HEIGHT
+        					});
+
+        $('.flipbook .own-size').css({
+        				"width": WIDTH * 0.482,
+					    "height": HEIGHT - 18
+        					});
 
     }
     
@@ -171,7 +197,7 @@ function Magazine() {
      */  
     function backCoverPage(load){
 
-		var page = DOC.numPages + 3,
+		var page = MAGAZINE.turn('pages') + 1,
 			_class = "hard fixed",
 			cover,
 			backCover;
@@ -184,7 +210,7 @@ function Magazine() {
 
 		MAGAZINE.turn("addPage", backCover, page); 
 
-		page = DOC.numPages + 4;
+		page = MAGAZINE.turn('pages') + 1;
 
 		_class = "hard";
 
@@ -211,12 +237,36 @@ function Magazine() {
           	newPage = page + 2;
 
       	canvas = document.createElement('canvas');
-      	canvas.width  = 560;
-      	canvas.height = 682;
+      	canvas.width  = WIDTH * 0.482;
+      	canvas.height = HEIGHT - 18;
 
       	ctx = canvas.getContext("2d");
 
       	renderPage(page, ctx);
+
+      	element = $('<div />', { 
+            		"class": _class,
+            		'id' : 'p'+ newPage
+           			}).append(canvas);
+
+      	MAGAZINE.turn("addPage", element, newPage);
+
+    }
+    
+    /**
+     * @author Ricardo Delgado
+     * Creates and adds an extra page magazine.
+     */  
+    function addPageExtra(){
+
+      	var canvas,
+         	element,
+          	_class = "own-size",
+          	newPage = MAGAZINE.turn('pages') + 1;
+
+      	canvas = document.createElement('canvas');
+      	canvas.width  = WIDTH * 0.482;
+      	canvas.height = HEIGHT - 18;
 
       	element = $('<div />', { 
             		"class": _class,
@@ -250,6 +300,7 @@ function Magazine() {
           	page.render(renderContext);
 
       	});
+  
     }
     
     /**
@@ -266,9 +317,11 @@ function Magazine() {
 
             case ESC:
                     
-                if (!MAGAZINE.data().zoomIn)
-                    MAGAZINE.turn("page", 1);
-
+                if (!MAGAZINE.data().zoomIn){
+                    MAGAZINE.turn("page", 2);
+                    MAGAZINE.turn("previous");
+                }
+                    
                 zoomHandle(-1);
 
             break;
@@ -325,6 +378,7 @@ function Magazine() {
 
             return false;
         }
+   
     }
     
     /**
@@ -351,11 +405,11 @@ function Magazine() {
     function zoomThis() {
 
         var element = document.getElementById('flipbook-viewport');
-        var positionShow = {x : window.innerWidth * 0.5, y : (window.innerHeight * 0.5) - 50};
+        var positionShow = {x : window.innerWidth * 0.5, y : (window.innerHeight * 0.5) - 60};
         animateMagazine(element, positionShow, 2500);
 
         MAGAZINE.transform(
-                'scale('+1.35+', '+1.35+')');
+                'scale('+1.25+', '+1.25+')');
         MAGAZINE.data().zoomIn = true;
         MAGAZINE.turn('resize');
         MAGAZINE.turn('disable', true);
@@ -373,28 +427,12 @@ function Magazine() {
         animateMagazine(element, positionShow, 2500);
 
         MAGAZINE.transform(
-                'translate('+0+'px, '+20+'px)' +
+                
                 'scale('+1+', '+1+')');
         MAGAZINE.data().zoomIn = false;
         MAGAZINE.turn('resize');
         MAGAZINE.turn('disable', false);
-    }
     
-    /**
-     * @author Ricardo Delgado
-     * Calculates the position of the paged for animation.
-     */ 
-	function positionPager(){
-
-      	var element = document.getElementById('pager'),
-          	positionShow = {y : ((HEIGHT / 2) + (window.innerHeight / 2))};
-
-      	element.style.top = (Math.random() + 1) * 3000 + 'px';
-
-      	setTimeout(function() {
-        	animatePager(element, positionShow);
-      	}, 1500);
-
     }
     
     /**
@@ -413,6 +451,7 @@ function Magazine() {
 	    setTimeout(function() {
 	      animateMagazine(element, positionShow);
 	    }, 1500);
+    
     }
     
     /**
@@ -440,27 +479,4 @@ function Magazine() {
 
     }
     
-    /**
-     * @author Ricardo Delgado
-     * Performs the animation output or paged enters.
-     * @param {Object} element         Element.
-     * @param {Array}  target          The objetive position.
-     * @param {Number} [duration=3000] Duration of the animation.
-     */ 
-    function animatePager (element, target, duration) {
-
-      var _duration = duration || 3000,
-          position = { x : 0, y : element.getBoundingClientRect().top};
-
-      new TWEEN.Tween(position)
-          .to({y : target.y}, _duration)
-          .easing(TWEEN.Easing.Exponential.InOut)
-          .onUpdate(update)
-          .start();
-
-      function update() {
-        element.style.top = position.y + 'px';
-      }
-
-    }
 }
