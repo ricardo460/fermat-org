@@ -60,12 +60,27 @@ function Magazine() {
            configMagazine();
 
            coverPage(load);
+            
+           var i = 1;
+            
+           if(load === 'book'){ 
+                addPage(1);
+               
+                actionBook();
+               
+                i = 1 + i;
+           }
            
-           for (var i = 1; i <= DOC.numPages; i++)
+           for (i ; i <= DOC.numPages; i++)
                 addPage(i); 
             
-           if (DOC.numPages % 2 !== 0)
-               addPageExtra();
+            if(load === 'book'){
+               if (DOC.numPages % 2 === 0)
+               addPageExtra(); 
+            }else{
+               if (DOC.numPages % 2 !== 0)
+               addPageExtra(); 
+            }
 
            backCoverPage(load);
 
@@ -156,6 +171,7 @@ function Magazine() {
         				"width": WIDTH * 0.482,
 					    "height": HEIGHT - 18
         					});
+        
 
     }
     
@@ -234,7 +250,7 @@ function Magazine() {
           	ctx,
          	element,
           	_class = "own-size",
-          	newPage = page + 2;
+          	newPage = MAGAZINE.turn('pages') + 1;
 
       	canvas = document.createElement('canvas');
       	canvas.width  = WIDTH * 0.482;
@@ -274,6 +290,45 @@ function Magazine() {
            			}).append(canvas);
 
       	MAGAZINE.turn("addPage", element, newPage);
+
+    }
+    /**
+     * @author Ricardo Delgado
+     * Creates and adds an extra page magazine.
+     */  
+    function addTableContent(){
+
+        var canvas,
+         	element,
+            div,
+          	_class = "own-size",
+          	newPage = MAGAZINE.turn('pages') + 1;
+
+      	canvas = document.createElement('canvas');
+      	canvas.width  = WIDTH * 0.482;
+      	canvas.height = HEIGHT - 18;
+        canvas.style.position = "relative";
+        div = document.createElement('div');
+      	div.width  = WIDTH * 0.482;
+      	div.height = HEIGHT - 18;
+        div.id = "table";
+        div.style.position = "absolute";
+        div.style.zIndex = 0;
+        div.style.top = 0;
+        div.style.left = 0;
+
+        element = $('<div />', { 
+            		"class": _class,
+            		'id' : 'p'+ newPage
+           			}).append(canvas);
+        
+        element.append(div);
+        
+        MAGAZINE.turn("addPage", element, newPage);
+        
+        $.ajax({url: 'books/tableContent.html'}).done(function(pageHtml) {      
+              $('#table').append(pageHtml);
+        });
 
     }
     
@@ -351,7 +406,35 @@ function Magazine() {
 		}); 
 
         ConfigZoom();
+        
 
+    }
+    
+    function actionBook(){
+        
+        addTableContent();
+        
+        window.Hash.on('^page\/([0-9]*)$', {
+
+            yep: function(path, parts) {
+
+                var page = parseInt(parts[1]) + 4;
+                
+                if (parts[1]!==undefined) {
+                    if (MAGAZINE.turn('is'))
+                        MAGAZINE.turn('page', page);
+                }
+
+            },
+            nop: function(path) {
+
+			if (MAGAZINE.turn('is'))
+				MAGAZINE.turn('page', 1);
+		  }
+
+        });
+        
+        
     }
     
     /**
