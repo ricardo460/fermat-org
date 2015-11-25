@@ -172,6 +172,50 @@ button:active {
   background-image:linear-gradient(right, #fff 95%, #cacaca 100%);
 }
 
+ .table-contents{
+	font-size:16px;
+	margin:0px auto;
+	color:#ccc;
+}
+
+ .table-contents h1{
+     left:50px;
+	color:#ccc;
+}
+
+.table-contents li{
+	list-style:none;
+	line-height:25px;
+         left:50%;
+}
+
+.table-contents span{
+	float:right;
+}
+
+.table-contents a{
+	float:left;
+	width:100%;
+	clear:both;
+	text-decoration:none;
+	color:#333;
+	margin:0px auto;
+	padding:0 20px;
+}
+
+.table-contents a:hover{
+	background:#CAD1EE;
+	float:left;
+	width:100%;
+	clear:both;
+	text-decoration:none;
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
+	-o-border-radius:10px;
+	-ms-border-radius:10px;
+	border-radius:10px;
+}
+
 @font-face {
     font-family: Canaro;
     src: url('fonts/canaro.otf') format("opentype");
