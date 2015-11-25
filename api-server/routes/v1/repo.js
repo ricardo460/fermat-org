@@ -234,10 +234,18 @@ router.get('/docs/:type', function (req, res, next) {
     try {
 
         var type = req.param('type');
+        var style = req.query.style;
+
 
         if(type !== 'book' && type !== 'readme' && type !== 'paper'){
             return res.status(422).send({ message:'Bad Parameters' });       
         }
+
+        if(typeof style != 'undefined' && style != 'large'){
+            return res.status(422).send({ message:'Bad Parameters' });
+        }
+
+
         repMod.getDocs(req, function (error, result) {
 
             if (error) {
