@@ -23,21 +23,6 @@ var nodSchema = mongoose.Schema({
         trim: true,
         required: true
     },
-    parnt_hash: {
-        type: String,
-        lowercase: true,
-        trim: true,
-        required: false,
-        'default': null
-    },
-    //("server" | "client" | "service" | "actor" | "wallet")
-    parnt_type: {
-        type: String,
-        lowercase: true,
-        trim: true,
-        required: false,
-        'default': null
-    },
     extra: {},
     upd_at: {
         type: mongoose.Schema.Types.ObjectId,
@@ -48,15 +33,14 @@ var nodSchema = mongoose.Schema({
 });
 
 /**
- * [usrnm description]
+ * s
  *
  * @type {number}
  */
 nodSchema.index({
     hash: 1,
     type: 1,
-    parnt_hash: 1,
-    parnt_type: 1
+    _wave_id: 1
 }, {
     name: "nods_cp_indx"
 });
