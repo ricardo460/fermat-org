@@ -40,8 +40,21 @@ function Camera(position, renderer, renderFunc) {
     this.dragging = false;
     this.aspectRatio = camera.aspect;
     this.moving = false;
+    this.freeView = false;
     
     // Public Methods
+    
+    this.enableFreeMode = function() {
+        controls.noRotate = false;
+        controls.noPan = false;
+        self.freeView = true;
+    };
+    
+    this.disableFreeMode = function() {
+        controls.noRotate = true;
+        controls.noPan = true;
+        self.freeView = false;
+    };
     
     /**
      * Returns the max distance set
@@ -251,7 +264,10 @@ function Camera(position, renderer, renderFunc) {
                 .to( { x: target.x, y: target.y, z: target.z }, duration )
                 //.easing( TWEEN.Easing.Exponential.InOut )
                 .onUpdate(function(){ controls.target.set(camera.position.x, camera.position.y, 1); })
-                .onComplete(function() { self.enable(); controls.noPan = true; })
+                .onComplete(function() {
+                    self.enable();
+                    controls.noPan = true;
+                })
                 .start();
 
             new TWEEN.Tween( camera.up )
@@ -266,10 +282,13 @@ function Camera(position, renderer, renderFunc) {
      *
      */
     this.update = function() {
-        if(controls.noPan === true && Math.ceil(camera.position.z) !== controls.position0.z) controls.noPan = false;
+        if(controls.noPan === true && Math.ceil(camera.position.z) !== controls.position0.z) {
+            
+            controls.noPan = false;
         
-        //if(self.moving)
-            //controls.enabled = false;
+            if(self.freeView === true)
+                self.enableFreeMode();
+        }
         
         controls.update();
         self.dragging = controls.dragging;

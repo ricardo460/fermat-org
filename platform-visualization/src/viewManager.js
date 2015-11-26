@@ -63,7 +63,7 @@ function ViewManager() {
                     
                     exit = function() {
                         window.tileManager.rollBack();
-                    }
+                    };
 
                     reset = function() {
                         window.tileManager.rollBack();
@@ -112,7 +112,24 @@ function ViewManager() {
                             window.getHeaderFLow();
                         }, 1000);
                     };
-
+                    
+                    break;
+                case 'network':
+                    enter = function() {
+                        window.networkViewer = new NetworkViewer();
+                        window.networkViewer.load();
+                        
+                        //Enable true view for when the user zooms
+                        window.camera.freeView = true;
+                    };
+                    
+                    exit = function() {
+                        window.networkViewer.unload();
+                        window.networkViewer = null;
+                        
+                        window.camera.disableFreeMode();
+                    };
+                    
                     break;
                 default:
                     break;
