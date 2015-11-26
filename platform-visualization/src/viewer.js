@@ -12,8 +12,9 @@ var table = [],
     stats = null,
     actualFlow = null,
     viewManager = null,
-    magazine = null;
+    magazine = null,
     headerFlow = [],
+    networkViewer = null,
     positionHeaderFlow = [];
 //Global constants
 var TILE_DIMENSION = {
@@ -570,11 +571,11 @@ function calculatePositionHeaderFLow(headerFlow) {
                 positionY = positionY + 500;
         }
         
-        for(y = 0; y < row; y++){ //filas
+        for(var y = 0; y < row; y++){ //filas
 
             var positionX = center.x + 1500;
 
-            for(m = 0; m < column; m++) { 
+            for(var m = 0; m < column; m++) { 
 
                 if(m===0)
                     positionX = positionX - 500;
@@ -582,7 +583,7 @@ function calculatePositionHeaderFLow(headerFlow) {
                     positionX = positionX - 1000;
             }
             //calculando X
-            for(x = 0; x < column; x++){  //columnas              
+            for(var x = 0; x < column; x++){  //columnas              
 
                 position = new THREE.Vector3();
 
