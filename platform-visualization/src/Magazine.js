@@ -410,11 +410,13 @@ function Magazine() {
                 if (parts[1]!==undefined) {
                       
                     if (MAGAZINE.turn('is')){
-                          
-                        MAGAZINE.turn('page', page);
-                        navigationUrl(parts[1]);
+                        
+                        if (MAGAZINE.turn("hasPage", page)){ 
+                            
+                            MAGAZINE.turn('page', page);
+                            navigationUrl(parts[1]);
+                        }
                     }
-
                 }       
 			}
 
