@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 /**
- * [wavSchema description]
+ * this entity represents an instance of time in the network's growth 
  *
  * @type {[type]}
  */

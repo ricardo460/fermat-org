@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 /**
- * [lnkSchema description]
+ * this entity represents the connections between any pair of nodes in the network
  *
  * @type {[type]}
  */

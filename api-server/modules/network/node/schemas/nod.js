@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 /**
- * [nodSchema description]
+ * this schema represents each node in the network
  *
  * @type {[type]}
  */
@@ -33,7 +33,7 @@ var nodSchema = mongoose.Schema({
 });
 
 /**
- * s
+ * [hash description]
  *
  * @type {number}
  */

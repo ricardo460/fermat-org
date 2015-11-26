@@ -2,7 +2,9 @@ var winston = require('winston');
 var loadLib = require('./modules/repository/lib/loader');
 var syncLib = require('./modules/repository/lib/syncer');
 var Cache = require('./lib/route-cache');
-var cache = new Cache({type: 'file'});
+var cache = new Cache({
+    type: 'file'
+});
 
 var _INTERVAL = 720000;
 
@@ -14,7 +16,7 @@ winston.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 
 setInterval(function () {
     'use strict';
     var mod = loop % 5;
-    loop ++;
+    loop++;
     switch (mod) {
     case 0:
         winston.log('info', 'Getting documentation');
