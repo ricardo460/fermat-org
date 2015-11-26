@@ -175,10 +175,11 @@ exports.getDocs = function (req, next) {
     'use strict';
     try {
         var type = req.param('type');
-        console.log('en getDocs');
-        console.log(type);
+        var style = req.query.style;
+
         if(type == 'book'){
-            docMod.getBookPdf(function (err, res) {
+
+            docMod.getBookPdf(style, function (err, res) {
                 if (err) {
                     next(err, null);
                 } else {
@@ -187,8 +188,7 @@ exports.getDocs = function (req, next) {
             });
 
         }else if (type == 'readme'){
-            console.log(type);
-            docMod.getReadmePdf(function (err, res) {
+            docMod.getReadmePdf(style, function (err, res) {
                 if (err) {
                     next(err, null);
                 } else {
@@ -197,7 +197,7 @@ exports.getDocs = function (req, next) {
             });
 
         }else if (type == 'paper'){
-            docMod.getPaperPdf(function (err, res) {
+            docMod.getPaperPdf(style, function (err, res) {
                 if (err) {
                     next(err, null);
                 } else {

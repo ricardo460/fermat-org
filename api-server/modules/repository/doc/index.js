@@ -1,8 +1,8 @@
 var fs = require('fs');
+var exec = require('child_process').exec;
 var path = require('path');
 var winston = require('winston');
-var cvToPdf = require('cv2pdf');
-var pdf = require('html-pdf');
+var markdownpdf = require("markdown-pdf");
 var env = process.env.NODE_ENV || 'development';
 
 /**
@@ -46,6 +46,26 @@ exports.getReadme = function (callback) {
     }
 };
 
+exports.generateBookPdf = function(callback){
+
+    var book = path.join(process.cwd(), 'cache', env, 'fermat', 'fermat-book', 'fermat-book.asciidoc');
+    var fermatBookLarge = path.join(process.cwd(), 'cache', env, 'files', 'fermat-book-large.pdf');
+    var fermatBook = path.join(process.cwd(), 'cache', env, 'files', 'fermat-book-large.pdf');
+
+
+    exec('asciidoctor-pdf -a pdf-style=book -a allow-uri-read -d book -o '+fermatBookLarge+' '+book,function(error, stdout, stderr) {
+        if(error)  return callback('Error proccesing book big', null);  
+
+        exec('asciidoctor-pdf -a allow-uri-read -d book -o '+fermatBook+' '+book,function(err, std, std) {
+            if(err)  return callback('Error proccesing book', null);
+
+            return callback(null, true);
+
+        });
+        
+    });
+}
+
 /**
  * [getBookPdf description]
  *
@@ -55,19 +75,17 @@ exports.getReadme = function (callback) {
  *
  * @return {[type]}   [description]
  */
-exports.getBookPdf = function (callback) {
+exports.getBookPdf = function (style, callback) {
     'use strict';
     try {
-        var book = path.join(process.cwd(), 'cache', env, 'fermat', 'fermat-documentation', 'documentation.html');
-        winston.log('info', 'reading file ', book);
-        var html = fs.readFileSync(book, 'utf8');        
-        pdf.create(html).toFile('./cache/'+env+'/files/book.pdf', function(err, res) {
-          if (err) return callback(err, null);
-          console.log('en el success');
-          var resp = { pdfFile:res.filename  };
-          return callback(null, resp);
-          
-        });
+        var cacheFile = path.join(process.cwd(), 'cache', env, 'files', 'fermat-book.pdf');
+        if (style) {
+            cacheFile = path.join(process.cwd(), 'cache', env, 'files', 'fermat-book-large.pdf');
+        }
+        var resp = { pdfFile: cacheFile  };
+         
+        return callback(null, resp);
+        
     } catch (err) {
         return callback(err, null);
     }
@@ -82,15 +100,44 @@ exports.getBookPdf = function (callback) {
  *
  * @return {[type]}   [description]
  */
-exports.getReadmePdf = function (callback) {
+exports.getReadmePdf = function (style, callback) {
     'use strict';
     try {
         var readme = path.join(process.cwd(), 'cache', env, 'fermat', 'README.md');
+        var cacheFile = path.join(process.cwd(), 'cache', env, 'files', 'readme.pdf');
+        var name = 'readme.pdf';
+        var resp = { pdfFile: cacheFile };
+        var css = 'style.css';
+        if (style) {
+            cacheFile = path.join(process.cwd(), 'cache', env, 'files', 'readme-large.pdf');
+            name = 'readme-large.pdf';
+            css = 'style-large.css';
+        }
         winston.log('info', 'reading file ', readme);
-        var cv2pdf = new cvToPdf(readme, {out: './cache/'+env+'/files/readme.pdf'});
-        cv2pdf.convert(function () {
-          return callback(null, cv2pdf);
+
+        fs.stat(cacheFile, function(err, stats){
+            var diff;
+            if (stats) {
+                var thisTime = new Date();
+                diff = (thisTime.getTime() - stats.ctime.getTime())/(1000*60*60);
+            }
+            else{
+                diff = 999;
+            }
+            
+            if(diff>12){
+                markdownpdf({ cssPath:'./assets/styles/'+css }).from(readme).to(cacheFile, function () {
+                    console.log("Done");
+                    
+                    return callback(null, resp);
+                });
+            }
+            else{
+                return callback(null, resp);
+            }
         });
+
+        
     } catch (err) {
         return callback(err, null);
     }
@@ -105,14 +152,38 @@ exports.getReadmePdf = function (callback) {
  *
  * @return {[type]}   [description]
  */
-exports.getPaperPdf = function (callback) {
+exports.getPaperPdf = function (style, callback) {
     'use strict';
     try {
         var paper = path.join(process.cwd(), 'cache', env, 'fermat', 'FERMAT-WHITE-PAPER.md');
+        var cacheFile = path.join(process.cwd(), 'cache', env, 'files', 'fermat-white-paper.pdf');
+        var name = 'fermat-white-paper.pdf';
+        var css = 'style.css';
+        if (style) {
+            cacheFile = path.join(process.cwd(), 'cache', env, 'files', 'fermat-white-paper-large.pdf');
+            name = 'fermat-white-paper-large.pdf';
+            css = 'style-large.css';
+        }
         winston.log('info', 'reading file ', paper);
-        var cv2pdf = new cvToPdf(paper, {out: './cache/'+env+'/files/fermat-white-paper.pdf'});
-        cv2pdf.convert(function () {
-          return callback(null, cv2pdf);
+        fs.stat(cacheFile, function(err, stats){
+            var diff;
+            if (stats) {
+                var thisTime = new Date();
+                diff = (thisTime.getTime() - stats.ctime.getTime())/(1000*60*60);
+            }
+            else{
+                diff = 999;
+            }
+            if(diff>12){
+                markdownpdf({ cssPath:'./assets/styles/'+css }).from(paper).to(cacheFile, function () {
+                    console.log("Done");
+                    return callback(null, resp);
+                });
+            }
+            else{
+                var resp = { pdfFile: cacheFile  };
+                return callback(null, resp);
+            }
         });
     } catch (err) {
         return callback(err, null);
