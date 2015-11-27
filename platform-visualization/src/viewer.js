@@ -82,7 +82,7 @@ function init() {
             
             setTimeout(function(){
                 signLayer.transformSignLayer();
-            }, 5000);
+            }, 2500);
         }
         if (window.actualView === "workflows") {
 

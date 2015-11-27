@@ -82,16 +82,16 @@ function SignLayer(){
 
 		var object, object2;
 
-		mesh.position.x = Math.random() * 80000 - 40000;
-        mesh.position.y = Math.random() * 80000 - 40000;
+		mesh.position.x = Math.random() * 990000;
+        mesh.position.y = Math.random() * 990000;
         mesh.position.z = 80000 * 2;
             
         mesh.position.copy(window.viewManager.translateToSection('table', mesh.position));
 		objects.push(mesh);
 
 		object2 = new THREE.Vector3();
-		object2.x = mesh.position.x;
-		object2.y = mesh.position.y;
+		object2.x = mesh.position.x ;
+		object2.y = mesh.position.y ;
 
 		positions.lastTarget.push(object2);
 
@@ -117,10 +117,6 @@ function SignLayer(){
             }, Math.random() * duration + duration)
             .easing(TWEEN.Easing.Exponential.InOut)
             .start();
-
-            new TWEEN.Tween(objects[i].material)
-            .to({ opacity : 1, needsUpdate : true}, Math.random() * duration + duration)
-            .start();
         }
 	};
 
@@ -137,10 +133,6 @@ function SignLayer(){
             }, Math.random() * duration + duration)
             .easing(TWEEN.Easing.Exponential.InOut)
             .start();
-
-            new TWEEN.Tween(objects[i].material)
-            .to({ opacity : 0, needsUpdate : true}, Math.random() * duration + duration)
-            .start();  
         }
 	};
 }

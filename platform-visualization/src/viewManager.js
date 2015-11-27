@@ -71,6 +71,10 @@ function ViewManager() {
 
                     reset = function() {
                         window.tileManager.rollBack();
+
+                        setTimeout(function(){
+                            window.signLayer.transformSignLayer();
+                         }, 3000);
                     };
 
                     break;
