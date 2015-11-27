@@ -51,7 +51,11 @@ function ViewManager() {
                         window.browserManager.modifyButtonLegend(1,'block');
 
                         window.tileManager.transform(window.tileManager.targets.table, 3000 + transition);
-
+                        
+                        setTimeout(function(){
+                            window.signLayer.transformSignLayer();
+                         }, 9500);
+                        
                         //Special: If coming from home, delay the animation
                         if(window.actualView === 'home')
                             transition = transition + 3000;
@@ -67,6 +71,10 @@ function ViewManager() {
 
                     reset = function() {
                         window.tileManager.rollBack();
+
+                        setTimeout(function(){
+                            window.signLayer.transformSignLayer();
+                         }, 3000);
                     };
 
                     break;

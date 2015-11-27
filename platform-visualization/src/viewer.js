@@ -80,6 +80,10 @@ function init() {
     $('#backButton').click(function() {
         if (window.actualView === "table") {
             changeView(tileManager.targets.table);
+            
+            setTimeout(function(){
+                signLayer.transformSignLayer();
+            }, 2500);
         }
         if (window.actualView === "workflows") {
 
