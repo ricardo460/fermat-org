@@ -58,6 +58,166 @@ var testFlow = [
         "_id": "5629db8be934756e08c9751b"
     }
 ];
+var testNetworkNodes = [
+    {
+        id : "server0",
+        type : "node",
+        subType : "server",
+        os : "linux",
+        ady : [
+            {
+                id : "server1",
+                linkType : "connected"
+            }
+        ]
+    },
+    {
+        id : "server1",
+        type : "node",
+        subType : "server",
+        os : "windows",
+        ady : [
+            {
+                id : "server2",
+                linkType : "connected"
+            }
+        ]
+    },
+    {
+        id : "server2",
+        type : "node",
+        subType : "pc",
+        os : "linux",
+        ady : []
+    }
+];
+var testNetworkClients = {
+    server0 : [
+        {
+            id : "client0",
+            type : "client",
+            subType : "phone",
+            ady : [
+                {
+                    id : "server0",
+                    linkType : "connected"
+                },
+                {
+                    id : "client3",
+                    from : "nService0",
+                    linkType : "connected"
+                }
+            ]
+        },
+        {
+            id : "client1",
+            type : "client",
+            subType : "pc",
+            ady : [
+                {
+                    id : "server0",
+                    linkType : "connected"
+                }
+            ]
+        },
+        {
+            id : "client2",
+            type : "client",
+            subType : "phone",
+            ady : [
+                {
+                    id : "server0",
+                    linkType : "connected"
+                }
+            ]
+        }
+    ],
+    server1 : [
+        {
+            id : "client3",
+            type : "client",
+            subType : "phone",
+            ady : [
+                {
+                    id : "server1",
+                    linkType : "connected"
+                },
+                {
+                    id : "client0",
+                    from : "nService0",
+                    linkType : "connected"
+                }
+            ]
+        }
+    ],
+    server2 : []
+};
+var testNetworkServices = {
+    client0 : [
+        {
+            id : "wallet0",
+            type : "wallet",
+            subType : "bitcoin_wallet",
+            currency : "bitcoin",
+            symbol : "BTC",
+            balance : "0.0123",
+            ady : [
+                {
+                    id : "client0",
+                    linkType : "installed"
+                }
+            ]
+        },
+        {
+            id : "nService0",
+            type : "nservice",
+            subType : "ukn_service",
+            ady : [
+                {
+                    id : "client0",
+                    linkType : "running"
+                }
+            ]
+        },
+        {
+            id : "nService1",
+            type : "nservice",
+            subType : "ukn_service",
+            ady : [
+                {
+                    id : "client0",
+                    linkType : "running"
+                }
+            ]
+        },
+        {
+            id : "nService2",
+            type : "nservice",
+            subType : "ukn_service",
+            ady : [
+                {
+                    id : "client0",
+                    linkType : "running"
+                }
+            ]
+        }
+    ],
+    client1 : [],
+    client2 : [],
+    client3 : [
+        {
+            id : "nService0",
+            type : "nservice",
+            subType : "ukn_service",
+            ady : [
+                {
+                    id : "client3",
+                    linkType : "running"
+                }
+            ]
+        }
+    ]
+};
 
 
 var layers = {
