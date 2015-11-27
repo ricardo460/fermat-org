@@ -658,7 +658,7 @@ function onClick(e) {
 
         clicked = camera.rayCast(mouse, scene.children);
 
-        if (clicked && clicked.length > 0) {
+        if (clicked && clicked.length > 0 && clicked[0].object.userData.onClick) {
 
             clicked[0].object.userData.onClick(clicked[0].object);
 
