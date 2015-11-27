@@ -10,7 +10,8 @@ function Magazine() {
         SCALE = null,
         WIDTH = window.innerWidth * 0.64,
         HEIGHT = (WIDTH * 0.5) * 1.21,
-        DOC = null;
+        DOC = null,
+        LOAD = null;
 
     var viewMagazine = {
 
@@ -46,6 +47,8 @@ function Magazine() {
      * @param {String} load  Name of the magazine to create.
      */
     this.init = function (load){
+        
+        LOAD = load;
 
     	window.PDFJS.getDocument(viewMagazine[load].file).then(function (doc) {
 
@@ -63,10 +66,11 @@ function Magazine() {
             
            var i = 1;
             
-           if(load === 'book'){ 
-                addPage(1);
+           if (load === 'book'){ 
                
-                actionBook();
+                addPage(1);
+
+                addTableContent();
                
                 i = 1 + i;
            }
@@ -74,13 +78,16 @@ function Magazine() {
            for (i ; i <= DOC.numPages; i++)
                 addPage(i); 
             
-            if(load === 'book'){
-               if (DOC.numPages % 2 === 0)
-               addPageExtra(); 
-            }else{
-               if (DOC.numPages % 2 !== 0)
-               addPageExtra(); 
-            }
+           if (load === 'book'){
+                
+                if (DOC.numPages % 2 === 0)
+                    addPageExtra(); 
+           }
+           else{
+               
+                if (DOC.numPages % 2 !== 0)
+                    addPageExtra(); 
+           }
 
            backCoverPage(load);
 
@@ -104,6 +111,8 @@ function Magazine() {
       	animateMagazine(flipbook, positionHide);
 
       	window.helper.hide(flipbook, 2000, false);
+
+        window.Hash.go("").update();
 
         DOC = null;
     
@@ -162,7 +171,7 @@ function Magazine() {
 						"top": (HEIGHT * 0.40) * -1
 						    });
 
-        $('.flipbook .hard').css({
+    	$('.flipbook .hard').css({
         				"width": WIDTH * 0.5,
 					    "height": HEIGHT
         					});
@@ -172,7 +181,6 @@ function Magazine() {
 					    "height": HEIGHT - 18
         					});
         
-
     }
     
     /**
@@ -299,7 +307,7 @@ function Magazine() {
     function addTableContent(){
 
         var canvas,
-         	element,
+            element,
             div,
           	_class = "own-size",
           	newPage = MAGAZINE.turn('pages') + 1;
@@ -311,7 +319,7 @@ function Magazine() {
         div = document.createElement('div');
       	div.width  = WIDTH * 0.482;
       	div.height = HEIGHT - 18;
-        div.id = "table";
+        div.id = "content";
         div.style.position = "absolute";
         div.style.zIndex = 0;
         div.style.top = 0;
@@ -327,7 +335,7 @@ function Magazine() {
         MAGAZINE.turn("addPage", element, newPage);
         
         $.ajax({url: 'books/tableContent.html'}).done(function(pageHtml) {      
-              $('#table').append(pageHtml);
+              $('#content').append(pageHtml);
         });
 
     }
@@ -373,11 +381,14 @@ function Magazine() {
             case ESC:
                     
                 if (!MAGAZINE.data().zoomIn){
+                    
                     MAGAZINE.turn("page", 2);
                     MAGAZINE.turn("previous");
                 }
                     
                 zoomHandle(-1);
+                    
+                navigationUrl("");
 
             break;
                     
@@ -385,56 +396,71 @@ function Magazine() {
 
     	});
 
+        window.Hash.on('^'+LOAD+'/page\/([0-9]*)$', {
+
+			yep: function(path, parts) {
+
+                var factor = 2;
+
+                if(LOAD === 'book')
+                    factor = 4;
+
+                var page = parseInt(parts[1]) + factor;
+
+                if (parts[1]!==undefined) {
+                      
+                    if (MAGAZINE.turn('is')){
+                        
+                        if (MAGAZINE.turn("hasPage", page)){ 
+                            
+                            MAGAZINE.turn('page', page);
+                            navigationUrl(parts[1]);
+                        }
+                    }
+                }       
+			}
+
+        }); 
+
         MAGAZINE.bind("turning", function(event, page, view) {
 
-      	     var magazine = $(this);
+			var magazine = $(this);
 				
-			 if (page >= 2){
-				$('#p2').addClass('fixed');
-			 }
-             else{
+			if (page >= 2){
+      		    $('#p2').addClass('fixed');
+      		}
+            else{
                 $('#p2').removeClass('fixed');
-             }
+            }
 
-             if (page < magazine.turn('pages')){
+            if (page < magazine.turn('pages')){
                 $('#pn').addClass('fixed');
-             }
-             else{
+            }
+            else{
                 $('#pn').removeClass('fixed');
-             }
-		  
-		}); 
+            }
+
+            if (page >= 4){
+                navigationUrl(page - 4);
+            }
+            else {
+                navigationUrl("");
+            }
+        }); 
+
+        navigationUrl("");
 
         ConfigZoom();
         
-
     }
     
-    function actionBook(){
-        
-        addTableContent();
-        
-        window.Hash.on('^page\/([0-9]*)$', {
+    function navigationUrl(page){
 
-            yep: function(path, parts) {
+        if(page === 0)
+          page = 1;
 
-                var page = parseInt(parts[1]) + 4;
-                
-                if (parts[1]!==undefined) {
-                    if (MAGAZINE.turn('is'))
-                        MAGAZINE.turn('page', page);
-                }
+        window.Hash.go(LOAD+'/page/'+page).update();
 
-            },
-            nop: function(path) {
-
-			if (MAGAZINE.turn('is'))
-				MAGAZINE.turn('page', 1);
-		  }
-
-        });
-        
-        
     }
     
     /**
@@ -524,7 +550,7 @@ function Magazine() {
      */ 
 	function positionMagazine(){
 
-      	var element = document.getElementById('flipbook-viewport');
+        var element = document.getElementById('flipbook-viewport');
 
 	    var positionShow = {x : window.innerWidth * 0.5, y : window.innerHeight * 0.5};
 
@@ -546,19 +572,19 @@ function Magazine() {
      */ 
     function animateMagazine (element, target, duration) {
 
-      var _duration = duration || 3000,
-          position = {x : element.getBoundingClientRect().left, y : element.getBoundingClientRect().top};
+        var _duration = duration || 3000,
+            position = {x : element.getBoundingClientRect().left, y : element.getBoundingClientRect().top};
 
-      new TWEEN.Tween(position)
-          .to({x : target.x, y : target.y}, _duration)
-          .easing(TWEEN.Easing.Exponential.InOut)
-          .onUpdate(update)
-          .start();
+        new TWEEN.Tween(position)
+            .to({x : target.x, y : target.y}, _duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .onUpdate(update)
+            .start();
 
-      function update() {
-        element.style.left = position.x + 'px';
-        element.style.top = position.y + 'px';
-      }
+        function update() {
+            element.style.left = position.x + 'px';
+            element.style.top = position.y + 'px';
+        }
 
     }
     
