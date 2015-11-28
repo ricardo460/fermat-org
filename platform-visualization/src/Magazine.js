@@ -11,7 +11,8 @@ function Magazine() {
         WIDTH = window.innerWidth * 0.64,
         HEIGHT = (WIDTH * 0.5) * 1.21,
         DOC = null,
-        LOAD = null;
+        LOAD = null,
+        CONTENT = null;
 
     var viewMagazine = {
 
@@ -50,6 +51,18 @@ function Magazine() {
         
         LOAD = load;
 
+        if (load === 'book'){
+
+            $.ajax({url: 'books/tableContent.html'}).done(function(pageHtml) {
+              
+              	$('#container').append(pageHtml);
+
+              	$('#table').hide();
+
+              	CONTENT = parseInt($("#table li").size());
+          	});
+        }
+
     	window.PDFJS.getDocument(viewMagazine[load].file).then(function (doc) {
 
 	       DOC = doc;
@@ -64,30 +77,13 @@ function Magazine() {
 
            coverPage(load);
             
-           var i = 1;
-            
-           if (load === 'book'){ 
-               
-                addPage(1);
-
+           if (load === 'book')
                 addTableContent();
-               
-                i = 1 + i;
-           }
-           
-           for (i ; i <= DOC.numPages; i++)
+             
+           for (var i = 1; i <= DOC.numPages; i++)
                 addPage(i); 
             
-           if (load === 'book'){
-                
-                if (DOC.numPages % 2 === 0)
-                    addPageExtra(); 
-           }
-           else{
-               
-                if (DOC.numPages % 2 !== 0)
-                    addPageExtra(); 
-           }
+           pageCompensate();
 
            backCoverPage(load);
 
@@ -213,7 +209,7 @@ function Magazine() {
 		MAGAZINE.turn("addPage", backCover, 2);
         
     }
-    
+   
     /**
      * @author Ricardo Delgado
      * Creates and adds the counter-cover and internal cover of the magazine.
@@ -245,6 +241,7 @@ function Magazine() {
 					});
 
 		MAGAZINE.turn("addPage", cover, page);
+	
 	}
 
     /**
@@ -279,9 +276,9 @@ function Magazine() {
     
     /**
      * @author Ricardo Delgado
-     * Creates and adds an extra page magazine.
+     * Creates and adds an Compensate page magazine.
      */  
-    function addPageExtra(){
+    function addPageCompensate(){
 
       	var canvas,
          	element,
@@ -300,11 +297,22 @@ function Magazine() {
       	MAGAZINE.turn("addPage", element, newPage);
 
     }
+
+    function addTableContent(){
+
+        addTable(1);
+
+        if (CONTENT > 24)
+            addTable(2);
+
+        $('#table').remove();
+    
+    }
     /**
      * @author Ricardo Delgado
      * Creates and adds an extra page magazine.
      */  
-    function addTableContent(){
+    function addTable(page){
 
         var canvas,
             element,
@@ -319,7 +327,7 @@ function Magazine() {
         div = document.createElement('div');
       	div.width  = WIDTH * 0.482;
       	div.height = HEIGHT - 18;
-        div.id = "content";
+        div.id = "content"+page;
         div.style.position = "absolute";
         div.style.zIndex = 0;
         div.style.top = 0;
@@ -334,10 +342,55 @@ function Magazine() {
         
         MAGAZINE.turn("addPage", element, newPage);
         
-        $.ajax({url: 'books/tableContent.html'}).done(function(pageHtml) {      
-              $('#content').append(pageHtml);
-        });
+        $('#content'+page).append(addContent(page));
 
+    }
+
+    function addContent(page){
+
+        var i = 1,
+            end = 24,
+            div = $('<div />', {"class": "table-contents"}),
+            title = $('<h1 />', {"id": "contents"}).html($('#title').text()),
+            ul = $('<ul />');
+
+        if(page === 2){
+	        i = 25;
+	        end = 50;
+        }
+
+        for (i; i <= end; i++){
+          	ul.append($('#l-'+i));
+        }
+
+        div.append(title);
+        div.append(ul);
+
+        return div;
+    
+    }
+
+    function pageCompensate(){
+
+    	if (LOAD === 'book'){
+
+                if (CONTENT <= 24){
+
+                  if (DOC.numPages % 2 === 0)
+                      addPageCompensate(); 
+                }
+                else{
+
+                  if (DOC.numPages % 2 !== 0)
+                      addPageCompensate();
+                }
+           }
+           else{
+               
+                if (DOC.numPages % 2 !== 0)
+                    addPageCompensate(); 
+           }
+    
     }
     
     /**
@@ -370,7 +423,7 @@ function Magazine() {
      * @author Ricardo Delgado
      * Add the special features of the magazine.
      */ 
-    function actionMagazine(){
+    function actionMagazine(cant){
 
     	$(document).keydown(function(e){
 
@@ -402,9 +455,16 @@ function Magazine() {
 
                 var factor = 2;
 
-                if(LOAD === 'book')
-                    factor = 4;
+                if (LOAD === 'book'){
 
+                    if (CONTENT > 24){
+                      factor = 4;
+                    }
+                    else{
+                      factor = 3;
+                    }
+                }
+                
                 var page = parseInt(parts[1]) + factor;
 
                 if (parts[1]!==undefined) {

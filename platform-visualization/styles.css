@@ -172,17 +172,21 @@ button:active {
   background-image:linear-gradient(right, #fff 95%, #cacaca 100%);
 }
 
- .table-contents{
+.table-contents{
 	font-size:16px;
 	margin:0px auto;
-	color:#ccc;
+  width:100%;
 }
 
- .table-contents h1{
-     left:50px;
-	color:#ccc;
+#contents{
+  position:absolute;
+  left:45%;
+	color:black;
 }
 
+.table-contents ul{
+  padding-top:17%;
+}
 .table-contents li{
 	list-style:none;
 	line-height:25px;
