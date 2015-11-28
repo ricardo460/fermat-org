@@ -209,7 +209,7 @@ function Magazine() {
 		MAGAZINE.turn("addPage", backCover, 2);
         
     }
-    
+   
     /**
      * @author Ricardo Delgado
      * Creates and adds the counter-cover and internal cover of the magazine.
@@ -302,7 +302,7 @@ function Magazine() {
 
         addTable(1);
 
-        if (CONTENT > 25)
+        if (CONTENT > 24)
             addTable(2);
 
         $('#table').remove();
@@ -349,13 +349,13 @@ function Magazine() {
     function addContent(page){
 
         var i = 1,
-            end = 25,
+            end = 24,
             div = $('<div />', {"class": "table-contents"}),
             title = $('<h1 />', {"id": "contents"}).html($('#title').text()),
             ul = $('<ul />');
 
         if(page === 2){
-	        i = 26;
+	        i = 25;
 	        end = 50;
         }
 
@@ -374,7 +374,7 @@ function Magazine() {
 
     	if (LOAD === 'book'){
 
-                if (CONTENT <= 25){
+                if (CONTENT <= 24){
 
                   if (DOC.numPages % 2 === 0)
                       addPageCompensate(); 
@@ -457,7 +457,7 @@ function Magazine() {
 
                 if (LOAD === 'book'){
 
-                    if (CONTENT > 25){
+                    if (CONTENT > 24){
                       factor = 4;
                     }
                     else{
