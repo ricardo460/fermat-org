@@ -136,6 +136,7 @@ function ViewManager() {
                         window.networkViewer = null;
                         
                         window.camera.disableFreeMode();
+                        window.camera.freeView = false;
                     };
                     
                     break;
