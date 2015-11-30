@@ -32,6 +32,7 @@ function ViewManager() {
      * Creates the structure of the transition functions depending of the view
      * @author Miguel Celedon
      * @lastmodifiedBy Emmanuel Colina
+     * @lastmodifiedBy Ricardo Delgado
      * @param   {String} view The name of the view to process
      * @returns {Object} An object containing all the possible functions that can be called
      */
@@ -99,7 +100,9 @@ function ViewManager() {
                 case 'readme':
                 case 'whitepaper':
                     enter = function() {
-                        window.magazine.init(view);
+                        setTimeout(function(){
+                            window.magazine.init(view);
+                        }, 2000);    
                     };
 
                     exit = function() {

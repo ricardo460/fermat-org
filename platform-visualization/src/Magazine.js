@@ -106,7 +106,7 @@ function Magazine() {
 
       	animateMagazine(flipbook, positionHide);
 
-      	window.helper.hide(flipbook, 2000, false);
+      	window.helper.hide(flipbook, 1500, false);
 
         window.Hash.go("").update();
 
