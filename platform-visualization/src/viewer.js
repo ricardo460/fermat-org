@@ -82,7 +82,7 @@ function init() {
             changeView(tileManager.targets.table);
             
             setTimeout(function(){
-                signLayer.transformSignLayer();
+                window.signLayer.transformSignLayer();
             }, 2500);
         }
         if (window.actualView === "workflows") {
@@ -122,7 +122,7 @@ function init() {
 
     //Disabled Menu
     //initMenu();
-    
+
     setTimeout(function() { initPage(); }, 500);
     
     /*setTimeout(function() {
@@ -168,23 +168,28 @@ function goToView ( targetView ) {
  */
 function initPage() {
 
-	goToView(window.location.hash.slice(1));
-
 	window.Hash.on('^[a-zA-Z]*$', {
 
 		yep: function(path, parts) {
 
 			var view = parts[0];
 
-			if(view !== undefined && view !== ""){
+            if(window.actualView !== undefined && window.actualView !== ""){ 
 
-				if(window.map.views[view].enabled !== undefined && window.map.views[view].enabled)
-					goToView(view);
-			}
+    			if(view !== undefined && view !== ""){
 
+    				if(window.map.views[view].enabled !== undefined && window.map.views[view].enabled)
+    					goToView(view);
+    			}
+
+            }
+            else{
+                goToView(window.location.hash.slice(1));
+            }
 		}
 
     });
+
 }
 
 function initMenu() {

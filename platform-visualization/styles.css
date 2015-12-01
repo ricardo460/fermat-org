@@ -1,12 +1,12 @@
 html, body {
-                height: 100%;
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                -khtml-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-            }
+    height: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 body {
     background-color: #ffffff;
@@ -57,8 +57,8 @@ button:active {
 }
 
 #legendButton:active {
-  color: #000000;
- background-color: rgba(127,127,127,0.75);  
+    color: #000000;
+    background-color: rgba(127,127,127,0.75);  
 }
 
 #legendButton:hover,.backButton:hover, .actionButton:hover  {
@@ -106,91 +106,93 @@ button:active {
 
 
 .flipbook{
-  -webkit-transition: -webkit-transform 3s;
-  -moz-transition: -moz-transform 3s;
-  -ms-transition: -ms-transform 3s;
-  -o-transition: -o-transform 3s;
-  transition: transform 3s;
+    -webkit-transition: -webkit-transform 3s;
+    -moz-transition: -moz-transform 3s;
+    -ms-transition: -ms-transform 3s;
+    -o-transition: -o-transform 3s;
+    transition: transform 3s;
 }
 
 
 .flipbook .shadow{
-  -webkit-transition: -webkit-box-shadow 0.5s;
-  -moz-transition: -moz-box-shadow 0.5s;
-  -o-transition: -webkit-box-shadow 0.5s;
-  -ms-transition: -ms-box-shadow 0.5s;
+    -webkit-transition: -webkit-box-shadow 0.5s;
+    -moz-transition: -moz-box-shadow 0.5s;
+    -o-transition: -webkit-box-shadow 0.5s;
+    -ms-transition: -ms-box-shadow 0.5s;
 
-  -webkit-box-shadow:0 0 10px #999;
-  -moz-box-shadow:0 0 10px #999;
-  -ms-box-shadow:0 0 10px #999;
-  -o-box-shadow:0 0 10px #999;
-  box-shadow:0 0 10px #999;
+    -webkit-box-shadow:0 0 10px #999;
+    -moz-box-shadow:0 0 10px #999;
+    -ms-box-shadow:0 0 10px #999;
+    -o-box-shadow:0 0 10px #999;
+    box-shadow:0 0 10px #999;
 }
 
 .flipbook .page{
-  -webkit-box-shadow:0 0 20px rgba(0,0,0,0.2);
-  -moz-box-shadow:0 0 20px rgba(0,0,0,0.2);
-  -ms-box-shadow:0 0 20px rgba(0,0,0,0.2);
-  -o-box-shadow:0 0 20px rgba(0,0,0,0.2);
-  box-shadow:0 0 20px rgba(0,0,0,0.2);
+    -webkit-box-shadow:0 0 20px rgba(0,0,0,0.2);
+    -moz-box-shadow:0 0 20px rgba(0,0,0,0.2);
+    -ms-box-shadow:0 0 20px rgba(0,0,0,0.2);
+    -o-box-shadow:0 0 20px rgba(0,0,0,0.2);
+    box-shadow:0 0 20px rgba(0,0,0,0.2);
 }
 
 .flipbook .hard{
-
-  background-color:white;
-  -webkit-box-shadow:none;
-  -moz-box-shadow:none;
-  -ms-box-shadow:none;
-  box-shadow:none;
+    background-color:white;
+    -webkit-box-shadow:none;
+    -moz-box-shadow:none;
+    -ms-box-shadow:none;
+    box-shadow:none;
 }
 #p1, #p2, #pn, #pf{
-  background-repeat:no-repeat;
-  background-size:100% 100%;
+    background-repeat:no-repeat;
+    background-size:100% 100%;
 }
 
 .flipbook .own-size{
-
-  background-color:white;
-  overflow:hidden;
+    background-color:white;
+    overflow:hidden;
 }
 
 .flipbook .even{
-  background:-webkit-gradient(linear, left top, right top, color-stop(0.95, #fff), color-stop(1, #dadada));
-  background-image:-webkit-linear-gradient(left, #fff 95%, #dadada 100%);
-  background-image:-moz-linear-gradient(left, #fff 95%, #dadada 100%);
-  background-image:-ms-linear-gradient(left, #fff 95%, #dadada 100%);
-  background-image:-o-linear-gradient(left, #fff 95%, #dadada 100%);
-  background-image:linear-gradient(left, #fff 95%, #dadada 100%);
+    background:-webkit-gradient(linear, left top, right top, color-stop(0.95, #fff), color-stop(1, #dadada));
+    background-image:-webkit-linear-gradient(left, #fff 95%, #dadada 100%);
+    background-image:-moz-linear-gradient(left, #fff 95%, #dadada 100%);
+    background-image:-ms-linear-gradient(left, #fff 95%, #dadada 100%);
+    background-image:-o-linear-gradient(left, #fff 95%, #dadada 100%);
+    background-image:linear-gradient(left, #fff 95%, #dadada 100%);
 }
 
 .flipbook .odd{
-  background:-webkit-gradient(linear, right top, left top, color-stop(0.95, #fff), color-stop(1, #cacaca));
-  background-image:-webkit-linear-gradient(right, #fff 95%, #cacaca 100%);
-  background-image:-moz-linear-gradient(right, #fff 95%, #cacaca 100%);
-  background-image:-ms-linear-gradient(right, #fff 95%, #cacaca 100%);
-  background-image:-o-linear-gradient(right, #fff 95%, #cacaca 100%);
-  background-image:linear-gradient(right, #fff 95%, #cacaca 100%);
+    background:-webkit-gradient(linear, right top, left top, color-stop(0.95, #fff), color-stop(1, #cacaca));
+    background-image:-webkit-linear-gradient(right, #fff 95%, #cacaca 100%);
+    background-image:-moz-linear-gradient(right, #fff 95%, #cacaca 100%);
+    background-image:-ms-linear-gradient(right, #fff 95%, #cacaca 100%);
+    background-image:-o-linear-gradient(right, #fff 95%, #cacaca 100%);
+    background-image:linear-gradient(right, #fff 95%, #cacaca 100%);
 }
 
 .table-contents{
-	font-size:16px;
-	margin:0px auto;
-  width:100%;
+    margin:0px auto;
+    width:100%;
+    padding: 0px;
+    position: relative;
+    left:0px;
 }
 
-#contents{
-  position:absolute;
-  left:45%;
-	color:black;
+#contents1, #contents2{
+    position:absolute;
+    left:45%;
+    color:black;
+    float:top;
+    padding: 0px;
+    margin: 0px;
 }
 
 .table-contents ul{
-  padding-top:17%;
+    padding-top:12%;
 }
 .table-contents li{
-	list-style:none;
-	line-height:25px;
-         left:50%;
+    list-style:none;
+    left:50%;
 }
 
 .table-contents span{
@@ -204,7 +206,6 @@ button:active {
 	text-decoration:none;
 	color:#333;
 	margin:0px auto;
-	padding:0 20px;
 }
 
 .table-contents a:hover{
