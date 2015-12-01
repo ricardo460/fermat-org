@@ -3,7 +3,7 @@
  */
 function TileManager() {
 
-    signLayer = new SignLayer();
+    var signLayer = new SignLayer();
     this.lastTargets = null;
     this.targets = {
         table: [],
@@ -838,6 +838,9 @@ function TileManager() {
         this.preComputeLayout();
         
         var layerCoordinates = [];
+        
+        var signRow = null,
+            signColumn = null;
 
         for (var i = 0; i < table.length; i++) {
 
