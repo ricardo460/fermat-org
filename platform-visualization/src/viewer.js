@@ -123,7 +123,7 @@ function init() {
     //Disabled Menu
     //initMenu();
     
-    setTimeout(function() { goToView(window.location.hash.slice(1)); }, 500);
+    setTimeout(function() { initPage(); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
@@ -160,6 +160,31 @@ function goToView ( targetView ) {
     else {
         goToView(window.map.start);
     }
+}
+
+/**
+ * @author Ricardo Delgado
+ * Load the page url.
+ */
+function initPage() {
+
+	goToView(window.location.hash.slice(1));
+
+	window.Hash.on('^[a-zA-Z]*$', {
+
+		yep: function(path, parts) {
+
+			var view = parts[0];
+
+			if(view !== undefined && view !== ""){
+
+				if(window.map.views[view].enabled !== undefined && window.map.views[view].enabled)
+					goToView(view);
+			}
+
+		}
+
+    });
 }
 
 function initMenu() {
