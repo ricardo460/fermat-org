@@ -3,7 +3,6 @@
  */
 function TileManager() {
 
-    signLayer = new SignLayer();
     this.lastTargets = null;
     this.targets = {
         table: [],

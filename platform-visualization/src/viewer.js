@@ -15,6 +15,7 @@ var table = [],
     magazine = null,
     headerFlow = [],
     networkViewer = null,
+    signLayer = new SignLayer(),
     positionHeaderFlow = [];
 //Global constants
 var TILE_DIMENSION = {
