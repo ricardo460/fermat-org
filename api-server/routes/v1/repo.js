@@ -265,7 +265,7 @@ router.get('/docs/:type', function (req, res, next) {
             });
         }
 
-        if(typeof style != 'undefined' && style != 'large'){
+        if(typeof style != 'undefined' && style != 'big'){
             return res.status(422).send({ message:'Bad Parameters' });
         }
 
