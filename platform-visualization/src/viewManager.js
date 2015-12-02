@@ -40,7 +40,7 @@ function ViewManager() {
         
         var transition = 5000;
         var actions = {},
-            enter = null, exit = null, reset = null;
+            enter = null, exit = null, reset = null, zoom = null;
         
         if(window.map.views[view].enabled === true) {
         
@@ -142,6 +142,11 @@ function ViewManager() {
                         window.camera.freeView = false;
                     };
                     
+                    zoom = function() {
+                        if(window.networkViewer)
+                            window.networkViewer.setCameraTarget();
+                    };
+                    
                     break;
                 default:
                     break;
@@ -151,7 +156,8 @@ function ViewManager() {
         actions = {
             enter : enter || function(){},
             exit : exit || function(){},
-            reset : reset || function(){}
+            reset : reset || function(){},
+            zoom : zoom || function(){}
         };
         
         return actions;

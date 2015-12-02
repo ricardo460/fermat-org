@@ -46,6 +46,10 @@ function Camera(position, renderer, renderFunc) {
     
     // Public Methods
     
+    /**
+     * Enables rotation and set a bigger maxDistance
+     * @author Miguel Celedon
+     */
     this.enableFreeMode = function() {
         controls.noRotate = false;
         controls.noPan = false;
@@ -55,6 +59,10 @@ function Camera(position, renderer, renderFunc) {
         self.freeView = true;
     };
     
+    /**
+     * Disables the free mode as normal
+     * @author Miguel Celedon
+     */
     this.disableFreeMode = function() {
         controls.noRotate = true;
         controls.noPan = true;
@@ -93,6 +101,12 @@ function Camera(position, renderer, renderFunc) {
         return camera.position.clone();
     };
     
+    /**
+     * Sets the target of the camera
+     * @author Miguel Celedon
+     * @param {object} target          The new target vector
+     * @param {number} [duration=2000] The duration of the transition
+     */
     this.setTarget = function(target, duration) {
         
         duration = (duration !== undefined) ? duration : 2000;
@@ -208,7 +222,6 @@ function Camera(position, renderer, renderFunc) {
      * @method loseFocus    loses focus from target
      *
      */
-     
     this.loseFocus = function() {
         
         if ( focus != null ) {
@@ -266,6 +279,7 @@ function Camera(position, renderer, renderFunc) {
     
     /**
      * Resets the camera position
+     * @author Miguel Celedon
      * @param {Number} [duration=2000] Duration of the animation
      */
     this.resetPosition = function(duration) {
@@ -277,7 +291,7 @@ function Camera(position, renderer, renderFunc) {
         
         if(self.freeView) {
             
-            var targetView = window.viewManager.translateToSection(window.actualView, new THREE.Vector3(0, 0, 0));
+            var targetView = window.viewManager.translateToSection(window.actualView, targetView);
             
             new TWEEN.Tween( controls.target )
                     .to( { x: targetView.x, y: targetView.y, z: targetView.z }, duration )
@@ -314,6 +328,8 @@ function Camera(position, renderer, renderFunc) {
             if(self.freeView === true) {
                 self.enableFreeMode();
             }
+            
+            window.viewManager.views[window.actualView].zoom();
         }
         
         controls.update();
