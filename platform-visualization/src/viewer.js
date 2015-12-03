@@ -66,7 +66,10 @@ function init() {
     screenshotsAndroid.init();
 
     // BrowserManager
-    browserManager.init();            
+    browserManager.init();
+    
+    // magazine
+    magazine.actionSpecial();
 
     var dimensions = tileManager.dimensions;
 
