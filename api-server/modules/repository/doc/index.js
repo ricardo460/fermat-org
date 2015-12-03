@@ -76,10 +76,10 @@ exports.generateBookPdf = function(callback){
     var fermatBook = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'fermat-book.pdf');
     var dir = path.join(process.cwd(), 'cache', env, 'fermat','fermat-book');
     var book = path.join(process.cwd(), 'cache', env, 'fermat', 'fermat-book', 'fermat-book.asciidoc');
-    var regExp = 'https://raw.githubusercontent.com/bitDubai/media-kit/master';
+    
     
 
-    exec('asciidoctor-pdf -a pdf-style=book -a allow-uri-read -d book -o '+fermatBookLarge+' '+book,function(error, stdout, stderr) {
+    exec('asciidoctor-pdf -a pdf-style=bookc -a allow-uri-read -d book -o '+fermatBookLarge+' '+book,function(error, stdout, stderr) {
         if(error)  return callback('Error proccesing book big', null);  
 
         exec('asciidoctor-pdf -a allow-uri-read -d book -o '+fermatBook+' '+book,function(err, std, std) {
@@ -144,10 +144,13 @@ exports.getReadmePdf = function (style, callback) {
             name = 'readme-big.pdf';
             css = 'style-big.css';
             paperFormat = 'A4';
+            resp = { pdfFile: cacheFile };
         }
         winston.log('info', 'reading file ', readme);
+        console.log(cacheFile);
 
         fs.stat(cacheFile, function(err, stats){
+            console.log(arguments);
             var diff;
             if (stats) {
                 var thisTime = new Date();
@@ -200,11 +203,13 @@ exports.getPaperPdf = function (style, callback) {
         var regExp = 'https://github.com/bitDubai/media-kit/blob/master';
         var css = 'style.css';
         var paperFormat = 'letter';
+        var resp = { pdfFile: cacheFile  };
         if (style) {
             cacheFile = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'fermat-white-paper-big.pdf');
             name = 'fermat-white-paper-big.pdf';
             css = 'style-big.css';
             paperFormat = 'A4';
+            resp = { pdfFile: cacheFile  };
         }
         winston.log('info', 'reading file ', paper);
         fs.stat(cacheFile, function(err, stats){
@@ -224,7 +229,7 @@ exports.getPaperPdf = function (style, callback) {
                 });
             }
             else{
-                var resp = { pdfFile: cacheFile  };
+                
                 return callback(null, resp);
             }
         });
