@@ -35,7 +35,7 @@ function foo() {
   ...
 }
 ```
-If a condition or block take one line, it can be written right on the next line with proper indentation
+If a condition or block takes one line, it can be written right on the next line with proper indentation
 ```javascript
 if(condicion)
   accion();
