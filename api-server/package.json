@@ -32,6 +32,6 @@
     "winston": "^1.0.1",
     "xml2js": "^0.4.12",
     "cv2pdf": "1.0.1",
-    "html-pdf": "1.4.0"
+    "markdown-pdf": "6.0.0"
   }
 }

@@ -23,18 +23,15 @@ var cache = new Cache({
 router.get('/comps/reload', function (req, res, next) {
     'use strict';
     try {
-
-        repMod.updBook(req, function (error, result) { 
-                       
+        repMod.updBook(req, function (error, result) {
             if (error) {
                 //res.status(200).send(error);
                 winston.log('info', 'Error: ', error);
             } else {
-                repMod.loadComps(req, function (error, res) {         
+                repMod.loadComps(req, function (error, res) {
                     if (error) {
                         winston.log('info', 'Error: ', error);
                     } else {
-                        cache.clear();
                         repMod.updComps(req, function (error, result) {
                             if (error) {
                                 winston.log('info', 'Error: ', error);
@@ -45,11 +42,12 @@ router.get('/comps/reload', function (req, res, next) {
                             }
                         });
                     }
-                }); 
+                });
             }
         });
-        res.status(200).send({'message': 'Updated Database' });
-
+        res.status(200).send({
+            'message': 'Updated Database'
+        });
     } catch (err) {
         next(err);
     }
@@ -72,6 +70,14 @@ router.get('/comps', function (req, res, next) {
         if (body) {
             // we send it
             res.status(200).send(body);
+            repMod.getComps(req, function (error, result) {
+                if (error) {
+                    winston.log('info', 'Error: ', error);
+                } else {
+                    // we save it
+                    cache.setBody(req, result);
+                }
+            });
         } else {
             // we create it
             repMod.getComps(req, function (error, result) {
@@ -109,6 +115,14 @@ router.get('/devs', function (req, res, next) {
         if (body) {
             // we send it
             res.status(200).send(body);
+            repMod.getDevs(req, function (error, result) {
+                if (error) {
+                    winston.log('info', 'Error: ', error);
+                } else {
+                    // we save it
+                    cache.setBody(req, result);
+                }
+            });
         } else {
             // we create it
             repMod.getDevs(req, function (error, result) {
@@ -149,6 +163,14 @@ router.get('/procs', function (req, res, next) {
         if (body) {
             // we send it
             res.status(200).send(body);
+            repMod.getProcs(req, function (error, result) {
+                if (error) {
+                    winston.log('info', 'Error: ', error);
+                } else {
+                    // we save it
+                    cache.setBody(req, result);
+                }
+            });
         } else {
             // we create it
             repMod.getProcs(req, function (error, result) {
@@ -234,16 +256,26 @@ router.get('/docs/:type', function (req, res, next) {
     try {
 
         var type = req.param('type');
+        var style = req.query.style;
 
-        if(type !== 'book' && type !== 'readme' && type !== 'paper'){
-            return res.status(422).send({ message:'Bad Parameters' });       
+
+        if (type !== 'book' && type !== 'readme' && type !== 'paper') {
+            return res.status(422).send({
+                message: 'Bad Parameters'
+            });
         }
+
+        if(typeof style != 'undefined' && style != 'big'){
+            return res.status(422).send({ message:'Bad Parameters' });
+        }
+
+
         repMod.getDocs(req, function (error, result) {
 
             if (error) {
                 res.status(200).send(error);
             } else {
-                
+
                 res.sendfile(result.pdfFile);
             }
         });
