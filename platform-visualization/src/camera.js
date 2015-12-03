@@ -111,10 +111,10 @@ function Camera(position, renderer, renderFunc) {
         
         duration = (duration !== undefined) ? duration : 2000;
         
-        /*new TWEEN.Tween(controls.target)
+        new TWEEN.Tween(controls.target)
         .to({x : target.x, y : target.y, z : target.z}, duration)
         .onUpdate(window.render)
-        .start();*/
+        .start();
         
         controls.target.set(target.x, target.y, target.z);
     };
@@ -401,7 +401,10 @@ function Camera(position, renderer, renderFunc) {
         new TWEEN.Tween(camera.position)
         .to({x : x, y : y, z : z}, _duration)
         .easing(TWEEN.Easing.Cubic.InOut)
-        .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
+        .onUpdate(function(){
+            if(!self.freeView)
+                controls.target.set(camera.position.x, camera.position.y, camera.position.z - 1); 
+        })
         .start();
         
     };

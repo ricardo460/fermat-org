@@ -210,6 +210,8 @@ function NetworkViewer() {
      */
     function onNodeClick(clickedNode) {
         
-        
+        var nodePosition = clickedNode.position;
+        window.camera.move(nodePosition.x, nodePosition.y, nodePosition.z + 1000, 2000);
+        window.camera.setTarget(nodePosition, 1000);
     }
 }
