@@ -692,13 +692,22 @@ function onClick(e) {
         //Obtain normalized click location (-1...1)
         mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
         mouse.y = - ((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height) * 2 + 1;
+        
+        //window.alert("Clicked on (" + mouse.x + ", " + mouse.y + ")");
 
         clicked = camera.rayCast(mouse, scene.children);
 
-        if (clicked && clicked.length > 0 && clicked[0].object.userData.onClick) {
-
-            clicked[0].object.userData.onClick(clicked[0].object);
-
+        //If at least one element got clicked, process the first which is NOT a line
+        if (clicked && clicked.length > 0) {
+            
+            for(var i = 0; i < clicked.length; i++) {
+                
+                if(clicked[i].object.userData.onClick && !(clicked[i].object instanceof THREE.Line)) {
+                    
+                    clicked[i].object.userData.onClick(clicked[i].object);
+                    break;
+                }
+            }
         }
     }
 }

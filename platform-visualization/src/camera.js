@@ -291,7 +291,7 @@ function Camera(position, renderer, renderFunc) {
         
         if(self.freeView) {
             
-            var targetView = window.viewManager.translateToSection(window.actualView, targetView);
+            var targetView = window.viewManager.translateToSection(window.actualView, new THREE.Vector3(0, 0, 0));
             
             new TWEEN.Tween( controls.target )
                     .to( { x: targetView.x, y: targetView.y, z: targetView.z }, duration )
@@ -384,6 +384,19 @@ function Camera(position, renderer, renderFunc) {
         
         raycaster.setFromCamera(target, camera);
         
+        /* Debug code, draw lines representing the clicks
+        
+        var mat = new THREE.LineBasicMaterial({color : 0xaaaaaa});
+        var g = new THREE.Geometry();
+        var r = raycaster.ray;
+        var dest = new THREE.Vector3(r.origin.x + r.direction.x * MAX_DISTANCE, r.origin.y + r.direction.y * MAX_DISTANCE, r.origin.z + r.direction.z * MAX_DISTANCE);
+
+        g.vertices.push( r.origin, dest);
+
+        var line = new THREE.Line(g, mat);
+
+        scene.add(line);*/
+        
         return raycaster.intersectObjects(elements);
     };
     
@@ -403,7 +416,7 @@ function Camera(position, renderer, renderFunc) {
         .easing(TWEEN.Easing.Cubic.InOut)
         .onUpdate(function(){
             if(!self.freeView)
-                controls.target.set(camera.position.x, camera.position.y, camera.position.z - 1); 
+                controls.target.set(camera.position.x, camera.position.y, 0);
         })
         .start();
         

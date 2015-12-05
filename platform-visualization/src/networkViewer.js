@@ -44,6 +44,12 @@ function NetworkViewer() {
         
     };
     
+    this.reset = function() {
+        
+        showAdj();
+        showNodes();
+    };
+    
     /**
      * Set the camera transition to get closer to the graph
      * @author Miguel Celedon
@@ -51,9 +57,13 @@ function NetworkViewer() {
     this.configureCamera = function() {
         
         var position = window.viewManager.translateToSection('network', new THREE.Vector3(0,0,0));
-        setTimeout(function() { window.camera.move(position.x, position.y, NET_RADIOUS, 2000); }, 5000);
+        setTimeout(function() {
+            window.camera.move(position.x, position.y, NET_RADIOUS, 2000);
+        }, 5000);
         
-        setTimeout(function() { self.setCameraTarget(); window.alert("View Set."); }, 7500);
+        setTimeout(function() {
+            self.setCameraTarget();
+        }, 7500);
     };
     
     /**
@@ -90,7 +100,7 @@ function NetworkViewer() {
             window.scene.add(sprite);
         }
         
-        drawAdy();
+        createAdj();
     }
     
     /**
@@ -103,7 +113,7 @@ function NetworkViewer() {
     function createNode(nodeData, startPosition) {
         
         var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0x000000}));
-        var id = nodeData.id;
+        var id = nodeData.id.toString();
         var position = window.viewManager.translateToSection('network', startPosition);
 
         sprite.userData = {
@@ -120,11 +130,29 @@ function NetworkViewer() {
         return sprite;
     }
     
+    function showNodes() {
+        
+        for(var nodeID in nodes) {
+            nodes[nodeID].sprite.visible = true;
+        }
+    }
+    
+    function hideNodes(excludedIDs) {
+        
+        for(var nodeID in nodes) {
+            
+            if(!excludedIDs.includes(nodeID)) {
+                
+                nodes[nodeID].sprite.visible = false;
+            }
+        }
+    }
+    
     /**
-     * Draws all adyacencies between the nodes
+     * Draws all adjacencies between the nodes
      * @author Miguel Celedon
      */
-    function drawAdy() {
+    function createAdj() {
         
         for(var nodeID in nodes) {
             
@@ -145,6 +173,7 @@ function NetworkViewer() {
                     lineGeo.vertices.push(origin, dest);
                     
                     var line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color : 0x000000}));
+                    line.visible = false;
                     
                     scene.add(line);
                     nodeEdges.push({
@@ -154,6 +183,26 @@ function NetworkViewer() {
                     });
                 }
             }
+        }
+        
+        showAdj();
+    }
+    
+    function showAdj() {
+        
+        var duration = 2000;
+        
+        for(var i = 0; i < nodeEdges.length; i++) {
+            nodeEdges[i].line.visible = true;
+        }
+    }
+    
+    function hideAdj() {
+        
+        var duration = 2000;
+        
+        for(var i = 0; i < nodeEdges.length; i++) {
+            nodeEdges[i].line.visible = false;
         }
     }
     
@@ -213,5 +262,8 @@ function NetworkViewer() {
         var nodePosition = clickedNode.position;
         window.camera.move(nodePosition.x, nodePosition.y, nodePosition.z + 1000, 2000);
         window.camera.setTarget(nodePosition, 1000);
+        
+        hideAdj();
+        hideNodes([clickedNode.userData.id]);
     }
 }
