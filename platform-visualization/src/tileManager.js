@@ -3,6 +3,7 @@
  */
 function TileManager() {
 
+    var signLayer = new SignLayer();
     this.lastTargets = null;
     this.targets = {
         table: [],
@@ -298,52 +299,40 @@ function TileManager() {
     /*this.fillTable = function(list) {
         var pluginList = list.plugins,
             i, l, dependency;
-
         for (i = 0, l = list.superLayers.length; i < l; i++) {
             superLayers[list.superLayers[i].code] = {};
             superLayers[list.superLayers[i].code].name = list.superLayers[i].name;
             superLayers[list.superLayers[i].code].index = list.superLayers[i].index;
-
             if (list.superLayers[i].dependsOn && list.superLayers[i].dependsOn.length !== 0) {
                 dependency = list.superLayers[i].dependsOn.split(' ').join('').split(',');
                 superLayers[list.superLayers[i].code].dependsOn = dependency;
             }
         }
         console.dir(superLayers);
-
         for (i = 0, l = list.layers.length; i < l; i++) {
             layers[list.layers[i].name] = {};
             layers[list.layers[i].name].index = list.layers[i].index;
             layers[list.layers[i].name].super_layer = list.layers[i].super_layer;
         }
         console.dir(layers);
-
-
         for (i = 0, l = list.groups.length; i < l; i++) {
             groups[list.groups[i].code] = {};
             groups[list.groups[i].code].index = list.groups[i].index;
-
             if (list.groups[i].dependsOn && list.groups[i].dependsOn.length !== 0) {
                 dependency = list.groups[i].dependsOn.split(' ').join('').split(',');
                 groups[list.groups[i].code].dependsOn = dependency;
             }
         }
         console.dir(groups);
-
         for (i = 0, l = pluginList.length; i < l; i++) {
-
             var data = pluginList[i];
-
             var _group = data.group;
             var _layer = data.layer;
             var _name = data.name;
-
             var layerID = layers[_layer].index;
             layerID = (layerID === undefined) ? layers.size() : layerID;
-
             var groupID = (_group !== undefined) ? groups[_group].index : undefined;
             groupID = (groupID === undefined) ? groups.size() : groupID;
-
             var element = {
                 group: _group,
                 groupID: groupID,
@@ -363,7 +352,6 @@ function TileManager() {
             table.push(element);
         }
         console.dir(table);
-
         groupsQtty = groups.size();
         layersQtty = layers.size();
     };*/
@@ -837,6 +825,9 @@ function TileManager() {
         this.preComputeLayout();
         
         var layerCoordinates = [];
+        
+        var signRow = null,
+            signColumn = null;
 
         for (var i = 0; i < table.length; i++) {
 
