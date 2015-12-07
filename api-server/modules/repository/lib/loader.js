@@ -531,8 +531,8 @@ var saveManifest = function (callback) {
                             var _proc = _procs[s];
                             //platfrm, name, desc, prev, next, callback
                             procMod.insOrUpdProc(_proc.platform ? _proc.platform.trim().toUpperCase() : null,
-                                _proc.name ? _proc.name.trim().toLowerCase() : null,
-                                _proc.description ? _proc.description.trim().toLowerCase() : null,
+                                _proc.name ? _proc.name.trim() : null,
+                                _proc.description ? _proc.description.trim() : null,
                                 _proc.previous ? _proc.previous.trim().toLowerCase() : null,
                                 _proc.next ? _proc.next.trim().toLowerCase() : null,
                                 function (err_proc, res_proc) {
@@ -550,8 +550,8 @@ var saveManifest = function (callback) {
                                                     _step.layer ? _step.layer.toLowerCase() : null, //layer_name
                                                     _step.name ? _step.name.toLowerCase() : null, //comp_name
                                                     _step.type ? _step.type.toLowerCase() : null, //type
-                                                    _step.title ? _step.title.toLowerCase() : null, //title
-                                                    _step.description ? _step.description.toLowerCase() : null, //description
+                                                    _step.title ? _step.title : null, //title
+                                                    _step.description ? _step.description : null, //description
                                                     _step.id || null, //order
                                                     _step.next || [], //next
                                                     function (err_stp, res_stp) {

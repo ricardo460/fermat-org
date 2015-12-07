@@ -46,6 +46,10 @@ function Camera(position, renderer, renderFunc) {
     
     // Public Methods
     
+    /**
+     * Enables rotation and set a bigger maxDistance
+     * @author Miguel Celedon
+     */
     this.enableFreeMode = function() {
         controls.noRotate = false;
         controls.noPan = false;
@@ -55,6 +59,10 @@ function Camera(position, renderer, renderFunc) {
         self.freeView = true;
     };
     
+    /**
+     * Disables the free mode as normal
+     * @author Miguel Celedon
+     */
     this.disableFreeMode = function() {
         controls.noRotate = true;
         controls.noPan = true;
@@ -93,14 +101,20 @@ function Camera(position, renderer, renderFunc) {
         return camera.position.clone();
     };
     
+    /**
+     * Sets the target of the camera
+     * @author Miguel Celedon
+     * @param {object} target          The new target vector
+     * @param {number} [duration=2000] The duration of the transition
+     */
     this.setTarget = function(target, duration) {
         
         duration = (duration !== undefined) ? duration : 2000;
         
-        /*new TWEEN.Tween(controls.target)
+        new TWEEN.Tween(controls.target)
         .to({x : target.x, y : target.y, z : target.z}, duration)
         .onUpdate(window.render)
-        .start();*/
+        .start();
         
         controls.target.set(target.x, target.y, target.z);
     };
@@ -208,7 +222,6 @@ function Camera(position, renderer, renderFunc) {
      * @method loseFocus    loses focus from target
      *
      */
-     
     this.loseFocus = function() {
         
         if ( focus != null ) {
@@ -266,6 +279,7 @@ function Camera(position, renderer, renderFunc) {
     
     /**
      * Resets the camera position
+     * @author Miguel Celedon
      * @param {Number} [duration=2000] Duration of the animation
      */
     this.resetPosition = function(duration) {
@@ -314,6 +328,8 @@ function Camera(position, renderer, renderFunc) {
             if(self.freeView === true) {
                 self.enableFreeMode();
             }
+            
+            window.viewManager.views[window.actualView].zoom();
         }
         
         controls.update();
@@ -368,6 +384,19 @@ function Camera(position, renderer, renderFunc) {
         
         raycaster.setFromCamera(target, camera);
         
+        /* Debug code, draw lines representing the clicks
+        
+        var mat = new THREE.LineBasicMaterial({color : 0xaaaaaa});
+        var g = new THREE.Geometry();
+        var r = raycaster.ray;
+        var dest = new THREE.Vector3(r.origin.x + r.direction.x * MAX_DISTANCE, r.origin.y + r.direction.y * MAX_DISTANCE, r.origin.z + r.direction.z * MAX_DISTANCE);
+
+        g.vertices.push( r.origin, dest);
+
+        var line = new THREE.Line(g, mat);
+
+        scene.add(line);*/
+        
         return raycaster.intersectObjects(elements);
     };
     
@@ -385,7 +414,10 @@ function Camera(position, renderer, renderFunc) {
         new TWEEN.Tween(camera.position)
         .to({x : x, y : y, z : z}, _duration)
         .easing(TWEEN.Easing.Cubic.InOut)
-        .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
+        .onUpdate(function(){
+            if(!self.freeView)
+                controls.target.set(camera.position.x, camera.position.y, 0);
+        })
         .start();
         
     };

@@ -43,6 +43,7 @@
         "ScreenshotsAndroid" : true,
         "BookManager" : true,
         "Magazine" : true,
-        "NetworkViewer" : true
+        "NetworkViewer" : true,
+        "SignLayer" : true
     }
 }

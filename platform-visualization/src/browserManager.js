@@ -225,7 +225,6 @@ function BrowserManager() {
      */
    function addTextura (view, button, mesh) {
        
-
         var canvas,
             ctx,
             img = new Image(),
@@ -239,7 +238,6 @@ function BrowserManager() {
         ctx = canvas.getContext("2d");
         ctx.globalAlpha = 0.90;
 
-        img = new Image(); 
         img.src = "images/browsers_arrows/arrow-"+button+".png";
 
         img.onload = function () {

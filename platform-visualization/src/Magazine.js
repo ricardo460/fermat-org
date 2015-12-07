@@ -30,7 +30,7 @@ function Magazine() {
 				coverFrontInside : "images/magazine/readme/cover-front-inside.png",
 				coverBack : "images/magazine/readme/cover-back.png",
 				coverBackInside : "images/magazine/readme/cover-back-inside.png",
-				scale : ((WIDTH * 0.482) * 0.00114)
+				scale : ((WIDTH * 0.482) * 0.00155)
 				},
             whitepaper : { 
 				file : "books/fermat-whitepaper-big.pdf",
@@ -38,7 +38,7 @@ function Magazine() {
 				coverFrontInside : "images/magazine/whitepaper/cover-front-inside.jpg",
 				coverBack : "images/magazine/whitepaper/cover-back.jpg",
 				coverBackInside : "images/magazine/whitepaper/cover-back-inside.jpg",
-				scale : ((WIDTH * 0.482) * 0.00114)
+				scale : ((WIDTH * 0.482) * 0.00155)
 				}
 			};
 		
@@ -115,7 +115,44 @@ function Magazine() {
         DOC = null;
 		
     };
-		
+    
+    /**
+     * @author Ricardo Delgado
+     * Add the special features of the magazine.
+     */ 	
+    this.actionSpecial = function(){
+        
+        $(document).keydown(function(e){
+
+            var ESC = 27,
+                view = null;
+
+            switch (e.keyCode) {
+
+                case ESC:
+                    
+                    view = window.actualView;
+
+                    if (view === "book" || view === "readme" || view === "whitepaper"){
+
+                        if (!MAGAZINE.data().zoomIn){
+
+                            if (2 < MAGAZINE.turn('page')){ 
+
+                                MAGAZINE.turn("page", 2);
+                                MAGAZINE.turn("previous");
+                                navigationUrl("");
+                            }
+                        }
+
+                        zoomHandle(-1);
+                    }
+                break;
+            }
+        });
+            
+    };
+    
     /**
      * @author Ricardo Delgado
      * Start adding all the settings for the magazine.
@@ -313,7 +350,11 @@ function Magazine() {
         MAGAZINE.turn("addPage", element, newPage);
 
     }
-
+    
+    /**
+     * @author Ricardo Delgado
+     * Table of contents of the book is added.
+     */ 
     function addTableContent(){
 
         addTable(1);
@@ -324,10 +365,12 @@ function Magazine() {
         $('#table').remove();
 		
     }
+    
     /**
      * @author Ricardo Delgado
-     * Creates and adds an extra page magazine.
-     */  
+     * The table of contents is added to the book.
+     * @param {Numer}  apge Page number reading.
+     */ 
     function addTable(page){
 
         var canvas,
@@ -361,7 +404,12 @@ function Magazine() {
         $('#content'+page).append(addContent(page));
 
     }
-
+    
+    /**
+     * @author Ricardo Delgado
+     * Content is added to the table.
+     * @param {Numer}  apge Page number reading.
+     */ 
     function addContent(page){
 
         var i = 1,
@@ -376,7 +424,7 @@ function Magazine() {
         }
 
         for (i; i <= end; i++){
-                ul.append($('#l-'+i));
+            ul.append($('#l-'+i));
         }
 
         div.append(title);
@@ -385,7 +433,11 @@ function Magazine() {
         return div;
 
     }
-
+    
+    /**
+     * @author Ricardo Delgado
+     * Page offset is added to the journal.
+     */ 
     function pageCompensate(){
 
         if (LOAD === 'book'){
@@ -439,31 +491,7 @@ function Magazine() {
      * @author Ricardo Delgado
      * Add the special features of the magazine.
      */ 
-    function actionMagazine(cant){
-
-        $(document).keydown(function(e){
-
-            var ESC = 27;
-
-            switch (e.keyCode) {
-
-                case ESC:
-
-                    if (!MAGAZINE.data().zoomIn){
-
-                        MAGAZINE.turn("page", 2);
-                        MAGAZINE.turn("previous");
-                    }
-
-                    zoomHandle(-1);
-
-                    navigationUrl("");
-
-                break;
-
-            }
-
-        });
+    function actionMagazine(){
 
         window.Hash.on('^'+LOAD+'/page\/([0-9]*)$', {
 
@@ -495,9 +523,8 @@ function Magazine() {
                     }
                 }       
             }
-
-        }); 
-
+        });
+        
         MAGAZINE.bind("turning", function(event, page, view) {
 
             var magazine = $(this);
@@ -529,20 +556,25 @@ function Magazine() {
         ConfigZoom();
 
     }
-		
+    
+    /**
+     * @author Ricardo Delgado
+     * The product is controlled by the url.
+     * @param {Numer}  num Page number.
+     */  		
     function navigationUrl(page){
 
-        if(page === 0)
+        if (page === 0)
             page = 1;
 
         window.Hash.go(LOAD+'/page/'+page).update();
 
     }
 		
-		/**
-		 * @author Ricardo Delgado
-		 * Believes zoom settings magazine.
-		 */ 
+    /**
+     * @author Ricardo Delgado
+     * Believes zoom settings magazine.
+     */ 
     function ConfigZoom(){
 
         var flipbook = document.getElementById("flipbook-viewport");
@@ -574,12 +606,12 @@ function Magazine() {
 
         if (MAGAZINE.data().zoomIn){ 
             
-            if(delta < 0)
+            if (delta < 0)
                 zoomOut();
         }
         else{
             
-            if(delta > 0)
+            if (delta > 0)
                 zoomThis();
         }
 
@@ -595,8 +627,7 @@ function Magazine() {
         var positionShow = {x : window.innerWidth * 0.5, y : (window.innerHeight * 0.5) - 60};
         animateMagazine(element, positionShow, 2500);
 
-        MAGAZINE.transform(
-                        'scale('+1.25+', '+1.25+')');
+        MAGAZINE.transform('scale('+1.25+', '+1.25+')');
         MAGAZINE.data().zoomIn = true;
         MAGAZINE.turn('resize');
         MAGAZINE.turn('disable', true);
@@ -613,9 +644,7 @@ function Magazine() {
         var positionShow = {x : window.innerWidth * 0.5, y : (window.innerHeight * 0.5)};
         animateMagazine(element, positionShow, 2500);
 
-        MAGAZINE.transform(
-
-                        'scale('+1+', '+1+')');
+        MAGAZINE.transform('scale('+1+', '+1+')');
         MAGAZINE.data().zoomIn = false;
         MAGAZINE.turn('resize');
         MAGAZINE.turn('disable', false);

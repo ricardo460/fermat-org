@@ -1,18 +1,18 @@
 # fermat-org
 
-## Convenio de código
+## Code agreement
 
-### Sobre la nomenclatura de variables
+### About naming variables
 
-- __Nombres de variables:__ Las variables se nombrarán usando _lowerCamelCase_ y serán lo más descriptivos, cortos y concisos posible. _lowerCamelCase_ es una de las nomenclaturas más comunes en la programación y consiste en que un nombre que incluye varias palabras, se escribirá sin separación y la primera letra de cada palabra excepto la primera, va en mayúscula. Ej:
+- __Variable names:__ The variables will be named using _lowerCamelCase_ and they will be as descriptive, short and concise as possible. _lowerCamelCase_ is one of the most common classifications in programming and is a name that includes several words, it will be written without separation and the first letter of each word except the first, is capitalized. Example:
 ```javascript
-var edades_de_personas; //MAL
-var edadesdepersonas; //MAL
-var arrEdadesDePersonas; //MAL, el nombre debe ser suficientemente descriptivo para inferir su tipo
-var edadesPersonas; //BIEN
+var edades_de_personas; //BAD
+var edadesdepersonas; //BAD
+var arrEdadesDePersonas; //BAD, the name must be descriptive enough to provide its type
+var edadesPersonas; //GOOD
 ```
 
-- __Globales:__ Las variables globales al leerlas tendrán como prefijo `window.` para marcarla propiamente con intención global, las globales presentes en otros archivos de código se usarán sólo para leer o llamar, no para modificar su valor. Ej:
+- __Global:__ When reading Global variables they will be set for `window.` To check it in order it is global, the global present in other code files will be used only for reading or calling not to change its value. Example:
 ```javascript
 var global = 3;
 
@@ -20,30 +20,30 @@ function foo() {
   var local = window.global + 3;
 }
 ```
-_Evitar la creación de más variables globales lo más que se pueda_
+_Avoid creating more global variables as much as you can_
 
-- __Constantes:__ Las variables constantes se escribirán totalmente en mayúsculas y se separarán las palabras por piso (_). Ej:
+- __Constant:__ The constant variables are completely written in capital letters and the words are separated by underscore (_). Example:
 ```javascript
 var MAX_NUMEROS = 3;
 ```
 
-### Sobre signos y estilos
+### About signs and styles
 
-- __Estilos:__ Las llaves para abrir una función se escribirán en la misma línea de la firma
+- __Styles:__ The keys to open a function will be written in the same line where it was declared
 ```javascript
 function foo() {
   ...
 }
 ```
-Si una condición o bloque llevan una sola línea se puede escribir justo en la línea siguiente con la indentación correcta
+If a condition or block takes one line, it can be written right on the next line with proper indentation
 ```javascript
 if(condicion)
   accion();
   
   ...
 
-/*Si el if tiene una sola línea pero tiene else, y el else tiene varias, se dibujará con llaves, los else irán en la línea de abajo,
-algunos editores tienen problemas si el else se pone en la misma linea que donde se cierra  */
+/*If the if is a single line but has an else , and else has several, it will be drawn with keys, the else will go on the bottom line,
+some editors have trouble if the else is put on the same line where it closes  */
 if(condicion) {
   accion();
 }
@@ -52,13 +52,13 @@ else {
   masAcciones();
 }
 
-//Si en caso contrario, ambos if y else tienen una sola línea, no hay problema con dejarlos sin llaves
+//If otherwise, both if and else have a single line , there won’t be a problem to leave them without keys
 if(condicion)
   accion();
 else
   otraAccion();
 ```
-No se dejará espacio entre los paréntesis, pero sí entre signos y comas:
+No space is left between the brackets, but will leave it between signs and commas:
 ```javascript
 foo = llamada( 'hola', 30, i + 5 ); //Mal
 foo = llamada('hola',30,i+5); //Mal
@@ -66,62 +66,62 @@ foo = llamada ('hola', 30, i + 5); //Mal
 foo = llamada('hola', 30, i + 5); //Bien
 ```
 
-- __Comparaciones:__ Para comparaciones comúnes se usará la comparación con tipo `===` puesto que es la más segura y sólo es cierta si además los valores son del mismo tipo. Se permite el uso de otras comparaciones sólo cuando la variable esperada __es una referencia__ (no es un número, ni un booleano, ni una cadena) y se quiere verificar su existencia se pueden usar `variable != null` así como también `if(variable)`. Se puede hacer excepción a esta regla si y sólo si la variable esperada es una cadena y no se admite que sea vacía.
+- __Comparisons:__ for common comparison we will use `===` since it is the safest, and it is only true if the values are also the same type. The use of other comparisons is only allowed when the expected variable __is a reference__ (not a number, or a Boolean, or string) and you want to verify their existence using `variable != null` and also `if(variable)`. You can make exceptions to this rule if and only if the expected variable is a string and is not allowed to be empty.
 
-- __Valores por defecto:__ Si bien en ES6 se aplican los valores por defecto, es una especificación muy nueva y no muchos navegadores lo soportan, por lo tanto existen dos maneras de asignar valores por defecto:
+- __Default values:__ While the default settings are applied in ES6, it is a very new and not many browsers support it, so there are two ways to assign default values:
 ```javascript
 function foo(varA, varB) {
-  varA = varA || 'Sin nombre'; //Si y solo si varA no es un numero, booleano. (También se rechazan cadenas vacías)
-  varB = (varB !== undefined) ? varB : 10; //Para los demás casos (este es preferible por ser más seguro para las variables de valor)
+  varA = varA || 'Sin nombre'; //if and only if varA is not a number, boolean. (also empty strings will be rejected)
+  varB = (varB !== undefined) ? varB : 10; //for other cases (this is preferred since it’s safer for value variables)
 }
 ```
 
-### Sobre estructuras de código y objetos
+### About structures and objects 
 
-- __Atributos públicos:__ Los atributos públicos se crearán usando `this`.
-- __Métodos públicos en un objeto que puede repetirse:__ Si un objeto está diseñado a tener varias instancias en el código, los métodos no se crearán con `this`, sino que serán agregados al __prototipo__ y no debe tener métodos privados.
-- __Atributos privados:__ Los atributos privados se crearán usando `var`.
-- __Uso de atributos públicos dentro del objeto:__ Todo objeto tendrá como atributo privado una variable llamada `self` que referencie a la variable `this` para así poder acceder seguramente a los métodos del mismo objeto (porque sabemos que `this` podría no ser lo que esperamos). A continuación el esqueleto de un objeto con todo lo que podría tener:
+- __Public attributes:__ Public attributes are created using `this`.
+- __Public methods on an object that can be repeated:__ If an object is designed to have multiple instances in the code, the methods are not created with `this`, but it will be added to the __prototype__ and should not have private methods.
+- __Private Attributes:__ Private attributes are created using `var`.
+- __Using public attributes within the object:__ Any object will have a private attribute as a variable named `self` that will reference the variable `this` in order to safely access the methods of that object (because we know `this` might not be what we expect). Here’s an example of the skeleton of an object with everything it could have:
 
 ```javascript
-//En su propio archivo myClase.js
+//in its own myClase.js file
 function myClase(parametros) {
   
-  //Constantes
+  //Constant
   var CONSTANTE = 10;
   
-  //Atributos públicos
+  //Public attributes
   this.atributoPublico = null;
   
-  //Atributos privados
+  //Private attributes
   var self = this;
   var attrPrivado = 30;
   
-  //Métodos públicos (si la clase tendrá sólo una instancia
+  //Public methods (if the class will only have one instance)
   this.publico = function(params) {
     //...
   }
   
-  //Métodos privados (la misma condición anterior)
+  //Private methods (the same condition as before)
   function privada(params) {
     //...
   }
   
-  //Eventos si hay
+  //Events if there are any
   
-  //Código de initializacion
+  //Initializing code
   
 }
 
-//Métodos públicos si serán usadas multiples instancias del mismo objeto
+//Public methods if multiple instances of the same object will be used
 myClase.prototype.funcionPublica = function(params) {
   //...
 }
 ```
 
-- __Sobre bucles:__ Si existen varios bucles for en una misma función y usan la misma variable, la variable será creada como variable de la función:
+- __About loops:__ If there are several for loops in the same function and they use the same variable, the variable will be created as a variable of the function:
 ```javascript
-//Mal, redefinicion de i
+//Bad, redefiniton of i
 function foo() {
   //...
   
@@ -130,7 +130,7 @@ function foo() {
   for(var i = 0...)
 }
 
-//Bien, no hay que preocuparse
+//Good, nothing to worry about
 function foo() {
   //...
   var i;
@@ -141,9 +141,9 @@ function foo() {
 }
 ```
 
-Las funciones _callback_ no se definirán dentro de los bucles:
+The functions _callback_ are not defined within loops:
 ```javascript
-//Sabemos que esto esta mal porque al llamar el callback, i será el último valor que se le puso.
+//We know this is bad because when using callback, i will be the last value added.
 function foo() {
   //...
   
@@ -155,7 +155,7 @@ function foo() {
   }
 }
 
-//Correcto, de esta manera cargar se llamará por cada iteración del for y con sus respectivos valores
+//Correct, this way way cargar will be called for every iteration of for and with its respective values
 function foo() {
   //...
   var cargar = function(textura) {

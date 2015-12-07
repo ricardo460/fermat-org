@@ -12,6 +12,10 @@ function NetworkViewer() {
     this.nodes = nodes;
     this.nodeEdges = nodeEdges;
     
+    /**
+     * Loads the node data
+     * @author Miguel Celedon
+     */
     this.load = function() {
         
         //Ask for nodes
@@ -21,9 +25,13 @@ function NetworkViewer() {
         
         drawNodes(networkNodes);
         
-        configureCamera();
+        self.configureCamera();
     };
     
+    /**
+     * Deletes all data loaded to free memory
+     * @author Miguel Celedon
+     */
     this.unload = function() {
         
         for(var node in nodes)
@@ -36,6 +44,44 @@ function NetworkViewer() {
         
     };
     
+    this.reset = function() {
+        
+        showAdj();
+        showNodes();
+    };
+    
+    /**
+     * Set the camera transition to get closer to the graph
+     * @author Miguel Celedon
+     */
+    this.configureCamera = function() {
+        
+        var position = window.viewManager.translateToSection('network', new THREE.Vector3(0,0,0));
+        setTimeout(function() {
+            window.camera.move(position.x, position.y, NET_RADIOUS, 2000);
+        }, 5000);
+        
+        setTimeout(function() {
+            self.setCameraTarget();
+        }, 7500);
+    };
+    
+    /**
+     * Sets the camera to target the center of the network
+     * @author Miguel Celedon
+     */
+    this.setCameraTarget = function() {
+        
+        var position = window.camera.getPosition();
+        
+        window.camera.setTarget(new THREE.Vector3(position.x, position.y, -NET_RADIOUS), 1);
+    };
+    
+    /**
+     * Draws the nodes in the network
+     * @author Miguel Celedon
+     * @param {Array} networkNodes Array of nodes to draw
+     */
     function drawNodes(networkNodes) {
         
         for(var i = 0; i < networkNodes.length; i++) {
@@ -54,19 +100,26 @@ function NetworkViewer() {
             window.scene.add(sprite);
         }
         
-        drawAdy();
+        createAdj();
     }
     
+    /**
+     * Creates a sprite representing a single node
+     * @author Miguel Celedon
+     * @param   {object}        nodeData      The data of the actual node
+     * @param   {THREE.Vector3} startPosition The starting position of the node
+     * @returns {Three.Sprite}  The sprite representing the node
+     */
     function createNode(nodeData, startPosition) {
         
         var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0x000000}));
-        var id = nodeData.id;
+        var id = nodeData.id.toString();
         var position = window.viewManager.translateToSection('network', startPosition);
 
         sprite.userData = {
             id : id,
-            originPosition : position
-            //TODO: set onClick()
+            originPosition : position,
+            onClick : onNodeClick
         };
 
         sprite.position.copy(position);
@@ -77,7 +130,29 @@ function NetworkViewer() {
         return sprite;
     }
     
-    function drawAdy() {
+    function showNodes() {
+        
+        for(var nodeID in nodes) {
+            nodes[nodeID].sprite.visible = true;
+        }
+    }
+    
+    function hideNodes(excludedIDs) {
+        
+        for(var nodeID in nodes) {
+            
+            if(!excludedIDs.includes(nodeID)) {
+                
+                nodes[nodeID].sprite.visible = false;
+            }
+        }
+    }
+    
+    /**
+     * Draws all adjacencies between the nodes
+     * @author Miguel Celedon
+     */
+    function createAdj() {
         
         for(var nodeID in nodes) {
             
@@ -98,6 +173,7 @@ function NetworkViewer() {
                     lineGeo.vertices.push(origin, dest);
                     
                     var line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color : 0x000000}));
+                    line.visible = false;
                     
                     scene.add(line);
                     nodeEdges.push({
@@ -108,8 +184,35 @@ function NetworkViewer() {
                 }
             }
         }
+        
+        showAdj();
     }
     
+    function showAdj() {
+        
+        var duration = 2000;
+        
+        for(var i = 0; i < nodeEdges.length; i++) {
+            nodeEdges[i].line.visible = true;
+        }
+    }
+    
+    function hideAdj() {
+        
+        var duration = 2000;
+        
+        for(var i = 0; i < nodeEdges.length; i++) {
+            nodeEdges[i].line.visible = false;
+        }
+    }
+    
+    /**
+     * Checks if an edge already exists
+     * @author Miguel Celedon
+     * @param   {string}  from ID of one node
+     * @param   {string}  to   ID of the other node
+     * @returns {boolean} true if the edge exists, false otherwise
+     */
     function edgeExists(from, to) {
         
         for(var i = 0; i < nodeEdges; i++) {
@@ -149,11 +252,18 @@ function NetworkViewer() {
         return networkNodes;
     }
     
-    function configureCamera() {
+    /**
+     * To be executed when a nodes is clicked
+     * @author Miguel Celedon
+     * @param {object} clickedNode The clicked node
+     */
+    function onNodeClick(clickedNode) {
         
-        var position = window.viewManager.translateToSection('network', new THREE.Vector3(0,0,0));
-        setTimeout(function() {window.camera.move(position.x, position.y, NET_RADIOUS, 2000); }, 5000);
+        var nodePosition = clickedNode.position;
+        window.camera.move(nodePosition.x, nodePosition.y, nodePosition.z + 1000, 2000);
+        window.camera.setTarget(nodePosition, 1000);
         
-        setTimeout(function() {window.camera.setTarget(new THREE.Vector3(position.x, position.y, -NET_RADIOUS / 2), 1000); }, 9000);
+        hideAdj();
+        hideNodes([clickedNode.userData.id]);
     }
 }
