@@ -130,6 +130,10 @@ function NetworkViewer() {
         return sprite;
     }
     
+    /**
+     * Shows the network nodes
+     * @author Miguel Celedon
+     */
     function showNodes() {
         
         for(var nodeID in nodes) {
@@ -137,6 +141,11 @@ function NetworkViewer() {
         }
     }
     
+    /**
+     * Hide all nodes
+     * @author Miguel Celedon
+     * @param {Array} excludedIDs Array of IDs that will be kept visible
+     */
     function hideNodes(excludedIDs) {
         
         for(var nodeID in nodes) {
@@ -188,6 +197,10 @@ function NetworkViewer() {
         showAdj();
     }
     
+    /**
+     * Show the edges
+     * @author Miguel Celedon
+     */
     function showAdj() {
         
         var duration = 2000;
@@ -197,6 +210,10 @@ function NetworkViewer() {
         }
     }
     
+    /**
+     * Hides the edges
+     * @author Miguel Celedon
+     */
     function hideAdj() {
         
         var duration = 2000;
