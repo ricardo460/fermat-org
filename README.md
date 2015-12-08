@@ -2,7 +2,7 @@
 
 ## Installation Guide
 
-## Part I: Setting Up the Environment.
+### Part I: Setting Up the Environment.
 
 Overview
 
@@ -17,11 +17,11 @@ To work on Fermat-org you need the following programs:
 
 Although there are many ways to configure these tools we provide a recommended configuration work environment.
 
-### Working in Windows.
+#### Working in Windows.
 
 Most developers work on Fermat-org to use Windows client side, but to work on the server side it is necessary to use Linux.
 
-### Installing Git.
+#### Installing Git.
 
 Installing Git on Windows is fast and easy just have to download the installation package for Windows and ready.
 
@@ -36,16 +36,16 @@ $ git config --global user.email name123@example.com
 
 Alternatively I can download another application client function as Git, such SourceTree Atlassian.
 
-### Installing Xampp.
+#### Installing Xampp.
 
 Simple download the executable from their official website and install.
 
-### Installing Node.js.
+#### Installing Node.js.
 
 Go to the [official website](https://nodejs.org/en/) and download the executable file and ready.
 
 
-### Installing Gulp.js.
+#### Installing Gulp.js.
 
 Gulp is a tool that will convert several files into one js.
 
@@ -55,11 +55,11 @@ After installing the Node.js run these commands to install the gulp.js.
 npm install -g gulp
 ```
 
-### Installing Adobe Brackets.
+#### Installing Adobe Brackets.
 
 Go to the [official website](http://brackets.io/) and download the executable file and then run.
 
-### Installing JsHint.
+#### Installing JsHint.
 
 The analyzer JsHint is a JavaScript code to avoid mistakes, it is a more permissive than JSLint version, this analyzer must download it from the brackets or other if applicable.
 
@@ -80,13 +80,13 @@ In the case of brackets, open the preferences file and add the following to the 
 
 For other text editors do have to edit the file .jshintrc for ours, which is in-visualization platform.
 
-## Part II: Compilation of Fermat-org locally.
+### Part II: Compilation of Fermat-org locally.
 
-### Downloading the repository.
+#### Downloading the repository.
 
 To download repository Fermat-org, you can clone directly from Fermat on github repository or download it via a third-party program, we use usually use SourceTree, but you can use it to your liking. After this set XAMPP for the root folder is Fermat-org / platform-visualization.
 
-### Gulp running.
+#### Gulp running.
 
 Once you've downloaded the repository, you must generate the file main.js to onset of Fermat-org locally, this process is straightforward:
 
@@ -96,7 +96,7 @@ Once you've downloaded the repository, you must generate the file main.js to ons
 
 And ready, gulp runs in this window every pending changes made to files to regenerate main.js whenever any change, please note that when you start programming you repeat these steps, so that the main js this always updated with your changes.
 
-### Running Fermat-org.
+#### Running Fermat-org.
 
 - __With internet:__ Just go to the browser.
 
