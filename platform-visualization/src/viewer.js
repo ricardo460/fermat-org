@@ -15,6 +15,8 @@ var table = [],
     magazine = null,
     headerFlow = [],
     networkViewer = null,
+    signLayer = new SignLayer(),
+    developer = new Developer(),
     positionHeaderFlow = [];
 //Global constants
 var TILE_DIMENSION = {
@@ -103,7 +105,18 @@ function init() {
             }, 4000);
             
             changeView(tileManager.targets.table);
-        }    
+        }
+        if(window.actualView === "developers")
+        {   
+            var _duration = 6000;
+            camera.resetPosition(_duration);
+
+            setTimeout(function(){
+                developer.animateDeveloper();
+            }, 4000);
+
+            changeView(tileManager.targets.table);
+        }   
     });
 
     $('#legendButton').click(function() {
@@ -508,6 +521,15 @@ function onElementClickHeaderFlow(id) {
         }, 1000);
 
         browserManager.modifyButtonBack(1,'block');
+    }
+}
+
+function onElementClickDeveloper(id, objectsDevelopers){
+
+    if(camera.getFocus() == null){
+        camera.setFocusDeveloper(id, 1000, objectsDevelopers);
+        browserManager.modifyButtonBack(1,'block');
+        developer.showDeveloperTiles(id);
     }
 }
 

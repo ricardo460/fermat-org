@@ -40,7 +40,7 @@ function ViewManager() {
         
         var transition = 5000;
         var actions = {},
-            enter = null, exit = null, reset = null, zoom = null;
+            enter = null, exit = null, reset = null;
         
         if(window.map.views[view].enabled === true) {
         
@@ -64,6 +64,8 @@ function ViewManager() {
                         window.headers.transformTable(transition);
 
                         window.changeViewWorkFlows();
+
+                        developer.delete();
                     };
                     
                     exit = function() {
@@ -129,6 +131,9 @@ function ViewManager() {
                     enter = function() {
                         window.networkViewer = new NetworkViewer();
                         window.networkViewer.load();
+                        
+                        //Enable true view for when the user zooms
+                        window.camera.freeView = true;
                     };
                     
                     exit = function() {
@@ -139,19 +144,23 @@ function ViewManager() {
                         window.camera.freeView = false;
                     };
                     
-                    zoom = function() {
-                        
-                        window.camera.enableFreeMode();
-                        
-                        if(window.networkViewer)
-                            window.networkViewer.setCameraTarget();
-                    };
-                    
-                    reset = function() {
-                        if(window.networkViewer)
-                            window.networkViewer.reset();
-                    };
-                    
+                    break;
+                case 'developers':
+                    enter = function(){
+                        developer.getDeveloper();
+
+                        setTimeout(function(){
+                            developer.animateDeveloper();
+                        }, 2000);        
+                };
+
+                    reset = function(){
+                        setTimeout(function(){
+                            developer.animateDeveloper();
+                        }, 4000);
+                        changeView(tileManager.targets.table);
+                };
+
                     break;
                 default:
                     break;
@@ -161,8 +170,7 @@ function ViewManager() {
         actions = {
             enter : enter || function(){},
             exit : exit || function(){},
-            reset : reset || function(){},
-            zoom : zoom || function(){}
+            reset : reset || function(){}
         };
         
         return actions;
