@@ -41,6 +41,9 @@
         "TileManager" : true,
         "tileManager" : true,
         "ScreenshotsAndroid" : true,
-        "BookManager" : true
+        "BookManager" : true,
+        "Magazine" : true,
+        "NetworkViewer" : true,
+        "SignLayer" : true
     }
 }

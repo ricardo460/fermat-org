@@ -12,8 +12,9 @@ var table = [],
     stats = null,
     actualFlow = null,
     viewManager = null,
-    magazine = null;
+    magazine = null,
     headerFlow = [],
+    networkViewer = null,
     positionHeaderFlow = [];
 //Global constants
 var TILE_DIMENSION = {
@@ -65,7 +66,10 @@ function init() {
     screenshotsAndroid.init();
 
     // BrowserManager
-    browserManager.init();            
+    browserManager.init();
+    
+    // magazine
+    magazine.actionSpecial();
 
     var dimensions = tileManager.dimensions;
 
@@ -79,6 +83,10 @@ function init() {
     $('#backButton').click(function() {
         if (window.actualView === "table") {
             changeView(tileManager.targets.table);
+            
+            setTimeout(function(){
+                window.signLayer.transformSignLayer();
+            }, 2500);
         }
         if (window.actualView === "workflows") {
 
@@ -117,8 +125,8 @@ function init() {
 
     //Disabled Menu
     //initMenu();
-    
-    setTimeout(function() { goToView(window.location.hash.slice(1)); }, 500);
+
+    setTimeout(function() { initPage(); }, 500);
     
     /*setTimeout(function() {
         var loader = new Loader();
@@ -155,6 +163,36 @@ function goToView ( targetView ) {
     else {
         goToView(window.map.start);
     }
+}
+
+/**
+ * @author Ricardo Delgado
+ * Load the page url.
+ */
+function initPage() {
+
+	window.Hash.on('^[a-zA-Z]*$', {
+
+		yep: function(path, parts) {
+
+			var view = parts[0];
+
+            if(window.actualView !== undefined && window.actualView !== ""){ 
+
+    			if(view !== undefined && view !== ""){
+
+    				if(window.map.views[view].enabled !== undefined && window.map.views[view].enabled)
+    					goToView(view);
+    			}
+
+            }
+            else{
+                goToView(window.location.hash.slice(1));
+            }
+		}
+
+    });
+
 }
 
 function initMenu() {
@@ -570,11 +608,11 @@ function calculatePositionHeaderFLow(headerFlow) {
                 positionY = positionY + 500;
         }
         
-        for(y = 0; y < row; y++){ //filas
+        for(var y = 0; y < row; y++){ //filas
 
             var positionX = center.x + 1500;
 
-            for(m = 0; m < column; m++) { 
+            for(var m = 0; m < column; m++) { 
 
                 if(m===0)
                     positionX = positionX - 500;
@@ -582,7 +620,7 @@ function calculatePositionHeaderFLow(headerFlow) {
                     positionX = positionX - 1000;
             }
             //calculando X
-            for(x = 0; x < column; x++){  //columnas              
+            for(var x = 0; x < column; x++){  //columnas              
 
                 position = new THREE.Vector3();
 
@@ -657,7 +695,7 @@ function onClick(e) {
 
         clicked = camera.rayCast(mouse, scene.children);
 
-        if (clicked && clicked.length > 0) {
+        if (clicked && clicked.length > 0 && clicked[0].object.userData.onClick) {
 
             clicked[0].object.userData.onClick(clicked[0].object);
 
