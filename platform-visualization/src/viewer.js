@@ -107,10 +107,7 @@ function init() {
             changeView(tileManager.targets.table);
         }
         if(window.actualView === "developers")
-        {   
-            var _duration = 6000;
-            camera.resetPosition(_duration);
-
+        {
             setTimeout(function(){
                 developer.animateDeveloper();
             }, 4000);

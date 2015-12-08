@@ -44,6 +44,7 @@
         "BookManager" : true,
         "Magazine" : true,
         "NetworkViewer" : true,
-        "SignLayer" : true
+        "SignLayer" : true,
+        "Developer" : true
     }
 }
