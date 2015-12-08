@@ -1,3 +1,7 @@
+/**
+ * Responsible for drawing the p2p network
+ * @author Miguel Celedon
+ */
 function ViewManager() {
     
     var SECTION_SIZE = window.MAX_DISTANCE * 1.5;

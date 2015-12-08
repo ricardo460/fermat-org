@@ -1,16 +1,14 @@
 function NetworkViewer() {
     
     var self = this;
-    var globalScene = window.scene;
-    var p2pScene = new THREE.Scene();
     var nodes = {};
-    var nodeEdges = [];
+    var edges = [];
     
     var NET_RADIOUS = 0;
     
     //TODO: Delete me
     this.nodes = nodes;
-    this.nodeEdges = nodeEdges;
+    this.edges = edges;
     
     /**
      * Loads the node data
@@ -38,9 +36,9 @@ function NetworkViewer() {
             scene.remove(nodes[node].sprite);
         nodes = {};
         
-        for(var i = 0; i < nodeEdges.length; i++)
-            scene.remove(nodeEdges[i].line);
-        nodeEdges = [];
+        for(var i = 0; i < edges.length; i++)
+            scene.remove(edges[i].line);
+        edges = [];
         
     };
     
@@ -185,7 +183,7 @@ function NetworkViewer() {
                     line.visible = false;
                     
                     scene.add(line);
-                    nodeEdges.push({
+                    edges.push({
                         from : nodeID,
                         to : ady.id,
                         line : line
@@ -205,8 +203,8 @@ function NetworkViewer() {
         
         var duration = 2000;
         
-        for(var i = 0; i < nodeEdges.length; i++) {
-            nodeEdges[i].line.visible = true;
+        for(var i = 0; i < edges.length; i++) {
+            edges[i].line.visible = true;
         }
     }
     
@@ -218,8 +216,8 @@ function NetworkViewer() {
         
         var duration = 2000;
         
-        for(var i = 0; i < nodeEdges.length; i++) {
-            nodeEdges[i].line.visible = false;
+        for(var i = 0; i < edges.length; i++) {
+            edges[i].line.visible = false;
         }
     }
     
@@ -232,8 +230,8 @@ function NetworkViewer() {
      */
     function edgeExists(from, to) {
         
-        for(var i = 0; i < nodeEdges; i++) {
-            var edge = nodeEdges[i];
+        for(var i = 0; i < edges; i++) {
+            var edge = edges[i];
             
             if((edge.from === from && edge.to === to) || (edge.to === from && edge.from === to)) return true;
         }
@@ -276,9 +274,13 @@ function NetworkViewer() {
      */
     function onNodeClick(clickedNode) {
         
-        var nodePosition = clickedNode.position;
-        window.camera.move(nodePosition.x, nodePosition.y, nodePosition.z + 1000, 2000);
-        window.camera.setTarget(nodePosition, 1000);
+        var goalPosition = new THREE.Vector3(0, -2500, 9000);
+        goalPosition.add(clickedNode.position);
+        
+        window.camera.move(goalPosition.x, goalPosition.y, goalPosition.z, 2000);
+        
+        goalPosition.z -= 9000;
+        window.camera.setTarget(goalPosition, 1000);
         
         hideAdj();
         hideNodes([clickedNode.userData.id]);
