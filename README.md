@@ -1,3 +1,5 @@
+![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+
 # fermat-org
 
 ## Installation Guide
@@ -30,7 +32,7 @@ Installing Git on Windows is fast and easy just have to download the installatio
 After you've downloaded have to configure global variables as follows:
 
 ```bash
-$ git config  --global user.name “User Name”
+$ git config --global user.name "User Name"
 $ git config --global user.email name123@example.com
 ```
 
