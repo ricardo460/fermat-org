@@ -80,7 +80,7 @@
             "left": "",
             "section" : [-5, 1],
             "title" : "Developers",
-            "enabled" : false
+            "enabled" : true
         },
 
         "network": {
