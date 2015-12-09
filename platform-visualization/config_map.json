@@ -90,7 +90,7 @@
             "left": "home",
             "section" : [5, 0],
             "title" : "Fermat Network",
-            "enabled" : false
+            "enabled" : true
         },
 
         "workflows": {

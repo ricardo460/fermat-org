@@ -1,3 +1,7 @@
+/**
+ * Responsible for drawing the p2p network
+ * @author Miguel Celedon
+ */
 function ViewManager() {
     
     var SECTION_SIZE = window.MAX_DISTANCE * 1.5;
@@ -32,6 +36,7 @@ function ViewManager() {
      * Creates the structure of the transition functions depending of the view
      * @author Miguel Celedon
      * @lastmodifiedBy Emmanuel Colina
+     * @lastmodifiedBy Ricardo Delgado
      * @param   {String} view The name of the view to process
      * @returns {Object} An object containing all the possible functions that can be called
      */
@@ -39,7 +44,7 @@ function ViewManager() {
         
         var transition = 5000;
         var actions = {},
-            enter = null, exit = null, reset = null;
+            enter = null, exit = null, reset = null, zoom = null;
         
         if(window.map.views[view].enabled === true) {
         
@@ -51,7 +56,11 @@ function ViewManager() {
                         window.browserManager.modifyButtonLegend(1,'block');
 
                         window.tileManager.transform(window.tileManager.targets.table, 3000 + transition);
-
+                        
+                        setTimeout(function(){
+                            window.signLayer.transformSignLayer();
+                         }, 9500);
+                        
                         //Special: If coming from home, delay the animation
                         if(window.actualView === 'home')
                             transition = transition + 3000;
@@ -63,10 +72,14 @@ function ViewManager() {
                     
                     exit = function() {
                         window.tileManager.rollBack();
-                    }
+                    };
 
                     reset = function() {
                         window.tileManager.rollBack();
+
+                        setTimeout(function(){
+                            window.signLayer.transformSignLayer();
+                         }, 3000);
                     };
 
                     break;
@@ -91,7 +104,9 @@ function ViewManager() {
                 case 'readme':
                 case 'whitepaper':
                     enter = function() {
-                        window.magazine.init(view);
+                        setTimeout(function(){
+                            window.magazine.init(view);
+                        }, 2000);    
                     };
 
                     exit = function() {
@@ -112,7 +127,35 @@ function ViewManager() {
                             window.getHeaderFLow();
                         }, 1000);
                     };
-
+                    
+                    break;
+                case 'network':
+                    enter = function() {
+                        window.networkViewer = new NetworkViewer();
+                        window.networkViewer.load();
+                    };
+                    
+                    exit = function() {
+                        window.networkViewer.unload();
+                        window.networkViewer = null;
+                        
+                        window.camera.disableFreeMode();
+                        window.camera.freeView = false;
+                    };
+                    
+                    zoom = function() {
+                        
+                        window.camera.enableFreeMode();
+                        
+                        if(window.networkViewer)
+                            window.networkViewer.setCameraTarget();
+                    };
+                    
+                    reset = function() {
+                        if(window.networkViewer)
+                            window.networkViewer.reset();
+                    };
+                    
                     break;
                 default:
                     break;
@@ -122,7 +165,8 @@ function ViewManager() {
         actions = {
             enter : enter || function(){},
             exit : exit || function(){},
-            reset : reset || function(){}
+            reset : reset || function(){},
+            zoom : zoom || function(){}
         };
         
         return actions;
