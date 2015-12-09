@@ -1,11 +1,8 @@
-var NET_RADIOUS = 0;
-
 function BaseNetworkViewer() {
     
     this.nodes = {};
     this.edges = [];
-    this.self = this;
-    
+    this.NET_RADIOUS = 1000;
 }
 
 BaseNetworkViewer.prototype = {
@@ -19,7 +16,7 @@ BaseNetworkViewer.prototype = {
         //Ask for nodes
         var networkNodes = this.test_load();
 
-        NET_RADIOUS = 1000 * networkNodes.length;
+        this.NET_RADIOUS = this.NET_RADIOUS * networkNodes.length;
 
         this.drawNodes(networkNodes);
 
@@ -56,17 +53,7 @@ BaseNetworkViewer.prototype = {
      * Set the camera transition to get closer to the graph
      * @author Miguel Celedon
      */
-    configureCamera : function() {
-
-        var position = window.viewManager.translateToSection('network', new THREE.Vector3(0,0,0));
-        setTimeout(function() {
-            window.camera.move(position.x, position.y, NET_RADIOUS, 2000);
-        }, 5000);
-
-        setTimeout(function() {
-            this.setCameraTarget();
-        }, 7500);
-    },
+    configureCamera : function() {},
 
     /**
      * Sets the camera to target the center of the network
@@ -76,7 +63,7 @@ BaseNetworkViewer.prototype = {
 
         var position = window.camera.getPosition();
 
-        window.camera.setTarget(new THREE.Vector3(position.x, position.y, -NET_RADIOUS), 1);
+        window.camera.setTarget(new THREE.Vector3(position.x, position.y, -this.NET_RADIOUS), 1);
     },
 
     /**
@@ -84,24 +71,7 @@ BaseNetworkViewer.prototype = {
      * @author Miguel Celedon
      * @param {Array} networkNodes Array of nodes to draw
      */
-    drawNodes : function(networkNodes) {
-
-        for(var i = 0; i < networkNodes.length; i++) {
-
-            var position = new THREE.Vector3(
-                (Math.random() * 2 - 1) * NET_RADIOUS,
-                (Math.random() * 2 - 1) * NET_RADIOUS,
-                ((Math.random() * 2 - 1) * NET_RADIOUS) - NET_RADIOUS);
-
-            var sprite = this.createNode(networkNodes[i], position);
-
-            sprite.scale.set(500, 500, 1.0);
-
-            window.scene.add(sprite);
-        }
-
-        this.createEdges();
-    },
+    drawNodes : function(networkNodes) {},
 
     /**
      * Creates a sprite representing a single node
@@ -119,7 +89,7 @@ BaseNetworkViewer.prototype = {
         sprite.userData = {
             id : id,
             originPosition : position,
-            onClick : this.onNodeClick
+            onClick : this.onNodeClick.bind(this)
         };
 
         sprite.position.copy(position);
@@ -283,8 +253,5 @@ BaseNetworkViewer.prototype = {
 
         goalPosition.z -= 9000;
         window.camera.setTarget(goalPosition, 1000);
-
-        this.self.hideEdges();
-        this.self.hideNodes([clickedNode.userData.id]);
     }
 };
