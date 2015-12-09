@@ -1,4 +1,109 @@
+![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+
 # fermat-org
+
+## Installation Guide
+
+### Part I: Setting Up the Environment.
+
+Overview
+
+To work on Fermat-org you need the following programs:
+
+* **Git**
+* **Xampp**
+* **Node.js**
+* **Gulp**
+* **Brackets or any other text editor of your choice**
+* **Jshint**
+
+Although there are many ways to configure these tools we provide a recommended configuration work environment.
+
+#### Working in Windows.
+
+Most developers work on Fermat-org to use Windows client side, but to work on the server side it is necessary to use Linux.
+
+#### Installing Git.
+
+Installing Git on Windows is fast and easy just have to download the installation package for Windows and ready.
+
+[download](http://git-scm.com/download/win)
+
+After you've downloaded have to configure global variables as follows:
+
+```bash
+$ git config --global user.name "User Name"
+$ git config --global user.email name123@example.com
+```
+
+Alternatively I can download another application client function as Git, such SourceTree Atlassian.
+
+#### Installing Xampp.
+
+Simple download the executable from their official website and install.
+
+#### Installing Node.js.
+
+Go to the [official website](https://nodejs.org/en/) and download the executable file and ready.
+
+
+#### Installing Gulp.js.
+
+Gulp is a tool that will convert several files into one js.
+
+After installing the Node.js run these commands to install the gulp.js.
+
+```bash
+npm install -g gulp
+```
+
+#### Installing Adobe Brackets.
+
+Go to the [official website](http://brackets.io/) and download the executable file and then run.
+
+#### Installing JsHint.
+
+The analyzer JsHint is a JavaScript code to avoid mistakes, it is a more permissive than JSLint version, this analyzer must download it from the brackets or other if applicable.
+
+Go to Extensions Manager and look Jshint and install.
+
+In the case of brackets, open the preferences file and add the following to the following:
+
+```javascript
+"language": {
+        "javascript": {
+            "linting.prefer": [
+                "JSHint"
+            ],
+            "linting.usePreferredOnly": true
+        }
+    }
+```
+
+For other text editors do have to edit the file .jshintrc for ours, which is in-visualization platform.
+
+### Part II: Compilation of Fermat-org locally.
+
+#### Downloading the repository.
+
+To download repository Fermat-org, you can clone directly from Fermat on github repository or download it via a third-party program, we use usually use SourceTree, but you can use it to your liking. After this set XAMPP for the root folder is Fermat-org / platform-visualization.
+
+#### Gulp running.
+
+Once you've downloaded the repository, you must generate the file main.js to onset of Fermat-org locally, this process is straightforward:
+
+* **Open the Windows command console (Start + R).**
+* **Go for the console to the repository folder Fermat-org/platform-visualization.**
+* **Write gulp, to run.**
+
+And ready, gulp runs in this window every pending changes made to files to regenerate main.js whenever any change, please note that when you start programming you repeat these steps, so that the main js this always updated with your changes.
+
+#### Running Fermat-org.
+
+- __With internet:__ Just go to the browser.
+
+- __Without Internet:__ You must modify the Fermat-org / platform-visualization / src / file getData.js and comment on the $ .ajax des comment setTimeout and ready.
+
 
 ## Code agreement
 
