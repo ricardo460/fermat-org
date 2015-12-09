@@ -315,4 +315,24 @@ function Helper() {
         
         return point;
     };
+    
+    /**
+     * Checks whether the given vector's components are numbers
+     * @author Miguel Celedon
+     * @param   {object}  vector The instance to check
+     * @returns {boolean} True if the vector is valid, false otherwise
+     */
+    this.isValidVector = function(vector) {
+        
+        var valid = true;
+        
+        if(!vector) {
+            valid = false;
+        }
+        else if(isNaN(vector.x) || isNaN(vector.y) || isNaN(vector.z)) {
+            valid = false;
+        }
+        
+        return valid;
+    };
 }
