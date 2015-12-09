@@ -4,283 +4,287 @@ function BaseNetworkViewer() {
     
     this.nodes = {};
     this.edges = [];
+    this.self = this;
     
 }
 
-/**
- * Loads the node data
- * @author Miguel Celedon
- */
-BaseNetworkViewer.prototype.load = function() {
+BaseNetworkViewer.prototype = {
 
-    //Ask for nodes
-    var networkNodes = this.test_load();
+    /**
+     * Loads the node data
+     * @author Miguel Celedon
+     */
+    load : function() {
 
-    NET_RADIOUS = 1000 * networkNodes.length;
+        //Ask for nodes
+        var networkNodes = this.test_load();
 
-    this.drawNodes(networkNodes);
+        NET_RADIOUS = 1000 * networkNodes.length;
 
-    this.configureCamera();
-};
+        this.drawNodes(networkNodes);
 
-/**
- * Deletes all data loaded to free memory
- * @author Miguel Celedon
- */
-BaseNetworkViewer.prototype.unload = function() {
+        this.configureCamera();
+    },
 
-    for(var node in this.nodes)
-        scene.remove(this.nodes[node].sprite);
-    this.nodes = {};
+    /**
+     * Deletes all data loaded to free memory
+     * @author Miguel Celedon
+     */
+    unload : function() {
 
-    for(var i = 0; i < this.edges.length; i++)
-        scene.remove(this.edges[i].line);
-    this.edges = [];
+        for(var node in this.nodes)
+            scene.remove(this.nodes[node].sprite);
+        this.nodes = {};
 
-};
+        for(var i = 0; i < this.edges.length; i++)
+            scene.remove(this.edges[i].line);
+        this.edges = [];
 
-/**
- * Redraws everything
- * @author Miguel Celedon
- */
-BaseNetworkViewer.prototype.reset = function() {
+    },
 
-    this.showEdges();
-    this.showNodes();
-};
+    /**
+     * Redraws everything
+     * @author Miguel Celedon
+     */
+    reset : function() {
 
-/**
- * Set the camera transition to get closer to the graph
- * @author Miguel Celedon
- */
-BaseNetworkViewer.prototype.configureCamera = function() {
+        this.showEdges();
+        this.showNodes();
+    },
 
-    var position = window.viewManager.translateToSection('network', new THREE.Vector3(0,0,0));
-    setTimeout(function() {
-        window.camera.move(position.x, position.y, NET_RADIOUS, 2000);
-    }, 5000);
+    /**
+     * Set the camera transition to get closer to the graph
+     * @author Miguel Celedon
+     */
+    configureCamera : function() {
 
-    setTimeout(function() {
-        this.setCameraTarget();
-    }, 7500);
-};
+        var position = window.viewManager.translateToSection('network', new THREE.Vector3(0,0,0));
+        setTimeout(function() {
+            window.camera.move(position.x, position.y, NET_RADIOUS, 2000);
+        }, 5000);
 
-/**
- * Sets the camera to target the center of the network
- * @author Miguel Celedon
- */
-BaseNetworkViewer.prototype.setCameraTarget = function() {
+        setTimeout(function() {
+            this.setCameraTarget();
+        }, 7500);
+    },
 
-    var position = window.camera.getPosition();
+    /**
+     * Sets the camera to target the center of the network
+     * @author Miguel Celedon
+     */
+    setCameraTarget : function() {
 
-    window.camera.setTarget(new THREE.Vector3(position.x, position.y, -NET_RADIOUS), 1);
-};
+        var position = window.camera.getPosition();
 
-/**
- * Draws the nodes in the network
- * @author Miguel Celedon
- * @param {Array} networkNodes Array of nodes to draw
- */
-BaseNetworkViewer.prototype.drawNodes = function(networkNodes) {
+        window.camera.setTarget(new THREE.Vector3(position.x, position.y, -NET_RADIOUS), 1);
+    },
 
-    for(var i = 0; i < networkNodes.length; i++) {
+    /**
+     * Draws the nodes in the network
+     * @author Miguel Celedon
+     * @param {Array} networkNodes Array of nodes to draw
+     */
+    drawNodes : function(networkNodes) {
 
-        var position = new THREE.Vector3(
-            (Math.random() * 2 - 1) * NET_RADIOUS,
-            (Math.random() * 2 - 1) * NET_RADIOUS,
-            ((Math.random() * 2 - 1) * NET_RADIOUS) - NET_RADIOUS);
+        for(var i = 0; i < networkNodes.length; i++) {
 
-        var sprite = this.createNode(networkNodes[i], position);
+            var position = new THREE.Vector3(
+                (Math.random() * 2 - 1) * NET_RADIOUS,
+                (Math.random() * 2 - 1) * NET_RADIOUS,
+                ((Math.random() * 2 - 1) * NET_RADIOUS) - NET_RADIOUS);
 
-        sprite.scale.set(500, 500, 1.0);
+            var sprite = this.createNode(networkNodes[i], position);
 
-        window.scene.add(sprite);
-    }
+            sprite.scale.set(500, 500, 1.0);
 
-    this.createEdges();
-};
-
-/**
- * Creates a sprite representing a single node
- * @author Miguel Celedon
- * @param   {object}        nodeData      The data of the actual node
- * @param   {THREE.Vector3} startPosition The starting position of the node
- * @returns {Three.Sprite}  The sprite representing the node
- */
-BaseNetworkViewer.prototype.createNode = function(nodeData, startPosition) {
-
-    var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0x000000}));
-    var id = nodeData.id.toString();
-    var position = window.viewManager.translateToSection('network', startPosition);
-
-    sprite.userData = {
-        id : id,
-        originPosition : position,
-        onClick : this.onNodeClick
-    };
-
-    sprite.position.copy(position);
-
-    this.nodes[id] = nodeData;
-    this.nodes[id].sprite = sprite;
-
-    return sprite;
-};
-
-/**
- * Shows the network nodes
- * @author Miguel Celedon
- */
-BaseNetworkViewer.prototype.showNodes = function() {
-
-    for(var nodeID in this.nodes) {
-        this.nodes[nodeID].sprite.visible = true;
-    }
-};
-
-/**
- * Hide all nodes
- * @author Miguel Celedon
- * @param {Array} excludedIDs Array of IDs that will be kept visible
- */
-BaseNetworkViewer.prototype.hideNodes = function(excludedIDs) {
-
-    for(var nodeID in this.nodes) {
-
-        if(!excludedIDs.includes(nodeID)) {
-
-            this.nodes[nodeID].sprite.visible = false;
+            window.scene.add(sprite);
         }
-    }
-};
 
-/**
- * Draws all adjacencies between the nodes
- * @author Miguel Celedon
- */
-BaseNetworkViewer.prototype.createEdges = function() {
+        this.createEdges();
+    },
 
-    for(var nodeID in this.nodes) {
+    /**
+     * Creates a sprite representing a single node
+     * @author Miguel Celedon
+     * @param   {object}        nodeData      The data of the actual node
+     * @param   {THREE.Vector3} startPosition The starting position of the node
+     * @returns {Three.Sprite}  The sprite representing the node
+     */
+    createNode : function(nodeData, startPosition) {
 
-        var origin, dest;
-        var node = this.nodes[nodeID];
+        var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0x000000}));
+        var id = nodeData.id.toString();
+        var position = window.viewManager.translateToSection('network', startPosition);
 
-        origin = node.sprite.position;
-
-        for(var i = 0; i < node.this.edges.length; i++) {
-
-            var actualEdge = node.this.edges[i];
-
-            if(this.nodes.hasOwnProperty(actualEdge.id) && !this.edgeExists(nodeID, actualEdge.id)) {
-
-                dest = this.nodes[actualEdge.id].sprite.position;
-
-                var lineGeo = new THREE.Geometry();
-                lineGeo.vertices.push(origin, dest);
-
-                var line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color : 0x000000}));
-                line.visible = false;
-
-                scene.add(line);
-                this.edges.push({
-                    from : nodeID,
-                    to : actualEdge.id,
-                    line : line
-                });
-            }
-        }
-    }
-
-    this.showEdges();
-};
-
-/**
- * Show the edges
- * @author Miguel Celedon
- */
-BaseNetworkViewer.prototype.showEdges = function() {
-
-    var duration = 2000;
-
-    for(var i = 0; i < this.edges.length; i++) {
-        this.edges[i].line.visible = true;
-    }
-};
-
-/**
- * Hides the edges
- * @author Miguel Celedon
- */
-BaseNetworkViewer.prototype.hideEdges = function() {
-
-    var duration = 2000;
-
-    for(var i = 0; i < this.edges.length; i++) {
-        this.edges[i].line.visible = false;
-    }
-};
-
-/**
- * Checks if an edge alreedges exists
- * @author Miguel Celedon
- * @param   {string}  from ID of one node
- * @param   {string}  to   ID of the other node
- * @returns {boolean} true if the edge exists, false otherwise
- */
-BaseNetworkViewer.prototype.edgeExists = function(from, to) {
-
-    for(var i = 0; i < this.edges; i++) {
-        var edge = this.edges[i];
-
-        if((edge.from === from && edge.to === to) || (edge.to === from && edge.from === to)) return true;
-    }
-
-    return false;
-};
-
-BaseNetworkViewer.prototype.test_load = function() {
-
-    var networkNodes = [];
-    var NUM_NODES = 25,
-        MAX_CONNECTIONS = 10;
-
-    for(var i = 0; i < NUM_NODES; i++) {
-
-        var node = {
-            id : i,
-            edges : []
+        sprite.userData = {
+            id : id,
+            originPosition : position,
+            onClick : this.onNodeClick
         };
 
-        var connections = Math.floor(Math.random() * MAX_CONNECTIONS);
+        sprite.position.copy(position);
 
-        for(var j = 0; j < connections; j++) {
+        this.nodes[id] = nodeData;
+        this.nodes[id].sprite = sprite;
 
-            node.this.edges.push({
-                id : Math.floor(Math.random() * NUM_NODES)
-            });
+        return sprite;
+    },
+
+    /**
+     * Shows the network nodes
+     * @author Miguel Celedon
+     */
+    showNodes : function() {
+
+        for(var nodeID in this.nodes) {
+            this.nodes[nodeID].sprite.visible = true;
+        }
+    },
+
+    /**
+     * Hide all nodes
+     * @author Miguel Celedon
+     * @param {Array} excludedIDs Array of IDs that will be kept visible
+     */
+    hideNodes : function(excludedIDs) {
+
+        for(var nodeID in this.nodes) {
+
+            if(!excludedIDs.includes(nodeID)) {
+
+                this.nodes[nodeID].sprite.visible = false;
+            }
+        }
+    },
+
+    /**
+     * Draws all adjacencies between the nodes
+     * @author Miguel Celedon
+     */
+    createEdges : function() {
+
+        for(var nodeID in this.nodes) {
+
+            var origin, dest;
+            var node = this.nodes[nodeID];
+
+            origin = node.sprite.position;
+
+            for(var i = 0; i < node.edges.length; i++) {
+
+                var actualEdge = node.edges[i];
+
+                if(this.nodes.hasOwnProperty(actualEdge.id) && !this.edgeExists(nodeID, actualEdge.id)) {
+
+                    dest = this.nodes[actualEdge.id].sprite.position;
+
+                    var lineGeo = new THREE.Geometry();
+                    lineGeo.vertices.push(origin, dest);
+
+                    var line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color : 0x000000}));
+                    line.visible = false;
+
+                    scene.add(line);
+                    this.edges.push({
+                        from : nodeID,
+                        to : actualEdge.id,
+                        line : line
+                    });
+                }
+            }
         }
 
-        networkNodes.push(node);
+        this.showEdges();
+    },
+
+    /**
+     * Show the edges
+     * @author Miguel Celedon
+     */
+    showEdges : function() {
+
+        var duration = 2000;
+
+        for(var i = 0; i < this.edges.length; i++) {
+            this.edges[i].line.visible = true;
+        }
+    },
+
+    /**
+     * Hides the edges
+     * @author Miguel Celedon
+     */
+    hideEdges : function() {
+
+        var duration = 2000;
+
+        for(var i = 0; i < this.edges.length; i++) {
+            this.edges[i].line.visible = false;
+        }
+    },
+
+    /**
+     * Checks if an edge alreedges exists
+     * @author Miguel Celedon
+     * @param   {string}  from ID of one node
+     * @param   {string}  to   ID of the other node
+     * @returns {boolean} true if the edge exists, false otherwise
+     */
+    edgeExists : function(from, to) {
+
+        for(var i = 0; i < this.edges; i++) {
+            var edge = this.edges[i];
+
+            if((edge.from === from && edge.to === to) || (edge.to === from && edge.from === to)) return true;
+        }
+
+        return false;
+    },
+
+    test_load : function() {
+
+        var networkNodes = [];
+        var NUM_NODES = 25,
+            MAX_CONNECTIONS = 10;
+
+        for(var i = 0; i < NUM_NODES; i++) {
+
+            var node = {
+                id : i,
+                edges : []
+            };
+
+            var connections = Math.floor(Math.random() * MAX_CONNECTIONS);
+
+            for(var j = 0; j < connections; j++) {
+
+                node.edges.push({
+                    id : Math.floor(Math.random() * NUM_NODES)
+                });
+            }
+
+            networkNodes.push(node);
+        }
+
+        return networkNodes;
+    },
+
+    /**
+     * To be executed when a nodes is clicked
+     * @author Miguel Celedon
+     * @param {object} clickedNode The clicked node
+     */
+    onNodeClick : function(clickedNode) {
+
+        var goalPosition = new THREE.Vector3(0, -2500, 9000);
+        goalPosition.add(clickedNode.position);
+
+        window.camera.move(goalPosition.x, goalPosition.y, goalPosition.z, 2000);
+
+        goalPosition.z -= 9000;
+        window.camera.setTarget(goalPosition, 1000);
+
+        this.self.hideEdges();
+        this.self.hideNodes([clickedNode.userData.id]);
     }
-
-    return networkNodes;
-};
-
-/**
- * To be executed when a nodes is clicked
- * @author Miguel Celedon
- * @param {object} clickedNode The clicked node
- */
-BaseNetworkViewer.prototype.onNodeClick = function(clickedNode) {
-
-    var goalPosition = new THREE.Vector3(0, -2500, 9000);
-    goalPosition.add(clickedNode.position);
-
-    window.camera.move(goalPosition.x, goalPosition.y, goalPosition.z, 2000);
-
-    goalPosition.z -= 9000;
-    window.camera.setTarget(goalPosition, 1000);
-
-    this.hideEdges();
-    this.hideNodes([clickedNode.userData.id]);
 };
