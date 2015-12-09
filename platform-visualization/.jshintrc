@@ -45,6 +45,7 @@
         "Magazine" : true,
         "NetworkViewer" : true,
         "SignLayer" : true,
-        "Developer" : true
+        "ClientsViewer" : true,
+        "BaseNetworkViewer" : true
     }
 }
