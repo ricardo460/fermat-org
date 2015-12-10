@@ -159,7 +159,14 @@ function Developer (){
         texture.minFilter = THREE.NearestFilter;
         texture.magFilter = THREE.LinearFilter;
 
-		
+		var pic = {
+            src: developerLink[id],
+            alpha: 0.8
+        };
+        pic.x = 26.5;
+        pic.y = 40;
+        pic.w = 84 * 1.9;
+        pic.h = 84 * 1.9;
 
 		var background = {
 		    src: 'images/developer/background_300.png',
@@ -169,83 +176,45 @@ function Developer (){
 		    h: 120 * 2
 		};
 
-		var pic = {
-		    src: developerLink[id],
-		    alpha: 0.8
-		};
-		pic.x = 22.5;
-		pic.y = 58;
-		pic.w = 42 * 1.1;
-		pic.h = 42 * 1.1;
-
 		var ringDeveloper = {
 			
 			src: 'images/developer/icon_developer_300.png'
 		};
-		ringDeveloper.x = 0;//64 * 5;
-        ringDeveloper.y = 50;//30 * 5;
-        ringDeveloper.w = 82 * 1.1;
-        ringDeveloper.h = 61 * 1.1;
-
-        var buttonCheck = {
-        	src: 'images/developer/button_check_300.png'
-        };
-        buttonCheck.x = 159 * 2;
-        buttonCheck.y = 130;
-        buttonCheck.w = 70 * 1.1;
-        buttonCheck.h = 55 * 1.1;
-
-        var arrowDeveloper = {
-        	src: 'images/developer/arrow_developer_300.png'
-        };
-
-        arrowDeveloper.x = 172 * 2;
-        arrowDeveloper.y = 190;
-        arrowDeveloper.w = 12 * 2;
-        arrowDeveloper.h = 17 * 2;
-
-        var emailDevelopericon = {
-        	src: 'images/developer/icons_email_300.png'
-        };
-
-        emailDevelopericon.x = 35;
-        emailDevelopericon.y = 210;
-        emailDevelopericon.w = 7 * 2;
-        emailDevelopericon.h = 5 * 2;
-
-        var nickDeveloper = {
-            text: developerAuthor[id],
-            font: (5 * 2) + 'px Canaro'
-        };
-        nickDeveloper.x = 30;
-        nickDeveloper.y = 160;
-        nickDeveloper.color = "#C55A54";
+		ringDeveloper.x = 25.5;
+        ringDeveloper.y = 33.5;
+        ringDeveloper.w = 82.7 * 2.0;
+        ringDeveloper.h = 82.7 * 2.0;
 
         var nameDeveloper = {
             text: developerAuthorRealName[id],
-            font: (9 * 2) + 'px Roboto Bold'
+            font: (9 * 2.2) + 'px Roboto Bold'
         };
-        nameDeveloper.x = 30;
-        nameDeveloper.y = 180;
-        nameDeveloper.color = "#4D7361";
+        nameDeveloper.x = 250;
+        nameDeveloper.y = 90;
+        nameDeveloper.color = "#FFFFFF";
+        
+        var nickDeveloper = {
+            text: developerAuthor[id],
+            font: (5 * 2.2) + 'px Canaro'
+        };
+        nickDeveloper.x = 250;
+        nickDeveloper.y = 176;
+        nickDeveloper.color = "#00B498";
 
         var emailDeveloper = {
             text: developerAuthorEmail[id],
-            font: (5 * 2) + 'px Roboto Medium'
+            font: (5 * 2.2) + 'px Roboto Medium'
         };
-        emailDeveloper.x = 55;
-        emailDeveloper.y = 217;
-        emailDeveloper.color = "#252727";
+        emailDeveloper.x = 250;
+        emailDeveloper.y = 202;
+        emailDeveloper.color = "#E05A52";
 
 		var data = [
-		background,
 		pic,
+		background,
 		ringDeveloper,
-		buttonCheck,
-		arrowDeveloper,
-		emailDevelopericon,
-		nickDeveloper,
 		nameDeveloper,
+        nickDeveloper,
 		emailDeveloper
 		];
 
@@ -263,6 +232,7 @@ function Developer (){
      * @author Emmanuel Colina
      */
 	this.createDeveloper = function (developerLink, developerAuthor, developerAuthorRealName, developerAuthorEmail){
+
 		var mesh, texture, lastTarget;
 
 		position.target = self.setPositionDeveloper(developerLink);
@@ -292,8 +262,6 @@ function Developer (){
         	scene.add(mesh);
         	objectsDeveloper.push(mesh);
 		}
-        
-        mesh.scale.set(5, 5, 5);
 	};
 
 	/**
@@ -530,8 +498,8 @@ function Developer (){
 
         for (var i = 0; i < table.length; i++) {
             
-            if (table[i].author == objectsDeveloper[id].name) {
-                
+            if (table[i].author === objectsDeveloper[id].name && !isNaN(objects[i].position.y)){
+
                 new TWEEN.Tween(objects[i].position)
                 .to({x : (center.x + (section % 5) * window.TILE_DIMENSION.width) - 750, y : (center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height) - 250, z : 0}, 2000)
                 .easing(TWEEN.Easing.Exponential.InOut)
