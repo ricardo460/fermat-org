@@ -111,10 +111,10 @@ function Camera(position, renderer, renderFunc) {
         
         duration = (duration !== undefined) ? duration : 2000;
         
-        /*new TWEEN.Tween(controls.target)
+        new TWEEN.Tween(controls.target)
         .to({x : target.x, y : target.y, z : target.z}, duration)
         .onUpdate(window.render)
-        .start();*/
+        .start();
         
         controls.target.set(target.x, target.y, target.z);
     };
@@ -291,7 +291,7 @@ function Camera(position, renderer, renderFunc) {
         
         if(self.freeView) {
             
-            var targetView = window.viewManager.translateToSection(window.actualView, targetView);
+            var targetView = window.viewManager.translateToSection(window.actualView, new THREE.Vector3(0, 0, 0));
             
             new TWEEN.Tween( controls.target )
                     .to( { x: targetView.x, y: targetView.y, z: targetView.z }, duration )
@@ -384,6 +384,19 @@ function Camera(position, renderer, renderFunc) {
         
         raycaster.setFromCamera(target, camera);
         
+        /* Debug code, draw lines representing the clicks
+        
+        var mat = new THREE.LineBasicMaterial({color : 0xaaaaaa});
+        var g = new THREE.Geometry();
+        var r = raycaster.ray;
+        var dest = new THREE.Vector3(r.origin.x + r.direction.x * MAX_DISTANCE, r.origin.y + r.direction.y * MAX_DISTANCE, r.origin.z + r.direction.z * MAX_DISTANCE);
+
+        g.vertices.push( r.origin, dest);
+
+        var line = new THREE.Line(g, mat);
+
+        scene.add(line);*/
+        
         return raycaster.intersectObjects(elements);
     };
     
@@ -401,7 +414,10 @@ function Camera(position, renderer, renderFunc) {
         new TWEEN.Tween(camera.position)
         .to({x : x, y : y, z : z}, _duration)
         .easing(TWEEN.Easing.Cubic.InOut)
-        .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
+        .onUpdate(function(){
+            if(!self.freeView)
+                controls.target.set(camera.position.x, camera.position.y, 0);
+        })
         .start();
         
     };

@@ -1,3 +1,7 @@
+/**
+ * Responsible for drawing the p2p network
+ * @author Miguel Celedon
+ */
 function ViewManager() {
     
     var SECTION_SIZE = window.MAX_DISTANCE * 1.5;
@@ -129,9 +133,6 @@ function ViewManager() {
                     enter = function() {
                         window.networkViewer = new NetworkViewer();
                         window.networkViewer.load();
-                        
-                        //Enable true view for when the user zooms
-                        window.camera.freeView = true;
                     };
                     
                     exit = function() {
@@ -143,8 +144,16 @@ function ViewManager() {
                     };
                     
                     zoom = function() {
+                        
+                        window.camera.enableFreeMode();
+                        
                         if(window.networkViewer)
                             window.networkViewer.setCameraTarget();
+                    };
+                    
+                    reset = function() {
+                        if(window.networkViewer)
+                            window.networkViewer.reset();
                     };
                     
                     break;
