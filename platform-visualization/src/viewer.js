@@ -92,17 +92,9 @@ function init() {
         }
         if (window.actualView === "workflows") {
 
-            var duration = 6000;
+            changeViewWorkFlows();
 
-            camera.resetPosition(duration);
-
-            setTimeout(function() {
-
-                changeViewWorkFlows();
-
-                getHeaderFLow();
-
-            }, 4000);
+            getHeaderFLow();
             
             changeView(tileManager.targets.table);
         }

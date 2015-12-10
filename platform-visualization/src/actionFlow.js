@@ -285,11 +285,12 @@ function ActionFlow(flow) {
         var moveAndDelete = function(id) {
             
             var target = positions.origin[id];
+            var object = objects[id];
             
-            new TWEEN.Tween(objects[id].position)
+            new TWEEN.Tween(object.position)
                 .to({x : target.x, y : target.y, z : target.z}, 6000)
                 .easing(TWEEN.Easing.Cubic.InOut)
-                .onComplete(function() { window.scene.remove(objects[id]); })
+                .onComplete(function() { window.scene.remove(object); })
                 .start();
         };
         
