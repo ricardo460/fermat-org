@@ -150,8 +150,6 @@ function Camera(position, renderer, renderFunc) {
     };
 
     this.setFocusScreenshots = function( id, duration ) {
-        
-        TWEEN.removeAll();
 
         focus = parseInt(id); 
 
