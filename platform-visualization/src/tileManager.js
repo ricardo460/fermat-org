@@ -878,19 +878,19 @@ function TileManager() {
             this.targets.table.push(object);
 
             if(i === 0 ){ //entra a la primera
-                signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer);
+                window.signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer);
                 signRow = table[i].layerID;
                 signColumn = table[i].groupID;
             }
 
             if(table[i].layerID !== signRow && table[i].groupID === signColumn && layers[table[i].layer].super_layer === false){ // solo cambio de filas
-                signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer);
+                window.signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer);
                 signRow = table[i].layerID;
                 signColumn = table[i].groupID;
             }
 
             if(signColumn !== table[i].groupID && layers[table[i].layer].super_layer === false){ //cambio de columna
-                signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer);
+                window.signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer);
                 signRow = table[i].layerID;
                 signColumn = table[i].groupID;
             }
@@ -958,7 +958,7 @@ function TileManager() {
             .start();
         
         window.screenshotsAndroid.hide();
-        signLayer.letAloneSignLayer();
+        window.signLayer.letAloneSignLayer();
     };
 
     //Private methods
