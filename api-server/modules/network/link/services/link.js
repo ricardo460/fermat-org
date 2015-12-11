@@ -125,15 +125,15 @@ exports.updateLinkById = function (_id, set, callback) {
 };
 
 /**
- * [delAllLInks description]
+ * [delAllLinks description]
  *
- * @method delAllLInks
+ * @method delAllLinks
  *
  * @param  {Function}  callback [description]
  *
  * @return {[type]}    [description]
  */
-exports.delAllLInks = function (callback) {
+exports.delAllLinks = function (callback) {
     'use strict';
     linkDao.delAllSchemas(function (err, link) {
         callback(err, link);
