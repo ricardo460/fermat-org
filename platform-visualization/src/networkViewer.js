@@ -9,6 +9,13 @@ function NetworkViewer() {
 NetworkViewer.prototype = Object.create(BaseNetworkViewer.prototype);
 NetworkViewer.prototype.constructor = NetworkViewer;
 
+NetworkViewer.prototype.load = function() {
+    
+    BaseNetworkViewer.prototype.load.call(this);
+    
+    this.configureCamera();
+};
+
 /**
  * To be executed when a nodes is clicked
  * @author Miguel Celedon
@@ -22,7 +29,7 @@ NetworkViewer.prototype.onNodeClick = function(clickedNode) {
     this.hideNodes([clickedNode.userData.id]);
     
     this.childNetwork = new ClientsViewer(clickedNode);
-    //this.childNetwork.load();
+    this.childNetwork.load();
 };
 
 /**
@@ -38,10 +45,14 @@ NetworkViewer.prototype.drawNodes = function(networkNodes) {
             (Math.random() * 2 - 1) * this.NET_RADIOUS,
             (Math.random() * 2 - 1) * this.NET_RADIOUS,
             ((Math.random() * 2 - 1) * this.NET_RADIOUS) - this.NET_RADIOUS);
+        
+        position = window.viewManager.translateToSection('network', position);
 
         var sprite = this.createNode(networkNodes[i], position);
 
         sprite.scale.set(500, 500, 1.0);
+        
+        window.console.log("Sprite Z position: " + position.z);
 
         window.scene.add(sprite);
     }
@@ -92,4 +103,11 @@ NetworkViewer.prototype.test_load = function() {
     }
 
     return networkNodes;
+};
+
+NetworkViewer.prototype.reset = function() {
+    
+    BaseNetworkViewer.prototype.reset.call(this);
+    
+    if(this.childNetwork) this.childNetwork.unload();
 };
