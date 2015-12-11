@@ -15,6 +15,8 @@ var table = [],
     magazine = null,
     headerFlow = [],
     networkViewer = null,
+    signLayer = new SignLayer(),
+    developer = new Developer(),
     positionHeaderFlow = [];
 //Global constants
 var TILE_DIMENSION = {
@@ -90,20 +92,20 @@ function init() {
         }
         if (window.actualView === "workflows") {
 
-            var duration = 6000;
+            changeViewWorkFlows();
 
-            camera.resetPosition(duration);
-
-            setTimeout(function() {
-
-                changeViewWorkFlows();
-
-                getHeaderFLow();
-
-            }, 4000);
+            getHeaderFLow();
             
             changeView(tileManager.targets.table);
-        }    
+        }
+        if(window.actualView === "developers")
+        {
+            setTimeout(function(){
+                developer.animateDeveloper();
+            }, 4000);
+
+            changeView(tileManager.targets.table);
+        }   
     });
 
     $('#legendButton').click(function() {
@@ -461,7 +463,7 @@ function onElementClick(id) {
         helper.show(button, 1000);
         
         $.ajax({
-            url: 'http://52.11.156.16:3000/repo/procs?platform=' + (element.group || element.superLayer) + '&layer=' + element.layer + '&component=' + element.name,
+            url: 'http://52.35.117.6:3000/repo/procs?platform=' + (element.group || element.superLayer) + '&layer=' + element.layer + '&component=' + element.name,
             method: "GET"
         }).success(
             function(processes) {
@@ -508,6 +510,15 @@ function onElementClickHeaderFlow(id) {
         }, 1000);
 
         browserManager.modifyButtonBack(1,'block');
+    }
+}
+
+function onElementClickDeveloper(id, objectsDevelopers){
+
+    if(camera.getFocus() == null){
+        camera.setFocusDeveloper(id, 1000, objectsDevelopers);
+        browserManager.modifyButtonBack(1,'block');
+        developer.showDeveloperTiles(id);
     }
 }
 
@@ -663,7 +674,7 @@ function calculatePositionHeaderFLow(headerFlow) {
 function getHeaderFLow() {
 
     $.ajax({
-        url: 'http://52.11.156.16:3000/v1/repo/procs/',
+        url: 'http://52.35.117.6:3000/v1/repo/procs/',
         method: "GET"
     }).success(
         function(processes) {
@@ -692,13 +703,22 @@ function onClick(e) {
         //Obtain normalized click location (-1...1)
         mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
         mouse.y = - ((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height) * 2 + 1;
+        
+        //window.alert("Clicked on (" + mouse.x + ", " + mouse.y + ")");
 
         clicked = camera.rayCast(mouse, scene.children);
 
-        if (clicked && clicked.length > 0 && clicked[0].object.userData.onClick) {
-
-            clicked[0].object.userData.onClick(clicked[0].object);
-
+        //If at least one element got clicked, process the first which is NOT a line
+        if (clicked && clicked.length > 0) {
+            
+            for(var i = 0; i < clicked.length; i++) {
+                
+                if(clicked[i].object.userData.onClick && !(clicked[i].object instanceof THREE.Line)) {
+                    
+                    clicked[i].object.userData.onClick(clicked[i].object);
+                    break;
+                }
+            }
         }
     }
 }

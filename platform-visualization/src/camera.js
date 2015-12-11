@@ -46,10 +46,6 @@ function Camera(position, renderer, renderFunc) {
     
     // Public Methods
     
-    /**
-     * Enables rotation and set a bigger maxDistance
-     * @author Miguel Celedon
-     */
     this.enableFreeMode = function() {
         controls.noRotate = false;
         controls.noPan = false;
@@ -59,10 +55,6 @@ function Camera(position, renderer, renderFunc) {
         self.freeView = true;
     };
     
-    /**
-     * Disables the free mode as normal
-     * @author Miguel Celedon
-     */
     this.disableFreeMode = function() {
         controls.noRotate = true;
         controls.noPan = true;
@@ -101,12 +93,6 @@ function Camera(position, renderer, renderFunc) {
         return camera.position.clone();
     };
     
-    /**
-     * Sets the target of the camera
-     * @author Miguel Celedon
-     * @param {object} target          The new target vector
-     * @param {number} [duration=2000] The duration of the transition
-     */
     this.setTarget = function(target, duration) {
         
         duration = (duration !== undefined) ? duration : 2000;
@@ -164,8 +150,6 @@ function Camera(position, renderer, renderFunc) {
     };
 
     this.setFocusScreenshots = function( id, duration ) {
-        
-        TWEEN.removeAll();
 
         focus = parseInt(id); 
 
@@ -217,11 +201,40 @@ function Camera(position, renderer, renderFunc) {
             .start();
     };
 
+    this.setFocusDeveloper = function(id, duration, objectsDevelopers) {
+
+        var POSITION_Z = 300;
+        var POSITION_Y = -50;
+        var POSITION_X = -50;
+
+        focus = parseInt(id);
+
+
+        for (var i = 0; i < objectsDevelopers.length ; i++) {
+            if(id !== i)
+                developer.letAloneDeveloper(objectsDevelopers[i]);
+        }
+
+        self.render(renderer, scene);
+
+        var vec = new THREE.Vector4(POSITION_X, POSITION_Y, POSITION_Z, 1);
+        var target = objectsDevelopers[id];
+
+        vec.applyMatrix4( target.matrix );
+
+        new TWEEN.Tween( camera.position )
+            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration * 2 )
+            .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
+            .onComplete(render)
+            .start();
+    };
+
     /**
      *
      * @method loseFocus    loses focus from target
      *
      */
+     
     this.loseFocus = function() {
         
         if ( focus != null ) {
@@ -279,7 +292,6 @@ function Camera(position, renderer, renderFunc) {
     
     /**
      * Resets the camera position
-     * @author Miguel Celedon
      * @param {Number} [duration=2000] Duration of the animation
      */
     this.resetPosition = function(duration) {
@@ -291,7 +303,7 @@ function Camera(position, renderer, renderFunc) {
         
         if(self.freeView) {
             
-            var targetView = window.viewManager.translateToSection(window.actualView, targetView);
+            var targetView = window.viewManager.translateToSection(window.actualView, new THREE.Vector3(0, 0, 0));
             
             new TWEEN.Tween( controls.target )
                     .to( { x: targetView.x, y: targetView.y, z: targetView.z }, duration )
@@ -328,8 +340,6 @@ function Camera(position, renderer, renderFunc) {
             if(self.freeView === true) {
                 self.enableFreeMode();
             }
-            
-            window.viewManager.views[window.actualView].zoom();
         }
         
         controls.update();
@@ -398,11 +408,25 @@ function Camera(position, renderer, renderFunc) {
         
         var _duration = duration || 2000;
         
-        new TWEEN.Tween(camera.position)
-        .to({x : x, y : y, z : z}, _duration)
-        .easing(TWEEN.Easing.Cubic.InOut)
-        .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
-        .start();
+        if(window.helper.isValidVector({x : x, y : y, z : z})) {
+            
+            new TWEEN.Tween(camera.position)
+            .to({x : x, y : y, z : z}, _duration)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .onUpdate(function(){
+                if(!self.freeView)
+                    controls.target.set(camera.position.x, camera.position.y, 0);
+            })
+            .start();
+            
+            new TWEEN.Tween(camera.up)
+            .to({x : 0, y : 1, z : 0}, _duration)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .start();
+        }
+        else {
+            window.alert("Error: this is not a valid vector (" + x + ", " + y + ", " + z + ")");
+        }
         
     };
     

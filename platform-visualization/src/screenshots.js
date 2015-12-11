@@ -4,402 +4,565 @@
  */
 function ScreenshotsAndroid() {
 
-    var action = { state : false, mesh : null };
+	var action = { state : false, mesh : null };
 
-    this.objects = {
-            mesh : [],
-            target : [],
-            texture : []
-        };
+	this.objects = {
+			mesh : [],
+			target : [],
+			texture : []
+		};
 
-    var self = this,
-        POSITION_X = 231;
-    
-    var onClick = function (target) {
-        change(target.userData.id);
-    };
+	var self = this,
+		POSITION_X = 231,
+		CONTROL = {},
+		SCREENSHOTS = {
 
-    /**
-    * @author Ricardo Delgado
-    * Initialization screenshots.
-    */
-    this.init = function () {
+			publisher: {
+				name:"publisher",
 
-        addWallet('publisher');
-        addWallet('factory');
-        addWallet('store');
+				screenshots:{ 
+					Screenshots_1: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/publisher_1.png",
+					Screenshots_2: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/publisher_2.png",
+					Screenshots_3: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/publisher_3.png",
+					Screenshots_4: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/publisher_4.png",
+					Screenshots_5: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/publisher_5.png",
+					Screenshots_6: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/publisher_6.png"
+				},
 
+				direction: {
+					platform: 2,
+					position:1
+				}
+			},
 
-        addMesh (window.tileManager.targets.table[tileManager.elementsByGroup[2][0]].position.x, 'factory', false); 
-        addMesh (window.tileManager.targets.table[tileManager.elementsByGroup[2][1]].position.x, 'publisher', false);
-        addMesh (window.tileManager.targets.table[tileManager.elementsByGroup[2][2]].position.x, 'store', false);
-        // Plano donde se muestra el cuarto capture no tiene por qué visualizarse.
-        // El false cuando tiene una posicion definida y true cuando no lo tiene.
-        // Eliminar cuando crezca la cantidad de las fichitas a cuatro (4)!!!  
-        addMesh (Math.random() * 80000 , 'store', true);
+			factory: {
+				name:"factory",
 
-    };
+				screenshots:{ 
+					Screenshots_1: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/wallet_factory_1.png",
+					Screenshots_2: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/wallet_factory_2.png",
+					Screenshots_3: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/wallet_factory_3.png",
+					Screenshots_4: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/wallet_factory_4.png",
+					Screenshots_5: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/wallet_factory_5.png"
+				},
 
-    /**
-    * @author Ricardo Delgado
-    * Each drawing screenshots of wallet.
-    * @param {String}  wallet   Wallet draw. 
-    */
-    function addWallet (wallet) {
+				direction: {
+					platform: 2,
+					position:0
+				}			
+			},
 
-     for (var i = 1; i <= 4; i++) {
+			store: {
+				name:"store",
 
-          addTexture (wallet, i);
-     }
+				screenshots:{
+					Screenshots_1: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/wallet_store_1.png",
+					Screenshots_2: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/wallet_store_2.png",
+					Screenshots_3: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/wallet_store_3.png",
+					Screenshots_4: "https://raw.githubusercontent.com/bitDubai/fermat/master/_others/proto/wallet_store_4.png"
+				},
 
-    }
+				direction: {
+					platform: 2,
+					position:2
+				}			
+			}
 
-    /**
-    * @author Ricardo Delgado
-    * Search for a wallet in specific in the variable self.objects.texture.
-    * @param {String}  wallet   Group wallet to find.
-    * @param {Number}    id     Wallet identifier. 
-    */
-    function searchWallet (wallet, id) {
+		};
 
-     var i = 0;
+	var onClick = function (target) {
+		change(target.userData.id);
+	};
 
-     while( self.objects.texture[i].wallet != wallet || self.objects.texture[i].id != id ) {
+	/**
+	* @author Ricardo Delgado
+	* Initialization screenshots.
+	*/
+	this.init = function () {
 
-             i = i + 1 ;
+		var cant = 0,
+			lost = "";
 
-       }  
+		for (var i in SCREENSHOTS){
 
-     return self.objects.texture[i].image;
+			var name = SCREENSHOTS[i].name,
+				platform = SCREENSHOTS[i].direction.platform,
+				position = SCREENSHOTS[i].direction.position;
 
-    }
+			CONTROL[name] = {};
 
-    /**
-    * @author Ricardo Delgado
-    * The plans necessary for the wallet are added, each level is for a group of wallet.
-    * @param {String}  _position    End position of the plane in the x axis.
-    * @param {String}    wallet     Wallet group to which it belongs.
-    */   
-    function addMesh (_position, wallet, state) {
+			addWallet(name);
 
-      var id = self.objects.mesh.length,
-          px = Math.random() * 80000 - 40000,
-          py = Math.random() * 80000 - 40000,
-          pz = 80000 * 2,
-          rx = Math.random() * 180,
-          ry = Math.random() * 180,
-          rz = Math.random() * 180,
-          z = 0,
-          _texture = searchWallet ( wallet, 1 );
+			addMesh(calculatePositionScreenshot(platform, position), name, true); 
 
-          if (state) z = pz;
+			lost = name;
 
-      var mesh = new THREE.Mesh(
-                 new THREE.PlaneGeometry( 50, 80 ),
-                 new THREE.MeshBasicMaterial( { map:_texture, side: THREE.FrontSide, transparent: true } )
-                 );
+			cant++;	
+		}
 
-      mesh.material.needsUpdate = true;
+		if (cant < 4){
 
-      mesh.userData = {
-          id : id,
-          wallet : wallet,
-          onClick : onClick
-      };
+			for (cant; cant <= 4; cant++)
+				addMesh(Math.random() * 80000 , lost, false);
+		}
 
-      mesh.material.opacity = 1;
+	};
 
-      mesh.scale.set( 4, 4, 4 );
+	function calculatePositionScreenshot(platform, position){
 
-      var target = { x : _position, y : window.tileManager.dimensions.layerPositions[3] + 240, z : z,
-                     px : px, py : py, pz : pz,
-                     rx : rx, ry : ry, rz : rz };
+		var _position = window.tileManager.targets.table[tileManager.elementsByGroup[platform][position]].position.x;
+		
+		return _position;
+	}
 
-      mesh.position.set( px, py, pz );
-      mesh.rotation.set( rx, ry, rz );
+	/**
+	* @author Ricardo Delgado
+	* Each drawing screenshots of wallet.
+	* @param {String}  wallet   Wallet draw. 
+	*/
+	function addWallet(wallet) {
 
-      window.scene.add(mesh);
+		var cant = 0,
+			total = 4;
 
-      self.objects.target.push(target);
+		for (var c in SCREENSHOTS[wallet].screenshots)
+			cant++;
 
-      self.objects.mesh.push(mesh);
+		if (cant <= 4)
+			total = cant;
 
-    }
+		for (var i = 1; i <= total; i++) {
 
-    /**
-    * @author Ricardo Delgado
-    * Wallet drawn and added required.
-    * @param {String}    wallet    Wallet draw.
-    * @param {String}      i       Group identifier wallet.
-    */ 
-    function addTexture (wallet, i) {
+			addTexture(wallet, i);
+		}
 
-      var _texture,
-          image;
+	}
 
-      image = new THREE.ImageUtils.loadTexture("images/screenshots_android/wallet_"+wallet+"_"+i+".png");
-      image.needsUpdate = true;  
-      image.minFilter = THREE.NearestFilter;
+	/**
+	* @author Ricardo Delgado
+	* Search for a wallet in specific in the variable self.objects.texture.
+	* @param {String}  wallet   Group wallet to find.
+	* @param {Number}    id     Wallet identifier. 
+	*/
+	function searchWallet (wallet, id) {
 
-      _texture = { id : i, wallet : wallet, image : image };
+		var i = 0;
 
-      self.objects.texture.push(_texture);
+		while( self.objects.texture[i].wallet != wallet || self.objects.texture[i].id != id ) {
 
-    }
+			i = i + 1 ;
+		}  
 
-    /**
-    * @author Ricardo Delgado
-    * Wallet hidden from view.
-    */ 
-    this.hide = function () {
+		return self.objects.texture[i].image;
 
-      var ignore;
+	}
 
-      if (action.state) ignore = action.mesh;
+	/**
+	* @author Ricardo Delgado
+	* The plans necessary for the wallet are added, each level is for a group of wallet.
+	* @param {String}  _position    End position of the plane in the x axis.
+	* @param {String}    wallet     Wallet group to which it belongs.
+	*/   
+	function addMesh (_position, wallet, state) {
 
-      for(var i = 0; i < self.objects.mesh.length; i++) { 
+		var id = self.objects.mesh.length,
+			px = Math.random() * 80000 - 40000,
+			py = Math.random() * 80000 - 40000,
+			pz = 80000 * 2,
+			rx = Math.random() * 180,
+			ry = Math.random() * 180,
+			rz = Math.random() * 180,
+			z = 0,
+			_texture = null;
 
-          if (i != ignore)  
+        if (state){ 
+            _texture = searchWallet ( wallet, 1 );
+        }
+        else{ 
+            z = pz;
+        }
+			
+		var mesh = new THREE.Mesh(
+					new THREE.PlaneGeometry( 50, 80 ),
+					new THREE.MeshBasicMaterial( { map:_texture, side: THREE.FrontSide, transparent: true } )
+					);
 
-          animate(self.objects.mesh[i], self.objects.target[i], false, 1500);
+		mesh.material.needsUpdate = true;
 
-      }
+		mesh.userData = {
+			id : id,
+			wallet : wallet,
+			onClick : onClick
+		};
 
-    }; 
+		mesh.material.opacity = 1;
 
-    /**
-    * @author Ricardo Delgado
-    * Show wallet sight.
-    */ 
-    this.show = function () {
+		mesh.scale.set( 4, 4, 4 );
 
+		var target = { x : _position, y : window.tileManager.dimensions.layerPositions[3] + 240, z : z,
+					   px : px, py : py, pz : pz,
+					   rx : rx, ry : ry, rz : rz };
+
+		mesh.position.set( px, py, pz );
+		mesh.rotation.set( rx, ry, rz );
+
+		window.scene.add(mesh);
+
+		self.objects.target.push(target);
+
+		self.objects.mesh.push(mesh);
+
+	}
+
+	/**
+	* @author Ricardo Delgado
+	* Wallet drawn and added required.
+	* @param {String}    wallet    Wallet draw.
+	* @param {String}      i       Group identifier wallet.
+	*/ 
+	function addTexture (wallet, i) {
+
+		var _texture,
+			canvas,
+			ctx,
+			image;
+
+		canvas = document.createElement('canvas');
+		canvas.width  = 260;
+		canvas.height = 480;
+
+		ctx = canvas.getContext("2d");
+
+		drawPicture(wallet, ctx);
+
+		image = new THREE.Texture(canvas);
+		image.needsUpdate = true;  
+		image.minFilter = THREE.NearestFilter;
+
+		_texture = { id : i, wallet : wallet, image : image };
+
+		self.objects.texture.push(_texture);
+
+	}
+
+	function drawPicture(wallet, ctx){
+
+		var img = new Image(),
+			cant = 0,
+			place;
+
+		for (var i in SCREENSHOTS[wallet].screenshots)
+			cant++;
+
+		place = Math.floor(Math.random()* cant + 1);
+
+		if (CONTROL[wallet]["picture"+place] === undefined){
+
+			CONTROL[wallet]["picture"+place] = place;
+
+			img.crossOrigin = "anonymous";
+
+			img.src = SCREENSHOTS[wallet].screenshots['Screenshots_'+place];
+
+			img.onload = function () {
+
+				ctx.drawImage(img, 0, 0);
+
+			};
+		}
+		else{
+			
+			drawPicture(wallet, ctx);
+		}
+
+	}
+
+	/**
+	* @author Ricardo Delgado
+	* Wallet hidden from view.
+	*/ 
+	this.hide = function () {
+
+		var ignore;
+
+		if (action.state) ignore = action.mesh;
+
+		for(var i = 0; i < self.objects.mesh.length; i++) { 
+
+			if (i != ignore)  
+				animate(self.objects.mesh[i], self.objects.target[i], false, 1500);
+
+		}
+
+	}; 
+
+	/**
+	* @author Ricardo Delgado
+	* Show wallet sight.
+	*/ 
+	this.show = function () {
 
         if (action.state) {
 
-            resetTexture(action.mesh);
-        }
-        else {
-            for (var i = 0; i < self.objects.mesh.length; i++) {
+			resetTexture(action.mesh);
+		}
+		else {
+			
+			for (var i = 0; i < self.objects.mesh.length; i++) {
 
-                animate(self.objects.mesh[i], self.objects.target[i], true, 2000);
-            }
-            
-            new TWEEN.Tween(this)
-            .to({}, self.objects.mesh.length * 2 * 2000)
-            .onUpdate(window.render)
-            .start();
-        }
-    };
+				animate(self.objects.mesh[i], self.objects.target[i], true, 2000);
+			}
+			
+		}
+	};
 
-    /**
-    * @author Ricardo Delgado
-    * Wallet focus and draw the other planes in the same group wallet.
-    * @param {Number}    id    Wallet identifier focus.
-    */ 
-    function change (id) {
+	/**
+	* @author Ricardo Delgado
+	* Wallet focus and draw the other planes in the same group wallet.
+	* @param {Number}    id    Wallet identifier focus.
+	*/ 
+	function change (id) {
 
-     if (window.camera.getFocus() === null) {
+		if (window.camera.getFocus() === null) {
 
-         action.state = true; action.mesh = id;
+			action.state = true; action.mesh = id;
 
-         window.camera.setFocusScreenshots(id, 2000);
+			window.camera.setFocusScreenshots(id, 2000);
+			
+			window.browserManager.modifyButtonBack(1, 'block');
 
-         window.browserManager.modifyButtonBack(1, 'block');
+			positionFocus(id);
 
-         positionFocus(id);
+		}
 
-         window.camera.disable();
+	}
 
-      }
+	function countControl(wallet){
 
-    }
+		var sum = 0;
+		
+		for (var i in CONTROL[wallet])
+			sum++;
 
-    /**
-    * @author Ricardo Delgado
-    * Accommodate the wallet.
-    * @param {Number}    id    Identifier reference wallet.
-    */ 
-    function positionFocus (id) {
+		return sum;
+	}
 
-     var ignore = id,
-         mesh = self.objects.mesh[id],
-         wallet = mesh.userData.wallet,
-         target,
-         x = POSITION_X;
+	/**
+	* @author Ricardo Delgado
+	* Accommodate the wallet.
+	* @param {Number}    id    Identifier reference wallet.
+	*/ 
+	function positionFocus (id) {
 
-     target = { x: mesh.position.x - (x / 2), y : mesh.position.y, z : mesh.position.z };
+		var ignore = id,
+			mesh = self.objects.mesh[id],
+			wallet = mesh.userData.wallet,
+			target = {},
+			count = 1,
+			_countControl = countControl(wallet),
+			x = POSITION_X;
 
-     animate(mesh, target, true, 1000);
+		target = { x: mesh.position.x - (x / 2), y : mesh.position.y, z : mesh.position.z };
+        
+		if (_countControl > 3)
+			animate(mesh, target, true, 1000);
 
-     setTimeout( function() { loadTexture(wallet, ignore); addTitle(wallet); }, 500 );
+		setTimeout( function() { loadTexture(wallet, ignore); addTitle(wallet); }, 500 );
 
-     setTimeout( function() { 
+		setTimeout( function() { 
 
-         for(var i = 0; i < self.objects.mesh.length; i++) { 
+			for(var i = 0; i < 4; i++) { 
 
-             if ( i != ignore ) { 
+				if (count < 4){ 
 
-                 var _mesh = self.objects.mesh[i];
+					if (count < _countControl){
 
-                 if (x === POSITION_X) {
+						if ( i != ignore ) { 
 
-                    x = x * 2;
-                 }
-                 else if (x > POSITION_X) { 
+							var _mesh = self.objects.mesh[i];
 
-                    x = (x / 2) * -1;
-                 }
-                 else { 
+							if(_countControl > 3){ 
 
-                    x = POSITION_X;
-                 }
+								if (x === POSITION_X) {
 
-                 target = { x: mesh.position.x + x, y : mesh.position.y, z : mesh.position.z };
+									x = x * 2;
+								}
+								else if (x > POSITION_X) { 
 
-                 animate(_mesh, target, true, 2000);
+									x = (x / 2) * -1;
+								}
+								else { 
 
-              }             
+									x = POSITION_X;
+								}
 
-          }
+							}
+							else{
 
-       }, 1500);
+								if (count === 1) {
 
-    }
+									x = x;
+								}
+								else{ 
 
-    /**
-    * @author Ricardo Delgado
-    * Add the title of the group focused wallet.
-    * @param {String}    text    Behalf of the wallet.
-    */ 
-    function addTitle(text) {
+									x = x * -1;
+								}
+							}
 
-     var title = document.createElement('h5');
-         title.id = 'titleScreenshots';
-         title.style.position = 'absolute';
-         title.innerHTML = "Wallet " + text;
-         title.style.top = '70px';
-         title.style.left = '46%';
-         title.style.fontSize = "28px";
-         title.style.zIndex = 10;
-         title.style.opacity = 0;
+							count++;
 
-         document.body.appendChild(title);
+							target = { x: mesh.position.x + x, y : mesh.position.y, z : mesh.position.z };
 
-         window.helper.show(title, 2000);
+							animate(_mesh, target, true, 2000);
 
-    }
+						}
+					} 
+				}            
+			}
 
-    /**
-    * @author Ricardo Delgado
-    * Texture change of plans regarding the group focused wallet.
-    * @param {String}    wallet    Behalf of the wallet.
-    * @param {Number}    ignore    Id focused wallet.
-    */ 
-    function loadTexture (wallet, ignore) {
+		}, 1500);
 
-     var id = 1,
-         _mesh;
+	}
 
-     for(var i = 0; i < self.objects.mesh.length; i++) { 
+	/**
+	* @author Ricardo Delgado
+	* Add the title of the group focused wallet.
+	* @param {String}    text    Behalf of the wallet.
+	*/ 
+	function addTitle(text) {
 
-         if (i != ignore) { 
+		var title = document.createElement('h5');
+			title.id = 'titleScreenshots';
+			title.style.position = 'absolute';
+			title.innerHTML = "Wallet " + text;
+			title.style.top = '70px';
+			title.style.left = '46%';
+			title.style.fontSize = "28px";
+			title.style.zIndex = 10;
+			title.style.opacity = 0;
 
-              id = id + 1 ;
+		document.body.appendChild(title);
 
-              _mesh = self.objects.mesh[i];
-              _mesh.material.map = searchWallet ( wallet, id ); 
-              _mesh.material.needsUpdate = true;
+		window.helper.show(title, 2000);
 
-          }
+	}
 
-      } 
+	/**
+	* @author Ricardo Delgado
+	* Texture change of plans regarding the group focused wallet.
+	* @param {String}    wallet    Behalf of the wallet.
+	* @param {Number}    ignore    Id focused wallet.
+	*/ 
+	function loadTexture (wallet, ignore) {
 
-    }
+		var id = 1,
+			_mesh,
+			count = 1,
+			_countControl = countControl(wallet);
 
-    /**
-    * @author Ricardo Delgado
-    * Change texture of the planes to the original state.
-    * @param {Number}    ignore    Id focused wallet.
-    */   
-    function resetTexture (ignore) {
+		for(var i = 0; i < 4; i++) { 
 
-     var title = document.getElementById('titleScreenshots'), 
-         _mesh;
+			if (count < 4){ 
 
-     self.hide(); 
+				if (count < _countControl){
 
-     window.helper.hide(title, 1000);
+					if (i != ignore) { 
 
-     setTimeout(function() {    
+						id = id + 1 ;
 
-         for(var i = 0; i < self.objects.mesh.length; i++) { 
+						_mesh = self.objects.mesh[i];
+						_mesh.material.map = searchWallet ( wallet, id ); 
+						_mesh.material.needsUpdate = true;
 
-             if (i != ignore) { 
+						count++;
+					}
+				}
+			}
+		} 
+	}
 
-                 _mesh = self.objects.mesh[i];
-                 _mesh.material.map = searchWallet ( _mesh.userData.wallet, 1 ); 
-                 _mesh.material.needsUpdate = true;
+	/**
+	* @author Ricardo Delgado
+	* Change texture of the planes to the original state.
+	* @param {Number}    ignore    Id focused wallet.
+	*/   
+	function resetTexture (ignore) {
 
-              }
+		var title = document.getElementById('titleScreenshots'), 
+			_mesh;
 
-          } 
+		self.hide(); 
 
-         action.state = false;
+		window.helper.hide(title, 1000);
 
-         self.show();  
+		setTimeout(function() {    
 
-     }, 1000);
+			for(var i = 0; i < self.objects.mesh.length; i++) { 
 
-    }
+				if (i != ignore) { 
 
-    /**
-    * @author Ricardo Delgado
-    * Animation and out of the wallet.
-    * @param {object}     mesh     Wallet.
-    * @param {Number}    target    Coordinates wallet.
-    * @param {Boolean}   state     Status wallet.
-    * @param {Number}   duration   Animation length.
-    */ 
-    function animate (mesh, target, state, duration){
+					_mesh = self.objects.mesh[i];
+					_mesh.material.map = searchWallet ( _mesh.userData.wallet, 1 ); 
+					_mesh.material.needsUpdate = true;
+				}
+			} 
 
-        var _duration = duration || 2000,
-            x,
-            y,
-            z,
-            rx,
-            ry,
-            rz;
+			action.state = false;
 
-        if (state) {
+			self.show();  
 
-           x = target.x;
-           y = target.y;
-           z = target.z;
-           
-           rx = 0;
-           ry = 0;
-           rz = 0;
-        } 
-        else {
+		}, 1000);
 
-           x = target.px;
-           y = target.py;
-           z = target.pz;
-           
-           rx = target.rx;
-           ry = target.ry;
-           rz = target.rz; 
-        }   
+	}
 
-        new TWEEN.Tween(mesh.position)
-            .to({x : x, y : y, z : z}, Math.random() * _duration + _duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
-            .start();
+	/**
+	* @author Ricardo Delgado
+	* Animation and out of the wallet.
+	* @param {object}     mesh     Wallet.
+	* @param {Number}    target    Coordinates wallet.
+	* @param {Boolean}   state     Status wallet.
+	* @param {Number}   duration   Animation length.
+	*/ 
+	function animate (mesh, target, state, duration){
 
-        new TWEEN.Tween(mesh.rotation)
-            .to({x: rx, y: ry, z: rz}, Math.random() * duration + duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
-            .start();
+		var _duration = duration || 2000,
+			x,
+			y,
+			z,
+			rx,
+			ry,
+			rz;
+
+		if (state) {
+
+		   x = target.x;
+		   y = target.y;
+		   z = target.z;
+		   
+		   rx = 0;
+		   ry = 0;
+		   rz = 0;
+		} 
+		else {
+
+		   x = target.px;
+		   y = target.py;
+		   z = target.pz;
+		   
+		   rx = target.rx;
+		   ry = target.ry;
+		   rz = target.rz; 
+		}   
+
+		new TWEEN.Tween(mesh.position)
+			.to({x : x, y : y, z : z}, Math.random() * _duration + _duration)
+			.easing(TWEEN.Easing.Exponential.InOut)
+			.start();
+
+		new TWEEN.Tween(mesh.rotation)
+			.to({x: rx, y: ry, z: rz}, Math.random() * duration + duration)
+			.easing(TWEEN.Easing.Exponential.InOut)
+			.start();
 
    }
 

@@ -1,3 +1,7 @@
+/**
+ * Responsible for drawing the p2p network
+ * @author Miguel Celedon
+ */
 function ViewManager() {
     
     var SECTION_SIZE = window.MAX_DISTANCE * 1.5;
@@ -40,7 +44,7 @@ function ViewManager() {
         
         var transition = 5000;
         var actions = {},
-            enter = null, exit = null, reset = null, zoom = null;
+            enter = null, exit = null, reset = null;
         
         if(window.map.views[view].enabled === true) {
         
@@ -64,6 +68,8 @@ function ViewManager() {
                         window.headers.transformTable(transition);
 
                         window.changeViewWorkFlows();
+
+                        developer.delete();
                     };
                     
                     exit = function() {
@@ -142,11 +148,23 @@ function ViewManager() {
                         window.camera.freeView = false;
                     };
                     
-                    zoom = function() {
-                        if(window.networkViewer)
-                            window.networkViewer.setCameraTarget();
-                    };
-                    
+                    break;
+                case 'developers':
+                    enter = function(){
+                        developer.getDeveloper();
+
+                        setTimeout(function(){
+                            developer.animateDeveloper();
+                        }, 2000);        
+                };
+
+                    reset = function(){
+                        setTimeout(function(){
+                            developer.animateDeveloper();
+                        }, 4000);
+                        changeView(tileManager.targets.table);
+                };
+
                     break;
                 default:
                     break;
@@ -156,8 +174,7 @@ function ViewManager() {
         actions = {
             enter : enter || function(){},
             exit : exit || function(){},
-            reset : reset || function(){},
-            zoom : zoom || function(){}
+            reset : reset || function(){}
         };
         
         return actions;
