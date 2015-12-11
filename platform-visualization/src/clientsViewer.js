@@ -5,7 +5,7 @@ function ClientsViewer(parentNode) {
     this.parentNode = parentNode;
     this.nodes = {};
     this.edges = [];
-    this.NET_RADIOUS = 500;
+    this.NET_RADIOUS = 1000;
 }
 
 ClientsViewer.prototype = Object.create(BaseNetworkViewer.prototype);
@@ -80,4 +80,28 @@ ClientsViewer.prototype.test_load = function() {
     
     return networkNodes;
     
+};
+
+ClientsViewer.prototype.createEdges = function() {
+    
+    for(var nodeID in this.nodes) {
+        
+        var origin = this.nodes[nodeID].sprite.position;
+        var dest = this.parentNode.position;
+        
+        var lineGeo = new THREE.Geometry();
+        lineGeo.vertices.push(origin, dest);
+
+        var line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color : 0x0000ff}));
+        line.visible = false;
+
+        scene.add(line);
+        this.edges.push({
+            from : nodeID,
+            to : this.parentNode.userData.id,
+            line : line
+        });
+    }
+    
+    BaseNetworkViewer.prototype.createEdges.call(this);
 };
