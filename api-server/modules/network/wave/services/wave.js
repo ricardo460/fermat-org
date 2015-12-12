@@ -46,23 +46,6 @@ exports.findWaveById = function (_id, callback) {
     });
 };
 
-/**
- * [findAndPopulateWaveById description]
- *
- * @method findAndPopulateWaveById
- *
- * @param  {[type]}                _id      [description]
- * @param  {[type]}                path     [description]
- * @param  {Function}              callback [description]
- *
- * @return {[type]}                [description]
- */
-exports.findAndPopulateWaveById = function (_id, path, callback) {
-    'use strict';
-    waveDao.findAndPopulateSchemaById(_id, path, function (err, wave) {
-        callback(err, wave);
-    });
-};
 
 /**
  * [findWave description]
