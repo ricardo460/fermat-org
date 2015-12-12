@@ -5,7 +5,7 @@ function ClientsViewer(parentNode) {
     this.parentNode = parentNode;
     this.nodes = {};
     this.edges = [];
-    this.NET_RADIOUS = 100;
+    this.NET_RADIOUS = 1000;
 }
 
 ClientsViewer.prototype = Object.create(BaseNetworkViewer.prototype);
@@ -22,15 +22,14 @@ ClientsViewer.prototype.createNode = function(nodeData, startPosition) {
 
     var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0x0000ff}));
     var id = nodeData.id.toString();
-    var position = window.viewManager.translateToSection('network', startPosition);
-
+    
     sprite.userData = {
         id : id,
-        originPosition : position,
+        originPosition : startPosition,
         onClick : this.onNodeClick.bind(this)
     };
 
-    sprite.position.copy(position);
+    sprite.position.copy(startPosition);
 
     this.nodes[id] = nodeData;
     this.nodes[id].sprite = sprite;
@@ -48,9 +47,11 @@ ClientsViewer.prototype.drawNodes = function(networkNodes) {
     for(var i = 0; i < networkNodes.length; i++) {
 
         var position = new THREE.Vector3(
-            (Math.random() * 2 - 1) * this.NET_RADIOUS,
-            this.NET_RADIOUS / 2,
-            ((Math.random() * 2 - 1) * this.NET_RADIOUS) - this.NET_RADIOUS);
+            Math.random() * this.NET_RADIOUS,
+            - this.NET_RADIOUS / 2,
+            Math.random() * this.NET_RADIOUS);
+        
+        position.add(this.parentNode.position);
 
         var sprite = this.createNode(networkNodes[i], position);
 
@@ -79,4 +80,28 @@ ClientsViewer.prototype.test_load = function() {
     
     return networkNodes;
     
+};
+
+ClientsViewer.prototype.createEdges = function() {
+    
+    for(var nodeID in this.nodes) {
+        
+        var origin = this.nodes[nodeID].sprite.position;
+        var dest = this.parentNode.position;
+        
+        var lineGeo = new THREE.Geometry();
+        lineGeo.vertices.push(origin, dest);
+
+        var line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color : 0x0000ff}));
+        line.visible = false;
+
+        scene.add(line);
+        this.edges.push({
+            from : nodeID,
+            to : this.parentNode.userData.id,
+            line : line
+        });
+    }
+    
+    BaseNetworkViewer.prototype.createEdges.call(this);
 };

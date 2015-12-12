@@ -9,8 +9,11 @@ function ScreenshotsAndroid() {
 	this.objects = {
 			mesh : [],
 			target : [],
-			texture : []
-		};
+			texture : [],
+			title : { mesh : {},
+					  texture : {}
+					}
+	};
 
 	var self = this,
 		POSITION_X = 231,
@@ -93,7 +96,9 @@ function ScreenshotsAndroid() {
 
 			addWallet(name);
 
-			addMesh(calculatePositionScreenshot(platform, position), name, true); 
+			addMesh(calculatePositionScreenshot(platform, position), name, true);
+            
+            addTextureTitle(name);
 
 			lost = name;
 
@@ -106,8 +111,14 @@ function ScreenshotsAndroid() {
 				addMesh(Math.random() * 80000 , lost, false);
 		}
 
+		addTitle();
 	};
 
+	/**
+	* @author Ricardo Delgado
+	* Calculates the position x to take screenshots.
+	* @param {String}  wallet   Wallet draw. 
+	*/	
 	function calculatePositionScreenshot(platform, position){
 
 		var _position = window.tileManager.targets.table[tileManager.elementsByGroup[platform][position]].position.x;
@@ -133,9 +144,8 @@ function ScreenshotsAndroid() {
 
 		for (var i = 1; i <= total; i++) {
 
-			addTexture(wallet, i);
+			addTextureWallet(wallet, i);
 		}
-
 	}
 
 	/**
@@ -144,17 +154,16 @@ function ScreenshotsAndroid() {
 	* @param {String}  wallet   Group wallet to find.
 	* @param {Number}    id     Wallet identifier. 
 	*/
-	function searchWallet (wallet, id) {
+	function searchWallet(wallet, id) {
 
 		var i = 0;
 
-		while( self.objects.texture[i].wallet != wallet || self.objects.texture[i].id != id ) {
+		while(self.objects.texture[i].wallet != wallet || self.objects.texture[i].id != id) {
 
 			i = i + 1 ;
 		}  
 
 		return self.objects.texture[i].image;
-
 	}
 
 	/**
@@ -163,7 +172,7 @@ function ScreenshotsAndroid() {
 	* @param {String}  _position    End position of the plane in the x axis.
 	* @param {String}    wallet     Wallet group to which it belongs.
 	*/   
-	function addMesh (_position, wallet, state) {
+	function addMesh(_position, wallet, state) {
 
 		var id = self.objects.mesh.length,
 			px = Math.random() * 80000 - 40000,
@@ -176,14 +185,14 @@ function ScreenshotsAndroid() {
 			_texture = null;
 
         if (state){ 
-            _texture = searchWallet ( wallet, 1 );
+            _texture = searchWallet (wallet, 1);
         }
         else{ 
             z = pz;
         }
 			
 		var mesh = new THREE.Mesh(
-					new THREE.PlaneGeometry( 50, 80 ),
+					new THREE.PlaneGeometry(50, 80),
 					new THREE.MeshBasicMaterial( { map:_texture, side: THREE.FrontSide, transparent: true } )
 					);
 
@@ -197,21 +206,88 @@ function ScreenshotsAndroid() {
 
 		mesh.material.opacity = 1;
 
-		mesh.scale.set( 4, 4, 4 );
+		mesh.scale.set(4, 4, 4);
 
 		var target = { x : _position, y : window.tileManager.dimensions.layerPositions[3] + 240, z : z,
 					   px : px, py : py, pz : pz,
 					   rx : rx, ry : ry, rz : rz };
 
-		mesh.position.set( px, py, pz );
-		mesh.rotation.set( rx, ry, rz );
+		mesh.position.set(px, py, pz);
+		mesh.rotation.set(rx, ry, rz);
 
 		window.scene.add(mesh);
 
 		self.objects.target.push(target);
 
 		self.objects.mesh.push(mesh);
+	}
 
+	/**
+	* @author Ricardo Delgado
+	* Add the title of the group focused wallet.
+	* @param {String}    text    Behalf of the wallet.
+	*/ 
+	function addTitle() {
+
+		var px = Math.random() * 80000 - 40000,
+			py = Math.random() * 80000 - 40000,
+			pz = 80000 * 2,
+			rx = Math.random() * 180,
+			ry = Math.random() * 180,
+			rz = Math.random() * 180,
+			texture = null;
+			
+		var mesh = new THREE.Mesh(
+					new THREE.PlaneGeometry(50, 15),
+					new THREE.MeshBasicMaterial( { map: texture, side: THREE.FrontSide, transparent: true } )
+					);
+
+		mesh.material.needsUpdate = true;
+
+		mesh.material.opacity = 1;
+
+		mesh.scale.set(4, 4, 4);
+
+		var target = { px : px, py : py, pz : pz,
+					   rx : rx, ry : ry, rz : rz };
+
+		mesh.position.set(px, py, pz);
+		mesh.rotation.set(rx, ry, rz);
+
+		window.scene.add(mesh);
+
+		self.objects.title.mesh = {
+						mesh : mesh,
+						target : target
+						};
+	}
+
+	/**
+	* @author Ricardo Delgado
+	* Add the title of the group focused wallet.
+	* @param {String}    Wallet    Behalf of the wallet.
+	*/ 
+	function addTextureTitle(wallet){
+
+		var canvas,
+			ctx,
+			texture,
+			text = "Wallet "+wallet;
+
+		canvas = document.createElement('canvas');
+		canvas.width  = 450;
+		canvas.height = 200;
+
+		ctx = canvas.getContext("2d");
+		ctx.textAlign = 'center';
+		ctx.font="bold 50px Arial";
+		ctx.fillText(text, 200, 100);
+
+		texture = new THREE.Texture(canvas);
+		texture.needsUpdate = true;  
+		texture.minFilter = THREE.NearestFilter;
+
+		self.objects.title.texture[wallet] = texture;
 	}
 
 	/**
@@ -220,7 +296,7 @@ function ScreenshotsAndroid() {
 	* @param {String}    wallet    Wallet draw.
 	* @param {String}      i       Group identifier wallet.
 	*/ 
-	function addTexture (wallet, i) {
+	function addTextureWallet(wallet, i) {
 
 		var _texture,
 			canvas,
@@ -242,9 +318,14 @@ function ScreenshotsAndroid() {
 		_texture = { id : i, wallet : wallet, image : image };
 
 		self.objects.texture.push(_texture);
-
 	}
 
+	/**
+	* @author Ricardo Delgado
+	* Wallet drawn and added required.
+	* @param {String}    wallet    Wallet draw.
+    * @param {Object} 	  ctx      Canvas context
+	*/ 
 	function drawPicture(wallet, ctx){
 
 		var img = new Image(),
@@ -274,7 +355,6 @@ function ScreenshotsAndroid() {
 			
 			drawPicture(wallet, ctx);
 		}
-
 	}
 
 	/**
@@ -291,9 +371,7 @@ function ScreenshotsAndroid() {
 
 			if (i != ignore)  
 				animate(self.objects.mesh[i], self.objects.target[i], false, 1500);
-
 		}
-
 	}; 
 
 	/**
@@ -312,16 +390,34 @@ function ScreenshotsAndroid() {
 
 				animate(self.objects.mesh[i], self.objects.target[i], true, 2000);
 			}
-			
 		}
 	};
+
+	/**
+	* @author Ricardo Delgado
+	* Load the title of the selected wallet.
+	* @param {String}    Wallet    Behalf of the wallet.
+	* @param {object}     mesh     Wallet.	
+	*/ 
+	function showTitle(wallet, mesh) {
+
+		var _mesh = self.objects.title.mesh.mesh,
+			target = {};
+
+		target = { x: mesh.position.x, y : mesh.position.y + 240, z : mesh.position.z };
+
+		_mesh.material.map = self.objects.title.texture[wallet]; 
+		_mesh.material.needsUpdate = true;
+
+		animate(_mesh, target, true, 2000);
+	}
 
 	/**
 	* @author Ricardo Delgado
 	* Wallet focus and draw the other planes in the same group wallet.
 	* @param {Number}    id    Wallet identifier focus.
 	*/ 
-	function change (id) {
+	function change(id) {
 
 		if (window.camera.getFocus() === null) {
 
@@ -332,11 +428,14 @@ function ScreenshotsAndroid() {
 			window.browserManager.modifyButtonBack(1, 'block');
 
 			positionFocus(id);
-
 		}
-
 	}
 
+	/**
+	* @author Ricardo Delgado
+	* Screenshots account total has a wallet.
+	* @param {String}    Wallet    Wallet counting.
+	*/ 
 	function countControl(wallet){
 
 		var sum = 0;
@@ -352,7 +451,7 @@ function ScreenshotsAndroid() {
 	* Accommodate the wallet.
 	* @param {Number}    id    Identifier reference wallet.
 	*/ 
-	function positionFocus (id) {
+	function positionFocus(id) {
 
 		var ignore = id,
 			mesh = self.objects.mesh[id],
@@ -362,12 +461,14 @@ function ScreenshotsAndroid() {
 			_countControl = countControl(wallet),
 			x = POSITION_X;
 
+		showTitle(wallet, mesh);
+			
 		target = { x: mesh.position.x - (x / 2), y : mesh.position.y, z : mesh.position.z };
         
 		if (_countControl > 3)
 			animate(mesh, target, true, 1000);
 
-		setTimeout( function() { loadTexture(wallet, ignore); addTitle(wallet); }, 500 );
+		setTimeout( function() { loadTexture(wallet, ignore); }, 500 );
 
 		setTimeout( function() { 
 
@@ -419,32 +520,7 @@ function ScreenshotsAndroid() {
 					} 
 				}            
 			}
-
 		}, 1500);
-
-	}
-
-	/**
-	* @author Ricardo Delgado
-	* Add the title of the group focused wallet.
-	* @param {String}    text    Behalf of the wallet.
-	*/ 
-	function addTitle(text) {
-
-		var title = document.createElement('h5');
-			title.id = 'titleScreenshots';
-			title.style.position = 'absolute';
-			title.innerHTML = "Wallet " + text;
-			title.style.top = '70px';
-			title.style.left = '46%';
-			title.style.fontSize = "28px";
-			title.style.zIndex = 10;
-			title.style.opacity = 0;
-
-		document.body.appendChild(title);
-
-		window.helper.show(title, 2000);
-
 	}
 
 	/**
@@ -453,7 +529,7 @@ function ScreenshotsAndroid() {
 	* @param {String}    wallet    Behalf of the wallet.
 	* @param {Number}    ignore    Id focused wallet.
 	*/ 
-	function loadTexture (wallet, ignore) {
+	function loadTexture(wallet, ignore) {
 
 		var id = 1,
 			_mesh,
@@ -486,16 +562,16 @@ function ScreenshotsAndroid() {
 	* Change texture of the planes to the original state.
 	* @param {Number}    ignore    Id focused wallet.
 	*/   
-	function resetTexture (ignore) {
+	function resetTexture(ignore) {
 
-		var title = document.getElementById('titleScreenshots'), 
+		var title = self.objects.title.mesh.mesh, 
 			_mesh;
 
 		self.hide(); 
 
-		window.helper.hide(title, 1000);
+		animate(title, self.objects.title.mesh.target, false, 1000); 
 
-		setTimeout(function() {    
+		setTimeout(function() {   
 
 			for(var i = 0; i < self.objects.mesh.length; i++) { 
 
@@ -512,7 +588,6 @@ function ScreenshotsAndroid() {
 			self.show();  
 
 		}, 1000);
-
 	}
 
 	/**
@@ -523,7 +598,7 @@ function ScreenshotsAndroid() {
 	* @param {Boolean}   state     Status wallet.
 	* @param {Number}   duration   Animation length.
 	*/ 
-	function animate (mesh, target, state, duration){
+	function animate(mesh, target, state, duration){
 
 		var _duration = duration || 2000,
 			x,
@@ -563,7 +638,6 @@ function ScreenshotsAndroid() {
 			.to({x: rx, y: ry, z: rz}, Math.random() * duration + duration)
 			.easing(TWEEN.Easing.Exponential.InOut)
 			.start();
-
    }
 
 }

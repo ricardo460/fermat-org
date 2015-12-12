@@ -19,8 +19,6 @@ BaseNetworkViewer.prototype = {
         this.NET_RADIOUS = this.NET_RADIOUS * networkNodes.length;
 
         this.drawNodes(networkNodes);
-
-        this.configureCamera();
     },
 
     /**
@@ -84,15 +82,14 @@ BaseNetworkViewer.prototype = {
 
         var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0x000000}));
         var id = nodeData.id.toString();
-        var position = window.viewManager.translateToSection('network', startPosition);
 
         sprite.userData = {
             id : id,
-            originPosition : position,
+            originPosition : startPosition,
             onClick : this.onNodeClick.bind(this)
         };
 
-        sprite.position.copy(position);
+        sprite.position.copy(startPosition);
 
         this.nodes[id] = nodeData;
         this.nodes[id].sprite = sprite;

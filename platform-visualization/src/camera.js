@@ -22,6 +22,7 @@ function Camera(position, renderer, renderFunc) {
     var controls = new THREE.TrackballControls( camera, renderer.domElement );
     var focus = null;
     var self = this;
+    var rendering = false;
     
     var fake = new THREE.Object3D();
     fake.position.set(MAX_DISTANCE, MAX_DISTANCE, -MAX_DISTANCE);
@@ -97,12 +98,10 @@ function Camera(position, renderer, renderFunc) {
         
         duration = (duration !== undefined) ? duration : 2000;
         
-        /*new TWEEN.Tween(controls.target)
+        new TWEEN.Tween(controls.target)
         .to({x : target.x, y : target.y, z : target.z}, duration)
         .onUpdate(window.render)
-        .start();*/
-        
-        controls.target.set(target.x, target.y, target.z);
+        .start();
     };
     
     /**
@@ -212,7 +211,7 @@ function Camera(position, renderer, renderFunc) {
 
         for (var i = 0; i < objectsDevelopers.length ; i++) {
             if(id !== i)
-                developer.letAloneDeveloper(objectsDevelopers[i]);
+                window.developer.letAloneDeveloper(objectsDevelopers[i]);
         }
 
         self.render(renderer, scene);
@@ -340,6 +339,9 @@ function Camera(position, renderer, renderFunc) {
             if(self.freeView === true) {
                 self.enableFreeMode();
             }
+            
+                if(window.viewManager && window.actualView)
+            window.viewManager.views[window.actualView].zoom();
         }
         
         controls.update();
@@ -358,18 +360,28 @@ function Camera(position, renderer, renderFunc) {
         
         var cam;
         
-        scene.traverse( function ( object ) {
+        if(rendering === false) {
+            
+            rendering = true;
 
-            if ( object instanceof THREE.LOD ) {
-                
-                if(object.userData.flying === true) cam = fake;
-                else cam = camera;
-                
-                object.update( cam );
-            }
-        });
-        
-        renderer.render ( scene, camera );
+            scene.traverse( function ( object ) {
+
+                if ( object instanceof THREE.LOD ) {
+
+                    if(object.userData.flying === true) cam = fake;
+                    else cam = camera;
+
+                    object.update( cam );
+                }
+            });
+
+            renderer.render ( scene, camera );
+            
+            rendering = false;
+        }
+        else {
+            console.log("Render ignored");
+        }
     };
     
     /**
@@ -394,6 +406,19 @@ function Camera(position, renderer, renderFunc) {
         
         raycaster.setFromCamera(target, camera);
         
+        /* Debug code, draw lines representing the clicks
+ 
+        var mat = new THREE.LineBasicMaterial({color : 0xaaaaaa});
+        var g = new THREE.Geometry();
+        var r = raycaster.ray;
+        var dest = new THREE.Vector3(r.origin.x + r.direction.x * MAX_DISTANCE, r.origin.y + r.direction.y * MAX_DISTANCE, r.origin.z + r.direction.z * MAX_DISTANCE);
+
+        g.vertices.push( r.origin, dest);
+
+        var line = new THREE.Line(g, mat);
+
+        scene.add(line);*/
+        
         return raycaster.intersectObjects(elements);
     };
     
@@ -416,6 +441,8 @@ function Camera(position, renderer, renderFunc) {
             .onUpdate(function(){
                 if(!self.freeView)
                     controls.target.set(camera.position.x, camera.position.y, 0);
+                
+                window.render();
             })
             .start();
             
