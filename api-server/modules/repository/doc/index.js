@@ -132,7 +132,7 @@ exports.getReadmePdf = function (style, callback) {
     'use strict';
     try {
         var readme = path.join(process.cwd(), 'cache', env, 'fermat', 'README.md');
-        var cacheFile = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'readme.pdf');
+        var cacheFile = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'fermat-readme.pdf');
         var name = 'readme.pdf';
         var resp = { pdfFile: cacheFile };
         var css = 'style.css';
@@ -140,7 +140,7 @@ exports.getReadmePdf = function (style, callback) {
         var regExp = 'https://github.com/bitDubai/media-kit/blob/master';
         var paperFormat = 'letter';
         if (style) {
-            cacheFile = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'readme-big.pdf');
+            cacheFile = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'fermat-readme-big.pdf');
             name = 'readme-big.pdf';
             css = 'style-big.css';
             paperFormat = 'A4';
@@ -197,7 +197,7 @@ exports.getPaperPdf = function (style, callback) {
     'use strict';
     try {
         var paper = path.join(process.cwd(), 'cache', env, 'fermat', 'FERMAT-WHITE-PAPER.md');
-        var cacheFile = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'fermat-white-paper.pdf');
+        var cacheFile = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'fermat-whitepaper.pdf');
         var name = 'fermat-white-paper.pdf';
         var copyPaper = path.join(process.cwd(), 'cache', env, 'files', 'copyPaper.md');
         var regExp = 'https://github.com/bitDubai/media-kit/blob/master';
@@ -205,7 +205,7 @@ exports.getPaperPdf = function (style, callback) {
         var paperFormat = 'letter';
         var resp = { pdfFile: cacheFile  };
         if (style) {
-            cacheFile = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'fermat-white-paper-big.pdf');
+            cacheFile = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'fermat-whitepaper-big.pdf');
             name = 'fermat-white-paper-big.pdf';
             css = 'style-big.css';
             paperFormat = 'A4';
