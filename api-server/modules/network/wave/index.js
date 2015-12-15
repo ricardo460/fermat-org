@@ -8,16 +8,15 @@ var WaveMdl = require('./models/wave');
  * @method insertWave
  *
  * @param  {[type]}   desc     [description]
- * @param  {[type]}   time     [description]
  * @param  {Function} callback [description]
  *
  * @return {[type]}   [description]
  */
-exports.insertWave = function (desc, time, callback) {
+exports.insertWave = function (desc, callback) {
     'use strict';
     try {
         
-        var wave = new WaveMdl(desc, time);
+        var wave = new WaveMdl(desc);
         waveSrv.insertWave(wave, function (err_ins, res_ins) {
             if (err_ins) {
                 return callback(err_ins, null);
