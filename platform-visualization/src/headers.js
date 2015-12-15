@@ -531,7 +531,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                     ['small', 16000]],
                 i, l,
                 header = new THREE.LOD();
-            
+
             for(i = 0, l = levels.length; i < l; i++) {
             
                 source = 'images/headers/' + levels[i][0] + '/' + group + '_logo.png';
@@ -542,14 +542,14 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                     );
                 
                 helper.applyTexture(source, object);
-                
+
                 header.addLevel(object, levels[i][1]);
             }
             
             return header;
         }
         
-        var src, width, height;
+        var src, width, height, numIdex;
             
         for (group in groups) {
             if (window.groups.hasOwnProperty(group) && group !== 'size') {
@@ -583,10 +583,13 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
         for (slayer in superLayers) {
             if (window.superLayers.hasOwnProperty(slayer) && slayer !== 'size') {
-
+                
                 headerData = window.superLayers[slayer];
-                row = superLayerPosition[headerData.index];
 
+                numIdex = headerData.index + 1;
+
+                row = superLayerPosition[numIdex];
+ 
                 width = columnWidth * window.TILE_DIMENSION.width;
                 height = width * 443 / 1379;
 
