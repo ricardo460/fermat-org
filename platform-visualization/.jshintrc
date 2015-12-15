@@ -46,6 +46,7 @@
         "NetworkViewer" : true,
         "SignLayer" : true,
         "ClientsViewer" : true,
-        "BaseNetworkViewer" : true
+        "BaseNetworkViewer" : true,
+        "Developer" : true
     }
 }
