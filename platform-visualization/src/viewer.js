@@ -39,7 +39,7 @@ function createScene(){
     renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true, alpha : true});
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xffffff);
+    renderer.setClearColor(0xFFFFFF);
     document.getElementById('container').appendChild(renderer.domElement);
 
     camera = new Camera(new THREE.Vector3(0, 0, 90000),

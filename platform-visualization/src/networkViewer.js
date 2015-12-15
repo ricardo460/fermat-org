@@ -9,6 +9,11 @@ function NetworkViewer() {
 NetworkViewer.prototype = Object.create(BaseNetworkViewer.prototype);
 NetworkViewer.prototype.constructor = NetworkViewer;
 
+/**
+ * @override
+ * Loads the data and configures camera
+ * @author Miguel Celedon
+ */
 NetworkViewer.prototype.load = function() {
     
     BaseNetworkViewer.prototype.load.call(this);
@@ -17,6 +22,7 @@ NetworkViewer.prototype.load = function() {
 };
 
 /**
+ * @override
  * To be executed when a nodes is clicked
  * @author Miguel Celedon
  * @param {object} clickedNode The clicked node
@@ -33,6 +39,7 @@ NetworkViewer.prototype.onNodeClick = function(clickedNode) {
 };
 
 /**
+ * @override
  * Draws the nodes in the network
  * @author Miguel Celedon
  * @param {Array} networkNodes Array of nodes to draw
@@ -61,6 +68,7 @@ NetworkViewer.prototype.drawNodes = function(networkNodes) {
 };
 
 /**
+ * @override
  * Set the camera transition to get closer to the graph
  * @author Miguel Celedon
  */
@@ -105,6 +113,11 @@ NetworkViewer.prototype.test_load = function() {
     return networkNodes;
 };
 
+/**
+ * @override
+ * Resets the network and unload its children
+ * @author Miguel Celedon
+ */
 NetworkViewer.prototype.reset = function() {
     
     BaseNetworkViewer.prototype.reset.call(this);
