@@ -29,21 +29,34 @@ exports.insertWave = function (desc, callback) {
 };
 
 /**
- * [findWaveById description]
+ * [findWaveByDate description]
  *
- * @method findWaveById
+ * @method findWaveByDate
  *
- * @param  {[type]}         _id [description]
+ * @param  {[type]}         date     [description]
  * @param  {Function}       callback [description]
  *
  * @return {[type]}         [description]
  */
-exports.findWaveById = function (_id, callback) {
+exports.findWaveByDate = function (date, callback) {
     'use strict';
     try {
-        waveSrv.findWaveById( 
-            _id
-        ,function (err, wave) {
+        var start = new Date(date).setHours(00);
+        var end = new Date(date).setHours(24);
+        var find_obj = {
+            '$and': []
+        };
+        find_obj['$and'].push({
+            'date': {
+                '$gte': start
+            }
+        });
+        find_obj['$and'].push({
+            'date': {
+                '$lt': end
+            }
+        });
+        waveSrv.findWaves(find_obj, function (err, wave) {
             if (err) {
                 return callback(err, null);
             }
