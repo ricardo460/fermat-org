@@ -374,7 +374,7 @@ function ActionFlow(flow) {
             ctx.fillStyle = '#FFFFFF';
             
             //Title
-            size = 20;
+            size = 18;
             ctx.font = 'bold ' + size + 'px Arial';
             window.helper.drawText(node.title, 421, 59, ctx, 250, size);
             
@@ -400,12 +400,12 @@ function ActionFlow(flow) {
             ctx.drawImage(image, 0, 0);
             
             //Title
-            var size = 22;
+            var size = 24;
             ctx.font = 'bold ' + size + 'px Arial';
-            window.helper.drawText(title, 190, 61, ctx, 280, size * 1.5);
+            window.helper.drawText(title, 190, 61, ctx, 400, size);
             
             //Description
-            size = 15;
+            size = 17;
             ctx.font = size + 'px Arial';
             window.helper.drawText(desc, 190, 126, ctx, 550, size);
         };
