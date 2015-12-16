@@ -68,7 +68,7 @@ function ActionFlow(flow) {
         }
 
         if (indice === 1){
-            self.showStepsFlow();
+            self.showSteps();
         }
     };
 
@@ -233,7 +233,7 @@ function ActionFlow(flow) {
             }
 
             new TWEEN.Tween(tile.position)
-                .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 2000)
+                .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 5000)
                 .easing(TWEEN.Easing.Cubic.InOut)
                 .start();
         }
@@ -308,24 +308,7 @@ function ActionFlow(flow) {
             var target = positions.target[id];
             
             new TWEEN.Tween(objects[id].position)
-                .to({x : target.x, y : target.y, z : target.z}, 4000)
-                .easing(TWEEN.Easing.Cubic.InOut)
-                .start();
-        };
-        
-        for(var i = 0, l = objects.length; i < l; i++) {
-            move(i);
-        }
-    };
-
-    this.showStepsFlow = function() {
-        
-        var move = function(id) {
-            
-            var target = positions.target[id];
-            
-            new TWEEN.Tween(objects[id].position)
-                .to({x : target.x, y : target.y, z : target.z}, 4000)
+                .to({x : target.x, y : target.y, z : target.z}, 6000)
                 .easing(TWEEN.Easing.Cubic.InOut)
                 .start();
         };
