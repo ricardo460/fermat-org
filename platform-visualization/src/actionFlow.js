@@ -80,10 +80,7 @@ function ActionFlow(flow) {
     this.letAloneHeaderFlow = function() {
         
         var i, _duration = 2000,
-            distance = camera.getMaxDistance() * 2,
-            out = window.viewManager.translateToSection('workflows', new THREE.Vector3(0, 0, distance));
-
-        var target;
+            distance = camera.getMaxDistance() * 2, target;
 
         var animate = function (object, target, dur) {
 
@@ -103,7 +100,7 @@ function ActionFlow(flow) {
 
         for (i = 0; i < objects.length; i++) {
 
-            target = out;
+            target = positions.origin[i];
             objects[i].userData.flying = true;
             animate(objects[i], target, Math.random() * _duration + _duration);
         }
@@ -377,7 +374,7 @@ function ActionFlow(flow) {
             ctx.fillStyle = '#FFFFFF';
             
             //Title
-            size = 20;
+            size = 18;
             ctx.font = 'bold ' + size + 'px Arial';
             window.helper.drawText(node.title, 421, 59, ctx, 250, size);
             
@@ -403,12 +400,12 @@ function ActionFlow(flow) {
             ctx.drawImage(image, 0, 0);
             
             //Title
-            var size = 20;
+            var size = 24;
             ctx.font = 'bold ' + size + 'px Arial';
-            window.helper.drawText(title, 190, 61, ctx, 274, size * 1.5);
+            window.helper.drawText(title, 190, 61, ctx, 400, size);
             
             //Description
-            size = 15;
+            size = 17;
             ctx.font = size + 'px Arial';
             window.helper.drawText(desc, 190, 126, ctx, 550, size);
         };
