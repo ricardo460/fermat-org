@@ -119,12 +119,15 @@ function ViewManager() {
                 case 'workflows':
                     enter = function() {
                         window.getHeaderFLow();
+
+                        window.headers.transformWorkFlow(8000);
                     };
 
                     reset = function() {
                         window.tileManager.rollBack();
 
                         setTimeout(function() {
+                            window.headers.transformWorkFlow(6000);
                             window.changeViewWorkFlows();
                             window.getHeaderFLow();
                         }, 1000);

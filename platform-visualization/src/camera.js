@@ -188,6 +188,8 @@ function Camera(position, renderer, renderFunc) {
         }
         self.render(renderer, scene);
 
+        headers.hidetransformWorkFlow(duration);
+
         var vec = new THREE.Vector4(0, POSITION_Y, POSITION_Z, 1);
         var target = headerFlow[id].objects[0];
 
