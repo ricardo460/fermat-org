@@ -39,7 +39,7 @@ function createScene(){
     renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true, alpha : true});
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xffffff);
+    renderer.setClearColor(0xFFFFFF);
     document.getElementById('container').appendChild(renderer.domElement);
 
     camera = new Camera(new THREE.Vector3(0, 0, 90000),
@@ -506,7 +506,7 @@ function onElementClickHeaderFlow(id) {
             for (var i = 0; i < headerFlow[id].flow.steps.length; i++) {
                 headerFlow[id].drawTree(headerFlow[id].flow.steps[i], headerFlow[id].positions.target[0].x + 900 * i, headerFlow[id].positions.target[0].y - 211, 0);
             }
-            headerFlow[id].showStepsFlow();
+            headerFlow[id].showSteps();
         }, 1000);
 
         browserManager.modifyButtonBack(1,'block');

@@ -4,13 +4,13 @@
  */
 function ActionFlow(flow) {
     
-    var BOX_WIDTH = 790;
-    var BOX_HEIGHT = 172;
+    var BOX_WIDTH = 825;
+    var BOX_HEIGHT = 188;
     var X_OFFSET = -312; //Because lines don't come from the center
     var ROW_SPACING = 350;
     var COLUMN_SPACING = 900;
-    var HEADER_WIDTH = 804;
-    var HEADER_HEIGHT = 232;
+    var HEADER_WIDTH = 825;
+    var HEADER_HEIGHT = 238;
     
     this.flow = flow || [];
     
@@ -68,7 +68,7 @@ function ActionFlow(flow) {
         }
 
         if (indice === 1){
-            self.showStepsFlow();
+            self.showSteps();
         }
     };
 
@@ -233,7 +233,7 @@ function ActionFlow(flow) {
             }
 
             new TWEEN.Tween(tile.position)
-                .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 2000)
+                .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 5000)
                 .easing(TWEEN.Easing.Cubic.InOut)
                 .start();
         }
@@ -308,24 +308,7 @@ function ActionFlow(flow) {
             var target = positions.target[id];
             
             new TWEEN.Tween(objects[id].position)
-                .to({x : target.x, y : target.y, z : target.z}, 4000)
-                .easing(TWEEN.Easing.Cubic.InOut)
-                .start();
-        };
-        
-        for(var i = 0, l = objects.length; i < l; i++) {
-            move(i);
-        }
-    };
-
-    this.showStepsFlow = function() {
-        
-        var move = function(id) {
-            
-            var target = positions.target[id];
-            
-            new TWEEN.Tween(objects[id].position)
-                .to({x : target.x, y : target.y, z : target.z}, 4000)
+                .to({x : target.x, y : target.y, z : target.z}, 6000)
                 .easing(TWEEN.Easing.Cubic.InOut)
                 .start();
         };
@@ -390,18 +373,18 @@ function ActionFlow(flow) {
             var size = 83;
             ctx.font = size + 'px Arial';
             ctx.fillStyle = '#000000';
-            window.helper.drawText(Nodeid, 40, 122, ctx, 76, size);
+            window.helper.drawText(Nodeid, 57, 130, ctx, 76, size);
             ctx.fillStyle = '#FFFFFF';
             
             //Title
             size = 20;
             ctx.font = 'bold ' + size + 'px Arial';
-            window.helper.drawText(node.title, 404, 51, ctx, 250, size);
+            window.helper.drawText(node.title, 421, 59, ctx, 250, size);
             
             //Description
             size = 12;
             ctx.font = size + 'px Arial';
-            window.helper.drawText(node.desc, 404, 96, ctx, 250, size);
+            window.helper.drawText(node.desc, 421, 104, ctx, 250, size);
         };
         
         return createFlowBox('images/workflow/stepBox.png', fillBox, BOX_WIDTH, BOX_HEIGHT);
