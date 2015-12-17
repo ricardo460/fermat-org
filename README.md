@@ -82,11 +82,27 @@ In the case of brackets, open the preferences file and add the following to the 
 
 For other text editors do have to edit the file .jshintrc for ours, which is in-visualization platform.
 
-### Part II: Compilation of Fermat-org locally.
-
-#### Downloading the repository.
+### Part II: Downloading the repository Fermat-org.
 
 To download repository Fermat-org, you can clone directly from Fermat on github repository or download it via a third-party program, we use usually use SourceTree, but you can use it to your liking. After this set XAMPP for the root folder is Fermat-org / platform-visualization.
+
+#### Creating a fork of a repository Fermat-org.
+
+A fork is a copy of a repository. Forking a repository allows you to freely experiment with changes without 
+affecting the original project.
+
+To create a fork follow these steps:
+
+* **Access GitHub.**
+* **Access the repository from which you want to create a fork.**
+* **You have to head to the upper right side and click on the Fork Button.**
+* **A pop-up will show up asking “Where should we fork this repository?” there you have to select your own user.**
+
+#### Keep your fork synced
+
+You might fork a project in order to propose changes to the upstream, or original, repository. In this case, it's good practice to regularly sync your fork with the upstream repository.
+
+### Part IV: Compilation of Fermat-org locally.
 
 #### Gulp running.
 
