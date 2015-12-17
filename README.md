@@ -84,8 +84,6 @@ For other text editors do have to edit the file .jshintrc for ours, which is in-
 
 ### Part II: Downloading the repository Fermat-org.
 
-To download repository Fermat-org, you can clone directly from Fermat on github repository or download it via a third-party program, we use usually use SourceTree, but you can use it to your liking. After this set XAMPP for the root folder is Fermat-org / platform-visualization.
-
 #### Creating a fork of a repository Fermat-org.
 
 A fork is a copy of a repository. Forking a repository allows you to freely experiment with changes without 
@@ -110,37 +108,37 @@ If you haven't yet, you should first set up Git. Don't forget to set up authenti
 
 Right now, you have a fork of the fermat-org repository, but you don't have the files in that repository on your computer. Let's create a clone of your fork locally on your computer.
 
-On GitHub, navigate to your fork of the YOUR_USERNAME/fermat-org repository.
-In the right sidebar of your fork's repository page, copy the URL of for your fork **https://github.com/YOUR_USERNAME/fermat-org.git**.
+1. On GitHub, navigate to your fork of the YOUR_USERNAME/fermat-org repository.
+2. In the right sidebar of your fork's repository page, copy the URL of for your fork **https://github.com/YOUR_USERNAME/fermat-org.git**.
 
-Open Terminal (for Mac and Linux users) or the command prompt (for Windows users).
+3. Open Terminal (for Mac and Linux users) or the command prompt (for Windows users).
 
-Type git clone, and then paste the URL you copied in Step 2. It will look like this, with your GitHub username instead of YOUR-USERNAME:
+4. Type git clone, and then paste the URL you copied in Step 2. It will look like this, with your GitHub username instead of YOUR-USERNAME:
 ```bash
   git clone https://github.com/YOUR-USERNAME/fermat-org.git
 ```
-Press Enter. Your local clone will be created.
+5. Press Enter. Your local clone will be created.
 Now, you have a local copy of your fork of the fermat-org repository!
 
 #####Step 3: Configure Git to sync your fork with the original repository
 
 When you fork a project in order to propose changes to the original repository, you can configure Git to pull changes from the original, or upstream, repository into the local clone of your fork.
 
-Open Terminal (for Mac and Linux users) or the command prompt (for Windows users).
+1. Open Terminal (for Mac and Linux users) or the command prompt (for Windows users).
 
-Change directories to the location of the fork you cloned in Step 2: Create a local clone of your fork.
+2. Change directories to the location of the fork you cloned in Step 2: Create a local clone of your fork.
 
-Type git remote -v and press Enter. You'll see the current configured remote repository for your fork.
+3. Type git remote -v and press Enter. You'll see the current configured remote repository for your fork.
 ```bash
   git remote -v
 # origin  https://github.com/YOUR_USERNAME/fermat-org.git (fetch)
 # origin  https://github.com/YOUR_USERNAME/fermat-org.git (push)
 ```
-Type git remote add upstream, and then paste the URL of the original repository press Enter. It will look like this:
+4. Type git remote add upstream, and then paste the URL of the original repository press Enter. It will look like this:
 ```bash
 git remote add upstream https://github.com/ORIGINAL_OWNER/fermat-org.git
 ```
-To verify the new upstream repository you've specified for your fork, type git remote -v again. You should see the URL for your fork as origin, and the URL for the original repository as upstream.
+5. To verify the new upstream repository you've specified for your fork, type git remote -v again. You should see the URL for your fork as origin, and the URL for the original repository as upstream.
 ```bash
 git remote -v
 # origin    https://github.com/YOUR_USERNAME/fermat-org.git (fetch)
