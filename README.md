@@ -120,46 +120,33 @@ Type git clone, and then paste the URL you copied in Step 2. It will look like t
   git clone https://github.com/YOUR-USERNAME/fermat-org.git
 ```
 Press Enter. Your local clone will be created.
-Now, you have a local copy of your fork of the Spoon-Knife repository!
+Now, you have a local copy of your fork of the fermat-org repository!
 
-#####Step 3: Configure Git to sync your fork with the original Spoon-Knife repository
+#####Step 3: Configure Git to sync your fork with the original repository
 
 When you fork a project in order to propose changes to the original repository, you can configure Git to pull changes from the original, or upstream, repository into the local clone of your fork.
 
-On GitHub, navigate to the octocat/Spoon-Knife repository.
-In the right sidebar of the repository page, click
-to copy the clone URL for the repository. 
-
-  Open Terminal (for Mac and Linux users) or the command prompt (for Windows users).
-
-
+Open Terminal (for Mac and Linux users) or the command prompt (for Windows users).
 
 Change directories to the location of the fork you cloned in Step 2: Create a local clone of your fork.
 
-    To go to your home directory, type just cd with no other text.
-    To list the files and folders in your current directory, type ls.
-    To go into one of your listed directories, type cd your_listed_directory.
-    To go up one directory, type cd ...
-
 Type git remote -v and press Enter. You'll see the current configured remote repository for your fork.
-
+```bash
   git remote -v
-# origin  https://github.com/YOUR_USERNAME/YOUR_FORK.git (fetch)
-# origin  https://github.com/YOUR_USERNAME/YOUR_FORK.git (push)
-
-Type git remote add upstream, and then paste the URL you copied in Step 2 and press Enter. It will look like this:
-
-git remote add upstream https://github.com/octocat/Spoon-Knife.git
-
-
-
+# origin  https://github.com/YOUR_USERNAME/fermat-org.git (fetch)
+# origin  https://github.com/YOUR_USERNAME/fermat-org.git (push)
+```
+Type git remote add upstream, and then paste the URL of the original repository press Enter. It will look like this:
+```bash
+git remote add upstream https://github.com/ORIGINAL_OWNER/fermat-org.git
+```
 To verify the new upstream repository you've specified for your fork, type git remote -v again. You should see the URL for your fork as origin, and the URL for the original repository as upstream.
 
 git remote -v
-# origin    https://github.com/YOUR_USERNAME/YOUR_FORK.git (fetch)
-# origin    https://github.com/YOUR_USERNAME/YOUR_FORK.git (push)
-# upstream  https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git (fetch)
-# upstream  https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git (push)
+# origin    https://github.com/YOUR_USERNAME/fermat-org.git (fetch)
+# origin    https://github.com/YOUR_USERNAME/fermat-org.git (push)
+# upstream  https://github.com/ORIGINAL_OWNER/fermat-org.git (fetch)
+# upstream  https://github.com/ORIGINAL_OWNER/fermat-org.git (push)
 
 ### Part IV: Compilation of Fermat-org locally.
 
