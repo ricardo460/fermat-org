@@ -141,12 +141,53 @@ Type git remote add upstream, and then paste the URL of the original repository 
 git remote add upstream https://github.com/ORIGINAL_OWNER/fermat-org.git
 ```
 To verify the new upstream repository you've specified for your fork, type git remote -v again. You should see the URL for your fork as origin, and the URL for the original repository as upstream.
-
+```bash
 git remote -v
 # origin    https://github.com/YOUR_USERNAME/fermat-org.git (fetch)
 # origin    https://github.com/YOUR_USERNAME/fermat-org.git (push)
 # upstream  https://github.com/ORIGINAL_OWNER/fermat-org.git (fetch)
 # upstream  https://github.com/ORIGINAL_OWNER/fermat-org.git (push)
+```
+
+### Part III: Synchronize fork and make pull request.
+
+Sync a fork of a repository is necessary to keep it up-to-date with the upstream repository.
+
+Before you can sync your fork with an upstream repository, you must configure a remote that points to the upstream repository as explained in the previous section.
+
+Open Terminal and change directories to the location of the fork you cloned.
+
+####Synchronizing the local repository of the upstream repository.
+Type the command in terminal
+```bash
+git pull upstream
+```
+The local repository will be updated.
+
+####Synchronizing the origin repository of the local repository.
+First commit your local changes and type the next command in the terminal
+```bash
+git push
+```
+The origin repository will be updated.
+
+####Making a Pull Request to your Responsible
+
+A Pull Request is where we ask our Responsible to get the latest changes we've made.
+
+The easiest and most visual way to do this is through GitHub. In order to do so, we have to head to our Fork, and on the left margin you'll see an green button that says: New Pull Request, click it. The web will show you a screen with a series of scrollable menus in which it indicates:
+
+    ¿To whom you wish to make the Pull Request? ¿To what branch?
+    ¿From where do you wish to make the Pull Request? ¿To what branch?
+
+Be sure to pick the fork of your Responsible, the master branch on the first, and your fork and the master branch on the second.
+
+Click the green button that says: Create pull request
+
+Fill all the fields indicating the reason to make the Pull Request and which where the modifications made.
+
+Confirm the Pull Request by clicking the button: Create Pull Request*, and there ends your responsibility.
+
 
 ### Part IV: Compilation of Fermat-org locally.
 
