@@ -67,9 +67,9 @@ function ViewManager() {
 
                         window.headers.transformTable(transition);
 
-                        window.changeViewWorkFlows();
+                        window.deleteAllWorkFlows();
 
-                        developer.delete();
+                        window.developer.delete();
                     };
                     
                     exit = function() {
@@ -119,18 +119,15 @@ function ViewManager() {
                 case 'workflows':
                     enter = function() {
                         window.getHeaderFLow();
-
                         window.headers.transformWorkFlow(8000);
                     };
 
                     reset = function() {
-                        window.tileManager.rollBack();
+                        window.showWorkFlow();
+                    };
 
-                        setTimeout(function() {
-                            window.headers.transformWorkFlow(6000);
-                            window.changeViewWorkFlows();
-                            window.getHeaderFLow();
-                        }, 1000);
+                    exit = function() {
+                        window.deleteAllWorkFlows();
                     };
                     
                     break;
@@ -164,16 +161,16 @@ function ViewManager() {
                     break;
                 case 'developers':
                     enter = function(){
-                        developer.getDeveloper();
+                        window.developer.getDeveloper();
 
                         setTimeout(function(){
-                            developer.animateDeveloper();
+                            window.developer.animateDeveloper();
                         }, 2000);        
                 };
 
                     reset = function(){
                         setTimeout(function(){
-                            developer.animateDeveloper();
+                            window.developer.animateDeveloper();
                         }, 4000);
                         changeView(tileManager.targets.table);
                 };
