@@ -92,8 +92,11 @@ affecting the original project.
 To create a fork follow these steps:
 
 * Access GitHub.
+
 * Access the repository from which you want to create a fork.
+
 * You have to head to the upper right side and click on the Fork Button.
+
 * A pop-up will show up asking “Where should we fork this repository?” there you have to select your own user.
 
 #### Keep your fork synced
@@ -108,37 +111,39 @@ If you haven't yet, you should first set up Git. Don't forget to set up authenti
 
 Right now, you have a fork of the fermat-org repository, but you don't have the files in that repository on your computer. Let's create a clone of your fork locally on your computer.
 
-1. On GitHub, navigate to your fork of the YOUR_USERNAME/fermat-org repository.
-2. In the right sidebar of your fork's repository page, copy the URL of for your fork **https://github.com/YOUR_USERNAME/fermat-org.git**.
+* On GitHub, navigate to your fork of the YOUR_USERNAME/fermat-org repository.
 
-3. Open Terminal (for Mac and Linux users) or the command prompt (for Windows users).
+* In the right sidebar of your fork's repository page, copy the URL of for your fork **https://github.com/YOUR_USERNAME/fermat-org.git**.
 
-4. Type git clone, and then paste the URL you copied in Step 2. It will look like this, with your GitHub username instead of YOUR-USERNAME:
+* Open Terminal (for Mac and Linux users) or the command prompt (for Windows users).
+
+* Type git clone, and then paste the URL you copied in Step 2. It will look like this, with your GitHub username instead of YOUR-USERNAME:
 ```bash
   git clone https://github.com/YOUR-USERNAME/fermat-org.git
 ```
-5. Press Enter. Your local clone will be created.
+* Press Enter. Your local clone will be created.
+
 Now, you have a local copy of your fork of the fermat-org repository!
 
 #####Step 3: Configure Git to sync your fork with the original repository
 
 When you fork a project in order to propose changes to the original repository, you can configure Git to pull changes from the original, or upstream, repository into the local clone of your fork.
 
-1. Open Terminal (for Mac and Linux users) or the command prompt (for Windows users).
+* Open Terminal (for Mac and Linux users) or the command prompt (for Windows users).
 
-2. Change directories to the location of the fork you cloned in Step 2: Create a local clone of your fork.
+* Change directories to the location of the fork you cloned in Step 2: Create a local clone of your fork.
 
-3. Type git remote -v and press Enter. You'll see the current configured remote repository for your fork.
+* Type git remote -v and press Enter. You'll see the current configured remote repository for your fork.
 ```bash
   git remote -v
 # origin  https://github.com/YOUR_USERNAME/fermat-org.git (fetch)
 # origin  https://github.com/YOUR_USERNAME/fermat-org.git (push)
 ```
-4. Type git remote add upstream, and then paste the URL of the original repository press Enter. It will look like this:
+* Type git remote add upstream, and then paste the URL of the original repository press Enter. It will look like this:
 ```bash
 git remote add upstream https://github.com/ORIGINAL_OWNER/fermat-org.git
 ```
-5. To verify the new upstream repository you've specified for your fork, type git remote -v again. You should see the URL for your fork as origin, and the URL for the original repository as upstream.
+* To verify the new upstream repository you've specified for your fork, type git remote -v again. You should see the URL for your fork as origin, and the URL for the original repository as upstream.
 ```bash
 git remote -v
 # origin    https://github.com/YOUR_USERNAME/fermat-org.git (fetch)
@@ -171,20 +176,20 @@ The origin repository will be updated.
 
 ####Making a Pull Request to your Responsible
 
-A Pull Request is where we ask our Responsible to get the latest changes we've made.
+* A Pull Request is where we ask our Responsible to get the latest changes we've made.
 
-The easiest and most visual way to do this is through GitHub. In order to do so, we have to head to our Fork, and on the left margin you'll see an green button that says: New Pull Request, click it. The web will show you a screen with a series of scrollable menus in which it indicates:
+* The easiest and most visual way to do this is through GitHub. In order to do so, we have to head to our Fork, and on the left margin you'll see an green button that says: New Pull Request, click it. The web will show you a screen with a series of scrollable menus in which it indicates:
 
     ¿To whom you wish to make the Pull Request? ¿To what branch?
     ¿From where do you wish to make the Pull Request? ¿To what branch?
 
-Be sure to pick the fork of your Responsible, the master branch on the first, and your fork and the master branch on the second.
+* Be sure to pick the fork of your Responsible, the master branch on the first, and your fork and the master branch on the second.
 
-Click the green button that says: Create pull request
+* Click the green button that says: Create pull request
 
-Fill all the fields indicating the reason to make the Pull Request and which where the modifications made.
+* Fill all the fields indicating the reason to make the Pull Request and which where the modifications made.
 
-Confirm the Pull Request by clicking the button: Create Pull Request*, and there ends your responsibility.
+* Confirm the Pull Request by clicking the button: Create Pull Request*, and there ends your responsibility.
 
 
 ### Part IV: Compilation of Fermat-org locally.
