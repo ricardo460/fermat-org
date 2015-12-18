@@ -39,7 +39,9 @@ function ActionFlow(flow) {
 
     
     var onClick = function(target) {
+
         if(window.actualView === 'workflows'){
+            
             window.onElementClickHeaderFlow(target.userData.id);
             self.action = true;
         }
@@ -54,27 +56,30 @@ function ActionFlow(flow) {
      */
     this.draw = function(initialX, initialY, initialZ, indice, id) {
 
-        var title = createTitleBox(self.flow.name, self.flow.desc);
-        
-        var origin = window.helper.getOutOfScreenPoint(0);
-        var target = new THREE.Vector3(initialX, initialY + window.TILE_DIMENSION.height * 2, initialZ);
+        var title = createTitleBox(self.flow.name, self.flow.desc),
+            origin = window.helper.getOutOfScreenPoint(0),
+            target = new THREE.Vector3(initialX, initialY + window.TILE_DIMENSION.height * 2, initialZ);
 
         title.userData = {
                 id: id,
                 onClick : onClick
         };
+        
         objectsFlow.position.origin.push(origin);
         objectsFlow.position.target.push(target);
         
         title.position.copy(origin);
         
         objectsFlow.mesh.push(title);
+        
         window.scene.add(title);
 
         if (indice === 0){
+            
             for(i = 0, l = self.flow.steps.length; i < l; i++){
                 self.drawTree(self.flow.steps[i], initialX + COLUMN_SPACING * i, initialY, 0);
             }
+            
             new TWEEN.Tween(this)
                 .to({}, 8000)
                 .onUpdate(window.render)
@@ -84,11 +89,10 @@ function ActionFlow(flow) {
             self.showSteps();
         }
 
-        if (indice === 1){
+        else if (indice === 1){
             self.showFlow();
         }
     };
-
 
     /**
   	 * @author Miguel Celedon
@@ -101,25 +105,32 @@ function ActionFlow(flow) {
 
     this.drawTree = function(root, x, y, z) {
         
-        if(typeof root.drawn === 'undefined') {
+        if (typeof root.drawn === 'undefined'){
+            
             drawStep(root, x, y, z);
 
             var childCount = root.next.length,
                 startX = x - 0.5 * (childCount - 1) * COLUMN_SPACING;
 
-            if(childCount !== 0) {
-
-                var lineGeo = new THREE.Geometry();
-                var lineMat = new THREE.LineBasicMaterial({color : 0x000000});
-
-                var rootPoint = new THREE.Vector3(x + X_OFFSET, y - ROW_SPACING / 2, -1);
+            if (childCount !== 0){
+                
+                 var lineGeo,
+                     lineMat, 
+                     rootPoint,
+                     rootLine,
+                     origin;           
+                
+                lineGeo = new THREE.Geometry();
+                lineMat = new THREE.LineBasicMaterial({color : 0x000000});
+                rootPoint = new THREE.Vector3(x + X_OFFSET, y - ROW_SPACING / 2, -1);
 
                 lineGeo.vertices.push(
-                    new THREE.Vector3(x + X_OFFSET, y, -1),
-                    rootPoint);
+                            new THREE.Vector3(x + X_OFFSET, y, -1),
+                            rootPoint
+                            );
 
-                var rootLine = new THREE.Line(lineGeo, lineMat);
-                var origin = helper.getOutOfScreenPoint(-1);
+                rootLine = new THREE.Line(lineGeo, lineMat);
+                origin = helper.getOutOfScreenPoint(-1);
                 rootLine.position.copy(origin);
                 objectsStep.position.origin.push(origin);
                 objectsStep.position.target.push(new THREE.Vector3(0, 0, 0));
@@ -127,7 +138,13 @@ function ActionFlow(flow) {
                 objectsStep.mesh.push(rootLine);
                 window.scene.add(rootLine);
 
-                var nextX, nextY, childLine, child, i, isLoop, nextZ = z;
+                var nextX, 
+                    nextY, 
+                    childLine, 
+                    child, 
+                    i, 
+                    isLoop, 
+                    nextZ = z;
 
                 for(i = 0; i < childCount; i++) {
 
@@ -152,12 +169,13 @@ function ActionFlow(flow) {
 
                     lineGeo = new THREE.Geometry();
                     lineGeo.vertices.push(
-                        rootPoint,
-                        new THREE.Vector3(nextX + X_OFFSET, rootPoint.y, -1),
-                        new THREE.Vector3(nextX + X_OFFSET, nextY, -1)
-                    );
+                            rootPoint,
+                            new THREE.Vector3(nextX + X_OFFSET, rootPoint.y, -1),
+                            new THREE.Vector3(nextX + X_OFFSET, nextY, -1)
+                        );
 
                     if(isLoop) {
+                        
                         lineGeo.vertices[2].setY(nextY + ROW_SPACING * 0.25);
 
                         lineGeo.vertices.push(
@@ -182,6 +200,56 @@ function ActionFlow(flow) {
             }
         }
     };
+    
+    /**
+     * @author Emmanuel Colina
+     * @lastmodifiedBy Ricardo Delgado
+     * Takes away all the tiles except the one with the id
+     */
+    this.letAloneHeaderFlow = function() {
+
+    	animateStep("origin", false);
+    	animateFlow("origin", true);
+    };
+    
+    /**
+     * @author Ricardo Delgado
+     * Displays all flow in the table.
+     */
+    this.showFlow = function() {
+        
+        animateFlow("target", true);
+    };
+
+    /**
+     * @author Ricardo Delgado
+     * It shows all the steps of the flow.
+     */
+    this.showSteps = function() {
+
+        animateStep("target", true);
+    };
+
+    /**
+     * @author Ricardo Delgado.
+     * Deletes all objects related to the flow.
+     */
+    this.deleteAll = function() {
+
+    	animateStep("origin", false);
+    	animateFlow("origin", false);  
+    };
+
+    /**
+     * @author Ricardo Delgado.
+     * Deletes all step related to the flow.
+     */    
+    this.deleteStep = function() {
+
+        window.tileManager.letAlone();
+
+        animateStep("origin", false);
+    };
 
     //Private methods
 
@@ -194,13 +262,17 @@ function ActionFlow(flow) {
      */
     function drawStep(node, x, y, _z) {
 
-        var z = _z || 0;
-        var tile,
+        var z = _z || 0,
+            tile,
+            stepBox,
+            origin,
+            target,
             tilePosition = new THREE.Vector3(x - 108, y - 2, z + 1);
 
         if(node.element !== -1) {
 
             if(typeof used[node.element] !== 'undefined') {
+                
                 tile = window.objects[node.element].clone();
                 tile.isClone = true;
                 
@@ -211,6 +283,7 @@ function ActionFlow(flow) {
                 window.scene.add(tile);
             }
             else {
+                
                 tile = window.objects[node.element];
                 used[node.element] = true;
             }
@@ -221,10 +294,12 @@ function ActionFlow(flow) {
                 .start();
         }
 
-        var stepBox = createStepBox(node);
+        stepBox = createStepBox(node);
         
-        var origin = window.helper.getOutOfScreenPoint(0);
-        var target = new THREE.Vector3(x, y, z);
+        origin = window.helper.getOutOfScreenPoint(0);
+        
+        target = new THREE.Vector3(x, y, z);
+        
         objectsStep.position.origin.push(origin);
         objectsStep.position.target.push(target);
         
@@ -261,11 +336,11 @@ function ActionFlow(flow) {
     
     
     /**
+     * @author Miguel Celedon
      * Creates a flow box and when texture is loaded, calls fillBox
      * @param   {String}     src     The texture to load
      * @param   {Function}   fillBox Function to call after load, receives context and image
      * @returns {THREE.Mesh} The created plane with the drawed texture
-     * @author Miguel Celedon
      */
     function createFlowBox(src, fillBox, width, height) {
         
@@ -359,45 +434,12 @@ function ActionFlow(flow) {
     }
 
     /**
-     * @author Emmanuel Colina
-     * @lastmodifiedBy Ricardo Delgado
-     * Takes away all the tiles except the one with the id
-     */
-    this.letAloneHeaderFlow = function() {
-
-    	animateStep("origin", false);
-    	animateFlow("origin", true);
-    };
-
-    this.showFlow = function() {
-        
-        animateFlow("target", true);
-    };
-
-
-    this.showSteps = function() {
-
-        animateStep("target", true);
-    };
-
-    /**
      * @author Ricardo Delgado.
-     * Deletes all objects related to the flow.
+     * Creates the animation for all flow there.
+     * @param   {String}     target     He says the goal should take the flow.
+     * @param   {Boolean}    state      state of the object.
+	 * @param   {Number}  duration   Animation length.
      */
-    this.deleteAll = function() {
-
-    	animateStep("origin", false);
-    	animateFlow("origin", false);
-       
-    };
-
-    this.deleteStep = function() {
-
-        window.tileManager.letAlone();
-
-        animateStep("origin", false);
-    };
-
     function animateFlow(target, state, duration){
 
         var _duration = duration || 2000,
@@ -412,6 +454,13 @@ function ActionFlow(flow) {
         }
     }
 
+    /**
+     * @author Ricardo Delgado.
+     * Creates the animation for all step there.
+     * @param   {String}  target He says the goal should take the step.
+     * @param   {Boolean} state  state of the object.
+	 * @param   {Number}  duration   Animation length.
+     */
     function animateStep(target, state, duration){
 
         var _duration = duration || 2000,
@@ -426,14 +475,22 @@ function ActionFlow(flow) {
         }
     }
 
-    function animate(object, target, _duration, state) {
+	/**
+	* @author Ricardo Delgado
+	* Animation and out of the flow and step.
+	* @param {object}    object    Object.
+	* @param {Number}    target    Coordinates Object.
+	* @param {Number}   duration   Animation length.
+	* @param {Boolean}   state     Status Object.
+	*/
+    function animate(object, target, duration, state) {
 
         new TWEEN.Tween(object.position)
             .to({
                 x: target.x,
                 y: target.y,
                 z: target.z
-            }, Math.random() * _duration + _duration)
+            }, Math.random() * duration + duration)
             .easing(TWEEN.Easing.Exponential.InOut)
             .onComplete(function () {
             	if(!state)
