@@ -247,6 +247,7 @@ function ActionFlow(flow) {
     this.deleteStep = function() {
 
         window.tileManager.letAlone();
+        used = [];
         animateStep("origin", false, 3000);
     };
 
