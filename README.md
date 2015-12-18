@@ -169,8 +169,7 @@ The local repository will be updated.
 
 Alternatively you can use git fetch upstream to bring any changes in the original repository and then do the master merge your local branch. The difference between git pull and git fetch is: git pull automatically updates your local branch and you do not have to merge git.
 
-Para actualizar el repositorio local usando git fetch escriba los siguientes comandos en la termina y despues presione enter. 
-To update the local repository using git fetch type the following commands in terminal and then press ENTER. 
+To update the local repository using git fetch type the following commands in terminal and then press INTRO. 
 ```bash
 git fetch upstream
 ```
