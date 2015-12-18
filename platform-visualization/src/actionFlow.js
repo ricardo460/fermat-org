@@ -406,7 +406,7 @@ function ActionFlow(flow) {
         
         return createFlowBox('images/workflow/stepBox.png', fillBox, BOX_WIDTH, BOX_HEIGHT);
     }
-    
+
     /**
      * Creates the title box
      * @param {String} title The title of the box
