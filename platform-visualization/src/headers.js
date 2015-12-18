@@ -15,7 +15,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         },
         positions = {
             table : [],
-            stack : []
+            stack : [],
+            workFlow: []
         },
         arrowsPositions = {
             origin: [],
@@ -32,6 +33,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
     // Public method
 
+    this.getPositionHeaderViewInFlow = function(){
+        return positions.workFlow;
+    };
     /**
      * @author Emmanuel Colina
      * @lastmodifiedBy Miguel Celedon
@@ -118,6 +122,52 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         .to({}, duration * 2)
         .onUpdate(render)
         .start();
+    };
+
+    /**
+     * @author Emmanuel Colina
+     * Arranges the headers by dependency
+     * @param {Number} [duration=2000] Duration in milliseconds for the animation
+     */
+    this.transformWorkFlow = function(duration) {
+        var _duration = duration || 2000;
+
+        var i, l;
+
+        for (i = 0, l = objects.length; i < l; i++) {
+            new TWEEN.Tween(objects[i].position)
+            .to({
+                x : positions.workFlow[i].position.x,
+                y : positions.workFlow[i].position.y,
+                z : positions.workFlow[i].position.z
+            }, _duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
+        }
+        
+        new TWEEN.Tween(this)
+        .to({}, duration * 2)
+        .onUpdate(render)
+        .start();
+    };
+
+    /**
+     * @author Emmanuel Colina
+     * Hide the headers
+     */
+    this.hidetransformWorkFlow = function (duration) {
+        var i, j,
+            position;
+        
+        for (i = 0; i < objects.length; i++ ) {
+            
+            position = window.helper.getOutOfScreenPoint(0);
+            
+            new TWEEN.Tween(objects[i].position)
+            .to({x : position.x, y : position.y, z : position.z}, duration)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .start();
+        }
     };
 
     /**
@@ -489,7 +539,32 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         
         graph = data;
     };
-    
+
+    /**
+     * @author Emmanuel Colina
+     * Calculate the position header
+     */
+    var headersPositionsViewWorkFlow = function() {
+
+        var width, height;
+        for(var i = 0; i < positions.table.length; i++){
+
+            column = i;
+
+            width = columnWidth * window.TILE_DIMENSION.width;
+            height = width * 443 / 1379;
+   
+            objectHeaderInWFlowGroup = new THREE.Object3D();
+            
+            objectHeaderInWFlowGroup.position.x = ((columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 10000;
+            objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
+            objectHeaderInWFlowGroup.name = positions.table[i].name;
+
+            objectHeaderInWFlowGroup.position.copy(window.viewManager.translateToSection('workflows', objectHeaderInWFlowGroup.position));
+            positions.workFlow.push(objectHeaderInWFlowGroup);
+        }
+    };
+
     var initialize = function() {
         
         var headerData,
@@ -531,7 +606,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                     ['small', 16000]],
                 i, l,
                 header = new THREE.LOD();
-            
+
             for(i = 0, l = levels.length; i < l; i++) {
             
                 source = 'images/headers/' + levels[i][0] + '/' + group + '_logo.png';
@@ -542,14 +617,14 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                     );
                 
                 helper.applyTexture(source, object);
-                
+
                 header.addLevel(object, levels[i][1]);
             }
             
             return header;
         }
         
-        var src, width, height;
+        var src, width, height, numIdex;
             
         for (group in groups) {
             if (window.groups.hasOwnProperty(group) && group !== 'size') {
@@ -583,10 +658,13 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
         for (slayer in superLayers) {
             if (window.superLayers.hasOwnProperty(slayer) && slayer !== 'size') {
-
+                
                 headerData = window.superLayers[slayer];
-                row = superLayerPosition[headerData.index];
 
+                numIdex = headerData.index + 1;
+
+                row = superLayerPosition[numIdex];
+ 
                 width = columnWidth * window.TILE_DIMENSION.width;
                 height = width * 443 / 1379;
 
@@ -615,6 +693,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         
         buildGraph();
         calculateStackPositions();
+        headersPositionsViewWorkFlow();
     };
     
     initialize();

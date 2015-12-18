@@ -4,13 +4,13 @@
  */
 function ActionFlow(flow) {
     
-    var BOX_WIDTH = 790;
-    var BOX_HEIGHT = 172;
+    var BOX_WIDTH = 825;
+    var BOX_HEIGHT = 188;
     var X_OFFSET = -312; //Because lines don't come from the center
     var ROW_SPACING = 350;
     var COLUMN_SPACING = 900;
-    var HEADER_WIDTH = 804;
-    var HEADER_HEIGHT = 232;
+    var HEADER_WIDTH = 825;
+    var HEADER_HEIGHT = 238;
     
     this.flow = flow || [];
     
@@ -68,7 +68,7 @@ function ActionFlow(flow) {
         }
 
         if (indice === 1){
-            self.showStepsFlow();
+            self.showSteps();
         }
     };
 
@@ -80,10 +80,7 @@ function ActionFlow(flow) {
     this.letAloneHeaderFlow = function() {
         
         var i, _duration = 2000,
-            distance = camera.getMaxDistance() * 2,
-            out = window.viewManager.translateToSection('workflows', new THREE.Vector3(0, 0, distance));
-
-        var target;
+            distance = camera.getMaxDistance() * 2, target;
 
         var animate = function (object, target, dur) {
 
@@ -103,7 +100,7 @@ function ActionFlow(flow) {
 
         for (i = 0; i < objects.length; i++) {
 
-            target = out;
+            target = positions.origin[i];
             objects[i].userData.flying = true;
             animate(objects[i], target, Math.random() * _duration + _duration);
         }
@@ -233,7 +230,7 @@ function ActionFlow(flow) {
             }
 
             new TWEEN.Tween(tile.position)
-                .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 2000)
+                .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 5000)
                 .easing(TWEEN.Easing.Cubic.InOut)
                 .start();
         }
@@ -308,24 +305,7 @@ function ActionFlow(flow) {
             var target = positions.target[id];
             
             new TWEEN.Tween(objects[id].position)
-                .to({x : target.x, y : target.y, z : target.z}, 4000)
-                .easing(TWEEN.Easing.Cubic.InOut)
-                .start();
-        };
-        
-        for(var i = 0, l = objects.length; i < l; i++) {
-            move(i);
-        }
-    };
-
-    this.showStepsFlow = function() {
-        
-        var move = function(id) {
-            
-            var target = positions.target[id];
-            
-            new TWEEN.Tween(objects[id].position)
-                .to({x : target.x, y : target.y, z : target.z}, 4000)
+                .to({x : target.x, y : target.y, z : target.z}, 6000)
                 .easing(TWEEN.Easing.Cubic.InOut)
                 .start();
         };
@@ -390,18 +370,18 @@ function ActionFlow(flow) {
             var size = 83;
             ctx.font = size + 'px Arial';
             ctx.fillStyle = '#000000';
-            window.helper.drawText(Nodeid, 40, 122, ctx, 76, size);
+            window.helper.drawText(Nodeid, 57, 130, ctx, 76, size);
             ctx.fillStyle = '#FFFFFF';
             
             //Title
-            size = 20;
+            size = 18;
             ctx.font = 'bold ' + size + 'px Arial';
-            window.helper.drawText(node.title, 404, 51, ctx, 250, size);
+            window.helper.drawText(node.title, 421, 59, ctx, 250, size);
             
             //Description
             size = 12;
             ctx.font = size + 'px Arial';
-            window.helper.drawText(node.desc, 404, 96, ctx, 250, size);
+            window.helper.drawText(node.desc, 421, 104, ctx, 250, size);
         };
         
         return createFlowBox('images/workflow/stepBox.png', fillBox, BOX_WIDTH, BOX_HEIGHT);
@@ -420,12 +400,12 @@ function ActionFlow(flow) {
             ctx.drawImage(image, 0, 0);
             
             //Title
-            var size = 20;
+            var size = 24;
             ctx.font = 'bold ' + size + 'px Arial';
-            window.helper.drawText(title, 190, 61, ctx, 274, size * 1.5);
+            window.helper.drawText(title, 190, 61, ctx, 400, size);
             
             //Description
-            size = 15;
+            size = 17;
             ctx.font = size + 'px Arial';
             window.helper.drawText(desc, 190, 126, ctx, 550, size);
         };
