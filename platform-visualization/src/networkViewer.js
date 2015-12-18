@@ -3,7 +3,6 @@ function NetworkViewer() {
     BaseNetworkViewer.call(this);
     
     this.childNetwork = null;
-    
 }
 
 NetworkViewer.prototype = Object.create(BaseNetworkViewer.prototype);
@@ -23,19 +22,64 @@ NetworkViewer.prototype.load = function() {
 
 /**
  * @override
+ * Unloads and undraws everything and closes its children
+ * @author Miguel Celedon
+ */
+NetworkViewer.prototype.unload = function() {
+    
+    if(this.childNetwork) {
+        
+        this.close();
+    }
+    
+    BaseNetworkViewer.prototype.unload.call(this);
+    
+};
+
+/**
+ * @override
  * To be executed when a nodes is clicked
  * @author Miguel Celedon
  * @param {object} clickedNode The clicked node
  */
 NetworkViewer.prototype.onNodeClick = function(clickedNode) {
     
-    BaseNetworkViewer.prototype.onNodeClick.call(this, clickedNode);
+    if(this.childNetwork === null) {
+        
+        BaseNetworkViewer.prototype.onNodeClick.call(this, clickedNode);
+
+        this.hideEdges();
+        this.hideNodes([clickedNode.userData.id]);
+        this.childNetwork = new ClientsViewer(clickedNode);
+        
+        this.open();
+    }
+};
+
+/**
+ * @override
+ * Called when the function needs to show its details
+ * @author Miguel Celedon
+ */
+NetworkViewer.prototype.open = function() {
     
-    this.hideEdges();
-    this.hideNodes([clickedNode.userData.id]);
-    
-    this.childNetwork = new ClientsViewer(clickedNode);
     this.childNetwork.load();
+    
+};
+
+/**
+ * @override
+ * Called when needed to hide the details
+ * @author Miguel Celedon
+ */
+NetworkViewer.prototype.close = function() {
+    
+    if(this.childNetwork !== null) {
+        
+        this.childNetwork.close();
+        this.childNetwork.unload();
+        this.childNetwork = null;
+    }
 };
 
 /**
@@ -122,5 +166,5 @@ NetworkViewer.prototype.reset = function() {
     
     BaseNetworkViewer.prototype.reset.call(this);
     
-    if(this.childNetwork) this.childNetwork.unload();
+    this.close();
 };

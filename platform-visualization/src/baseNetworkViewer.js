@@ -1,8 +1,14 @@
+/**
+ * @class
+ * @classdesc The base class that represents a node network
+ * @author Miguel Celedon
+ */
 function BaseNetworkViewer() {
     
     this.nodes = {};
     this.edges = [];
     this.NET_RADIOUS = 1000;
+    this.hasFocus = false;
 }
 
 BaseNetworkViewer.prototype = {
@@ -250,5 +256,17 @@ BaseNetworkViewer.prototype = {
 
         goalPosition.z -= 9000;
         window.camera.setTarget(goalPosition, 1000);
-    }
+    },
+    
+    /**
+     * Action to open the details about a node
+     * @author Miguel Celedon
+     */
+    open : function() {},
+    
+    /**
+     * Action to close the details of a node
+     * @author Miguel Celedon
+     */
+    close : function() {}
 };
