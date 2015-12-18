@@ -44,7 +44,7 @@ function ViewManager() {
         
         var transition = 5000;
         var actions = {},
-            enter = null, exit = null, reset = null, zoom = null;
+            enter = null, exit = null, reset = null, zoom = null, backButton = null;
         
         if(window.map.views[view].enabled === true) {
         
@@ -67,10 +67,19 @@ function ViewManager() {
 
                         window.headers.transformTable(transition);
 
-                        window.changeViewWorkFlows();
+                        window.deleteAllWorkFlows();
 
-                        developer.delete();
+                        window.developer.delete();
                     };
+                    
+                    backButton = function() {
+                        
+                        window.changeView(tileManager.targets.table);
+            
+                        setTimeout(function(){
+                            window.signLayer.transformSignLayer();
+                        }, 2500);
+                    };                    
                     
                     exit = function() {
                         window.tileManager.rollBack();
@@ -110,6 +119,10 @@ function ViewManager() {
                             window.magazine.init(view);
                         }, 2000);    
                     };
+                    
+                    reset = function() {
+                        window.magazine.actionSpecial();
+                    };
 
                     exit = function() {
                         window.magazine.remove();
@@ -119,18 +132,15 @@ function ViewManager() {
                 case 'workflows':
                     enter = function() {
                         window.getHeaderFLow();
-
                         window.headers.transformWorkFlow(8000);
                     };
+                    
+                    backButton = reset = function() {
+                        window.showWorkFlow();
+                    };
 
-                    reset = function() {
-                        window.tileManager.rollBack();
-
-                        setTimeout(function() {
-                            window.headers.transformWorkFlow(6000);
-                            window.changeViewWorkFlows();
-                            window.getHeaderFLow();
-                        }, 1000);
+                    exit = function() {
+                        window.deleteAllWorkFlows();
                     };
                     
                     break;
@@ -164,19 +174,20 @@ function ViewManager() {
                     break;
                 case 'developers':
                     enter = function(){
-                        developer.getDeveloper();
+                        window.developer.getDeveloper();
 
                         setTimeout(function(){
-                            developer.animateDeveloper();
+                            window.developer.animateDeveloper();
                         }, 2000);        
-                };
-
-                    reset = function(){
+                    };
+                    
+                    backButton = reset = function() {
                         setTimeout(function(){
-                            developer.animateDeveloper();
+                            window.developer.animateDeveloper();
                         }, 4000);
-                        changeView(tileManager.targets.table);
-                };
+                        
+                        window.changeView(tileManager.targets.table);
+                    };
 
                     break;
                 default:
@@ -188,7 +199,8 @@ function ViewManager() {
             enter : enter || function(){},
             exit : exit || function(){},
             reset : reset || function(){},
-            zoom : zoom || function(){}
+            zoom : zoom || function(){},
+            backButton : backButton || function(){}
         };
         
         return actions;
