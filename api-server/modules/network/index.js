@@ -1,14 +1,47 @@
-/*jshint -W069 */
-'use strict';
-var nodSrv = require('./node/services/nod');
-var NodMdl = require('./node/models/nod');
-var linkSrv = require('./link/services/link');
-var LinkMdl = require('./link/models/link');
-var waveSrv = require('./wave/services/wave');
-var WaveMdl = require('./wave/models/wave');
+var linkMod = require('./link');
+var nodeMod = require('./node');
+var waveMod = require('./wave');
 
-exports.getLastNetwork = function(callback) {};
-exports.getServerNetwork = function(callback) {};
-exports.getChildren = function(prnt_hash, callback) {};
+exports.getServerNetwork = function (req, next) {
+	'use strict';
+	try {
+		waveMod.findLastWave(function (err_wav, res_wav) {
+			if (err_wav) {
+				next(err_wav, null);
+			} else {
+				nodeMod.findNodsByWaveIdAndType(res_wav._id, 'server', function (err_nods, res_nods) {
+					if (err_nods) {
+						next(err_nods, null);
+					} else {
+
+					}
+				});
+			}
+		});
+	} catch (err) {
+		next(err, null);
+	}
+};
+
+exports.getChildren = function (req, next) {
+	'use strict';
+	try {
+		waveMod.findLastWave(function (err_wav, res_wav) {
+			if (err_wav) {
+				next(err_wav, null);
+			} else {
+				nodeMod.findNodsByWaveIdAndHash(res_wav._id, req.query.hash, function (err_nods, res_nods) {
+					if (err_nods) {
+						next(err_nods, null);
+					} else {
+
+					}
+				});
+			}
+		});
+	} catch (err) {
+		next(err, null);
+	}
+};
 
 /*jshint +W069 */

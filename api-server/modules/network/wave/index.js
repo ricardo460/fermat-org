@@ -15,7 +15,7 @@ var WaveMdl = require('./models/wave');
 exports.insertWave = function (desc, callback) {
     'use strict';
     try {
-        
+
         var wave = new WaveMdl(desc);
         waveSrv.insertWave(wave, function (err_ins, res_ins) {
             if (err_ins) {
@@ -41,8 +41,10 @@ exports.insertWave = function (desc, callback) {
 exports.findWaveByDate = function (date, callback) {
     'use strict';
     try {
-        var start = new Date(date).setHours(00);
-        var end = new Date(date).setHours(24);
+        var start = new Date(date)
+            .setHours(00);
+        var end = new Date(date)
+            .setHours(24);
         var find_obj = {
             '$and': []
         };
@@ -56,7 +58,7 @@ exports.findWaveByDate = function (date, callback) {
                 '$lt': end
             }
         });
-        waveSrv.findWaves(find_obj, function (err, wave) {
+        waveSrv.findWaves(find_obj, {}, function (err, wave) {
             if (err) {
                 return callback(err, null);
             }
@@ -67,4 +69,25 @@ exports.findWaveByDate = function (date, callback) {
     }
 };
 
+
+exports.findLastWave = function (callback) {
+    'use strict';
+    try {
+        waveSrv.findWaves({}, {
+            _id: 1
+        }, function (err, wave) {
+            if (err) {
+                return callback(err, null);
+            }
+            if (Array.isArray(wave) && wave.length > 0) {
+                return callback(null, wave[0]);
+            } else {
+                return callback(null, null);
+            }
+
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
 /*jshint +W069 */
