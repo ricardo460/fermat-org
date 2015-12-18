@@ -40,7 +40,8 @@ BaseNetworkViewer.prototype = {
         for(var i = 0; i < this.edges.length; i++)
             scene.remove(this.edges[i].line);
         this.edges = [];
-
+        
+        window.render();
     },
 
     /**
@@ -112,6 +113,7 @@ BaseNetworkViewer.prototype = {
         for(var nodeID in this.nodes) {
             this.nodes[nodeID].sprite.visible = true;
         }
+        window.render();
     },
 
     /**
@@ -128,6 +130,7 @@ BaseNetworkViewer.prototype = {
                 this.nodes[nodeID].sprite.visible = false;
             }
         }
+        window.render();
     },
 
     /**
@@ -181,6 +184,7 @@ BaseNetworkViewer.prototype = {
         for(var i = 0; i < this.edges.length; i++) {
             this.edges[i].line.visible = true;
         }
+        window.render();
     },
 
     /**
@@ -194,6 +198,7 @@ BaseNetworkViewer.prototype = {
         for(var i = 0; i < this.edges.length; i++) {
             this.edges[i].line.visible = false;
         }
+        window.render();
     },
 
     /**

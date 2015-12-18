@@ -168,3 +168,23 @@ NetworkViewer.prototype.reset = function() {
     
     this.close();
 };
+
+/**
+ * Closes and unloads the child, if the child is open, closes it
+ * @author Miguel Celedon
+ * @returns {object} The reference to itself, if there was no children I'll return null
+ */
+NetworkViewer.prototype.closeChild = function() {
+    
+    var self = null;
+    
+    if(this.childNetwork !== null) {
+        this.childNetwork = this.childNetwork.closeChild();
+        self = this;
+    }
+    else {
+        this.reset();
+    }
+    
+    return self;
+};

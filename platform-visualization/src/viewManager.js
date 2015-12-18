@@ -161,6 +161,7 @@ function ViewManager() {
                     zoom = function() {
                         
                         window.camera.enableFreeMode();
+                        window.helper.showBackButton();
                         
                         if(window.networkViewer)
                             window.networkViewer.setCameraTarget();
@@ -169,6 +170,16 @@ function ViewManager() {
                     reset = function() {
                         if(window.networkViewer)
                             window.networkViewer.reset();
+                        
+                        window.helper.hideBackButton();
+                        window.camera.resetPosition();
+                    };
+                    
+                    backButton = function() {
+                        
+                        if(window.networkViewer && window.networkViewer.closeChild() === null) {
+                            reset();
+                        }
                     };
                     
                     break;

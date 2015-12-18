@@ -6,6 +6,7 @@ function ClientsViewer(parentNode) {
     this.nodes = {};
     this.edges = [];
     this.NET_RADIOUS = 1000;
+    this.childNetwork = null;
 }
 
 ClientsViewer.prototype = Object.create(BaseNetworkViewer.prototype);
@@ -103,5 +104,30 @@ ClientsViewer.prototype.createEdges = function() {
         });
     }
     
-    BaseNetworkViewer.prototype.createEdges.call(this);
+    this.showEdges();
+    
+    //Not needed now
+    //BaseNetworkViewer.prototype.createEdges.call(this);
+};
+
+/**
+ * Closes and unloads the child, if the child is open, closes it
+ * @author Miguel Celedon
+ * @returns {object} The reference to itself, if there was no children I'll return null
+ */
+ClientsViewer.prototype.closeChild = function() {
+    
+    var self = null;
+    
+    if(this.childNetwork !== null){
+        //TODO
+        self = this;
+    }
+    else {
+        this.close();
+        this.unload();
+    }
+    
+    return self;
+    
 };
