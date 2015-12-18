@@ -13,7 +13,8 @@ exports.getServerNetwork = function (req, next) {
 					if (err_nods) {
 						next(err_nods, null);
 					} else {
-
+						//TODO: search links
+						//TODO: get hashes
 					}
 				});
 			}
@@ -34,7 +35,8 @@ exports.getChildren = function (req, next) {
 					if (err_nods) {
 						next(err_nods, null);
 					} else {
-
+						//TODO: search links
+						//TODO: get hashes
 					}
 				});
 			}
