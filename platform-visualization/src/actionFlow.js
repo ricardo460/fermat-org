@@ -218,7 +218,7 @@ function ActionFlow(flow) {
      */
     this.showFlow = function() {
         
-        animateFlow("target", true, 3000);
+        animateFlow("target", true, 6000);
     };
 
     /**
@@ -449,7 +449,7 @@ function ActionFlow(flow) {
 
             _target = objectsFlow.position[target][i];
             object = objectsFlow.mesh[i];
-            animate(object, _target, 2000, state);
+            animate(object, _target, _duration, state);
         }
     }
 
@@ -496,7 +496,7 @@ function ActionFlow(flow) {
                 x: target.x,
                 y: target.y,
                 z: target.z
-            }, Math.random() * duration + duration)
+            }, duration)
             .easing(TWEEN.Easing.Cubic.InOut)
             .onComplete(function () {
             	if(!state)
