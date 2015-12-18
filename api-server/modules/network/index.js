@@ -9,12 +9,58 @@ exports.getServerNetwork = function (req, next) {
 			if (err_wav) {
 				next(err_wav, null);
 			} else {
+				//TODO: get hashes
 				nodeMod.findNodsByWaveIdAndType(res_wav._id, 'server', function (err_nods, res_nods) {
 					if (err_nods) {
 						next(err_nods, null);
 					} else {
-						//TODO: search links
-						//TODO: get hashes
+						var res_obj = [];
+						var loopNods = function (i) {
+							if (i < res_nods.length) {
+								//TODO: search links
+								var parent = res_nods[i];
+								linkMod.findChildren(res_wav._id, parent._id, function (err_chldrn, res_chldrn) {
+									if (err_chldrn) {
+										res_obj.push(parent);
+										loopNods(++i);
+									} else {
+										var children = [];
+										var loopChldrn = function (j) {
+											var link = res_chldrn[j];
+											if (j < res_chldrn.length) {
+												//TODO: finde node
+												nodeMod.findNodById(link._chld_nod_id, function (err_chld, res_chld) {
+													if (err_chld) {
+														loopChldrn(++j);
+													} else {
+														children.push(res_chld);
+														loopChldrn(++j);
+													}
+												});
+											} else {
+												parent.children = children;
+												res_obj.push(parent);
+												loopNods(++i);
+											}
+										};
+										if (res_chldrn && Array.isArray(res_chldrn)) {
+											loopChldrn(0);
+										} else {
+											parent.children = children;
+											res_obj.push(parent);
+											loopNods(++i);
+										}
+									}
+								});
+							} else {
+								next(null, res_obj);
+							}
+						};
+						if (res_nods && Array.isArray(res_nods)) {
+							loopNods(0);
+						} else {
+							next(null, res_obj);
+						}
 					}
 				});
 			}
@@ -35,8 +81,41 @@ exports.getChildren = function (req, next) {
 					if (err_nods) {
 						next(err_nods, null);
 					} else {
-						//TODO: search links
-						//TODO: get hashes
+						if (res_nods && Array.isArray(res_nods)) {
+							var parent = res_nods[0];
+							linkMod.findChildren(res_wav._id, parent._id, function (err_chldrn, res_chldrn) {
+								if (err_chldrn) {
+									parent.children = [];
+									next(null, parent);
+								} else {
+									var children = [];
+									var loopChldrn = function (j) {
+										var link = res_chldrn[j];
+										if (j < res_chldrn.length) {
+											nodeMod.findNodById(link._chld_nod_id, function (err_chld, res_chld) {
+												if (err_chld) {
+													loopChldrn(++j);
+												} else {
+													children.push(res_chld);
+													loopChldrn(++j);
+												}
+											});
+										} else {
+											parent.children = children;
+											next(null, parent);
+										}
+									};
+									if (res_chldrn && Array.isArray(res_chldrn)) {
+										loopChldrn(0);
+									} else {
+										parent.children = children;
+										next(null, parent);
+									}
+								}
+							});
+						} else {
+							next(null, {});
+						}
 					}
 				});
 			}

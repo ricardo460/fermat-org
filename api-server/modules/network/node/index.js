@@ -28,6 +28,20 @@ exports.findNodsByWaveIdAndType = function (_wave_id, type, callback) {
     }
 };
 
+exports.findNodById = function (_id, callback) {
+    'use strict';
+    try {
+        nodSrv.findNodById(_id, function (err, nod) {
+            if (err) {
+                return callback(err, null);
+            }
+            return callback(null, nod);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
 exports.findNodsByWaveIdAndHash = function (_wave_id, hash, callback) {
     'use strict';
     try {
