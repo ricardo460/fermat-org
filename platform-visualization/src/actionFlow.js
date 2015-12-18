@@ -267,7 +267,7 @@ function ActionFlow(flow) {
             stepBox,
             origin,
             target,
-            tilePosition = new THREE.Vector3(x - 108, y - 2, z + 1);
+            tilePosition = new THREE.Vector3(x - 108, y + 5, z + 1);
 
         if(node.element !== -1) {
 
@@ -390,7 +390,7 @@ function ActionFlow(flow) {
             var size = 83;
             ctx.font = size + 'px Arial';
             ctx.fillStyle = '#000000';
-            window.helper.drawText(Nodeid, 57, 130, ctx, 76, size);
+            window.helper.drawText(Nodeid, 37, 120, ctx, 76, size);
             ctx.fillStyle = '#FFFFFF';
             
             //Title
@@ -401,7 +401,7 @@ function ActionFlow(flow) {
             //Description
             size = 12;
             ctx.font = size + 'px Arial';
-            window.helper.drawText(node.desc, 421, 104, ctx, 250, size);
+            window.helper.drawText(node.desc, 421, 114, ctx, 250, size);
         };
         
         return createFlowBox('images/workflow/stepBox.png', fillBox, BOX_WIDTH, BOX_HEIGHT);

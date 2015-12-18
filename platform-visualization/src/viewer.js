@@ -534,7 +534,7 @@ function onElementClickDeveloper(id, objectsDevelopers){
 
 function calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) { 
 
-    var position;
+    var position, indice = 1;
     var find = false;
 
     for (var i = 0; i < objectHeaderInWFlowGroup.length; i++) {
@@ -553,6 +553,8 @@ function calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) {
 
                     positionHeaderFlow.push(position);
 
+                    headerFlow[j].draw(position.x, position.y, 0, indice, j);
+
                     find = true;
                 }
                 else
@@ -563,19 +565,13 @@ function calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) {
                     
                     position.y = positionHeaderFlow[positionHeaderFlow.length - 1].y - 500;
 
+                    headerFlow[j].draw(position.x, position.y, 0, indice, j);
+
                     positionHeaderFlow.push(position);
                 }    
             }
         }
         find = false;     
-    }
-    headerFlowDraw();
-}
-
-function headerFlowDraw(){
-    var indice = 1;
-    for (var k = 0; k < headerFlow.length; k++){
-        headerFlow[k].draw(positionHeaderFlow[k].x, positionHeaderFlow[k].y, positionHeaderFlow[k].z, indice, k);
     }
 }
 
