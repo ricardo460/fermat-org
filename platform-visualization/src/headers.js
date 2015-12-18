@@ -546,15 +546,17 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      */
     var headersPositionsViewWorkFlow = function() {
 
-        var width, height;
+        var width, 
+            height;
+        
         for(var i = 0; i < positions.table.length; i++){
 
-            column = i;
+            var column = i;
 
             width = columnWidth * window.TILE_DIMENSION.width;
             height = width * 443 / 1379;
    
-            objectHeaderInWFlowGroup = new THREE.Object3D();
+            var objectHeaderInWFlowGroup = new THREE.Object3D();
             
             objectHeaderInWFlowGroup.position.x = ((columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 10000;
             objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;

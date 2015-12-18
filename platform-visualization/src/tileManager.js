@@ -914,7 +914,7 @@ function TileManager() {
             distance = camera.getMaxDistance() * 2,
             out = window.viewManager.translateToSection('table', new THREE.Vector3(0, 0, distance));
 
-        TWEEN.removeAll();
+        //TWEEN.removeAll();
 
         var target;
 
