@@ -167,6 +167,41 @@ git pull upstream
 ```
 The local repository will be updated.
 
+Alternatively you can use git fetch upstream to bring any changes in the original repository and then do the master merge your local branch. The difference between git pull and git fetch is: git pull automatically updates your local branch and you do not have to merge git.
+
+Para actualizar el repositorio local usando git fetch escriba los siguientes comandos en la termina y despues presione enter. 
+To update the local repository using git fetch type the following commands in terminal and then press ENTER. 
+```bash
+git fetch upstream
+```
+  Check out your fork's local master branch.
+
+```bash
+git checkout master
+# Switched to branch 'master'
+```
+Merge the changes from upstream/master into your local master branch. This brings your fork's master branch into sync with the upstream repository, without losing your local changes.
+
+```bash
+git merge upstream/master
+    # Updating a422352..5fdff0f
+    # Fast-forward
+    #  README                    |    9 -------
+    #  README.md                 |    7 ++++++
+    #  2 files changed, 7 insertions(+), 9 deletions(-)
+    #  delete mode 100644 README
+    #  create mode 100644 README.md
+```
+   If your local branch didn't have any unique commits, Git will instead perform a "fast-forward":
+
+```bash
+git merge upstream/master
+    # Updating 34e91da..16c56ad
+    # Fast-forward
+    #  README.md                 |    5 +++--
+    #  1 file changed, 3 insertions(+), 2 deletions(-)
+```
+ 
 ####Synchronizing the origin repository of the local repository.
 First commit your local changes and type the next command in the terminal
 ```bash
