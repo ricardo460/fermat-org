@@ -69,9 +69,6 @@ function init() {
 
     // BrowserManager
     browserManager.init();
-    
-    // magazine
-    magazine.actionSpecial();
 
     var dimensions = tileManager.dimensions;
 
@@ -83,25 +80,10 @@ function init() {
     //create_stats();
 
     $('#backButton').click(function() {
-        if (window.actualView === "table") {
-            changeView(tileManager.targets.table);
-            
-            setTimeout(function(){
-                window.signLayer.transformSignLayer();
-            }, 2500);
-        }
-        if (window.actualView === "workflows") {
-
-            showWorkFlow();
-        }
-        if(window.actualView === "developers")
-        {
-            setTimeout(function(){
-                developer.animateDeveloper();
-            }, 4000);
-
-            changeView(tileManager.targets.table);
-        }   
+        
+        if(viewManager.views[window.actualView])
+            viewManager.views[window.actualView].backButton();
+ 
     });
 
     $('#legendButton').click(function() {
@@ -118,7 +100,6 @@ function init() {
     });
 
             
-
     $('#container').click(onClick);
 
     //Disabled Menu
