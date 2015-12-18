@@ -218,7 +218,7 @@ function ActionFlow(flow) {
      */
     this.showFlow = function() {
         
-        animateFlow("target", true);
+        animateFlow("target", true, 3000);
     };
 
     /**
@@ -227,7 +227,7 @@ function ActionFlow(flow) {
      */
     this.showSteps = function() {
 
-        animateStep("target", true);
+        animateStep("target", true, 3000);
     };
 
     /**
@@ -247,8 +247,7 @@ function ActionFlow(flow) {
     this.deleteStep = function() {
 
         window.tileManager.letAlone();
-
-        animateStep("origin", false);
+        animateStep("origin", false, 3000);
     };
 
     //Private methods
@@ -467,7 +466,14 @@ function ActionFlow(flow) {
             _target,
             object;
 
-        for (var i = 0,l = objectsStep.mesh.length; i < l; i++){
+        if(!state){
+        
+            for(var _i = 0, _l = self.flow.steps.length; _i < _l; _i++) 
+                
+                delete self.flow.steps[_i].drawn;
+        }
+
+        for (var i = 0, l = objectsStep.mesh.length; i < l; i++){
 
             _target = objectsStep.position[target][i];
             object = objectsStep.mesh[i];
@@ -491,7 +497,7 @@ function ActionFlow(flow) {
                 y: target.y,
                 z: target.z
             }, Math.random() * duration + duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
+            .easing(TWEEN.Easing.Cubic.InOut)
             .onComplete(function () {
             	if(!state)
                 	window.scene.remove(object);    
