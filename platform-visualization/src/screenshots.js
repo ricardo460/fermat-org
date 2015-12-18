@@ -425,7 +425,7 @@ function ScreenshotsAndroid() {
 
 			window.camera.setFocusScreenshots(id, 2000);
 			
-			window.browserManager.modifyButtonBack(1, 'block');
+			window.helper.showBackButton();
 
 			positionFocus(id);
 		}

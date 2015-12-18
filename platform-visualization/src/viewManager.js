@@ -99,7 +99,7 @@ function ViewManager() {
 
                         window.headers.transformStack(transition);
 
-                        window.browserManager.modifyButtonBack(0,'none');
+                        window.helpser.hideBackButton();
 
                         window.browserManager.modifyButtonLegend(0,'none');
                     };
@@ -132,7 +132,7 @@ function ViewManager() {
                 case 'workflows':
                     enter = function() {
                         window.getHeaderFLow();
-                        window.headers.transformWorkFlow(8000);
+                        window.headers.transformWorkFlow(transition);
                     };
                     
                     backButton = reset = function() {

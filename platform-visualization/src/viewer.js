@@ -257,7 +257,7 @@ function onElementClick(id) {
         setTimeout(function() {
             
             camera.setFocus(id, 1000);
-            browserManager.modifyButtonBack(1,'block');
+            helper.showBackButton();
             
             if(table[id].author) {
                 var button = document.createElement('button');
@@ -490,7 +490,7 @@ function onElementClickHeaderFlow(id) {
            headerFlow[id].showSteps();
         }, 1000);
 
-        browserManager.modifyButtonBack(1,'block');
+        helper.showBackButton();
     }
 }
 
@@ -514,7 +514,7 @@ function showWorkFlow() {
             }
         }
         
-        browserManager.modifyButtonBack(0,'none');
+        helper.hideBackButton();
     }
 }
 
@@ -522,7 +522,7 @@ function onElementClickDeveloper(id, objectsDevelopers){
 
     if(camera.getFocus() == null){
         camera.setFocusDeveloper(id, 1000, objectsDevelopers);
-        browserManager.modifyButtonBack(1,'block');
+        helper.showBackButton();
         developer.showDeveloperTiles(id);
     }
 }
