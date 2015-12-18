@@ -22,6 +22,7 @@
 	PATH=$PATH:$JAVA_HOME/bin:$NODEJS_HOME/bin
 
 	If the PATH is not created then write this
+	
 	PATH=$PATH:$NODEJS_HOME/bin
 	
 	export PATH
