@@ -23,6 +23,7 @@
 
 	If the PATH is not created then write this
 	PATH=$PATH:$NODEJS_HOME/bin
+	
 	export PATH
 
 * Save your changes.
