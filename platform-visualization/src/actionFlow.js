@@ -208,8 +208,9 @@ function ActionFlow(flow) {
      */
     this.letAloneHeaderFlow = function() {
 
-        workFlows(objectsStep, "origin", false);
-        workFlows(objectsFlow, "origin", true);
+        workFlows('steps', 'origin', false);
+
+        workFlows('flow', 'origin', true);
     };
     
     /**
@@ -218,7 +219,7 @@ function ActionFlow(flow) {
      */
     this.showFlow = function() {
         
-        workFlows(objectsFlow, "target", true, 4000);
+        workFlows('flow', 'target', true, 4000);
     };
 
     /**
@@ -227,7 +228,7 @@ function ActionFlow(flow) {
      */
     this.showSteps = function() {
 
-        workFlows(objectsStep, "target", true, 3700);
+        workFlows('steps', 'target', true, 3000);
     };
 
     /**
@@ -236,8 +237,8 @@ function ActionFlow(flow) {
      */
     this.deleteAll = function() {
 
-        workFlows(objectsStep, "origin", false);
-        workFlows(objectsFlow, "origin", false);  
+        workFlows('steps', 'origin', false);
+        workFlows('flow', 'origin', false);  
     };
 
     /**
@@ -247,7 +248,7 @@ function ActionFlow(flow) {
     this.deleteStep = function() {
 
         window.tileManager.letAlone();
-        workFlows(objectsStep, "origin", false, 3000);
+        workFlows('steps', 'origin', false, 3000);
     };
 
     //Private methods
@@ -444,23 +445,41 @@ function ActionFlow(flow) {
 
         var _duration = duration || 2000,
             _target,
+            _objects,
             object;
 
-        if(!visible){
+        if(objects === 'steps'){
 
-            used = [];
+            _objects = objectsStep;
+
+            if(!visible){
+
+                used = [];
+
+                objectsStep = { mesh : [], position :{ target : [], origin : [] } };
         
-            for(var _i = 0, _l = self.flow.steps.length; _i < _l; _i++){
+                for(var _i = 0, _l = self.flow.steps.length; _i < _l; _i++)
 
-                if(self.flow.steps[_i].drawn !== undefined)
                     delete self.flow.steps[_i].drawn;
             }
         }
+        else{
 
-        for(var i = 0, l = objects.mesh.length; i < l; i++){
+            _objects = objectsFlow;
 
-            _target = objects.position[target][i];
-            object = objects.mesh[i];
+            if(!visible){
+
+                used = [];
+
+                objectsFlow = { mesh : [], position :{ target : [], origin : [] } };
+        
+            }
+        }
+
+        for(var i = 0, l = _objects.mesh.length; i < l; i++){
+
+            _target = _objects.position[target][i];
+            object = _objects.mesh[i];
             animate(object, _target, _duration, visible);
         }
 
