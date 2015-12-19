@@ -5,33 +5,33 @@
 function ActionFlow(flow) {
     
     var BOX_WIDTH = 825,
-	    BOX_HEIGHT = 188,
-	    X_OFFSET = -312, //Because lines don't come from the center
-	    ROW_SPACING = 350,
-	    COLUMN_SPACING = 900,
-	    HEADER_WIDTH = 825,
-	    HEADER_HEIGHT = 238;
+        BOX_HEIGHT = 188,
+        X_OFFSET = -312, //Because lines don't come from the center
+        ROW_SPACING = 350,
+        COLUMN_SPACING = 900,
+        HEADER_WIDTH = 825,
+        HEADER_HEIGHT = 238;
 
-	var self = this;
+    var self = this;
 
     var objectsFlow = {
-    		mesh : [],
-    		position :{
-	    		target : [],
-	        	origin : []
-	    	} 
+            mesh : [],
+            position :{
+                target : [],
+                origin : []
+            } 
     },
-    	objectsStep = {
-	    	mesh : [],
-	    	position :{
-	    		target : [],
-	        	origin : []
-	    	}
+        objectsStep = {
+            mesh : [],
+            position :{
+                target : [],
+                origin : []
+            }
     };
 
     this.flow = flow || [];
 
-	this.action = false;
+    this.action = false;
 
     this.objects = objectsFlow.mesh;
 
@@ -95,7 +95,7 @@ function ActionFlow(flow) {
     };
 
     /**
-  	 * @author Miguel Celedon
+     * @author Miguel Celedon
      * @lastmodifiedBy Ricardo Delgado
      * Recursively draw the flow tree
      * @param {Object} root The root of the tree
@@ -208,8 +208,8 @@ function ActionFlow(flow) {
      */
     this.letAloneHeaderFlow = function() {
 
-    	animateStep("origin", false);
-    	animateFlow("origin", true);
+        workFlows(objectsStep, "origin", false);
+        workFlows(objectsFlow, "origin", true);
     };
     
     /**
@@ -218,7 +218,7 @@ function ActionFlow(flow) {
      */
     this.showFlow = function() {
         
-        animateFlow("target", true, 6000);
+        workFlows(objectsFlow, "target", true, 4000);
     };
 
     /**
@@ -227,7 +227,7 @@ function ActionFlow(flow) {
      */
     this.showSteps = function() {
 
-        animateStep("target", true, 3000);
+        workFlows(objectsStep, "target", true, 3700);
     };
 
     /**
@@ -236,8 +236,8 @@ function ActionFlow(flow) {
      */
     this.deleteAll = function() {
 
-    	animateStep("origin", false);
-    	animateFlow("origin", false);  
+        workFlows(objectsStep, "origin", false);
+        workFlows(objectsFlow, "origin", false);  
     };
 
     /**
@@ -247,8 +247,7 @@ function ActionFlow(flow) {
     this.deleteStep = function() {
 
         window.tileManager.letAlone();
-        used = [];
-        animateStep("origin", false, 3000);
+        workFlows(objectsStep, "origin", false, 3000);
     };
 
     //Private methods
@@ -436,61 +435,46 @@ function ActionFlow(flow) {
     /**
      * @author Ricardo Delgado.
      * Creates the animation for all flow there.
+     * @param   {Object}    objects     .     
      * @param   {String}     target     He says the goal should take the flow.
-     * @param   {Boolean}    state      state of the object.
-	 * @param   {Number}  duration   Animation length.
+     * @param   {Boolean}    visible    visible of the object.
+     * @param   {Number}    duration    Animation length.
      */
-    function animateFlow(target, state, duration){
+    function workFlows(objects, target, visible, duration){
 
         var _duration = duration || 2000,
             _target,
             object;
 
-    	for(var i = 0, l = objectsFlow.mesh.length; i < l; i++) {
+        if(!visible){
 
-            _target = objectsFlow.position[target][i];
-            object = objectsFlow.mesh[i];
-            animate(object, _target, _duration, state);
+            used = [];
+        
+            for(var _i = 0, _l = self.flow.steps.length; _i < _l; _i++){
+
+                if(self.flow.steps[_i].drawn !== undefined)
+                    delete self.flow.steps[_i].drawn;
+            }
         }
+
+        for(var i = 0, l = objects.mesh.length; i < l; i++){
+
+            _target = objects.position[target][i];
+            object = objects.mesh[i];
+            animate(object, _target, _duration, visible);
+        }
+
     }
 
     /**
-     * @author Ricardo Delgado.
-     * Creates the animation for all step there.
-     * @param   {String}  target He says the goal should take the step.
-     * @param   {Boolean} state  state of the object.
-	 * @param   {Number}  duration   Animation length.
-     */
-    function animateStep(target, state, duration){
-
-        var _duration = duration || 2000,
-            _target,
-            object;
-
-        if(!state){
-        
-            for(var _i = 0, _l = self.flow.steps.length; _i < _l; _i++) 
-                
-                delete self.flow.steps[_i].drawn;
-        }
-
-        for (var i = 0, l = objectsStep.mesh.length; i < l; i++){
-
-            _target = objectsStep.position[target][i];
-            object = objectsStep.mesh[i];
-            animate(object, _target, _duration, state);
-        }
-    }
-
-	/**
-	* @author Ricardo Delgado
-	* Animation and out of the flow and step.
-	* @param {object}    object    Object.
-	* @param {Number}    target    Coordinates Object.
-	* @param {Number}   duration   Animation length.
-	* @param {Boolean}   state     Status Object.
-	*/
-    function animate(object, target, duration, state) {
+    * @author Ricardo Delgado
+    * Animation and out of the flow and step.
+    * @param {object}    object    Object.
+    * @param {Number}    target    Coordinates Object.
+    * @param {Number}   duration   Animation length.
+    * @param {Boolean}   visible   visible Object.
+    */
+    function animate(object, target, duration, visible) {
 
         new TWEEN.Tween(object.position)
             .to({
@@ -500,8 +484,8 @@ function ActionFlow(flow) {
             }, duration)
             .easing(TWEEN.Easing.Cubic.InOut)
             .onComplete(function () {
-            	if(!state)
-                	window.scene.remove(object);    
+                if(!visible)
+                    window.scene.remove(object);    
             })
             .start();
     }
