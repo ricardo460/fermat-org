@@ -67,7 +67,7 @@ function ViewManager() {
 
                         window.headers.transformTable(transition);
 
-                        window.managerFlow.deleteAllWorkFlows();
+                        window.deleteAllWorkFlows();
 
                         window.developer.delete();
                     };
@@ -131,16 +131,16 @@ function ViewManager() {
                     break;
                 case 'workflows':
                     enter = function() {
-                        window.managerFlow.getHeaderFLow();
+                        window.getHeaderFLow();
                         window.headers.transformWorkFlow(transition);
                     };
                     
                     backButton = reset = function() {
-                        window.managerFlow.showWorkFlow();
+                        window.showWorkFlow();
                     };
 
                     exit = function() {
-                        window.managerFlow.deleteAllWorkFlows();
+                        window.deleteAllWorkFlows();
                     };
                     
                     break;

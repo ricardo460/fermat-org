@@ -1,23 +1,23 @@
-//global variables
 var table = [],
+    helper = new Helper(),
     camera,
     scene = new THREE.Scene(),
     renderer,
-    objects = [],
-    actualView,
-    stats = null,
-//Class
-    helper = new Helper(),
     logo = new Logo(),
     browserManager,
     screenshotsAndroid,
+    objects = [],
     headers = null,
-    managerFlow = null,
+    actualView,
+    stats = null,
+    actualFlow = null,
     viewManager = null,
     magazine = null,
+    headerFlow = [],
     networkViewer = null,
     signLayer = new SignLayer(),
-    developer = new Developer();
+    developer = new Developer(),
+    positionHeaderFlow = [];
 //Global constants
 var TILE_DIMENSION = {
     width : 231,
@@ -57,7 +57,6 @@ function init() {
     browserManager = new BrowserManager();
     screenshotsAndroid = new ScreenshotsAndroid();
     magazine = new Magazine();
-    managerFlow = new ManagerFlow();
     
     //View Manager
     viewManager = new ViewManager();
@@ -211,7 +210,7 @@ function initMenu() {
  * @lastmodifiedBy Ricardo Delgado
  * Delete All the actual view to table
  */
-/* RD.
+
 function deleteAllWorkFlows() {
     var _duration = 2000;
 
@@ -224,7 +223,7 @@ function deleteAllWorkFlows() {
     }
     
     headerFlow = [];
-}*/
+}
 
 function changeView(targets) {
 
@@ -233,14 +232,12 @@ function changeView(targets) {
     
     helper.show('container', 2000);
     
-    managerFlow.getActualFlow();
-    /* RD.
     if(actualFlow) {
         for(var i = 0; i < actualFlow.length; i++) {
             actualFlow[i].deleteAll();
         }
         actualFlow = null;
-    }*/
+    }
 
     if (targets != null) {
         tileManager.transform(targets, 2000);
@@ -284,7 +281,7 @@ function onElementClick(id) {
                 helper.show(button, 1000);
             }
             
-            window.managerFlow.getAndShowFlows(id);
+            getAndShowFlows(id);
             
         }, 3000);
         
@@ -426,7 +423,7 @@ function onElementClick(id) {
 
         new Timeline(tasks, tlContainer).show();
     }
-    /* RD.
+    
     function getAndShowFlows(id) {
         
         var button = document.createElement('button'),
@@ -472,14 +469,14 @@ function onElementClick(id) {
                 }
             }
         );
-    }*/
+    }
 }
 
 /**
  * @author Emmanuel Colina
  * 
  */
-/* RD.
+
 function onElementClickHeaderFlow(id) {
 
     if (camera.getFocus() == null) {
@@ -495,8 +492,8 @@ function onElementClickHeaderFlow(id) {
 
         helper.showBackButton();
     }
-}*/
-/* RD.
+}
+
 function showWorkFlow() {
 
     if (camera.getFocus() !== null) {
@@ -519,7 +516,7 @@ function showWorkFlow() {
         
         helper.hideBackButton();
     }
-}*/
+}
 
 function onElementClickDeveloper(id, objectsDevelopers){
 
@@ -534,7 +531,7 @@ function onElementClickDeveloper(id, objectsDevelopers){
  * @author Emmanuel Colina
  * Calculate the headers flows
  */
-/* RD.
+
 function calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) { 
 
     var position, indice = 1;
@@ -576,13 +573,13 @@ function calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) {
         }
         find = false;     
     }
-}*/
+}
 
 /**
  * @author Emmanuel Colina
  * Get the headers flows
  */
-/* RD.
+
 function getHeaderFLow() {
 
     $.ajax({
@@ -599,7 +596,7 @@ function getHeaderFLow() {
             calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup);   
         }
     );
-}*/
+}
 /**
  * Generic event when user clicks in 3D space
  * @param {Object} e Event data
@@ -634,7 +631,7 @@ function onClick(e) {
         }
     }
 }
-/* RD.
+
 //Should draw ONLY one flow at a time
 function showFlow(flows) {
     
@@ -658,7 +655,7 @@ function showFlow(flows) {
         
     }, 1500);
 }
-*/
+
 function animate() {
 
     requestAnimationFrame(animate);
