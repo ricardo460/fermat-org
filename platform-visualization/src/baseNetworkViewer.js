@@ -1,8 +1,14 @@
+/**
+ * @class
+ * @classdesc The base class that represents a node network
+ * @author Miguel Celedon
+ */
 function BaseNetworkViewer() {
     
     this.nodes = {};
     this.edges = [];
     this.NET_RADIOUS = 1000;
+    this.hasFocus = false;
 }
 
 BaseNetworkViewer.prototype = {
@@ -34,7 +40,8 @@ BaseNetworkViewer.prototype = {
         for(var i = 0; i < this.edges.length; i++)
             scene.remove(this.edges[i].line);
         this.edges = [];
-
+        
+        window.render();
     },
 
     /**
@@ -106,6 +113,7 @@ BaseNetworkViewer.prototype = {
         for(var nodeID in this.nodes) {
             this.nodes[nodeID].sprite.visible = true;
         }
+        window.render();
     },
 
     /**
@@ -122,6 +130,7 @@ BaseNetworkViewer.prototype = {
                 this.nodes[nodeID].sprite.visible = false;
             }
         }
+        window.render();
     },
 
     /**
@@ -175,6 +184,7 @@ BaseNetworkViewer.prototype = {
         for(var i = 0; i < this.edges.length; i++) {
             this.edges[i].line.visible = true;
         }
+        window.render();
     },
 
     /**
@@ -188,6 +198,7 @@ BaseNetworkViewer.prototype = {
         for(var i = 0; i < this.edges.length; i++) {
             this.edges[i].line.visible = false;
         }
+        window.render();
     },
 
     /**
@@ -250,5 +261,17 @@ BaseNetworkViewer.prototype = {
 
         goalPosition.z -= 9000;
         window.camera.setTarget(goalPosition, 1000);
-    }
+    },
+    
+    /**
+     * Action to open the details about a node
+     * @author Miguel Celedon
+     */
+    open : function() {},
+    
+    /**
+     * Action to close the details of a node
+     * @author Miguel Celedon
+     */
+    close : function() {}
 };

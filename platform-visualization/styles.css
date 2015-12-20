@@ -26,10 +26,6 @@ a {
     text-align: center;
 }
 
-button:focus {
-    outline: 0 !important;
-}
-
 button:active {
     color: #000000;
     border: none;
@@ -80,13 +76,6 @@ button:active {
     border: 0px;
     padding: 5px 10px;
     cursor: pointer;
-}
-
-.backButton {
-    position : fixed;
-    top : 10px;
-    left : 10px;
-    z-index: 10;
 }
 
 .colorBox {

@@ -401,7 +401,7 @@ function ActionFlow(flow) {
             //Description
             size = 12;
             ctx.font = size + 'px Arial';
-            window.helper.drawText(node.desc, 421, 104, ctx, 250, size);
+            window.helper.drawText(node.desc, 421, 114, ctx, 250, size);
         };
         
         return createFlowBox('images/workflow/stepBox.png', fillBox, BOX_WIDTH, BOX_HEIGHT);

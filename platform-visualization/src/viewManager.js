@@ -99,7 +99,7 @@ function ViewManager() {
 
                         window.headers.transformStack(transition);
 
-                        window.browserManager.modifyButtonBack(0,'none');
+                        window.helpser.hideBackButton();
 
                         window.browserManager.modifyButtonLegend(0,'none');
                     };
@@ -132,7 +132,7 @@ function ViewManager() {
                 case 'workflows':
                     enter = function() {
                         window.getHeaderFLow();
-                        window.headers.transformWorkFlow(8000);
+                        window.headers.transformWorkFlow(transition);
                     };
                     
                     backButton = reset = function() {
@@ -161,6 +161,7 @@ function ViewManager() {
                     zoom = function() {
                         
                         window.camera.enableFreeMode();
+                        window.helper.showBackButton();
                         
                         if(window.networkViewer)
                             window.networkViewer.setCameraTarget();
@@ -169,6 +170,16 @@ function ViewManager() {
                     reset = function() {
                         if(window.networkViewer)
                             window.networkViewer.reset();
+                        
+                        window.helper.hideBackButton();
+                        window.camera.resetPosition();
+                    };
+                    
+                    backButton = function() {
+                        
+                        if(window.networkViewer && window.networkViewer.closeChild() === null) {
+                            reset();
+                        }
                     };
                     
                     break;
