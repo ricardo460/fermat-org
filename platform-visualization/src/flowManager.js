@@ -263,10 +263,8 @@ function FlowManager(){
 
         this.positions = objectsFlow.position;
 
-        init();
+        initFlow();
 
-      
-        
         var onClick = function(target) {
 
             if(window.actualView === 'workflows'){
@@ -307,7 +305,7 @@ function FlowManager(){
 
             if (indice === 0){
                 
-                for(i = 0, l = self.flow.steps.length; i < l; i++){
+                for(var i = 0, l = self.flow.steps.length; i < l; i++){
                     self.drawTree(self.flow.steps[i], initialX + COLUMN_SPACING * i, initialY, 0);
                 }
                 
@@ -757,7 +755,7 @@ function FlowManager(){
         
         //-----------------------------------------------------------------------------
 
-        function init(){ 
+        function initFlow(){ 
 
             var i, l;
         

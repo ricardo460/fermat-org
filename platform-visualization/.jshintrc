@@ -31,10 +31,8 @@
         "testData" : true,
         "Helper" : true,
         "getData" : true,
-        "ActionFlow" : true,
         "Stats" : true,
         "Logo" : true,
-        "logo" : true,
         "animate" : true,
         "init" : true,
         "BrowserManager" : true,
@@ -47,6 +45,7 @@
         "SignLayer" : true,
         "ClientsViewer" : true,
         "BaseNetworkViewer" : true,
-        "Developer" : true
+        "Developer" : true,
+        "FlowManager" : true
     }
 }

@@ -9,15 +9,15 @@ var table = [],
 //Class
     helper = new Helper(),
     logo = new Logo(),
-    browserManager,
-    screenshotsAndroid,
+    signLayer = new SignLayer(),
+    developer = new Developer(),
+    browserManager = null,
+    screenshotsAndroid = null,
     headers = null,
     flowManager = null,
     viewManager = null,
     magazine = null,
-    networkViewer = null,
-    signLayer = new SignLayer(),
-    developer = new Developer();
+    networkViewer = null;
 //Global constants
 var TILE_DIMENSION = {
     width : 231,
