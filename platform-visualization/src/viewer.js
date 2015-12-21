@@ -1,23 +1,23 @@
+//global variables
 var table = [],
-    helper = new Helper(),
     camera,
     scene = new THREE.Scene(),
     renderer,
-    logo = new Logo(),
-    browserManager,
-    screenshotsAndroid,
     objects = [],
-    headers = null,
     actualView,
     stats = null,
-    actualFlow = null,
-    viewManager = null,
-    magazine = null,
-    headerFlow = [],
-    networkViewer = null,
+//Class
+    helper = new Helper(),
+    logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),
-    positionHeaderFlow = [];
+    browserManager = null,
+    screenshotsAndroid = null,
+    headers = null,
+    flowManager = null,
+    viewManager = null,
+    magazine = null,
+    networkViewer = null;
 //Global constants
 var TILE_DIMENSION = {
     width : 231,
@@ -57,7 +57,8 @@ function init() {
     browserManager = new BrowserManager();
     screenshotsAndroid = new ScreenshotsAndroid();
     magazine = new Magazine();
-    
+    flowManager = new FlowManager();
+
     //View Manager
     viewManager = new ViewManager();
 
@@ -205,25 +206,6 @@ function initMenu() {
     }, false);
 }
 
-/**
- * @author Emmanuel Colina
- * @lastmodifiedBy Ricardo Delgado
- * Delete All the actual view to table
- */
-
-function deleteAllWorkFlows() {
-    var _duration = 2000;
-
-    if(headerFlow){
-        for(var i = 0; i < headerFlow.length; i++) {
-
-            headerFlow[i].deleteAll();
-            helper.hideObject(headerFlow[i].objects[0], false, _duration);
-        }
-    }
-    
-    headerFlow = [];
-}
 
 function changeView(targets) {
 
@@ -232,12 +214,7 @@ function changeView(targets) {
     
     helper.show('container', 2000);
     
-    if(actualFlow) {
-        for(var i = 0; i < actualFlow.length; i++) {
-            actualFlow[i].deleteAll();
-        }
-        actualFlow = null;
-    }
+    flowManager.getActualFlow();
 
     if (targets != null) {
         tileManager.transform(targets, 2000);
@@ -281,7 +258,7 @@ function onElementClick(id) {
                 helper.show(button, 1000);
             }
             
-            getAndShowFlows(id);
+            window.flowManager.getAndShowFlows(id);
             
         }, 3000);
         
@@ -423,100 +400,8 @@ function onElementClick(id) {
 
         new Timeline(tasks, tlContainer).show();
     }
-    
-    function getAndShowFlows(id) {
-        
-        var button = document.createElement('button'),
-            sucesorButton = document.getElementById('developerButton') || document.getElementById('backButton'),
-            element = table[id],
-            flows;
-        
-        button.id = 'showFlows';
-        button.className = 'actionButton';
-        button.style.position = 'absolute';
-        button.innerHTML = 'Loading flows...';
-        button.style.top = '10px';
-        button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
-        button.style.zIndex = 10;
-        button.style.opacity = 0;
-        document.body.appendChild(button);
-        
-        helper.show(button, 1000);
-        
-        $.ajax({
-            url: 'http://52.35.117.6:3000/repo/procs?platform=' + (element.group || element.superLayer) + '&layer=' + element.layer + '&component=' + element.name,
-            method: "GET"
-        }).success(
-            function(processes) {
-                var p = processes;
-                var flows = [];
-                
-                for(var i = 0; i < p.length; i++) {
-                    
-                    flows.push(new ActionFlow(p[i]));
-                }
-                
-                if(flows.length > 0) {
-                    button.innerHTML = 'Show Workflows';
-                    button.addEventListener('click', function() {
-                        showFlow(flows);
-                        helper.hide(button, 1000, false);
-                        helper.hide('developerButton', 1000, false);
-                    });
-                }
-                else {
-                    helper.hide(button, 1000, false);
-                }
-            }
-        );
-    }
 }
 
-/**
- * @author Emmanuel Colina
- * 
- */
-
-function onElementClickHeaderFlow(id) {
-
-    if (camera.getFocus() == null) {
-
-        camera.setFocusHeaderFlow(id, 1000, headerFlow);
-
-        setTimeout(function() {
-            for (var i = 0; i < headerFlow[id].flow.steps.length; i++) {
-                headerFlow[id].drawTree(headerFlow[id].flow.steps[i], headerFlow[id].positions.target[0].x + 900 * i, headerFlow[id].positions.target[0].y - 211, 0);
-            }
-           headerFlow[id].showSteps();
-        }, 1000);
-
-        helper.showBackButton();
-    }
-}
-
-function showWorkFlow() {
-
-    if (camera.getFocus() !== null) {
-
-        camera.loseFocus();
-
-        window.headers.transformWorkFlow(2000);
-
-        for (var i = 0; i < headerFlow.length ; i++) {
-
-            if(headerFlow[i].action){
-
-                headerFlow[i].deleteStep();
-                headerFlow[i].action = false;
-            }
-            else{
-                headerFlow[i].showFlow();
-            }
-        }
-        
-        helper.hideBackButton();
-    }
-}
 
 function onElementClickDeveloper(id, objectsDevelopers){
 
@@ -527,76 +412,6 @@ function onElementClickDeveloper(id, objectsDevelopers){
     }
 }
 
-/**
- * @author Emmanuel Colina
- * Calculate the headers flows
- */
-
-function calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) { 
-
-    var position, indice = 1;
-    var find = false;
-
-    for (var i = 0; i < objectHeaderInWFlowGroup.length; i++) {
-
-        for (var j = 0; j < headerFlow.length; j++) {
-
-            if(objectHeaderInWFlowGroup[i].name === headerFlow[j].flow.platfrm){
-                
-                if(find === false){
-
-                    position = new THREE.Vector3();
-
-                    position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
-
-                    position.y = objectHeaderInWFlowGroup[i].position.y - 2500;
-
-                    positionHeaderFlow.push(position);
-
-                    headerFlow[j].draw(position.x, position.y, 0, indice, j);
-
-                    find = true;
-                }
-                else
-                {
-                    position = new THREE.Vector3();
-
-                    position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
-                    
-                    position.y = positionHeaderFlow[positionHeaderFlow.length - 1].y - 500;
-
-                    headerFlow[j].draw(position.x, position.y, 0, indice, j);
-
-                    positionHeaderFlow.push(position);
-                }    
-            }
-        }
-        find = false;     
-    }
-}
-
-/**
- * @author Emmanuel Colina
- * Get the headers flows
- */
-
-function getHeaderFLow() {
-
-    $.ajax({
-        url: 'http://52.35.117.6:3000/v1/repo/procs/',
-        method: "GET"
-    }).success(
-        function(processes) {
-            var p = processes, objectHeaderInWFlowGroup;    
-            
-            for(var i = 0; i < p.length; i++){
-                headerFlow.push(new ActionFlow(p[i])); 
-            }
-            objectHeaderInWFlowGroup = window.headers.getPositionHeaderViewInFlow();   
-            calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup);   
-        }
-    );
-}
 /**
  * Generic event when user clicks in 3D space
  * @param {Object} e Event data
@@ -630,30 +445,6 @@ function onClick(e) {
             }
         }
     }
-}
-
-//Should draw ONLY one flow at a time
-function showFlow(flows) {
-    
-    var position = objects[camera.getFocus()].position;
-    var indice = 0;
-
-    camera.enable();
-    camera.move(position.x, position.y, position.z + window.TILE_DIMENSION.width * 5);
-    
-    setTimeout(function() {
-        
-        actualFlow = [];
-        
-        for(var i = 0; i < flows.length; i++) {
-            actualFlow.push(flows[i]);
-            flows[i].draw(position.x, position.y, 0, indice, i);
-            
-            //Dummy, set distance between flows
-            position.x += window.TILE_DIMENSION.width * 10;
-        }
-        
-    }, 1500);
 }
 
 function animate() {
