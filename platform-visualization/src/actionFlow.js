@@ -208,9 +208,9 @@ function ActionFlow(flow) {
      */
     this.letAloneHeaderFlow = function() {
 
-        workFlows('steps', 'origin', false);
+        animateFlows('steps', 'origin', false);
 
-        workFlows('flow', 'origin', true);
+        animateFlows('flow', 'origin', true);
     };
     
     /**
@@ -219,7 +219,7 @@ function ActionFlow(flow) {
      */
     this.showFlow = function() {
         
-        workFlows('flow', 'target', true, 4000);
+        animateFlows('flow', 'target', true, 2500);
     };
 
     /**
@@ -228,7 +228,7 @@ function ActionFlow(flow) {
      */
     this.showSteps = function() {
 
-        workFlows('steps', 'target', true, 3000);
+        animateFlows('steps', 'target', true, 3000);
     };
 
     /**
@@ -237,8 +237,8 @@ function ActionFlow(flow) {
      */
     this.deleteAll = function() {
 
-        workFlows('steps', 'origin', false);
-        workFlows('flow', 'origin', false);  
+        animateFlows('steps', 'origin', false);
+        animateFlows('flow', 'origin', false);  
     };
 
     /**
@@ -248,7 +248,7 @@ function ActionFlow(flow) {
     this.deleteStep = function() {
 
         window.tileManager.letAlone();
-        workFlows('steps', 'origin', false, 3000);
+        animateFlows('steps', 'origin', false, 3000);
     };
 
     //Private methods
@@ -286,12 +286,14 @@ function ActionFlow(flow) {
                 
                 tile = window.objects[node.element];
                 used[node.element] = true;
-            }
 
-            new TWEEN.Tween(tile.position)
-                .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 5000)
+                new TWEEN.Tween(tile.position)
+                .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 7000)
                 .easing(TWEEN.Easing.Cubic.InOut)
                 .start();
+            }
+
+
         }
 
         stepBox = createStepBox(node);
@@ -441,7 +443,7 @@ function ActionFlow(flow) {
      * @param   {Boolean}    visible    visible of the object.
      * @param   {Number}    duration    Animation length.
      */
-    function workFlows(objects, target, visible, duration){
+    function animateFlows(objects, target, visible, duration){
 
         var _duration = duration || 2000,
             _target,
@@ -480,33 +482,26 @@ function ActionFlow(flow) {
 
             _target = _objects.position[target][i];
             object = _objects.mesh[i];
-            animate(object, _target, _duration, visible);
+            moveObject(object, _target, _duration, visible);
         }
 
-    }
+        function moveObject(object, target, duration, visible) {
 
-    /**
-    * @author Ricardo Delgado
-    * Animation and out of the flow and step.
-    * @param {object}    object    Object.
-    * @param {Number}    target    Coordinates Object.
-    * @param {Number}   duration   Animation length.
-    * @param {Boolean}   visible   visible Object.
-    */
-    function animate(object, target, duration, visible) {
+            new TWEEN.Tween(object.position)
+                .to({
+                    x: target.x,
+                    y: target.y,
+                    z: target.z
+                }, duration)
+                .easing(TWEEN.Easing.Cubic.InOut)
+                .onComplete(function () {
+                    if(!visible)
+                        window.scene.remove(object);    
+                })
+                .start();
+        }
 
-        new TWEEN.Tween(object.position)
-            .to({
-                x: target.x,
-                y: target.y,
-                z: target.z
-            }, duration)
-            .easing(TWEEN.Easing.Cubic.InOut)
-            .onComplete(function () {
-                if(!visible)
-                    window.scene.remove(object);    
-            })
-            .start();
+
     }
     
     /**
