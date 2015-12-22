@@ -179,11 +179,23 @@ NetworkViewer.prototype.closeChild = function() {
     var self = null;
     
     if(this.childNetwork !== null) {
+        
+        //If the child is closed we need the parent to reset focus
+        var parent = this.childNetwork.parentNode;
+        
         this.childNetwork = this.childNetwork.closeChild();
         self = this;
+        
+        //If closed, reset focus
+        if(this.childNetwork !== null)
+            BaseNetworkViewer.prototype.onNodeClick.call(this, parent);
     }
-    else {
+    
+    //Finally
+    if(this.childNetwork === null)
+    {
         this.reset();
+        self = null;
     }
     
     return self;

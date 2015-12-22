@@ -39,6 +39,27 @@ ClientsViewer.prototype.createNode = function(nodeData, startPosition) {
 };
 
 /**
+ * @override
+ * Executed when a node is clicked, moves the camera and draw its childs
+ * @author Miguel Celedon
+ * @param {object} clickedNode The clicked node
+ */
+ClientsViewer.prototype.onNodeClick = function(clickedNode) {
+    
+    if(this.childNetwork === null) {
+        
+        BaseNetworkViewer.prototype.onNodeClick.call(this, clickedNode);
+
+        this.hideEdges(clickedNode.userData.id);
+        this.hideNodes([clickedNode.userData.id]);
+        //this.childNetwork = new ClientsViewer(clickedNode);
+        this.childNetwork = {};
+        
+        this.open();
+    }
+};
+
+/**
  * Draws the nodes in the network
  * @author Miguel Celedon
  * @param {Array} networkNodes Array of nodes to draw
@@ -97,6 +118,7 @@ ClientsViewer.prototype.createEdges = function() {
         line.visible = false;
 
         scene.add(line);
+        
         this.edges.push({
             from : nodeID,
             to : this.parentNode.userData.id,
@@ -111,6 +133,19 @@ ClientsViewer.prototype.createEdges = function() {
 };
 
 /**
+ * Hide edges except the one connecting to the parent
+ * @author Miguel Celedon
+ * @param {string} clickedID The ID of the clicked node to except its edge hiding
+ */
+ClientsViewer.prototype.hideEdges = function(clickedID) {
+    
+    var edgeID = this.edgeExists(this.parentNode.userData.id, clickedID);
+    
+    BaseNetworkViewer.prototype.hideEdges.call(this, [edgeID]);
+    
+};
+
+/**
  * Closes and unloads the child, if the child is open, closes it
  * @author Miguel Celedon
  * @returns {object} The reference to itself, if there was no children I'll return null
@@ -120,8 +155,15 @@ ClientsViewer.prototype.closeChild = function() {
     var self = null;
     
     if(this.childNetwork !== null){
-        //TODO
+        
+        //TODO: Change for a call to childNetwork.closeChild() to keep the chain
+        this.childNetwork = null;
+        
         self = this;
+        
+        //If direct child is closed, show its brothers
+        if(this.childNetwork === null)
+            this.reset();
     }
     else {
         this.close();

@@ -150,7 +150,7 @@ BaseNetworkViewer.prototype = {
 
                 var actualEdge = node.edges[i];
 
-                if(this.nodes.hasOwnProperty(actualEdge.id) && !this.edgeExists(nodeID, actualEdge.id)) {
+                if(this.nodes.hasOwnProperty(actualEdge.id) && this.edgeExists(nodeID, actualEdge.id) === -1) {
 
                     dest = this.nodes[actualEdge.id].sprite.position;
 
@@ -190,13 +190,17 @@ BaseNetworkViewer.prototype = {
     /**
      * Hides the edges
      * @author Miguel Celedon
+     * @param {Array} excludedIDs Array of IDs that will be kept visible
      */
-    hideEdges : function() {
+    hideEdges : function(excludedIDs) {
 
         var duration = 2000;
+        excludedIDs = excludedIDs || [];
 
         for(var i = 0; i < this.edges.length; i++) {
-            this.edges[i].line.visible = false;
+            
+            if(!excludedIDs.includes(i))
+                this.edges[i].line.visible = false;
         }
         window.render();
     },
@@ -204,19 +208,19 @@ BaseNetworkViewer.prototype = {
     /**
      * Checks if an edge alreedges exists
      * @author Miguel Celedon
-     * @param   {string}  from ID of one node
-     * @param   {string}  to   ID of the other node
-     * @returns {boolean} true if the edge exists, false otherwise
+     * @param   {string} from ID of one node
+     * @param   {string} to   ID of the other node
+     * @returns {number} The index in the edges array, -1 if not found
      */
     edgeExists : function(from, to) {
 
-        for(var i = 0; i < this.edges; i++) {
+        for(var i = 0; i < this.edges.length; i++) {
             var edge = this.edges[i];
 
-            if((edge.from === from && edge.to === to) || (edge.to === from && edge.from === to)) return true;
+            if((edge.from === from && edge.to === to) || (edge.to === from && edge.from === to)) return i;
         }
 
-        return false;
+        return -1;
     },
 
     test_load : function() {
