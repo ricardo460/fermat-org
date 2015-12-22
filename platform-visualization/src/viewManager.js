@@ -44,7 +44,7 @@ function ViewManager() {
         
         var transition = 5000;
         var actions = {},
-            enter = null, exit = null, reset = null;
+            enter = null, exit = null, reset = null, zoom = null;
         
         if(window.map.views[view].enabled === true) {
         
@@ -119,12 +119,15 @@ function ViewManager() {
                 case 'workflows':
                     enter = function() {
                         window.getHeaderFLow();
+
+                        window.headers.transformWorkFlow(8000);
                     };
 
                     reset = function() {
                         window.tileManager.rollBack();
 
                         setTimeout(function() {
+                            window.headers.transformWorkFlow(6000);
                             window.changeViewWorkFlows();
                             window.getHeaderFLow();
                         }, 1000);
@@ -135,9 +138,6 @@ function ViewManager() {
                     enter = function() {
                         window.networkViewer = new NetworkViewer();
                         window.networkViewer.load();
-                        
-                        //Enable true view for when the user zooms
-                        window.camera.freeView = true;
                     };
                     
                     exit = function() {
@@ -146,6 +146,19 @@ function ViewManager() {
                         
                         window.camera.disableFreeMode();
                         window.camera.freeView = false;
+                    };
+                    
+                    zoom = function() {
+                        
+                        window.camera.enableFreeMode();
+                        
+                        if(window.networkViewer)
+                            window.networkViewer.setCameraTarget();
+                    };
+                    
+                    reset = function() {
+                        if(window.networkViewer)
+                            window.networkViewer.reset();
                     };
                     
                     break;
@@ -174,7 +187,8 @@ function ViewManager() {
         actions = {
             enter : enter || function(){},
             exit : exit || function(){},
-            reset : reset || function(){}
+            reset : reset || function(){},
+            zoom : zoom || function(){}
         };
         
         return actions;

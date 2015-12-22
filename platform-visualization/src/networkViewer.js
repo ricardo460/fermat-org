@@ -10,6 +10,19 @@ NetworkViewer.prototype = Object.create(BaseNetworkViewer.prototype);
 NetworkViewer.prototype.constructor = NetworkViewer;
 
 /**
+ * @override
+ * Loads the data and configures camera
+ * @author Miguel Celedon
+ */
+NetworkViewer.prototype.load = function() {
+    
+    BaseNetworkViewer.prototype.load.call(this);
+    
+    this.configureCamera();
+};
+
+/**
+ * @override
  * To be executed when a nodes is clicked
  * @author Miguel Celedon
  * @param {object} clickedNode The clicked node
@@ -22,10 +35,11 @@ NetworkViewer.prototype.onNodeClick = function(clickedNode) {
     this.hideNodes([clickedNode.userData.id]);
     
     this.childNetwork = new ClientsViewer(clickedNode);
-    //this.childNetwork.load();
+    this.childNetwork.load();
 };
 
 /**
+ * @override
  * Draws the nodes in the network
  * @author Miguel Celedon
  * @param {Array} networkNodes Array of nodes to draw
@@ -38,10 +52,14 @@ NetworkViewer.prototype.drawNodes = function(networkNodes) {
             (Math.random() * 2 - 1) * this.NET_RADIOUS,
             (Math.random() * 2 - 1) * this.NET_RADIOUS,
             ((Math.random() * 2 - 1) * this.NET_RADIOUS) - this.NET_RADIOUS);
+        
+        position = window.viewManager.translateToSection('network', position);
 
         var sprite = this.createNode(networkNodes[i], position);
 
         sprite.scale.set(500, 500, 1.0);
+        
+        window.console.log("Sprite Z position: " + position.z);
 
         window.scene.add(sprite);
     }
@@ -50,6 +68,7 @@ NetworkViewer.prototype.drawNodes = function(networkNodes) {
 };
 
 /**
+ * @override
  * Set the camera transition to get closer to the graph
  * @author Miguel Celedon
  */
@@ -92,4 +111,16 @@ NetworkViewer.prototype.test_load = function() {
     }
 
     return networkNodes;
+};
+
+/**
+ * @override
+ * Resets the network and unload its children
+ * @author Miguel Celedon
+ */
+NetworkViewer.prototype.reset = function() {
+    
+    BaseNetworkViewer.prototype.reset.call(this);
+    
+    if(this.childNetwork) this.childNetwork.unload();
 };

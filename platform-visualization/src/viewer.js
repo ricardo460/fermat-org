@@ -39,7 +39,7 @@ function createScene(){
     renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true, alpha : true});
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xffffff);
+    renderer.setClearColor(0xFFFFFF);
     document.getElementById('container').appendChild(renderer.domElement);
 
     camera = new Camera(new THREE.Vector3(0, 0, 90000),
@@ -91,6 +91,10 @@ function init() {
             }, 2500);
         }
         if (window.actualView === "workflows") {
+
+            var duration = 6000;
+
+            window.headers.transformWorkFlow(duration);
 
             changeViewWorkFlows();
 
@@ -506,7 +510,7 @@ function onElementClickHeaderFlow(id) {
             for (var i = 0; i < headerFlow[id].flow.steps.length; i++) {
                 headerFlow[id].drawTree(headerFlow[id].flow.steps[i], headerFlow[id].positions.target[0].x + 900 * i, headerFlow[id].positions.target[0].y - 211, 0);
             }
-            headerFlow[id].showStepsFlow();
+            headerFlow[id].showSteps();
         }, 1000);
 
         browserManager.modifyButtonBack(1,'block');
@@ -527,142 +531,50 @@ function onElementClickDeveloper(id, objectsDevelopers){
  * Calculate the headers flows
  */
 
-function calculatePositionHeaderFLow(headerFlow) {
+function calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) { 
 
     var position;
-    var indice = 1;
-    
-    var center = new THREE.Vector3(0, 0, 0);
-    center = viewManager.translateToSection('workflows', center);
+    var find = false;
 
-    if (headerFlow.length === 1) {
+    for (var i = 0; i < objectHeaderInWFlowGroup.length; i++) {
 
-        positionHeaderFlow.push(center);
-    }
+        for (var j = 0; j < headerFlow.length; j++) {
 
-    else if (headerFlow.length === 2) {
+            if(objectHeaderInWFlowGroup[i].name === headerFlow[j].flow.platfrm){
+                
+                if(find === false){
 
-        center.x = center.x - 500;
+                    position = new THREE.Vector3();
 
-        for (var k = 0; k < headerFlow.length; k++) {
+                    position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
 
-            position = new THREE.Vector3();
-
-            position.x = center.x;
-            position.y = center.y;
-        
-            positionHeaderFlow.push(position);
-
-            center.x = center.x + 1000;
-        }
-
-    }
-    else if (headerFlow.length > 2) {
-
-        var sqrt, round, column, row, initialY, count, raizC, raizC2;
-        count = 0;
-        round = 0;
-        column = 0;
-
-        //calculamos columnas y filas
-
-        if((Math.sqrt(headerFlow.length) % 1) !== 0) {
-
-            for(var r = headerFlow.length; r < headerFlow.length * 2; r++){
-
-                if((Math.sqrt(r) % 1) === 0){
-
-                    raizC = r;
-                    sqrt = Math.sqrt(raizC);
-
-                    for(var l = raizC - 1; l > 0; l--){ 
-
-                        if((Math.sqrt(l) % 1) === 0){
-
-                            raizC2 = l;
-                            break;
-                        }
-                        count = count + 1;
-                    }
-                    count = count / 2;
-
-                    for(var f = raizC2 + 1; f <= raizC2 + count; f++){
-                        if(headerFlow.length === f) {
-                            row = sqrt - 1;
-                            column = sqrt;
-                        }
-                    }
-                    for(var t = raizC - 1; t >= raizC - count; t--){
-                        if(headerFlow.length === t) {
-                            row = column = sqrt ;
-                        }
-                    }
-                }
-                if(row !== 0  && column !== 0){
-                    break;
-                }
-            }
-        }
-        else{
-            row = column = Math.sqrt(headerFlow.length);
-        }
-
-        count = 0;
-        var positionY = center.y - 1500;  
-
-        //calculando Y
-        for(var p = 0; p < row; p++) { 
-
-            if(p === 0)
-                positionY = positionY + 250;
-            else
-                positionY = positionY + 500;
-        }
-        
-        for(var y = 0; y < row; y++){ //filas
-
-            var positionX = center.x + 1500;
-
-            for(var m = 0; m < column; m++) { 
-
-                if(m===0)
-                    positionX = positionX - 500;
-                else
-                    positionX = positionX - 1000;
-            }
-            //calculando X
-            for(var x = 0; x < column; x++){  //columnas              
-
-                position = new THREE.Vector3();
-
-                position.y = positionY;
-
-                position.x = positionX;
-
-                if(count < headerFlow.length){
+                    position.y = objectHeaderInWFlowGroup[i].position.y - 2500;
 
                     positionHeaderFlow.push(position);
-                    count = count + 1;
-                }
 
-                if((positionX + 500) === center.x + 1500) {
-                    positionX = positionX + 1000;
+                    find = true;
                 }
                 else
-                    positionX = positionX + 1000;
-            }
+                {
+                    position = new THREE.Vector3();
 
-            if((positionY - 250) === center.y - 1500) {
-                positionY = positionY - 500;
+                    position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
+                    
+                    position.y = positionHeaderFlow[positionHeaderFlow.length - 1].y - 500;
+
+                    positionHeaderFlow.push(position);
+                }    
             }
-            else
-                positionY = positionY - 500;     
-        }      
+        }
+        find = false;     
     }
+    headerFlowDraw();
+}
 
-    for (var j = 0; j < headerFlow.length; j++){
-
-        headerFlow[j].draw(positionHeaderFlow[j].x, positionHeaderFlow[j].y, positionHeaderFlow[j].z, indice, j);
+function headerFlowDraw(){
+    var indice = 1;
+    for (var k = 0; k < headerFlow.length; k++){
+        headerFlow[k].draw(positionHeaderFlow[k].x, positionHeaderFlow[k].y, positionHeaderFlow[k].z, indice, k);
     }
 }
 
@@ -678,16 +590,16 @@ function getHeaderFLow() {
         method: "GET"
     }).success(
         function(processes) {
-            var p = processes;
+            var p = processes, objectHeaderInWFlowGroup;    
             
             for(var i = 0; i < p.length; i++){
                 headerFlow.push(new ActionFlow(p[i])); 
             }
-            calculatePositionHeaderFLow(headerFlow);
+            objectHeaderInWFlowGroup = window.headers.getPositionHeaderViewInFlow();   
+            calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup);   
         }
     );
 }
-
 /**
  * Generic event when user clicks in 3D space
  * @param {Object} e Event data
@@ -775,4 +687,16 @@ function render() {
 
     //renderer.render( scene, camera );
     camera.render(renderer, scene);
+}
+
+/**
+ * This function is meant to be used only for testing in the debug console,
+ * it cleans the entire scene so the website frees some memory and so you can
+ * let it in the background without using so much resources.
+ * @author Miguel Celedon
+ */
+function shutDown() {
+    
+    scene = new THREE.Scene();
+    
 }

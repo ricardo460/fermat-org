@@ -456,10 +456,7 @@ function TileManager() {
 
         var middle = canvas.width / 2;
         var ctx = canvas.getContext('2d');
-        ctx.globalAlpha = 0;
         ctx.fillStyle = "#FFFFFF";
-        //ctx.fillRect(0, 0, tileWidth * scale, tileHeight * scale);
-        ctx.globalAlpha = 1;
         ctx.textAlign = 'center';
 
         var texture = new THREE.Texture(canvas);
@@ -467,8 +464,7 @@ function TileManager() {
         texture.magFilter = THREE.LinearFilter;
 
         var pic = {
-                src: picture || base + 'buster.png',
-                alpha: 0.8
+                src: picture || base + 'buster.png'
             },
             portrait = {
                 src: base + 'portrait/' + quality + '/' + state + '.png',
@@ -707,18 +703,16 @@ function TileManager() {
             mesh = new THREE.Mesh(
                 new THREE.PlaneGeometry(tileWidth, tileHeight),
                 new THREE.MeshBasicMaterial({
-                    vertexColors: THREE.FaceColors,
-                    side: THREE.FrontSide,
-                    color: 0xffffff,
-                    transparent : true
+                    side: THREE.DoubleSide,
+                    transparent : true,
+                    map : texture
                 })
             );
             mesh.userData = {
                 id: id,
                 onClick : onClick
             };
-            mesh.material.map = texture;
-            mesh.material.needsUpdate = true;
+            mesh.renderOrder = 1;
             element.addLevel(mesh, levels[j][1]);
             element.userData = {
                 flying: false
@@ -973,19 +967,13 @@ function TileManager() {
         var image = new Image();
         var actual = data.shift();
 
-        if (actual.src && actual.src != 'undefined') {
+        if (actual && actual.src && actual.src != 'undefined') {
 
             image.onload = function () {
-
-
-                if (actual.alpha)
-                    ctx.globalAlpha = actual.alpha;
 
                 ctx.drawImage(image, actual.x, actual.y, actual.w, actual.h);
                 if (texture)
                     texture.needsUpdate = true;
-
-                ctx.globalAlpha = 1;
 
                 if (data.length !== 0) {
 
