@@ -502,16 +502,21 @@ function TileManager() {
                 text: table[id].authorRealName || table[id].author || '',
                 font: (3.5 * scale) + 'px Arial'
             },
-            picManteiner = {
+            picMantainer = {
                 src: picture || base + 'buster.png'
             },
-            nameManteiner = {
-                text: table[id].authorRealName || table[id].author || '',
-                font: (5 * scale) + 'px Arial',
+            mantainer = {
+                text: 'Mantainer',
+                font: (5.5 * scale) + 'px Arial',
                 color: "#FFFFFF"
             },
-            userManteiner = {
-                text: "",
+            nameMantainer = {
+                text: table[id].authorRealName || table[id].author || '',
+                font: (4.8 * scale) + 'px Arial',
+                color: "#FFFFFF"
+            },
+            userMantainer = {
+                text: table[id].authorRealName || table[id].author || '',
                 font: (4.3 * scale) + 'px Arial',
                 color: "#E2E2E2"
             };
@@ -548,16 +553,19 @@ function TileManager() {
             authorText.x = middle;
             authorText.y = 80 * scale;
 
-            picManteiner.x = 136 * scale;
-            picManteiner.y = 63.6 * scale;
-            picManteiner.w = 23.5 * scale;
-            picManteiner.h = 23.5 * scale;
+            picMantainer.x = 136 * scale;
+            picMantainer.y = 63.6 * scale;
+            picMantainer.w = 23.5 * scale;
+            picMantainer.h = 23.5 * scale;
 
-            nameManteiner.x = 181 * scale;
-            nameManteiner.y = 74 * scale;
+            mantainer.x = 174.5 * scale;
+            mantainer.y = 70 * scale;
 
-            userManteiner.x = 179 * scale;
-            userManteiner.y = 79 * scale;
+            nameMantainer.x = 181 * scale;
+            nameMantainer.y = 77 * scale;
+
+            userMantainer.x = 181 * scale;
+            userMantainer.y = 82 * scale;
 
             break;
         case "development":
@@ -591,16 +599,19 @@ function TileManager() {
             authorText.x = middle;
             authorText.y = 88 * scale;
 
-            picManteiner.x = 141 * scale;
-            picManteiner.y = 78.5 * scale;
-            picManteiner.w = 23.5 * scale;
-            picManteiner.h = 23.5 * scale;
+            picMantainer.x = 141 * scale;
+            picMantainer.y = 78.5 * scale;
+            picMantainer.w = 23.5 * scale;
+            picMantainer.h = 23.5 * scale;
 
-            nameManteiner.x = 183.5 * scale;
-            nameManteiner.y = 88 * scale;
+            mantainer.x = 178.2 * scale;
+            mantainer.y = 84 * scale;
 
-            userManteiner.x = 181.5 * scale;
-            userManteiner.y = 93 * scale;
+            nameMantainer.x = 184.5 * scale;
+            nameMantainer.y = 91 * scale;
+
+            userMantainer.x = 184.5 * scale;
+            userMantainer.y = 96 * scale;
 
             break;
         case "qa":
@@ -634,16 +645,19 @@ function TileManager() {
             authorText.x = middle;
             authorText.y = 78 * scale;
 
-            picManteiner.x = 141 * scale;
-            picManteiner.y = 81 * scale;
-            picManteiner.w = 23.5 * scale;
-            picManteiner.h = 23.5 * scale;
+            picMantainer.x = 141 * scale;
+            picMantainer.y = 81 * scale;
+            picMantainer.w = 23.5 * scale;
+            picMantainer.h = 23.5 * scale;
 
-            nameManteiner.x = 183.5 * scale;
-            nameManteiner.y = 91 * scale;
+            mantainer.x = 179.2 * scale;
+            mantainer.y = 87.5 * scale;
 
-            userManteiner.x = 181.5 * scale;
-            userManteiner.y = 96 * scale;         
+            nameMantainer.x = 184.5 * scale;
+            nameMantainer.y = 94.5 * scale;
+
+            userMantainer.x = 184.5 * scale;
+            userMantainer.y = 99.5 * scale;         
 
             break;
         case "production":
@@ -679,16 +693,19 @@ function TileManager() {
             authorText.x = 82 * scale;
             authorText.y = 77 * scale;
 
-            picManteiner.x = 136 * scale;
-            picManteiner.y = 69 * scale;
-            picManteiner.w = 23.5 * scale;
-            picManteiner.h = 23.5 * scale;
+            picMantainer.x = 136 * scale;
+            picMantainer.y = 69 * scale;
+            picMantainer.w = 23.5 * scale;
+            picMantainer.h = 23.5 * scale;
 
-            nameManteiner.x = 180 * scale;
-            nameManteiner.y = 79.2 * scale;
+            mantainer.x = 174.5 * scale;
+            mantainer.y = 76 * scale;
 
-            userManteiner.x = 178 * scale;
-            userManteiner.y = 84.2 * scale;                     
+            nameMantainer.x = 180 * scale;
+            nameMantainer.y = 83 * scale;
+
+            userMantainer.x = 180 * scale;
+            userMantainer.y = 88 * scale;                     
 
             break;
         }
@@ -701,7 +718,7 @@ function TileManager() {
 
         var data = [
             pic,
-            picManteiner,
+            picMantainer,
             portrait,
             groupIcon,
             typeIcon,
@@ -710,8 +727,9 @@ function TileManager() {
             nameText,
             layerText,
             authorText,
-            nameManteiner,
-            userManteiner
+            mantainer,
+            nameMantainer,
+            userMantainer
         ];
 
         if ( table[id].found !== true ) {
