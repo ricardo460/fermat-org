@@ -476,15 +476,3 @@ function render() {
     //renderer.render( scene, camera );
     camera.render(renderer, scene);
 }
-
-/**
- * This function is meant to be used only for testing in the debug console,
- * it cleans the entire scene so the website frees some memory and so you can
- * let it in the background without using so much resources.
- * @author Miguel Celedon
- */
-function shutDown() {
-    
-    scene = new THREE.Scene();
-    
-}
