@@ -501,6 +501,19 @@ function TileManager() {
             authorText = {
                 text: table[id].authorRealName || table[id].author || '',
                 font: (3.5 * scale) + 'px Arial'
+            },
+            picManteiner = {
+                src: picture || base + 'buster.png'
+            },
+            nameManteiner = {
+                text: table[id].authorRealName || table[id].author || '',
+                font: (5 * scale) + 'px Arial',
+                color: "#FFFFFF"
+            },
+            userManteiner = {
+                text: "",
+                font: (4.3 * scale) + 'px Arial',
+                color: "#E2E2E2"
             };
 
         switch (state) {
@@ -510,10 +523,10 @@ function TileManager() {
             pic.w = 53 * scale;
             pic.h = 53 * scale;
 
-            groupIcon.x = 25 * scale;
+            groupIcon.x = 13 * scale;
             groupIcon.y = 49 * scale;
 
-            typeIcon.x = 160 * scale;
+            typeIcon.x = 45 * scale;
             typeIcon.y = 49 * scale;
 
             ring.x = 72 * scale;
@@ -535,6 +548,17 @@ function TileManager() {
             authorText.x = middle;
             authorText.y = 80 * scale;
 
+            picManteiner.x = 136 * scale;
+            picManteiner.y = 63.6 * scale;
+            picManteiner.w = 23.5 * scale;
+            picManteiner.h = 23.5 * scale;
+
+            nameManteiner.x = 181 * scale;
+            nameManteiner.y = 74 * scale;
+
+            userManteiner.x = 179 * scale;
+            userManteiner.y = 79 * scale;
+
             break;
         case "development":
             pic.x = 79 * scale;
@@ -542,10 +566,10 @@ function TileManager() {
             pic.w = 53 * scale;
             pic.h = 53 * scale;
 
-            groupIcon.x = 25 * scale;
+            groupIcon.x = 10 * scale;
             groupIcon.y = 76 * scale;
 
-            typeIcon.x = 154 * scale;
+            typeIcon.x = 42 * scale;
             typeIcon.y = 76 * scale;
 
             ring.x = 64.5 * scale;
@@ -567,6 +591,17 @@ function TileManager() {
             authorText.x = middle;
             authorText.y = 88 * scale;
 
+            picManteiner.x = 141 * scale;
+            picManteiner.y = 78.5 * scale;
+            picManteiner.w = 23.5 * scale;
+            picManteiner.h = 23.5 * scale;
+
+            nameManteiner.x = 183.5 * scale;
+            nameManteiner.y = 88 * scale;
+
+            userManteiner.x = 181.5 * scale;
+            userManteiner.y = 93 * scale;
+
             break;
         case "qa":
             pic.x = 80 * scale;
@@ -574,10 +609,10 @@ function TileManager() {
             pic.w = 53 * scale;
             pic.h = 53 * scale;
 
-            groupIcon.x = 35 * scale;
+            groupIcon.x = 10 * scale;
             groupIcon.y = 76 * scale;
 
-            typeIcon.x = 154 * scale;
+            typeIcon.x = 42 * scale;
             typeIcon.y = 76 * scale;
 
             ring.x = 67 * scale;
@@ -598,6 +633,17 @@ function TileManager() {
 
             authorText.x = middle;
             authorText.y = 78 * scale;
+
+            picManteiner.x = 141 * scale;
+            picManteiner.y = 81 * scale;
+            picManteiner.w = 23.5 * scale;
+            picManteiner.h = 23.5 * scale;
+
+            nameManteiner.x = 183.5 * scale;
+            nameManteiner.y = 91 * scale;
+
+            userManteiner.x = 181.5 * scale;
+            userManteiner.y = 96 * scale;         
 
             break;
         case "production":
@@ -621,7 +667,7 @@ function TileManager() {
             codeText.y = 26 * scale;
 
             nameText.x = 170 * scale;
-            nameText.y = 71 * scale;
+            nameText.y = 45 * scale;
             nameText.font = (7 * scale) + 'px Arial';
             nameText.constraint = 60 * scale;
             nameText.lineHeight = 9 * scale;
@@ -632,6 +678,17 @@ function TileManager() {
 
             authorText.x = 82 * scale;
             authorText.y = 77 * scale;
+
+            picManteiner.x = 136 * scale;
+            picManteiner.y = 69 * scale;
+            picManteiner.w = 23.5 * scale;
+            picManteiner.h = 23.5 * scale;
+
+            nameManteiner.x = 180 * scale;
+            nameManteiner.y = 79.2 * scale;
+
+            userManteiner.x = 178 * scale;
+            userManteiner.y = 84.2 * scale;                     
 
             break;
         }
@@ -644,6 +701,7 @@ function TileManager() {
 
         var data = [
             pic,
+            picManteiner,
             portrait,
             groupIcon,
             typeIcon,
@@ -651,7 +709,9 @@ function TileManager() {
             codeText,
             nameText,
             layerText,
-            authorText
+            authorText,
+            nameManteiner,
+            userManteiner
         ];
 
         if ( table[id].found !== true ) {
