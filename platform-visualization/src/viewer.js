@@ -227,13 +227,28 @@ function changeView(targets) {
  */
 function onElementClick(id) {
     
+    var focus = parseInt(id);
+
     if (camera.getFocus() == null) {
 
-        camera.setFocus(id, 2000);
+        tileManager.letAlone(focus, 2000);
+
+        objects[focus].getObjectForDistance(0).visible = true;
+
+        headers.hideHeaders(2000);
+
+        window.camera.setFocus(id, objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 2000);
         
         setTimeout(function() {
             
-            camera.setFocus(id, 1000);
+            tileManager.letAlone(focus, 1000);
+
+            objects[focus].getObjectForDistance(0).visible = true;
+
+            headers.hideHeaders(1000);
+
+            window.camera.setFocus(id, objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 1000);
+
             helper.showBackButton();
             
             if(table[id].author) {
@@ -405,8 +420,17 @@ function onElementClick(id) {
 
 function onElementClickDeveloper(id, objectsDevelopers){
 
+    var duration = 1000;
+
     if(camera.getFocus() == null){
-        camera.setFocusDeveloper(id, 1000, objectsDevelopers);
+        
+        window.camera.setFocus(id, objectsDevelopers[id], new THREE.Vector4(-50, -50, 300,1), duration);
+
+        for (var i = 0; i < objectsDevelopers.length ; i++) {
+            if(id !== i)
+                window.developer.letAloneDeveloper(objectsDevelopers[i]);
+        }
+
         helper.showBackButton();
         developer.showDeveloperTiles(id);
     }

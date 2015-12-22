@@ -419,11 +419,18 @@ function ScreenshotsAndroid() {
 	*/ 
 	function change(id) {
 
+		var duration = 2000;
+		var focus = parseInt(id);
+
 		if (window.camera.getFocus() === null) {
 
 			action.state = true; action.mesh = id;
 
-			window.camera.setFocusScreenshots(id, 2000);
+			tileManager.letAlone();
+
+			window.camera.setFocus(id, self.objects.mesh[focus], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), duration);
+			
+			headers.hideHeaders(duration);
 			
 			window.helper.showBackButton();
 

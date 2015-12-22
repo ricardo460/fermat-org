@@ -140,9 +140,18 @@ function FlowManager(){
      */
     function onElementClickHeaderFlow(id) {
 
+        var duration = 1000;
+
         if (window.camera.getFocus() == null) {
 
-            window.camera.setFocusHeaderFlow(id, 1000, headerFlow);
+            window.camera.setFocus(id, headerFlow[id].objects[0], new THREE.Vector4(0, -850, 2600, 1),duration);
+
+            for (var i = 0; i < headerFlow.length ; i++) {
+                if(id !== i)
+                    headerFlow[i].letAloneHeaderFlow();
+            }
+
+            headers.hidetransformWorkFlow(duration);
 
             setTimeout(function() {
                 for (var i = 0; i < headerFlow[id].flow.steps.length; i++) {
