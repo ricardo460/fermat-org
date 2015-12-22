@@ -581,9 +581,9 @@ function TileManager() {
             typeIcon.y = 76 * scale;
 
             ring.x = 67 * scale;
-            ring.y = 34.7 * scale;
+            ring.y = 35.2 * scale;
             ring.w = 78 * scale;
-            ring.h = 68.5 * scale;
+            ring.h = 69.6 * scale;
 
             codeText.x = middle;
             codeText.y = 20 * scale;
