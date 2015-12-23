@@ -18,7 +18,6 @@ var lnkSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Nod'
     }
-    //("server" | "client" | "service" | "actor" | "wallet")
     type: {
         type: String,
         lowercase: true,
