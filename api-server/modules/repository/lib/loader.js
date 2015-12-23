@@ -3,7 +3,8 @@ var winston = require('winston');
 var request = require('request');
 var fs = require('fs');
 var path = require('path');
-var parseString = require('xml2js').parseString;
+var parseString = require('xml2js')
+    .parseString;
 var platfrmMod = require('../platform');
 var suprlayMod = require('../superlayer');
 var layerMod = require('../layer');
@@ -12,15 +13,7 @@ var procMod = require('../process');
 var devMod = require('../developer');
 var Cache = require('../../../lib/route-cache');
 
-//var db = require('../../../db');
-//https://github.com/bitDubai/fermat.git
 var env = process.env.NODE_ENV || 'development';
-//var USER_AGENT = 'Miguelcldn';
-//var USER_AGENT = 'MALOTeam'
-var USER_AGENT = (env === 'development') ? 'Miguelcldn' : 'fuelusumar';
-//var TOKEN = '3c12e4c95821c7c2602a47ae46faf8a0ddab4962'; // Miguelcldn    
-//var TOKEN = 'fb6c27928d83f8ea6a9565e0f008cceffee83af1'; // MALOTeam
-var TOKEN = (env === 'development') ? '3c12e4c95821c7c2602a47ae46faf8a0ddab4962' : '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
 
 /**
  * [getRepoDir description]
@@ -39,14 +32,28 @@ var getRepoDir = function (section, layer, type, comp, team) {
     'use strict';
     try {
         var _root = "fermat",
-            _section = section ? section.toUpperCase().split(' ').join('_') : null,
-            _type = type ? type.toLowerCase().split(' ').join('_') : null,
-            _layer = layer ? layer.toLowerCase().split(' ').join('_') : null,
-            _comp = comp ? comp.toLowerCase().split(' ').join('-') : null,
-            _team = team ? team.toLowerCase().split(' ').join('-') : null;
+            _section = section ? section.toUpperCase()
+            .split(' ')
+            .join('_') : null,
+            _type = type ? type.toLowerCase()
+            .split(' ')
+            .join('_') : null,
+            _layer = layer ? layer.toLowerCase()
+            .split(' ')
+            .join('_') : null,
+            _comp = comp ? comp.toLowerCase()
+            .split(' ')
+            .join('-') : null,
+            _team = team ? team.toLowerCase()
+            .split(' ')
+            .join('-') : null;
         if (_section && _type && _layer && _comp && _team) {
             return _section + "/" + _type + "/" + _layer + "/" +
-                _root + "-" + _section.split('_').join('-').toLowerCase() + "-" + _type.split('_').join('-') + "-" + _layer.split('_').join('-') + "-" + _comp + "-" + _team;
+                _root + "-" + _section.split('_')
+                .join('-')
+                .toLowerCase() + "-" + _type.split('_')
+                .join('-') + "-" + _layer.split('_')
+                .join('-') + "-" + _comp + "-" + _team;
         }
         return null;
     } catch (err) {
@@ -152,7 +159,7 @@ var doRequest = function (method, url, params, callback) {
     try {
         var env = process.env.NODE_ENV || 'development';
         var form, i;
-        url += '?access_token=' + TOKEN;
+        //url += '?access_token=' + TOKEN;
         if (env === 'development') {
             url += '&ref=develop'
         }
@@ -169,7 +176,7 @@ var doRequest = function (method, url, params, callback) {
                 url: url,
                 form: form,
                 headers: {
-                    'User-Agent': USER_AGENT,
+                    //'User-Agent': USER_AGENT,
                     'Accept': 'application/json'
                 }
             }, function (err, res, body) {
@@ -180,7 +187,7 @@ var doRequest = function (method, url, params, callback) {
             request.get({
                 url: url,
                 headers: {
-                    'User-Agent': USER_AGENT,
+                    //'User-Agent': USER_AGENT,
                     'Accept': 'application/json'
                 }
             }, function (err, res, body) {
@@ -222,70 +229,6 @@ var processRequestBody = function (body, callback) {
 };
 
 /**
- * [getReadme description]
- *
- * @method getReadme
- *
- * @param  {Function} callback [description]
- *
- * @return {[type]}   [description]
- */
-/*var getReadme = function (callback) {
-    'use strict';
-    try {
-        doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/README.md', null, function (err_req, res_req) {
-            if (err_req) {
-                return callback(err_req, null);
-            }
-            processRequestBody(res_req, function (err_pro, res_pro) {
-                if (err_pro) {
-                    return callback(err_pro, null);
-                }
-                if (res_pro) {
-                    return callback(null, res_pro);
-                }
-            });
-        });
-    } catch (err) {
-        return callback(err, null);
-    }
-};*/
-
-/**
- * [saveReadme description]
- *
- * @method saveReadme
- *
- * @param  {Function} callback [description]
- *
- * @return {[type]}   [description]
- */
-/*var saveReadme = function (callback) {
-    try {
-        getReadme(function (err_red, res_red) {
-            if (err_red) {
-                return callback(err_red, null);
-            }
-            var env = process.env.NODE_ENV || 'development';
-
-            var filename = path.join(process.cwd(), 'cache', env, 'README.md');
-            fs.writeFile(filename, res_red, {
-                flags: 'w'
-            }, function (err_sav) {
-                if (err_sav) {
-                    return callback(err_sav, null);
-                }
-                return callback(null, {
-                    save: true
-                });
-            });
-        });
-    } catch (err) {
-        callback(err, null);
-    }
-};*/
-
-/**
  * [getManifest description]
  *
  * @method getManifest
@@ -298,13 +241,13 @@ var getManifest = function (callback) {
     'use strict';
     try {
         var cwd = process.cwd(),
-        env = process.env.NODE_ENV || 'development',
-        file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.xml'),
-        exist = fs.lstatSync(file);
+            env = process.env.NODE_ENV || 'development',
+            file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.xml'),
+            exist = fs.lstatSync(file);
 
-        if(exist.isFile()){
+        if (exist.isFile()) {
             winston.log('info', 'Read Cache FermatManifest.xml %s', file);
-            fs.readFile(file, function(err_read, res_read) {
+            fs.readFile(file, function (err_read, res_read) {
                 if (err_read) {
                     return callback(err_read, null);
                 }
@@ -315,8 +258,7 @@ var getManifest = function (callback) {
                     return callback(null, res_par);
                 });
             });
-        }
-        else{
+        } else {
             doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function (err_req, res_req) {
                 if (err_req) {
                     return callback(err_req, null);
@@ -325,7 +267,10 @@ var getManifest = function (callback) {
                     if (err_pro) {
                         return callback(err_pro, null);
                     }
-                    var strCont = res_pro.split('\n').join(' ').split('\t').join(' ');
+                    var strCont = res_pro.split('\n')
+                        .join(' ')
+                        .split('\t')
+                        .join(' ');
                     parseString(strCont, function (err_par, res_par) {
                         if (err_par) {
                             return callback(err_par, null);
@@ -339,8 +284,6 @@ var getManifest = function (callback) {
         return callback(err, null);
     }
 };
-
-
 
 /**
  * [parseManifest description]
@@ -505,9 +448,11 @@ var saveManifest = function (callback) {
                     var loopLays = function (u) {
                         if (u < _lays.length) {
                             var _lay = _lays[u];
-                            layerMod.insOrUpdLayer(_lay.name ? _lay.name.trim().toLowerCase() : null,
+                            layerMod.insOrUpdLayer(_lay.name ? _lay.name.trim()
+                                .toLowerCase() : null,
                                 _lay.language ? _lay.language.toLowerCase() : null,
-                                _lay.super_layer ? _lay.super_layer.trim().toUpperCase() : null,
+                                _lay.super_layer ? _lay.super_layer.trim()
+                                .toUpperCase() : null,
                                 u,
                                 function (err_lay, res_lay) {
                                     if (err_lay) {
@@ -530,11 +475,14 @@ var saveManifest = function (callback) {
                         if (s < _procs.length) {
                             var _proc = _procs[s];
                             //platfrm, name, desc, prev, next, callback
-                            procMod.insOrUpdProc(_proc.platform ? _proc.platform.trim().toUpperCase() : null,
+                            procMod.insOrUpdProc(_proc.platform ? _proc.platform.trim()
+                                .toUpperCase() : null,
                                 _proc.name ? _proc.name.trim() : null,
                                 _proc.description ? _proc.description.trim() : null,
-                                _proc.previous ? _proc.previous.trim().toLowerCase() : null,
-                                _proc.next ? _proc.next.trim().toLowerCase() : null,
+                                _proc.previous ? _proc.previous.trim()
+                                .toLowerCase() : null,
+                                _proc.next ? _proc.next.trim()
+                                .toLowerCase() : null,
                                 function (err_proc, res_proc) {
                                     if (err_proc) {
                                         winston.log('info', err_proc.message, err_proc);
@@ -577,10 +525,14 @@ var saveManifest = function (callback) {
                     var loopSuprlays = function (n) {
                         if (n < _suprlays.length) {
                             var _suprlay = _suprlays[n];
-                            suprlayMod.insOrUpdSuprlay(_suprlay.code.trim().toUpperCase(),
-                                _suprlay.name.trim().toLowerCase(),
+                            suprlayMod.insOrUpdSuprlay(_suprlay.code.trim()
+                                .toUpperCase(),
+                                _suprlay.name.trim()
+                                .toLowerCase(),
                                 _suprlay.logo,
-                                _suprlay.dependsOn ? _suprlay.dependsOn.split(' ').join('').split(',') : [],
+                                _suprlay.dependsOn ? _suprlay.dependsOn.split(' ')
+                                .join('')
+                                .split(',') : [],
                                 0,
                                 function (err_supr, res_supr) {
                                     if (err_supr) {
@@ -592,7 +544,8 @@ var saveManifest = function (callback) {
                                         var loopLayers = function (o) {
                                             if (o < _layers.length) {
                                                 var _layer = _layers[o];
-                                                layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null,
+                                                layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim()
+                                                    .toLowerCase() : null,
                                                     _layer.language ? _layer.language.toLowerCase() : null,
                                                     res_supr.code, -1,
                                                     function (err_lay, res_lay) {
@@ -608,11 +561,15 @@ var saveManifest = function (callback) {
                                                                     compMod.insOrUpdComp(null,
                                                                         res_supr._id,
                                                                         res_lay._id,
-                                                                        _comp.name.trim().toLowerCase(),
-                                                                        _comp.type.trim().toLowerCase(),
-                                                                        _comp.description.trim().toLowerCase(),
+                                                                        _comp.name.trim()
+                                                                        .toLowerCase(),
+                                                                        _comp.type.trim()
+                                                                        .toLowerCase(),
+                                                                        _comp.description.trim()
+                                                                        .toLowerCase(),
                                                                         _comp.difficulty,
-                                                                        _comp['code-level'].trim().toLowerCase(),
+                                                                        _comp['code-level'].trim()
+                                                                        .toLowerCase(),
                                                                         _comp.repo_dir,
                                                                         null,
                                                                         function (err_comp, res_comp) {
@@ -628,23 +585,25 @@ var saveManifest = function (callback) {
                                                                                     if (q < _devs.length) {
                                                                                         var _dev = _devs[q];
                                                                                         if (_dev.name) {
-                                                                                            devMod.insOrUpdDev(_dev.name.trim().toLowerCase(), null, null, null, null, null, null, null, function (err_dev, res_dev) {
-                                                                                                if (err_dev) {
-                                                                                                    winston.log('info', err_dev.message, err_dev);
-                                                                                                    winston.log('info', err_dev.message, _dev);
-                                                                                                    loopDevs(++q);
-                                                                                                } else {
-                                                                                                    compMod.insOrUpdCompDev(res_comp._id, res_dev._id, _dev.role, _dev.scope, _dev.percentage || '0', function (err_compDev, res_compDev) {
-                                                                                                        if (err_compDev) {
-                                                                                                            winston.log('info', err_compDev.message, err_compDev);
-                                                                                                            loopDevs(++q);
-                                                                                                        } else {
-                                                                                                            upd_devs.push(res_compDev._id);
-                                                                                                            loopDevs(++q);
-                                                                                                        }
-                                                                                                    });
-                                                                                                }
-                                                                                            });
+                                                                                            devMod.insOrUpdDev(_dev.name.trim()
+                                                                                                .toLowerCase(), null, null, null, null, null, null, null,
+                                                                                                function (err_dev, res_dev) {
+                                                                                                    if (err_dev) {
+                                                                                                        winston.log('info', err_dev.message, err_dev);
+                                                                                                        winston.log('info', err_dev.message, _dev);
+                                                                                                        loopDevs(++q);
+                                                                                                    } else {
+                                                                                                        compMod.insOrUpdCompDev(res_comp._id, res_dev._id, _dev.role, _dev.scope, _dev.percentage || '0', function (err_compDev, res_compDev) {
+                                                                                                            if (err_compDev) {
+                                                                                                                winston.log('info', err_compDev.message, err_compDev);
+                                                                                                                loopDevs(++q);
+                                                                                                            } else {
+                                                                                                                upd_devs.push(res_compDev._id);
+                                                                                                                loopDevs(++q);
+                                                                                                            }
+                                                                                                        });
+                                                                                                    }
+                                                                                                });
                                                                                         } else {
                                                                                             loopDevs(++q);
                                                                                         }
@@ -704,10 +663,14 @@ var saveManifest = function (callback) {
                     var loopPlatfrms = function (i) {
                         if (i < _platfrms.length) {
                             var _platfrm = _platfrms[i];
-                            platfrmMod.insOrUpdPlatfrm(_platfrm.code.trim().toUpperCase(),
-                                _platfrm.name.trim().toLowerCase(),
+                            platfrmMod.insOrUpdPlatfrm(_platfrm.code.trim()
+                                .toUpperCase(),
+                                _platfrm.name.trim()
+                                .toLowerCase(),
                                 _platfrm.logo,
-                                _platfrm.dependsOn ? _platfrm.dependsOn.split(' ').join('').split(',') : [],
+                                _platfrm.dependsOn ? _platfrm.dependsOn.split(' ')
+                                .join('')
+                                .split(',') : [],
                                 0,
                                 function (err_plat, res_plat) {
                                     if (err_plat) {
@@ -719,7 +682,8 @@ var saveManifest = function (callback) {
                                         var loopLayers = function (j) {
                                             if (j < _layers.length) {
                                                 var _layer = _layers[j];
-                                                layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null,
+                                                layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim()
+                                                    .toLowerCase() : null,
                                                     _layer.language ? _layer.language.toLowerCase() : null,
                                                     null, -1,
                                                     function (err_lay, res_lay) {
@@ -735,11 +699,15 @@ var saveManifest = function (callback) {
                                                                     compMod.insOrUpdComp(res_plat._id,
                                                                         null,
                                                                         res_lay._id,
-                                                                        _comp.name.trim().toLowerCase(),
-                                                                        _comp.type.trim().toLowerCase(),
-                                                                        _comp.description.trim().toLowerCase(),
+                                                                        _comp.name.trim()
+                                                                        .toLowerCase(),
+                                                                        _comp.type.trim()
+                                                                        .toLowerCase(),
+                                                                        _comp.description.trim()
+                                                                        .toLowerCase(),
                                                                         _comp.difficulty,
-                                                                        _comp['code-level'].trim().toLowerCase(),
+                                                                        _comp['code-level'].trim()
+                                                                        .toLowerCase(),
                                                                         _comp.repo_dir,
                                                                         null,
                                                                         function (err_comp, res_comp) {
@@ -755,23 +723,25 @@ var saveManifest = function (callback) {
                                                                                     if (l < _devs.length) {
                                                                                         var _dev = _devs[l];
                                                                                         if (_dev.name) {
-                                                                                            devMod.insOrUpdDev(_dev.name.trim().toLowerCase(), null, null, null, null, null, null, null, function (err_dev, res_dev) {
-                                                                                                if (err_dev) {
-                                                                                                    winston.log('info', err_dev.message, err_dev);
-                                                                                                    winston.log('info', err_dev.message, _dev);
-                                                                                                    loopDevs(++l);
-                                                                                                } else {
-                                                                                                    compMod.insOrUpdCompDev(res_comp._id, res_dev._id, _dev.role, _dev.scope, _dev.percentage || '0', function (err_compDev, res_compDev) {
-                                                                                                        if (err_compDev) {
-                                                                                                            winston.log('info', err_compDev.message, err_compDev);
-                                                                                                            loopDevs(++l);
-                                                                                                        } else {
-                                                                                                            upd_devs.push(res_compDev._id);
-                                                                                                            loopDevs(++l);
-                                                                                                        }
-                                                                                                    });
-                                                                                                }
-                                                                                            });
+                                                                                            devMod.insOrUpdDev(_dev.name.trim()
+                                                                                                .toLowerCase(), null, null, null, null, null, null, null,
+                                                                                                function (err_dev, res_dev) {
+                                                                                                    if (err_dev) {
+                                                                                                        winston.log('info', err_dev.message, err_dev);
+                                                                                                        winston.log('info', err_dev.message, _dev);
+                                                                                                        loopDevs(++l);
+                                                                                                    } else {
+                                                                                                        compMod.insOrUpdCompDev(res_comp._id, res_dev._id, _dev.role, _dev.scope, _dev.percentage || '0', function (err_compDev, res_compDev) {
+                                                                                                            if (err_compDev) {
+                                                                                                                winston.log('info', err_compDev.message, err_compDev);
+                                                                                                                loopDevs(++l);
+                                                                                                            } else {
+                                                                                                                upd_devs.push(res_compDev._id);
+                                                                                                                loopDevs(++l);
+                                                                                                            }
+                                                                                                        });
+                                                                                                    }
+                                                                                                });
                                                                                         } else {
                                                                                             loopDevs(++l);
                                                                                         }
@@ -958,15 +928,14 @@ var getContent = function (repo_dir, callback) {
     try {
 
         var cwd = process.cwd(),
-        env = process.env.NODE_ENV || 'development',
-        dir = path.join(cwd, 'cache', env, 'fermat',repo_dir),
-        exist = fs.lstatSync(dir);
+            env = process.env.NODE_ENV || 'development',
+            dir = path.join(cwd, 'cache', env, 'fermat', repo_dir),
+            exist = fs.lstatSync(dir);
 
-        if(exist.isDirectory()){
+        if (exist.isDirectory()) {
             winston.log('info', 'Read Cache Directory %s', dir);
             return callback(null, []);
-        }
-        else{
+        } else {
             doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/' + repo_dir, null, function (err_req, res_req) {
                 if (err_req) {
                     return callback(err_req, null);
@@ -1118,21 +1087,4 @@ exports.loadComps = function (callback) {
         return callback(err, null);
     }
 };
-
-/*exports.loadDocs = function (callback) {
-    'use strict';
-    try {
-        saveReadme(function (err, res) {
-            if (err) {
-                return callback(err, null);
-            }
-            if (res) {
-                return callback(null, res);
-            }
-            return callback(null, null);
-        });
-    } catch (err) {
-        return callback(err, null);
-    }
-};*/
 /*jshint +W069 */
