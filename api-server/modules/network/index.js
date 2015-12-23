@@ -77,13 +77,16 @@ exports.getChildren = function (req, next) {
 			console.log(res_wav);
 			if (err_wav) {
 				next(err_wav, null);
-			} else if(res_wav.length > 0) {
+			} else if(res_wav._id) {
 
 				nodeMod.findNodsByWaveIdAndHash(res_wav._id, req.query.hash, function (err_nods, res_nods) {
+					console.log("en findDNOs");
+					console.log(res_nods);
+
 					if (err_nods) {
 						next(err_nods, null);
 					} else {
-						if (res_nods && Array.isArray(res_nods)) {
+						if (res_nods && Array.isArray(res_nods) && res_nods.length > 0) {
 							var parent = res_nods[0];
 							linkMod.findChildren(res_wav._id, parent._id, function (err_chldrn, res_chldrn) {
 								if (err_chldrn) {
