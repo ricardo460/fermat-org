@@ -14,7 +14,7 @@ var nodeSch = require('../../node/schemas/nod');
  *
  * @type {Dao}
  */
-var linkDao = new Dao('Link', linkSch, linkMdl, 'Node', nodeSch, nodeMdl
+var linkDao = new Dao('Link', linkSch, linkMdl, 'Node', nodeSch, nodeMdl,
                       'Wave', waveSch, waveMdl);
 
 /**
