@@ -64,31 +64,49 @@ sudo apt-get install mongodb
 
 ###Running the project (api-server)
 
-Para ejecutar el proyecto siga los siguientes pasos:
+To run the project, follow these steps:
 
-* Abra el terminal y ubiquese en la carpeta api-server del proyecto.
+* Open the terminal and go to the api-server project folder.
 
-* Escriba en el terminal el siguiente comando.
+* Type the following command in the terminal.
 ```bash
  sudo npm install
 ```
-* Luego escriba:
+* Then type:
 ```bash
  sudo npm install forever -g
 ```
-* Ahora ejecute el comando:
+* Now run the command:
 ```bash
  sh starter.sh
 ```
-Ejecutados estos comandos ya estaria el proyecto corriendo, un proxy en el puerto 3000 el branch master en el 3001 y develop en el 3002 
+The project should be running. a proxy on port 3000, the master branch in port 3001 and the branch Develop in port 3002.
 
-###Estructura del proyecto
+###Project structure
 
 El proyecto tiene la siguiente estructura de carpetas:
 
-* **api-server** la cual contiene el servidor y la logica del negocio.
+* **api-server** it contains the server and business logic.
+	* **assets**  it contains image and css style resources for doc book.
+	* **bin** server executable file.
+	* **cache** where the fermat repo is saved (master and develop branches).
+	* **lib** it contains libraries of our creation.
+	* **modules** it contains modules folder (where main development is made).
+	* **public** web access (not developed yet).
+	* **routes** it contains route files.
+	* **views**  it contains template files for web access.
+	* **app.js [file]** it contains the main server code.
+	* **config.js [file]** it contains the configuration of the connection to the database.
+	* **db.js [file]** establishes the connection to the database.
+	* **Gruntfile.js [file]**
+	* **image-loader.js [file]** it contains a script used to generate a JSON object with the images that are within the repository.
+	* **manual_update.js [file]**
+	* **package.json [file]** here are all the dependencies.
+	* **proxy.js [file]** creates proxy servers and starts http server to redirect requests according to version.
+	* **starter.sh [file]** starts the server.
+	* **test.js [file]** tests are implemented here to generate documentation that is in the repository.
+	* **update.js [file]** you download all the repository and updates the database.
 
+* **p2p-network-visualization** which has all the logic that is used to plot the Fermat p2p network that includes servers, clients, each client wallets etc.
 
-* **p2p-network-visualization** la cual tiene toda la logica que se usa para graficar la red p2p de Fermat, eso incluye servidores, clientes, wallets de cada cliente etc.
-
-* **platform-visualization** contiene la logica que se encarga de graficar el repositorio Fermat.
+* **platform-visualization** It contains the logic that is responsible for plotting the repository Fermat.
