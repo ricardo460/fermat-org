@@ -74,9 +74,11 @@ exports.getChildren = function (req, next) {
 	'use strict';
 	try {
 		waveMod.findLastWave(function (err_wav, res_wav) {
+			console.log(res_wav);
 			if (err_wav) {
 				next(err_wav, null);
-			} else {
+			} else if(res_wav.length > 0) {
+
 				nodeMod.findNodsByWaveIdAndHash(res_wav._id, req.query.hash, function (err_nods, res_nods) {
 					if (err_nods) {
 						next(err_nods, null);
@@ -118,6 +120,8 @@ exports.getChildren = function (req, next) {
 						}
 					}
 				});
+			} else {
+				next(null, {});
 			}
 		});
 	} catch (err) {

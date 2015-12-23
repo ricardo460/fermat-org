@@ -13,11 +13,11 @@ var lnkSchema = mongoose.Schema({
     _chld_nod_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Nod'
-    }
+    },
     _prnt_nod_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Nod'
-    }
+    },
     type: {
         type: String,
         lowercase: true,
