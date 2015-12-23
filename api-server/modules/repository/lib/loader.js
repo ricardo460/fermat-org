@@ -240,25 +240,32 @@ var processRequestBody = function (body, callback) {
 var getManifest = function (callback) {
     'use strict';
     try {
+        console.log("en el getManifest");
         var cwd = process.cwd(),
             env = process.env.NODE_ENV || 'development',
-            file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.xml'),
-            exist = fs.lstatSync(file);
+            file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.xml');
 
-        if (exist.isFile()) {
-            winston.log('info', 'Read Cache FermatManifest.xml %s', file);
-            fs.readFile(file, function (err_read, res_read) {
-                if (err_read) {
-                    return callback(err_read, null);
-                }
-                parseString(res_read, function (err_par, res_par) {
-                    if (err_par) {
-                        return callback(err_par, null);
+        try {
+            
+            var stats = fs.lstatSync(file);
+            if (stats.isFile()) {
+                winston.log('info', 'Read Cache FermatManifest.xml %s', file);
+                fs.readFile(file, function (err_read, res_read) {
+                    if (err_read) {
+                        return callback(err_read, null);
                     }
-                    return callback(null, res_par);
+                    parseString(res_read, function (err_par, res_par) {
+                        if (err_par) {
+                            return callback(err_par, null);
+                        }
+                        return callback(null, res_par);
+                    });
                 });
-            });
-        } else {
+            }
+
+        }catch (err){
+
+            winston.log('info', 'Doing Request For Maninfest');
             doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function (err_req, res_req) {
                 if (err_req) {
                     return callback(err_req, null);
@@ -279,8 +286,11 @@ var getManifest = function (callback) {
                     });
                 });
             });
-        }
+
+        } 
+        
     } catch (err) {
+        console.log("en el catch de getManifest");
         return callback(err, null);
     }
 };
@@ -298,6 +308,7 @@ var parseManifest = function (callback) {
     'use strict';
     try {
         var i, j, k, layers, _layers, layer, comps, depends, _depends, depend, steps, _steps, fermat, platfrms, _platfrms, platfrm, suprlays, _suprlays, suprlay, procs, _procs, _proc, _step, _next;
+        console.log("en el parseManifest");
         getManifest(function (err_man, res_man) {
             if (err_man) {
                 return callback(err_man, null);
@@ -435,6 +446,7 @@ var parseManifest = function (callback) {
 var saveManifest = function (callback) {
     'use strict';
     try {
+        console.log("en el saveManifest");
         parseManifest(function (err_load, res_load) {
             if (err_load) {
                 winston.log('info', err_load.message, err_load);
@@ -1074,6 +1086,7 @@ exports.updDevs = function (callback) {
 exports.loadComps = function (callback) {
     'use strict';
     try {
+        console.log("en el loadComps");
         saveManifest(function (err, res) {
             if (err) {
                 return callback(err, null);
