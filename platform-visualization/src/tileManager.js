@@ -399,7 +399,8 @@ function TileManager() {
             var groupID = _platfrm ? _platfrm.order : undefined;
             groupID = (groupID === undefined) ? groups.size() : groupID;
 
-            var _author = getBestDev(_comp.devs);
+            var _author = getBestDev(_comp.devs, "author");
+            var _maintainer = getBestDev(_comp.devs, "maintainer");
             
             _layer = helper.capFirstLetter(_layer.name);
 
@@ -416,6 +417,9 @@ function TileManager() {
                 author: _author.usrnm ? _author.usrnm : undefined,
                 authorRealName: _author.name ? _author.name : undefined,
                 authorEmail: _author.email ? _author.email : undefined,
+                maintainer : _maintainer.usrnm ? _author.usrnm : undefined,
+                maintainerPicture : _maintainer.avatar_url ? _maintainer.avatar_url : undefined,
+                maintainerRealName : _maintainer.name ? _maintainer.name : undefined,
                 difficulty: _comp.difficulty,
                 code_level: _comp.code_level ? _comp.code_level : undefined,
                 life_cycle: _comp.life_cycle,
@@ -502,21 +506,21 @@ function TileManager() {
                 text: table[id].authorRealName || table[id].author || '',
                 font: (3.5 * scale) + 'px Arial'
             },
-            picMantainer = {
-                src: picture || base + 'buster.png'
+            picMaintainer = {
+                src: table[id].maintainerPicture || base + 'buster.png'
             },
-            mantainer = {
-                text: 'Mantainer',
+            maintainer = {
+                text: 'Maintainer',
                 font: (5.5 * scale) + 'px Arial',
                 color: "#FFFFFF"
             },
-            nameMantainer = {
-                text: table[id].authorRealName || table[id].author || '',
+            nameMaintainer = {
+                text: table[id].maintainerRealName || table[id].maintainer || '',
                 font: (4.8 * scale) + 'px Arial',
                 color: "#FFFFFF"
             },
-            userMantainer = {
-                text: table[id].authorRealName || table[id].author || '',
+            userMaintainer = {
+                text: table[id].maintainer || 'No Maintainer yet',
                 font: (4.3 * scale) + 'px Arial',
                 color: "#E2E2E2"
             };
@@ -553,19 +557,19 @@ function TileManager() {
             authorText.x = middle;
             authorText.y = 80 * scale;
 
-            picMantainer.x = 136 * scale;
-            picMantainer.y = 63.6 * scale;
-            picMantainer.w = 23.5 * scale;
-            picMantainer.h = 23.5 * scale;
+            picMaintainer.x = 136 * scale;
+            picMaintainer.y = 63.6 * scale;
+            picMaintainer.w = 23.5 * scale;
+            picMaintainer.h = 23.5 * scale;
 
-            mantainer.x = 174.5 * scale;
-            mantainer.y = 70 * scale;
+            maintainer.x = 174.5 * scale;
+            maintainer.y = 70 * scale;
 
-            nameMantainer.x = 181 * scale;
-            nameMantainer.y = 77 * scale;
+            nameMaintainer.x = 181 * scale;
+            nameMaintainer.y = 77 * scale;
 
-            userMantainer.x = 181 * scale;
-            userMantainer.y = 82 * scale;
+            userMaintainer.x = 181 * scale;
+            userMaintainer.y = 82 * scale;
 
             break;
         case "development":
@@ -599,19 +603,19 @@ function TileManager() {
             authorText.x = middle;
             authorText.y = 88 * scale;
 
-            picMantainer.x = 141 * scale;
-            picMantainer.y = 78.5 * scale;
-            picMantainer.w = 23.5 * scale;
-            picMantainer.h = 23.5 * scale;
+            picMaintainer.x = 141 * scale;
+            picMaintainer.y = 78.5 * scale;
+            picMaintainer.w = 23.5 * scale;
+            picMaintainer.h = 23.5 * scale;
 
-            mantainer.x = 178.2 * scale;
-            mantainer.y = 84 * scale;
+            maintainer.x = 178.2 * scale;
+            maintainer.y = 84 * scale;
 
-            nameMantainer.x = 184.5 * scale;
-            nameMantainer.y = 91 * scale;
+            nameMaintainer.x = 184.5 * scale;
+            nameMaintainer.y = 91 * scale;
 
-            userMantainer.x = 184.5 * scale;
-            userMantainer.y = 96 * scale;
+            userMaintainer.x = 184.5 * scale;
+            userMaintainer.y = 96 * scale;
 
             break;
         case "qa":
@@ -645,19 +649,19 @@ function TileManager() {
             authorText.x = middle;
             authorText.y = 78 * scale;
 
-            picMantainer.x = 141 * scale;
-            picMantainer.y = 81 * scale;
-            picMantainer.w = 23.5 * scale;
-            picMantainer.h = 23.5 * scale;
+            picMaintainer.x = 141 * scale;
+            picMaintainer.y = 81 * scale;
+            picMaintainer.w = 23.5 * scale;
+            picMaintainer.h = 23.5 * scale;
 
-            mantainer.x = 179.2 * scale;
-            mantainer.y = 87.5 * scale;
+            maintainer.x = 179.2 * scale;
+            maintainer.y = 87.5 * scale;
 
-            nameMantainer.x = 184.5 * scale;
-            nameMantainer.y = 94.5 * scale;
+            nameMaintainer.x = 184.5 * scale;
+            nameMaintainer.y = 94.5 * scale;
 
-            userMantainer.x = 184.5 * scale;
-            userMantainer.y = 99.5 * scale;         
+            userMaintainer.x = 184.5 * scale;
+            userMaintainer.y = 99.5 * scale;         
 
             break;
         case "production":
@@ -693,19 +697,19 @@ function TileManager() {
             authorText.x = 82 * scale;
             authorText.y = 77 * scale;
 
-            picMantainer.x = 136 * scale;
-            picMantainer.y = 69 * scale;
-            picMantainer.w = 23.5 * scale;
-            picMantainer.h = 23.5 * scale;
+            picMaintainer.x = 136 * scale;
+            picMaintainer.y = 69 * scale;
+            picMaintainer.w = 23.5 * scale;
+            picMaintainer.h = 23.5 * scale;
 
-            mantainer.x = 174.5 * scale;
-            mantainer.y = 76 * scale;
+            maintainer.x = 174.5 * scale;
+            maintainer.y = 76 * scale;
 
-            nameMantainer.x = 180 * scale;
-            nameMantainer.y = 83 * scale;
+            nameMaintainer.x = 180 * scale;
+            nameMaintainer.y = 83 * scale;
 
-            userMantainer.x = 180 * scale;
-            userMantainer.y = 88 * scale;                     
+            userMaintainer.x = 180 * scale;
+            userMaintainer.y = 88 * scale;                     
 
             break;
         }
@@ -718,7 +722,7 @@ function TileManager() {
 
         var data = [
             pic,
-            picMantainer,
+            picMaintainer,
             portrait,
             groupIcon,
             typeIcon,
@@ -727,9 +731,9 @@ function TileManager() {
             nameText,
             layerText,
             authorText,
-            mantainer,
-            nameMantainer,
-            userMantainer
+            maintainer,
+            nameMaintainer,
+            userMaintainer
         ];
 
         if ( table[id].found !== true ) {
@@ -1134,19 +1138,31 @@ function TileManager() {
         }
     }
 
-    function getBestDev(_devs) {
+    /**
+     * Gets the best developer in the given role
+     * @param   {Array}  _devs The array of developers
+     * @param   {string} role  The role to look for
+     * @returns {object} The best developer by the given criteria
+     */
+    function getBestDev(_devs, role) {
         var dev = {};
         if (_devs) {
             var _dev = {};
             dev.percnt = 0;
             for (var i = 0, l = _devs.length; i < l; i++) {
                 _dev = _devs[i];
-                if (_dev.scope == 'implementation' && _dev.percnt >= dev.percnt) {
-                    dev.percnt = _dev.percnt;
-                    dev.usrnm = _dev.dev.usrnm;
-                    dev.name = _dev.dev.name;
-                    dev.email = _dev.dev.email;
-                    dev.avatar_url = _dev.dev.avatar_url;
+                
+                if((role === 'author' && _dev.role === 'author' && _dev.scope === 'implementation') ||
+                   (role === 'maintainer' && _dev.role === 'maintainer')) {
+                
+                    if (_dev.percnt >= dev.percnt) {
+                        
+                        dev.percnt = _dev.percnt;
+                        dev.usrnm = _dev.dev.usrnm;
+                        dev.name = _dev.dev.name;
+                        dev.email = _dev.dev.email;
+                        dev.avatar_url = _dev.dev.avatar_url;
+                    }
                 }
             }
         }
