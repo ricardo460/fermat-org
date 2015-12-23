@@ -247,6 +247,7 @@ function Camera(position, renderer, renderFunc) {
      *
      */
     this.update = function() {
+        
         if(controls.noPan === true && Math.ceil(camera.position.z) !== controls.position0.z) {
             
             controls.noPan = false;
@@ -257,6 +258,9 @@ function Camera(position, renderer, renderFunc) {
             
                 if(window.viewManager && window.actualView)
             window.viewManager.views[window.actualView].zoom();
+        }
+        else if(controls.noPan === false && Math.ceil(camera.position.z) === controls.position0.z && self.freeView === false) {
+            this.onKeyDown({keyCode : 27}); //Force reset if far enough
         }
         
         controls.update();
