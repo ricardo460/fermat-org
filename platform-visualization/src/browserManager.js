@@ -36,26 +36,6 @@ function BrowserManager() {
     }
 
    /**
-    * @author Ricardo Delgado
-    * Button changes the value back.
-    * @param {Number} valor    value of opacity
-    * @param {String} display  button status
-    */
-   this.modifyButtonBack = function (valor, display) {
-    
-       var browserButton = document.getElementById('backButton');
-
-       $(browserButton).fadeTo(1000, valor, function() {
-
-           $(browserButton).show();
-
-           browserButton.style.display = display;
-
-       });
-
-   };
-
-   /**
      * @author Ricardo Delgado
      * Button changes the value legend.
      * @param {Number}  valor    value of opacity.

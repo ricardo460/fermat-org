@@ -1,148 +1,151 @@
-/**
- * Represents a flow of actions related to some tiles
- * @param   {Object}  flow The objects that describes the flow including a set of steps
- */
 function ActionFlow(flow) {
-    
-    var BOX_WIDTH = 825;
-    var BOX_HEIGHT = 188;
-    var X_OFFSET = -312; //Because lines don't come from the center
-    var ROW_SPACING = 350;
-    var COLUMN_SPACING = 900;
-    var HEADER_WIDTH = 825;
-    var HEADER_HEIGHT = 238;
-    
-    this.flow = flow || [];
-    
-    
+
+    var BOX_WIDTH = 825,
+        BOX_HEIGHT = 188,
+        X_OFFSET = -312, //Because lines don't come from the center
+        ROW_SPACING = 350,
+        COLUMN_SPACING = 900,
+        HEADER_WIDTH = 825,
+        HEADER_HEIGHT = 238;
+
     var self = this;
 
-    var objects = [];
-    var positions = {
-        target : [],
-        origin : []
-    };
-    
-    var onClick = function(target) {
-        if(window.actualView === 'workflows')
-            window.onElementClickHeaderFlow(target.userData.id);
+    var used = [];
+
+    var objectsFlow = {
+            mesh : [],
+            position :{
+                target : [],
+                origin : []
+            } 
+    },
+        objectsStep = {
+            mesh : [],
+            position :{
+                target : [],
+                origin : []
+            }
     };
 
-    this.objects = objects;
-    this.positions = positions;
+    this.flow = flow || [];
+
+    this.action = false;
+
+    this.objects = objectsFlow.mesh;
+
+    this.positions = objectsFlow.position;
+
+    initFlow();
+
+    var onClick = function(target) {
+
+        if(window.actualView === 'workflows'){
+
+            window.flowManager.onElementClickHeaderFlow(target.userData.id);
+            self.action = true;
+        }
+    };
+
+    // Public method
 
     /**
      * Draws the flow
      * @lastmodifiedBy Emmanuel Colina
+     * @lastmodifiedBy Ricardo Delgado
      * @param   {Number}  initialX Position where to start
      * @param   {Number}  initialY Position where to start
      */
     this.draw = function(initialX, initialY, initialZ, indice, id) {
 
-        var title = createTitleBox(self.flow.name, self.flow.desc);
-        
-        var origin = window.helper.getOutOfScreenPoint(0);
-        var target = new THREE.Vector3(initialX, initialY + window.TILE_DIMENSION.height * 2, initialZ);
+        var title = createTitleBox(self.flow.name, self.flow.desc),
+            origin = window.helper.getOutOfScreenPoint(0),
+            target = new THREE.Vector3(initialX, initialY + window.TILE_DIMENSION.height * 2, initialZ);
 
         title.userData = {
                 id: id,
                 onClick : onClick
         };
-        positions.origin.push(origin);
-        positions.target.push(target);
-        
+
+        objectsFlow.position.origin.push(origin);
+        objectsFlow.position.target.push(target);
+
         title.position.copy(origin);
-        
-        objects.push(title);
-        scene.add(title);
+
+        objectsFlow.mesh.push(title);
+
+        window.scene.add(title);
 
         if (indice === 0){
-            for(i = 0, l = self.flow.steps.length; i < l; i++){
+
+            for(var i = 0, l = self.flow.steps.length; i < l; i++){
                 self.drawTree(self.flow.steps[i], initialX + COLUMN_SPACING * i, initialY, 0);
             }
+
             new TWEEN.Tween(this)
                 .to({}, 8000)
                 .onUpdate(window.render)
                 .start();
+
+            self.showAllFlow();
             self.showSteps();
         }
 
-        if (indice === 1){
-            self.showSteps();
+        else if (indice === 1){
+            self.showAllFlow();
         }
     };
 
     /**
-     * Takes away all the tiles except the one with the id
-     * @author Emmanuel Colina
-     */
-
-    this.letAloneHeaderFlow = function() {
-        
-        var i, _duration = 2000,
-            distance = camera.getMaxDistance() * 2, target;
-
-        var animate = function (object, target, dur) {
-
-            new TWEEN.Tween(object.position)
-                .to({
-                    x: target.x,
-                    y: target.y,
-                    z: target.z
-                }, dur)
-                .easing(TWEEN.Easing.Exponential.InOut)
-                .onComplete(function () {
-                    object.userData.flying = false;
-                })
-                .start();
-
-        };
-
-        for (i = 0; i < objects.length; i++) {
-
-            target = positions.origin[i];
-            objects[i].userData.flying = true;
-            animate(objects[i], target, Math.random() * _duration + _duration);
-        }
-    };
-
-     /**
+     * @author Miguel Celedon
+     * @lastmodifiedBy Ricardo Delgado
      * Recursively draw the flow tree
      * @param {Object} root The root of the tree
      * @param {Number} x    X position of the root
      * @param {Number} y    Y position of the root
-     * @author Miguel Celedon
      */
 
     this.drawTree = function(root, x, y, z) {
-        
-        if(typeof root.drawn === 'undefined') {
+
+        if (typeof root.drawn === 'undefined'){
+
             drawStep(root, x, y, z);
 
             var childCount = root.next.length,
                 startX = x - 0.5 * (childCount - 1) * COLUMN_SPACING;
 
-            if(childCount !== 0) {
+            if (childCount !== 0){
 
-                var lineGeo = new THREE.Geometry();
-                var lineMat = new THREE.LineBasicMaterial({color : 0x000000});
+                 var lineGeo,
+                     lineMat, 
+                     rootPoint,
+                     rootLine,
+                     origin;           
 
-                var rootPoint = new THREE.Vector3(x + X_OFFSET, y - ROW_SPACING / 2, -1);
+                lineGeo = new THREE.Geometry();
+                lineMat = new THREE.LineBasicMaterial({color : 0x000000});
+                rootPoint = new THREE.Vector3(x + X_OFFSET, y - ROW_SPACING / 2, -1);
 
                 lineGeo.vertices.push(
-                    new THREE.Vector3(x + X_OFFSET, y, -1),
-                    rootPoint);
+                            new THREE.Vector3(x + X_OFFSET, y, -1),
+                            rootPoint
+                            );
 
-                var rootLine = new THREE.Line(lineGeo, lineMat);
-                var origin = helper.getOutOfScreenPoint(-1);
+                rootLine = new THREE.Line(lineGeo, lineMat);
+                origin = helper.getOutOfScreenPoint(-1);
                 rootLine.position.copy(origin);
-                positions.origin.push(origin);
-                positions.target.push(new THREE.Vector3(0, 0, 0));
-                
-                objects.push(rootLine);
+                objectsStep.position.origin.push(origin);
+                objectsStep.position.target.push(new THREE.Vector3(0, 0, 0));
+
+                objectsStep.mesh.push(rootLine);
                 window.scene.add(rootLine);
 
-                var nextX, nextY, childLine, child, i, isLoop, nextZ = z;
+                var nextX, 
+                    nextY, 
+                    childLine, 
+                    child, 
+                    i, 
+                    isLoop, 
+                    nextZ = z;
 
                 for(i = 0; i < childCount; i++) {
 
@@ -167,12 +170,13 @@ function ActionFlow(flow) {
 
                     lineGeo = new THREE.Geometry();
                     lineGeo.vertices.push(
-                        rootPoint,
-                        new THREE.Vector3(nextX + X_OFFSET, rootPoint.y, -1),
-                        new THREE.Vector3(nextX + X_OFFSET, nextY, -1)
-                    );
+                            rootPoint,
+                            new THREE.Vector3(nextX + X_OFFSET, rootPoint.y, -1),
+                            new THREE.Vector3(nextX + X_OFFSET, nextY, -1)
+                        );
 
                     if(isLoop) {
+
                         lineGeo.vertices[2].setY(nextY + ROW_SPACING * 0.25);
 
                         lineGeo.vertices.push(
@@ -181,15 +185,15 @@ function ActionFlow(flow) {
                     }
 
                     childLine = new THREE.Line(lineGeo, lineMat);
-                    
+
                     //childLine.position.z = 80000;
 
                     origin = helper.getOutOfScreenPoint(-1);
                     childLine.position.copy(origin);
-                    positions.origin.push(origin);
-                    positions.target.push(new THREE.Vector3(0, 0, 0));
-                    
-                    objects.push(childLine);
+                    objectsStep.position.origin.push(origin);
+                    objectsStep.position.target.push(new THREE.Vector3(0, 0, 0));
+
+                    objectsStep.mesh.push(childLine);
                     window.scene.add(childLine);
 
                     self.drawTree(child, nextX, nextY, nextZ);
@@ -197,10 +201,60 @@ function ActionFlow(flow) {
             }
         }
     };
+    /**
+     * @author Emmanuel Colina
+     * @lastmodifiedBy Ricardo Delgado
+     * Takes away all the tiles except the one with the id
+     */
+    this.letAloneHeaderFlow = function() {
+
+        animateFlows('steps', 'origin', false);
+
+        animateFlows('flow', 'origin', true);
+    };
+
+    /**
+     * @author Ricardo Delgado
+     * Displays all flow in the table.
+     */
+    this.showAllFlow = function() {
+
+        animateFlows('flow', 'target', true, 2500);
+    };
+
+    /**
+     * @author Ricardo Delgado
+     * It shows all the steps of the flow.
+     */
+    this.showSteps = function() {
+
+        animateFlows('steps', 'target', true, 3000);
+    };
+
+    /**
+     * @author Ricardo Delgado.
+     * Deletes all objects related to the flow.
+     */
+    this.deleteAll = function() {
+
+        animateFlows('steps', 'origin', false);
+        animateFlows('flow', 'origin', false);  
+    };
+
+    /**
+     * @author Ricardo Delgado.
+     * Deletes all step related to the flow.
+     */    
+    this.deleteStep = function() {
+
+        window.tileManager.letAlone();
+        animateFlows('steps', 'origin', false, 3000);
+    };
 
     //Private methods
 
     /**
+     * @lastmodifiedBy Ricardo Delgado
      * Draws a single step
      * @param {Object} node The information of the step
      * @param {Number} x    X position
@@ -208,43 +262,52 @@ function ActionFlow(flow) {
      */
     function drawStep(node, x, y, _z) {
 
-        var z = _z || 0;
-        var tile,
+        var z = _z || 0,
+            tile,
+            stepBox,
+            origin,
+            target,
             tilePosition = new THREE.Vector3(x - 108, y - 2, z + 1);
 
         if(node.element !== -1) {
 
             if(typeof used[node.element] !== 'undefined') {
+
                 tile = window.objects[node.element].clone();
                 tile.isClone = true;
-                
-                positions.origin.push(window.helper.getOutOfScreenPoint(1));
-                positions.target.push(tilePosition);
-                
-                objects.push(tile);
+
+                objectsStep.position.origin.push(window.helper.getOutOfScreenPoint(1));
+                objectsStep.position.target.push(tilePosition);
+
+                objectsStep.mesh.push(tile);
                 window.scene.add(tile);
             }
             else {
+
                 tile = window.objects[node.element];
                 used[node.element] = true;
-            }
 
-            new TWEEN.Tween(tile.position)
-                .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 5000)
+                new TWEEN.Tween(tile.position)
+                .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 7000)
                 .easing(TWEEN.Easing.Cubic.InOut)
                 .start();
+            }
+
+
         }
 
-        var stepBox = createStepBox(node);
-        
-        var origin = window.helper.getOutOfScreenPoint(0);
-        var target = new THREE.Vector3(x, y, z);
-        positions.origin.push(origin);
-        positions.target.push(target);
-        
+        stepBox = createStepBox(node);
+
+        origin = window.helper.getOutOfScreenPoint(0);
+
+        target = new THREE.Vector3(x, y, z);
+
+        objectsStep.position.origin.push(origin);
+        objectsStep.position.target.push(target);
+
         stepBox.position.copy(origin);
-        
-        objects.push(stepBox);
+
+        objectsStep.mesh.push(stepBox);
         scene.add(stepBox);
 
         node.drawn = {
@@ -261,132 +324,91 @@ function ActionFlow(flow) {
      */
 
     function colides(x, from) {
-            
-            var actual;
-            
-            for(var i = 0; i < self.flow.steps.length; i++) {
-                actual = self.flow.steps[i];
-                
-                if(actual.drawn && actual.drawn.x === x && actual !== from) return true;
-            }
-            
-            return false;
-        }
-    
-    /**
-     * Deletes all objects related to the flow
-     */
-     
-    this.delete = function() {
-        
-        var moveAndDelete = function(id) {
-            
-            var target = positions.origin[id];
-            var object = objects[id];
-            
-            new TWEEN.Tween(object.position)
-                .to({x : target.x, y : target.y, z : target.z}, 6000)
-                .easing(TWEEN.Easing.Cubic.InOut)
-                .onComplete(function() { window.scene.remove(object); })
-                .start();
-        };
-        
-        for(var i = 0, l = objects.length; i < l; i++) {
-            moveAndDelete(i);
-        }
-        
-        objects = [];
-    };
 
-    this.showSteps = function() {
-        
-        var move = function(id) {
-            
-            var target = positions.target[id];
-            
-            new TWEEN.Tween(objects[id].position)
-                .to({x : target.x, y : target.y, z : target.z}, 6000)
-                .easing(TWEEN.Easing.Cubic.InOut)
-                .start();
-        };
-        
-        for(var i = 0, l = objects.length; i < l; i++) {
-            move(i);
+        var actual;
+
+        for(var i = 0; i < self.flow.steps.length; i++) {
+            actual = self.flow.steps[i];
+
+            if(actual.drawn && actual.drawn.x === x && actual !== from) return true;
         }
-    };
-    
+
+        return false;
+    }
+
+
     /**
+     * @author Miguel Celedon
      * Creates a flow box and when texture is loaded, calls fillBox
      * @param   {String}     src     The texture to load
      * @param   {Function}   fillBox Function to call after load, receives context and image
      * @returns {THREE.Mesh} The created plane with the drawed texture
-     * @author Miguel Celedon
      */
     function createFlowBox(src, fillBox, width, height) {
-        
+
         var canvas = document.createElement('canvas');
         canvas.height = height;
         canvas.width = width;
         var ctx = canvas.getContext('2d');
         var size = 12;
         ctx.fillStyle = '#FFFFFF';
-        
+
         var image = document.createElement('img');
         var texture = new THREE.Texture(canvas);
         texture.minFilter = THREE.LinearFilter;
-        
+
         ctx.font = size + 'px Arial';
-        
+
         image.onload = function() {
             fillBox(ctx, image);
             texture.needsUpdate = true;
         };
-        
+
         image.src = src;
-        
+
         var mesh = new THREE.Mesh(
             new THREE.PlaneGeometry(width, height),
             new THREE.MeshBasicMaterial({color : 0xFFFFFF, map : texture, transparent : true})
         );
-        
+
         return mesh;
     }
-    
+
     /**
      * Creates a single step box
      * @param {Object} node The node to draw
      * @author Miguel Celedon
      */
     function createStepBox(node) {
-        
+
         var fillBox = function(ctx, image) {
-            
+
             ctx.drawImage(image, 0, 0);
-            
+
             //ID
             var Nodeid = parseInt(node.id) + 1;
             Nodeid = (Nodeid < 10) ? '0' + Nodeid.toString() : Nodeid.toString();
-            
+
             var size = 83;
             ctx.font = size + 'px Arial';
             ctx.fillStyle = '#000000';
             window.helper.drawText(Nodeid, 57, 130, ctx, 76, size);
             ctx.fillStyle = '#FFFFFF';
-            
+
             //Title
             size = 18;
             ctx.font = 'bold ' + size + 'px Arial';
             window.helper.drawText(node.title, 421, 59, ctx, 250, size);
-            
+
             //Description
             size = 12;
             ctx.font = size + 'px Arial';
-            window.helper.drawText(node.desc, 421, 104, ctx, 250, size);
+            window.helper.drawText(node.desc, 421, 114, ctx, 250, size);
         };
-        
+
         return createFlowBox('images/workflow/stepBox.png', fillBox, BOX_WIDTH, BOX_HEIGHT);
     }
-    
+
     /**
      * Creates the title box
      * @param {String} title The title of the box
@@ -394,25 +416,94 @@ function ActionFlow(flow) {
      * @author Miguel Celedon
      */
     function createTitleBox(title, desc) {
-        
+
         var fillBox = function(ctx, image) {
-            
+
             ctx.drawImage(image, 0, 0);
-            
+
             //Title
             var size = 24;
             ctx.font = 'bold ' + size + 'px Arial';
             window.helper.drawText(title, 190, 61, ctx, 400, size);
-            
+
             //Description
             size = 17;
             ctx.font = size + 'px Arial';
             window.helper.drawText(desc, 190, 126, ctx, 550, size);
         };
-        
+
         return createFlowBox('images/workflow/titleBox.png', fillBox, HEADER_WIDTH, HEADER_HEIGHT);
     }
-    
+
+    /**
+     * @author Ricardo Delgado.
+     * Creates the animation for all flow there.
+     * @param   {Object}    objects     .     
+     * @param   {String}     target     He says the goal should take the flow.
+     * @param   {Boolean}    visible    visible of the object.
+     * @param   {Number}    duration    Animation length.
+     */
+    function animateFlows(objects, target, visible, duration){
+
+        var _duration = duration || 2000,
+            _target,
+            _objects,
+            object;
+
+        if(objects === 'steps'){
+
+            _objects = objectsStep;
+
+            if(!visible){
+
+                used = [];
+
+                objectsStep = { mesh : [], position :{ target : [], origin : [] } };
+
+                for(var _i = 0, _l = self.flow.steps.length; _i < _l; _i++)
+
+                    delete self.flow.steps[_i].drawn;
+            }
+        }
+        else{
+
+            _objects = objectsFlow;
+
+            if(!visible){
+
+                used = [];
+
+                objectsFlow = { mesh : [], position :{ target : [], origin : [] } };
+
+            }
+        }
+
+        for(var i = 0, l = _objects.mesh.length; i < l; i++){
+
+            _target = _objects.position[target][i];
+            object = _objects.mesh[i];
+            moveObject(object, _target, _duration, visible);
+        }
+
+        function moveObject(object, target, duration, visible) {
+
+            new TWEEN.Tween(object.position)
+                .to({
+                    x: target.x,
+                    y: target.y,
+                    z: target.z
+                }, duration)
+                .easing(TWEEN.Easing.Cubic.InOut)
+                .onComplete(function () {
+                    if(!visible)
+                        window.scene.remove(object);    
+                })
+                .start();
+        }
+
+
+    }
+
     /**
      * Looks for the node related to that step
      * @param   {Number} id The id of the step
@@ -420,31 +511,33 @@ function ActionFlow(flow) {
      * @author Miguel Celedon
      */
     function getStep(id) {
-        
+
         var i, l, actual;
-        
+
         for(i = 0, l = self.flow.steps.length; i < l; i++) {
-            
+
             actual = self.flow.steps[i];
-            
+
             //Should not be done, the id in 'next' and in each step should be the same type (strings)
             if(actual.id == id) return actual;
         }
-        
+
         return null;
     }
-    
+
     //-----------------------------------------------------------------------------
-    var used = [];
-    
-    var i, l;
-    
-    for(i = 0, l = self.flow.steps.length; i < l; i++) {
-        
-        var element = self.flow.steps[i];
-        
-        self.flow.steps[i].element = helper.searchElement(
-            (element.platfrm || element.suprlay) + '/' + element.layer + '/' + element.name
-        );
+
+    function initFlow(){ 
+
+        var i, l;
+
+        for(i = 0, l = self.flow.steps.length; i < l; i++) {
+
+            var element = self.flow.steps[i];
+
+            self.flow.steps[i].element = helper.searchElement(
+                (element.platfrm || element.suprlay) + '/' + element.layer + '/' + element.name
+            );
+        }
     }
 }

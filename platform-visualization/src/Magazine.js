@@ -122,35 +122,18 @@ function Magazine() {
      */ 	
     this.actionSpecial = function(){
         
-        $(document).keydown(function(e){
+        if (!MAGAZINE.data().zoomIn){
 
-            var ESC = 27,
-                view = null;
+            if (2 < MAGAZINE.turn('page')){ 
 
-            switch (e.keyCode) {
-
-                case ESC:
-                    
-                    view = window.actualView;
-
-                    if (view === "book" || view === "readme" || view === "whitepaper"){
-
-                        if (!MAGAZINE.data().zoomIn){
-
-                            if (2 < MAGAZINE.turn('page')){ 
-
-                                MAGAZINE.turn("page", 2);
-                                MAGAZINE.turn("previous");
-                                navigationUrl("");
-                            }
-                        }
-
-                        zoomHandle(-1);
-                    }
-                break;
+                MAGAZINE.turn("page", 2);
+                MAGAZINE.turn("previous");
+                navigationUrl("");
             }
-        });
-            
+        }
+
+        zoomHandle(-1);
+
     };
     
     /**
