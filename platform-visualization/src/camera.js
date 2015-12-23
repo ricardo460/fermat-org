@@ -110,123 +110,36 @@ function Camera(position, renderer, renderFunc) {
      *
      * @param {Number} id       target id
      * @param {Number} duration animation duration time
+     * @param {Object} target  target of the focus
+     * @param {Vector} offset  offset of the focus
      */
-    this.setFocus = function( id, duration ) {
-        
-        TWEEN.removeAll();
-        focus = parseInt(id);
-        
+
+    /**
+     * Sets the focus to one object
+     * 
+     * @author Miguel Celedon
+     * @param {THREE.Object3D} target          The target to see
+     * @param {THREE.Vector3}  offset          The distance and position to set the camera
+     * @param {number}         [duration=3000] The duration of the animation
+     */
+    this.setFocus = function(target, offset, duration){
+
         duration = duration || 3000;
+        focus = target;
 
-        tileManager.letAlone(focus, duration);
-        
-        objects[focus].getObjectForDistance(0).visible = true;
-        self.render(renderer, scene);
-        
-        headers.hideHeaders(duration);
-    
-        var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1);
-        var target = window.objects[ focus ];
-
-        vec.applyMatrix4( target.matrix );
-
-        /*new TWEEN.Tween( controls.target )
-            .to( { x: target.position.x, y: target.position.y, z: target.position.z }, duration )
-            .easing( TWEEN.Easing.Exponential.InOut )
-            .start();*/
+        self.render(renderer, scene); 
+        offset.applyMatrix4( target.matrix );
 
         new TWEEN.Tween( camera.position )
-            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration)
-            //.easing( TWEEN.Easing.Exponential.InOut )
-            .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
+            .to( { x: offset.x, y: offset.y, z: offset.z }, duration )
             .onComplete(render)
             .start();
+        
+        self.setTarget(target.position, duration / 2);
 
         new TWEEN.Tween( camera.up )
-            .to( { x: target.up.x, y: target.up.y, z: target.up.z }, Math.random() * duration + duration )
+            .to( { x: target.up.x, y: target.up.y, z: target.up.z }, duration )
             .easing( TWEEN.Easing.Exponential.InOut )
-            .start();
-    };
-
-    this.setFocusScreenshots = function( id, duration ) {
-
-        focus = parseInt(id); 
-
-        tileManager.letAlone();
-        
-        self.render(renderer, scene);
-        
-        headers.hideHeaders(duration);
-    
-        var vec = new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1);
-        var target = window.screenshotsAndroid.objects.mesh[focus];
-
-        vec.applyMatrix4( target.matrix );
-
-        new TWEEN.Tween( camera.position )
-            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration * 2 )
-            .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
-            .onComplete(render)
-            .start();
-
-        new TWEEN.Tween( camera.up )
-            .to( { x: target.up.x, y: target.up.y, z: target.up.z }, Math.random() * duration + duration )
-            .easing( TWEEN.Easing.Exponential.InOut )
-            .start();
-    };
-
-    this.setFocusHeaderFlow = function(id, duration, headerFlow) {
-
-        var POSITION_Z = 2600;
-        var POSITION_Y = -850;
-
-        focus = parseInt(id);
-
-        for (var i = 0; i < headerFlow.length ; i++) {
-            if(id !== i)
-                headerFlow[i].letAloneHeaderFlow();
-        }
-        self.render(renderer, scene);
-
-        headers.hidetransformWorkFlow(duration);
-
-        var vec = new THREE.Vector4(0, POSITION_Y, POSITION_Z, 1);
-        var target = headerFlow[id].objects[0];
-
-        vec.applyMatrix4( target.matrix );
-
-        new TWEEN.Tween( camera.position )
-            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration * 2 )
-            .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
-            .onComplete(render)
-            .start();
-    };
-
-    this.setFocusDeveloper = function(id, duration, objectsDevelopers) {
-
-        var POSITION_Z = 300;
-        var POSITION_Y = -50;
-        var POSITION_X = -50;
-
-        focus = parseInt(id);
-
-
-        for (var i = 0; i < objectsDevelopers.length ; i++) {
-            if(id !== i)
-                window.developer.letAloneDeveloper(objectsDevelopers[i]);
-        }
-
-        self.render(renderer, scene);
-
-        var vec = new THREE.Vector4(POSITION_X, POSITION_Y, POSITION_Z, 1);
-        var target = objectsDevelopers[id];
-
-        vec.applyMatrix4( target.matrix );
-
-        new TWEEN.Tween( camera.position )
-            .to( { x: vec.x, y: vec.y, z: vec.z }, Math.random() * duration + duration * 2 )
-            .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
-            .onComplete(render)
             .start();
     };
 

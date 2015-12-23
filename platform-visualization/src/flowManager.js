@@ -140,9 +140,21 @@ function FlowManager(){
      */
     function onElementClickHeaderFlow(id) {
 
-        if (window.camera.getFocus() == null) {
+        var duration = 1000;
 
-            window.camera.setFocusHeaderFlow(id, 1000, headerFlow);
+        if (window.camera.getFocus() == null) {
+            
+            var camTarget = headerFlow[id].objects[0].clone();
+            camTarget.position.y -= 850;
+
+            window.camera.setFocus(camTarget, new THREE.Vector4(0, -850, 2600, 1),duration);
+
+            for (var i = 0; i < headerFlow.length ; i++) {
+                if(id !== i)
+                    headerFlow[i].letAloneHeaderFlow();
+            }
+
+            headers.hidetransformWorkFlow(duration);
 
             setTimeout(function() {
                 for (var i = 0; i < headerFlow[id].flow.steps.length; i++) {
@@ -205,7 +217,7 @@ function FlowManager(){
     //Should draw ONLY one flow at a time
     function showFlow (flows) {
     
-        var position = objects[window.camera.getFocus()].position;
+        var position = window.camera.getFocus().position;
         var indice = 0;
 
         window.camera.enable();
