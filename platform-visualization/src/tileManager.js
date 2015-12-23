@@ -165,7 +165,7 @@ function TileManager() {
 
         for (i = 0; i <= groupsQtty; i++) indexes.push(0);
 
-        for (i = 0; i < objects.length; i++) {
+        for (i = 0; i < window.objects.length; i++) {
 
             var g = (table[i].groupID !== undefined) ? table[i].groupID : groupsQtty;
 
@@ -219,7 +219,7 @@ function TileManager() {
             current.push(0);
         }
 
-        for (i = 0, l = objects.length; i < l; i++) {
+        for (i = 0, l = window.objects.length; i < l; i++) {
 
             var row = table[i].layerID;
 
@@ -271,7 +271,7 @@ function TileManager() {
             gridLine.push(gridLineSub);
         }
 
-        for (i = 0; i < objects.length; i++) {
+        for (i = 0; i < window.objects.length; i++) {
 
             var group = table[i].groupID;
             var layer = table[i].layerID;
@@ -777,7 +777,7 @@ function TileManager() {
 
                     var index = self.elementsByGroup[k][j];
 
-                    var animation = animate(objects[index], goal[index], delay);
+                    var animation = animate(window.objects[index], goal[index], delay);
 
                     animation[0].start();
                     animation[1].start();
@@ -837,7 +837,7 @@ function TileManager() {
             
             scene.add(object);
 
-            objects.push(object);
+            window.objects.push(object);
 
             //
 
@@ -934,16 +934,16 @@ function TileManager() {
 
         };
 
-        for (i = 0; i < objects.length; i++) {
+        for (i = 0; i < window.objects.length; i++) {
 
             if (ids.indexOf(i) !== -1) {
                 target = this.lastTargets[i].position;
             } else {
                 target = out;
-                objects[i].userData.flying = true;
+                window.objects[i].userData.flying = true;
             }
 
-            animate(objects[i], target, Math.random() * _duration + _duration);
+            animate(window.objects[i], target, Math.random() * _duration + _duration);
         }
 
         new TWEEN.Tween(this)

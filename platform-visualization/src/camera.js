@@ -114,22 +114,31 @@ function Camera(position, renderer, renderFunc) {
      * @param {Vector} offset  offset of the focus
      */
 
-    this.setFocus = function(id, target, offset, duration){
+    /**
+     * Sets the focus to one object
+     * 
+     * @author Miguel Celedon
+     * @param {THREE.Object3D} target          The target to see
+     * @param {THREE.Vector3}  offset          The distance and position to set the camera
+     * @param {number}         [duration=3000] The duration of the animation
+     */
+    this.setFocus = function(target, offset, duration){
 
         duration = duration || 3000;
-        focus = parseInt(id);
+        focus = target;
 
         self.render(renderer, scene); 
         offset.applyMatrix4( target.matrix );
 
         new TWEEN.Tween( camera.position )
-            .to( { x: offset.x, y: offset.y, z: offset.z }, Math.random() * duration + duration * 2 )
-            .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
+            .to( { x: offset.x, y: offset.y, z: offset.z }, duration )
             .onComplete(render)
             .start();
+        
+        self.setTarget(target.position, duration / 2);
 
         new TWEEN.Tween( camera.up )
-            .to( { x: target.up.x, y: target.up.y, z: target.up.z }, Math.random() * duration + duration )
+            .to( { x: target.up.x, y: target.up.y, z: target.up.z }, duration )
             .easing( TWEEN.Easing.Exponential.InOut )
             .start();
     };

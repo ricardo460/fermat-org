@@ -237,7 +237,7 @@ function onElementClick(id) {
 
         headers.hideHeaders(2000);
 
-        window.camera.setFocus(id, objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 2000);
+        window.camera.setFocus(objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 2000);
         
         setTimeout(function() {
             
@@ -247,7 +247,7 @@ function onElementClick(id) {
 
             headers.hideHeaders(1000);
 
-            window.camera.setFocus(id, objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 1000);
+            window.camera.setFocus(objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 1000);
 
             helper.showBackButton();
             
@@ -424,7 +424,7 @@ function onElementClickDeveloper(id, objectsDevelopers){
 
     if(camera.getFocus() == null){
         
-        window.camera.setFocus(id, objectsDevelopers[id], new THREE.Vector4(-50, -50, 300,1), duration);
+        window.camera.setFocus(objectsDevelopers[id], new THREE.Vector4(-50, -50, 300,1), duration);
 
         for (var i = 0; i < objectsDevelopers.length ; i++) {
             if(id !== i)

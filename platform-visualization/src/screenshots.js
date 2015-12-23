@@ -428,7 +428,7 @@ function ScreenshotsAndroid() {
 
 			tileManager.letAlone();
 
-			window.camera.setFocus(id, self.objects.mesh[focus], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), duration);
+			window.camera.setFocus(self.objects.mesh[focus], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), duration);
 			
 			headers.hideHeaders(duration);
 			
