@@ -15,7 +15,7 @@ function CLI() {
         
         var found = [];
         
-        for(var i = 0; i < list.length; i++) {
+        for(var i in list) {
             if(condition(list[i]))
                 found.push(i);
         }
