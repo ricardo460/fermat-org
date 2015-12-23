@@ -46,10 +46,6 @@ function Camera(position, renderer, renderFunc) {
     this.controls = controls;
     
     // Public Methods
-
-    this.setIdFocus = function(idFocus){      
-        focus = parseInt(idFocus);
-    };
     
     this.enableFreeMode = function() {
         controls.noRotate = false;
@@ -114,13 +110,14 @@ function Camera(position, renderer, renderFunc) {
      *
      * @param {Number} id       target id
      * @param {Number} duration animation duration time
-     * @param {Object} target  focus object
+     * @param {Object} target  target of the focus
      * @param {Vector} offset  offset of the focus
      */
 
-    this.setFocus = function(target, offset, duration){
+    this.setFocus = function(id, target, offset, duration){
 
         duration = duration || 3000;
+        focus = parseInt(id);
 
         self.render(renderer, scene); 
         offset.applyMatrix4( target.matrix );
@@ -129,6 +126,11 @@ function Camera(position, renderer, renderFunc) {
             .to( { x: offset.x, y: offset.y, z: offset.z }, Math.random() * duration + duration * 2 )
             .onUpdate(function(){controls.target.set(camera.position.x, camera.position.y,0); })
             .onComplete(render)
+            .start();
+
+        new TWEEN.Tween( camera.up )
+            .to( { x: target.up.x, y: target.up.y, z: target.up.z }, Math.random() * duration + duration )
+            .easing( TWEEN.Easing.Exponential.InOut )
             .start();
     };
 

@@ -144,9 +144,7 @@ function FlowManager(){
 
         if (window.camera.getFocus() == null) {
 
-            window.camera.setIdFocus(id);
-
-            window.camera.setFocus(headerFlow[id].objects[0], new THREE.Vector4(0, -850, 2600, 1),duration);
+            window.camera.setFocus(id, headerFlow[id].objects[0], new THREE.Vector4(0, -850, 2600, 1),duration);
 
             for (var i = 0; i < headerFlow.length ; i++) {
                 if(id !== i)
