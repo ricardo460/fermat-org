@@ -6,13 +6,12 @@ var mongoose = require('mongoose');
  * @method WavMdl
  *
  * @param  {[type]} desc      [description]
- * @param  {[type]} time      [description]
  */
-function WaveMdl(desc, time) {
+function WaveMdl(desc) {
     'use strict';
     // always initialize all instance properties
     this.desc = desc;
-    this.time = time;
+    this.time = new Date();
     this.upd_at = new mongoose.Types.ObjectId();
 }
 

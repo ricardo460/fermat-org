@@ -3,23 +3,20 @@ var nodSrv = require('./services/nod');
 var NodMdl = require('./models/nod');
 var XtraMdl = require('./models/xtra');
 
-/**
- * [findNodsByWaveId description]
- *
- * @method findNodsByWaveId
- *
- * @param  {[type]}         _wave_id [description]
- * @param  {Function}       callback [description]
- *
- * @return {[type]}         [description]
- */
-exports.findNodsByWaveId = function (_wave_id, callback) {
+
+exports.findNodsByWaveIdAndType = function (_wave_id, type, callback) {
     'use strict';
     try {
-        nodSrv.findNods({
-            _wave_id: _wave_id
-        }, {
-            type: 1
+        var find_obj = {};
+        find_obj['$and'] = [];
+        find_obj['$and'].push({
+            '_wave_id': _wave_id
+        });
+        find_obj['$and'].push({
+            'type': type
+        });
+        nodSrv.findNods(find_obj, {
+            _id: 1
         }, function (err, nods) {
             if (err) {
                 return callback(err, null);
@@ -31,23 +28,33 @@ exports.findNodsByWaveId = function (_wave_id, callback) {
     }
 };
 
-/**
- * [findNodsByHash description]
- *
- * @method findNodsByHash
- *
- * @param  {[type]}       hash     [description]
- * @param  {Function}     callback [description]
- *
- * @return {[type]}       [description]
- */
-exports.findNodsByHash = function (hash, callback) {
+exports.findNodById = function (_id, callback) {
     'use strict';
     try {
-        nodSrv.findNods({
-            hash: hash
-        }, {
-            _wave_id: 1
+        nodSrv.findNodById(_id, function (err, nod) {
+            if (err) {
+                return callback(err, null);
+            }
+            return callback(null, nod);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
+exports.findNodsByWaveIdAndHash = function (_wave_id, hash, callback) {
+    'use strict';
+    try {
+        var find_obj = {};
+        find_obj['$and'] = [];
+        find_obj['$and'].push({
+            '_wave_id': _wave_id
+        });
+        find_obj['$and'].push({
+            'hash': hash
+        });
+        nodSrv.findNods(find_obj, {
+            _id: 1
         }, function (err, nods) {
             if (err) {
                 return callback(err, null);
@@ -57,6 +64,9 @@ exports.findNodsByHash = function (hash, callback) {
     } catch (err) {
         return callback(err, null);
     }
+} catch (err) {
+    return callback(err, null);
+}
 };
 
 /**

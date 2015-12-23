@@ -8,7 +8,6 @@ var devMod = require('./developer');
 var loadMod = require('./lib/loader');
 var syncMod = require('./lib/syncer');
 
-
 /**
  * [getComps description]
  *
@@ -79,7 +78,8 @@ exports.getProcs = function (req, next) {
             procMod.findProcsByComp(platfrm_code,
                 suprlay_code,
                 layer_name,
-                comp_name, function (err, res) {
+                comp_name,
+                function (err, res) {
                     if (err) {
                         next(err, null);
                     } else {
@@ -97,8 +97,8 @@ exports.getProcs = function (req, next) {
                 }
             });
         } else {
-            
-            procMod.getAllProces(function(err, res) {
+
+            procMod.getAllProces(function (err, res) {
                 if (err) {
                     next(err, null);
                 } else {
@@ -177,7 +177,7 @@ exports.getDocs = function (req, next) {
         var type = req.param('type');
         var style = req.query.style;
 
-        if(type == 'book'){
+        if (type == 'book') {
 
             docMod.getBookPdf(style, function (err, res) {
                 if (err) {
@@ -187,7 +187,7 @@ exports.getDocs = function (req, next) {
                 }
             });
 
-        }else if (type == 'readme'){
+        } else if (type == 'readme') {
             docMod.getReadmePdf(style, function (err, res) {
                 if (err) {
                     next(err, null);
@@ -196,7 +196,7 @@ exports.getDocs = function (req, next) {
                 }
             });
 
-        }else if (type == 'paper'){
+        } else if (type == 'paper') {
             docMod.getPaperPdf(style, function (err, res) {
                 if (err) {
                     next(err, null);
@@ -205,7 +205,7 @@ exports.getDocs = function (req, next) {
                 }
             });
         }
-        
+
     } catch (err) {
         next(err, null);
     }
@@ -221,7 +221,7 @@ exports.getDocs = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.getDevs = function(req, next){
+exports.getDevs = function (req, next) {
     'use strict';
     try {
         devMod.getDevs(function (err, res) {
@@ -246,7 +246,7 @@ exports.getDevs = function(req, next){
  *
  * @return {[type]}   [description]
  */
-exports.loadComps = function(req, next){
+exports.loadComps = function (req, next) {
     'use strict';
     try {
         loadMod.loadComps(function (err, res) {
@@ -271,7 +271,7 @@ exports.loadComps = function(req, next){
  *
  * @return {[type]}   [description]
  */
-exports.updComps = function(req, next){
+exports.updComps = function (req, next) {
     'use strict';
     try {
         loadMod.updComps(function (err, res) {
@@ -296,7 +296,7 @@ exports.updComps = function(req, next){
  *
  * @return {[type]}   [description]
  */
-exports.updBook = function(req, next){
+exports.updBook = function (req, next) {
     'use strict';
     try {
         syncMod.getBook(function (err, res) {
