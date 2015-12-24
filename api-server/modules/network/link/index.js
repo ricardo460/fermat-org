@@ -191,6 +191,7 @@ exports.findChildren = function (_wave_id, _prnt_nod_id, callback) {
                 '_prnt_nod_id': _prnt_nod_id
             });
         }
+        console.log(find_obj);
         linkSrv.findLinks(find_obj, function (err, links) {
             if (err) {
                 return callback(err, null);

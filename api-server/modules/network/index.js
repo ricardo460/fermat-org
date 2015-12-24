@@ -79,7 +79,7 @@ exports.getChildren = function (req, next) {
 				next(err_wav, null);
 			} else if(res_wav._id) {
 
-				nodeMod.findNodsByWaveIdAndHash(res_wav._id, req.query.hash, function (err_nods, res_nods) {
+				nodeMod.findNodsByWaveIdAndHash(res_wav._id, req.params.hash, function (err_nods, res_nods) {
 					console.log("en findDNOs");
 					console.log(res_nods);
 
