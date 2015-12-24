@@ -14,6 +14,9 @@ var devMod = require('../developer');
 var Cache = require('../../../lib/route-cache');
 
 var env = process.env.NODE_ENV || 'development';
+var USER_AGENT = (env === 'development') ? 'Miguelcldn' : 'fuelusumar';
+var TOKEN = (env === 'development') ? '3c12e4c95821c7c2602a47ae46faf8a0ddab4962' : '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
+
 
 /**
  * [getRepoDir description]
@@ -159,7 +162,7 @@ var doRequest = function (method, url, params, callback) {
     try {
         var env = process.env.NODE_ENV || 'development';
         var form, i;
-        //url += '?access_token=' + TOKEN;
+        url += '?access_token=' + TOKEN;
         if (env === 'development') {
             url += '&ref=develop'
         }
@@ -176,7 +179,7 @@ var doRequest = function (method, url, params, callback) {
                 url: url,
                 form: form,
                 headers: {
-                    //'User-Agent': USER_AGENT,
+                    'User-Agent': USER_AGENT,
                     'Accept': 'application/json'
                 }
             }, function (err, res, body) {
@@ -187,7 +190,7 @@ var doRequest = function (method, url, params, callback) {
             request.get({
                 url: url,
                 headers: {
-                    //'User-Agent': USER_AGENT,
+                    'User-Agent': USER_AGENT,
                     'Accept': 'application/json'
                 }
             }, function (err, res, body) {
@@ -242,43 +245,54 @@ var getManifest = function (callback) {
     try {
         var cwd = process.cwd(),
             env = process.env.NODE_ENV || 'development',
-            file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.xml'),
-            exist = fs.lstatSync(file);
+            file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.xml'); //, exist = fs.lstatSync(file);
 
-        if (exist.isFile()) {
-            winston.log('info', 'Read Cache FermatManifest.xml %s', file);
-            fs.readFile(file, function (err_read, res_read) {
-                if (err_read) {
-                    return callback(err_read, null);
-                }
-                parseString(res_read, function (err_par, res_par) {
-                    if (err_par) {
-                        return callback(err_par, null);
+        fs.lstat(file, function (err, stats) {
+            if (!err && stats.isFile()) {
+                // Yes it is
+                winston.log('info', 'Read Cache FermatManifest.xml %s', file);
+                fs.readFile(file, function (err_read, res_read) {
+                    if (err_read) {
+                        return callback(err_read, null);
                     }
-                    return callback(null, res_par);
-                });
-            });
-        } else {
-            doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function (err_req, res_req) {
-                if (err_req) {
-                    return callback(err_req, null);
-                }
-                processRequestBody(res_req, function (err_pro, res_pro) {
-                    if (err_pro) {
-                        return callback(err_pro, null);
-                    }
-                    var strCont = res_pro.split('\n')
-                        .join(' ')
-                        .split('\t')
-                        .join(' ');
-                    parseString(strCont, function (err_par, res_par) {
+                    parseString(res_read, function (err_par, res_par) {
                         if (err_par) {
                             return callback(err_par, null);
                         }
                         return callback(null, res_par);
                     });
                 });
-            });
+            } else {
+                if (err) {
+                    winston.log('info', err.message, err);
+                }
+                doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function (err_req, res_req) {
+                    if (err_req) {
+                        return callback(err_req, null);
+                    }
+                    processRequestBody(res_req, function (err_pro, res_pro) {
+                        if (err_pro) {
+                            return callback(err_pro, null);
+                        }
+                        var strCont = res_pro.split('\n')
+                            .join(' ')
+                            .split('\t')
+                            .join(' ');
+                        parseString(strCont, function (err_par, res_par) {
+                            if (err_par) {
+                                return callback(err_par, null);
+                            }
+                            return callback(null, res_par);
+                        });
+                    });
+                });
+            }
+        });
+
+        if (exist.isFile()) {
+
+        } else {
+
         }
     } catch (err) {
         return callback(err, null);
