@@ -64,9 +64,6 @@ exports.findNodsByWaveIdAndHash = function (_wave_id, hash, callback) {
     } catch (err) {
         return callback(err, null);
     }
-} catch (err) {
-    return callback(err, null);
-}
 };
 
 /**
