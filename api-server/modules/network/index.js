@@ -24,6 +24,8 @@ exports.getServerNetwork = function (req, next) {
 										res_obj.push(parent);
 										loopNods(++i);
 									} else {
+										console.log("en res_chldrn");
+										console	.log(res_chldrn);
 										var children = [];
 										var loopChldrn = function (j) {
 											var link = res_chldrn[j];
@@ -43,7 +45,7 @@ exports.getServerNetwork = function (req, next) {
 												loopNods(++i);
 											}
 										};
-										if (res_chldrn && Array.isArray(res_chldrn)) {
+										if (res_chldrn && Array.isArray(res_chldrn) && res_chldrn.length > 0) {
 											loopChldrn(0);
 										} else {
 											parent.children = children;
@@ -89,6 +91,8 @@ exports.getChildren = function (req, next) {
 						if (res_nods && Array.isArray(res_nods) && res_nods.length > 0) {
 							var parent = res_nods[0];
 							linkMod.findChildren(res_wav._id, parent._id, function (err_chldrn, res_chldrn) {
+								console.log(err_chldrn);
+								console.log(res_chldrn);
 								if (err_chldrn) {
 									parent.children = [];
 									next(null, parent);
@@ -110,7 +114,7 @@ exports.getChildren = function (req, next) {
 											next(null, parent);
 										}
 									};
-									if (res_chldrn && Array.isArray(res_chldrn)) {
+									if (res_chldrn && Array.isArray(res_chldrn) && res_chldrn.length > 0) {
 										loopChldrn(0);
 									} else {
 										parent.children = children;
