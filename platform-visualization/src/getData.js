@@ -18,7 +18,7 @@ function getData() {
                     tileManager.fillTable(lists);
 
                     TWEEN.removeAll();
-                    logo.stopFade();
+                    window.logo.stopFade();
                     init();
                 });
             });
