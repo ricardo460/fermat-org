@@ -33,7 +33,7 @@ function ScreenshotsAndroid() {
 				},
 
 				direction: {
-					platform: 2,
+					platform: 3,
 					position:1
 				}
 			},
@@ -50,7 +50,7 @@ function ScreenshotsAndroid() {
 				},
 
 				direction: {
-					platform: 2,
+					platform: 3,
 					position:0
 				}			
 			},
@@ -66,7 +66,7 @@ function ScreenshotsAndroid() {
 				},
 
 				direction: {
-					platform: 2,
+					platform: 3,
 					position:2
 				}			
 			}
