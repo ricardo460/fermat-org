@@ -82,6 +82,27 @@ To run the project, follow these steps:
 ```
 The project should be running. a proxy on port 3000, the master branch in port 3001 and the branch Develop in port 3002.
 
+###Running fermat.org locally
+
+* Install apache.
+	* To install apache, open terminal and type in these commands:
+```bash
+sudo apt-get update
+```
+```bash
+sudo apt-get install apache2
+```
+* Verify that the Apache Server is working properly.
+	* Open your Web browser and type http://localhost/index.html
+	* If the page is visualized correctly it means that the server was successfully installed.
+
+* Open the terminal and move to the folder platform-visualization and run gulp.
+
+* Publish the application fermat.org on your apache server.
+	* Copy the folder platform-visualization in /var/www/html.
+
+* Finally open your Web browser and type http://localhost/platform-visualization/index.html
+
 ###Project structure
 
 The project is structured as follows:
