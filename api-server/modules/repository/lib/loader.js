@@ -14,6 +14,9 @@ var devMod = require('../developer');
 var Cache = require('../../../lib/route-cache');
 
 var env = process.env.NODE_ENV || 'development';
+var USER_AGENT = (env === 'development') ? 'Miguelcldn' : 'fuelusumar';
+var TOKEN = (env === 'development') ? '3c12e4c95821c7c2602a47ae46faf8a0ddab4962' : '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
+
 
 /**
  * [getRepoDir description]
@@ -159,7 +162,7 @@ var doRequest = function (method, url, params, callback) {
     try {
         var env = process.env.NODE_ENV || 'development';
         var form, i;
-        //url += '?access_token=' + TOKEN;
+        url += '?access_token=' + TOKEN;
         if (env === 'development') {
             url += '&ref=develop'
         }
@@ -176,7 +179,7 @@ var doRequest = function (method, url, params, callback) {
                 url: url,
                 form: form,
                 headers: {
-                    //'User-Agent': USER_AGENT,
+                    'User-Agent': USER_AGENT,
                     'Accept': 'application/json'
                 }
             }, function (err, res, body) {
@@ -187,7 +190,7 @@ var doRequest = function (method, url, params, callback) {
             request.get({
                 url: url,
                 headers: {
-                    //'User-Agent': USER_AGENT,
+                    'User-Agent': USER_AGENT,
                     'Accept': 'application/json'
                 }
             }, function (err, res, body) {
@@ -288,7 +291,6 @@ var getManifest = function (callback) {
             });
 
         } 
-        
     } catch (err) {
         console.log("en el catch de getManifest");
         return callback(err, null);

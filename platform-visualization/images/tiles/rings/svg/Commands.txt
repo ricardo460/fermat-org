@@ -1,0 +1,31 @@
+Pasos para ejecutar el scripts
+
+* Primero asegurarse de tener instalado Inkscape antes de empezar.
+
+* Tener esta estructura en la ubicación C:\xampp\htdocs\images\tiles\rings dentro de esta carpeta crear high, medium, small, mini y svg.
+
+* En svg guardar el script y los svg de los anillos.
+
+* Modificar los nombre de los archivos de la siguiente forma:
+
+	* development_diff_1.svg
+	* development_diff_2.svg
+	* development_diff_3.svg
+	* development_diff_4.svg
+	* development_diff_5.svg
+
+	* linear_diff_1.svg
+	* linear_diff_2.svg
+	* linear_diff_3.svg
+	* linear_diff_4.svg
+	* linear_diff_5.svg
+
+	* qa_diff_1.svg
+	* qa_diff_2.svg
+	* qa_diff_3.svg
+	* qa_diff_4.svg
+	* qa_diff_5.svg
+
+* Ejecutar el script y al terminar se crearan todas las versiones de los anillos.
+
+

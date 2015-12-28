@@ -1,23 +1,23 @@
+//global variables
 var table = [],
-    helper = new Helper(),
     camera,
     scene = new THREE.Scene(),
     renderer,
-    logo = new Logo(),
-    browserManager,
-    screenshotsAndroid,
     objects = [],
-    headers = null,
     actualView,
     stats = null,
-    actualFlow = null,
-    viewManager = null,
-    magazine = null,
-    headerFlow = [],
-    networkViewer = null,
+//Class
+    helper = new Helper(),
+    logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),
-    positionHeaderFlow = [];
+    browserManager = null,
+    screenshotsAndroid = null,
+    headers = null,
+    flowManager = null,
+    viewManager = null,
+    magazine = null,
+    networkViewer = null;
 //Global constants
 var TILE_DIMENSION = {
     width : 231,
@@ -57,7 +57,8 @@ function init() {
     browserManager = new BrowserManager();
     screenshotsAndroid = new ScreenshotsAndroid();
     magazine = new Magazine();
-    
+    flowManager = new FlowManager();
+
     //View Manager
     viewManager = new ViewManager();
 
@@ -69,9 +70,6 @@ function init() {
 
     // BrowserManager
     browserManager.init();
-    
-    // magazine
-    magazine.actionSpecial();
 
     var dimensions = tileManager.dimensions;
 
@@ -83,33 +81,10 @@ function init() {
     //create_stats();
 
     $('#backButton').click(function() {
-        if (window.actualView === "table") {
-            changeView(tileManager.targets.table);
-            
-            setTimeout(function(){
-                window.signLayer.transformSignLayer();
-            }, 2500);
-        }
-        if (window.actualView === "workflows") {
-
-            var duration = 6000;
-
-            window.headers.transformWorkFlow(duration);
-
-            changeViewWorkFlows();
-
-            getHeaderFLow();
-            
-            changeView(tileManager.targets.table);
-        }
-        if(window.actualView === "developers")
-        {
-            setTimeout(function(){
-                developer.animateDeveloper();
-            }, 4000);
-
-            changeView(tileManager.targets.table);
-        }   
+        
+        if(viewManager.views[window.actualView])
+            viewManager.views[window.actualView].backButton();
+ 
     });
 
     $('#legendButton').click(function() {
@@ -126,7 +101,6 @@ function init() {
     });
 
             
-
     $('#container').click(onClick);
 
     //Disabled Menu
@@ -232,21 +206,6 @@ function initMenu() {
     }, false);
 }
 
-/**
- * @author Emmanuel Colina
- * Changes the actual view to table
- */
-
-function changeViewWorkFlows() {
-    var _duration = 2000;
-    if(headerFlow){
-        for(var i = 0; i < headerFlow.length; i++) {
-            headerFlow[i].delete();
-            helper.hideObject(headerFlow[i].objects[0], false, _duration);
-        }
-    }
-    headerFlow = [];
-}
 
 function changeView(targets) {
 
@@ -255,12 +214,7 @@ function changeView(targets) {
     
     helper.show('container', 2000);
     
-    if(actualFlow) {
-        for(var i = 0; i < actualFlow.length; i++) {
-            actualFlow[i].delete();
-        }
-        actualFlow = null;
-    }
+    flowManager.getActualFlow();
 
     if (targets != null) {
         tileManager.transform(targets, 2000);
@@ -273,14 +227,29 @@ function changeView(targets) {
  */
 function onElementClick(id) {
     
+    var focus = parseInt(id);
+
     if (camera.getFocus() == null) {
 
-        camera.setFocus(id, 2000);
+        tileManager.letAlone(focus, 2000);
+
+        objects[focus].getObjectForDistance(0).visible = true;
+
+        headers.hideHeaders(2000);
+
+        window.camera.setFocus(objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 2000);
         
         setTimeout(function() {
             
-            camera.setFocus(id, 1000);
-            browserManager.modifyButtonBack(1,'block');
+            tileManager.letAlone(focus, 1000);
+
+            objects[focus].getObjectForDistance(0).visible = true;
+
+            headers.hideHeaders(1000);
+
+            window.camera.setFocus(objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 1000);
+
+            helper.showBackButton();
             
             if(table[id].author) {
                 var button = document.createElement('button');
@@ -304,7 +273,7 @@ function onElementClick(id) {
                 helper.show(button, 1000);
             }
             
-            getAndShowFlows(id);
+            window.flowManager.getAndShowFlows(id);
             
         }, 3000);
         
@@ -446,160 +415,27 @@ function onElementClick(id) {
 
         new Timeline(tasks, tlContainer).show();
     }
-    
-    function getAndShowFlows(id) {
-        
-        var button = document.createElement('button'),
-            sucesorButton = document.getElementById('developerButton') || document.getElementById('backButton'),
-            element = table[id],
-            flows;
-        
-        button.id = 'showFlows';
-        button.className = 'actionButton';
-        button.style.position = 'absolute';
-        button.innerHTML = 'Loading flows...';
-        button.style.top = '10px';
-        button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
-        button.style.zIndex = 10;
-        button.style.opacity = 0;
-        document.body.appendChild(button);
-        
-        helper.show(button, 1000);
-        
-        $.ajax({
-            url: 'http://52.35.117.6:3000/repo/procs?platform=' + (element.group || element.superLayer) + '&layer=' + element.layer + '&component=' + element.name,
-            method: "GET"
-        }).success(
-            function(processes) {
-                var p = processes;
-                var flows = [];
-                
-                for(var i = 0; i < p.length; i++) {
-                    
-                    flows.push(new ActionFlow(p[i]));
-                }
-                
-                if(flows.length > 0) {
-                    button.innerHTML = 'Show Workflows';
-                    button.addEventListener('click', function() {
-                        showFlow(flows);
-                        helper.hide(button, 1000, false);
-                        helper.hide('developerButton', 1000, false);
-                    });
-                }
-                else {
-                    helper.hide(button, 1000, false);
-                }
-            }
-        );
-    }
 }
 
-/**
- * @author Emmanuel Colina
- * 
- */
-
-function onElementClickHeaderFlow(id) {
-
-    if (camera.getFocus() == null) {
-
-        camera.setFocusHeaderFlow(id, 1000, headerFlow);
-
-        setTimeout(function() {
-            for (var i = 0; i < headerFlow[id].flow.steps.length; i++) {
-                headerFlow[id].drawTree(headerFlow[id].flow.steps[i], headerFlow[id].positions.target[0].x + 900 * i, headerFlow[id].positions.target[0].y - 211, 0);
-            }
-            headerFlow[id].showSteps();
-        }, 1000);
-
-        browserManager.modifyButtonBack(1,'block');
-    }
-}
 
 function onElementClickDeveloper(id, objectsDevelopers){
 
+    var duration = 1000;
+
     if(camera.getFocus() == null){
-        camera.setFocusDeveloper(id, 1000, objectsDevelopers);
-        browserManager.modifyButtonBack(1,'block');
+        
+        window.camera.setFocus(objectsDevelopers[id], new THREE.Vector4(-50, -50, 300,1), duration);
+
+        for (var i = 0; i < objectsDevelopers.length ; i++) {
+            if(id !== i)
+                window.developer.letAloneDeveloper(objectsDevelopers[i]);
+        }
+
+        helper.showBackButton();
         developer.showDeveloperTiles(id);
     }
 }
 
-/**
- * @author Emmanuel Colina
- * Calculate the headers flows
- */
-
-function calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) { 
-
-    var position;
-    var find = false;
-
-    for (var i = 0; i < objectHeaderInWFlowGroup.length; i++) {
-
-        for (var j = 0; j < headerFlow.length; j++) {
-
-            if(objectHeaderInWFlowGroup[i].name === headerFlow[j].flow.platfrm){
-                
-                if(find === false){
-
-                    position = new THREE.Vector3();
-
-                    position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
-
-                    position.y = objectHeaderInWFlowGroup[i].position.y - 2500;
-
-                    positionHeaderFlow.push(position);
-
-                    find = true;
-                }
-                else
-                {
-                    position = new THREE.Vector3();
-
-                    position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
-                    
-                    position.y = positionHeaderFlow[positionHeaderFlow.length - 1].y - 500;
-
-                    positionHeaderFlow.push(position);
-                }    
-            }
-        }
-        find = false;     
-    }
-    headerFlowDraw();
-}
-
-function headerFlowDraw(){
-    var indice = 1;
-    for (var k = 0; k < headerFlow.length; k++){
-        headerFlow[k].draw(positionHeaderFlow[k].x, positionHeaderFlow[k].y, positionHeaderFlow[k].z, indice, k);
-    }
-}
-
-/**
- * @author Emmanuel Colina
- * Get the headers flows
- */
-
-function getHeaderFLow() {
-
-    $.ajax({
-        url: 'http://52.35.117.6:3000/v1/repo/procs/',
-        method: "GET"
-    }).success(
-        function(processes) {
-            var p = processes, objectHeaderInWFlowGroup;    
-            
-            for(var i = 0; i < p.length; i++){
-                headerFlow.push(new ActionFlow(p[i])); 
-            }
-            objectHeaderInWFlowGroup = window.headers.getPositionHeaderViewInFlow();   
-            calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup);   
-        }
-    );
-}
 /**
  * Generic event when user clicks in 3D space
  * @param {Object} e Event data
@@ -635,30 +471,6 @@ function onClick(e) {
     }
 }
 
-//Should draw ONLY one flow at a time
-function showFlow(flows) {
-    
-    var position = objects[camera.getFocus()].position;
-    var indice = 0;
-
-    camera.enable();
-    camera.move(position.x, position.y, position.z + window.TILE_DIMENSION.width * 5);
-    
-    setTimeout(function() {
-        
-        actualFlow = [];
-        
-        for(var i = 0; i < flows.length; i++) {
-            actualFlow.push(flows[i]);
-            flows[i].draw(position.x, position.y, 0, indice, i);
-            
-            //Dummy, set distance between flows
-            position.x += window.TILE_DIMENSION.width * 10;
-        }
-        
-    }, 1500);
-}
-
 function animate() {
 
     requestAnimationFrame(animate);
@@ -687,16 +499,4 @@ function render() {
 
     //renderer.render( scene, camera );
     camera.render(renderer, scene);
-}
-
-/**
- * This function is meant to be used only for testing in the debug console,
- * it cleans the entire scene so the website frees some memory and so you can
- * let it in the background without using so much resources.
- * @author Miguel Celedon
- */
-function shutDown() {
-    
-    scene = new THREE.Scene();
-    
 }
