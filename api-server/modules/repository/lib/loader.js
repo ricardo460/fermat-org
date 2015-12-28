@@ -288,12 +288,6 @@ var getManifest = function (callback) {
                 });
             }
         });
-
-        if (exist.isFile()) {
-
-        } else {
-
-        }
     } catch (err) {
         return callback(err, null);
     }
@@ -547,7 +541,7 @@ var saveManifest = function (callback) {
                                 _suprlay.dependsOn ? _suprlay.dependsOn.split(' ')
                                 .join('')
                                 .split(',') : [],
-                                0,
+                                n,
                                 function (err_supr, res_supr) {
                                     if (err_supr) {
                                         winston.log('info', err_supr.message, err_supr);
@@ -685,7 +679,7 @@ var saveManifest = function (callback) {
                                 _platfrm.dependsOn ? _platfrm.dependsOn.split(' ')
                                 .join('')
                                 .split(',') : [],
-                                0,
+                                i,
                                 function (err_plat, res_plat) {
                                     if (err_plat) {
                                         winston.log('info', err_plat.message, err_plat);
