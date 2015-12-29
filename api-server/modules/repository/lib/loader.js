@@ -243,15 +243,13 @@ var processRequestBody = function (body, callback) {
 var getManifest = function (callback) {
     'use strict';
     try {
-        console.log("en el getManifest");
         var cwd = process.cwd(),
             env = process.env.NODE_ENV || 'development',
-            file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.xml');
+            file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.xml'); //, exist = fs.lstatSync(file);
 
-        try {
-            
-            var stats = fs.lstatSync(file);
-            if (stats.isFile()) {
+        fs.lstat(file, function (err, stats) {
+            if (!err && stats.isFile()) {
+                // Yes it is
                 winston.log('info', 'Read Cache FermatManifest.xml %s', file);
                 fs.readFile(file, function (err_read, res_read) {
                     if (err_read) {
@@ -264,36 +262,33 @@ var getManifest = function (callback) {
                         return callback(null, res_par);
                     });
                 });
-            }
-
-        }catch (err){
-
-            winston.log('info', 'Doing Request For Maninfest');
-            doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function (err_req, res_req) {
-                if (err_req) {
-                    return callback(err_req, null);
+            } else {
+                if (err) {
+                    winston.log('info', err.message, err);
                 }
-                processRequestBody(res_req, function (err_pro, res_pro) {
-                    if (err_pro) {
-                        return callback(err_pro, null);
+                doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function (err_req, res_req) {
+                    if (err_req) {
+                        return callback(err_req, null);
                     }
-                    var strCont = res_pro.split('\n')
-                        .join(' ')
-                        .split('\t')
-                        .join(' ');
-                    parseString(strCont, function (err_par, res_par) {
-                        if (err_par) {
-                            return callback(err_par, null);
+                    processRequestBody(res_req, function (err_pro, res_pro) {
+                        if (err_pro) {
+                            return callback(err_pro, null);
                         }
-                        return callback(null, res_par);
+                        var strCont = res_pro.split('\n')
+                            .join(' ')
+                            .split('\t')
+                            .join(' ');
+                        parseString(strCont, function (err_par, res_par) {
+                            if (err_par) {
+                                return callback(err_par, null);
+                            }
+                            return callback(null, res_par);
+                        });
                     });
                 });
-                
-            });
-
-        } 
+            }
+        });
     } catch (err) {
-        console.log("en el catch de getManifest");
         return callback(err, null);
     }
 };
