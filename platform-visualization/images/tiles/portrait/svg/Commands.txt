@@ -1,0 +1,18 @@
+Pasos para crear los png de los svg.
+
+* Primero asegurarse de tener instalado Inkscape antes de empezar.
+
+* Abrir consola y dirigirte a la ubicación de los scripts y svg.
+
+(Tener los scripts y los svg en la misma carpeta).
+
+* Ejecutar el primer script y esperar a que genere los png.
+
+* Después guárdalos en su respectiva carpeta.
+
+Comandos 
+
+powershell export_High.ps1
+powershell export_Medium.ps1
+powershell export_Small.ps1
+powershell export_High.ps1
