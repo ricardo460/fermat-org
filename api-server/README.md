@@ -93,7 +93,7 @@ sudo apt-get update
 sudo apt-get install apache2
 ```
 * Verify that the Apache Server is working properly.
-	* Open your Web browser and type http://localhost/index.html.
+	* Open your web browser and type http://localhost/index.html.
 	* If the page is visualized correctly it means that the server was successfully installed.
 
 * Open the terminal and move to the folder platform-visualization and run gulp.
