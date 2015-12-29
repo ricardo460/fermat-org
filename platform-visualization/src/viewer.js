@@ -129,8 +129,11 @@ function goToView ( targetView ) {
     var transition = 5000;
     
     newCenter = viewManager.translateToSection(targetView, newCenter);
-    camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition);
+    camera.moving = true;
+    camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition, true);
     camera.lockPan();
+    
+    setTimeout(function() { camera.moving = false; }, transition);
     
     if(window.map.views[targetView] != null) {
         viewManager.views[targetView].enter();
