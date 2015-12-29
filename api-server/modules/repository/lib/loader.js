@@ -813,6 +813,7 @@ var saveManifest = function (callback) {
                         'save': true
                     });
 
+                    // deleting previous database
                     procMod.delAllProcs(function (err_del, res_del) {
                         winston.log('info', 'deleting proccess...');
                         if (err_del) {
@@ -823,7 +824,25 @@ var saveManifest = function (callback) {
                             if (err_del) {
                                 winston.log('info', err_del.message, err_del);
                             }
-                            return loopPlatfrms(0);
+                            layerMod.delAllLayers(function (err_del, res_del) {
+                                winston.log('info', 'deleting layers...');
+                                if (err_del) {
+                                    winston.log('info', err_del.message, err_del);
+                                }
+                                suprlayMod.delAllSuprlays(function (err_del, res_del) {
+                                    winston.log('info', 'deleting superlayers...');
+                                    if (err_del) {
+                                        winston.log('info', err_del.message, err_del);
+                                    }
+                                    platfrmMod.delAllPlatfrms(function (err_del, res_del) {
+                                        winston.log('info', 'deleting platforms...');
+                                        if (err_del) {
+                                            winston.log('info', err_del.message, err_del);
+                                        }
+                                        return loopPlatfrms(0);
+                                    });
+                                });
+                            });
                         });
                     });
                 } else {
