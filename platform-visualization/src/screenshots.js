@@ -420,7 +420,7 @@ function ScreenshotsAndroid() {
 	function change(id) {
 
 		var duration = 2000;
-		var idFocus = parseInt(id);
+		var focus = parseInt(id);
 
 		if (window.camera.getFocus() === null) {
 
@@ -428,9 +428,7 @@ function ScreenshotsAndroid() {
 
 			tileManager.letAlone();
 
-			window.camera.setIdFocus(id);
-
-			window.camera.setFocus(self.objects.mesh[idFocus], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), duration);
+			window.camera.setFocus(self.objects.mesh[focus], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), duration);
 			
 			headers.hideHeaders(duration);
 			

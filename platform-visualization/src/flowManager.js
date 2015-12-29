@@ -143,10 +143,11 @@ function FlowManager(){
         var duration = 1000;
 
         if (window.camera.getFocus() == null) {
+            
+            var camTarget = headerFlow[id].objects[0].clone();
+            camTarget.position.y -= 850;
 
-            window.camera.setIdFocus(id);
-
-            window.camera.setFocus(headerFlow[id].objects[0], new THREE.Vector4(0, -850, 2600, 1),duration);
+            window.camera.setFocus(camTarget, new THREE.Vector4(0, -850, 2600, 1),duration);
 
             for (var i = 0; i < headerFlow.length ; i++) {
                 if(id !== i)
@@ -216,7 +217,7 @@ function FlowManager(){
     //Should draw ONLY one flow at a time
     function showFlow (flows) {
     
-        var position = objects[window.camera.getFocus()].position;
+        var position = window.camera.getFocus().position;
         var indice = 0;
 
         window.camera.enable();
