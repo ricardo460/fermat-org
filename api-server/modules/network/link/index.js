@@ -64,7 +64,7 @@ exports.findChildrenByType = function (_wave_id, _prnt_nod_id, type, callback) {
                 'type': type
             });
         }
-        linkSrv.findLinks(find_obj, function (err, links) {
+        linkSrv.findLinks(find_obj, { upd_at: -1 }, function (err, links) {
             if (err) {
                 return callback(err, null);
             }
@@ -108,51 +108,7 @@ exports.findParentsByType = function (_wave_id, _chld_nod_id, type, callback) {
                 'type': type
             });
         }
-        linkSrv.findLinks(find_obj, function (err, links) {
-            if (err) {
-                return callback(err, null);
-            }
-            return callback(null, links);
-        });
-    } catch (err) {
-        return callback(err, null);
-    }
-};
-
-/**
- * [findParentsByType description]
- *
- * @method findParentsByType
- *
- * @param  {[type]}         _wave_id     [description]
- * @param  {[type]}         _chld_nod_id [description]
- * @param  {[type]}         type         [description]
- * @param  {Function}       callback     [description]
- *
- * @return {[type]}         [description]
- */
-exports.findParentsByType = function (_wave_id, _chld_nod_id, type, callback) {
-    'use strict';
-    try {
-        var find_obj = {
-            '$and': []
-        };
-        if (_wave_id) {
-            find_obj['$and'].push({
-                '_wave_id': _wave_id
-            });
-        }
-        if (_chld_nod_id) {
-            find_obj['$and'].push({
-                '_chld_nod_id': _chld_nod_id
-            });
-        }
-        if (type) {
-            find_obj['$and'].push({
-                'type': type
-            });
-        }
-        linkSrv.findLinks(find_obj, function (err, links) {
+        linkSrv.findLinks(find_obj, { upd_at: -1 }, function (err, links) {
             if (err) {
                 return callback(err, null);
             }
@@ -191,7 +147,7 @@ exports.findChildren = function (_wave_id, _prnt_nod_id, callback) {
                 '_prnt_nod_id': _prnt_nod_id
             });
         }
-        linkSrv.findLinks(find_obj, function (err, links) {
+        linkSrv.findLinks(find_obj, { upd_at: -1 }, function (err, links) {
             if (err) {
                 return callback(err, null);
             }
@@ -235,7 +191,7 @@ exports.findParents = function (_wave_id, _chld_nod_id, callback) {
                 'type': type
             });
         }
-        linkSrv.findLinks(find_obj, function (err, links) {
+        linkSrv.findLinks(find_obj, { upd_at: -1 }, function (err, links) {
             if (err) {
                 return callback(err, null);
             }

@@ -306,6 +306,7 @@ var parseManifest = function (callback) {
     'use strict';
     try {
         var i, j, k, layers, _layers, layer, comps, depends, _depends, depend, steps, _steps, fermat, platfrms, _platfrms, platfrm, suprlays, _suprlays, suprlay, procs, _procs, _proc, _step, _next;
+        console.log("en el parseManifest");
         getManifest(function (err_man, res_man) {
             if (err_man) {
                 return callback(err_man, null);
@@ -443,6 +444,7 @@ var parseManifest = function (callback) {
 var saveManifest = function (callback) {
     'use strict';
     try {
+        console.log("en el saveManifest");
         parseManifest(function (err_load, res_load) {
             if (err_load) {
                 winston.log('info', err_load.message, err_load);
@@ -1082,6 +1084,7 @@ exports.updDevs = function (callback) {
 exports.loadComps = function (callback) {
     'use strict';
     try {
+        console.log("en el loadComps");
         saveManifest(function (err, res) {
             if (err) {
                 return callback(err, null);

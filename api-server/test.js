@@ -1,6 +1,14 @@
 var modDoc = require('./modules/repository/doc');
+var loader = require('./modules/network/lib/loader.js');
+var db = require('./db');
 
-modDoc.generateBookPdf(function (err, res) {
+loader.getNetwork(function(){
+
+    console.log(arguments);
+
+});
+
+/*modDoc.generateBookPdf(function (err, res) {
             if (err) {
                 console.log('info', err);
             } else {
@@ -38,4 +46,4 @@ modDoc.getReadmePdf('big',function (err, res) {
             } else {
                 console.log('info', 'Readme big are generated');
             }
-        });
+        }); */
