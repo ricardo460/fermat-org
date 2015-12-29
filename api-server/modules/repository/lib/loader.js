@@ -80,14 +80,14 @@ var getRepoDir = function (section, layer, type, comp, team) {
 var processComp = function (section, layer, comp, type) {
     'use strict';
     try {
-        var i, dev, status, devs, _authors, _mantainers, _life_cycle, life_cycle, proComp;
+        var i, dev, status, devs, _authors, _maintainers, _life_cycle, life_cycle, proComp;
         proComp = {};
         proComp = comp['$'];
         proComp.type = type;
         proComp.repo_dir = getRepoDir(section.code, layer.name, type, proComp.name, 'bitdubai');
         devs = [];
         _authors = comp.authors && comp.authors[0] && comp.authors[0].author ? comp.authors[0].author : [];
-        _mantainers = comp.mantainers && comp.mantainers[0] && comp.mantainers[0].mantainer ? comp.mantainers[0].mantainer : [];
+        _maintainers = comp.maintainers && comp.maintainers[0] && comp.maintainers[0].maintainer ? comp.maintainers[0].maintainer : [];
         _life_cycle = comp.life_cycle && comp.life_cycle[0] && comp.life_cycle[0].status ? comp.life_cycle[0].status : [];
         for (i = 0; i < _authors.length; i++) {
             dev = {};
@@ -95,10 +95,10 @@ var processComp = function (section, layer, comp, type) {
             dev.role = 'author';
             devs.push(dev);
         }
-        for (i = 0; i < _mantainers.length; i++) {
+        for (i = 0; i < _maintainers.length; i++) {
             dev = {};
-            dev = _mantainers[i]['$'];
-            dev.role = 'mantainer';
+            dev = _maintainers[i]['$'];
+            dev.role = 'maintainer';
             devs.push(dev);
         }
         proComp.devs = devs;
