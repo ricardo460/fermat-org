@@ -80,14 +80,14 @@ var getRepoDir = function (section, layer, type, comp, team) {
 var processComp = function (section, layer, comp, type) {
     'use strict';
     try {
-        var i, dev, status, devs, _authors, _mantainers, _life_cycle, life_cycle, proComp;
+        var i, dev, status, devs, _authors, _maintainers, _life_cycle, life_cycle, proComp;
         proComp = {};
         proComp = comp['$'];
         proComp.type = type;
         proComp.repo_dir = getRepoDir(section.code, layer.name, type, proComp.name, 'bitdubai');
         devs = [];
         _authors = comp.authors && comp.authors[0] && comp.authors[0].author ? comp.authors[0].author : [];
-        _mantainers = comp.mantainers && comp.mantainers[0] && comp.mantainers[0].mantainer ? comp.mantainers[0].mantainer : [];
+        _maintainers = comp.maintainers && comp.maintainers[0] && comp.maintainers[0].maintainer ? comp.maintainers[0].maintainer : [];
         _life_cycle = comp.life_cycle && comp.life_cycle[0] && comp.life_cycle[0].status ? comp.life_cycle[0].status : [];
         for (i = 0; i < _authors.length; i++) {
             dev = {};
@@ -95,10 +95,10 @@ var processComp = function (section, layer, comp, type) {
             dev.role = 'author';
             devs.push(dev);
         }
-        for (i = 0; i < _mantainers.length; i++) {
+        for (i = 0; i < _maintainers.length; i++) {
             dev = {};
-            dev = _mantainers[i]['$'];
-            dev.role = 'mantainer';
+            dev = _maintainers[i]['$'];
+            dev.role = 'maintainer';
             devs.push(dev);
         }
         proComp.devs = devs;
@@ -288,12 +288,6 @@ var getManifest = function (callback) {
                 });
             }
         });
-
-        if (exist.isFile()) {
-
-        } else {
-
-        }
     } catch (err) {
         return callback(err, null);
     }
@@ -312,6 +306,7 @@ var parseManifest = function (callback) {
     'use strict';
     try {
         var i, j, k, layers, _layers, layer, comps, depends, _depends, depend, steps, _steps, fermat, platfrms, _platfrms, platfrm, suprlays, _suprlays, suprlay, procs, _procs, _proc, _step, _next;
+        console.log("en el parseManifest");
         getManifest(function (err_man, res_man) {
             if (err_man) {
                 return callback(err_man, null);
@@ -449,6 +444,7 @@ var parseManifest = function (callback) {
 var saveManifest = function (callback) {
     'use strict';
     try {
+        console.log("en el saveManifest");
         parseManifest(function (err_load, res_load) {
             if (err_load) {
                 winston.log('info', err_load.message, err_load);
@@ -547,7 +543,7 @@ var saveManifest = function (callback) {
                                 _suprlay.dependsOn ? _suprlay.dependsOn.split(' ')
                                 .join('')
                                 .split(',') : [],
-                                0,
+                                n,
                                 function (err_supr, res_supr) {
                                     if (err_supr) {
                                         winston.log('info', err_supr.message, err_supr);
@@ -685,7 +681,7 @@ var saveManifest = function (callback) {
                                 _platfrm.dependsOn ? _platfrm.dependsOn.split(' ')
                                 .join('')
                                 .split(',') : [],
-                                0,
+                                i,
                                 function (err_plat, res_plat) {
                                     if (err_plat) {
                                         winston.log('info', err_plat.message, err_plat);
@@ -817,6 +813,7 @@ var saveManifest = function (callback) {
                         'save': true
                     });
 
+                    // deleting previous database
                     procMod.delAllProcs(function (err_del, res_del) {
                         winston.log('info', 'deleting proccess...');
                         if (err_del) {
@@ -827,7 +824,25 @@ var saveManifest = function (callback) {
                             if (err_del) {
                                 winston.log('info', err_del.message, err_del);
                             }
-                            return loopPlatfrms(0);
+                            layerMod.delAllLayers(function (err_del, res_del) {
+                                winston.log('info', 'deleting layers...');
+                                if (err_del) {
+                                    winston.log('info', err_del.message, err_del);
+                                }
+                                suprlayMod.delAllSuprlays(function (err_del, res_del) {
+                                    winston.log('info', 'deleting superlayers...');
+                                    if (err_del) {
+                                        winston.log('info', err_del.message, err_del);
+                                    }
+                                    platfrmMod.delAllPlatfrms(function (err_del, res_del) {
+                                        winston.log('info', 'deleting platforms...');
+                                        if (err_del) {
+                                            winston.log('info', err_del.message, err_del);
+                                        }
+                                        return loopPlatfrms(0);
+                                    });
+                                });
+                            });
                         });
                     });
                 } else {
@@ -1088,6 +1103,7 @@ exports.updDevs = function (callback) {
 exports.loadComps = function (callback) {
     'use strict';
     try {
+        console.log("en el loadComps");
         saveManifest(function (err, res) {
             if (err) {
                 return callback(err, null);

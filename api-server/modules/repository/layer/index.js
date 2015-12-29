@@ -39,7 +39,8 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
                     set_obj.order = order;
                     res_lay.order = order;
                 }
-                if (Object.keys(set_obj).length > 0) {
+                if (Object.keys(set_obj)
+                    .length > 0) {
                     layerSrv.updateLayerById(res_lay._id, set_obj, function (err_upd, res_upd) {
                         if (err_upd) {
                             return callback(err_upd, null);
@@ -87,6 +88,29 @@ exports.getLayers = function (callback) {
                 return callback(err, null);
             }
             return callback(null, layers);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
+/**
+ * [delAllLayers description]
+ *
+ * @method delAllLayers
+ *
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.delAllLayers = function (callback) {
+    'use strict';
+    try {
+        layerSrv.delAllLayers(function (err, layers) {
+            if (err) {
+                return callback(err, null);
+            }
+            return callback(null, true);
         });
     } catch (err) {
         return callback(err, null);
