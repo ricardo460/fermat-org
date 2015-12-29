@@ -36,7 +36,7 @@ function SignLayer(){
         image.src = src;
         
         var mesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(width, height),
+            new THREE.PlaneBufferGeometry(width, height),
             new THREE.MeshBasicMaterial({color : 0xFFFFFF, map : texture, transparent : true})
         );
         
