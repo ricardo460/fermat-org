@@ -107,7 +107,7 @@ exports.getPlatfrms = function (callback) {
 exports.delAllPlatfrms = function (callback) {
     'use strict';
     try {
-        layerSrv.delAllPlatfrms(function (err, platfrms) {
+        platfrmSrv.delAllPlatfrms(function (err, platfrms) {
             if (err) {
                 return callback(err, null);
             }

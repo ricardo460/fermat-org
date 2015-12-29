@@ -94,3 +94,26 @@ exports.getSuprlays = function (callback) {
         callback(err, null);
     }
 };
+
+/**
+ * [delAllSuprlays description]
+ *
+ * @method delAllSuprlays
+ *
+ * @param  {Function}     callback [description]
+ *
+ * @return {[type]}       [description]
+ */
+exports.delAllSuprlays = function (callback) {
+    'use strict';
+    try {
+        suprlaySrv.delAllSuprlays(function (err, platfrms) {
+            if (err) {
+                return callback(err, null);
+            }
+            return callback(null, true);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
