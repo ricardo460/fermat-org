@@ -7,7 +7,7 @@ var cache = new Cache({
     type: 'file'
 });
 
-var _INTERVAL = 30000;
+var _INTERVAL = 300000;
 
 var loop = 0;
 

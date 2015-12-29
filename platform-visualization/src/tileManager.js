@@ -165,7 +165,7 @@ function TileManager() {
 
         for (i = 0; i <= groupsQtty; i++) indexes.push(0);
 
-        for (i = 0; i < objects.length; i++) {
+        for (i = 0; i < window.objects.length; i++) {
 
             var g = (table[i].groupID !== undefined) ? table[i].groupID : groupsQtty;
 
@@ -219,7 +219,7 @@ function TileManager() {
             current.push(0);
         }
 
-        for (i = 0, l = objects.length; i < l; i++) {
+        for (i = 0, l = window.objects.length; i < l; i++) {
 
             var row = table[i].layerID;
 
@@ -271,7 +271,7 @@ function TileManager() {
             gridLine.push(gridLineSub);
         }
 
-        for (i = 0; i < objects.length; i++) {
+        for (i = 0; i < window.objects.length; i++) {
 
             var group = table[i].groupID;
             var layer = table[i].layerID;
@@ -399,7 +399,8 @@ function TileManager() {
             var groupID = _platfrm ? _platfrm.order : undefined;
             groupID = (groupID === undefined) ? groups.size() : groupID;
 
-            var _author = getBestDev(_comp.devs);
+            var _author = getBestDev(_comp.devs, "author");
+            var _maintainer = getBestDev(_comp.devs, "maintainer");
             
             _layer = helper.capFirstLetter(_layer.name);
 
@@ -416,6 +417,9 @@ function TileManager() {
                 author: _author.usrnm ? _author.usrnm : undefined,
                 authorRealName: _author.name ? _author.name : undefined,
                 authorEmail: _author.email ? _author.email : undefined,
+                maintainer : _maintainer.usrnm ? _author.usrnm : undefined,
+                maintainerPicture : _maintainer.avatar_url ? _maintainer.avatar_url : undefined,
+                maintainerRealName : _maintainer.name ? _maintainer.name : undefined,
                 difficulty: _comp.difficulty,
                 code_level: _comp.code_level ? _comp.code_level : undefined,
                 life_cycle: _comp.life_cycle,
@@ -501,6 +505,24 @@ function TileManager() {
             authorText = {
                 text: table[id].authorRealName || table[id].author || '',
                 font: (3.5 * scale) + 'px Arial'
+            },
+            picMaintainer = {
+                src: table[id].maintainerPicture || base + 'buster.png'
+            },
+            maintainer = {
+                text: 'Maintainer',
+                font: (5.5 * scale) + 'px Arial',
+                color: "#FFFFFF"
+            },
+            nameMaintainer = {
+                text: table[id].maintainerRealName || table[id].maintainer || '',
+                font: (4.8 * scale) + 'px Arial',
+                color: "#FFFFFF"
+            },
+            userMaintainer = {
+                text: table[id].maintainer || 'No Maintainer yet',
+                font: (4.3 * scale) + 'px Arial',
+                color: "#E2E2E2"
             };
 
         switch (state) {
@@ -510,10 +532,10 @@ function TileManager() {
             pic.w = 53 * scale;
             pic.h = 53 * scale;
 
-            groupIcon.x = 25 * scale;
+            groupIcon.x = 13 * scale;
             groupIcon.y = 49 * scale;
 
-            typeIcon.x = 160 * scale;
+            typeIcon.x = 45 * scale;
             typeIcon.y = 49 * scale;
 
             ring.x = 72 * scale;
@@ -535,6 +557,20 @@ function TileManager() {
             authorText.x = middle;
             authorText.y = 80 * scale;
 
+            picMaintainer.x = 136 * scale;
+            picMaintainer.y = 63.6 * scale;
+            picMaintainer.w = 23.5 * scale;
+            picMaintainer.h = 23.5 * scale;
+
+            maintainer.x = 174.5 * scale;
+            maintainer.y = 70 * scale;
+
+            nameMaintainer.x = 181 * scale;
+            nameMaintainer.y = 77 * scale;
+
+            userMaintainer.x = 181 * scale;
+            userMaintainer.y = 82 * scale;
+
             break;
         case "development":
             pic.x = 79 * scale;
@@ -542,10 +578,10 @@ function TileManager() {
             pic.w = 53 * scale;
             pic.h = 53 * scale;
 
-            groupIcon.x = 25 * scale;
+            groupIcon.x = 10 * scale;
             groupIcon.y = 76 * scale;
 
-            typeIcon.x = 154 * scale;
+            typeIcon.x = 42 * scale;
             typeIcon.y = 76 * scale;
 
             ring.x = 64.5 * scale;
@@ -567,6 +603,20 @@ function TileManager() {
             authorText.x = middle;
             authorText.y = 88 * scale;
 
+            picMaintainer.x = 141 * scale;
+            picMaintainer.y = 78.5 * scale;
+            picMaintainer.w = 23.5 * scale;
+            picMaintainer.h = 23.5 * scale;
+
+            maintainer.x = 178.2 * scale;
+            maintainer.y = 84 * scale;
+
+            nameMaintainer.x = 184.5 * scale;
+            nameMaintainer.y = 91 * scale;
+
+            userMaintainer.x = 184.5 * scale;
+            userMaintainer.y = 96 * scale;
+
             break;
         case "qa":
             pic.x = 80 * scale;
@@ -574,16 +624,16 @@ function TileManager() {
             pic.w = 53 * scale;
             pic.h = 53 * scale;
 
-            groupIcon.x = 35 * scale;
+            groupIcon.x = 10 * scale;
             groupIcon.y = 76 * scale;
 
-            typeIcon.x = 154 * scale;
+            typeIcon.x = 42 * scale;
             typeIcon.y = 76 * scale;
 
             ring.x = 67 * scale;
-            ring.y = 34.7 * scale;
+            ring.y = 35.2 * scale;
             ring.w = 78 * scale;
-            ring.h = 68.5 * scale;
+            ring.h = 69.6 * scale;
 
             codeText.x = middle;
             codeText.y = 20 * scale;
@@ -598,6 +648,20 @@ function TileManager() {
 
             authorText.x = middle;
             authorText.y = 78 * scale;
+
+            picMaintainer.x = 141 * scale;
+            picMaintainer.y = 81 * scale;
+            picMaintainer.w = 23.5 * scale;
+            picMaintainer.h = 23.5 * scale;
+
+            maintainer.x = 179.2 * scale;
+            maintainer.y = 87.5 * scale;
+
+            nameMaintainer.x = 184.5 * scale;
+            nameMaintainer.y = 94.5 * scale;
+
+            userMaintainer.x = 184.5 * scale;
+            userMaintainer.y = 99.5 * scale;         
 
             break;
         case "production":
@@ -621,7 +685,7 @@ function TileManager() {
             codeText.y = 26 * scale;
 
             nameText.x = 170 * scale;
-            nameText.y = 71 * scale;
+            nameText.y = 45 * scale;
             nameText.font = (7 * scale) + 'px Arial';
             nameText.constraint = 60 * scale;
             nameText.lineHeight = 9 * scale;
@@ -632,6 +696,20 @@ function TileManager() {
 
             authorText.x = 82 * scale;
             authorText.y = 77 * scale;
+
+            picMaintainer.x = 136 * scale;
+            picMaintainer.y = 69 * scale;
+            picMaintainer.w = 23.5 * scale;
+            picMaintainer.h = 23.5 * scale;
+
+            maintainer.x = 174.5 * scale;
+            maintainer.y = 76 * scale;
+
+            nameMaintainer.x = 180 * scale;
+            nameMaintainer.y = 83 * scale;
+
+            userMaintainer.x = 180 * scale;
+            userMaintainer.y = 88 * scale;                     
 
             break;
         }
@@ -644,6 +722,7 @@ function TileManager() {
 
         var data = [
             pic,
+            picMaintainer,
             portrait,
             groupIcon,
             typeIcon,
@@ -651,7 +730,10 @@ function TileManager() {
             codeText,
             nameText,
             layerText,
-            authorText
+            authorText,
+            maintainer,
+            nameMaintainer,
+            userMaintainer
         ];
 
         if ( table[id].found !== true ) {
@@ -777,7 +859,7 @@ function TileManager() {
 
                     var index = self.elementsByGroup[k][j];
 
-                    var animation = animate(objects[index], goal[index], delay);
+                    var animation = animate(window.objects[index], goal[index], delay);
 
                     animation[0].start();
                     animation[1].start();
@@ -837,7 +919,7 @@ function TileManager() {
             
             scene.add(object);
 
-            objects.push(object);
+            window.objects.push(object);
 
             //
 
@@ -914,7 +996,7 @@ function TileManager() {
             distance = camera.getMaxDistance() * 2,
             out = window.viewManager.translateToSection('table', new THREE.Vector3(0, 0, distance));
 
-        TWEEN.removeAll();
+        //TWEEN.removeAll();
 
         var target;
 
@@ -934,16 +1016,16 @@ function TileManager() {
 
         };
 
-        for (i = 0; i < objects.length; i++) {
+        for (i = 0; i < window.objects.length; i++) {
 
             if (ids.indexOf(i) !== -1) {
                 target = this.lastTargets[i].position;
             } else {
                 target = out;
-                objects[i].userData.flying = true;
+                window.objects[i].userData.flying = true;
             }
 
-            animate(objects[i], target, Math.random() * _duration + _duration);
+            animate(window.objects[i], target, Math.random() * _duration + _duration);
         }
 
         new TWEEN.Tween(this)
@@ -1056,19 +1138,31 @@ function TileManager() {
         }
     }
 
-    function getBestDev(_devs) {
+    /**
+     * Gets the best developer in the given role
+     * @param   {Array}  _devs The array of developers
+     * @param   {string} role  The role to look for
+     * @returns {object} The best developer by the given criteria
+     */
+    function getBestDev(_devs, role) {
         var dev = {};
         if (_devs) {
             var _dev = {};
             dev.percnt = 0;
             for (var i = 0, l = _devs.length; i < l; i++) {
                 _dev = _devs[i];
-                if (_dev.scope == 'implementation' && _dev.percnt >= dev.percnt) {
-                    dev.percnt = _dev.percnt;
-                    dev.usrnm = _dev.dev.usrnm;
-                    dev.name = _dev.dev.name;
-                    dev.email = _dev.dev.email;
-                    dev.avatar_url = _dev.dev.avatar_url;
+                
+                if((role === 'author' && _dev.role === 'author' && _dev.scope === 'implementation') ||
+                   (role === 'maintainer' && _dev.role === 'maintainer')) {
+                
+                    if (_dev.percnt >= dev.percnt) {
+                        
+                        dev.percnt = _dev.percnt;
+                        dev.usrnm = _dev.dev.usrnm;
+                        dev.name = _dev.dev.name;
+                        dev.email = _dev.dev.email;
+                        dev.avatar_url = _dev.dev.avatar_url;
+                    }
                 }
             }
         }

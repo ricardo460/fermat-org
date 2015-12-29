@@ -335,4 +335,12 @@ function Helper() {
         
         return valid;
     };
+    
+    this.showBackButton = function() {
+        window.helper.show('backButton');
+    };
+    
+    this.hideBackButton = function() {
+        window.helper.hide('backButton', 1000, true);
+    };
 }

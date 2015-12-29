@@ -1,26 +1,6 @@
 var suprlaySrv = require('./services/suprlay');
 var SuprlayMdl = require('./models/suprlay');
 
-function getOrder(code) {
-    'use strict';
-    var order = -1;
-    switch (code) {
-    case 'P2P':
-        order = 0;
-        break;
-    case 'BCH':
-        order = 1;
-        break;
-    case 'OSA':
-        order = 2;
-        break;
-    default:
-        order = -1;
-        break;
-    }
-    return order;
-}
-
 /**
  * [insOrUpdSuprlay description]
  *
@@ -39,7 +19,7 @@ function getOrder(code) {
 exports.insOrUpdSuprlay = function (code, name, logo, deps, order, callback) {
     'use strict';
     try {
-        order = code ? getOrder(code) : null;
+        //order = code ? getOrder(code) : null;
         suprlaySrv.findSuprlayByCode(code, function (err_supr, res_supr) {
             if (err_supr) {
                 return callback(err_supr, null);
@@ -58,11 +38,12 @@ exports.insOrUpdSuprlay = function (code, name, logo, deps, order, callback) {
                     set_obj.deps = deps;
                     res_supr.deps = deps;
                 }
-                if (order && order !== res_supr.order) {
+                if (order != -1 && order != res_supr.order) {
                     set_obj.order = order;
                     res_supr.order = order;
                 }
-                if (Object.keys(set_obj).length > 0) {
+                if (Object.keys(set_obj)
+                    .length > 0) {
                     suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
                         if (err_upd) {
                             return callback(err_upd, null);
