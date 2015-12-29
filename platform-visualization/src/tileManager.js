@@ -760,6 +760,7 @@ function TileManager() {
      * @param   {Number}     i ID of the tile (index in table)
      * @returns {DOMElement} The drawable element that represents the tile
      */
+     
     this.createElement = function (id) {
 
         var mesh,
@@ -783,7 +784,7 @@ function TileManager() {
             texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale);
 
             mesh = new THREE.Mesh(
-                new THREE.PlaneGeometry(tileWidth, tileHeight),
+                new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
                 new THREE.MeshBasicMaterial({
                     side: THREE.DoubleSide,
                     transparent : true,

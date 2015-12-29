@@ -245,7 +245,7 @@ function Developer (){
 			texture = self.createTextureDeveloper(i, developerLink, developerAuthor, developerAuthorRealName, developerAuthorEmail);
 
 			mesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(230, 120),
+            new THREE.PlaneBufferGeometry(230, 120),
             new THREE.MeshBasicMaterial({ transparent : true, color : 0xFFFFFF}));
             mesh.userData = {
                 id: i,

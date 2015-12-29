@@ -417,14 +417,14 @@ function onElementClick(id) {
     }
 }
 
-
 function onElementClickDeveloper(id, objectsDevelopers){
 
     var duration = 1000;
 
     if(camera.getFocus() == null){
-        
-        window.camera.setFocus(objectsDevelopers[id], new THREE.Vector4(-50, -50, 300,1), duration);
+        var camTarget = objectsDevelopers[id].clone();
+
+        window.camera.setFocus(camTarget, new THREE.Vector4(0, 0, 1000, 1), duration);
 
         for (var i = 0; i < objectsDevelopers.length ; i++) {
             if(id !== i)

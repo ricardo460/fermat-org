@@ -16,20 +16,16 @@ function Logo(){
         OPEN_FERMAT_Y = -OPEN_WALLET_Y,
         SCALE = 4;
     
-    
-    
     var walletLogo = createLogo(824, 824, "images/walletlogo.png", new THREE.Vector3(0, CLOSED_WALLET_Y, UPPER_LAYER)),
         fermatLogo = createLogo(1058, 241, "images/fermatlogo.png", new THREE.Vector3(0, CLOSED_FERMAT_Y, UPPER_LAYER));
-    
     
     this.walletLogo = walletLogo;
     this.fermatLogo = fermatLogo;
     
-    
     function createLogo(width, height, texture, position) {
         
         var mesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(width, height),
+            new THREE.PlaneBufferGeometry(width, height),
             new THREE.MeshBasicMaterial({ side: THREE.FrontSide, transparent : true, opacity : 0, color : 0xFFFFFF}));
         helper.applyTexture(texture, mesh);
         
