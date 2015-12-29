@@ -26,30 +26,35 @@ var getBook = function (callback) {
 
     if (test('-d', dir)) {
         cd(dir);
-        if (exec('git reset --hard').code !== 0) {
+        if (exec('git reset --hard')
+            .code !== 0) {
             echo('Error: Git reset failed');
             err = 1;
             //exit(1);
         }
         winston.log('info', 'Pulling repository');
         if (env === 'development') {
-            if (exec('git checkout develop').code !== 0) {
+            if (exec('git checkout develop')
+                .code !== 0) {
                 echo('Error: Git checkout failed');
                 err = 1;
                 //exit(1);
             }
-            if (exec('git pull origin develop').code !== 0) {
+            if (exec('git pull origin develop')
+                .code !== 0) {
                 echo('Error: Git pull failed');
                 err = 1;
                 //exit(1);
             }
         } else {
-            if (exec('git checkout master').code !== 0) {
+            if (exec('git checkout master')
+                .code !== 0) {
                 echo('Error: Git checkout failed');
                 err = 1;
                 //exit(1);
             }
-            if (exec('git pull origin master').code !== 0) {
+            if (exec('git pull origin master')
+                .code !== 0) {
                 echo('Error: Git pull failed');
                 err = 1;
                 //exit(1);
@@ -57,7 +62,8 @@ var getBook = function (callback) {
         }
         cd('fermat-documentation');
         winston.log('info', 'Compiling documentation');
-        if (exec('asciidoctor -d book documentation.asciidoc').code !== 0) {
+        if (exec('asciidoctor -d book documentation.asciidoc')
+            .code !== 0) {
             echo('Error: asciidoctor book failed');
             err = 1;
             //exit(1);
@@ -65,24 +71,28 @@ var getBook = function (callback) {
     } else {
         cd(folder);
         winston.log('info', 'Cloning repository');
-        if (exec('git clone https://fuelusumar:21121734fractal@github.com/bitDubai/fermat.git').code !== 0) {
+        if (exec('git clone https://github.com/bitDubai/fermat.git')
+            .code !== 0) {
             echo('Error: Git clone failed');
             err = 1;
             //exit(1);
         }
         cd('./fermat');
         if (env === 'development') {
-            if (exec('git branch develop').code !== 0) {
+            if (exec('git branch develop')
+                .code !== 0) {
                 echo('Error: Git branch failed');
                 err = 1;
                 //exit(1);
             }
-            if (exec('git checkout develop').code !== 0) {
+            if (exec('git checkout develop')
+                .code !== 0) {
                 echo('Error: Git checkout failed');
                 err = 1;
                 //exit(1);
             }
-            if (exec('git pull origin develop').code !== 0) {
+            if (exec('git pull origin develop')
+                .code !== 0) {
                 echo('Error: Git pull failed');
                 err = 1;
                 //exit(1);
@@ -90,7 +100,8 @@ var getBook = function (callback) {
         }
         cd('./fermat-documentation');
         winston.log('info', 'Compiling documentation');
-        if (exec('asciidoctor -d book documentation.asciidoc').code !== 0) {
+        if (exec('asciidoctor -d book documentation.asciidoc')
+            .code !== 0) {
             echo('Error: asciidoctor book failed');
             err = 1;
             //exit(1);
@@ -98,11 +109,10 @@ var getBook = function (callback) {
     }
     cd(cwd);
 
-    if(typeof callback != 'undefined'){
-        if(err){
-            callback('Error: syncer failed', null); 
-        }
-        else{
+    if (typeof callback != 'undefined') {
+        if (err) {
+            callback('Error: syncer failed', null);
+        } else {
             callback(null, true);
         }
         return;

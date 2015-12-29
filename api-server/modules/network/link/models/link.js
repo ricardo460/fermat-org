@@ -5,15 +5,10 @@ var mongoose = require('mongoose');
  *
  * @method LinkMdl
  *
- * @param  {[type]} _wave_id [description]
- * @param  {[type]} _chld_nod_id [description]
+ * @param  {[type]} _wave_id       [description]
+ * @param  {[type]} _chld_nod_id   [description]
  * @param  {[type]} _prnt_nod_id   [description]
- * @param  {[type]} type        [description]
- * @param  {[type]} type        [description]
- * @param  {[type]} description [description]
- * @param  {[type]} difficulty  [description]
- * @param  {[type]} code_level  [description]
- * @param  {[type]} repo_dir  [description]
+ * @param  {[type]} type           [description]
  */
 function LinkMdl(_wave_id, _chld_nod_id, _prnt_nod_id, type) {
     'use strict';

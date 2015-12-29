@@ -46,6 +46,7 @@
         "ClientsViewer" : true,
         "BaseNetworkViewer" : true,
         "Developer" : true,
-        "FlowManager" : true
+        "FlowManager" : true,
+        "ActionFlow" : true
     }
 }
