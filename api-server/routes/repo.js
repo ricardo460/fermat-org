@@ -34,8 +34,7 @@ var cache = new Cache({
 });*/
 
 /**
- * [description]
- * Obtiene los componentes
+ * Gets components
  * @route
  *
  */
@@ -113,8 +112,7 @@ router.get('/comps', function (req, res, next) {
 });*/
 
 /**
- * [description]
- *Obtiene los procesos
+ * Gets the processes
  * @method
  *
  * @param  {[type]} req   [description]
@@ -149,8 +147,7 @@ router.get('/procs', function (req, res, next) {
 });
 
 /**
- * [description]
- * Obtiene el Readme del repositorio
+ * Gets the repository Readme
  * @method
  *
  * @param  {[type]} req   [description]
