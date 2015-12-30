@@ -35,7 +35,7 @@ var cache = new Cache({
 
 /**
  * [description]
- *
+ * Obtiene los componentes
  * @route
  *
  */
@@ -114,7 +114,7 @@ router.get('/comps', function (req, res, next) {
 
 /**
  * [description]
- *
+ *Obtiene los procesos
  * @method
  *
  * @param  {[type]} req   [description]
@@ -150,7 +150,7 @@ router.get('/procs', function (req, res, next) {
 
 /**
  * [description]
- *
+ * Obtiene el Readme del repositorio
  * @method
  *
  * @param  {[type]} req   [description]
@@ -175,8 +175,7 @@ router.get('/readme', function (req, res, next) {
 });
 
 /**
- * [description]
- *
+ * Gets the documentation
  * @method
  *
  * @param  {[type]} req   [description]

@@ -9,8 +9,7 @@ var loadMod = require('./lib/loader');
 var syncMod = require('./lib/syncer');
 
 /**
- * [getComps description]
- *
+ * Get all components
  * @method getComps
  *
  * @param  {[type]}   req  [description]
@@ -112,8 +111,7 @@ exports.getProcs = function (req, next) {
 };
 
 /**
- * [getReadme description]
- *
+ * Gets the repository Readme
  * @method getReadme
  *
  * @param  {[type]}   req  [description]
@@ -137,8 +135,7 @@ exports.getReadme = function (req, next) {
 };
 
 /**
- * [getBook description]
- *
+ * Gets the documentation repository
  * @method getBook
  *
  * @param  {[type]}   req  [description]
@@ -162,7 +159,7 @@ exports.getBook = function (req, next) {
 };
 
 /**
- * [getDocs description]
+ * Gets the documentation given a specific type
  *
  * @method getBook
  *
