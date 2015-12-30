@@ -546,7 +546,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      */
     var headersPositionsViewWorkFlow = function() {
 
-        var width, height, group, headerData, objectHeaderInWFlowGroup, slayer;
+        var width, height, group, headerData, objectHeaderInWFlowGroup, slayer, column;
         
         for(group in groups){
             if (window.groups.hasOwnProperty(group) && group !== 'size'){
@@ -646,7 +646,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             return header;
         }
         
-        var src, width, height, numIdex;
+        var src, width, height;
             
         for (group in groups) {
             if (window.groups.hasOwnProperty(group) && group !== 'size') {
@@ -683,9 +683,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 
                 headerData = window.superLayers[slayer];
 
-                numIdex = headerData.index + 1;
-
-                row = superLayerPosition[numIdex];
+                row = superLayerPosition[headerData.index];
  
                 width = columnWidth * window.TILE_DIMENSION.width;
                 height = width * 443 / 1379;

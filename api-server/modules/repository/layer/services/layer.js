@@ -139,3 +139,19 @@ exports.updateLayerById = function (_id, set, callback) {
         callback(err, layer);
     });
 };
+
+/**
+ * [delAllLayers description]
+ *
+ * @method delAllLayers
+ *
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.delAllLayers = function (callback) {
+    'use strict';
+    layerDao.delAllSchemas(function (err, layer) {
+        callback(err, layer);
+    });
+};

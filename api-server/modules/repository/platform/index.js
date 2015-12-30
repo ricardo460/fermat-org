@@ -93,3 +93,27 @@ exports.getPlatfrms = function (callback) {
     }
 
 };
+
+
+/**
+ * [delAllPlatfrms description]
+ *
+ * @method delAllPlatfrms
+ *
+ * @param  {Function}     callback [description]
+ *
+ * @return {[type]}       [description]
+ */
+exports.delAllPlatfrms = function (callback) {
+    'use strict';
+    try {
+        platfrmSrv.delAllPlatfrms(function (err, platfrms) {
+            if (err) {
+                return callback(err, null);
+            }
+            return callback(null, true);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};

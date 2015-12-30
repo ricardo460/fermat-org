@@ -139,3 +139,19 @@ exports.updatePlatfrmById = function (_id, set, callback) {
         callback(err, platfrm);
     });
 };
+
+/**
+ * [delAllPlatfrms description]
+ *
+ * @method delAllPlatfrms
+ *
+ * @param  {Function}     callback [description]
+ *
+ * @return {[type]}       [description]
+ */
+exports.delAllPlatfrms = function (callback) {
+    'use strict';
+    platfrmDao.delAllSchemas(function (err, platfrm) {
+        callback(err, platfrm);
+    });
+};

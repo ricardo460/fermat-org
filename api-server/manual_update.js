@@ -1,6 +1,7 @@
 var winston = require('winston');
 var loadLib = require('./modules/repository/lib/loader');
 var Cache = require('./lib/route-cache');
+var db = require('./db');
 var cache = new Cache({
 	type: 'file'
 });
