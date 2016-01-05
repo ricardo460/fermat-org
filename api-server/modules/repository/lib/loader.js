@@ -606,68 +606,79 @@ var saveManifest = function (callback) {
                                                     var loopComps = function (k) {
                                                         if (k < _comps.length) {
                                                             var _comp = _comps[k];
-                                                            compMod.insOrUpdComp(res_plat._id, null, res_lay._id, _comp.name.trim().toLowerCase(), _comp.type.trim().toLowerCase(), _comp.description.trim().toLowerCase(), _comp.difficulty, _comp['code-level'].trim().toLowerCase(), _comp.repo_dir, _comp.screenshots.trim().toLowerCase(), null, function (err_comp, res_comp) {
-                                                                if (err_comp) {
-                                                                    winston.log('info', err_comp.message, err_comp);
-                                                                    loopComps(++k);
-                                                                } else {
-                                                                    var _devs = _comp.devs;
-                                                                    var upd_devs = [];
-                                                                    var upd_life_cycle = [];
-                                                                    var loopDevs = function (l) {
-                                                                        if (l < _devs.length) {
-                                                                            var _dev = _devs[l];
-                                                                            if (_dev.name) {
-                                                                                devMod.insOrUpdDev(_dev.name.trim().toLowerCase(), null, null, null, null, null, null, null, function (err_dev, res_dev) {
-                                                                                    if (err_dev) {
-                                                                                        winston.log('info', err_dev.message, err_dev);
-                                                                                        winston.log('info', err_dev.message, _dev);
-                                                                                        loopDevs(++l);
-                                                                                    } else {
-                                                                                        compMod.insOrUpdCompDev(res_comp._id, res_dev._id, _dev.role, _dev.scope, _dev.percentage || '0', function (err_compDev, res_compDev) {
-                                                                                            if (err_compDev) {
-                                                                                                winston.log('info', err_compDev.message, err_compDev);
-                                                                                                loopDevs(++l);
-                                                                                            } else {
-                                                                                                upd_devs.push(res_compDev._id);
-                                                                                                loopDevs(++l);
-                                                                                            }
-                                                                                        });
-                                                                                    }
-                                                                                });
-                                                                            } else {
-                                                                                loopDevs(++l);
-                                                                            }
-                                                                        } else {
-                                                                            var _life_cycle = _comp.life_cycle;
-                                                                            var loopLifeCycle = function (m) {
-                                                                                if (m < _life_cycle.length) {
-                                                                                    var _status = _life_cycle[m];
-                                                                                    compMod.insOrUpdStatus(res_comp._id, _status.name, _status.target, _status.reached, function (err_sta, res_sta) {
-                                                                                        if (err_sta) {
-                                                                                            winston.log('info', err_sta.message, err_sta);
-                                                                                            loopLifeCycle(++m);
+                                                            compMod.insOrUpdComp(res_plat._id, //
+                                                                null, //
+                                                                res_lay._id, //
+                                                                _comp.name.trim().toLowerCase(), //
+                                                                _comp.type.trim().toLowerCase(), //
+                                                                _comp.description.trim().toLowerCase(), //
+                                                                _comp.difficulty, //
+                                                                _comp['code-level'].trim().toLowerCase(), //
+                                                                _comp.repo_dir, //
+                                                                _comp.screenshots ? _comp.screenshots.trim().toLowerCase() : null, //
+                                                                null, //
+                                                                function (err_comp, res_comp) {
+                                                                    if (err_comp) {
+                                                                        winston.log('info', err_comp.message, err_comp);
+                                                                        loopComps(++k);
+                                                                    } else {
+                                                                        var _devs = _comp.devs;
+                                                                        var upd_devs = [];
+                                                                        var upd_life_cycle = [];
+                                                                        var loopDevs = function (l) {
+                                                                            if (l < _devs.length) {
+                                                                                var _dev = _devs[l];
+                                                                                if (_dev.name) {
+                                                                                    devMod.insOrUpdDev(_dev.name.trim().toLowerCase(), null, null, null, null, null, null, null, function (err_dev, res_dev) {
+                                                                                        if (err_dev) {
+                                                                                            winston.log('info', err_dev.message, err_dev);
+                                                                                            winston.log('info', err_dev.message, _dev);
+                                                                                            loopDevs(++l);
                                                                                         } else {
-                                                                                            upd_life_cycle.push(res_sta._id);
-                                                                                            loopLifeCycle(++m);
+                                                                                            compMod.insOrUpdCompDev(res_comp._id, res_dev._id, _dev.role, _dev.scope, _dev.percentage || '0', function (err_compDev, res_compDev) {
+                                                                                                if (err_compDev) {
+                                                                                                    winston.log('info', err_compDev.message, err_compDev);
+                                                                                                    loopDevs(++l);
+                                                                                                } else {
+                                                                                                    upd_devs.push(res_compDev._id);
+                                                                                                    loopDevs(++l);
+                                                                                                }
+                                                                                            });
                                                                                         }
                                                                                     });
                                                                                 } else {
-                                                                                    compMod.updCompDevAndLifCyc(res_comp._id, upd_devs, upd_life_cycle, function (err_upd, res_upd) {
-                                                                                        if (err_upd) {
-                                                                                            loopComps(++k);
-                                                                                        } else {
-                                                                                            loopComps(++k);
-                                                                                        }
-                                                                                    });
+                                                                                    loopDevs(++l);
                                                                                 }
-                                                                            };
-                                                                            loopLifeCycle(0);
-                                                                        }
-                                                                    };
-                                                                    loopDevs(0);
-                                                                }
-                                                            });
+                                                                            } else {
+                                                                                var _life_cycle = _comp.life_cycle;
+                                                                                var loopLifeCycle = function (m) {
+                                                                                    if (m < _life_cycle.length) {
+                                                                                        var _status = _life_cycle[m];
+                                                                                        compMod.insOrUpdStatus(res_comp._id, _status.name, _status.target, _status.reached, function (err_sta, res_sta) {
+                                                                                            if (err_sta) {
+                                                                                                winston.log('info', err_sta.message, err_sta);
+                                                                                                loopLifeCycle(++m);
+                                                                                            } else {
+                                                                                                upd_life_cycle.push(res_sta._id);
+                                                                                                loopLifeCycle(++m);
+                                                                                            }
+                                                                                        });
+                                                                                    } else {
+                                                                                        compMod.updCompDevAndLifCyc(res_comp._id, upd_devs, upd_life_cycle, function (err_upd, res_upd) {
+                                                                                            if (err_upd) {
+                                                                                                loopComps(++k);
+                                                                                            } else {
+                                                                                                loopComps(++k);
+                                                                                            }
+                                                                                        });
+                                                                                    }
+                                                                                };
+                                                                                loopLifeCycle(0);
+                                                                            }
+                                                                        };
+                                                                        loopDevs(0);
+                                                                    }
+                                                                });
                                                         } else {
                                                             loopLayers(++j);
                                                         }
