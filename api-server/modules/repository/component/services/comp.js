@@ -13,19 +13,12 @@ var SuprlayMdl = require('../../superlayer/models/suprlay');
 var suprlaySch = require('../../superlayer/schemas/suprlay');
 var LayerMdl = require('../../layer/models/layer');
 var layerSch = require('../../layer/schemas/layer');
-
-
 /**
  * [compDao description]
  *
  * @type {Dao}
  */
-var compDao = new Dao('Comp', compSch, compMdl, 'CompDev', compDevSch, CompDevMdl,
-    'Platfrm', platfrmSch, PlatfrmMdl,
-    'Suprlay', suprlaySch, SuprlayMdl,
-    'Layer', layerSch, LayerMdl,
-    'Status', statusSch, statusMdl);
-
+var compDao = new Dao('Comp', compSch, compMdl, 'CompDev', compDevSch, CompDevMdl, 'Platfrm', platfrmSch, PlatfrmMdl, 'Suprlay', suprlaySch, SuprlayMdl, 'Layer', layerSch, LayerMdl, 'Status', statusSch, statusMdl);
 /**
  * [insertComp description]
  *
@@ -42,7 +35,6 @@ exports.insertComp = function (comp_mdl, callback) {
         callback(err, comp);
     });
 };
-
 /**
  * [findCompById description]
  *
@@ -59,7 +51,6 @@ exports.findCompById = function (_id, callback) {
         callback(err, comp);
     });
 };
-
 /**
  * [findAndPopulateCompById description]
  *
@@ -77,7 +68,6 @@ exports.findAndPopulateCompById = function (_id, path, callback) {
         callback(err, comp);
     });
 };
-
 /**
  * [findComp description]
  *
@@ -94,7 +84,6 @@ exports.findComp = function (query, callback) {
         callback(err, comp);
     });
 };
-
 /**
  * [findComps description]
  *
@@ -111,7 +100,6 @@ exports.findComps = function (query, sort, callback) {
         callback(err, comp);
     });
 };
-
 /**
  * [findAllComps description]
  *
@@ -130,14 +118,12 @@ exports.findAllComps = function (query, order, callback) {
             callback(err, null);
         } else {
             var _comps = [];
-
             var loopComps = function (i) {
                 if (i < comps.length) {
                     var _comp = comps[i];
                     var _compDevs = _comp.devs;
                     //var _lifeCycle = _comp.life_cycle;
                     var _devs = [];
-
                     var loopCompDevs = function (j) {
                         if (j < _compDevs.length) {
                             var _compDev = {};
@@ -168,7 +154,6 @@ exports.findAllComps = function (query, order, callback) {
         }
     });
 };
-
 /**
  * [updateCompById description]
  *
@@ -189,7 +174,6 @@ exports.updateCompById = function (_id, set, callback) {
         callback(err, comp);
     });
 };
-
 /**
  * [pushDevToCompById description]
  *
@@ -212,7 +196,6 @@ exports.pushDevToCompById = function (_id, _compDev_id, callback) {
         callback(err, comp);
     });
 };
-
 /**
  * [pushDevToCompById description]
  *
@@ -234,7 +217,6 @@ exports.pullDevFromCompById = function (_id, _compDev_id, callback) {
         callback(err, comp);
     });
 };
-
 /**
  * [pushLifeCycleToCompById description]
  *
@@ -257,7 +239,6 @@ exports.pushStatusToCompLifeCycleById = function (_id, _status_id, callback) {
         callback(err, comp);
     });
 };
-
 /**
  * [pullLifeCycleFromCompById description]
  *
@@ -279,7 +260,6 @@ exports.pullStatusFromCompLifeCycleById = function (_id, _status_id, callback) {
         callback(err, comp);
     });
 };
-
 /**
  * [delAllComps description]
  *

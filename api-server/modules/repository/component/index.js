@@ -5,7 +5,6 @@ var compDevSrv = require('./services/compDev');
 var CompDevMdl = require('./models/compDev');
 var statusSrv = require('./services/status');
 var StatusMdl = require('./models/status');
-
 /**
  * [getComps description]
  *
@@ -27,9 +26,7 @@ exports.getComps = function (callback) {
     } catch (err) {
         return callback(err, null);
     }
-
 };
-
 /**
  * [findComps description]
  *
@@ -51,9 +48,7 @@ exports.findComps = function (callback) {
     } catch (err) {
         return callback(err, null);
     }
-
 };
-
 /**
  * [insOrUpdComp description]
  *
@@ -68,12 +63,13 @@ exports.findComps = function (callback) {
  * @param  {[type]}     difficulty  [description]
  * @param  {[type]}     code_level  [description]
  * @param  {[type]}     repo_dir    [description]
+ * @param  {[type]}     scrnshts     [description]
  * @param  {[type]}     found       [description]
  * @param  {Function}   callback    [description]
  *
  * @return {[type]}     [description]
  */
-exports.insOrUpdComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, found, callback) {
+exports.insOrUpdComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, scrnshts, found, callback) {
     'use strict';
     try {
         var find_obj = {
@@ -125,6 +121,10 @@ exports.insOrUpdComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type
                     set_obj.repo_dir = repo_dir;
                     res_comp.repo_dir = repo_dir;
                 }
+                if (scrnshts && scrnshts !== res_comp.scrnshts) {
+                    set_obj.scrnshts = scrnshts;
+                    res_comp.scrnshts = scrnshts;
+                }
                 if (found && found !== res_comp.found) {
                     set_obj.found = found;
                     res_comp.found = found;
@@ -140,7 +140,7 @@ exports.insOrUpdComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type
                     return callback(null, res_comp);
                 }
             } else {
-                var comp = new CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir);
+                var comp = new CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, scrnshts);
                 compSrv.insertComp(comp, function (err_ins, res_ins) {
                     if (err_ins) {
                         return callback(err_ins, null);
@@ -153,7 +153,6 @@ exports.insOrUpdComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type
         return callback(err, null);
     }
 };
-
 /**
  * [insOrUpdCompDev description]
  *
@@ -228,7 +227,6 @@ exports.insOrUpdCompDev = function (_comp_id, _dev_id, role, scope, percnt, call
         return callback(err, null);
     }
 };
-
 /**
  * [insOrUpdStatus description]
  *
@@ -296,7 +294,6 @@ exports.insOrUpdStatus = function (_comp_id, name, target, reached, callback) {
         return callback(err, null);
     }
 };
-
 /**
  * [updCompDevAndLifCyc description]
  *
@@ -344,7 +341,6 @@ exports.updCompDevAndLifCyc = function (_comp_id, devs, life_cycle, callback) {
         return callback(err, null);
     }
 };
-
 /**
  * [delAllComps description]
  *
@@ -377,5 +373,4 @@ exports.delAllComps = function (callback) {
         return callback(err, null);
     }
 };
-
 /*jshint +W069 */
