@@ -7,20 +7,11 @@ function Logo(){
     
     var self = this;
 
-    var LOWER_LAYER = 63000,
-        UPPER_LAYER = 70000;
+    var POSITION_Z = 35000,
+        SCALE = 24;
     
-    var CLOSED_WALLET_Y = 1150,
-        OPEN_WALLET_Y = 6000,
-        CLOSED_FERMAT_Y = -CLOSED_WALLET_Y,
-        OPEN_FERMAT_Y = -OPEN_WALLET_Y,
-        SCALE = 4;
-    
-    var walletLogo = createLogo(824, 824, "images/walletlogo.png", new THREE.Vector3(0, CLOSED_WALLET_Y, UPPER_LAYER)),
-        fermatLogo = createLogo(1058, 241, "images/fermatlogo.png", new THREE.Vector3(0, CLOSED_FERMAT_Y, UPPER_LAYER));
-    
-    this.walletLogo = walletLogo;
-    this.fermatLogo = fermatLogo;
+    var logo = createLogo(1000, 1000, "images/fermat_logo.png", new THREE.Vector3(0, 0, POSITION_Z));
+    this.logo = logo;
     
     function createLogo(width, height, texture, position) {
         
@@ -43,50 +34,6 @@ function Logo(){
      */
     this.startFade = function(duration) {
         
-        self.fadeLogo(duration, walletLogo);
-        self.fadeLogo(duration, fermatLogo);
-    };
-    
-    /**
-     * Stops the fade animation
-     * @param {Number} [duration=1000] The duration of the fade
-     * @author Miguel Celedon
-     */
-    this.stopFade = function(duration) {
-        
-        self.stopFadeLogo(duration, walletLogo);
-        self.stopFadeLogo(duration, fermatLogo);
-    };
-    
-    /** 
-     * Opens the logo
-     * @param {Number} [duration=1000] The duration of the animation
-     * @author Miguel Celedon
-     */
-    this.openLogo = function(duration) {
-        self.moveLogo(duration, walletLogo, OPEN_WALLET_Y, LOWER_LAYER);
-        self.moveLogo(duration, fermatLogo, OPEN_FERMAT_Y, LOWER_LAYER);
-    };
-    
-    /**
-     * Closes the logo
-     * @param {Number} [duration=1000] The duration of the animation
-     * @author Miguel Celedon
-     */
-    this.closeLogo = function(duration) {
-        self.moveLogo(duration, walletLogo, CLOSED_WALLET_Y, UPPER_LAYER);
-        self.moveLogo(duration, fermatLogo, CLOSED_FERMAT_Y, UPPER_LAYER);
-    };
-    
-    /**
-     * @author Emmanuel Colina
-     * @lastmodifiedBy Miguel Celedon
-     *                     
-     * It provides a fade to logo
-     * @param {Number} [duration=2000] Duration of the animation
-     * @param {Object} logo            The logo to animate
-     */
-    this.fadeLogo = function (duration, logo){
         var _duration = duration || 1500;
 
         var tween1 = new TWEEN.Tween(logo.material)
@@ -102,43 +49,19 @@ function Logo(){
 
         tween1.start();
     };
-
+    
     /**
-     * @author Emmanuel Colina
-     * @lastmodifiedBy Miguel Celedon
-     *                     
-     * repaint with opacity : 1, after of THREE.removeAll();
-     * @param {Number} [duration=2000] Duration of the animation
-     * @param {Object} logo            The Logo to stop its fade
+     * Stops the fade animation
+     * @param {Number} [duration=1000] The duration of the fade
+     * @author Miguel Celedon
      */
-    this.stopFadeLogo = function (duration, logo){
+    this.stopFade = function(duration) {
+        
         var _duration = duration || 1000;
 
         var tweenstop = new TWEEN.Tween(logo.material)
         .to({ opacity : 1, needsUpdate : true}, _duration)
         .onUpdate(render)
         .start();
-    };
-
-    /**
-     * @author Emmanuel Colina
-     * @lastmodifiedBy Miguel Celedon
-     * Moves the logo
-     * @param {Number}     [duration=2000] Duration of the delay
-     * @param {THREE.Mesh} object          The object to move                            
-     * @param {Number}     targetY         The objetive Y position
-     * @param {Number}     targetZ         The objetive Z position
-     */
-    this.moveLogo = function (duration, object, targetY, targetZ){
-
-        var _duration = duration || 2000;
-
-        var tween = new TWEEN.Tween(object.position);
-        tween.to({ y: targetY, z: targetZ}, 2000);
-        tween.delay( _duration );
-        tween.easing(TWEEN.Easing.Exponential.InOut);
-        tween.onUpdate(render);
-
-        tween.start();
     };
 }
