@@ -97,7 +97,7 @@ function ViewManager() {
 
                         window.headers.transformStack(transition);
 
-                        window.helpser.hideBackButton();
+                        window.helper.hideBackButton();
 
                         window.browserManager.modifyButtonLegend(0,'none');
                     };
