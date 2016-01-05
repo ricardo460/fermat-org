@@ -105,7 +105,7 @@ function ViewManager() {
                     break;
                 case 'home':
                     enter = function() {
-                        logo.stopFade(2000);
+                        window.logo.stopFade(2000);
                     };
 
                     break;
@@ -146,6 +146,7 @@ function ViewManager() {
                     enter = function() {
                         window.networkViewer = new NetworkViewer();
                         window.networkViewer.load();
+                        
                     };
                     
                     exit = function() {

@@ -138,7 +138,8 @@ function FlowManager(){
      * @author Emmanuel Colina
      * 
      */
-    function onElementClickHeaderFlow(id) {
+     
+    this.onElementClickHeaderFlow = function(id) {
 
         var duration = 1000;
 
@@ -165,7 +166,7 @@ function FlowManager(){
 
             window.helper.showBackButton();
         }
-    }
+    };
 
     /**
      * @author Emmanuel Colina

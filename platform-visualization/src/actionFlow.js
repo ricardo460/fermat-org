@@ -40,7 +40,6 @@ function ActionFlow(flow) {
     var onClick = function(target) {
 
         if(window.actualView === 'workflows'){
-
             window.flowManager.onElementClickHeaderFlow(target.userData.id);
             self.action = true;
         }
@@ -98,6 +97,7 @@ function ActionFlow(flow) {
     /**
      * @author Miguel Celedon
      * @lastmodifiedBy Ricardo Delgado
+     * @lastmodifiedBy Emmanuel Colina
      * Recursively draw the flow tree
      * @param {Object} root The root of the tree
      * @param {Number} x    X position of the root
@@ -121,14 +121,26 @@ function ActionFlow(flow) {
                      rootLine,
                      origin;           
 
-                lineGeo = new THREE.Geometry();
+                lineGeo = new THREE.BufferGeometry();
+
                 lineMat = new THREE.LineBasicMaterial({color : 0x000000});
                 rootPoint = new THREE.Vector3(x + X_OFFSET, y - ROW_SPACING / 2, -1);
 
-                lineGeo.vertices.push(
-                            new THREE.Vector3(x + X_OFFSET, y, -1),
-                            rootPoint
-                            );
+                var vertexPositions = [
+                    [x + X_OFFSET, y, -1],
+                    [ x + X_OFFSET, y - ROW_SPACING / 2, -1]
+                ];
+                
+                var vertices = new Float32Array( vertexPositions.length * 3 );
+
+                for ( var j = 0; j < vertexPositions.length; j++ )
+                {
+                    vertices[ j*3 + 0 ] = vertexPositions[j][0];
+                    vertices[ j*3 + 1 ] = vertexPositions[j][1];
+                    vertices[ j*3 + 2 ] = vertexPositions[j][2];
+                }
+
+                lineGeo.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
 
                 rootLine = new THREE.Line(lineGeo, lineMat);
                 origin = helper.getOutOfScreenPoint(-1);
@@ -185,7 +197,6 @@ function ActionFlow(flow) {
                     }
 
                     childLine = new THREE.Line(lineGeo, lineMat);
-
                     //childLine.position.z = 80000;
 
                     origin = helper.getOutOfScreenPoint(-1);
@@ -201,6 +212,7 @@ function ActionFlow(flow) {
             }
         }
     };
+    
     /**
      * @author Emmanuel Colina
      * @lastmodifiedBy Ricardo Delgado
@@ -367,7 +379,7 @@ function ActionFlow(flow) {
         image.src = src;
 
         var mesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(width, height),
+            new THREE.PlaneBufferGeometry(width, height),
             new THREE.MeshBasicMaterial({color : 0xFFFFFF, map : texture, transparent : true})
         );
 
