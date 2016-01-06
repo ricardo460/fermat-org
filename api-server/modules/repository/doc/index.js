@@ -7,7 +7,7 @@ var env = process.env.NODE_ENV || 'development';
 
 /**
  * [getBook description]
- *
+ * Obtiene una pagina html que tiene toda la documentacion del proyecto
  * @method getBook
  *
  * @param  {Function} callback [description]
@@ -27,7 +27,7 @@ exports.getBook = function (callback) {
 };
 
 /**
- * [getReadme description]
+ * Se trae del repositorio el readme
  *
  * @method getReadme
  *

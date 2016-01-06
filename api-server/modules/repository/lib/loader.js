@@ -1,4 +1,7 @@
 /*jshint -W069 */
+/**
+Procesa el manifest del repositorio Fermat
+**/
 var winston = require('winston');
 var request = require('request');
 var fs = require('fs');
@@ -147,7 +150,7 @@ var processCompList = function (section, layer, compList, type) {
 
 /**
  * [doRequest description]
- *
+ * Hace un request al api de github
  * @method doRequest
  *
  * @param  {[type]}   method   [description]
@@ -205,7 +208,7 @@ var doRequest = function (method, url, params, callback) {
 
 /**
  * [processRequestBody description]
- *
+ * obtiene el manifest de github
  * @method processRequestBody
  *
  * @param  {[type]}           body     [description]
@@ -233,7 +236,7 @@ var processRequestBody = function (body, callback) {
 
 /**
  * [getManifest description]
- *
+ * pasa el manifest a un objeto json
  * @method getManifest
  *
  * @param  {Function}  callback [description]
@@ -295,7 +298,7 @@ var getManifest = function (callback) {
 
 /**
  * [parseManifest description]
- *
+ * pasa el json obtenido a una estructura mas limpia
  * @method parseManifest
  *
  * @param  {Function}    callback [description]
@@ -434,7 +437,7 @@ var parseManifest = function (callback) {
 
 /**
  * [saveManifest description]
- *
+ * se encarga de recorrer el json generado por el parserManifest y lo guarda en la base de datos
  * @method saveManifest
  *
  * @param  {Function}   callback [description]
@@ -859,7 +862,7 @@ var saveManifest = function (callback) {
 
 /**
  * [getUser description]
- *
+ *Obtiene la informacion del usuario de github
  * @method getUser
  *
  * @param  {[type]}   usrnm    [description]
@@ -889,7 +892,7 @@ var getUser = function (usrnm, callback) {
 
 /**
  * [updateDevs description]
- *
+ *actualiza la informacion del developer en la base de datos
  * @method updateDevs
  *
  * @param  {Function} callback [description]
@@ -944,7 +947,7 @@ var updateDevs = function (callback) {
 
 /**
  * [getContent description]
- *
+ *Revisa los directorios del repositorio
  * @method getContent
  *
  * @param  {[type]}   repo_dir [description]
@@ -984,7 +987,7 @@ var getContent = function (repo_dir, callback) {
 
 /**
  * [updateComps description]
- *
+ * Actualiza el repositorio en la base de datos
  * @method updateComps
  *
  * @param  {Function}  callback [description]
