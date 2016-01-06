@@ -67,7 +67,6 @@ var processComp = function (section, layer, comp, type) {
         proComp = {};
         proComp = comp['$'];
         proComp.screenshots = proComp.screenshots && proComp.screenshots.trim().toLowerCase() == "true" ? true : false;
-        if (proComp.screenshots) console.log("+++++++++++++++++++++++++++++++++++++++");
         proComp.type = type;
         proComp.repo_dir = getRepoDir(section.code, layer.name, type, proComp.name, 'bitdubai');
         devs = [];
@@ -120,7 +119,6 @@ var processCompList = function (section, layer, compList, type) {
         for (i = 0; i < compList.length; i++) {
             comp = {};
             comp = processComp(section, layer, compList[i], type);
-            if (comp.screenshots) console.log("------------------------------------------");
             comps.push(comp);
         }
         return comps;
@@ -282,7 +280,6 @@ var parseManifest = function (callback) {
     'use strict';
     try {
         var i, j, k, layers, _layers, layer, comps, depends, _depends, depend, steps, _steps, fermat, platfrms, _platfrms, platfrm, suprlays, _suprlays, suprlay, procs, _procs, _proc, _step, _next;
-        console.log("en el parseManifest");
         getManifest(function (err_man, res_man) {
             if (err_man) {
                 return callback(err_man, null);
@@ -417,7 +414,6 @@ var parseManifest = function (callback) {
 var saveManifest = function (callback) {
     'use strict';
     try {
-        console.log("en el saveManifest");
         parseManifest(function (err_load, res_load) {
             if (err_load) {
                 winston.log('info', err_load.message, err_load);
@@ -450,40 +446,45 @@ var saveManifest = function (callback) {
                         if (s < _procs.length) {
                             var _proc = _procs[s];
                             //platfrm, name, desc, prev, next, callback
-                            procMod.insOrUpdProc(_proc.platform ? _proc.platform.trim().toUpperCase() : null, _proc.name ? _proc.name.trim() : null, _proc.description ? _proc.description.trim() : null, _proc.previous ? _proc.previous.trim().toLowerCase() : null, _proc.next ? _proc.next.trim().toLowerCase() : null, function (err_proc, res_proc) {
-                                if (err_proc) {
-                                    winston.log('info', err_proc.message, err_proc);
-                                    loopProcs(++s);
-                                } else {
-                                    var _steps = _proc.steps;
-                                    var loopSteps = function (t) {
-                                        if (t < _steps.length) {
-                                            var _step = _steps[t];
-                                            procMod.insOrUpdStep(res_proc._id, //_proc_id
-                                                _step.platform ? _step.platform.toUpperCase() : null, //platfrm_code
-                                                _step.superlayer ? _step.superlayer.toUpperCase() : null, //suprlay_code
-                                                _step.layer ? _step.layer.toLowerCase() : null, //layer_name
-                                                _step.name ? _step.name.toLowerCase() : null, //comp_name
-                                                _step.type ? _step.type.toLowerCase() : null, //type
-                                                _step.title ? _step.title : null, //title
-                                                _step.description ? _step.description : null, //description
-                                                _step.id || null, //order
-                                                _step.next || [], //next
-                                                function (err_stp, res_stp) {
-                                                    if (err_stp) {
-                                                        winston.log('info', err_stp.message, err_stp);
-                                                        loopSteps(++t);
-                                                    } else {
-                                                        loopSteps(++t);
-                                                    }
-                                                });
-                                        } else {
-                                            loopProcs(++s);
-                                        }
-                                    };
-                                    loopSteps(0);
-                                }
-                            });
+                            procMod.insOrUpdProc(_proc.platform ? _proc.platform.trim().toUpperCase() : null, //
+                                _proc.name ? _proc.name.trim() : null, //
+                                _proc.description ? _proc.description.trim() : null, //
+                                _proc.previous ? _proc.previous.trim() : null, //
+                                _proc.next ? _proc.next.trim() : null, //
+                                function (err_proc, res_proc) {
+                                    if (err_proc) {
+                                        winston.log('info', err_proc.message, err_proc);
+                                        loopProcs(++s);
+                                    } else {
+                                        var _steps = _proc.steps;
+                                        var loopSteps = function (t) {
+                                            if (t < _steps.length) {
+                                                var _step = _steps[t];
+                                                procMod.insOrUpdStep(res_proc._id, //_proc_id
+                                                    _step.platform ? _step.platform.toUpperCase() : null, //platfrm_code
+                                                    _step.superlayer ? _step.superlayer.toUpperCase() : null, //suprlay_code
+                                                    _step.layer ? _step.layer.toLowerCase() : null, //layer_name
+                                                    _step.name ? _step.name.toLowerCase() : null, //comp_name
+                                                    _step.type ? _step.type.toLowerCase() : null, //type
+                                                    _step.title ? _step.title : null, //title
+                                                    _step.description ? _step.description : null, //description
+                                                    _step.id || null, //order
+                                                    _step.next || [], //next
+                                                    function (err_stp, res_stp) {
+                                                        if (err_stp) {
+                                                            winston.log('info', err_stp.message, err_stp);
+                                                            loopSteps(++t);
+                                                        } else {
+                                                            loopSteps(++t);
+                                                        }
+                                                    });
+                                            } else {
+                                                loopProcs(++s);
+                                            }
+                                        };
+                                        loopSteps(0);
+                                    }
+                                });
                         } else {
                             loopLays(0);
                         }
@@ -509,11 +510,6 @@ var saveManifest = function (callback) {
                                                     var loopComps = function (p) {
                                                         if (p < _comps.length) {
                                                             var _comp = _comps[p];
-                                                            if (_comp.screenshots) {
-                                                                console.log("************************************");
-                                                                console.dir(_comp);
-                                                                console.log("************************************");
-                                                            }
                                                             compMod.insOrUpdComp(null, // _platfrm_id
                                                                 res_supr._id, // _suprlay_id
                                                                 res_lay._id, // _layer_id
@@ -628,11 +624,6 @@ var saveManifest = function (callback) {
                                                     var loopComps = function (k) {
                                                         if (k < _comps.length) {
                                                             var _comp = _comps[k];
-                                                            if (_comp.screenshots) {
-                                                                console.log("************************************");
-                                                                console.dir(_comp);
-                                                                console.log("************************************");
-                                                            }
                                                             compMod.insOrUpdComp(res_plat._id, // _platfrm_id
                                                                 null, // _suprlay_id
                                                                 res_lay._id, // _layer_id
@@ -1010,7 +1001,6 @@ exports.updDevs = function (callback) {
 exports.loadComps = function (callback) {
     'use strict';
     try {
-        console.log("en el loadComps");
         saveManifest(function (err, res) {
             if (err) {
                 return callback(err, null);
