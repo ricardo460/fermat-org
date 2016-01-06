@@ -544,6 +544,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      * @author Emmanuel Colina
      * Calculate the position header
      */
+     
     var headersPositionsViewWorkFlow = function() {
 
         var width, height, group, headerData, objectHeaderInWFlowGroup, slayer, column;
@@ -577,7 +578,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
    
                 objectHeaderInWFlowGroup = new THREE.Object3D();
             
-                objectHeaderInWFlowGroup.position.x = ((columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 10000;
+                objectHeaderInWFlowGroup.position.x = ((columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 15000;
                 objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
                 objectHeaderInWFlowGroup.name = slayer;
 
@@ -634,7 +635,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 source = 'images/headers/' + levels[i][0] + '/' + group + '_logo.png';
                 
                 var object = new THREE.Mesh(
-                    new THREE.PlaneGeometry(width, height),
+                    new THREE.PlaneBufferGeometry(width, height),
                     new THREE.MeshBasicMaterial({transparent : true, opacity : 0})
                     );
                 

@@ -33,7 +33,7 @@ function ScreenshotsAndroid() {
 				},
 
 				direction: {
-					platform: 2,
+					platform: 3,
 					position:1
 				}
 			},
@@ -50,7 +50,7 @@ function ScreenshotsAndroid() {
 				},
 
 				direction: {
-					platform: 2,
+					platform: 3,
 					position:0
 				}			
 			},
@@ -66,7 +66,7 @@ function ScreenshotsAndroid() {
 				},
 
 				direction: {
-					platform: 2,
+					platform: 3,
 					position:2
 				}			
 			}
@@ -192,7 +192,7 @@ function ScreenshotsAndroid() {
         }
 			
 		var mesh = new THREE.Mesh(
-					new THREE.PlaneGeometry(50, 80),
+					new THREE.PlaneBufferGeometry(50, 80),
 					new THREE.MeshBasicMaterial( { map:_texture, side: THREE.FrontSide, transparent: true } )
 					);
 
@@ -417,6 +417,7 @@ function ScreenshotsAndroid() {
 	* Wallet focus and draw the other planes in the same group wallet.
 	* @param {Number}    id    Wallet identifier focus.
 	*/ 
+	
 	function change(id) {
 
 		var duration = 2000;

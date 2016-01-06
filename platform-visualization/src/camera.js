@@ -256,8 +256,8 @@ function Camera(position, renderer, renderFunc) {
                 self.enableFreeMode();
             }
             
-                if(window.viewManager && window.actualView)
-            window.viewManager.views[window.actualView].zoom();
+            if(window.viewManager && window.actualView)
+                window.viewManager.views[window.actualView].zoom();
         }
         else if(controls.noPan === false && Math.ceil(camera.position.z) === controls.position0.z && self.freeView === false) {
             this.onKeyDown({keyCode : 27}); //Force reset if far enough
@@ -343,14 +343,17 @@ function Camera(position, renderer, renderFunc) {
     
     /**
      * Moves the camera to a position
-     * @param {Number} x               X coordinate
-     * @param {Number} y               Y coordinate
-     * @param {Number} z               Z coordinate
-     * @param {Number} [duration=2000] Milliseconds of the animation
+     * @author Miguel Celedon
+     * @param {Number}  x               X coordinate
+     * @param {Number}  y               Y coordinate
+     * @param {Number}  z               Z coordinate
+     * @param {Number}  [duration=2000] Milliseconds of the animation
+     * @param {boolean} [synced]        If true, moves like it were not in free view
      */
-    this.move = function(x, y, z, duration) {
+    this.move = function(x, y, z, duration, synced) {
         
         var _duration = duration || 2000;
+        synced = synced || false;
         
         if(window.helper.isValidVector({x : x, y : y, z : z})) {
             
@@ -358,7 +361,7 @@ function Camera(position, renderer, renderFunc) {
             .to({x : x, y : y, z : z}, _duration)
             .easing(TWEEN.Easing.Cubic.InOut)
             .onUpdate(function(){
-                if(!self.freeView)
+                if(!self.freeView || synced)
                     controls.target.set(camera.position.x, camera.position.y, 0);
                 
                 window.render();
