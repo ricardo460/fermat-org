@@ -20,6 +20,9 @@ setInterval(function () {
     loop++;
     switch (mod) {
     case 0:
+    /**
+    baja el manifiesto, lo parsea y lo guarda en la base datos y lo actualiza en la base de datos
+    **/
         loadLib.loadComps(function (err, res) {
             if (err) {
                 winston.log('info', err.message, err);
@@ -29,6 +32,9 @@ setInterval(function () {
         });
         break;
     case 1:
+    /**
+    verifica que cada componente esta dentro en la carpeta que le corresponde
+    **/
         loadLib.updComps(function (err, res) {
             if (err) {
                 winston.log('info', err.message, err);
@@ -38,6 +44,9 @@ setInterval(function () {
         });
         break;
     case 2:
+    /**
+    se descarga la informacion de los developers
+    **/
         loadLib.updDevs(function (err, res) {
             if (err) {
                 winston.log('info', err.message, err);
