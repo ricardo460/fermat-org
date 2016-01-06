@@ -72,6 +72,11 @@ exports.findComps = function (callback) {
 exports.insOrUpdComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, scrnshts, found, callback) {
     'use strict';
     try {
+        if (typeof callback == "undefined") {
+            console.log("*************************************************************");
+            console.dir(arguments);
+            console.log("*************************************************************");
+        }
         var find_obj = {
             '$and': []
         };
@@ -98,8 +103,7 @@ exports.insOrUpdComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type
         compSrv.findComp(find_obj, function (err_comp, res_comp) {
             if (err_comp) {
                 return callback(err_comp, null);
-            }
-            if (res_comp) {
+            } else if (res_comp) {
                 var set_obj = {};
                 if (type && type !== res_comp.type) {
                     set_obj.type = type;
@@ -121,7 +125,7 @@ exports.insOrUpdComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type
                     set_obj.repo_dir = repo_dir;
                     res_comp.repo_dir = repo_dir;
                 }
-                if (scrnshts && scrnshts !== res_comp.scrnshts) {
+                if ((scrnshts && !res_comp.scrnshts) || (!scrnshts && res_comp.scrnshts)) {
                     set_obj.scrnshts = scrnshts;
                     res_comp.scrnshts = scrnshts;
                 }
