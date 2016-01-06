@@ -191,26 +191,27 @@ function Helper() {
     };
     
     /**
-     * Prints difficulty as stars
-     * @param   {Number} value Difficulty to represent (max 5)
-     * @returns {String} A maximun of 5 stars
+     * Returns the route of the API server
+     * @author Miguel Celedon
+     * @param   {string} route The name of the route to get
+     * @returns {string} The URL related to the requested route
      */
-    this.printDifficulty = function(value) {
-        var max = 5;
-        var result = "";
-
-        while (value > 0) {
-            result += '★';
-            max--;
-            value--;
+    this.getAPIUrl = function(route) {
+        
+        var SERVER = "http://52.35.117.6:3000";
+        var tail = "";
+        
+        switch(route) {
+                
+            case "comps":
+                tail = "/v1/repo/comps";
+                break;
+            case "procs":
+                tail = "/v1/repo/procs";
+                break;
         }
-
-        while (max > 0) {
-            result += '☆';
-            max--;
-        }
-
-        return result;
+        
+        return SERVER + tail;
     };
     
     /**
