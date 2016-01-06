@@ -1,3 +1,4 @@
+var libxml = require("libxmljs");
 var procMod = require('./process');
 var compMod = require('./component');
 var layerMod = require('./layer');
@@ -287,9 +288,9 @@ exports.updComps = function (req, next) {
 }
 
 /**
- * [updComps description]
+ * [updBook description]
  *
- * @method updComps
+ * @method updBook
  *
  * @param  {[type]}   req  [description]
  * @param  {Function} next [description]
@@ -306,6 +307,39 @@ exports.updBook = function (req, next) {
                 next(null, res);
             }
         });
+    } catch (err) {
+        next(err, null);
+    }
+}
+
+/**
+ * [checkManifest description]
+ *
+ * @method checkManifest
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.checkManifest = function (req, next) {
+    'use strict';
+    try {
+       
+        loadMod.getManifestWithExt('xml', function (err_xml, res_xml) {
+            if (err_xml) {
+                next(err_xml, null);
+            } else {
+                try {
+                    libxml.parseXml(res_xml);
+                    return next(null, "FermatManifest Cool");
+                } catch (e) {
+                    return next(null, {"message": e.message, "location":e});
+                }
+                
+            }
+        });
+
     } catch (err) {
         next(err, null);
     }
