@@ -13,32 +13,6 @@ ClientsViewer.prototype = Object.create(BaseNetworkViewer.prototype);
 ClientsViewer.prototype.constructor = ClientsViewer;
 
 /**
- * Creates a sprite representing a single node
- * @author Miguel Celedon
- * @param   {object}        nodeData      The data of the actual node
- * @param   {THREE.Vector3} startPosition The starting position of the node
- * @returns {Three.Sprite}  The sprite representing the node
- */
-ClientsViewer.prototype.createNode = function(nodeData, startPosition) {
-
-    var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0x0000ff}));
-    var id = nodeData.id.toString();
-    
-    sprite.userData = {
-        id : id,
-        originPosition : startPosition,
-        onClick : this.onNodeClick.bind(this)
-    };
-
-    sprite.position.copy(startPosition);
-
-    this.nodes[id] = nodeData;
-    this.nodes[id].sprite = sprite;
-
-    return sprite;
-};
-
-/**
  * @override
  * Executed when a node is clicked, moves the camera and draw its childs
  * @author Miguel Celedon

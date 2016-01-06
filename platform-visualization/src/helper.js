@@ -221,21 +221,25 @@ function Helper() {
      */
     this.applyTexture = function(source, object, callback) {
         
-        var loader = new THREE.TextureLoader();
+        if(source != null && object != null) {
         
-        loader.load(
-            source,
-            function(tex) {
-                tex.minFilter = THREE.NearestFilter;
-                tex.needsUpdate = true;
-                object.material.map = tex;
-                object.needsUpdate = true;
-                
-                //console.log(tex.image.currentSrc);
-                
-                if(callback != null && typeof(callback) === 'function')
-                    callback(object);
-            });
+            var loader = new THREE.TextureLoader();
+
+            loader.load(
+                source,
+                function(tex) {
+                    tex.minFilter = THREE.NearestFilter;
+                    tex.needsUpdate = true;
+                    object.material.map = tex;
+                    object.needsUpdate = true;
+
+                    //console.log(tex.image.currentSrc);
+
+                    if(callback != null && typeof(callback) === 'function')
+                        callback(object);
+                }
+            );
+        }
     };
     
     /**
