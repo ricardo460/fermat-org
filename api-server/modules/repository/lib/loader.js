@@ -13,7 +13,7 @@ var devMod = require('../developer');
 var Cache = require('../../../lib/route-cache');
 var env = process.env.NODE_ENV || 'development';
 var USER_AGENT = (env === 'development') ? 'Miguelcldn' : 'fuelusumar';
-var TOKEN = (env === 'development') ? '3c12e4c95821c7c2602a47ae46faf8a0ddab4962' : '2086bf3c7edd8a1c9937794eeaa1144f29f82558'; // fuelusumar
+var TOKEN = (env === 'development') ? '3c12e4c95821c7c2602a47ae46faf8a0ddab4962' : '4074ff2e5281cba97803fee8a06a91c71984093e'; // fuelusumar
 /**
  * [getRepoDir description]
  *
@@ -64,10 +64,7 @@ var processComp = function (section, layer, comp, type) {
         proComp = {};
         proComp = comp['$'];
         proComp.screenshots = proComp.screenshots && proComp.screenshots.trim().toLowerCase() == "true" ? true : false;
-        if (proComp.screenshots) {
-            console.log("######################################################");
-            console.dir(proComp);
-        }
+        if (proComp.screenshots) console.log("+++++++++++++++++++++++++++++++++++++++");
         proComp.type = type;
         proComp.repo_dir = getRepoDir(section.code, layer.name, type, proComp.name, 'bitdubai');
         devs = [];
@@ -120,6 +117,7 @@ var processCompList = function (section, layer, compList, type) {
         for (i = 0; i < compList.length; i++) {
             comp = {};
             comp = processComp(section, layer, compList[i], type);
+            if (comp.screenshots) console.log("------------------------------------------");
             comps.push(comp);
         }
         return comps;

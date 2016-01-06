@@ -27,7 +27,7 @@ function CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, d
     this.difficulty = difficulty;
     this.code_level = code_level;
     this.repo_dir = repo_dir;
-    this.scrnshts = scrnshts ? true : false;
+    this.scrnshts = scrnshts;
     this.found = false;
     this.devs = [];
     this.certs = [];
