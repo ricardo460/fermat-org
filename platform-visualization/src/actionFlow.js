@@ -106,6 +106,13 @@ function ActionFlow(flow) {
 
     this.drawTree = function(root, x, y, z) {
 
+        var COLORS = {
+            TYPE:["default", "direct call"],
+            COLOR:[0X000000,  0x0000FF]
+        };
+
+        var indice = null;
+
         if (typeof root.drawn === 'undefined'){
 
             drawStep(root, x, y, z);
@@ -123,7 +130,21 @@ function ActionFlow(flow) {
 
                 lineGeo = new THREE.BufferGeometry();
 
-                lineMat = new THREE.LineBasicMaterial({color : 0x000000});
+                for (var k = 0; k < COLORS.TYPE.length; k++) {
+                    
+                    if(root.next[0].type === COLORS.TYPE[k]){
+                        indice = k;
+                        break;
+                    }
+
+                }
+
+                if(indice == null) //default
+                    indice = 0; 
+
+                lineMat = new THREE.LineBasicMaterial({color : COLORS.COLOR[indice]}); 
+
+
                 rootPoint = new THREE.Vector3(x + X_OFFSET, y - ROW_SPACING / 2, -1);
 
                 var vertexPositions = [
@@ -168,7 +189,19 @@ function ActionFlow(flow) {
                     nextX = startX + i * COLUMN_SPACING;
 
                     if(isLoop) {
-                        lineMat = new THREE.LineBasicMaterial({color : 0x888888});
+
+                        var gradient = new THREE.Color(COLORS.COLOR[indice]);
+
+                        if(gradient.r === 0)
+                           gradient.r = 0.5;
+                           
+                        if(gradient.g === 0)
+                           gradient.g = 0.5; 
+
+                        if(gradient.b === 0)
+                           gradient.b = 0.5;  
+
+                        lineMat = new THREE.LineBasicMaterial({color : gradient.getHex()}); //gradient
                         nextY = child.drawn.y;
 
                         if(nextX !== rootPoint.x && colides(nextX, root)) {
@@ -176,7 +209,7 @@ function ActionFlow(flow) {
                         }
                     }
                     else {
-                        lineMat = new THREE.LineBasicMaterial({color : 0x000000});
+                        lineMat = new THREE.LineBasicMaterial({color : COLORS.COLOR[indice]});
                         nextY = y - ROW_SPACING;
                     }
 
