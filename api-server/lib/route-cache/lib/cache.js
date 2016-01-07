@@ -2,7 +2,6 @@ var fs = require('fs');
 var path = require('path');
 var winston = require('winston');
 var Route = require('./route');
-
 /**
  * [Cache description]
  *
@@ -26,7 +25,6 @@ function Cache(options) {
         this.time = 3600000;
     }
 }
-
 /**
  * [clear description]
  *
@@ -44,10 +42,9 @@ Cache.prototype.clear = function () {
         }
         return true;
     } catch (err) {
-        winston.log('info', 'Error deleting file cache', err);
+        winston.log('error', 'Error deleting file cache', err);
     }
 };
-
 /**
  * [set description]
  *
@@ -67,9 +64,8 @@ Cache.prototype.set = function (url, body) {
             cache = global.memcache;
         }
     } catch (err) {
-        winston.log('info', 'Error reading or parsing file cache', err);
+        winston.log('error', 'Error reading or parsing file cache', err);
     }
-
     var route;
     if (cache) {
         if (cache[url]) {
@@ -89,14 +85,13 @@ Cache.prototype.set = function (url, body) {
         route = new Route(body, null, this.time);
         cache[url] = route;
     }
-
     if (this.type === 'file') {
         var data = JSON.stringify(cache);
         fs.writeFile(this.filename, data, {
             flags: 'w'
         }, function (err) {
             if (err) {
-                winston.log('info', 'Error reading or parsing file cache', err);
+                winston.log('error', 'Error reading or parsing file cache', err);
             }
         });
         return cache[url];
@@ -104,7 +99,6 @@ Cache.prototype.set = function (url, body) {
     global.memcache = cache;
     return cache[url];
 };
-
 /**
  * [get description]
  *
@@ -127,9 +121,8 @@ Cache.prototype.get = function (url) {
             winston.log('info', 'Searching on memory cache');
         }
     } catch (err) {
-        winston.log('info', 'Error reading or parsing file cache', err);
+        winston.log('error', 'Error reading or parsing file cache', err);
     }
-
     if (cache) {
         if (cache[url]) {
             var routecache = new Route(cache[url].body, cache[url].date, this.time);
@@ -148,7 +141,6 @@ Cache.prototype.get = function (url) {
     winston.log('info', 'Not found in cache');
     return undefined;
 };
-
 /**
  * [del description]
  *
@@ -169,9 +161,8 @@ Cache.prototype.del = function (url) {
             cache = global.memcache;
         }
     } catch (err) {
-        winston.log('info', 'Error reading or parsing file cache', err);
+        winston.log('error', 'Error reading or parsing file cache', err);
     }
-
     var route;
     if (cache) {
         if (cache[url]) {
@@ -179,14 +170,13 @@ Cache.prototype.del = function (url) {
             delete cache[url];
         }
     }
-
     if (this.type === 'file') {
         var data = JSON.stringify(cache);
         fs.writeFile(this.filename, data, {
             flags: 'w'
         }, function (err) {
             if (err) {
-                winston.log('info', 'Error reading or parsing file cache', err);
+                winston.log('error', 'Error reading or parsing file cache', err);
             }
         });
         return route;
@@ -194,5 +184,4 @@ Cache.prototype.del = function (url) {
     global.memcache = cache;
     return route;
 };
-
 module.exports = Cache;

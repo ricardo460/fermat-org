@@ -6,43 +6,47 @@ var Cache = require('./lib/route-cache');
 var cache = new Cache({
     type: 'file'
 });
-
 var _INTERVAL = 300000;
-
 var loop = 0;
-
-
 winston.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 60);
-
 setInterval(function () {
     'use strict';
     var mod = loop % 12;
     loop++;
     switch (mod) {
     case 0:
+        /**
+        baja el manifiesto, lo parsea y lo guarda en la base datos y lo actualiza en la base de datos
+        **/
         loadLib.loadComps(function (err, res) {
             if (err) {
-                winston.log('info', err.message, err);
+                winston.log('error', err.message, err);
             } else {
-                winston.log('info', 'Components and developers loaded', res);
+                winston.log('debug', 'Components and developers loaded', res);
             }
         });
         break;
     case 1:
+        /**
+        verifica que cada componente esta dentro en la carpeta que le corresponde
+        **/
         loadLib.updComps(function (err, res) {
             if (err) {
-                winston.log('info', err.message, err);
+                winston.log('error', err.message, err);
             } else {
-                winston.log('info', 'Components updated', res);
+                winston.log('debug', 'Components updated', res);
             }
         });
         break;
     case 2:
+        /**
+        se descarga la informacion de los developers
+        **/
         loadLib.updDevs(function (err, res) {
             if (err) {
-                winston.log('info', err.message, err);
+                winston.log('error', err.message, err);
             } else {
-                winston.log('info', 'Developers updated', res);
+                winston.log('debug', 'Developers updated', res);
                 cache.clear();
             }
         });
@@ -61,7 +65,7 @@ setInterval(function () {
     case 6:
         modDoc.generateBookPdf(function (err, res) {
             if (err) {
-                winston.log('info', err);
+                winston.log('error', err);
             } else {
                 winston.log('info', 'Books are generated');
             }

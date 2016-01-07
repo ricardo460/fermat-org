@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-
 /**
  * [compSchema description]
  *
@@ -47,6 +46,10 @@ var compSchema = mongoose.Schema({
         type: String,
         trim: true
     },
+    scrnshts: {
+        type: Boolean,
+        'default': false
+    },
     found: {
         type: Boolean,
         'default': false
@@ -57,7 +60,7 @@ var compSchema = mongoose.Schema({
     }],
     certs: [{
         type: mongoose.Schema.Types.ObjectId //,
-        //ref: 'Cert'
+            //ref: 'Cert'
     }],
     life_cycle: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -70,7 +73,6 @@ var compSchema = mongoose.Schema({
 }, {
     collection: 'comps'
 });
-
 /**
  * [code description]
  *
@@ -86,5 +88,4 @@ compSchema.index({
 }, {
     name: "comps_cp_indx"
 }); // schema level
-
 module.exports = compSchema;

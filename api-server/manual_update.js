@@ -5,15 +5,13 @@ var db = require('./db');
 var cache = new Cache({
 	type: 'file'
 });
-
 winston.log('info', 'Attempting manual update...');
-
 loadLib.loadComps(function (err, res) {
 	'use strict';
 	if (err) {
-		winston.log('info', err.message, err);
+		winston.log('error', err.message, err);
 	} else {
-		winston.log('info', 'Components and developers loaded', res);
+		winston.log('debug', 'Components and developers loaded', res);
 		cache.clear();
 	}
 });

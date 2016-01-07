@@ -1,8 +1,11 @@
+
 require('shelljs/global');
 var path = require('path');
 var winston = require('winston');
 
-
+/**
+* Download Fermat repository and returns the documentation
+**/
 var getBook = function (callback) {
     'use strict';
     var cwd = process.cwd(),

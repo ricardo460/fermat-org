@@ -100,6 +100,7 @@ function BrowserManager() {
      * @author Miguel Celedon
      * @param {THREE.Vector3} center Center of the sign
      */
+     
     function showSign(center) {
         
         var newCenter = center.clone();
@@ -110,7 +111,7 @@ function BrowserManager() {
         
         //Create placeholder for now
         var sign = new THREE.Mesh(
-            new THREE.PlaneGeometry(8000, 6000),
+            new THREE.PlaneBufferGeometry(8000, 6000),
             new THREE.MeshBasicMaterial({color : 0xFFFFFF, map : texture})
         );
         
@@ -133,7 +134,7 @@ function BrowserManager() {
             id = self.objects.mesh.length;
 
         mesh = new THREE.Mesh(
-               new THREE.PlaneGeometry( 60, 60 ),
+               new THREE.PlaneBufferGeometry( 60, 60 ),
                new THREE.MeshBasicMaterial( { map:null , side: THREE.FrontSide, transparent: true } ));
     
        _position = calculatePositionArrow (centerX, centerY, button);

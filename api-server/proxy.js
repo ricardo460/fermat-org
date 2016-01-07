@@ -4,22 +4,18 @@ var winston = require('winston'),
     eventEmitter = new events.EventEmitter(),
     http = require('http'),
     httpProxy = require('http-proxy');
-
 var proxy_api = {
     host: '127.0.0.1',
     port: 3000
 };
-
 var prod_api = {
     host: '127.0.0.1',
     port: 3001
 };
-
 var dev_api = {
     host: '127.0.0.1',
     port: 3002
 };
-
 /**
  * creates proxy servers and starts http server to redirect requests according to version
  */
@@ -33,7 +29,6 @@ var starProxyServer = function () {
     var dev_proxy = new httpProxy.createProxyServer({
         target: dev_api
     });
-
     winston.log('info', 'Starting http server on port %s...', proxy_api.port);
     http.createServer(function (req, res) {
         if (req.url.indexOf('env=development') > -1) {
@@ -47,13 +42,10 @@ var starProxyServer = function () {
         }
     }).listen(proxy_api.port);
 };
-
 // action to take when events are emitted
 eventEmitter.on('starProxyServer', starProxyServer);
-
 // events emision
 eventEmitter.emit('starProxyServer');
-
 process.on('uncaughtException', function (err) {
-    winston.log('info', 'Error starting the proxy', err);
+    winston.log('error', 'Error starting the proxy', err);
 });
