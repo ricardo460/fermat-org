@@ -197,7 +197,7 @@ function Camera(position, renderer, renderFunc) {
             //TWEEN.removeAll();
             var duration = 2000;
 
-            if(viewManager.views[window.actualView])
+            if(viewManager.views && viewManager.views[window.actualView])
                 viewManager.views[window.actualView].reset();
 
             self.resetPosition(duration);
