@@ -120,7 +120,6 @@ exports.insOrUpdComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type
                     set_obj.repo_dir = repo_dir;
                     res_comp.repo_dir = repo_dir;
                 }
-                if (scrnshts) console.log("///////////////////////////////////////");
                 set_obj.scrnshts = scrnshts;
                 res_comp.scrnshts = scrnshts;
                 if (found && found !== res_comp.found) {

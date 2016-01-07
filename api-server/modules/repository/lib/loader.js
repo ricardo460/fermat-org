@@ -15,8 +15,8 @@ var procMod = require('../process');
 var devMod = require('../developer');
 var Cache = require('../../../lib/route-cache');
 var env = process.env.NODE_ENV || 'development';
-var USER_AGENT = (env === 'development') ? 'Miguelcldn' : 'fuelusumar';
-var TOKEN = (env === 'development') ? '3c12e4c95821c7c2602a47ae46faf8a0ddab4962' : '4074ff2e5281cba97803fee8a06a91c71984093e'; // fuelusumar
+var USER_AGENT = (env === 'development') ? 'kyxer' : 'fuelusumar';
+var TOKEN = (env === 'development') ? '240703b54b7ff62e0205a2981dffa2bb9fa20938' : '4074ff2e5281cba97803fee8a06a91c71984093e'; // fuelusumar
 /**
  * [getRepoDir description]
  *
@@ -44,7 +44,7 @@ var getRepoDir = function (section, layer, type, comp, team) {
         }
         return null;
     } catch (err) {
-        winston.log('info', err.message, err);
+        winston.log('error', err.message, err);
         return null;
     }
 };
@@ -67,7 +67,6 @@ var processComp = function (section, layer, comp, type) {
         proComp = {};
         proComp = comp['$'];
         proComp.screenshots = proComp.screenshots && proComp.screenshots.trim().toLowerCase() == "true" ? true : false;
-        if (proComp.screenshots) console.log("+++++++++++++++++++++++++++++++++++++++");
         proComp.type = type;
         proComp.repo_dir = getRepoDir(section.code, layer.name, type, proComp.name, 'bitdubai');
         devs = [];
@@ -96,7 +95,7 @@ var processComp = function (section, layer, comp, type) {
         proComp.life_cycle = life_cycle;
         return proComp;
     } catch (err) {
-        winston.log('info', err.message, err);
+        winston.log('error', err.message, err);
         return null;
     }
 };
@@ -120,12 +119,11 @@ var processCompList = function (section, layer, compList, type) {
         for (i = 0; i < compList.length; i++) {
             comp = {};
             comp = processComp(section, layer, compList[i], type);
-            if (comp.screenshots) console.log("------------------------------------------");
             comps.push(comp);
         }
         return comps;
     } catch (err) {
-        winston.log('info', err.message, err);
+        winston.log('error', err.message, err);
         return null;
     }
 };
@@ -244,7 +242,7 @@ var getManifest = function (callback) {
                 });
             } else {
                 if (err) {
-                    winston.log('info', err.message, err);
+                    winston.log('error', err.message, err);
                 }
                 doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.xml', null, function (err_req, res_req) {
                     if (err_req) {
@@ -282,7 +280,6 @@ var parseManifest = function (callback) {
     'use strict';
     try {
         var i, j, k, layers, _layers, layer, comps, depends, _depends, depend, steps, _steps, fermat, platfrms, _platfrms, platfrm, suprlays, _suprlays, suprlay, procs, _procs, _proc, _step, _next;
-        console.log("en el parseManifest");
         getManifest(function (err_man, res_man) {
             if (err_man) {
                 return callback(err_man, null);
@@ -417,10 +414,9 @@ var parseManifest = function (callback) {
 var saveManifest = function (callback) {
     'use strict';
     try {
-        console.log("en el saveManifest");
         parseManifest(function (err_load, res_load) {
             if (err_load) {
-                winston.log('info', err_load.message, err_load);
+                winston.log('error', err_load.message, err_load);
             } else {
                 if (res_load.platfrms && Array.isArray(res_load.platfrms) && res_load.suprlays && Array.isArray(res_load.suprlays)) {
                     var _platfrms = res_load.platfrms;
@@ -432,14 +428,14 @@ var saveManifest = function (callback) {
                             var _lay = _lays[u];
                             layerMod.insOrUpdLayer(_lay.name ? _lay.name.trim().toLowerCase() : null, _lay.language ? _lay.language.toLowerCase() : null, _lay.super_layer ? _lay.super_layer.trim().toUpperCase() : null, u, function (err_lay, res_lay) {
                                 if (err_lay) {
-                                    winston.log('info', err_lay.message, err_lay);
+                                    winston.log('error', err_lay.message, err_lay);
                                 }
                                 loopLays(++u);
                             });
                         } else {
                             updateComps(function (err_upd, res_upd) {
                                 if (err_upd) {
-                                    winston.log('info', err_upd.message, err_upd);
+                                    winston.log('error', err_upd.message, err_upd);
                                 }
                                 winston.log('info', 'done loading components');
                                 return;
@@ -450,40 +446,45 @@ var saveManifest = function (callback) {
                         if (s < _procs.length) {
                             var _proc = _procs[s];
                             //platfrm, name, desc, prev, next, callback
-                            procMod.insOrUpdProc(_proc.platform ? _proc.platform.trim().toUpperCase() : null, _proc.name ? _proc.name.trim() : null, _proc.description ? _proc.description.trim() : null, _proc.previous ? _proc.previous.trim().toLowerCase() : null, _proc.next ? _proc.next.trim().toLowerCase() : null, function (err_proc, res_proc) {
-                                if (err_proc) {
-                                    winston.log('info', err_proc.message, err_proc);
-                                    loopProcs(++s);
-                                } else {
-                                    var _steps = _proc.steps;
-                                    var loopSteps = function (t) {
-                                        if (t < _steps.length) {
-                                            var _step = _steps[t];
-                                            procMod.insOrUpdStep(res_proc._id, //_proc_id
-                                                _step.platform ? _step.platform.toUpperCase() : null, //platfrm_code
-                                                _step.superlayer ? _step.superlayer.toUpperCase() : null, //suprlay_code
-                                                _step.layer ? _step.layer.toLowerCase() : null, //layer_name
-                                                _step.name ? _step.name.toLowerCase() : null, //comp_name
-                                                _step.type ? _step.type.toLowerCase() : null, //type
-                                                _step.title ? _step.title : null, //title
-                                                _step.description ? _step.description : null, //description
-                                                _step.id || null, //order
-                                                _step.next || [], //next
-                                                function (err_stp, res_stp) {
-                                                    if (err_stp) {
-                                                        winston.log('info', err_stp.message, err_stp);
-                                                        loopSteps(++t);
-                                                    } else {
-                                                        loopSteps(++t);
-                                                    }
-                                                });
-                                        } else {
-                                            loopProcs(++s);
-                                        }
-                                    };
-                                    loopSteps(0);
-                                }
-                            });
+                            procMod.insOrUpdProc(_proc.platform ? _proc.platform.trim().toUpperCase() : null, //
+                                _proc.name ? _proc.name.trim() : null, //
+                                _proc.description ? _proc.description.trim() : null, //
+                                _proc.previous ? _proc.previous.trim() : null, //
+                                _proc.next ? _proc.next.trim() : null, //
+                                function (err_proc, res_proc) {
+                                    if (err_proc) {
+                                        winston.log('error', err_proc.message, err_proc);
+                                        loopProcs(++s);
+                                    } else {
+                                        var _steps = _proc.steps;
+                                        var loopSteps = function (t) {
+                                            if (t < _steps.length) {
+                                                var _step = _steps[t];
+                                                procMod.insOrUpdStep(res_proc._id, //_proc_id
+                                                    _step.platform ? _step.platform.toUpperCase() : null, //platfrm_code
+                                                    _step.superlayer ? _step.superlayer.toUpperCase() : null, //suprlay_code
+                                                    _step.layer ? _step.layer.toLowerCase() : null, //layer_name
+                                                    _step.name ? _step.name.toLowerCase() : null, //comp_name
+                                                    _step.type ? _step.type.toLowerCase() : null, //type
+                                                    _step.title ? _step.title : null, //title
+                                                    _step.description ? _step.description : null, //description
+                                                    _step.id || null, //order
+                                                    _step.next || [], //next
+                                                    function (err_stp, res_stp) {
+                                                        if (err_stp) {
+                                                            winston.log('info', err_stp.message, err_stp);
+                                                            loopSteps(++t);
+                                                        } else {
+                                                            loopSteps(++t);
+                                                        }
+                                                    });
+                                            } else {
+                                                loopProcs(++s);
+                                            }
+                                        };
+                                        loopSteps(0);
+                                    }
+                                });
                         } else {
                             loopLays(0);
                         }
@@ -493,7 +494,7 @@ var saveManifest = function (callback) {
                             var _suprlay = _suprlays[n];
                             suprlayMod.insOrUpdSuprlay(_suprlay.code.trim().toUpperCase(), _suprlay.name.trim().toLowerCase(), _suprlay.logo, _suprlay.dependsOn ? _suprlay.dependsOn.split(' ').join('').split(',') : [], n, function (err_supr, res_supr) {
                                 if (err_supr) {
-                                    winston.log('info', err_supr.message, err_supr);
+                                    winston.log('error', err_supr.message, err_supr);
                                     loopSuprlays(++n);
                                 } else {
                                     var _layers = _suprlay.layers;
@@ -502,18 +503,13 @@ var saveManifest = function (callback) {
                                             var _layer = _layers[o];
                                             layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null, _layer.language ? _layer.language.toLowerCase() : null, res_supr.code, -1, function (err_lay, res_lay) {
                                                 if (err_lay) {
-                                                    winston.log('info', err_lay.message, err_lay);
+                                                    winston.log('error', err_lay.message, err_lay);
                                                     loopLayers(++o);
                                                 } else if (res_lay) {
                                                     var _comps = _layer.comps;
                                                     var loopComps = function (p) {
                                                         if (p < _comps.length) {
                                                             var _comp = _comps[p];
-                                                            if (_comp.screenshots) {
-                                                                console.log("************************************");
-                                                                console.dir(_comp);
-                                                                console.log("************************************");
-                                                            }
                                                             compMod.insOrUpdComp(null, // _platfrm_id
                                                                 res_supr._id, // _suprlay_id
                                                                 res_lay._id, // _layer_id
@@ -527,7 +523,7 @@ var saveManifest = function (callback) {
                                                                 null, // found
                                                                 function (err_comp, res_comp) { // callback
                                                                     if (err_comp) {
-                                                                        winston.log('info', err_comp.message, err_comp);
+                                                                        winston.log('error', err_comp.message, err_comp);
                                                                         loopComps(++p);
                                                                     } else {
                                                                         var _devs = _comp.devs;
@@ -539,13 +535,13 @@ var saveManifest = function (callback) {
                                                                                 if (_dev.name) {
                                                                                     devMod.insOrUpdDev(_dev.name.trim().toLowerCase(), null, null, null, null, null, null, null, function (err_dev, res_dev) {
                                                                                         if (err_dev) {
-                                                                                            winston.log('info', err_dev.message, err_dev);
-                                                                                            winston.log('info', err_dev.message, _dev);
+                                                                                            winston.log('error', err_dev.message, err_dev);
+                                                                                            winston.log('error', err_dev.message, _dev);
                                                                                             loopDevs(++q);
                                                                                         } else {
                                                                                             compMod.insOrUpdCompDev(res_comp._id, res_dev._id, _dev.role, _dev.scope, _dev.percentage || '0', function (err_compDev, res_compDev) {
                                                                                                 if (err_compDev) {
-                                                                                                    winston.log('info', err_compDev.message, err_compDev);
+                                                                                                    winston.log('error', err_compDev.message, err_compDev);
                                                                                                     loopDevs(++q);
                                                                                                 } else {
                                                                                                     upd_devs.push(res_compDev._id);
@@ -564,7 +560,7 @@ var saveManifest = function (callback) {
                                                                                         var _status = _life_cycle[r];
                                                                                         compMod.insOrUpdStatus(res_comp._id, _status.name, _status.target, _status.reached, function (err_sta, res_sta) {
                                                                                             if (err_sta) {
-                                                                                                winston.log('info', err_sta.message, err_sta);
+                                                                                                winston.log('error', err_sta.message, err_sta);
                                                                                                 loopLifeCycle(++r);
                                                                                             } else {
                                                                                                 upd_life_cycle.push(res_sta._id);
@@ -612,7 +608,7 @@ var saveManifest = function (callback) {
                             var _platfrm = _platfrms[i];
                             platfrmMod.insOrUpdPlatfrm(_platfrm.code.trim().toUpperCase(), _platfrm.name.trim().toLowerCase(), _platfrm.logo, _platfrm.dependsOn ? _platfrm.dependsOn.split(' ').join('').split(',') : [], i, function (err_plat, res_plat) {
                                 if (err_plat) {
-                                    winston.log('info', err_plat.message, err_plat);
+                                    winston.log('error', err_plat.message, err_plat);
                                     loopPlatfrms(++i);
                                 } else {
                                     var _layers = _platfrm.layers;
@@ -621,18 +617,13 @@ var saveManifest = function (callback) {
                                             var _layer = _layers[j];
                                             layerMod.insOrUpdLayer(_layer.name ? _layer.name.trim().toLowerCase() : null, _layer.language ? _layer.language.toLowerCase() : null, null, -1, function (err_lay, res_lay) {
                                                 if (err_lay) {
-                                                    winston.log('info', err_lay.message, err_lay);
+                                                    winston.log('error', err_lay.message, err_lay);
                                                     loopLayers(++j);
                                                 } else if (res_lay) {
                                                     var _comps = _layer.comps;
                                                     var loopComps = function (k) {
                                                         if (k < _comps.length) {
                                                             var _comp = _comps[k];
-                                                            if (_comp.screenshots) {
-                                                                console.log("************************************");
-                                                                console.dir(_comp);
-                                                                console.log("************************************");
-                                                            }
                                                             compMod.insOrUpdComp(res_plat._id, // _platfrm_id
                                                                 null, // _suprlay_id
                                                                 res_lay._id, // _layer_id
@@ -646,7 +637,7 @@ var saveManifest = function (callback) {
                                                                 null, // found
                                                                 function (err_comp, res_comp) { // callback
                                                                     if (err_comp) {
-                                                                        winston.log('info', err_comp.message, err_comp);
+                                                                        winston.log('error', err_comp.message, err_comp);
                                                                         loopComps(++k);
                                                                     } else {
                                                                         var _devs = _comp.devs;
@@ -658,13 +649,13 @@ var saveManifest = function (callback) {
                                                                                 if (_dev.name) {
                                                                                     devMod.insOrUpdDev(_dev.name.trim().toLowerCase(), null, null, null, null, null, null, null, function (err_dev, res_dev) {
                                                                                         if (err_dev) {
-                                                                                            winston.log('info', err_dev.message, err_dev);
-                                                                                            winston.log('info', err_dev.message, _dev);
+                                                                                            winston.log('error', err_dev.message, err_dev);
+                                                                                            winston.log('error', err_dev.message, _dev);
                                                                                             loopDevs(++l);
                                                                                         } else {
                                                                                             compMod.insOrUpdCompDev(res_comp._id, res_dev._id, _dev.role, _dev.scope, _dev.percentage || '0', function (err_compDev, res_compDev) {
                                                                                                 if (err_compDev) {
-                                                                                                    winston.log('info', err_compDev.message, err_compDev);
+                                                                                                    winston.log('error', err_compDev.message, err_compDev);
                                                                                                     loopDevs(++l);
                                                                                                 } else {
                                                                                                     upd_devs.push(res_compDev._id);
@@ -683,7 +674,7 @@ var saveManifest = function (callback) {
                                                                                         var _status = _life_cycle[m];
                                                                                         compMod.insOrUpdStatus(res_comp._id, _status.name, _status.target, _status.reached, function (err_sta, res_sta) {
                                                                                             if (err_sta) {
-                                                                                                winston.log('info', err_sta.message, err_sta);
+                                                                                                winston.log('error', err_sta.message, err_sta);
                                                                                                 loopLifeCycle(++m);
                                                                                             } else {
                                                                                                 upd_life_cycle.push(res_sta._id);
@@ -733,27 +724,27 @@ var saveManifest = function (callback) {
                     procMod.delAllProcs(function (err_del, res_del) {
                         winston.log('info', 'deleting proccess...');
                         if (err_del) {
-                            winston.log('info', err_del.message, err_del);
+                            winston.log('error', err_del.message, err_del);
                         }
                         compMod.delAllComps(function (err_del, res_del) {
                             winston.log('info', 'deleting components...');
                             if (err_del) {
-                                winston.log('info', err_del.message, err_del);
+                                winston.log('error', err_del.message, err_del);
                             }
                             layerMod.delAllLayers(function (err_del, res_del) {
                                 winston.log('info', 'deleting layers...');
                                 if (err_del) {
-                                    winston.log('info', err_del.message, err_del);
+                                    winston.log('error', err_del.message, err_del);
                                 }
                                 suprlayMod.delAllSuprlays(function (err_del, res_del) {
                                     winston.log('info', 'deleting superlayers...');
                                     if (err_del) {
-                                        winston.log('info', err_del.message, err_del);
+                                        winston.log('error', err_del.message, err_del);
                                     }
                                     platfrmMod.delAllPlatfrms(function (err_del, res_del) {
                                         winston.log('info', 'deleting platforms...');
                                         if (err_del) {
-                                            winston.log('info', err_del.message, err_del);
+                                            winston.log('error', err_del.message, err_del);
                                         }
                                         return loopPlatfrms(0);
                                     });
@@ -824,12 +815,12 @@ var updateDevs = function (callback) {
                     var _dev = res_devs[i];
                     getUser(_dev.usrnm, function (err_usr, res_usr) {
                         if (err_usr) {
-                            winston.log('info', err_usr.message, err_usr);
+                            winston.log('error', err_usr.message, err_usr);
                             loopDevs(++i);
                         } else if (res_usr) {
                             devMod.insOrUpdDev(_dev.usrnm, res_usr.email || null, res_usr.name || null, null, res_usr.location || null, res_usr.avatar_url || null, res_usr.html_url || null, res_usr.bio || null, function (err_upd, res_upd) {
                                 if (err_upd) {
-                                    winston.log('info', err_upd.message, err_upd);
+                                    winston.log('error', err_upd.message, err_upd);
                                 }
                             });
                         }
@@ -909,7 +900,7 @@ var updateComps = function (callback) {
                         if (_comp.code_level !== 'concept') {
                             getContent(_comp.repo_dir, function (err_dir, res_dir) {
                                 if (err_dir) {
-                                    winston.log('info', err_dir.message, err_dir);
+                                    winston.log('error', err_dir.message, err_dir);
                                 } else {
                                     if (res_dir && Array.isArray(res_dir)) {
                                         compMod.insOrUpdComp(_comp._platfrm_id, // _platfrm_id
@@ -925,9 +916,9 @@ var updateComps = function (callback) {
                                             true, // found
                                             function (err_upd, res_upd) { // callback
                                                 if (err_upd) {
-                                                    winston.log('info', err_upd.message, err_upd);
+                                                    winston.log('error', err_upd.message, err_upd);
                                                 } else {
-                                                    winston.log('info', 'updating %s...', _comp._id + '...');
+                                                    winston.log('debug', 'updating %s...', _comp._id + '...');
                                                 }
                                             });
                                     }
@@ -1010,7 +1001,6 @@ exports.updDevs = function (callback) {
 exports.loadComps = function (callback) {
     'use strict';
     try {
-        console.log("en el loadComps");
         saveManifest(function (err, res) {
             if (err) {
                 return callback(err, null);

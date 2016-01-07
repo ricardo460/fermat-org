@@ -1,7 +1,6 @@
 /*global require*/
 /*global module*/
 var mongoose = require('mongoose');
-
 /**
  * [procSchema description]
  *
@@ -15,7 +14,6 @@ var procSchema = mongoose.Schema({
     },
     name: {
         type: String,
-        lowercase: true,
         trim: true
     },
     desc: {
@@ -24,12 +22,10 @@ var procSchema = mongoose.Schema({
     },
     prev: {
         type: String,
-        lowercase: true,
         trim: true
     },
     next: {
         type: String,
-        lowercase: true,
         trim: true
     },
     steps: [{
@@ -43,7 +39,6 @@ var procSchema = mongoose.Schema({
 }, {
     collection: 'procs'
 });
-
 /**
  * [desc description]
  *
@@ -54,5 +49,4 @@ procSchema.index({
 }, {
     name: "procs_cp_indx"
 }); // schema level
-
 module.exports = procSchema;
