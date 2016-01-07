@@ -13,8 +13,61 @@ function Developer (){
 
 	var onClick = function(target) {
         if(window.actualView === 'developers')
-            window.onElementClickDeveloper(target.userData.id, objectsDeveloper);
+            onElementClickDeveloper(target.userData.id, objectsDeveloper);
     };
+
+    function onElementClickDeveloper(id, objectsDevelopers){
+
+        var duration = 1000;
+
+        if(camera.getFocus() == null){
+            var camTarget = objectsDevelopers[id].clone();
+
+            window.camera.setFocus(camTarget, new THREE.Vector4(0, 0, 1000, 1), duration);
+
+            for (var i = 0; i < objectsDevelopers.length ; i++) {
+                if(id !== i)
+                    letAloneDeveloper(objectsDevelopers[i]);
+            }
+
+            helper.showBackButton();
+            self.showDeveloperTiles(id);
+        }
+    }
+
+    /**
+     * Let Alone Developer 
+     * @param   {object}     objectsDevelopers all the developers
+     * @author Emmanuel Colina
+     */
+     
+    function letAloneDeveloper(objectsDevelopers){
+
+        var i, _duration = 2000,
+            distance = camera.getMaxDistance() * 2,
+            out = window.viewManager.translateToSection('developers', new THREE.Vector3(0, 0, distance));
+
+        var target;
+
+        var animate = function (object, target, dur) {
+
+            new TWEEN.Tween(object.position)
+                .to({
+                    x: target.x,
+                    y: target.y,
+                    z: target.z
+                }, dur)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .onComplete(function () {
+                    object.userData.flying = false;
+                })
+                .start();
+        };
+
+        target = out;
+        objectsDevelopers.userData.flying = true;
+        animate(objectsDevelopers, target, Math.random() * _duration + _duration);
+    }
 
     function drawPictureDeveloper(data, ctx, texture) {
 
@@ -404,39 +457,6 @@ function Developer (){
 	    }
 
 	    return positionDeveloper;
-	};
-
-	/**
-     * Let Alone Developer 
-     * @param   {object}     objectsDevelopers all the developers
-     * @author Emmanuel Colina
-     */
-	this.letAloneDeveloper = function(objectsDevelopers){
-
-		var i, _duration = 2000,
-            distance = camera.getMaxDistance() * 2,
-            out = window.viewManager.translateToSection('developers', new THREE.Vector3(0, 0, distance));
-
-        var target;
-
-        var animate = function (object, target, dur) {
-
-            new TWEEN.Tween(object.position)
-                .to({
-                    x: target.x,
-                    y: target.y,
-                    z: target.z
-                }, dur)
-                .easing(TWEEN.Easing.Exponential.InOut)
-                .onComplete(function () {
-                    object.userData.flying = false;
-                })
-                .start();
-        };
-
-		target = out;
-		objectsDevelopers.userData.flying = true;
-		animate(objectsDevelopers, target, Math.random() * _duration + _duration);
 	};
 
 	/**
