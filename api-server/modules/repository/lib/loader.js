@@ -210,8 +210,6 @@ var processRequestBody = function (body, callback) {
         return callback(err, null);
     }
 };
-<<<<<<< HEAD
-
 
 /**
  * [getManifestWithExt description]
@@ -268,8 +266,6 @@ exports.getManifestWithExt = function (ext, callback) {
 
 };
 
-=======
->>>>>>> upstream/master
 /**
  * [getManifest description]
  * pasa el manifest a un objeto json
@@ -285,10 +281,7 @@ var getManifest = function (callback) {
         var cwd = process.cwd(),
             env = process.env.NODE_ENV || 'development',
             file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.xml');
-<<<<<<< HEAD
 
-=======
->>>>>>> upstream/master
         fs.lstat(file, function (err, stats) {
             if (!err && stats.isFile()) {
                 // Yes it is
