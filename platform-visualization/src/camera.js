@@ -355,23 +355,27 @@ function Camera(position, renderer, renderFunc) {
         var _duration = duration || 2000;
         synced = synced || false;
         
+        var tween = null;
+        
         if(window.helper.isValidVector({x : x, y : y, z : z})) {
             
-            new TWEEN.Tween(camera.position)
-            .to({x : x, y : y, z : z}, _duration)
-            .easing(TWEEN.Easing.Cubic.InOut)
-            .onUpdate(function(){
-                if(!self.freeView || synced)
-                    controls.target.set(camera.position.x, camera.position.y, 0);
-                
-                window.render();
-            })
-            .start();
+            tween = new TWEEN.Tween(camera.position)
+                    .to({x : x, y : y, z : z}, _duration)
+                    .easing(TWEEN.Easing.Cubic.InOut)
+                    .onUpdate(function(){
+                        if(!self.freeView || synced)
+                            controls.target.set(camera.position.x, camera.position.y, 0);
+
+                        window.render();
+                    });
             
-            new TWEEN.Tween(camera.up)
-            .to({x : 0, y : 1, z : 0}, _duration)
-            .easing(TWEEN.Easing.Cubic.InOut)
-            .start();
+            var next = new TWEEN.Tween(camera.up)
+                        .to({x : 0, y : 1, z : 0}, _duration)
+                        .easing(TWEEN.Easing.Cubic.InOut);
+            
+            tween.onStart(function() { next.start(); });
+            tween.start();
+            
         }
         else {
             window.alert("Error: this is not a valid vector (" + x + ", " + y + ", " + z + ")");
