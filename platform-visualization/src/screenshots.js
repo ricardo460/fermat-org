@@ -4,9 +4,8 @@
  */
 function ScreenshotsAndroid() {
 
-	var action = { state : false, mesh : null };
-
-	this.objects = {
+	// Public Variables
+    this.objects = {
 			mesh : [],
 			target : [],
 			texture : [],
@@ -15,18 +14,26 @@ function ScreenshotsAndroid() {
 					}
 		};
 
+    // Private Variables
 	var self = this,
 		POSITION_X = 231,
 		CONTROL = {},
 		SCREENSHOTS = {};
+    
+    var action = { state : false, mesh : null };
 
 	var onClick = function(target) {
 		change(target.userData.id);
 	};
 
-	function fillScreenshots(callback){
+    // Public method
+	/**
+	* @author Ricardo Delgado
+	* Initialization screenshots.
+	*/
+	this.init = function () {
 
-		$.get("json/screenshots.json", {}, function(json) {
+        $.get("json/screenshots.json", {}, function(json) {
 
 	        for(var _group in json){
 
@@ -46,42 +53,62 @@ function ScreenshotsAndroid() {
         						for(var _screen in json[_group][_layer][_wallet].screenshots)
 									screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
 
-								setScreenshot(id, position, name, screenshots);
+								fillScreenshots(id, position, name, screenshots);
 	        				}
 	        			}
 	        		}
 	        	}
 	        }
 
-	        callback();
+	        setScreenshot();
     	});
+		
+	};
+    
+    	/**
+	* @author Ricardo Delgado
+	* Wallet hidden from view.
+	*/ 
+	this.hide = function () {
 
-	}
+		var ignore;
 
-	function setScreenshot(id, position, name, screenshots){
+		if (action.state) ignore = action.mesh;
 
-		SCREENSHOTS[id] = {};
-		SCREENSHOTS[id].name = name;
-		SCREENSHOTS[id].position = position;
-		SCREENSHOTS[id].screenshots = screenshots;
-	}
+		for(var i = 0; i < self.objects.mesh.length; i++) { 
+
+			if (i != ignore)  
+				animate(self.objects.mesh[i], self.objects.target[i], false, 1500);
+		}
+	}; 
 
 	/**
 	* @author Ricardo Delgado
-	* Initialization screenshots.
-	*/
-	this.init = function () {
+	* Show wallet sight.
+	*/ 
+	this.show = function () {
 
-		
-		fillScreenshots (
-   			_init
-		);
-		
+        if (action.state) {
+
+			resetTexture(action.mesh);
+		}
+		else {
+			
+			for (var i = 0; i < self.objects.mesh.length; i++) {
+
+				animate(self.objects.mesh[i], self.objects.target[i], true, 2000);
+			}
+		}
 	};
-
-	function _init(){
-
-		var cant = 0,
+    
+    // Private method
+    /**
+	* @author Ricardo Delgado
+	* Screenshots settings show.
+	*/ 
+    function setScreenshot(){
+        
+        var cant = 0,
 			lost = "";
 
 		for (var id in SCREENSHOTS){
@@ -110,6 +137,22 @@ function ScreenshotsAndroid() {
 
 		addTitle();
 
+	}
+
+    /**
+	* @author Ricardo Delgado
+	* Variable filled SCREENSHOTS.
+    * @param {String}  id   Wallet id
+    * @param {number}  position   End position of the plane in the x axis.
+    * @param {String}   wallet     Wallet group to which it belongs.
+    * @param {Array}  screenshots  All routes screenshot.
+	*/ 
+	function fillScreenshots(id, position, name, screenshots){
+
+		SCREENSHOTS[id] = {};
+		SCREENSHOTS[id].name = name;
+		SCREENSHOTS[id].position = position;
+		SCREENSHOTS[id].screenshots = screenshots;
 	}
 
 	/**
@@ -155,7 +198,7 @@ function ScreenshotsAndroid() {
 	/**
 	* @author Ricardo Delgado
 	* The plans necessary for the wallet are added, each level is for a group of wallet.
-	* @param {String}  _position    End position of the plane in the x axis.
+	* @param {number}  _position    End position of the plane in the x axis.
 	* @param {String}    wallet     Wallet group to which it belongs.
 	*/   
 	function addMesh(_position, wallet, state) {
@@ -340,42 +383,6 @@ function ScreenshotsAndroid() {
 			drawPicture(id, wallet, ctx);
 		}
 	}
-
-	/**
-	* @author Ricardo Delgado
-	* Wallet hidden from view.
-	*/ 
-	this.hide = function () {
-
-		var ignore;
-
-		if (action.state) ignore = action.mesh;
-
-		for(var i = 0; i < self.objects.mesh.length; i++) { 
-
-			if (i != ignore)  
-				animate(self.objects.mesh[i], self.objects.target[i], false, 1500);
-		}
-	}; 
-
-	/**
-	* @author Ricardo Delgado
-	* Show wallet sight.
-	*/ 
-	this.show = function () {
-
-        if (action.state) {
-
-			resetTexture(action.mesh);
-		}
-		else {
-			
-			for (var i = 0; i < self.objects.mesh.length; i++) {
-
-				animate(self.objects.mesh[i], self.objects.target[i], true, 2000);
-			}
-		}
-	};
 
 	/**
 	* @author Ricardo Delgado
