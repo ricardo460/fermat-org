@@ -66,7 +66,7 @@ walkDir(root);
 
 var imagesStr = JSON.stringify(SCREENSHOTS);
 
-fs.writeFile('screenshots.json', imagesStr, {
+fs.writeFile('json/screenshots.json', imagesStr, {
     flags: 'w'
 }, function (err) {
     'use strict';

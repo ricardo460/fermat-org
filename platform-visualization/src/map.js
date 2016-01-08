@@ -7,7 +7,7 @@ var map = {};
  */
 function loadMap(callback){
     
-    $.get("config_map.json", {}, function(json) {
+    $.get("json/config_map.json", {}, function(json) {
         window.map = json;
         callback();
     });
