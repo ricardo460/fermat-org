@@ -28,7 +28,7 @@ var walkDir = function (directoryName) {
 var root = '../platform-visualization/images';
 walkDir(root);
 var imagesStr = JSON.stringify(images.sort());
-fs.writeFile('../platform-visualization/images.json', imagesStr, {
+fs.writeFile('../platform-visualization/json/images.json', imagesStr, {
     flags: 'w'
 }, function (err) {
     'use strict';
