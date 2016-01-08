@@ -222,7 +222,7 @@ var processRequestBody = function (body, callback) {
  */
 exports.getManifestWithExt = function (ext, callback) {
     try {
-        var cwd = process.cwd(),
+        /*var cwd = process.cwd(),
             env = process.env.NODE_ENV || 'development',
             file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.'+ ext);
 
@@ -240,7 +240,7 @@ exports.getManifestWithExt = function (ext, callback) {
             } else {
                 if (err) {
                     winston.log('info', err.message, err);
-                }
+                }*/
                 doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.'+ ext, null, function (err_req, res_req) {
                     if (err_req) {
                         return callback(err_req, null);
@@ -258,8 +258,8 @@ exports.getManifestWithExt = function (ext, callback) {
                         
                     });
                 });
-            }
-        });
+        /*    }
+        });*/
     } catch (err) {
         return callback(err, null);
     }
