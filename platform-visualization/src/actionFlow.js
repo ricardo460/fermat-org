@@ -106,14 +106,13 @@ function ActionFlow(flow) {
 
     this.drawTree = function(root, x, y, z) {
 
-        var COLORS = {
-            TYPE:["default", "direct call"],
-            COLOR:[0X000000,  0x0000FF]
+        var TYPE = {
+            async : 0xFF0000,
+            direct: 0x0000FF
         };
 
-        var indice = null;
-
         if (typeof root.drawn === 'undefined'){
+
 
             drawStep(root, x, y, z);
 
@@ -122,28 +121,22 @@ function ActionFlow(flow) {
 
             if (childCount !== 0){
 
-                 var lineGeo,
-                     lineMat, 
-                     rootPoint,
-                     rootLine,
-                     origin;           
+                var color = TYPE[root.next[0].type];
+
+                if(root.next[0].type === "direct call")
+                    color = (color !== undefined) ? color : TYPE.direct;
+                else
+                    color = (color !== undefined) ? color : TYPE.async;
+
+                var lineGeo,
+                    lineMat, 
+                    rootPoint,
+                    rootLine,
+                    origin;           
 
                 lineGeo = new THREE.BufferGeometry();
 
-                for (var k = 0; k < COLORS.TYPE.length; k++) {
-                    
-                    if(root.next[0].type === COLORS.TYPE[k]){
-                        indice = k;
-                        break;
-                    }
-
-                }
-
-                if(indice == null) //default
-                    indice = 0; 
-
-                lineMat = new THREE.LineBasicMaterial({color : COLORS.COLOR[indice]}); 
-
+                lineMat = new THREE.LineBasicMaterial({color : color}); 
 
                 rootPoint = new THREE.Vector3(x + X_OFFSET, y - ROW_SPACING / 2, -1);
 
@@ -190,16 +183,11 @@ function ActionFlow(flow) {
 
                     if(isLoop) {
 
-                        var gradient = new THREE.Color(COLORS.COLOR[indice]);
+                        var gradient = new THREE.Color(color);
 
-                        if(gradient.r === 0)
-                           gradient.r = 0.5;
-                           
-                        if(gradient.g === 0)
-                           gradient.g = 0.5; 
-
-                        if(gradient.b === 0)
-                           gradient.b = 0.5;  
+                        gradient.r = Math.max(gradient.r, 0.5);
+                        gradient.g = Math.max(gradient.g, 0.5);
+                        gradient.b = Math.max(gradient.b, 0.5); 
 
                         lineMat = new THREE.LineBasicMaterial({color : gradient.getHex()}); //gradient
                         nextY = child.drawn.y;
@@ -209,7 +197,7 @@ function ActionFlow(flow) {
                         }
                     }
                     else {
-                        lineMat = new THREE.LineBasicMaterial({color : COLORS.COLOR[indice]});
+                        lineMat = new THREE.LineBasicMaterial({color : color});
                         nextY = y - ROW_SPACING;
                     }
 
