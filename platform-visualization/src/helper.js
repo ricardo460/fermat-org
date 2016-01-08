@@ -209,6 +209,12 @@ function Helper() {
             case "procs":
                 tail = "/v1/repo/procs";
                 break;
+            case "servers":
+                tail = "/v1/network/servers";
+                break;
+            case "nodes":
+                tail = "/v1/network/node";
+                break;
         }
         
         return SERVER + tail;
