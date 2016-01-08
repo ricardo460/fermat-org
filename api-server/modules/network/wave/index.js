@@ -42,7 +42,7 @@ exports.findWaveByDate = function (date, callback) {
     'use strict';
     try {
         var start = new Date(date)
-            .setHours(00);
+            .setHours(0);
         var end = new Date(date)
             .setHours(24);
         var find_obj = {

@@ -1,4 +1,4 @@
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 # fermat-org
 
@@ -233,7 +233,8 @@ The origin repository will be updated.
 Once you've downloaded the repository, you must generate the file main.js to onset of Fermat-org locally, this process is straightforward:
 
 * **Open the Windows command console (Start + R).**
-* **Go for the console to the repository folder Fermat-org/platform-visualization.**
+* **Type cmd to start the command line.**
+* **From the console go to the repository folder Fermat-org/platform-visualization.**
 * **Write gulp, to run.**
 
 And ready, gulp runs in this window every pending changes made to files to regenerate main.js whenever any change, please note that when you start programming you repeat these steps, so that the main js this always updated with your changes.

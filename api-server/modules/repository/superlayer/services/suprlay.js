@@ -139,3 +139,19 @@ exports.updateSuprlayById = function (_id, set, callback) {
         callback(err, suprlay);
     });
 };
+
+/**
+ * [delAllSuprlays description]
+ *
+ * @method delAllSuprlays
+ *
+ * @param  {Function}     callback [description]
+ *
+ * @return {[type]}       [description]
+ */
+exports.delAllSuprlays = function (callback) {
+    'use strict';
+    suprlayDao.delAllSchemas(function (err, suprlay) {
+        callback(err, suprlay);
+    });
+};

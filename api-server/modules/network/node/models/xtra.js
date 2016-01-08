@@ -33,7 +33,5 @@ function XtraMdl(os, sub, curncy, symbl, balnc, status) {
     }
 }
 
-//gustavo corradi
-
 // export the class
 module.exports = XtraMdl;

@@ -15,7 +15,7 @@ var wavSchema = mongoose.Schema({
     time: {
         type: Date,
         'default': Date.now
-    }
+    },
     upd_at: {
         type: mongoose.Schema.Types.ObjectId,
         'default': new mongoose.Types.ObjectId()

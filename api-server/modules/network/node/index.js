@@ -53,6 +53,8 @@ exports.findNodsByWaveIdAndHash = function (_wave_id, hash, callback) {
         find_obj['$and'].push({
             'hash': hash
         });
+        console.log("en el find");
+        console.log(find_obj);
         nodSrv.findNods(find_obj, {
             _id: 1
         }, function (err, nods) {
@@ -64,9 +66,6 @@ exports.findNodsByWaveIdAndHash = function (_wave_id, hash, callback) {
     } catch (err) {
         return callback(err, null);
     }
-} catch (err) {
-    return callback(err, null);
-}
 };
 
 /**
