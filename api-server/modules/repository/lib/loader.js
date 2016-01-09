@@ -128,6 +128,7 @@ var processCompList = function (section, layer, compList, type) {
     }
 };
 /**
+ * 
  * [doRequest description]
  * Hace un request al api de github
  * @method doRequest
