@@ -250,6 +250,10 @@ exports.getManifestWithExt = function (ext, callback) {
                         if (err_pro) {
                             return callback(err_pro, null);
                         }
+                        if (typeof res_pro.message != 'undefined' 
+                            && res_pro.message == 'Bad credentials') {
+                            return callback(res_pro.message, null);
+                        }
                         var strCont = res_pro.split('\n')
                             .join(' ')
                             .split('\t')
