@@ -1,4 +1,4 @@
-var libxml = require("libxmljs");
+var libxml = require('libxmljs');
 var procMod = require('./process');
 var compMod = require('./component');
 var layerMod = require('./layer');
