@@ -429,6 +429,15 @@ exports.getAllProces = function (callback) {
         return callback(err, null);
     }
 };
+/**
+ * [delAllProcs description]
+ *
+ * @method delAllProcs
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
 exports.delAllProcs = function (callback) {
     'use strict';
     try {
