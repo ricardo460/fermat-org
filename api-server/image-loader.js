@@ -5,6 +5,7 @@ var winston = require('winston');
 var filename;
 var images = [];
 var root = '../platform-visualization/images';
+var destination = '../platform-visualization/images/wallet_screenshots';
 var source = '../../../Test/api-server/cache/production/fermat/seed-resources/wallet_screenshots';
 /**
  * [walkDir description]
@@ -52,7 +53,7 @@ var loadImages = function () {
     }, function (err) {
         'use strict';
         if (err) {
-            winston.log('error', 'Error reading or parsing file cache', err);
+            winston.log('info', 'Error reading or parsing file cache', err);
         }
     });
 };
@@ -66,17 +67,21 @@ var loadImages = function () {
  * @param  {function} callback
  * 
  */
-ncp(source, root, function (err) {
-    if (err) {
-        winston.log('error', err.message, err);
-        loadImages();
-    } else {
-        source = '../../../Test/api-server/cache/development/fermat/seed-resources/wallet_screenshots';
-        ncp(source, root, function (err) {
-            if (err) {
-                winston.log('error', err.message, err);
-            }
+try {
+    ncp(source, destination, function (err) {
+        if (err) {
+            winston.log('info', err.message, err);
             loadImages();
-        });
-    }
-});
+        } else {
+            source = '../../../Test/api-server/cache/development/fermat/seed-resources/wallet_screenshots';
+            ncp(source, destination, function (err) {
+                if (err) {
+                    winston.log('info', err.message, err);
+                }
+                loadImages();
+            });
+        }
+    });
+} catch (err) {
+    winston.log('info', err.message, err);
+}
