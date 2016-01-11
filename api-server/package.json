@@ -27,6 +27,7 @@
     "mongodb": "^2.0.47",
     "mongoose": "^4.2.4",
     "morgan": "~1.6.1",
+    "ncp": "^2.0.0",
     "passport": "^0.3.0",
     "passport-http-bearer": "^1.0.1",
     "request": "^2.63.0",
