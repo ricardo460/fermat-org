@@ -534,7 +534,7 @@ var saveManifest = function (callback) {
                                                     _step.next || [], //next
                                                     function (err_stp, res_stp) {
                                                         if (err_stp) {
-                                                            winston.log('info', err_stp.message, err_stp);
+                                                            winston.log('error', err_stp.message, err_stp);
                                                             loopSteps(++t);
                                                         } else {
                                                             loopSteps(++t);

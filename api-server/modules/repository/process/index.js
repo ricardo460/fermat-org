@@ -1,4 +1,5 @@
 /*jshint -W069 */
+var winston = require('winston');
 var stepSrv = require('./services/step');
 var StepMdl = require('./models/step');
 var procSrv = require('./services/proc');
@@ -7,7 +8,19 @@ var platfrmSrv = require('../platform/services/platfrm');
 var suprlaySrv = require('../superlayer/services/suprlay');
 var layerSrv = require('../layer/services/layer');
 var compSrv = require('../component/services/comp');
-
+/**
+ * [findComp description]
+ *
+ * @method findComp
+ *
+ * @param  {[type]}   platfrm_code [description]
+ * @param  {[type]}   suprlay_code [description]
+ * @param  {[type]}   layer_name   [description]
+ * @param  {[type]}   comp_name    [description]
+ * @param  {Function} callback     [description]
+ *
+ * @return {[type]}   [description]
+ */
 var findComp = function (platfrm_code, suprlay_code, layer_name, comp_name, callback) {
     'use strict';
     try {
@@ -66,9 +79,7 @@ var findComp = function (platfrm_code, suprlay_code, layer_name, comp_name, call
     } catch (err) {
         callback(err, null);
     }
-
 };
-
 /**
  * [findProcsByComp description]
  *
@@ -129,7 +140,6 @@ exports.findProcsByComp = function (platfrm_code, suprlay_code, layer_name, comp
                                     _procs.push(res_proc);
                                     loopSteps(++i);
                                 }
-
                             });
                         }
                     } else {
@@ -142,9 +152,18 @@ exports.findProcsByComp = function (platfrm_code, suprlay_code, layer_name, comp
     } catch (err) {
         callback(err, null);
     }
-
 };
-
+/**
+ * [findStepsByProc description]
+ *
+ * @method findStepsByProc
+ *
+ * @param  {[type]}        platfrm   [description]
+ * @param  {[type]}        proc_name [description]
+ * @param  {Function}      callback  [description]
+ *
+ * @return {[type]}        [description]
+ */
 exports.findStepsByProc = function (platfrm, proc_name, callback) {
     'use strict';
     try {
@@ -160,9 +179,7 @@ exports.findStepsByProc = function (platfrm, proc_name, callback) {
     } catch (err) {
         callback(err, null);
     }
-
 };
-
 /**
  * [insOrUpdProc description]
  *
@@ -235,9 +252,7 @@ exports.insOrUpdProc = function (platfrm, name, desc, prev, next, callback) {
     } catch (err) {
         callback(err, null);
     }
-
 };
-
 /**
  * [insOrUpdStep description]
  *
@@ -262,7 +277,7 @@ exports.insOrUpdStep = function (_proc_id, platfrm_code, suprlay_code, layer_nam
     try {
         findComp(platfrm_code, suprlay_code, layer_name, comp_name, function (err_comp, res_comp) {
             if (err_comp) {
-                return callback(err_comp, null);
+                winston.log('error', err_comp.message, err_comp);
             }
             var find_obj = {
                 '$and': []
@@ -320,13 +335,7 @@ exports.insOrUpdStep = function (_proc_id, platfrm_code, suprlay_code, layer_nam
                         return callback(null, res_step);
                     }
                 } else {
-                    var step = new StepMdl(_proc_id,
-                        res_comp ? res_comp._id : null,
-                        type,
-                        title,
-                        desc,
-                        order,
-                        next);
+                    var step = new StepMdl(_proc_id, res_comp ? res_comp._id : null, type, title, desc, order, next);
                     stepSrv.insertStep(step, function (err_ins, res_ins) {
                         if (err_ins) {
                             return callback(err_ins, null);
@@ -339,9 +348,7 @@ exports.insOrUpdStep = function (_proc_id, platfrm_code, suprlay_code, layer_nam
     } catch (err) {
         callback(err, null);
     }
-
 };
-
 /**
  * [getAllProces description]
  *
@@ -352,23 +359,18 @@ exports.insOrUpdStep = function (_proc_id, platfrm_code, suprlay_code, layer_nam
  * @return {[type]}   [description]
  */
 exports.getAllProces = function (callback) {
-    'use strict'; 
+    'use strict';
     try {
         procSrv.findAllProcs({}, {}, function (err, procs) {
             if (err) {
                 return callback(err, null);
             }
-
-            var loopProcs = function(j){
-
+            var loopProcs = function (j) {
                 if (j < procs.length) {
-
                     var _proc = procs[j];
-
                     stepSrv.findSteps({
                         _proc_id: _proc._id
                     }, {}, function (err, steps) {
-
                         if (err) {
                             return callback(err, null);
                         }
@@ -411,25 +413,22 @@ exports.getAllProces = function (callback) {
                                     });
                                 }
                             } else {
-                                procs[j].steps = _steps; 
+                                procs[j].steps = _steps;
                                 loopProcs(++j);
                             }
                         };
                         loopSteps(0);
                     });
-
-                }else{
+                } else {
                     return callback(null, procs);
                 }
             }
             loopProcs(0);
-
         });
     } catch (err) {
         return callback(err, null);
     }
 };
-
 exports.delAllProcs = function (callback) {
     'use strict';
     try {
@@ -448,5 +447,4 @@ exports.delAllProcs = function (callback) {
         return callback(err, null);
     }
 };
-
 /*jshint +W069 */
