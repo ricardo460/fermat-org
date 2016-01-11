@@ -11,6 +11,80 @@ function FlowManager(){
 
     // Public method
     /**
+     * @author Emmanuel Colina
+     * Set position for each Header Flow
+     * @param {Object} header target
+     */
+
+    this.createColumHeaderFlow = function (header){
+
+        var countElement = 0, 
+            obj, 
+            ids = [], 
+            position = [], 
+            center;
+
+        for (var i = 0; i < headerFlow.length; i++) {
+            if(header.name === headerFlow[i].flow.platfrm){
+                countElement = countElement + 1;
+                ids.push(i);
+            }
+        }
+
+        center = new THREE.Vector3();
+        center.copy(header.position);
+        center.y = center.y - 2700;
+
+        if(countElement === 1){
+
+            position.push(center); 
+        }
+        else if(countElement === 2) {
+
+            center.x = center.x - 500;
+
+            for (var k = 0; k < countElement; k++) {
+
+                obj = new THREE.Vector3();
+
+                obj.x = center.x;
+                obj.y = center.y;
+            
+                position.push(obj);
+
+                center.x = center.x + 1000;
+            }
+        }
+        else if(countElement > 2){
+            var mid;
+
+
+            mid = Math.round(countElement / 2);
+            
+            for (var x = mid; x > 0; x--) {
+                
+                center.x = center.x - 1500;
+            }
+
+            for(var j = 0; j < countElement; j++){
+
+                obj = new THREE.Vector3();
+
+                obj.x = center.x + 1000;
+                obj.y = center.y;
+
+                position.push(obj);
+
+                center.x = center.x + 1500;
+            }
+        }
+
+        letAloneColumHeaderFlow(ids);
+        setPositionColumHeaderFlow(ids, position);
+        drawColumHeaderFlow(ids, position);
+    };
+
+    /**
     * @author Emmanuel Colina
     * @lastmodifiedBy Ricardo Delgado
     * Delete All the actual view to table
@@ -103,6 +177,7 @@ function FlowManager(){
 
                     headerFlow[i].deleteStep();
                     headerFlow[i].action = false;
+                    headerFlow[i].showAllFlow();
                 }
                 else{
                     headerFlow[i].showAllFlow();
@@ -242,5 +317,67 @@ function FlowManager(){
             }
             
         }, 1500);
+    }
+
+    /**
+     * @author Emmanuel Colina
+     * let alone the header flow
+     * @param {Object} ids id of header flow
+     */
+    function letAloneColumHeaderFlow(ids){
+
+        var find = false;
+
+        for (var p = 0; p < headerFlow.length ; p++) {
+
+            for(var q = 0; q < ids.length; q++){
+                if(ids[q] === p)
+                    find = true;
+            }
+            if(find === false)
+                headerFlow[p].letAloneHeaderFlow();
+
+            find = false;
+        }
+    }
+
+    /**
+     * @author Emmanuel Colina
+     * set position to header flow
+     * @param {Object} ids id of header flow
+     * @param {Object} position of header flow
+     */
+    function setPositionColumHeaderFlow(ids, position){
+
+        var duration = 3000;
+
+        for (var i = 0, l = ids.length; i < l; i++) {
+            new TWEEN.Tween(headerFlow[ids[i]].objects[0].position)
+            .to({
+                x : position[i].x,
+                y : position[i].y,
+                z : position[i].z
+            }, Math.random() * duration + duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
+        }
+    }
+
+    /**
+     * @author Emmanuel Colina
+     * draw header flow
+     * @param {Object} ids id of header flow
+     * @param {Object} position of header flow
+     */
+    function drawColumHeaderFlow(ids, position){
+
+        for (var m = 0; m < ids.length; m++) {
+            for (var k = 0; k < headerFlow[ids[m]].flow.steps.length; k++) {
+                    headerFlow[ids[m]].drawTree(headerFlow[ids[m]].flow.steps[k], position[m].x + 900 * k, position[m].y - 211, 0);
+            }
+
+            headerFlow[ids[m]].showSteps();
+            headerFlow[ids[m]].action = true;   
+        }
     }
 }
