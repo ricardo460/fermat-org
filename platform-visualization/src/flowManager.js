@@ -58,8 +58,11 @@ function FlowManager(){
         
         window.helper.show(button, 1000);
         
+        var url = window.helper.getAPIUrl("procs");
+        url += '?platform=' + (element.group || element.superLayer) + '&layer=' + element.layer + '&component=' + element.name;
+        
         $.ajax({
-            url: 'http://52.35.117.6:3000/repo/procs?platform=' + (element.group || element.superLayer) + '&layer=' + element.layer + '&component=' + element.name,
+            url: url,
             method: "GET"
         }).success(
             function(processes) {
@@ -116,8 +119,10 @@ function FlowManager(){
      */
     this.getHeaderFLow = function() {
 
+        var url = window.helper.getAPIUrl("procs");
+        
         $.ajax({
-            url: 'http://52.35.117.6:3000/v1/repo/procs/',
+            url: url,
             method: "GET"
         }).success(
             function(processes) {

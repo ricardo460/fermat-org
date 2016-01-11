@@ -86,8 +86,19 @@ BaseNetworkViewer.prototype = {
      * @returns {Three.Sprite}  The sprite representing the node
      */
     createNode : function(nodeData, startPosition) {
-
-        var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0x000000}));
+        
+        var texture = THREE.ImageUtils.loadTexture(this.PICTURES[nodeData.subType] || this.PICTURES.pc);
+        texture.minFilter = THREE.NearestFilter;
+        
+        var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0xffffff, map : texture}));
+        /*var sprite = new THREE.Mesh(
+            new THREE.PlaneGeometry(5, 5),
+            new THREE.MeshBasicMaterial({color : 0xffffff, map : texture})
+        );*/
+        //window.helper.applyTexture(this.PICTURES[nodeData.subType], sprite);
+        sprite.renderOrder = 100;
+        sprite.material.blending = THREE.NoBlending;
+        
         var id = nodeData.id.toString();
 
         sprite.userData = {
@@ -228,12 +239,15 @@ BaseNetworkViewer.prototype = {
         var networkNodes = [];
         var NUM_NODES = 25,
             MAX_CONNECTIONS = 10;
+        
+        var TYPES = ['pc', 'actor'];
 
         for(var i = 0; i < NUM_NODES; i++) {
 
             var node = {
                 id : i,
-                edges : []
+                edges : [],
+                subType : TYPES[Math.floor(Math.random() * 10) % 2]
             };
 
             var connections = Math.floor(Math.random() * MAX_CONNECTIONS);
@@ -277,5 +291,12 @@ BaseNetworkViewer.prototype = {
      * Action to close the details of a node
      * @author Miguel Celedon
      */
-    close : function() {}
+    close : function() {},
+    
+    PICTURES : {
+        server : "/images/network/pc.png",
+        pc : "/images/network/pc.png",
+        phone : "/images/network/pc.png",
+        actor : "/images/network/actor.png"
+    }
 };

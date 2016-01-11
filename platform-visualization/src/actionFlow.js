@@ -106,7 +106,13 @@ function ActionFlow(flow) {
 
     this.drawTree = function(root, x, y, z) {
 
+        var TYPE = {
+            async : 0xFF0000,
+            direct: 0x0000FF
+        };
+
         if (typeof root.drawn === 'undefined'){
+
 
             drawStep(root, x, y, z);
 
@@ -115,15 +121,23 @@ function ActionFlow(flow) {
 
             if (childCount !== 0){
 
-                 var lineGeo,
-                     lineMat, 
-                     rootPoint,
-                     rootLine,
-                     origin;           
+                var color = TYPE[root.next[0].type];
+
+                if(root.next[0].type === "direct call")
+                    color = (color !== undefined) ? color : TYPE.direct;
+                else
+                    color = (color !== undefined) ? color : TYPE.async;
+
+                var lineGeo,
+                    lineMat, 
+                    rootPoint,
+                    rootLine,
+                    origin;           
 
                 lineGeo = new THREE.BufferGeometry();
 
-                lineMat = new THREE.LineBasicMaterial({color : 0x000000});
+                lineMat = new THREE.LineBasicMaterial({color : color}); 
+
                 rootPoint = new THREE.Vector3(x + X_OFFSET, y - ROW_SPACING / 2, -1);
 
                 var vertexPositions = [
@@ -168,7 +182,14 @@ function ActionFlow(flow) {
                     nextX = startX + i * COLUMN_SPACING;
 
                     if(isLoop) {
-                        lineMat = new THREE.LineBasicMaterial({color : 0x888888});
+
+                        var gradient = new THREE.Color(color);
+
+                        gradient.r = Math.max(gradient.r, 0.5);
+                        gradient.g = Math.max(gradient.g, 0.5);
+                        gradient.b = Math.max(gradient.b, 0.5); 
+
+                        lineMat = new THREE.LineBasicMaterial({color : gradient.getHex()}); //gradient
                         nextY = child.drawn.y;
 
                         if(nextX !== rootPoint.x && colides(nextX, root)) {
@@ -176,7 +197,7 @@ function ActionFlow(flow) {
                         }
                     }
                     else {
-                        lineMat = new THREE.LineBasicMaterial({color : 0x000000});
+                        lineMat = new THREE.LineBasicMaterial({color : color});
                         nextY = y - ROW_SPACING;
                     }
 

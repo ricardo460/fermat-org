@@ -810,12 +810,13 @@ function TileManager() {
      * @param {Array}  goal     Member of ViewManager.targets
      * @param {Number} duration Milliseconds of animation
      */
-    this.transform = function (goal, duration) {
+    this.transform = function (goal, ordered, duration) {
 
         var i, l, j,
             DELAY = 500;
 
         duration = duration || 2000;
+        ordered = ordered || false;
 
         //TWEEN.removeAll();
 
@@ -846,25 +847,36 @@ function TileManager() {
                                 .delay(delay)
                                 .easing(TWEEN.Easing.Exponential.InOut);
 
-                var animation = [move, rotation];
+                move.onStart(function() { rotation.start(); });
 
-                return animation;
+                return move;
             };
+            
+            if(ordered === true) {
 
-            for(i = 0; i < self.elementsByGroup.length; i++) {
+                for(i = 0; i < self.elementsByGroup.length; i++) {
 
-                var k = (i + self.elementsByGroup.length - 1) % (self.elementsByGroup.length);
-                var delay = i * DELAY;
+                    var k = (i + self.elementsByGroup.length - 1) % (self.elementsByGroup.length);
+                    var delay = i * DELAY;
 
-                for(j = 0; j < self.elementsByGroup[k].length; j++) {
+                    for(j = 0; j < self.elementsByGroup[k].length; j++) {
 
-                    var index = self.elementsByGroup[k][j];
+                        var index = self.elementsByGroup[k][j];
 
-                    var animation = animate(window.objects[index], goal[index], delay);
+                        var animation = animate(window.objects[index], goal[index], delay);
 
-                    animation[0].start();
-                    animation[1].start();
+                        animation.start();
+                    }
                 }
+            }
+            else {
+                
+                for(i = 0; i < window.objects.length; i++) {
+                    
+                    animate(window.objects[i], goal[i], 0).start();
+                    
+                }
+                
             }
 
             if(window.actualView === 'table') {
