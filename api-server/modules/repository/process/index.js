@@ -253,6 +253,16 @@ exports.insOrUpdProc = function (platfrm, name, desc, prev, next, callback) {
         callback(err, null);
     }
 };
+
+exports.findProcById = function(_id, callback){
+    procSrv.findProcById(_id, function (err_proc, res_proc) {
+        if (err_proc) {
+            return callback(err_proc, null);
+        }
+        return callback(null, res_proc);
+    });
+};
+
 /**
  * [insOrUpdStep description]
  *
@@ -456,4 +466,6 @@ exports.delAllProcs = function (callback) {
         return callback(err, null);
     }
 };
+
+
 /*jshint +W069 */
