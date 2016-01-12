@@ -49,8 +49,6 @@ exports.getProc = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-
-
 }
 
 /**
@@ -74,6 +72,18 @@ exports.uptProc = function (req, next) {
  * @return {[type]}   [description]
  */
 exports.delProc = function (req, next) {
+	'use strict';
+    try {
+        procMod.delProcById(req.params.proc_id, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
 
 }
 

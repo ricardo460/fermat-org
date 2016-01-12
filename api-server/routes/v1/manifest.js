@@ -400,7 +400,7 @@ router.delete('/procs/:proc_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                res.status(200).send(result);
+                res.status(204)
             }
         });
     } catch (err) {
