@@ -191,6 +191,18 @@ exports.delLay = function (req, next) {
  * @return {[type]}   [description]
  */
 exports.getSprlay = function (req, next) {
+	'use strict';
+    try {
+        suprlayMod.findSuprlayById(req.params.sprly_id, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
 
 }
 
