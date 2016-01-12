@@ -65,38 +65,74 @@ exports.delProc = function (req, next) {
 }
 
 /**
- * @method getProc
+ * @method getComp
  *
  * @param  {[type]}   req  [description]
  * @param  {Function} next [description]
  *
  * @return {[type]}   [description]
  */
-exports.getProc = function (req, next) {
+exports.getComp = function (req, next) {
 
 }
 
 /**
- * @method uptProc
+ * @method uptComp
  *
  * @param  {[type]}   req  [description]
  * @param  {Function} next [description]
  *
  * @return {[type]}   [description]
  */
-exports.uptProc = function (req, next) {
+exports.uptComp = function (req, next) {
 
 }
 
 /**
- * @method delProc
+ * @method delComp
  *
  * @param  {[type]}   req  [description]
  * @param  {Function} next [description]
  *
  * @return {[type]}   [description]
  */
-exports.delProc = function (req, next) {
+exports.delComp = function (req, next) {
+
+}
+
+/**
+ * @method getLay
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.getLay = function (req, next) {
+
+}
+
+/**
+ * @method uptLay
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.uptLay = function (req, next) {
+
+}
+
+/**
+ * @method delLay
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.delLay = function (req, next) {
 
 }
 

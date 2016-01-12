@@ -482,4 +482,83 @@ router.delete('/comps/:comp_id', function (req, res, next) {
     }
 });
 
+
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.get('/layers/:lay_id', function (req, res, next) {
+    'use strict';
+    try {
+        mnfMod.getLay(req, function (error, result) {
+            if (error) {
+                res.status(200).send(error);
+            } else {
+                res.status(200).send(result);
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.put('/layers/:lay_id', function (req, res, next) {
+    'use strict';
+    try {
+        mnfMod.uptLay(req, function (error, result) {
+            if (error) {
+                res.status(200).send(error);
+            } else {
+                res.status(200).send(result);
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.delete('/layers/:Lay_id', function (req, res, next) {
+    'use strict';
+    try {
+        mnfMod.delLay(req, function (error, result) {
+            if (error) {
+                res.status(200).send(error);
+            } else {
+                res.status(200).send(result);
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
 module.exports = router;
