@@ -561,4 +561,82 @@ router.delete('/layers/:Lay_id', function (req, res, next) {
     }
 });
 
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.get('/suprlays/:sprly_id', function (req, res, next) {
+    'use strict';
+    try {
+        mnfMod.getSprlay(req, function (error, result) {
+            if (error) {
+                res.status(200).send(error);
+            } else {
+                res.status(200).send(result);
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.put('/suprlays/:sprly_id', function (req, res, next) {
+    'use strict';
+    try {
+        mnfMod.uptSprlay(req, function (error, result) {
+            if (error) {
+                res.status(200).send(error);
+            } else {
+                res.status(200).send(result);
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.delete('/suprlays/:sprly_id', function (req, res, next) {
+    'use strict';
+    try {
+        mnfMod.delSprlay(req, function (error, result) {
+            if (error) {
+                res.status(200).send(error);
+            } else {
+                res.status(200).send(result);
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
 module.exports = router;

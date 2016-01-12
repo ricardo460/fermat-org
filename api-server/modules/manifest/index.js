@@ -137,6 +137,42 @@ exports.delLay = function (req, next) {
 }
 
 /**
+ * @method getSprlay
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.getSprlay = function (req, next) {
+
+}
+
+/**
+ * @method uptSprlay
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.uptSprlay = function (req, next) {
+
+}
+
+/**
+ * @method delSprlay
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.delSprlay = function (req, next) {
+
+}
+
+/**
  * @method listProcs
  *
  * @param  {[type]}   req  [description]
