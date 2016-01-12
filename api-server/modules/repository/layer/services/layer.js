@@ -120,6 +120,23 @@ exports.findAllLayers = function (query, order, callback) {
 };
 
 /**
+ * [findLayerById description]
+ *
+ * @method findLayerById
+ *
+ * @param  {[type]}     _id      [description]
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findLayerById = function (_id, callback) {
+    'use strict';
+    layerDao.findSchemaById(_id, function (err, layer) {
+        callback(err, layer);
+    });
+};
+
+/**
  * [updateLayerById description]
  *
  * @method updateLayerById
