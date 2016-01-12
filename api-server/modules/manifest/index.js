@@ -96,7 +96,18 @@ exports.delProc = function (req, next) {
  * @return {[type]}   [description]
  */
 exports.getComp = function (req, next) {
-
+	'use strict';
+    try {
+        compMod.findCompById(req.params.comp_id, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
 }
 
 /**

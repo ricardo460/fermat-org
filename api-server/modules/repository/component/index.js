@@ -338,6 +338,26 @@ exports.updCompDevAndLifCyc = function (_comp_id, devs, life_cycle, callback) {
         return callback(err, null);
     }
 };
+
+/**
+ * [findCompById description]
+ *
+ * @method findCompById
+ *
+ * @param  {[type]}     _id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findCompById = function(_id, callback){
+    compSrv.findCompById(_id, function (err_comp, res_comp) {
+        if (err_comp) {
+            return callback(err_comp, null);
+        }
+        return callback(null, res_comp);
+    });
+};
+
 /**
  * [delAllComps description]
  *
