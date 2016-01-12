@@ -29,6 +29,78 @@ exports.addProc = function (req, next) {
 };
 
 /**
+ * @method getProc
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.getProc = function (req, next) {
+
+}
+
+/**
+ * @method uptProc
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.uptProc = function (req, next) {
+
+}
+
+/**
+ * @method delProc
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.delProc = function (req, next) {
+
+}
+
+/**
+ * @method getProc
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.getProc = function (req, next) {
+
+}
+
+/**
+ * @method uptProc
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.uptProc = function (req, next) {
+
+}
+
+/**
+ * @method delProc
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.delProc = function (req, next) {
+
+}
+
+/**
  * @method listProcs
  *
  * @param  {[type]}   req  [description]
