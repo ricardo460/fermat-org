@@ -173,6 +173,42 @@ exports.delSprlay = function (req, next) {
 }
 
 /**
+ * @method getPltf
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.getPltf = function (req, next) {
+
+}
+
+/**
+ * @method uptPltf
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.uptPltf = function (req, next) {
+
+}
+
+/**
+ * @method delPltf
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.delPltf = function (req, next) {
+
+}
+
+/**
  * @method listProcs
  *
  * @param  {[type]}   req  [description]

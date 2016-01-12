@@ -639,4 +639,82 @@ router.delete('/suprlays/:sprly_id', function (req, res, next) {
     }
 });
 
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.get('/platforms/:pltf_id', function (req, res, next) {
+    'use strict';
+    try {
+        mnfMod.getPltf(req, function (error, result) {
+            if (error) {
+                res.status(200).send(error);
+            } else {
+                res.status(200).send(result);
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.put('/platforms/:pltf_id', function (req, res, next) {
+    'use strict';
+    try {
+        mnfMod.uptPltf(req, function (error, result) {
+            if (error) {
+                res.status(200).send(error);
+            } else {
+                res.status(200).send(result);
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.delete('/platforms/:pltf_id', function (req, res, next) {
+    'use strict';
+    try {
+        mnfMod.delPltf(req, function (error, result) {
+            if (error) {
+                res.status(200).send(error);
+            } else {
+                res.status(200).send(result);
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
 module.exports = router;
