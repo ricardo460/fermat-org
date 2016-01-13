@@ -55,7 +55,7 @@ function ViewManager() {
 
                         window.browserManager.modifyButtonLegend(1,'block');
 
-                        window.tileManager.transform(window.tileManager.targets.table, 3000 + transition);
+                        window.tileManager.transform(window.tileManager.targets.table, true, 3000 + transition);
                         
                         setTimeout(function(){
                             window.signLayer.transformSignLayer();
@@ -97,7 +97,7 @@ function ViewManager() {
 
                         window.headers.transformStack(transition);
 
-                        window.helpser.hideBackButton();
+                        window.helper.hideBackButton();
 
                         window.browserManager.modifyButtonLegend(0,'none');
                     };

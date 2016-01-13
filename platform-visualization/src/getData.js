@@ -5,9 +5,12 @@ var tileManager = new TileManager();
 function getData() {
     animate();
     
+    var url = window.helper.getAPIUrl("comps");
+    
+    //url += "?env=development"; //When needed the development branch, for lab.fermat.org
+    
  $.ajax({
-        url: "http://52.35.117.6:3000/repo/comps?access_token=561fd1a5032e0c5f7e20387d",
-        //url: "http://52.35.117.6:3000/repo/comps?access_token=561fd1a5032e0c5f7e20387d&env=development",
+        url: url,
         method: "GET"
     }).success(
         function (lists) {
@@ -24,6 +27,7 @@ function getData() {
             });
         });
 
+//Use when you don't want to connect to server
 /*setTimeout(function(){
         var l = JSON.parse(testData);
         

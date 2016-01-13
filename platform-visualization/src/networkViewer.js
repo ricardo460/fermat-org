@@ -127,34 +127,6 @@ NetworkViewer.prototype.configureCamera = function() {
     }, 7500);
 };
 
-NetworkViewer.prototype.test_load = function() {
-    
-    var networkNodes = [];
-    var NUM_NODES = 25,
-        MAX_CONNECTIONS = 10;
-
-    for(var i = 0; i < NUM_NODES; i++) {
-
-        var node = {
-            id : i,
-            edges : []
-        };
-
-        var connections = Math.floor(Math.random() * MAX_CONNECTIONS);
-
-        for(var j = 0; j < connections; j++) {
-
-            node.edges.push({
-                id : Math.floor(Math.random() * NUM_NODES)
-            });
-        }
-
-        networkNodes.push(node);
-    }
-
-    return networkNodes;
-};
-
 /**
  * @override
  * Resets the network and unload its children

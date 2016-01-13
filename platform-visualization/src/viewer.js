@@ -36,7 +36,7 @@ function createScene(){
 
     var light = new THREE.AmbientLight(0xFFFFFF);
     scene.add( light );
-    renderer = new THREE.WebGLRenderer({antialias : true, logarithmicDepthBuffer : true, alpha : true});
+    renderer = new THREE.WebGLRenderer({antialias : true, alpha : true}); //Logarithmic depth buffer disabled due to sprite - zbuffer issue
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
     renderer.setClearColor(0xFFFFFF);
@@ -153,7 +153,7 @@ function goToView ( targetView ) {
  * Load the page url.
  */
 function initPage() {
-
+    
 	window.Hash.on('^[a-zA-Z]*$', {
 
 		yep: function(path, parts) {
@@ -417,25 +417,6 @@ function onElementClick(id) {
         $(tlContainer).fadeTo(1000, 1);
 
         new Timeline(tasks, tlContainer).show();
-    }
-}
-
-function onElementClickDeveloper(id, objectsDevelopers){
-
-    var duration = 1000;
-
-    if(camera.getFocus() == null){
-        var camTarget = objectsDevelopers[id].clone();
-
-        window.camera.setFocus(camTarget, new THREE.Vector4(0, 0, 1000, 1), duration);
-
-        for (var i = 0; i < objectsDevelopers.length ; i++) {
-            if(id !== i)
-                window.developer.letAloneDeveloper(objectsDevelopers[i]);
-        }
-
-        helper.showBackButton();
-        developer.showDeveloperTiles(id);
     }
 }
 
