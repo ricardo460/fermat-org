@@ -1,5 +1,6 @@
 /*global require*/
 /*global module*/
+var request = require('request');
 var express = require('express');
 var passport = require('passport');
 var winston = require('winston');
@@ -49,6 +50,32 @@ router.get('/comps/reload', function (req, res, next) {
         next(err);
     }
 });
+/**
+ * Gets the access token and returns
+ */
+router.get('/accessToken', function (req, res, next) {
+    'use strict';
+    try {
+        console.log("Get acces token");
+        var code = req.query;
+        var url = "https://github.com/login/oauth/access_token?client_id=6cac9cc2c2cb584c5bf4&client_secret=4887bbc58790c7a242a8dafcb035c0a01dc2a199&" +
+            "code="+code['code'];
+        request.get({
+                url: url,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }, function (err, resp, body) {
+                console.log("response: ");
+                console.dir(body);
+                res.status(200).send(body);
+            });
+        
+    } catch (err) {
+        next(err);
+    }
+});
+
 /**
  * [description]
  *
