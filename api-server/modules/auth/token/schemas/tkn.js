@@ -15,9 +15,9 @@ var tknSchema = mongoose.Schema({
 		required: true,
 		ref: 'App'
 	},
-	tkn: {
-		type: String,
-		required: true
+	axs_key: {
+		type: mongoose.Schema.Types.ObjectId,
+		'default': new mongoose.Types.ObjectId()
 	},
 	upd_at: {
 		type: mongoose.Schema.Types.ObjectId,
