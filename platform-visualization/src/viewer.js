@@ -36,7 +36,12 @@ function createScene(){
 
     var light = new THREE.AmbientLight(0xFFFFFF);
     scene.add( light );
-    renderer = new THREE.WebGLRenderer({antialias : true, alpha : true}); //Logarithmic depth buffer disabled due to sprite - zbuffer issue
+    
+    if(webglAvailable())
+        renderer = new THREE.WebGLRenderer({antialias : true, alpha : true}); //Logarithmic depth buffer disabled due to sprite - zbuffer issue
+    else
+        renderer = new THREE.CanvasRenderer({antialias : true, alpha : true});
+        
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
     renderer.setClearColor(0xFFFFFF);
@@ -47,6 +52,18 @@ function createScene(){
         render);
 
     logo.startFade();
+}
+
+function webglAvailable() {
+    try {
+        var canvas = document.createElement('canvas');
+        
+        //Force boolean cast
+        return !!( window.WebGLRenderingContext && 
+                  (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+    } catch (e) {
+        return false;
+    }
 }
 
 /**
