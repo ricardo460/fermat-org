@@ -11,11 +11,17 @@ Overview
 To work on Fermat-org you need the following programs:
 
 * **Git**
-* **Xampp**
-* **Node.js**
-* **Gulp**
-* **Brackets or any other text editor of your choice**
-* **Jshint**
+* **Fermat-org (Backend)**
+  * **Node.js**
+  * **npm**
+  * **MongoDB
+  Nota: Para instalar estos programas dirijase a la siguiente guia [api-server](api-server/README.md)
+* **Fermat-org (Frontend)**
+  * **Xampp**
+  * **Gulp**
+  * **Brackets or any other text editor of your choice**
+  * **Jshint**
+
 
 Although there are many ways to configure these tools we provide a recommended configuration work environment.
 
