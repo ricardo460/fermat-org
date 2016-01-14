@@ -116,3 +116,22 @@ exports.delAllLayers = function (callback) {
         return callback(err, null);
     }
 };
+
+/**
+ * [findLayerById description]
+ *
+ * @method findLayerById
+ *
+ * @param  {[type]}     _id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findLayerById = function(_id, callback){
+    layerSrv.findLayerById(_id, function (err_lay, res_lay) {
+        if (err_lay) {
+            return callback(err_lay, null);
+        }
+        return callback(null, res_lay);
+    });
+};

@@ -117,3 +117,22 @@ exports.delAllPlatfrms = function (callback) {
         return callback(err, null);
     }
 };
+
+/**
+ * [findPlatfrmById description]
+ *
+ * @method findPlatfrmById
+ *
+ * @param  {[type]}     _id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findPlatfrmById = function(_id, callback){
+    platfrmSrv.findPlatfrmById(_id, function (err_plat, res_plat) {
+        if (err_plat) {
+            return callback(err_plat, null);
+        }
+        return callback(null, res_plat);
+    });
+};

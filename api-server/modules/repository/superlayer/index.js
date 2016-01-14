@@ -117,3 +117,22 @@ exports.delAllSuprlays = function (callback) {
         return callback(err, null);
     }
 };
+
+/**
+ * [findSuprlayById description]
+ *
+ * @method findSuprlayById
+ *
+ * @param  {[type]}     _id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findSuprlayById = function(_id, callback){
+    suprlaySrv.findSuprlayById(_id, function (err_suprlay, res_suprlay) {
+        if (err_suprlay) {
+            return callback(err_suprlay, null);
+        }
+        return callback(null, res_suprlay);
+    });
+};

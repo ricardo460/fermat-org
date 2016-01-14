@@ -254,6 +254,66 @@ exports.insOrUpdProc = function (platfrm, name, desc, prev, next, callback) {
     }
 };
 /**
+ * [findProcById description]
+ *
+ * @method findProcById
+ *
+ * @param  {[type]}     _id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findProcById = function(_id, callback){
+    procSrv.findProcById(_id, function (err_proc, res_proc) {
+        if (err_proc) {
+            return callback(err_proc, null);
+        }
+        return callback(null, res_proc);
+    });
+};
+
+exports.delProcById = function(_id, callback){
+
+    procSrv.findProcById(_id, function (err_proc, res_proc) {
+        if (err_proc) {
+            return callback(err_proc, null);
+        }
+        if(res_proc) {
+            var steps = res_proc.steps;
+            var loopDelSteeps = function(){
+
+                if(steps.length <= 0){
+
+                    procSrv.delSchemaById(_id, function (err_del_proc, res_del_proc) {
+                        if (err_del_proc) {
+                            return callback(err_del_proc, null);
+                        }
+                        return callback(null, res_del_proc);
+                    });
+
+                } else {
+
+                    var _idStep = steps.pop()
+                    stepSrv.delSchemaById(_idStep, function (err_del_step, res_delstep) {
+                        if (err_del_step) {
+                            return callback(err_del_step, null);
+                        } else {
+                            loopDelSteeps();
+                        }
+                    });
+                }
+
+            };
+
+            loopDelSteeps();
+
+        } else {
+            return callback(null, null);
+        }
+    });    
+};
+
+/**
  * [insOrUpdStep description]
  *
  * @method insOrUpdStep
@@ -456,4 +516,6 @@ exports.delAllProcs = function (callback) {
         return callback(err, null);
     }
 };
+
+
 /*jshint +W069 */
