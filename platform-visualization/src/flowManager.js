@@ -114,7 +114,7 @@ function FlowManager(){
         }
     };
 
-    this.getAndShowFlows = function(id) {
+    this.getAndShowFlows = function(id, callBack) {
         
         var button = document.createElement('button'),
             sucesorButton = document.getElementById('developerButton') || document.getElementById('backButton'),
@@ -152,13 +152,14 @@ function FlowManager(){
                     button.innerHTML = 'Show Workflows';
                     button.addEventListener('click', function() {
                         showFlow(flows);
-                        window.helper.hide(button, 1000, false);
-                        window.helper.hide('developerButton', 1000, false);
+                        window.helper.hideButtons();
                     });
                 }
                 else {
                     window.helper.hide(button, 1000, false);
                 }
+
+                setTimeout( function() { callBack(id); }, 1500 );  
             }
         );
     };

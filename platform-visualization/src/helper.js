@@ -27,6 +27,14 @@ function Helper() {
             });
         }
     };
+
+    this.hideButtons = function(){
+
+        if( $('#developerButton') != null ) window.helper.hide($('#developerButton'), 1000);
+        if( $('#showFlows') != null ) window.helper.hide($('#showFlows'), 1000);
+        if( $('#showScreenshots') != null ) window.helper.hide($('#showScreenshots'), 1000);        
+
+    }
     
     /**
      * @author Miguel Celedon
