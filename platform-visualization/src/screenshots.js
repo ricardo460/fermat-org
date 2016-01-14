@@ -498,7 +498,7 @@ function ScreenshotsAndroid() {
 
 		target = { x: position.x, y : position.y, z : 0 };
 
-		animate(mesh, target, true, 500, function(){
+		animate(mesh, target, true, 1000, function(){
 	   			window.camera.enable();
 	   			window.camera.setFocus(mesh, new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 1000);
 	   			positionFocus(id);
@@ -644,16 +644,14 @@ function ScreenshotsAndroid() {
 
 		self.hide(); 
 
-		animate(title, self.objects.title.mesh.target, false, 1000); 
-
-		setTimeout(function() {   
+		animate(title, self.objects.title.mesh.target, false, 1000, function() {   
 
 			for(var i = 0; i < self.objects.mesh.length; i++) { 
 
 				if (i != ignore) { 
 
 					_mesh = self.objects.mesh[i];
-					_mesh.material.map = searchWallet(_mesh.userData.wallet, 1 ); 
+					_mesh.material.map = searchWallet(_mesh.userData.wallet, 1); 
 					_mesh.material.needsUpdate = true;
 				}
 			} 
@@ -662,7 +660,7 @@ function ScreenshotsAndroid() {
 
 			self.show();  
 
-		}, 1000);
+		});
 	}
 
 	/**
@@ -673,10 +671,9 @@ function ScreenshotsAndroid() {
 	* @param {Boolean}   state     Status wallet.
 	* @param {Number}   duration   Animation length.
 	*/ 
-	function animate(mesh, target, state, duration, callBack){
+	function animate(mesh, target, state, duration, callback){
 
 		var _duration = duration || 2000,
-			call = callBack || false,
 			x,
 			y,
 			z,
@@ -716,8 +713,8 @@ function ScreenshotsAndroid() {
 			.to({x: rx, y: ry, z: rz}, _duration + 500)
 			.easing(TWEEN.Easing.Exponential.InOut)
 			.onComplete(function () {
-                    if(call !== false)
-                        callBack();   
+                    if(callback != null && typeof(callback) === 'function')
+                        callback();   
                 })
 			.start();
    }

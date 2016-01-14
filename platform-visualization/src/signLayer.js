@@ -55,7 +55,7 @@ function SignLayer(){
 		var mesh;
 		var source = "images/sign/sign.png";
 
-        screenshotsAndroid.setGroup(_group, titleSign);
+        window.screenshotsAndroid.setGroup(_group, titleSign);
 
 		var fillBox = function(ctx, image) {
             
@@ -71,7 +71,7 @@ function SignLayer(){
 
         mesh = createBoxSignLayer(source, fillBox, 720, 140);
 		mesh = self.setPositionSignLayer(mesh, x , y);
-		scene.add(mesh);
+		window.scene.add(mesh);
 	};
 
 	/**
