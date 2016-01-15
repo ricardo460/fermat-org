@@ -51,7 +51,7 @@ function ScreenshotsAndroid() {
             	button.style.zIndex = 10;
             	button.style.opacity = 0;
                 button.addEventListener('click', function() {
-                    showScreenshotsButton(id)
+                    showScreenshotsButton(id);
                     window.helper.hideButtons();
                 });
 
@@ -60,7 +60,7 @@ function ScreenshotsAndroid() {
                 helper.show(button, 1000);
     	}
     		
-    }
+    };
 
 	/**
 	* @author Ricardo Delgado
@@ -85,7 +85,7 @@ function ScreenshotsAndroid() {
 	        						position = window.tileManager.targets.table[i].position,
 	        						show = false,
 	        						screenshots = {};
-	        						//alert(GROUP[_group][0]+" "+"Sub App");
+	        						
 	        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
 	        						show = true;
 
@@ -172,9 +172,9 @@ function ScreenshotsAndroid() {
 		if (cant < 4){
 
 			var random = Math.random() * 80000,
-				position = {x : random, y : random};
+				_position = {x : random, y : random};
 			for (cant; cant <= 4; cant++)
-				addMesh(position , lost, false);
+				addMesh(_position , lost, false);
 		}
 
 		addTitle();
