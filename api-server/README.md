@@ -79,10 +79,10 @@ sudo apt-get install mongodb
 ```
 3) Check that the PEAR and PECL Versions
 
-``bash
+```bash
 	pear version
 ```
-``bash
+```bash
 	pecl version
 ```
 4) Install package php5-dev 
@@ -101,9 +101,8 @@ sudo apt-get install mongodb
 
 7) Add Extention to php.ini
 
-locate php.ini
-(/etc/php5/apache2/php.ini)
-Add – “extension=mongo.so” to the “Dynamic Extensions” section.
+* locate php.ini (/etc/php5/apache2/php.ini).
+* Add – “extension=mongo.so” to the “Dynamic Extensions” section.
 
 8) Then Restart Apache server.
 ```bash
@@ -112,10 +111,10 @@ Add – “extension=mongo.so” to the “Dynamic Extensions” section.
 
 9) Go to – http://localhost/rockmongo-1.1.7 (Name the folder that contains the tool rockmongo which moved to the location /var/www/html)
 
-Login with –
+Login with 
 
-Username – admin
-Password -admin
+* Username - admin
+* Password - admin 
 
 ###Running the project (api-server)
 
