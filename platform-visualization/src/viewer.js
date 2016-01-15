@@ -284,8 +284,7 @@ function onElementClick(id) {
 
                 button.addEventListener('click', function() {
                     showDeveloper(id);
-                    helper.hide(button, 1000, false);
-                    helper.hide('showFlows', 1000, false);
+                    window.helper.hideButtons();
                 });
 
                 document.body.appendChild(button);
@@ -293,7 +292,7 @@ function onElementClick(id) {
                 helper.show(button, 1000);
             }
             
-            window.flowManager.getAndShowFlows(id);
+            window.flowManager.getAndShowFlows(id, window.screenshotsAndroid.showButtonScreenshot);
             
         }, 3000);
         

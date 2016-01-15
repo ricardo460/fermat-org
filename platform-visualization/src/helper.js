@@ -9,7 +9,7 @@ function Helper() {
      * @param {Number}     [duration=1000] Duration of the fade animation
      * @param {Boolean}    [keep=false]     If set true, don't remove the element, just dissapear
      */
-    this.hide = function(element, duration, keep) {
+    this.hide = function(element, duration, keep, callback) {
 
         var dur = duration || 1000,
             el = element;
@@ -24,9 +24,20 @@ function Helper() {
                     el.style.display = 'none';
                 else
                     $(el).remove();
+
+                if(callback != null && typeof(callback) === 'function')
+                    callback(); 
             });
         }
+
     };
+
+    this.hideButtons = function(){
+
+        if( $('#developerButton') != null ) window.helper.hide($('#developerButton'), 1000);
+        if( $('#showFlows') != null ) window.helper.hide($('#showFlows'), 1000);
+        if( $('#showScreenshots') != null ) window.helper.hide($('#showScreenshots'), 1000);        
+    }
     
     /**
      * @author Miguel Celedon
