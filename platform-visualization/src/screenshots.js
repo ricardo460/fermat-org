@@ -19,8 +19,7 @@ function ScreenshotsAndroid() {
 		POSITION_X = 231,
 		CONTROL = {},
 		SCREENSHOTS = {},
-		GROUP = {},
-		ID = 0;
+		GROUP = {};
 
     var action = { state : false, mesh : null };
 
