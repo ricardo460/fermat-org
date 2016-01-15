@@ -8,20 +8,23 @@
 
 Overview
 
-To work on Fermat-org you need the following programs:
+Fermat-org the system is divided into two modules which are the server and the client. To work in these modules first thing to do is install the version control system (Git), to keep track of source code and allow other programmers to collaborate on development.
 
-* **Git**
-* **Fermat-org (Backend)**
-  * **Node.js**
-  * **npm**
-  * **MongoDB
-  Nota: Para instalar estos programas dirijase a la siguiente guia [api-server](api-server/README.md)
-* **Fermat-org (Frontend)**
-  * **Xampp**
-  * **Gulp**
-  * **Brackets or any other text editor of your choice**
-  * **Jshint**
+To work on the server side the following programs must be installed:
 
+* Node.js
+* MongoDB
+* RockMongo (a MongoDB administration tool)
+
+For instructions on installing these programs go to the guide [api-server](api-server/README.md).
+
+To work on the client side the following programs must be installed:
+
+* Node.js
+* Xampp
+* Gulp
+* Brackets or any other text editor of your choice
+* Jshint
 
 Although there are many ways to configure these tools we provide a recommended configuration work environment.
 
@@ -49,7 +52,7 @@ Alternatively I can download another application client function as Git, such So
 Simple download the executable from their official website and install.
 
 #### Installing Node.js.
-
+Installation for Windows.
 Go to the [official website](https://nodejs.org/en/) and download the executable file and ready.
 
 
