@@ -62,54 +62,58 @@ sudo apt-get install mongodb
 
 ###Install and Configure RockMongo - A Tool to Manage MongoDB
 
-Prerequisites
-MongoDB
-Apache Server
-PHP – 5.1.6 or newer
+**Prerequisites**
+* MongoDB
+* Apache Server
+* PHP – 5.1.6 or newer
 
-1. Install PHP with Apache
+1) Install PHP with Apache
 
 ```bash
 	sudo apt-get install php5 libapache2-mod-php5
 ```
-2. Install PHP Pear
+2) Install PHP Pear
 
 ```bash
 	sudo apt-get install php-pear
 ```
-3. Check that the PEAR and PECL Versions
+3) Check that the PEAR and PECL Versions
 
 ``bash
 	pear version
+```
+``bash
 	pecl version
 ```
-4. Install package php5-dev 
+4) Install package php5-dev 
 
 ```bash
 	sudo apt-get install php5-dev
 ```
-5. Install php MongoDB Driver
+5) Install php MongoDB Driver
 
 ```bash
 	sudo pecl install mongo
 ```
-6. Download the latest Rockmongo from – http://rockmongo.com/downloads
+6) Download the latest Rockmongo from – http://rockmongo.com/downloads
 
-Extract it to /var/www/html/
+	Extract it to /var/www/html/
 
-7. Add Extention to php.ini
+7) Add Extention to php.ini
 
 locate php.ini
 (/etc/php5/apache2/php.ini)
 Add – “extension=mongo.so” to the “Dynamic Extensions” section.
 
-8. Then Restart Apache server.
+8) Then Restart Apache server.
 ```bash
 	sudo service apache2 restart
 ```
 
-9. Go to – http://localhost/rockmongo-1.1.7 (Name the folder that contains the tool rockmongo which moved to the location /var/www/html)
+9) Go to – http://localhost/rockmongo-1.1.7 (Name the folder that contains the tool rockmongo which moved to the location /var/www/html)
+
 Login with –
+
 Username – admin
 Password -admin
 
