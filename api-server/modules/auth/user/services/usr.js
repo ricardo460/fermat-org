@@ -1,11 +1,11 @@
 var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
-var devSrv = require('../../../repository/developer/services/dev');
+var devMod = require('../../../repository/developer');
 var UsrMdl = require('../models/usr');
 var usrSch = require('../schemas/usr');
 /**
- * [compDao description]
+ * [usrDao description]
  *
  * @type {Dao}
  */
-var compDao = new Dao('Usr', usrSch, UsrMdl);
+var usrDao = new Dao('Usr', usrSch, UsrMdl);
