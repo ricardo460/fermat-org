@@ -1,4 +1,3 @@
-var tileManager = new TileManager();
 //var URL = "get_plugins.php";
 //var URL = "http://52.11.156.16:3000/repo/comps";
 
@@ -16,13 +15,17 @@ function getData() {
         function (lists) {
         
             window.loadMap(function() {
-        
-                window.preLoad(function() {
-                    tileManager.fillTable(lists);
 
-                    TWEEN.removeAll();
-                    window.logo.stopFade();
-                    init();
+                window.tileManager.JsonTile(function() {
+
+                    window.preLoad(function() {
+
+                        tileManager.fillTable(lists);
+
+                        TWEEN.removeAll();
+                        window.logo.stopFade();
+                        init();
+                    });
                 });
             });
         });

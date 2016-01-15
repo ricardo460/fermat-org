@@ -7,6 +7,7 @@ var table = [],
     actualView,
     stats = null,
 //Class
+    tileManager = new TileManager(),
     helper = new Helper(),
     logo = new Logo(),
     signLayer = new SignLayer(),
