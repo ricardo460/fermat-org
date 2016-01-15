@@ -1,21 +1,21 @@
 var mongoose = require('mongoose');
 /**
- * [appSchema description]
+ * represents an app subscribed to the API
  *
  * @type {[type]}
  */
 var appSchema = mongoose.Schema({
-    _owner_id: {
+    _owner_id: { // app owner
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Usr'
     },
-    name: {
+    name: { // app name
         type: String,
         trim: true,
         required: true
             //validate: /^[a-zA-Z][a-zA-Z0-9\._\-]{3,14}?[a-zA-Z0-9]{0,2}$/
     },
-    desc: {
+    desc: { // app description
         type: String,
         trim: true,
         //validate: /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/,

@@ -1,11 +1,11 @@
 var mongoose = require('mongoose');
 /**
- * [usrSchema description]
+ * represents a system user
  *
  * @type {[type]}
  */
 var usrSchema = mongoose.Schema({
-    usrnm: {
+    usrnm: { // username
         type: String,
         lowercase: true,
         trim: true,
@@ -16,7 +16,7 @@ var usrSchema = mongoose.Schema({
         type: String,
         lowercase: true,
         trim: true,
-        required: false,
+        required: true,
         //validate: /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/,
         'default': null
     },
@@ -28,6 +28,12 @@ var usrSchema = mongoose.Schema({
     avatar_url: {
         type: String,
         trim: true,
+        'default': null
+    },
+    github_tkn: {
+        type: String,
+        trim: true,
+        required: true,
         'default': null
     },
     upd_at: {
