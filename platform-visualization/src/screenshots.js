@@ -381,7 +381,7 @@ function ScreenshotsAndroid() {
 
 		canvas = document.createElement('canvas');
 		canvas.width  = 538;
-		canvas.height = 940;
+		canvas.height = 948;
 
 		ctx = canvas.getContext("2d");
 
