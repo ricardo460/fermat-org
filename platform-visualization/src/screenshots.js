@@ -77,7 +77,7 @@ function ScreenshotsAndroid() {
 	        		for(var _wallet in json[_group][_layer]){
 
 	        			for (var i = 0; i < window.table.length; i++){
-
+	        				
 	        				if(window.table[i].type === "Android" && window.table[i].group === _group && window.table[i].layer === _layer && window.table[i].name === _wallet){
 	        					
 	        					var id = i,
@@ -117,7 +117,7 @@ function ScreenshotsAndroid() {
 		for(var i = 0; i < self.objects.mesh.length; i++) { 
 
 			if (i != ignore)  
-				animate(self.objects.mesh[i], self.objects.target[i], false, 1500);
+				animate(self.objects.mesh[i], self.objects.target[i], false, 800);
 		}
 	}; 
 
@@ -135,7 +135,7 @@ function ScreenshotsAndroid() {
 			
 			for (var i = 0; i < self.objects.mesh.length; i++) {
 
-				animate(self.objects.mesh[i], self.objects.target[i], true, 2000);
+				animate(self.objects.mesh[i], self.objects.target[i], true, 1500);
 			}
 		}
 	};
@@ -314,7 +314,7 @@ function ScreenshotsAndroid() {
 			texture = null;
 			
 		var mesh = new THREE.Mesh(
-					new THREE.PlaneGeometry(50, 15),
+					new THREE.PlaneGeometry(70, 15),
 					new THREE.MeshBasicMaterial( { map: texture, side: THREE.FrontSide, transparent: true } )
 					);
 
@@ -351,13 +351,13 @@ function ScreenshotsAndroid() {
 			text = wallet;
 
 		canvas = document.createElement('canvas');
-		canvas.width  = 450;
+		canvas.width  = 600;
 		canvas.height = 200;
-
+		var middle = canvas.width / 2;
 		ctx = canvas.getContext("2d");
 		ctx.textAlign = 'center';
-		ctx.font="bold 50px Arial";
-		ctx.fillText(text, 200, 100);
+		ctx.font="bold 40px Arial";
+		ctx.fillText(text, middle, 100);
 
 		texture = new THREE.Texture(canvas);
 		texture.needsUpdate = true;  
@@ -380,8 +380,8 @@ function ScreenshotsAndroid() {
 			image;
 
 		canvas = document.createElement('canvas');
-		canvas.width  = 260;
-		canvas.height = 480;
+		canvas.width  = 538;
+		canvas.height = 948;
 
 		ctx = canvas.getContext("2d");
 

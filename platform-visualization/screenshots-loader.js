@@ -37,10 +37,10 @@ var walkDir = function (directoryName) {
                     SCREENSHOTS[group][layer][wallet] = {};
 
                 if(typeof SCREENSHOTS[group][layer][wallet].name === 'undefined')
-                    SCREENSHOTS[group][layer][wallet]['name'] = wallet;
+                    SCREENSHOTS[group][layer][wallet].name = wallet;
 
                 if(typeof SCREENSHOTS[group][layer][wallet].screenshots === 'undefined')
-                    SCREENSHOTS[group][layer][wallet]['screenshots'] = {};
+                    SCREENSHOTS[group][layer][wallet].screenshots = {};
             }
             
             var fullPath = path.join(directoryName, filename);
@@ -105,5 +105,5 @@ function AddScreenshots(fullPath, wallet, directoryName){
 
     num = fullPath.replace(directoryName+"\\", '');
     num = num.replace(".png", '');
-    SCREENSHOTS[group][layer][wallet]["screenshots"]["Screenshots_"+num] = src;
+    SCREENSHOTS[group][layer][wallet].screenshots['Screenshots_'+num] = src;
 }
