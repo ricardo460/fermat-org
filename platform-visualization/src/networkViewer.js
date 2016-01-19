@@ -48,8 +48,8 @@ NetworkViewer.prototype.onNodeClick = function(clickedNode) {
         
         BaseNetworkViewer.prototype.onNodeClick.call(this, clickedNode);
 
-        this.hideEdges();
-        this.hideNodes([clickedNode.userData.id]);
+        this.hide([clickedNode.userData.id]);
+        
         this.childNetwork = new ClientsViewer(clickedNode);
         
         this.open();
@@ -120,6 +120,9 @@ NetworkViewer.prototype.configureCamera = function() {
     var position = window.viewManager.translateToSection('network', new THREE.Vector3(0,0,0));
     setTimeout(function() {
         window.camera.move(position.x, position.y, self.NET_RADIOUS, 2000);
+        
+        self.show.call(self);
+        
     }, 5000);
 
     setTimeout(function() {
