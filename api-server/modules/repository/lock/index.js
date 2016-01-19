@@ -46,7 +46,9 @@ exports.insOrUpdLock = function (_usr_id, _item_id, item_type, priority, callbac
 					if (err_lock) {
 						return callback(err_lock, null);
 					}
-					if (res_itm && dateLib.isDiffGr(res_itm.upd_at, LOCK_TIME)) {
+					if (res_itm && !dateLib.isDiffGr(res_itm.upd_at, LOCK_TIME)) {
+						return callback(new Error('item is locked'), null);
+					} else if (res_itm && dateLib.isDiffGr(res_itm.upd_at, LOCK_TIME)) {
 						lockSrv.delLockById(res_itm._id, function (err_del, res_del) {
 							if (err_del) {
 								return callback(err_del, null);
@@ -62,8 +64,14 @@ exports.insOrUpdLock = function (_usr_id, _item_id, item_type, priority, callbac
 								return callback(new Error('no valid parameters'), null);
 							}
 						});
-					} else {
-						return callback(new Error('item is locked'), null);
+					} else if (res_itm) {
+						var lock = new LockMdl(_usr_id, _item_id, item_type, priority || 9);
+						lockSrv.insertLock(lock, function (err_ins, res_ins) {
+							if (err_ins) {
+								return callback(err_ins, null);
+							}
+							return callback(null, res_ins);
+						});
 					}
 				});
 			}

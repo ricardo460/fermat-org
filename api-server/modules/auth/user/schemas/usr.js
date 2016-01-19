@@ -24,7 +24,7 @@ var usrSchema = mongoose.Schema({
         type: String,
         trim: true,
         'default': null
-    }
+    },
     avatar_url: {
         type: String,
         trim: true,

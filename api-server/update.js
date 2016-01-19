@@ -85,17 +85,12 @@ setInterval(function () {
         winston.log('info', 'Doing nothing');
         break;
     case 11:
-        winston.log('info', 'Doing nothing');
-        break;
-    case 12:
-        loadNet.getNetwork(function(err, result){
-            if(err){
+        loadNet.getNetwork(function (err, result) {
+            if (err) {
                 winston.log('info', err);
             }
             winston.log('info', 'Get Network and loading');
-
         });
         break;
     }
-
 }, _INTERVAL);
