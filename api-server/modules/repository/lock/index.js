@@ -1,5 +1,7 @@
+var dateLib = require('./libs/date');
 var lockSrv = require('./services/lock');
 var LockMdl = require('./models/lock');
+var LOCK_TIME = 300000;
 /**
  * [insOrUpdLock description]
  *
@@ -44,7 +46,7 @@ exports.insOrUpdLock = function (_usr_id, _item_id, item_type, priority, callbac
 					if (err_lock) {
 						return callback(err_lock, null);
 					}
-					if (res_itm && true /* item date > n*/ ) {
+					if (res_itm && dateLib.isDiffGr(res_itm.upd_at, LOCK_TIME)) {
 						lockSrv.delLockById(res_itm._id, function (err_del, res_del) {
 							if (err_del) {
 								return callback(err_del, null);
@@ -57,9 +59,11 @@ exports.insOrUpdLock = function (_usr_id, _item_id, item_type, priority, callbac
 									return callback(null, res_ins);
 								});
 							} else {
-								return callback(null, null);
+								return callback(new Error('no valid parameters'), null);
 							}
 						});
+					} else {
+						return callback(new Error('item is locked'), null);
 					}
 				});
 			}

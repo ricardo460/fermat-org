@@ -8,11 +8,11 @@ var validator = require('validator');
  *
  * @return {Boolean}   [description]
  */
-function isValidData(data) {
+var isValidData = function (data) {
     if (typeof data == 'undefined' || data === null || data === '' || data === "" || data.length === 0) {
         return false;
     } else return true;
-}
+};
 /**
  * [isObjectID description]
  *
@@ -22,7 +22,7 @@ function isValidData(data) {
  *
  * @return {Boolean}  [description]
  */
-function isObjectID(_obj_id) {
+var isObjectID = function (_obj_id) {
     var str = _obj_id + '';
     if (isValidData(str)) {
         str = str + '';
@@ -39,7 +39,7 @@ function isObjectID(_obj_id) {
     } else {
         return false;
     }
-}
+};
 /**
  * [getObjIdToMilis description]
  *
@@ -49,7 +49,26 @@ function isObjectID(_obj_id) {
  *
  * @return {[type]}        [description]
  */
-function getObjIdToMilis(_obj_id) {};
+var getObjIdToMilis = function (_obj_id) {
+    if (isObjectID(_obj_id)) {
+        var timestamp = _obj_id.getTimestamp();
+        var date = new Date(timestamp);
+        var milisec = date.getTime();
+        return milisec;
+    }
+    return -1;
+};
+/**
+ * [getNow description]
+ *
+ * @method getNow
+ *
+ * @return {[type]} [description]
+ */
+var getNow = function () {
+    var date = new Date();
+    return date.getTime();
+};
 /**
  * [isDiffGr description]
  *
@@ -60,4 +79,14 @@ function getObjIdToMilis(_obj_id) {};
  *
  * @return {Boolean} [description]
  */
-exports.isDiffGr = function (_obj_id, diff) {};
+exports.isDiffGr = function (_obj_id, lapse) {
+    var then = getObjIdToMilis(_obj_id);
+    if (then > -1) {
+        var diff = getNow() - then;
+        if (diff < lapse) {
+            return false;
+        }
+        return true;
+    }
+    return true;
+};
