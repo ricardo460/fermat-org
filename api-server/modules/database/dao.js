@@ -433,6 +433,26 @@ Dao.prototype.delSchemaById = function (_id, callback) {
     }
 };
 /**
+ * [delSchema description]
+ *
+ * @method delSchema
+ *
+ * @param  {[type]}   query    [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
+Dao.prototype.delSchema = function (query, callback) {
+    'use strict';
+    try {
+        this.Schema.remove(query, function (err, res) {
+            return callback(err, res);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+/**
  * [delAllSchemas description]
  *
  * @method delAllSchemas

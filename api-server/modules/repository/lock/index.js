@@ -1,5 +1,5 @@
-var lockSrv = require('./services/layer');
-var LockMdl = require('./models/layer');
+var lockSrv = require('./services/lock');
+var LockMdl = require('./models/lock');
 /**
  * [insOrUpdLock description]
  *
@@ -13,7 +13,61 @@ var LockMdl = require('./models/layer');
  *
  * @return {[type]}     [description]
  */
-exports.insOrUpdLock = function (_usr_id, _item_id, item_type, priority, callback) {};
+exports.insOrUpdLock = function (_usr_id, _item_id, item_type, priority, callback) {
+	try {
+		lockSrv.findLockByUsrIdAndItemId(_usr_id, _item_id, function (err_lock, res_lock) {
+			if (err_lock) {
+				return callback(err_lock, null);
+			}
+			if (res_lock) {
+				var set_obj = {};
+				if (item_type && item_type !== res_lock.item_type) {
+					set_obj.item_type = item_type;
+					res_lock.item_type = item_type;
+				}
+				if (priority > -1 && priority !== res_lock.priority) {
+					set_obj.priority = priority;
+					res_lock.priority = priority;
+				}
+				if (Object.keys(set_obj).length > 0) {
+					lockSrv.updateLockById(res_lock._id, set_obj, function (err_upd, res_upd) {
+						if (err_upd) {
+							return callback(err_upd, null);
+						}
+						return callback(null, res_lock);
+					});
+				} else {
+					return callback(null, res_lock);
+				}
+			} else {
+				lockSrv.findLockByItemId(_item_id, function (err_itm, res_itm) {
+					if (err_lock) {
+						return callback(err_lock, null);
+					}
+					if (res_itm && true /* item date > n*/ ) {
+						lockSrv.delLockById(res_itm._id, function (err_del, res_del) {
+							if (err_del) {
+								return callback(err_del, null);
+							} else if (_usr_id && _item_id && item_type) {
+								var lock = new LockMdl(_usr_id, _item_id, item_type, priority || 9);
+								lockSrv.insertLock(lock, function (err_ins, res_ins) {
+									if (err_ins) {
+										return callback(err_ins, null);
+									}
+									return callback(null, res_ins);
+								});
+							} else {
+								return callback(null, null);
+							}
+						});
+					}
+				});
+			}
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
 /**
  * [delLock description]
  *
@@ -25,4 +79,15 @@ exports.insOrUpdLock = function (_usr_id, _item_id, item_type, priority, callbac
  *
  * @return {[type]}   [description]
  */
-exports.delLock = function (_usr_id, _item_id, callback) {};
+exports.delLock = function (_usr_id, _item_id, callback) {
+	try {
+		lockSrv.delLockByUsrIdAndItemId(_usr_id, _item_id, function (err_del, res_del) {
+			if (err_del) {
+				return callback(err_del, null);
+			}
+			return callback(null, res_del);
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};

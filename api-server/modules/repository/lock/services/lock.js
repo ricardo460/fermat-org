@@ -10,6 +10,16 @@ var usrSch = require('../../../auth/user/schemas/usr');
  * @type {Dao}
  */
 var lockDao = new Dao('Lock', lockSch, lockMdl, 'Usr', usrSch, usrMdl);
+/**
+ * [insertLock description]
+ *
+ * @method insertLock
+ *
+ * @param  {[type]}   lock_mdl [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.insertLock = function (lock_mdl, callback) {
 	'use strict';
 	lockDao.insertSchema(lock_mdl, function (err, lock) {
@@ -46,13 +56,11 @@ exports.findLockById = function (_id, callback) {
 exports.findLockByUsrIdAndItemId = function (_usr_id, _item_id, callback) {
 	'use strict';
 	lockDao.findSchema({
-		{
-			'$and': [{
-				'_item_id': _item_id
+		'$and': [{
+			'_item_id': _item_id
 			}, {
-				'_usr_id': _usr_id
+			'_usr_id': _usr_id
 			}]
-		}
 	}, function (err, lock) {
 		callback(err, lock);
 	});
@@ -62,15 +70,15 @@ exports.findLockByUsrIdAndItemId = function (_usr_id, _item_id, callback) {
  *
  * @method findLockByName
  *
- * @param  {[type]}       _usr_id    [description]
+ * @param  {[type]}       _item_id    [description]
  * @param  {Function}     callback [description]
  *
  * @return {[type]}       [description]
  */
-exports.findLockByUsrId = function (_usr_id, callback) {
+exports.findLockByItemId = function (_item_id, callback) {
 	'use strict';
 	lockDao.findSchema({
-		_usr_id: _usr_id
+		_item_id: _item_id
 	}, function (err, lock) {
 		callback(err, lock);
 	});
@@ -143,6 +151,47 @@ exports.updateLockById = function (_id, set, callback) {
 	lockDao.updateSchema({
 		_id: _id
 	}, set, {}, function (err, lock) {
+		callback(err, lock);
+	});
+};
+/**
+ * [delLockByUsrIdAndItemId description]
+ *
+ * @method delLockByUsrIdAndItemId
+ *
+ * @param  {[type]}                _usr_id  [description]
+ * @param  {[type]}                _item_id [description]
+ * @param  {Function}              callback [description]
+ *
+ * @return {[type]}                [description]
+ */
+exports.delLockByUsrIdAndItemId = function (_usr_id, _item_id, callback) {
+	'use strict';
+	set.upd_at = new mongoose.Types.ObjectId();
+	lockDao.delSchema({
+		'$and': [{
+			'_item_id': _item_id
+			}, {
+			'_usr_id': _usr_id
+			}]
+	}, function (err, lock) {
+		callback(err, lock);
+	});
+};
+/**
+ * [delLockById description]
+ *
+ * @method delLockById
+ *
+ * @param  {[type]}    _id      [description]
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.delLockById = function (_id, callback) {
+	'use strict';
+	set.upd_at = new mongoose.Types.ObjectId();
+	lockDao.delSchemaById(_id, function (err, lock) {
 		callback(err, lock);
 	});
 };
