@@ -114,23 +114,11 @@ function FlowManager(){
         }
     };
 
-    this.getAndShowFlows = function(id, callback) {
+    this.getAndShowFlows = function(id) {
         
-        var button = document.createElement('button'),
-            sucesorButton = document.getElementById('developerButton') || document.getElementById('backButton'),
-            element = window.table[id];
+        var element = window.table[id];
         
-        button.id = 'showFlows';
-        button.className = 'actionButton';
-        button.style.position = 'absolute';
-        button.innerHTML = 'Loading flows...';
-        button.style.top = '10px';
-        button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
-        button.style.zIndex = 10;
-        button.style.opacity = 0;
-        document.body.appendChild(button);
-        
-        window.helper.show(button, 1000);
+        var button = buttonsManager.createButtons('showFlows', 'Loading flows...');
         
         var url = window.helper.getAPIUrl("procs");
         url += '?platform=' + (element.group || element.superLayer) + '&layer=' + element.layer + '&component=' + element.name;
@@ -150,16 +138,13 @@ function FlowManager(){
                 
                 if(flows.length > 0) {
                     button.innerHTML = 'Show Workflows';
-                    callback(id);
                     button.addEventListener('click', function() {
                         showFlow(flows);
-                        window.helper.hideButtons();
+                        buttonsManager.removeAllButtons();
                     });
                 }
                 else {
-                    window.helper.hide(button, 1000, false, function() {
-                        callback(id);
-                    });
+                    buttonsManager.deleteButton('showFlows');
                 } 
             }
         );

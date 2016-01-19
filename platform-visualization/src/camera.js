@@ -160,7 +160,7 @@ function Camera(position, renderer, renderFunc) {
             if( $('#tlContainer') != null ) helper.hide($('#tlContainer'), 1000);
             $(renderer.domElement).fadeTo(1000, 1);
 
-            window.helper.hideButtons();
+            buttonsManager.removeAllButtons();
 
             focus = null;
         }

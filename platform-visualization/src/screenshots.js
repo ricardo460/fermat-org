@@ -39,27 +39,12 @@ function ScreenshotsAndroid() {
     this.showButtonScreenshot = function(id){
 
     	if(typeof SCREENSHOTS[id] !== 'undefined'){
-                var button = document.createElement('button'),
-                	sucesorButton = document.getElementById('showFlows') || document.getElementById('developerButton') || document.getElementById('backButton');
-                	
-            	button.id = 'showScreenshots';
-            	button.className = 'actionButton';
-            	button.style.position = 'absolute';
-            	button.innerHTML = 'View Screenshots';
-            	button.style.top = '10px';
-            	button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
-            	button.style.zIndex = 10;
-            	button.style.opacity = 0;
-                button.addEventListener('click', function() {
-                    showScreenshotsButton(id);
-                    window.helper.hideButtons();
-                });
 
-                document.body.appendChild(button);
-
-                helper.show(button, 1000);
-    	}
-    		
+    		buttonsManager.createButtons('showScreenshots', 'View Screenshots', function(){
+    			
+    			showScreenshotsButton(id);
+    		});
+    	}	
     };
 
 	/**
