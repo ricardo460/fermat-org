@@ -24,8 +24,8 @@ ClientsViewer.prototype.onNodeClick = function(clickedNode) {
         
         BaseNetworkViewer.prototype.onNodeClick.call(this, clickedNode);
 
-        this.hideEdges(clickedNode.userData.id);
-        this.hideNodes([clickedNode.userData.id]);
+        this.hide([clickedNode.userData.id], clickedNode.userData.id);
+        
         //this.childNetwork = new ClientsViewer(clickedNode);
         this.childNetwork = {};
         
@@ -51,12 +51,14 @@ ClientsViewer.prototype.drawNodes = function(networkNodes) {
 
         var sprite = this.createNode(networkNodes[i], position);
 
-        sprite.scale.set(500, 500, 1.0);
+        sprite.scale.set(1000, 1000, 1.0);
 
         window.scene.add(sprite);
     }
 
     this.createEdges();
+    
+    this.show();
 };
 
 ClientsViewer.prototype.test_load = function() {
@@ -100,8 +102,6 @@ ClientsViewer.prototype.createEdges = function() {
         });
     }
     
-    this.showEdges();
-    
     //Not needed now
     //BaseNetworkViewer.prototype.createEdges.call(this);
 };
@@ -109,13 +109,14 @@ ClientsViewer.prototype.createEdges = function() {
 /**
  * Hide edges except the one connecting to the parent
  * @author Miguel Celedon
- * @param {string} clickedID The ID of the clicked node to except its edge hiding
+ * @param   {string}      clickedID The ID of the clicked node to except its edge hiding
+ * @returns {TWEEN.Tween} The first in the tween chain
  */
 ClientsViewer.prototype.hideEdges = function(clickedID) {
     
     var edgeID = this.edgeExists(this.parentNode.userData.id, clickedID);
     
-    BaseNetworkViewer.prototype.hideEdges.call(this, [edgeID]);
+    return BaseNetworkViewer.prototype.hideEdges.call(this, [edgeID]);
     
 };
 
