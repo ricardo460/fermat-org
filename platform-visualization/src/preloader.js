@@ -41,7 +41,7 @@ function preLoad(onLoadAll) {
     
     //Preload images
     $.ajax({
-        url: "./images.json",
+        url: "./json/images.json",
         success: function (images) {
             'use strict';
 

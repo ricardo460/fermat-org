@@ -9,7 +9,7 @@ function Helper() {
      * @param {Number}     [duration=1000] Duration of the fade animation
      * @param {Boolean}    [keep=false]     If set true, don't remove the element, just dissapear
      */
-    this.hide = function(element, duration, keep) {
+    this.hide = function(element, duration, keep, callback) {
 
         var dur = duration || 1000,
             el = element;
@@ -24,8 +24,19 @@ function Helper() {
                     el.style.display = 'none';
                 else
                     $(el).remove();
+
+                if(callback != null && typeof(callback) === 'function')
+                    callback(); 
             });
         }
+
+    };
+
+    this.hideButtons = function(){
+
+        if( $('#developerButton') != null ) window.helper.hide($('#developerButton'), 1000);
+        if( $('#showFlows') != null ) window.helper.hide($('#showFlows'), 1000);
+        if( $('#showScreenshots') != null ) window.helper.hide($('#showScreenshots'), 1000);        
     };
     
     /**
@@ -314,15 +325,25 @@ function Helper() {
         return -1;
     };
     
-    this.getOutOfScreenPoint = function(z) {
+    /**
+     * Gets a point randomly chosen out of the screen
+     * @author Miguel Celedon
+     * @param   {number}        [z=0]         The desired Z
+     * @param   {string}        [view='home'] The view of the relative center
+     * @returns {THREE.Vector3} A new vector with the point position
+     */
+    this.getOutOfScreenPoint = function(z, view) {
         
-        z = (z !== undefined) ? z : 0;
+        z = (typeof z !== "undefined") ? z : 0;
+        view = (typeof view !== "undefined") ? view : 'home';
         
         var away = window.camera.getMaxDistance() * 4;
         var point = new THREE.Vector3(0, 0, z);
         
         point.x = Math.random() * away + away * ((Math.floor(Math.random() * 10) % 2) * -1);
         point.y = Math.random() * away + away * ((Math.floor(Math.random() * 10) % 2) * -1);
+        
+        point = window.viewManager.translateToSection(view, point);
         
         return point;
     };
@@ -353,5 +374,20 @@ function Helper() {
     
     this.hideBackButton = function() {
         window.helper.hide('backButton', 1000, true);
+    };
+    
+    /**
+     * Creates an empty tween which calls render() every update
+     * @author Miguel Celedon
+     * @param {number} [duration=2000] Duration of the tween
+     */
+    this.forceTweenRender = function(duration) {
+        
+        duration = (typeof duration !== "undefined") ? duration : 2000;
+        
+        new TWEEN.Tween(window)
+        .to({}, duration)
+        .onUpdate(window.render)
+        .start();
     };
 }
