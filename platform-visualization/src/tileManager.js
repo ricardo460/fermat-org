@@ -13,13 +13,13 @@ function TileManager() {
     this.dimensions = {};
     this.elementsByGroup = [];
 
+    var jsonTile = {};
     var self = this;
     var groupsQtty;
     var layersQtty;
     var section = [];
     var columnWidth = 0;
     var layerPosition = [];
-    
     var superLayerMaxHeight = 0;
     var superLayerPosition = [];
     
@@ -28,7 +28,13 @@ function TileManager() {
             window.onElementClick(target.userData.id);
     };
     
+    this.JsonTile = function(callback){
 
+        $.get("json/config_tile.json", {}, function(json) {
+            jsonTile = json;
+            callback();
+        });
+    }
     /**
      * Pre-computes the space layout for next draw
      */
@@ -187,7 +193,6 @@ function TileManager() {
             this.targets.sphere.push(object);
 
             indexes[g]++;
-
 
         }
 
@@ -472,247 +477,118 @@ function TileManager() {
             },
             portrait = {
                 src: base + 'portrait/' + quality + '/' + state + '.png',
-                x: 0,
-                y: 0,
-                w: tileWidth * scale,
-                h: tileHeight * scale
+                x: jsonTile.global.portrait.x,
+                y: jsonTile.global.portrait.y,
+                w: jsonTile.global.portrait.w * tileWidth * scale,
+                h: jsonTile.global.portrait.h * tileHeight * scale
             },
             groupIcon = {
                 src: base + 'icons/group/' + quality + '/icon_' + group + '.png',
-                w: 28 * scale,
-                h: 28 * scale
+                w: jsonTile.global.groupIcon.w * scale,
+                h: jsonTile.global.groupIcon.h * scale
             },
             typeIcon = {
                 src: base + 'icons/type/' + quality + '/' + type.toLowerCase() + '_logo.png',
-                w: 28 * scale,
-                h: 28 * scale
+                w: jsonTile.global.typeIcon.w * scale,
+                h: jsonTile.global.typeIcon.h * scale
             },
             ring = {
                 src: base + 'rings/' + quality + '/' + state + '_diff_' + difficulty + '.png'
             },
             codeText = {
                 text: table[id].code,
-                font: (18 * scale) + "px Arial"
+                font: (jsonTile.global.codeText.font * scale) + "px Arial"
             },
             nameText = {
                 text: table[id].name,
-                font: (10 * scale) + 'px Arial'
+                font: (jsonTile.global.nameText.font * scale) + 'px Arial'
             },
             layerText = {
                 text: table[id].layer,
-                font: (6 * scale) + 'px Arial'
+                font: (jsonTile.global.layerText.font * scale) + 'px Arial'
             },
             authorText = {
                 text: table[id].authorRealName || table[id].author || '',
-                font: (3.5 * scale) + 'px Arial'
+                font: (jsonTile.global.authorText.font * scale) + 'px Arial'
             },
             picMaintainer = {
                 src: table[id].maintainerPicture || base + 'buster.png'
             },
             maintainer = {
                 text: 'Maintainer',
-                font: (5.5 * scale) + 'px Arial',
+                font: (jsonTile.global.maintainer.font * scale) + 'px Arial',
                 color: "#FFFFFF"
             },
             nameMaintainer = {
                 text: table[id].maintainerRealName || table[id].maintainer || '',
-                font: (4.8 * scale) + 'px Arial',
+                font: (jsonTile.global.nameMaintainer.font * scale) + 'px Arial',
                 color: "#FFFFFF"
             },
             userMaintainer = {
                 text: table[id].maintainer || 'No Maintainer yet',
-                font: (4.3 * scale) + 'px Arial',
+                font: (jsonTile.global.userMaintainer.font * scale) + 'px Arial',
                 color: "#E2E2E2"
             };
 
-        switch (state) {
-        case "concept":
-            pic.x = 79 * scale;
-            pic.y = 36 * scale;
-            pic.w = 53 * scale;
-            pic.h = 53 * scale;
+            pic.x = jsonTile[state].pic.x * scale;
+            pic.y = jsonTile[state].pic.y * scale;
+            pic.w = jsonTile[state].pic.w * scale;
+            pic.h = jsonTile[state].pic.h * scale;
 
-            groupIcon.x = 13 * scale;
-            groupIcon.y = 49 * scale;
+            groupIcon.x = jsonTile[state].groupIcon.x * scale;
+            groupIcon.y = jsonTile[state].groupIcon.y * scale;
 
-            typeIcon.x = 45 * scale;
-            typeIcon.y = 49 * scale;
+            typeIcon.x = jsonTile[state].typeIcon.x * scale;
+            typeIcon.y = jsonTile[state].typeIcon.y * scale;
 
-            ring.x = 72 * scale;
-            ring.y = 93 * scale;
-            ring.w = 68 * scale;
-            ring.h = 9 * scale;
+            ring.x = jsonTile[state].ring.x * scale;
+            ring.y = jsonTile[state].ring.y * scale;
+            ring.w = jsonTile[state].ring.w * scale;
+            ring.h = jsonTile[state].ring.h * scale;
 
             codeText.x = middle;
-            codeText.y = 21 * scale;
+            codeText.y = jsonTile[state].codeText.y * scale;
 
             nameText.x = middle;
-            nameText.y = 33 * scale;
-            nameText.font = (9 * scale) + 'px Arial';
-            nameText.color = "#000000";
+            nameText.y = jsonTile[state].nameText.y * scale;
+            nameText.font = (jsonTile[state].nameText.font * scale) + 'px Arial';
 
             layerText.x = middle;
-            layerText.y = 114 * scale;
+            layerText.y = jsonTile[state].layerText.y * scale;
 
             authorText.x = middle;
-            authorText.y = 80 * scale;
+            authorText.y = jsonTile[state].authorText.y * scale;
 
-            picMaintainer.x = 136 * scale;
-            picMaintainer.y = 63.6 * scale;
-            picMaintainer.w = 23.5 * scale;
-            picMaintainer.h = 23.5 * scale;
+            picMaintainer.x = jsonTile[state].picMaintainer.x * scale;
+            picMaintainer.y = jsonTile[state].picMaintainer.y * scale;
+            picMaintainer.w = jsonTile[state].picMaintainer.w * scale;
+            picMaintainer.h = jsonTile[state].picMaintainer.h * scale;
 
-            maintainer.x = 174.5 * scale;
-            maintainer.y = 70 * scale;
+            maintainer.x = jsonTile[state].maintainer.x * scale;
+            maintainer.y = jsonTile[state].maintainer.y * scale;
 
-            nameMaintainer.x = 181 * scale;
-            nameMaintainer.y = 77 * scale;
+            nameMaintainer.x = jsonTile[state].nameMaintainer.x * scale;
+            nameMaintainer.y = jsonTile[state].nameMaintainer.y * scale;
 
-            userMaintainer.x = 181 * scale;
-            userMaintainer.y = 82 * scale;
+            userMaintainer.x = jsonTile[state].userMaintainer.x * scale;
+            userMaintainer.y = jsonTile[state].userMaintainer.y * scale; 
 
-            break;
-        case "development":
-            pic.x = 79 * scale;
-            pic.y = 47 * scale;
-            pic.w = 53 * scale;
-            pic.h = 53 * scale;
+            if(typeof jsonTile[state].layerText.color  !== 'undefined')
+                layerText.color = jsonTile[state].layerText.color;
 
-            groupIcon.x = 10 * scale;
-            groupIcon.y = 76 * scale;
+            if(typeof jsonTile[state].nameText.color  !== 'undefined')
+                nameText.color = jsonTile[state].nameText.color;
 
-            typeIcon.x = 42 * scale;
-            typeIcon.y = 76 * scale;
+            if(state === "production"){ 
+                codeText.x = jsonTile[state].codeText.x * scale;
+                layerText.x = jsonTile[state].layerText.x * scale;
+                authorText.x = jsonTile[state].authorText.x * scale;
 
-            ring.x = 64.5 * scale;
-            ring.y = 30.8 * scale;
-            ring.w = 82 * scale;
-            ring.h = 81.5 * scale;
-
-            codeText.x = middle;
-            codeText.y = 20 * scale;
-
-            nameText.x = middle;
-            nameText.y = 28 * scale;
-            nameText.font = (6 * scale) + 'px Arial';
-
-            layerText.x = middle;
-            layerText.y = 113 * scale;
-            layerText.color = "#F26662";
-
-            authorText.x = middle;
-            authorText.y = 88 * scale;
-
-            picMaintainer.x = 141 * scale;
-            picMaintainer.y = 78.5 * scale;
-            picMaintainer.w = 23.5 * scale;
-            picMaintainer.h = 23.5 * scale;
-
-            maintainer.x = 178.2 * scale;
-            maintainer.y = 84 * scale;
-
-            nameMaintainer.x = 184.5 * scale;
-            nameMaintainer.y = 91 * scale;
-
-            userMaintainer.x = 184.5 * scale;
-            userMaintainer.y = 96 * scale;
-
-            break;
-        case "qa":
-            pic.x = 80 * scale;
-            pic.y = 35 * scale;
-            pic.w = 53 * scale;
-            pic.h = 53 * scale;
-
-            groupIcon.x = 10 * scale;
-            groupIcon.y = 76 * scale;
-
-            typeIcon.x = 42 * scale;
-            typeIcon.y = 76 * scale;
-
-            ring.x = 67 * scale;
-            ring.y = 35.2 * scale;
-            ring.w = 78 * scale;
-            ring.h = 69.6 * scale;
-
-            codeText.x = middle;
-            codeText.y = 20 * scale;
-
-            nameText.x = middle;
-            nameText.y = 28 * scale;
-            nameText.font = (6 * scale) + 'px Arial';
-
-            layerText.x = middle;
-            layerText.y = 112 * scale;
-            layerText.color = "#FCC083";
-
-            authorText.x = middle;
-            authorText.y = 78 * scale;
-
-            picMaintainer.x = 141 * scale;
-            picMaintainer.y = 81 * scale;
-            picMaintainer.w = 23.5 * scale;
-            picMaintainer.h = 23.5 * scale;
-
-            maintainer.x = 179.2 * scale;
-            maintainer.y = 87.5 * scale;
-
-            nameMaintainer.x = 184.5 * scale;
-            nameMaintainer.y = 94.5 * scale;
-
-            userMaintainer.x = 184.5 * scale;
-            userMaintainer.y = 99.5 * scale;         
-
-            break;
-        case "production":
-            pic.x = 56 * scale;
-            pic.y = 33 * scale;
-            pic.w = 53 * scale;
-            pic.h = 53 * scale;
-
-            groupIcon.x = 17 * scale;
-            groupIcon.y = 30 * scale;
-
-            typeIcon.x = 17 * scale;
-            typeIcon.y = 62 * scale;
-
-            ring.x = 25 * scale;
-            ring.y = 99 * scale;
-            ring.w = 68 * scale;
-            ring.h = 9 * scale;
-
-            codeText.x = 170 * scale;
-            codeText.y = 26 * scale;
-
-            nameText.x = 170 * scale;
-            nameText.y = 45 * scale;
-            nameText.font = (7 * scale) + 'px Arial';
-            nameText.constraint = 60 * scale;
-            nameText.lineHeight = 9 * scale;
-            nameText.wrap = true;
-
-            layerText.x = 170 * scale;
-            layerText.y = 107 * scale;
-
-            authorText.x = 82 * scale;
-            authorText.y = 77 * scale;
-
-            picMaintainer.x = 136 * scale;
-            picMaintainer.y = 69 * scale;
-            picMaintainer.w = 23.5 * scale;
-            picMaintainer.h = 23.5 * scale;
-
-            maintainer.x = 174.5 * scale;
-            maintainer.y = 76 * scale;
-
-            nameMaintainer.x = 180 * scale;
-            nameMaintainer.y = 83 * scale;
-
-            userMaintainer.x = 180 * scale;
-            userMaintainer.y = 88 * scale;                     
-
-            break;
-        }
+                nameText.x = jsonTile[state].nameText.x * scale;                
+                nameText.constraint = jsonTile[state].nameText.constraint * scale;
+                nameText.lineHeight = jsonTile[state].nameText.lineHeight * scale;
+                nameText.wrap = true;
+            }
 
         if (state == "concept" || state == "production")
             ring.src = base + 'rings/' + quality + '/linear_diff_' + difficulty + '.png';
@@ -967,19 +843,19 @@ function TileManager() {
             this.targets.table.push(object);
 
             if(i === 0 ){ //entra a la primera
-                window.signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer);
+                window.signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer, table[i].group);
                 signRow = table[i].layerID;
                 signColumn = table[i].groupID;
             }
 
             if(table[i].layerID !== signRow && table[i].groupID === signColumn && layers[table[i].layer].super_layer === false){ // solo cambio de filas
-                window.signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer);
+                window.signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer, table[i].group);
                 signRow = table[i].layerID;
                 signColumn = table[i].groupID;
             }
 
-            if(signColumn !== table[i].groupID && layers[table[i].layer].super_layer === false){ //cambio de columna
-                window.signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer);
+            else if(signColumn !== table[i].groupID && layers[table[i].layer].super_layer === false){ //cambio de columna
+                window.signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer, table[i].group);
                 signRow = table[i].layerID;
                 signColumn = table[i].groupID;
             }

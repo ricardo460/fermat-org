@@ -101,7 +101,7 @@ NetworkViewer.prototype.drawNodes = function(networkNodes) {
 
         var sprite = this.createNode(networkNodes[i], position);
 
-        sprite.scale.set(500, 500, 1.0);
+        sprite.scale.set(1000, 1000, 1.0);
 
         window.scene.add(sprite);
     }

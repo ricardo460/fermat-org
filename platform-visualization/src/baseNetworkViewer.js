@@ -240,7 +240,7 @@ BaseNetworkViewer.prototype = {
         var NUM_NODES = 25,
             MAX_CONNECTIONS = 10;
         
-        var TYPES = ['pc', 'actor'];
+        var TYPES = ['pc', 'server', 'phone', 'tablet'];
 
         for(var i = 0; i < NUM_NODES; i++) {
 
@@ -294,9 +294,10 @@ BaseNetworkViewer.prototype = {
     close : function() {},
     
     PICTURES : {
-        server : "/images/network/pc.png",
+        server : "/images/network/server.png",
         pc : "/images/network/pc.png",
-        phone : "/images/network/pc.png",
-        actor : "/images/network/actor.png"
+        phone : "/images/network/phone.png",
+        actor : "/images/network/actor.png",
+        tablet : "/images/network/tablet.png"
     }
 };
