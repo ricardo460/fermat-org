@@ -7,6 +7,7 @@ function ButtonsManager() {
         button : []
     };
 
+    var self = this;
     /**
      * @author Ricardo Delgado
      * All the buttons and their functions are added.
