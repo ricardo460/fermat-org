@@ -190,7 +190,6 @@ exports.delLockByUsrIdAndItemId = function (_usr_id, _item_id, callback) {
  */
 exports.delLockById = function (_id, callback) {
 	'use strict';
-	set.upd_at = new mongoose.Types.ObjectId();
 	lockDao.delSchemaById(_id, function (err, lock) {
 		callback(err, lock);
 	});
