@@ -83,10 +83,10 @@ exports.isDiffGr = function (_obj_id, lapse) {
     var then = getObjIdToMilis(_obj_id);
     if (then > -1) {
         var diff = getNow() - then;
-        if (diff < lapse) {
-            return false;
+        if (diff > lapse) {
+            return true;
         }
-        return true;
+        return false;
     }
-    return true;
+    return false;
 };

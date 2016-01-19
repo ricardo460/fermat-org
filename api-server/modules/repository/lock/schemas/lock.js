@@ -6,8 +6,7 @@ var mongoose = require('mongoose');
  */
 var lockSchema = mongoose.Schema({
     _usr_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Usr'
+        type: mongoose.Schema.Types.ObjectId
     },
     _item_id: {
         type: mongoose.Schema.Types.ObjectId
