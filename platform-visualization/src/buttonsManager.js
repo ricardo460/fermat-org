@@ -7,6 +7,11 @@ function ButtonsManager() {
         button : []
     };
 
+    /**
+     * @author Ricardo Delgado
+     * All the buttons and their functions are added.
+     * @param {String} id  Tile ID.
+     */
     this.actionButtons = function(id){
 
         if(window.table[id].author) {
@@ -22,6 +27,13 @@ function ButtonsManager() {
         window.flowManager.getAndShowFlows(id);//Always stop last
     };
 
+    /**
+     * @author Ricardo Delgado
+     * creation of button and its function is added.
+     * @param {String}  id  Button ID.
+     * @param {String} text  Button text.
+	 * @param {Function} callback Function to call when finished.    
+     */
     this.createButtons = function(id, text, callback){
 
     	var object = {
@@ -63,6 +75,12 @@ function ButtonsManager() {
       	return button;
     };
 
+    /**
+     * @author Ricardo Delgado
+     * Eliminates the desired button.
+     * @param {String}  id  Button ID.
+	 * @param {Function} callback Function to call when finished.    
+     */
     this.deleteButton = function(id, callback){
 
     	for(var i = 0; i < objects.button.length; i++){
@@ -75,6 +93,10 @@ function ButtonsManager() {
     	}
     };
 
+    /**
+     * @author Ricardo Delgado
+     * Removes all created buttons. 
+     */
     this.removeAllButtons = function(){
 
     	if(objects.button.length !== 0){
