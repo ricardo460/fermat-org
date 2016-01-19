@@ -1,10 +1,10 @@
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
-# fermat-org
+# fermat-org server
 
 ## Installation Guide
 
-###Installing Node.js and npm
+###Manually installing Node.js
 
 * Go to the [official website](https://nodejs.org/en/) and download the version for linux.
 
@@ -46,21 +46,75 @@ If the version of npm shown in the terminal means that is already installed.
 
 Node.js comes with so npm can also use the command npm.
 
-Also Alternatively , you can perform the installation of node.js and npm using the apt-get command.
+###Installing Node.js via package manager
+
 ```bash
 	sudo apt-get update
 	sudo apt-get install nodejs
 ```
 
-```bash
-	sudo apt-get install npm
-```
 ###Installing MongoDB
 
 Open the terminal and type the command
 ```bash
 sudo apt-get install mongodb
 ```
+
+###Install and Configure RockMongo - A Tool to Manage MongoDB
+
+**Prerequisites**
+* MongoDB
+* Apache Server
+* PHP – 5.1.6 or newer
+
+1) Install PHP with Apache
+
+```bash
+	sudo apt-get install php5 libapache2-mod-php5
+```
+2) Install PHP Pear
+
+```bash
+	sudo apt-get install php-pear
+```
+3) Check that the PEAR and PECL Versions
+
+```bash
+	pear version
+```
+```bash
+	pecl version
+```
+4) Install package php5-dev 
+
+```bash
+	sudo apt-get install php5-dev
+```
+5) Install php MongoDB Driver
+
+```bash
+	sudo pecl install mongo
+```
+6) Download the latest Rockmongo from – http://rockmongo.com/downloads
+
+	Extract it to /var/www/html/
+
+7) Add Extention to php.ini
+
+* locate php.ini (/etc/php5/apache2/php.ini).
+* Add – “extension=mongo.so” to the “Dynamic Extensions” section.
+
+8) Then Restart Apache server.
+```bash
+	sudo service apache2 restart
+```
+
+9) Go to – http://localhost/rockmongo-1.1.7 (Name the folder that contains the tool rockmongo which moved to the location /var/www/html)
+
+Login with 
+
+* Username - admin
+* Password - admin 
 
 ###Running the project (api-server)
 
