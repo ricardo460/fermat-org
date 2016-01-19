@@ -38,14 +38,13 @@ exports.updateToken = function(axs_key, callback) {
 			}
 			if (res_token) {
 				var set_obj = {};
-				set_obj.upd_at = new Date();
-				res_token.upd_at = new Date();
+				//res_token.upd_at = new Date();
 				if (Object.keys(set_obj).length > 0) {
 					tokenSrv.updateTokenByAccesToken(res_token.axs_key, set_obj, function(err_upd, res_upd) {
 						if (err_upd) {
 							return callback(err_upd, null);
 						}
-						return callback(null, res_token);
+						return callback(null, res_upd);
 					});
 				}
 			}
