@@ -418,6 +418,18 @@ exports.getProc = function (req, next) {
  */
 exports.uptProc = function (req, next) {
 
+    'use strict';
+    try {
+        procMod.insOrUpdProc(req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
 }
 
 /**
