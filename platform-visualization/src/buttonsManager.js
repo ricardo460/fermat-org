@@ -3,8 +3,13 @@
  */
 function ButtonsManager() {
 
-    var objects = {
+    this.objects = {
         button : []
+    };
+
+    var classConfig = {
+    	button : 'actionButton',
+    	label : 'label'
     };
 
     var self = this;
@@ -13,13 +18,13 @@ function ButtonsManager() {
      * All the buttons and their functions are added.
      * @param {String} id  Tile ID.
      */
-    this.actionButtons = function(id){
+    this.actionButtons = function(id, callback){
 
         if(window.table[id].author) {
 
             self.createButtons('developerButton', 'View developer', function(){
             
-                window.showDeveloper(id);
+                callback();
             });
         }
 
@@ -35,29 +40,33 @@ function ButtonsManager() {
      * @param {String} text  Button text.
 	 * @param {Function} callback Function to call when finished.    
      */
-    this.createButtons = function(id, text, callback){
+    this.createButtons = function(id, text, callback, _x, _y, _type){
 
     	var object = {
             id : id,
             text : text
           };
 
-      	var idSucesor = "backButton";
+        var x = _x || 5,
+        	y = _y || 10,
+        	type = _type || 'button',
+        	idSucesor = "backButton",
+        	_class = classConfig[type];
 
-      	if(objects.button.length !== 0)
-      		idSucesor = objects.button[objects.button.length - 1].id;
+      	if(self.objects.button.length !== 0)
+      		idSucesor = self.objects.button[self.objects.button.length - 1].id;
 
-      	var button = document.createElement('button'),
+      	var button = document.createElement(type),
           	sucesorButton = document.getElementById(idSucesor);
                   
-      	button.id = id;
-    		button.className = 'actionButton';
-    		button.style.position = 'absolute';
-    		button.innerHTML = text;
-    		button.style.top = '10px';
-    		button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
-    		button.style.zIndex = 10;
-    		button.style.opacity = 0;
+  		button.id = id;
+		button.className = _class;
+		button.style.position = 'absolute';
+		button.innerHTML = text;
+		button.style.top = y + 'px';
+		button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + x) + 'px';
+		button.style.zIndex = 10;
+		button.style.opacity = 0;
 
       	button.addEventListener('click', function() {
       		
@@ -69,7 +78,7 @@ function ButtonsManager() {
 
       	document.body.appendChild(button);
 
-      	objects.button.push(object);
+      	self.objects.button.push(object);
 
       	window.helper.show(button, 1000);
 
@@ -84,10 +93,10 @@ function ButtonsManager() {
      */
     this.deleteButton = function(id, callback){
 
-    	for(var i = 0; i < objects.button.length; i++){
+    	for(var i = 0; i < self.objects.button.length; i++){
 
-    		if(objects.button[i].id === id){
-    			objects.button.splice(i,1);
+    		if(self.objects.button[i].id === id){
+    			self.objects.button.splice(i,1);
     			window.helper.hide($('#'+id), 1000, callback);
     			
     		}
@@ -100,9 +109,9 @@ function ButtonsManager() {
      */
     this.removeAllButtons = function(){
 
-    	if(objects.button.length !== 0){
+    	if(self.objects.button.length !== 0){
 
-	    	var actualButton = objects.button.shift();
+	    	var actualButton = self.objects.button.shift();
 
 	    	if( $('#'+actualButton.id) != null ) 
 	    		window.helper.hide($('#'+actualButton.id), 1000); 

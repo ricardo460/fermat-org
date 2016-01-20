@@ -274,7 +274,9 @@ function onElementClick(id) {
 
             window.helper.showBackButton();
 
-            window.buttonsManager.actionButtons(id);
+            window.buttonsManager.actionButtons(id, function(){
+                showDeveloper(id);
+            });
             
         }, 3000);
         
