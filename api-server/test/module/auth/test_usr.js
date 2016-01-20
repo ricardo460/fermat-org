@@ -11,14 +11,14 @@ setInterval(function() {
 		case 0:
 			console.log('info', 'Starting database connexion');
 			var db = require('../../../db');
-			/*modUsr.delAllUsrs(function(err, res) {
+			modUsr.delAllUsrs(function(err, res) {
 				if (err) {
 					console.log('error', err);
 				} else {
 					console.log('info', 'Delete all users succes ok');
 					console.log(res);
 				}
-			});*/
+			});
 			break;
 		case 1:
 			console.log('info', 'Inserting user');
