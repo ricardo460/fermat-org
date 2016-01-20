@@ -37,9 +37,15 @@ router.get('/servers', function (req, res, next) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
-                    // we save it
-                    cache.setBody(req, result);
-                    res.status(200).send(result);
+
+                    if(result) {
+                        cache.setBody(req, result);
+                        res.status(200).send(result);
+                    } else {
+                        res.status(200).send({message:"NO WAVE YET"});
+                    }
+                    
+                    
                 }
             });
         }
@@ -74,8 +80,12 @@ router.get('/nodes/:hash/children', function (req, res, next) {
                     res.status(200).send(error);
                 } else {
                     // we save it
-                    cache.setBody(req, result);
-                    res.status(200).send(result);
+                    if(result) {
+                        cache.setBody(req, result);
+                        res.status(200).send(result);
+                    } else {
+                        res.status(404).send({message:"NOT FOUND"});
+                    }
                 }
             });
         }

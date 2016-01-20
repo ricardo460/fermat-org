@@ -130,6 +130,23 @@ exports.updateProcById = function (_id, set, callback) {
 };
 
 /**
+ * [findProcById description]
+ *
+ * @method findProcById
+ *
+ * @param  {[type]}     _id      [description]
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findProcById = function (_id, callback) {
+    'use strict';
+    procDao.findSchemaById(_id, function (err, proc) {
+        callback(err, proc);
+    });
+};
+
+/**
  * [findAllProcs description]
  *
  * @method findAllProcs
