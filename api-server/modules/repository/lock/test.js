@@ -1,4 +1,4 @@
-var winston = require('winston');
+/*var winston = require('winston');
 var mongoose = require('mongoose');
 var lockMod = require('./index');
 var objid = new mongoose.Types.ObjectId();
@@ -7,7 +7,7 @@ var timestamp = objid.getTimestamp();
 var date = new Date(timestamp);
 console.dir(objid);
 console.dir(timestamp);
-console.dir(date);
+console.dir(date);*/
 //console.dir(dateLib.getObjIdToMilis(objid));
 /*	
 Update | Delete | New Field | Duplicate | Refresh | Text | Expand
@@ -57,7 +57,7 @@ Update | Delete | New Field | Duplicate | Refresh | Text | Expand
    "__v": NumberInt(0) 
 }
 */
-var _INTERVAL = 2000;
+/*var _INTERVAL = 2000;
 var loop = 0;
 winston.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 60);
 setInterval(function () {
@@ -113,4 +113,63 @@ setInterval(function () {
 		process.exit(1);
 		break;
 	}
-}, _INTERVAL);
+}, _INTERVAL);*/
+var text = "If compareFunction returns leave a and b unchanged with respect to each other";
+var array_of_chars = text.split(' ').join('').toLowerCase().split('');
+var count_array = [];
+var indexOf = function (array, element) {
+	for (var i = array.length - 1; i >= 0; i--) {
+		if (element.key == array[i].key) return i;
+	}
+	return -1;
+}
+for (var i = 0; i < array_of_chars.length; i++) {
+	var ch = {
+		key: array_of_chars[i],
+		value: 1
+	};
+	var index = indexOf(count_array, ch);
+	if (index > -1) {
+		count_array[index].value = count_array[index].value + 1;
+	} else {
+		count_array.push(ch);
+	}
+}
+count_array.sort(function (a, b) {
+	if (a.value > b.value) {
+		return 1;
+	}
+	if (a.value < b.value) {
+		return -1;
+	}
+	// a must be equal to b
+	return 0;
+});
+console.dir(count_array.pop());
+// unshift() prepend one or more elements to the beginning of an array
+// shift() pulls the first element off of the given array and returns it
+// push() append one or more elements to the end of an array
+// pop() pulls the last element off of the given array and returns it
+// 
+var fib = function (n) {
+	var prev = 1;
+	var res = 1;
+	if (n > 2) {
+		for (var i = 2; i < n; i++) {
+			var temp = res;
+			res = prev + res;
+			prev = temp;
+		}
+	}
+	return res;
+}
+console.dir(fib(7));
+
+function r(n) {
+	if (n <= 1) {
+		return n;
+	} else {
+		return r(n - 1) + r(n - 2);
+	}
+}
+console.dir(r(1000));

@@ -7,6 +7,7 @@ var table = [],
     actualView,
     stats = null,
 //Class
+    tileManager = new TileManager(),
     helper = new Helper(),
     logo = new Logo(),
     signLayer = new SignLayer(),
@@ -17,7 +18,8 @@ var table = [],
     flowManager = null,
     viewManager = null,
     magazine = null,
-    networkViewer = null;
+    networkViewer = null,
+    buttonsManager = null;
 //Global constants
 var TILE_DIMENSION = {
     width : 231,
@@ -36,7 +38,12 @@ function createScene(){
 
     var light = new THREE.AmbientLight(0xFFFFFF);
     scene.add( light );
-    renderer = new THREE.WebGLRenderer({antialias : true, alpha : true}); //Logarithmic depth buffer disabled due to sprite - zbuffer issue
+    
+    if(webglAvailable())
+        renderer = new THREE.WebGLRenderer({antialias : true, alpha : true}); //Logarithmic depth buffer disabled due to sprite - zbuffer issue
+    else
+        renderer = new THREE.CanvasRenderer({antialias : true, alpha : true});
+        
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
     renderer.setClearColor(0xFFFFFF);
@@ -49,6 +56,18 @@ function createScene(){
     logo.startFade();
 }
 
+function webglAvailable() {
+    try {
+        var canvas = document.createElement('canvas');
+        
+        //Force boolean cast
+        return !!( window.WebGLRenderingContext && 
+                  (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+    } catch (e) {
+        return false;
+    }
+}
+
 /**
  * Starts everything after receiving the json from the server
  */
@@ -58,6 +77,7 @@ function init() {
     screenshotsAndroid = new ScreenshotsAndroid();
     magazine = new Magazine();
     flowManager = new FlowManager();
+    buttonsManager = new ButtonsManager();
 
     //View Manager
     viewManager = new ViewManager();
@@ -232,55 +252,33 @@ function onElementClick(id) {
     
     var focus = parseInt(id);
 
-    if (camera.getFocus() == null) {
+    if (window.camera.getFocus() == null) {
 
-        tileManager.letAlone(focus, 2000);
+        window.tileManager.letAlone(focus, 2000);
 
-        objects[focus].getObjectForDistance(0).visible = true;
+        window.objects[focus].getObjectForDistance(0).visible = true;
 
-        headers.hideHeaders(2000);
+        window.headers.hideHeaders(2000);
 
         window.camera.setFocus(objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 2000);
         
         setTimeout(function() {
             
-            tileManager.letAlone(focus, 1000);
+            window.tileManager.letAlone(focus, 1000);
 
-            objects[focus].getObjectForDistance(0).visible = true;
+            window.objects[focus].getObjectForDistance(0).visible = true;
 
-            headers.hideHeaders(1000);
+            window.headers.hideHeaders(1000);
 
             window.camera.setFocus(objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 1000);
 
-            helper.showBackButton();
-            
-            if(table[id].author) {
-                var button = document.createElement('button');
-                button.id = 'developerButton';
-                button.className = 'actionButton';
-                button.style.position = 'absolute';
-                button.innerHTML = 'View developer';
-                button.style.top = '10px';
-                button.style.left = (10 + document.getElementById('backButton').clientWidth + 5) + 'px';
-                button.style.zIndex = 10;
-                button.style.opacity = 0;
+            window.helper.showBackButton();
 
-                button.addEventListener('click', function() {
-                    showDeveloper(id);
-                    helper.hide(button, 1000, false);
-                    helper.hide('showFlows', 1000, false);
-                });
-
-                document.body.appendChild(button);
-
-                helper.show(button, 1000);
-            }
-            
-            window.flowManager.getAndShowFlows(id);
+            window.buttonsManager.actionButtons(id);
             
         }, 3000);
         
-        camera.disable();   
+        window.camera.disable();   
     }
 
     function showDeveloper(id) {

@@ -37,7 +37,6 @@
         "init" : true,
         "BrowserManager" : true,
         "TileManager" : true,
-        "tileManager" : true,
         "ScreenshotsAndroid" : true,
         "BookManager" : true,
         "Magazine" : true,
@@ -47,6 +46,7 @@
         "BaseNetworkViewer" : true,
         "Developer" : true,
         "FlowManager" : true,
-        "ActionFlow" : true
+        "ActionFlow" : true,
+        "ButtonsManager" : true
     }
 }

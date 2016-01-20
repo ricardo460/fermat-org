@@ -1,0 +1,265 @@
+{
+    "global": {
+        "portrait": {
+                "x" : 0,
+                "y" : 0,
+                "w" : 1,
+                "h" : 1
+            },
+            "groupIcon": {
+                "w" : 28,
+                "h" : 28
+            },
+            "typeIcon": {
+                "w" : 28,
+                "h" : 28
+            },
+            "codeText": {
+                "font" : 18
+            },
+            "nameText": {
+                "font" : 10
+            },
+            "layerText": {
+                "font" : 6
+            },
+            "authorText": {
+                "font" : 3.5
+            },
+            "maintainer": {
+                "font" : 5.5
+            },  
+            "nameMaintainer": {
+                "font" : 4.8
+            },  
+            "userMaintainer": {
+                "font" : 4.3
+            } 
+    },
+    "concept":{  
+
+            "pic": {
+                "x" : 79,
+                "y" : 36,
+                "w" : 53,
+                "h" : 53
+            },    
+            "groupIcon": {
+                "x" : 13,
+                "y" : 49
+            },
+            "typeIcon": {
+                "x" : 45,
+                "y" : 49
+            },
+            "ring": {
+                "x" : 72,
+                "y" : 93,
+                "w" : 68,
+                "h" : 9
+            },   
+            "codeText": {
+                "y" : 21
+            },
+            "nameText": {
+                "y" : 33,
+                "font" : 9,
+                "color" : "#000000"
+            },
+            "layerText": {
+                "y" : 114
+            },
+            "authorText": {
+                "y" : 80
+            },
+            "picMaintainer": {
+                "x" : 136,
+                "y" : 63.6,
+                "w" : 23.5,
+                "h" : 23.5
+            }, 
+            "maintainer": {
+                "x" : 174.5,
+                "y" : 70
+            },  
+            "nameMaintainer": {
+                "x" : 181,
+                "y" : 77
+            },  
+            "userMaintainer": {
+                "x" : 181,
+                "y" : 82
+            } 
+    },
+    "development":{  
+
+            "pic": {
+                "x" : 79,
+                "y" : 47,
+                "w" : 53,
+                "h" : 53
+            },    
+            "groupIcon": {
+                "x" : 10,
+                "y" : 76
+            },
+            "typeIcon": {
+                "x" : 42,
+                "y" : 76
+            },
+            "ring": {
+                "x" : 64.5,
+                "y" : 30.8,
+                "w" : 82,
+                "h" : 81.5
+            },   
+            "codeText": {
+                "y" : 20
+            },
+            "nameText": {
+                "y" : 28,
+                "font" : 6
+            },
+            "layerText": {
+                "y" : 113,
+                "color" : "#F26662"
+            },
+            "authorText": {
+                "y" : 88
+            },
+            "picMaintainer": {
+                "x" : 141,
+                "y" : 78.5,
+                "w" : 23.5,
+                "h" : 23.5
+            }, 
+            "maintainer": {
+                "x" : 178.2,
+                "y" : 84
+            },  
+            "nameMaintainer": {
+                "x" : 184.5,
+                "y" : 91
+            },  
+            "userMaintainer": {
+                "x" : 184.5,
+                "y" : 96
+            } 
+    },
+    "qa":{  
+
+            "pic": {
+                "x" : 80,
+                "y" : 35,
+                "w" : 53,
+                "h" : 53
+            },    
+            "groupIcon": {
+                "x" : 10,
+                "y" : 76
+            },
+            "typeIcon": {
+                "x" : 42,
+                "y" : 76
+            },
+            "ring": {
+                "x" : 67,
+                "y" : 35.2,
+                "w" : 78,
+                "h" : 69.6
+            },   
+            "codeText": {
+                "y" : 20
+            },
+            "nameText": {
+                "y" : 28,
+                "font" : 6
+            },
+            "layerText": {
+                "y" : 112,
+                "color" : "#FCC083"
+            },
+            "authorText": {
+                "y" : 78
+            },
+            "picMaintainer": {
+                "x" : 141,
+                "y" : 81,
+                "w" : 23.5,
+                "h" : 23.5
+            }, 
+            "maintainer": {
+                "x" : 179.2,
+                "y" : 87.5
+            },  
+            "nameMaintainer": {
+                "x" : 184.5,
+                "y" : 94.5
+            },  
+            "userMaintainer": {
+                "x" : 184.5,
+                "y" : 99.5
+            } 
+    },
+    "production":{  
+
+            "pic": {
+                "x" : 56,
+                "y" : 33,
+                "w" : 53,
+                "h" : 53
+            },    
+            "groupIcon": {
+                "x" : 17,
+                "y" : 30
+            },
+            "typeIcon": {
+                "x" : 17,
+                "y" : 62
+            },
+            "ring": {
+                "x" : 25,
+                "y" : 99,
+                "w" : 68,
+                "h" : 9
+            },   
+            "codeText": {
+                "x" : 170,
+                "y" : 26
+            },
+            "nameText": {
+                "x" : 170,
+                "y" : 45,
+                "font" : 7,
+                "constraint" : 60,
+                "lineHeight" : 9               
+            },
+            "layerText": {
+                "x" : 170,
+                "y" : 107
+            },
+            "authorText": {
+                "x" : 82,
+                "y" : 77
+            },
+            "picMaintainer": {
+                "x" : 136,
+                "y" : 69,
+                "w" : 23.5,
+                "h" : 23.5
+            }, 
+            "maintainer": {
+                "x" : 174.5,
+                "y" : 76
+            },  
+            "nameMaintainer": {
+                "x" : 180,
+                "y" : 83
+            },  
+            "userMaintainer": {
+                "x" : 180,
+                "y" : 88
+            } 
+    }
+
+}
