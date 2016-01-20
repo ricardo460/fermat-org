@@ -33,18 +33,6 @@ var appSchema = mongoose.Schema({
     collection: 'apps'
 });
 /**
- * [usrnm description]
- *
- * @type {[type]}
- */
-appSchema.index({
-    usrnm: 1
-}, {
-    unique: true
-}, {
-    name: "apps_usrnm_uq_indx"
-});
-/**
  * [_owner_id description]
  *
  * @type {number}
