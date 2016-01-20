@@ -117,3 +117,15 @@ exports.updateUsrById = function (_id, set, callback) {
         callback(err, usr);
     });
 };
+
+/**
+ * [delAllUsers description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.delAllUsers = function (callback) {
+    'use strict';
+    usrDao.delAllSchemas(function (err, usr) {
+        callback(err, usr);
+    });
+};

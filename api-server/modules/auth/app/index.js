@@ -37,7 +37,7 @@ exports.insOrUpdApp = function(_owner_id, name, desc, callback) {
 						if (err_upd) {
 							return callback(err_upd, null);
 						}
-						return callback(null, res_app);
+						return callback(null, res_upd);
 					});
 				} else {
 					return callback(null, res_app);

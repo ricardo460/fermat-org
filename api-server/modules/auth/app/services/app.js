@@ -120,7 +120,7 @@ exports.updateAppById = function (_id, set, callback) {
  */
 exports.delAllApps = function (callback) {
     'use strict';
-    compDao.delAllSchemas(function (err, app) {
+    appDao.delAllSchemas(function (err, app) {
         callback(err, app);
     });
 };
