@@ -3,10 +3,9 @@ function ClientsViewer(parentNode) {
     BaseNetworkViewer.call(this);
     
     this.parentNode = parentNode;
-    this.nodes = {};
-    this.edges = [];
-    this.NET_RADIOUS = 1000;
     this.childNetwork = null;
+    
+    //this.parentNode.hide(parentNode.userData.id);
 }
 
 ClientsViewer.prototype = Object.create(BaseNetworkViewer.prototype);
@@ -48,10 +47,12 @@ ClientsViewer.prototype.open = function() {
 ClientsViewer.prototype.drawNodes = function(networkNodes) {
 
     for(var i = 0; i < networkNodes.length; i++) {
+        
+        var halfRadious = this.NET_RADIOUS / 2;
 
         var position = new THREE.Vector3(
             Math.random() * this.NET_RADIOUS,
-            - this.NET_RADIOUS / 2,
+            - (Math.random() * halfRadious + halfRadious),
             Math.random() * this.NET_RADIOUS);
         
         position.add(this.parentNode.position);
