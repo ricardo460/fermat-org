@@ -1,18 +1,19 @@
-var tokenSrv = require('./services/tkn');
-var tokenMdl = require('./models/tkn');
+var mongoose = require('mongoose');
+var tknSrv = require('./services/tkn');
+var TknMdl = require('./models/tkn');
 
 /**
- * [insTokenApp description]
+ * [instknApp description]
  * @param  {[type]}   _usr_id  [description]
  * @param  {[type]}   _app_id  [description]
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.insToken = function(_usr_id, _app_id, callback) {
+exports.insTkn = function(_usr_id, _app_id, callback) {
 	'use strict';
 	try {
-		var token = new tokenMdl(_usr_id, _app_id);
-		tokenSrv.insertToken(token, function(err_ins, res_ins) {
+		var tkn = new TknMdl(_usr_id, _app_id);
+		tknSrv.insTkn(tkn, function(err_ins, res_ins) {
 			if (err_ins) {
 				return callback(err_ins, null);
 			}
@@ -24,70 +25,68 @@ exports.insToken = function(_usr_id, _app_id, callback) {
 };
 
 /**
- * [updateToken description]
+ * [updatetkn description]
  * @param  {[type]}   axs_key  [description]
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.updateToken = function(axs_key, callback) {
+exports.updateTkn = function(axs_key, callback) {
 	'use strict';
 	try {
-		tokenSrv.findTokenByAccesToken(axs_key, function(err_token, res_token) {
-			if (err_token) {
-				return callback(err_token, null);
+		tknSrv.findTknByAxsKey(axs_key, function(err_tkn, res_tkn) {
+			if (err_tkn) {
+				return callback(err_tkn, null);
 			}
-			if (res_token) {
+			if (res_tkn) {
 				var set_obj = {};
-				set_obj.upd_at = new Date();
-				res_token.upd_at = new Date();
+				set_obj.upd_at = new mongoose.Types.ObjectId();
 				if (Object.keys(set_obj).length > 0) {
-					tokenSrv.updateTokenByAccesToken(res_token.axs_key, set_obj, function(err_upd, res_upd) {
+					tknSrv.updateTknByAxsKey(res_tkn.axs_key, set_obj, function(err_upd, res_upd) {
 						if (err_upd) {
 							return callback(err_upd, null);
 						}
-						return callback(null, res_token);
+						return callback(null, res_upd);
 					});
 				}
-			}
+			} else return callback(null, res_tkn);
 		});
 	} catch (err) {
 		return callback(err, null);
 	}
 };
 /**
- * [getTokens description]
+ * [gettkns description]
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.getListTokens = function(callback) {
+exports.getTkns = function(callback) {
 	'use strict';
 	try {
-		tokenSrv.findAllTokens({}, {}, function(err, tokens) {
+		tknSrv.findAllTkns({}, {}, function(err, tkns) {
 			if (err) {
 				return callback(err, null);
 			}
-			return callback(null, tokens);
+			return callback(null, tkns);
 		});
 	} catch (err) {
 		return callback(err, null);
 	}
 };
 
-//{axs_tkn: var}
 /**
- * [getToken description]
- * @param  {[type]}   query    [description]
+ * [gettkn description]
+ * @param  {[type]}   axs_key  [description]
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.getToken = function(query, callback) {
+exports.getTkn = function(axs_key, callback) {
 	'use strict';
 	try {
-		tokenSrv.findTokenByAccesToken(query, function(err, tokens) {
+		tknSrv.findTknByAxsKey(axs_key, function(err, tkn) {
 			if (err) {
 				return callback(err, null);
 			}
-			return callback(null, tokens);
+			return callback(null, tkn);
 		});
 	} catch (err) {
 		return callback(err, null);
