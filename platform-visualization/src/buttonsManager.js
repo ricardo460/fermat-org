@@ -9,7 +9,8 @@ function ButtonsManager() {
 
     var classConfig = {
     	button : 'actionButton',
-    	label : 'label'
+    	label : 'label',
+    	select : 'select'
     };
 
     var self = this;
@@ -23,8 +24,9 @@ function ButtonsManager() {
         if(window.table[id].author) {
 
             self.createButtons('developerButton', 'View developer', function(){
-            
-                callback();
+
+            	if(typeof(callback) === 'function')
+                	callback();
             });
         }
 
@@ -70,7 +72,7 @@ function ButtonsManager() {
 
       	button.addEventListener('click', function() {
       		
-                if(callback != null && typeof(callback) === 'function')
+                if(typeof(callback) === 'function')
                     callback(); 
 
                 self.removeAllButtons();
