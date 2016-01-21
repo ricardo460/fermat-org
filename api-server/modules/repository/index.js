@@ -487,6 +487,18 @@ exports.getComp = function (req, next) {
  * @return {[type]}   [description]
  */
 exports.uptComp = function (req, next) {
+    'use strict';
+    try {
+        compMod.updateCompById(req.params.comp_id, req.body.platfrm_id, req.body.suprlay_id, req.body.layer_id, req.body.name, req.body.type, req.body.description, req.body.difficulty, req.body.code_level, req.body.repo_dir, req.body.scrnshts, req.body.found, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
 
 }
 

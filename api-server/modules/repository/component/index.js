@@ -390,4 +390,52 @@ exports.delAllComps = function (callback) {
         return callback(err, null);
     }
 };
+
+export.updateCompById = function(_comp_id, _platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, scrnshts, found, callback){
+
+    var set_obj = {};
+    if (_platfrm_id) {
+        set_obj._platfrm_id = _platfrm_id;
+    }
+    if (_suprlay_id) {
+        set_obj._suprlay_id = _suprlay_id;
+    }
+    if (_layer_id) {
+        set_obj._layer_id = _layer_id;
+    }
+    if (name) {
+        set_obj.name = name;
+    }
+    if (type) {
+        set_obj.type = type;
+    }
+    if (description) {
+        set_obj.description = description;
+    }
+    if (difficulty) {
+        set_obj.difficulty = difficulty;
+    }
+    if (code_level) {
+        set_obj.code_level = code_level;
+    }
+    if (repo_dir) {
+        set_obj.repo_dir = repo_dir;
+    }
+    if (scrnshts) {
+        set_obj.scrnshts = scrnshts;
+    }
+    if (found) {
+        set_obj.found = found;
+    }
+
+    compSrv.updateCompById(_comp_id, set_obj, function (err, procs) {
+        if (err) {
+            return callback(err, null);
+        }
+        return callback(null, procs);
+    });
+
+
+}
+
 /*jshint +W069 */
