@@ -46,6 +46,8 @@ NetworkViewer.prototype.onNodeClick = function(clickedNode) {
     
     if(this.childNetwork === null) {
         
+        TWEEN.removeAll();
+        
         BaseNetworkViewer.prototype.onNodeClick.call(this, clickedNode);
 
         this.hide([clickedNode.userData.id]);
@@ -95,7 +97,7 @@ NetworkViewer.prototype.drawNodes = function(networkNodes) {
         var position = new THREE.Vector3(
             (Math.random() * 2 - 1) * this.NET_RADIOUS,
             (Math.random() * 2 - 1) * this.NET_RADIOUS,
-            ((Math.random() * 2 - 1) * this.NET_RADIOUS) - this.NET_RADIOUS);
+            ((Math.random() * 2 - 1) * this.NET_RADIOUS));
         
         position = window.viewManager.translateToSection('network', position);
 

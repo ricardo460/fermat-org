@@ -50,10 +50,7 @@ BaseNetworkViewer.prototype = {
      */
     reset : function() {
 
-        this.showNodes()
-        .chain(this.showEdges())
-        .start();
-        window.helper.forceTweenRender();
+        this.show();
     },
 
     /**
@@ -365,7 +362,7 @@ BaseNetworkViewer.prototype = {
      * @param {object} clickedNode The clicked node
      */
     onNodeClick : function(clickedNode) {
-
+        
         var goalPosition = new THREE.Vector3(0, -2500, 9000);
         goalPosition.add(clickedNode.position);
 

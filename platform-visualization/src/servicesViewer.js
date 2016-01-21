@@ -1,15 +1,13 @@
-function ClientsViewer(parentNode) {
+function ServicesViewer(parentNode) {
     
     BaseNetworkViewer.call(this);
     
     this.parentNode = parentNode;
     this.childNetwork = null;
-    
-    //this.parentNode.hide(parentNode.userData.id);
 }
 
-ClientsViewer.prototype = Object.create(BaseNetworkViewer.prototype);
-ClientsViewer.prototype.constructor = ClientsViewer;
+ServicesViewer.prototype = Object.create(BaseNetworkViewer.prototype);
+ServicesViewer.prototype.constructor = ServicesViewer;
 
 /**
  * @override
@@ -17,26 +15,19 @@ ClientsViewer.prototype.constructor = ClientsViewer;
  * @author Miguel Celedon
  * @param {object} clickedNode The clicked node
  */
-ClientsViewer.prototype.onNodeClick = function(clickedNode) {
+ServicesViewer.prototype.onNodeClick = function(clickedNode) {
     
     if(this.childNetwork === null) {
-        
-        TWEEN.removeAll();
         
         BaseNetworkViewer.prototype.onNodeClick.call(this, clickedNode);
 
         this.hide([clickedNode.userData.id], clickedNode.userData.id);
         
-        //this.childNetwork = new ClientsViewer(clickedNode);
-        this.childNetwork = new ServicesViewer(clickedNode);
+        //this.childNetwork = new ServicesViewer(clickedNode);
+        this.childNetwork = {};
         
         this.open();
     }
-};
-
-ClientsViewer.prototype.open = function() {
-    
-    this.childNetwork.load();
 };
 
 /**
@@ -44,12 +35,12 @@ ClientsViewer.prototype.open = function() {
  * @author Miguel Celedon
  * @param {Array} networkNodes Array of nodes to draw
  */
-ClientsViewer.prototype.drawNodes = function(networkNodes) {
+ServicesViewer.prototype.drawNodes = function(networkNodes) {
 
     for(var i = 0; i < networkNodes.length; i++) {
-        
-        var halfRadious = this.NET_RADIOUS / 2;
 
+        var halfRadious = this.NET_RADIOUS / 2;
+        
         var position = new THREE.Vector3(
             Math.random() * this.NET_RADIOUS,
             - (Math.random() * halfRadious + halfRadious),
@@ -69,11 +60,11 @@ ClientsViewer.prototype.drawNodes = function(networkNodes) {
     this.show();
 };
 
-ClientsViewer.prototype.test_load = function() {
+ServicesViewer.prototype.test_load = function() {
     
     var networkNodes = [];
     var NUM_NODES = 5;
-    var TYPES = ['pc', 'phone', 'tablet'];
+    var TYPES = ['actor'];
     
     for(var i = 0; i < NUM_NODES; i++) {
         
@@ -90,7 +81,7 @@ ClientsViewer.prototype.test_load = function() {
     
 };
 
-ClientsViewer.prototype.createEdges = function() {
+ServicesViewer.prototype.createEdges = function() {
     
     for(var nodeID in this.nodes) {
         
@@ -100,7 +91,7 @@ ClientsViewer.prototype.createEdges = function() {
         var lineGeo = new THREE.Geometry();
         lineGeo.vertices.push(origin, dest);
 
-        var line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color : 0x0000ff, transparent : true, opacity : 0}));
+        var line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color : 0x00ff00, transparent : true, opacity : 0}));
 
         scene.add(line);
         
@@ -121,7 +112,7 @@ ClientsViewer.prototype.createEdges = function() {
  * @param   {string}      clickedID The ID of the clicked node to except its edge hiding
  * @returns {TWEEN.Tween} The first in the tween chain
  */
-ClientsViewer.prototype.hideEdges = function(clickedID) {
+ServicesViewer.prototype.hideEdges = function(clickedID) {
     
     var edgeID = this.edgeExists(this.parentNode.userData.id, clickedID);
     
@@ -134,16 +125,14 @@ ClientsViewer.prototype.hideEdges = function(clickedID) {
  * @author Miguel Celedon
  * @returns {object} The reference to itself, if there was no children I'll return null
  */
-ClientsViewer.prototype.closeChild = function() {
+ServicesViewer.prototype.closeChild = function() {
     
     var self = null;
     
     if(this.childNetwork !== null){
         
-        //If the child is closed we need the parent to reset focus
-        var parent = this.childNetwork.parentNode;
-        
-        this.childNetwork = this.childNetwork.closeChild();
+        //TODO: Change for a call to childNetwork.closeChild() to keep the chain
+        this.childNetwork = null;
         
         self = this;
         

@@ -191,7 +191,6 @@ For each type the structure will change adding other properties:
 
     ```javascript
         currency : CURRENCY_NUMBER,
-        symbol : CURR_SYMBOL_STRING,
-        balance : BALANCE_NUMBER
+        symbol : CURR_SYMBOL_STRING
     ```
 ## Client-side process

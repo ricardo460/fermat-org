@@ -160,7 +160,7 @@ function Camera(position, renderer, renderFunc) {
             if( $('#tlContainer') != null ) helper.hide($('#tlContainer'), 1000);
             $(renderer.domElement).fadeTo(1000, 1);
 
-            buttonsManager.removeAllButtons();
+            window.buttonsManager.removeAllButtons();
 
             focus = null;
         }
@@ -326,7 +326,7 @@ function Camera(position, renderer, renderFunc) {
         
         raycaster.setFromCamera(target, camera);
         
-        /* Debug code, draw lines representing the clicks
+        /* Debug code, draw lines representing the clicks 
  
         var mat = new THREE.LineBasicMaterial({color : 0xaaaaaa});
         var g = new THREE.Geometry();
