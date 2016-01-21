@@ -13,18 +13,18 @@ var usrDao = new Dao('Usr', usrSch, UsrMdl);
 
 /**
  * [insertUsrAndDev description]
- * @param  {[type]}   usr_Mdl  [description]
- * @param  {[type]}   dev_Mdl  [description]
+ * @param  {[type]}   usr_mdl  [description]
+ * @param  {[type]}   dev_mdl  [description]
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.insertUsrAndDev = function (usr_Mdl, dev_Mdl, callback) {
+exports.insertUsrAndDev = function (usr_mdl, dev_mdl, callback) {
     'use strict';
-    usrDao.insertSchema(usr_Mdl, function (err, usr) {
+    usrDao.insertSchema(usr_mdl, function (err, usr) {
         callback(err, usr);
     });
-    devMod.insOrUpdDev(dev_Mdl.usrnm, dev_Mdl.email, dev_Mdl.name, dev_Mdl.bday, dev_Mdl.country,
-    dev_Mdl.avatar_url, dev_Mdl.url, dev_Mdl.bio, function (err, dev) {
+    devMod.insOrUpdDev(dev_mdl.usrnm, dev_mdl.email, dev_mdl.name, dev_mdl.bday, dev_mdl.country,
+    dev_mdl.avatar_url, dev_mdl.url, dev_mdl.bio, function (err, dev) {
     	callback(err, dev);
     });
 };
@@ -80,7 +80,7 @@ exports.findUsrByUsrnm = function (usrnm, callback) {
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.findUsers = function (query, limit, order, callback) {
+exports.findUsrs = function (query, limit, order, callback) {
     'use strict';
     usrDao.findSchemaLst(query, limit, order, function (err, usr) {
         callback(err, usr);
@@ -94,7 +94,7 @@ exports.findUsers = function (query, limit, order, callback) {
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.findAllUsers = function (query, order, callback) {
+exports.findAllUsrs = function (query, order, callback) {
     'use strict';
     usrDao.findAllSchemaLst(query, order, function (err, usr) {
         callback(err, usr);
@@ -123,7 +123,7 @@ exports.updateUsrById = function (_id, set, callback) {
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.delAllUsers = function (callback) {
+exports.delAllUsrs = function (callback) {
     'use strict';
     usrDao.delAllSchemas(function (err, usr) {
         callback(err, usr);

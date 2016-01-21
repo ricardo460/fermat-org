@@ -13,13 +13,13 @@ var appDao = new Dao('App', appSch, AppMdl, 'Usr', usrSch, UsrMdl);
 
 /**
  * Insert app in database
- * @param  {[type]}   AppMdl   [description]
+ * @param  {[type]}   app_mdl  [description]
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.insertApp = function (AppMdl, callback) {
+exports.insApp = function (app_mdl, callback) {
     'use strict';
-    appDao.insertSchema(AppMdl, function (err, app) {
+    appDao.insertSchema(app_mdl, function (err, app) {
         callback(err, app);
     });
 };

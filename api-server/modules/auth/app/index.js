@@ -1,5 +1,5 @@
 var appSrv = require('./services/app');
-var appMdl = require('./models/app');
+var AppMdl = require('./models/app');
 
 
 /**
@@ -13,8 +13,8 @@ var appMdl = require('./models/app');
 exports.insApp = function(_owner_id, name, desc, callback) {
 	'use strict';
 	try {
-		var app = new appMdl(_owner_id, name, desc);
-		appSrv.insertApp(app, function(err_ins, res_ins) {
+		var app = new AppMdl(_owner_id, name, desc);
+		appSrv.insApp(app, function(err_ins, res_ins) {
 			if (err_ins) {
 				return callback(err_ins, null);
 			}

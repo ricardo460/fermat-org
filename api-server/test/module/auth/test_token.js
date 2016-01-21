@@ -1,4 +1,4 @@
-var modToken = require('../../../modules/auth/token');
+var modTkn = require('../../../modules/auth/token');
 var mongoose = require('mongoose');
 var accessKey = null;
 var _INTERVAL = 2000;
@@ -13,8 +13,8 @@ setInterval(function() {
 			var db = require('../../../db');
 			break;
 		case 1:
-			console.log('info', 'Inserting Token 1 ');
-			modToken.insToken(new mongoose.Types.ObjectId("569ff8867a833e1f1bd9b4d3"), new mongoose.Types.ObjectId("569ff9157bdc782d1b1f3343"), function(err, res) {
+			console.log('info', 'Inserting Tkn 1 ');
+			modTkn.insTkn(new mongoose.Types.ObjectId("569ff8867a833e1f1bd9b4d3"), new mongoose.Types.ObjectId("569ff9157bdc782d1b1f3343"), function(err, res) {
 				if (err) {
 					console.log('error', err);
 				} else {
@@ -24,8 +24,8 @@ setInterval(function() {
 			});
 			break;
 		case 2:
-			console.log('info', 'Inserting Token 2');
-			modToken.insToken(new mongoose.Types.ObjectId("569ff8827a833e1f1bd9b4c5"), new mongoose.Types.ObjectId("569ff9117bdc782d1b1f3338"), function(err, res) {
+			console.log('info', 'Inserting Tkn 2');
+			modTkn.insTkn(new mongoose.Types.ObjectId("569ff8827a833e1f1bd9b4c5"), new mongoose.Types.ObjectId("569ff9117bdc782d1b1f3338"), function(err, res) {
 				if (err) {
 					console.log('error', err);
 				} else {
@@ -37,35 +37,35 @@ setInterval(function() {
 			});
 			break;
 		case 3:
-			console.log('info', 'Obtaining token list');
-			modToken.getListTokens(function(err_res, res_token) {
+			console.log('info', 'Obtaining Tkn list');
+			modTkn.getTkns(function(err_res, res_tkn) {
 				if (err_res) {
 					console.log('error', err_res);
 				} else {
-					console.log("List tokens: ");
-					console.log(res_token);
+					console.log("List Tkns: ");
+					console.log(res_tkn);
 				}
 			});
 			break;
 		case 4: 
-			console.log('info', 'Update token by acces key: '+accessKey);
-			modToken.updateToken(accessKey, function(err_res, res_token) {
+			console.log('info', 'Update Tkn by acces key: '+accessKey);
+			modTkn.updateTkn(accessKey, function(err_res, res_tkn) {
 				if (err_res) {
 					console.log('error', err_res);
 				} else {
-					console.log("Token updated: ");
-					console.log(res_token);
+					console.log("Tkn updated: ");
+					console.log(res_tkn);
 				}
 			});
 			break;
 		case 5:
-			console.log('info', 'Obtaining token by access key: '+accessKey);
-			modToken.getToken(accessKey, function(err_res, res_token) {
+			console.log('info', 'Obtaining Tkn by access key: '+accessKey);
+			modTkn.getTkn(accessKey, function(err_res, res_tkn) {
 				if (err_res) {
 					console.log('error', err_res);
 				} else {
-					console.log("Token: ");
-					console.log(res_token);
+					console.log("Tkn: ");
+					console.log(res_tkn);
 				}
 			});
 			break;

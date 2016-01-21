@@ -14,59 +14,58 @@ var usrSch = require('../../user/schemas/usr');
 var tknDao = new Dao('Tkn', tknSch, TknMdl, 'App', appSch, AppMdl, 'Usr', usrSch, UsrMdl);
 
 /**
- * [insertToken description]
- * @param  {[type]}   TknMdl   [description]
+ * [insTkn description]
+ * @param  {[type]}   tkn_mdl  [description]
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.insertToken = function(TknMdl, callback) {
+exports.insTkn = function(tkn_mdl, callback) {
 	'use strict';
-	tknDao.insertSchema(TknMdl, function(err, token) {
-		callback(err, token);
+	tknDao.insertSchema(tkn_mdl, function(err, tkn) {
+		callback(err, tkn);
 	});
 };
 /**
- * [updateTokenByAxsKey description]
+ * [updateTknByAxsKey description]
  * @param  {[type]}   axs_key  [description]
  * @param  {[type]}   set      [description]
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.updateTokenByAxsKey = function(axs_key, set, callback) {
+exports.updateTknByAxsKey = function(axs_key, set, callback) {
 	'use strict';
-	set.upd_at = new mongoose.Types.ObjectId();
 	tknDao.updateSchema({
 		axs_key: axs_key
-	}, set, {}, function(err, token) {
-		callback(err, token);
+	}, set, {}, function(err, tkn) {
+		callback(err, tkn);
 	});
 };
 
 /**
- * [findTokenByAxsKey description]
+ * [findtknByAxsKey description]
  * @param  {[type]}   axs_key  [description]
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.findTokenByAxsKey = function(axs_key, callback) {
+exports.findTknByAxsKey = function(axs_key, callback) {
 	'use strict';
 	tknDao.findAndPopulateSchema({
 		'axs_key': axs_key
-	}, '_usr_id _app_id', function(err, token) {
-		callback(err, token);
+	}, '_usr_id _app_id', function(err, tkn) {
+		callback(err, tkn);
 	});
 }
 
 /**
- * [findAllTokens description]
+ * [findAllTkns description]
  * @param  {[type]}   query    [description]
  * @param  {[type]}   order    [description]
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.findAllTokens = function(query, order, callback) {
+exports.findAllTkns = function(query, order, callback) {
 	'use strict';
-	tknDao.findAndPopulateAllSchemaLst(query, order, '_usr_id _app_id', function(err, token) {
-		callback(err, token);
+	tknDao.findAndPopulateAllSchemaLst(query, order, '_usr_id _app_id', function(err, tkn) {
+		callback(err, tkn);
 	});
 };

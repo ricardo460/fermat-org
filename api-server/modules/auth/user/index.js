@@ -82,7 +82,7 @@ exports.insOrUpdUsr = function(usrnm, email, name, bday, country, avatar_url, gi
 exports.getUsrs = function(callback) {
 	'use strict';
 	try {
-		usrSrv.findAllUsers({}, {}, function(err, usrs) {
+		usrSrv.findAllUsrs({}, {}, function(err, usrs) {
 			if (err) {
 				return callback(err, null);
 			}
@@ -141,7 +141,7 @@ exports.getUsrsByUsrnm = function(usrnm, callback) {
 exports.delAllUsrs = function(callback) {
 	'use strict';
 	try {
-		usrSrv.delAllUsers(function(err, usr) {
+		usrSrv.delAllUsrs(function(err, usr) {
 			if (err) {
 				return callback(err, null);
 			}
