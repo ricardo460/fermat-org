@@ -136,3 +136,50 @@ exports.findSuprlayById = function(_id, callback){
         return callback(null, res_suprlay);
     });
 };
+
+/**
+ * [updateSuprlayById description]
+ *
+ * @method updateSuprlayById
+ *
+ *
+ * @param  {[type]}     _sprly_id       [description]
+ * @param  {[type]}     code            [description]
+ * @param  {[type]}     name            [description]
+ * @param  {[type]}     logo            [description]
+ * @param  {[type]}     deps            [description]
+ * @param  {[type]}     order           [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updateSuprlayById =  function (_sprly_id, code, name, logo, deps, order, callback) {
+    'use strict';
+    try {
+        var set_obj = {};
+        if (code) {
+            set_obj.code = code;
+        }
+        if (name) {
+            set_obj.name = name;
+        }
+        if (logo) {
+            set_obj.logo = logo;
+        }
+        if (deps) {
+            set_obj.deps = deps;
+        }
+        if (order) {
+            set_obj.order = order;
+        }
+
+        suprlaySrv.updateSuprlayById(_sprly_id, set_obj, function (err, sprly) {
+            if (err) {
+                return callback(err, null);
+            }
+            return callback(null, sprly);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};

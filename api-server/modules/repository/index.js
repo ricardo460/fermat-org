@@ -607,7 +607,18 @@ exports.getSprlay = function (req, next) {
  * @return {[type]}   [description]
  */
 exports.uptSprlay = function (req, next) {
-
+    'use strict';
+    try {
+        suprlayMod.updateSuprlayById(req.params.sprly_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
 }
 
 /**
