@@ -547,6 +547,18 @@ exports.getLay = function (req, next) {
  * @return {[type]}   [description]
  */
 exports.uptLay = function (req, next) {
+    'use strict';
+    try {
+        layMod.updateLayerById(req.params.lay_id, req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
 
 }
 

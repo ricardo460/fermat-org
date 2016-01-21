@@ -391,6 +391,27 @@ exports.delAllComps = function (callback) {
     }
 };
 
+/**
+ * [updateCompById description]
+ *
+ * @method updateCompById
+ *
+ *
+ * @param  {[type]}     _comp_id        [description]
+ * @param  {[type]}     _platfrm_id     [description]
+ * @param  {[type]}     _suprlay_id     [description]
+ * @param  {[type]}     _layer_id       [description]
+ * @param  {[type]}     type            [description]
+ * @param  {[type]}     description     [description]
+ * @param  {[type]}     difficulty      [description]
+ * @param  {[type]}     code_level      [description]
+ * @param  {[type]}     repo_dir        [description]
+ * @param  {[type]}     scrnshts        [description]
+ * @param  {[type]}     found           [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
 export.updateCompById = function(_comp_id, _platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, scrnshts, found, callback){
 
     var set_obj = {};
@@ -428,11 +449,11 @@ export.updateCompById = function(_comp_id, _platfrm_id, _suprlay_id, _layer_id, 
         set_obj.found = found;
     }
 
-    compSrv.updateCompById(_comp_id, set_obj, function (err, procs) {
+    compSrv.updateCompById(_comp_id, set_obj, function (err, comp) {
         if (err) {
             return callback(err, null);
         }
-        return callback(null, procs);
+        return callback(null, comp);
     });
 
 

@@ -135,3 +135,46 @@ exports.findLayerById = function(_id, callback){
         return callback(null, res_lay);
     });
 };
+
+/**
+ * [updateLayerById description]
+ *
+ * @method updateLayerById
+ *
+ *
+ * @param  {[type]}     _lay_id         [description]
+ * @param  {[type]}     name            [description]
+ * @param  {[type]}     lang            [description]
+ * @param  {[type]}     suprlay         [description]
+ * @param  {[type]}     order           [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updateLayerById =  function (_lay_id, name, lang, suprlay, order, callback) {
+    'use strict';
+    try {
+        var set_obj = {};
+        if (name) {
+            set_obj.name = name;
+        }
+        if (lang) {
+            set_obj.lang = lang;
+        }
+        if (suprlay) {
+            set_obj.suprlay = suprlay;
+        }
+        if (order) {
+            set_obj.order = order;
+        }
+
+        layerSrv.updateLayerById(_lay_id, set_obj, function (err, lay) {
+            if (err) {
+                return callback(err, null);
+            }
+            return callback(null, lay);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
