@@ -310,7 +310,7 @@ exports.delProcById = function(_id, callback){
         } else {
             return callback(null, null);
         }
-    });    
+    });
 };
 
 /**
@@ -511,6 +511,46 @@ exports.delAllProcs = function (callback) {
                 }
                 return callback(null, true);
             });
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
+/**
+ * [updateProcById description]
+ *
+ * @method updateProcById
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updateProcById =  function (_proc_id, platfrm, name, desc, prev, next, callback) {
+    'use strict';
+    try {
+        var set_obj = {};
+        if (platfrm) {
+            set_obj.platfrm = platfrm;
+        }
+        if (name) {
+            set_obj.name = name;
+        }
+        if (desc) {
+            set_obj.desc = desc;
+        }
+        if (prev) {
+            set_obj.prev = prev;
+        }
+        if (next ) {
+            set_obj.next = next;
+        }
+
+        procSrv.updateProcById(_proc_id, set_obj, function (err, procs) {
+            if (err) {
+                return callback(err, null);
+            }
+            return callback(null, procs);
         });
     } catch (err) {
         return callback(err, null);

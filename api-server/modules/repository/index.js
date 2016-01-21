@@ -417,10 +417,9 @@ exports.getProc = function (req, next) {
  * @return {[type]}   [description]
  */
 exports.uptProc = function (req, next) {
-
     'use strict';
     try {
-        procMod.insOrUpdProc(req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, function (err, res) {
+        procMod.updateProcById(req.params.proc_id, req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, function (err, res) {
             if (err) {
                 next(err, null);
             } else {
