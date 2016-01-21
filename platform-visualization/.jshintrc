@@ -44,6 +44,7 @@
         "SignLayer" : true,
         "ClientsViewer" : true,
         "BaseNetworkViewer" : true,
+        "ServicesViewer" : true,
         "Developer" : true,
         "FlowManager" : true,
         "ActionFlow" : true,

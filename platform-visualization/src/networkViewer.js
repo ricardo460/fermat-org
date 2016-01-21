@@ -46,6 +46,8 @@ NetworkViewer.prototype.onNodeClick = function(clickedNode) {
     
     if(this.childNetwork === null) {
         
+        TWEEN.removeAll();
+        
         BaseNetworkViewer.prototype.onNodeClick.call(this, clickedNode);
 
         this.hide([clickedNode.userData.id]);
