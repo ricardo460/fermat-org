@@ -68,7 +68,31 @@ button:active {
     z-index: 10;
     
 }
+#div-Edit1 {
+    left: 20%;
+    top: 0.5%;
+    width: 60.5%;
+    height: 8%;
+    display:inline-block;
+    position:absolute; 
+}
 
+#div-Edit2 {
+    left: 27%;
+    top: 1.8%;
+    display:inline-block;
+    width: 40%;
+    height: 6%;
+    position:absolute;
+}
+
+.edit-Fermat {
+    color: rgba(127,127,127,1);
+}
+
+#select-layer {
+    width:18.3%;
+}
 .backButton, .actionButton, #legend {
     color: rgba(127,127,127,1);
     background: transparent;
@@ -77,6 +101,8 @@ button:active {
     padding: 5px 10px;
     cursor: pointer;
 }
+
+
 
 .colorBox {
     width: 10px;

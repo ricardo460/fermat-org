@@ -4,13 +4,7 @@
 function ButtonsManager() {
 
     this.objects = {
-        button : []
-    };
-
-    var classConfig = {
-    	button : 'actionButton',
-    	label : 'label',
-    	select : 'select'
+        buttons : []
     };
 
     var self = this;
@@ -42,7 +36,7 @@ function ButtonsManager() {
      * @param {String} text  Button text.
 	 * @param {Function} callback Function to call when finished.    
      */
-    this.createButtons = function(id, text, callback, _x, _y, _type){
+    this.createButtons = function(id, text, callback, _x, _type){
 
     	var object = {
             id : id,
@@ -50,22 +44,20 @@ function ButtonsManager() {
           };
 
         var x = _x || 5,
-        	y = _y || 10,
         	type = _type || 'button',
-        	idSucesor = "backButton",
-        	_class = classConfig[type];
+        	idSucesor = "backButton";
 
-      	if(self.objects.button.length !== 0)
-      		idSucesor = self.objects.button[self.objects.button.length - 1].id;
+      	if(self.objects.buttons.length !== 0)
+      		idSucesor = self.objects.buttons[self.objects.buttons.length - 1].id;
 
       	var button = document.createElement(type),
           	sucesorButton = document.getElementById(idSucesor);
                   
   		button.id = id;
-		button.className = _class;
+		button.className = 'actionButton';
 		button.style.position = 'absolute';
 		button.innerHTML = text;
-		button.style.top = y + 'px';
+		button.style.top = '10px';
 		button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + x) + 'px';
 		button.style.zIndex = 10;
 		button.style.opacity = 0;
@@ -80,7 +72,7 @@ function ButtonsManager() {
 
       	document.body.appendChild(button);
 
-      	self.objects.button.push(object);
+      	self.objects.buttons.push(object);
 
       	window.helper.show(button, 1000);
 
@@ -95,10 +87,10 @@ function ButtonsManager() {
      */
     this.deleteButton = function(id, callback){
 
-    	for(var i = 0; i < self.objects.button.length; i++){
+    	for(var i = 0; i < self.objects.buttons.length; i++){
 
-    		if(self.objects.button[i].id === id){
-    			self.objects.button.splice(i,1);
+    		if(self.objects.buttons[i].id === id){
+    			self.objects.buttons.splice(i,1);
     			window.helper.hide($('#'+id), 1000, callback);
     			
     		}
@@ -111,9 +103,9 @@ function ButtonsManager() {
      */
     this.removeAllButtons = function(){
 
-    	if(self.objects.button.length !== 0){
+    	if(self.objects.buttons.length !== 0){
 
-	    	var actualButton = self.objects.button.shift();
+	    	var actualButton = self.objects.buttons.shift();
 
 	    	if( $('#'+actualButton.id) != null ) 
 	    		window.helper.hide($('#'+actualButton.id), 1000); 
