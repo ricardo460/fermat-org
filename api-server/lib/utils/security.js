@@ -7,23 +7,7 @@
  *
  **/
 var validator = require('validator'),
-    crypto = require('crypto'),
-    sanitizer = require('sanitizer'),
-    config = require('../config.js'),
-    apikeys = require('../apikeys');
-
-exports.isValidRanking = function (ranking) {
-    var valid = false;
-    if (ranking == config.ranking.wilson) valid = true;
-    else if (ranking == config.ranking.hack) valid = true;
-    else if (ranking == config.ranking.reddit) valid = true;
-    else if (ranking == config.ranking.random) valid = true;
-    else if (ranking == config.ranking.controversy) valid = true;
-    else if (ranking == config.ranking.fresh) valid = true;
-    else if (ranking == config.ranking.distance) valid = true;
-    //else  valid = false;
-    return valid;
-};
+    sanitizer = require('sanitizer');
 
 exports.isValidDate = function (date) {
     return isValidDate(date);
@@ -49,15 +33,6 @@ function isValidData(data) {
         return 0;
     } else return 1;
 }
-
-function isValidCoordinate(lt, ln) {
-    return (lt && ln && (lt + '' != '0' || ln + '' != '0') && (lt + '' != '0.0' || ln + '' != '0.0'));
-}
-
-exports.isValidCoordinate = function (lt, ln) {
-    return isValidCoordinate(lt, ln);
-};
-
 
 /**
  * [isObjectID description]
@@ -171,25 +146,11 @@ exports.sanitizeItem = function (item) {
  */
 exports.apiVersion = function (api_version) {
     if (isValidData(api_version)) {
-        if (api_version == "v3") return 1;
+        if (api_version == "v1") return 1;
     } else {
         //console.log('invalid api_version');
         return 0;
     }
-};
-
-/**
- * [user description]
- * @param  {[type]} user [description]
- * @return {[type]}      [description]
- */
-exports.user = function (user) {
-    if (isValidData(user)) {
-        if (!isEmail(user.email)) return 0;
-        if (!isLengthPassword(user.password)) return 0;
-        return 1;
-    }
-    return 0;
 };
 
 /**
@@ -237,7 +198,6 @@ exports.isValidAccount = function (account) {
     if (isUsername(account) || isEmail(account)) {
         return 1;
     }
-    //console.log('invalid username');
     return 0;
 };
 
@@ -249,52 +209,6 @@ exports.isValidAccount = function (account) {
 exports.isLengthPassword = function (passwd) {
     return isLengthPassword(passwd);
 };
-
-/**
- * [encodingPass description]
- * @param  {[type]} pass  [description]
- * @param  {[type]} email [description]
- * @return {[type]}       [description]
- */
-exports.encodingPass = function (pass) {
-    var cipher = crypto.createCipher('aes-256-cbc', config.salt),
-        crypted = cipher.update(pass, 'utf8', 'hex');
-    crypted += cipher.final('hex');
-    return crypted;
-};
-
-exports.encodePass = function (pass) {
-    return crypto.createHash('sha256').update(pass).digest('hex');
-};
-
-
-/**
- * [decodingPass description]
- * @param  {[type]} pass [description]
- * @return {[type]}      [description]
- */
-exports.decodingPass = function (pass) {
-    var decipher = crypto.createDecipher('aes-256-cbc', config.salt),
-        dec = decipher.update(pass, 'hex', 'utf8');
-    dec += decipher.final('utf8');
-    return dec;
-};
-
-exports.decodeWithApiKey = function (pass, apikey) {
-    var decipher = crypto.createDecipher('aes-256-cbc', apikey),
-        dec = decipher.update(pass, 'hex', 'utf8');
-    dec += decipher.final('utf8');
-    return dec;
-};
-
-exports.encodeWithApiKey = function (string, apikey) {
-    var cipher = crypto.createCipher('aes-256-cbc', apikey),
-        aux = string,
-        crypted = cipher.update(aux, 'utf8', 'hex');
-    crypted += cipher.final('hex');
-    return crypted;
-};
-
 
 exports.isValidApiKeyId = function (apikey_id) {
     if (typeof apikeys[apikey_id] == "undefined") {
@@ -372,21 +286,6 @@ exports.isIdArray = function (idArray) {
         return 1;
     }
     return 0;
-};
-
-exports.isContactsList = function (contacts) {
-    if (Array.isArray(contacts)) {
-        contacts.forEach(function (contact) {
-            if (validator.isAlphanumeric(contact)) {
-
-            } else {
-                return 0;
-            }
-        });
-    } else {
-        return 0;
-    }
-    return 1;
 };
 
 exports.isUUID = function (uuid) {

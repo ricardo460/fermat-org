@@ -36,6 +36,8 @@
     "shelljs": "^0.5.3",
     "validator": "^4.5.0",
     "winston": "^1.0.1",
-    "xml2js": "^0.4.12"
+    "xml2js": "^0.4.12",
+    "validator": "4.5.1",
+    "sanitizer": "0.1.3"
   }
 }

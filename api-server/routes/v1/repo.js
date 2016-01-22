@@ -4,6 +4,7 @@ var request = require('request');
 var express = require('express');
 var passport = require('passport');
 var winston = require('winston');
+var security = require('../../lib/security')
 var router = express.Router();
 var repMod = require('../../modules/repository');
 var Cache = require('../../lib/route-cache');
@@ -27,35 +28,24 @@ var cache = new Cache({
  */
 router.post('/procs', function (req, res, next) {
     'use strict';
-       try {   
-              // Estructura erick
-              //  validar estos  (req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, function (err, res) 
-            if (!securityManisfest.isValidData(req.body.platfrm) ||  
-            !securityManisfest.isValidData(req.body.name) || 
-            !securityManisfest.isValidData(req.body.desc) || 
-            !securityManisfest.isValidData(req.body.prev) ||  
-            !securityManisfest.isValidData(req.body.next) ||   
-            
-            !securityManisfest.isObjectID(req.params.usr_id)) {
-                 res.status(412).send('missing or invalid data');
-        } else {
-            //cryptedAuth.bearerStrategy(req, function(error, granted) {
-            //  if (error) logs.resError(__filename, req, res, 500, 106, error, true);
-            //  else if (!granted) logs.resWarning(__filename, req, res, 401, 107, new Error('user is unauthorized'), true); //failed login
-            //  else {
-            //Success login
-            // data needed for module
-            //logs.logEvent(__filename, req, 'auth', 'deactivate');
+    try {
 
-        mnfMod.addProc(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
+            if (!security.isValidData(req.body.platfrm) ||
+            !security.isValidData(req.body.name) ||
+            !security.isValidData(req.body.desc) ||
+            !security.isValidData(req.body.prev) ||
+            !security.isValidData(req.body.next)) {
+                res.status(412).send('missing or invalid data');
             } else {
-                res.status(200).send(result);
-            }
-        });
 
-        }//Fin Esctructura Erick
+                repMod.addProc(req, function (error, result) {
+                    if (error) {
+                        res.status(200).send(error);
+                    } else {
+                        res.status(200).send(result);
+                    }
+                });
+            }
     }catch (err) {
         next(err);
     }
