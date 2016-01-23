@@ -7,6 +7,7 @@ var winston = require('winston');
 var router = express.Router();
 var repMod = require('../../modules/repository');
 var Cache = require('../../lib/route-cache');
+var libGithb = require('../../modules/auth/lib/github');
 // creation of object cache
 var cache = new Cache({
     type: 'file',
@@ -18,19 +19,19 @@ var cache = new Cache({
  * @route
  *
  */
-router.get('/comps/reload', function (req, res, next) {
+router.get('/comps/reload', function(req, res, next) {
     'use strict';
     try {
-        repMod.updBook(req, function (error, result) {
+        repMod.updBook(req, function(error, result) {
             if (error) {
                 //res.status(200).send(error);
                 winston.log('error', 'Error: ', error);
             } else {
-                repMod.loadComps(req, function (error, res) {
+                repMod.loadComps(req, function(error, res) {
                     if (error) {
                         winston.log('error', 'Error: ', error);
                     } else {
-                        repMod.updComps(req, function (error, result) {
+                        repMod.updComps(req, function(error, result) {
                             if (error) {
                                 winston.log('error', 'Error: ', error);
                                 //res.status(200).send(error);
@@ -53,24 +54,21 @@ router.get('/comps/reload', function (req, res, next) {
 /**
  * Gets the access token and returns
  */
-router.get('/accessToken', function (req, res, next) {
+router.get('/accessToken', function(req, resp, next) {
     'use strict';
     try {
         console.log("Get acces token");
-        var code = req.query;
+        var code = req.query['code'];
+        var api_key = req.query['api_key'];
+        console.log("api_key: "+api_key);
         var url = "https://github.com/login/oauth/access_token?client_id=6cac9cc2c2cb584c5bf4&client_secret=4887bbc58790c7a242a8dafcb035c0a01dc2a199&" +
-            "code="+code['code'];
-        request.get({
-                url: url,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            }, function (err, resp, body) {
-                console.log("response: ");
-                console.dir(body);
-                res.status(200).send(body);
-            });
-        
+            "code=" + code;
+        console.log("url a enviar: " + url);
+        var usr = libGithb.getUsrGithub(url);
+        console.log("Usr: ");
+        console.log(usr);
+        resp.status(200).send("ok");
+
     } catch (err) {
         next(err);
     }
@@ -82,7 +80,7 @@ router.get('/accessToken', function (req, res, next) {
  * @route
  *
  */
-router.get('/comps', function (req, res, next) {
+router.get('/comps', function(req, res, next) {
     'use strict';
     try {
         //passport.authenticate('bearer', function (err, access, scope) {
@@ -92,7 +90,7 @@ router.get('/comps', function (req, res, next) {
         if (body) {
             // we send it
             res.status(200).send(body);
-            repMod.getComps(req, function (error, result) {
+            repMod.getComps(req, function(error, result) {
                 if (error) {
                     winston.log('error', 'Error: ', error);
                 } else {
@@ -102,7 +100,7 @@ router.get('/comps', function (req, res, next) {
             });
         } else {
             // we create it
-            repMod.getComps(req, function (error, result) {
+            repMod.getComps(req, function(error, result) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
@@ -126,7 +124,7 @@ router.get('/comps', function (req, res, next) {
  * @route
  *
  */
-router.get('/devs', function (req, res, next) {
+router.get('/devs', function(req, res, next) {
     'use strict';
     try {
         //passport.authenticate('bearer', function (err, access, scope) {
@@ -136,7 +134,7 @@ router.get('/devs', function (req, res, next) {
         if (body) {
             // we send it
             res.status(200).send(body);
-            repMod.getDevs(req, function (error, result) {
+            repMod.getDevs(req, function(error, result) {
                 if (error) {
                     winston.log('error', 'Error: ', error);
                 } else {
@@ -146,7 +144,7 @@ router.get('/devs', function (req, res, next) {
             });
         } else {
             // we create it
-            repMod.getDevs(req, function (error, result) {
+            repMod.getDevs(req, function(error, result) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
@@ -175,7 +173,7 @@ router.get('/devs', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/procs', function (req, res, next) {
+router.get('/procs', function(req, res, next) {
     'use strict';
     try {
         // we search for body in cache
@@ -183,7 +181,7 @@ router.get('/procs', function (req, res, next) {
         if (body) {
             // we send it
             res.status(200).send(body);
-            repMod.getProcs(req, function (error, result) {
+            repMod.getProcs(req, function(error, result) {
                 if (error) {
                     winston.log('error', 'Error: ', error);
                 } else {
@@ -193,7 +191,7 @@ router.get('/procs', function (req, res, next) {
             });
         } else {
             // we create it
-            repMod.getProcs(req, function (error, result) {
+            repMod.getProcs(req, function(error, result) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
@@ -218,10 +216,10 @@ router.get('/procs', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/readme', function (req, res, next) {
+router.get('/readme', function(req, res, next) {
     'use strict';
     try {
-        repMod.getReadme(req, function (error, result) {
+        repMod.getReadme(req, function(error, result) {
             if (error) {
                 res.status(200).send(error);
             } else {
@@ -243,10 +241,10 @@ router.get('/readme', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/book', function (req, res, next) {
+router.get('/book', function(req, res, next) {
     'use strict';
     try {
-        repMod.getBook(req, function (error, result) {
+        repMod.getBook(req, function(error, result) {
             if (error) {
                 res.status(200).send(error);
             } else {
@@ -268,7 +266,7 @@ router.get('/book', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/docs/:type', function (req, res, next) {
+router.get('/docs/:type', function(req, res, next) {
     'use strict';
     try {
         var type = req.param('type');
@@ -283,7 +281,7 @@ router.get('/docs/:type', function (req, res, next) {
                 message: 'Bad Parameters'
             });
         }
-        repMod.getDocs(req, function (error, result) {
+        repMod.getDocs(req, function(error, result) {
             if (error) {
                 res.status(200).send(error);
             } else {
@@ -306,20 +304,20 @@ router.get('/docs/:type', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/manifest/check', function (req, res, next) {
+router.get('/manifest/check', function(req, res, next) {
     'use strict';
     try {
-        
+
         // we create it
-        repMod.checkManifest(req, function (error, result) {
+        repMod.checkManifest(req, function(error, result) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                
+
                 res.status(200).send(result);
             }
         });
-        
+
     } catch (err) {
         next(err);
     }
