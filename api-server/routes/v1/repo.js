@@ -4,6 +4,7 @@ var request = require('request');
 var express = require('express');
 var passport = require('passport');
 var winston = require('winston');
+var security = require('../../lib/security')
 var router = express.Router();
 var repMod = require('../../modules/repository');
 var Cache = require('../../lib/route-cache');
@@ -27,35 +28,24 @@ var cache = new Cache({
  */
 router.post('/procs', function (req, res, next) {
     'use strict';
-       try {   
-              // Estructura erick
-              //  validar estos  (req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, function (err, res) 
-            if (!securityManisfest.isValidData(req.body.platfrm) ||  
-            !securityManisfest.isValidData(req.body.name) || 
-            !securityManisfest.isValidData(req.body.desc) || 
-            !securityManisfest.isValidData(req.body.prev) ||  
-            !securityManisfest.isValidData(req.body.next) ||   
-            
-            !securityManisfest.isObjectID(req.params.usr_id)) {
-                 res.status(412).send('missing or invalid data');
-        } else {
-            //cryptedAuth.bearerStrategy(req, function(error, granted) {
-            //  if (error) logs.resError(__filename, req, res, 500, 106, error, true);
-            //  else if (!granted) logs.resWarning(__filename, req, res, 401, 107, new Error('user is unauthorized'), true); //failed login
-            //  else {
-            //Success login
-            // data needed for module
-            //logs.logEvent(__filename, req, 'auth', 'deactivate');
+    try { 
 
-        mnfMod.addProc(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
+            if (!security.isValidData(req.body.platfrm) ||
+            !security.isValidData(req.body.name) ||
+            !security.isValidData(req.body.desc) ||
+            !security.isValidData(req.body.prev) ||
+            !security.isValidData(req.body.next)) {
+                res.status(412).send('missing or invalid data');
             } else {
-                res.status(200).send(result);
-            }
-        });
 
-        }//Fin Esctructura Erick
+                repMod.addProc(req, function (error, result) {
+                    if (error) {
+                        res.status(200).send(error);
+                    } else {
+                        res.status(200).send(result);
+                    }
+                });
+            }
     }catch (err) {
         next(err);
     }
@@ -101,6 +91,26 @@ router.get('/simple-procs', function (req, res, next) {
 router.post('/comps', function (req, res, next) {
     'use strict';
     try {
+
+    		
+    
+    	  if (!security.isValidData(req.body.platfrm_id) ||
+            !security.isValidData(req.body.suprlay_id) ||
+            !security.isValidData(req.body.layer_id) ||
+            !security.isValidData(req.body.name) ||
+
+            !security.isValidData(req.body.type) ||
+            !security.isValidData(req.body.description) ||
+            !security.isValidData(req.body.difficulty) ||
+            !security.isValidData(req.body.code_level)||
+
+             !security.isValidData(req.body.repo_dir) ||
+            !security.isValidData(req.body.scrnshts) ||
+         
+            !security.isValidData(req.body.found)) {
+                res.status(412).send('missing or invalid data');
+            } else {
+
         repMod.addComp(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
@@ -108,6 +118,7 @@ router.post('/comps', function (req, res, next) {
                 res.status(200).send(result);
             }
         });
+            }
     } catch (err) {
         next(err);
     }
@@ -153,6 +164,13 @@ router.get('/simple-comps', function (req, res, next) {
 router.post('/layers', function (req, res, next) {
     'use strict';
     try {
+
+          if (!security.isValidData(req.body.name) ||
+              !security.isValidData(req.body.lang) ||
+              !security.isValidData(req.body.suprlay) ||              
+              !security.isValidData(req.body.order)) {
+                res.status(412).send('missing or invalid data');
+            } else {
         repMod.addLayer(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
@@ -160,6 +178,7 @@ router.post('/layers', function (req, res, next) {
                 res.status(200).send(result);
             }
         });
+         }
     } catch (err) {
         next(err);
     }
@@ -205,6 +224,15 @@ router.get('/layers', function (req, res, next) {
 router.post('/suprlays', function (req, res, next) {
     'use strict';
     try {
+    	
+          if (!security.isValidData(req.body.code) ||
+              !security.isValidData(req.body.name) ||
+              !security.isValidData(req.body.logo) ||
+              !security.isValidData(req.body.deps) || 
+                          
+              !security.isValidData(req.body.order)) {
+                res.status(412).send('missing or invalid data');
+            } else {
         repMod.addSuprLay(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
@@ -212,6 +240,7 @@ router.post('/suprlays', function (req, res, next) {
                 res.status(200).send(result);
             }
         });
+         }
     } catch (err) {
         next(err);
     }
@@ -256,6 +285,18 @@ router.get('/suprlays', function (req, res, next) {
 router.post('/platforms', function (req, res, next) {
     'use strict';
     try {
+
+    	   )
+    		
+    	  if (!security.isValidData(req.body.code) ||
+              !security.isValidData(req.body.name) ||
+              !security.isValidData(req.body.logo) ||
+               
+              !security.isValidData(req.body.deps) ||                  
+              !security.isValidData(req.body.order)) {
+                res.status(412).send('missing or invalid data');
+            } else {
+
         repMod.addPlatform(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
@@ -263,6 +304,7 @@ router.post('/platforms', function (req, res, next) {
                 res.status(200).send(result);
             }
         });
+         }
     } catch (err) {
         next(err);
     }
@@ -310,6 +352,16 @@ router.post('/comps/:comp_id/life-cicles', function (req, res, next) {
 router.post('/comps/:comp_id/comp-devs', function (req, res, next) {
     'use strict';
     try {
+
+    	  if (!security.isValidData(req.body.comp_id) ||
+              !security.isValidData(req.body.dev_id) ||
+              !security.isValidData(req.body.role) ||
+               
+              !security.isValidData(req.body.scope) ||                      
+              !security.isValidData(req.body.percnt)) {
+                res.status(412).send('missing or invalid data');
+            } else {
+  
         repMod.addCompDev(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
@@ -317,6 +369,7 @@ router.post('/comps/:comp_id/comp-devs', function (req, res, next) {
                 res.status(200).send(result);
             }
         });
+           }
     } catch (err) {
         next(err);
     }
@@ -336,6 +389,20 @@ router.post('/comps/:comp_id/comp-devs', function (req, res, next) {
 router.post('/procs/:proc_id/steps', function (req, res, next) {
     'use strict';
     try {
+                  
+    	 if (!security.isValidData(req.body.proc_id) ||
+              !security.isValidData(req.body.platfrm_code) ||
+              !security.isValidData(req.body.suprlay_code) ||
+              !security.isValidData(req.body.layer_name) ||   
+              !security.isValidData(req.body.comp_name) ||
+              !security.isValidData(req.body.type)|| 
+              !security.isValidData(req.body.title) ||
+              !security.isValidData(req.body.desc) || 
+              !security.isValidData( req.body.order)) {
+            
+            res.status(412).send('missing or invalid data');
+            } else {
+  
         repMod.addStep(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
@@ -343,6 +410,7 @@ router.post('/procs/:proc_id/steps', function (req, res, next) {
                 res.status(200).send(result);
             }
         });
+         }
     } catch (err) {
         next(err);
     }
@@ -1073,3 +1141,4 @@ router.get('/manifest/check', function (req, res, next) {
 });
 
 module.exports = router;
+Status 
