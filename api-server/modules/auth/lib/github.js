@@ -1,6 +1,13 @@
 var request = require('request');
 var winston = require('winston');
 var USER_AGENT = "api-server";
+
+/**
+ * [getUsrGithub description]
+ * @param  {[type]}   url      [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
 exports.getUsrGithub = function(url, callback) {
 	try {
 		request.get({
@@ -11,13 +18,15 @@ exports.getUsrGithub = function(url, callback) {
 		}, function(err, resp, body) {
 			body = JSON.parse(body);
 			var axs_tkn = body.access_token;
-			getUsr(axs_tkn, function(error, res) {
+			getUsr(axs_tkn, function(error, res_usr) {
 				if (error) {
 					console.log("error", error);
 					return callback(error, null);
 				}
 				console.log("return data user");
-				return callback(null, res);
+				res_usr = JSON.parse(res_usr);
+				res_usr.set('github_tkn', axs_tkn);
+				return callback(null, res_usr);
 			});
 		});
 	} catch (error) {
@@ -27,6 +36,12 @@ exports.getUsrGithub = function(url, callback) {
 
 };
 
+/**
+ * [getUsr description]
+ * @param  {[type]}   axs_tkn  [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
 getUsr = function(axs_tkn, callback) {
 	var url = "https://api.github.com/user?access_token=" + axs_tkn;
 	try {
