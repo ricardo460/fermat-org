@@ -6,8 +6,8 @@ var passport = require('passport');
 var winston = require('winston');
 var router = express.Router();
 var repMod = require('../../modules/repository');
+var authMod = require('../../modules/auth');
 var Cache = require('../../lib/route-cache');
-var libGithb = require('../../modules/auth/lib/github');
 // creation of object cache
 var cache = new Cache({
     type: 'file',
@@ -51,25 +51,34 @@ router.get('/comps/reload', function(req, res, next) {
         next(err);
     }
 });
+
 /**
- * Gets the access token and returns
+ * Get autorization for use the api
+ * @param  {[type]} req   [description]
+ * @param  {[type]} resp  [description]
+ * @param  {[type]} next) [description]
+ * @return {[type]}       [description]
  */
-router.get('/accessToken', function(req, resp, next) {
+router.get('/getAutorization', function(req, resp, next) {
     'use strict';
     try {
         console.log("Get acces token");
         var code = req.query['code'];
         var api_key = req.query['api_key'];
-        console.log("api_key: "+api_key);
+        console.log("api_key: " + api_key);
         var url = "https://github.com/login/oauth/access_token?client_id=6cac9cc2c2cb584c5bf4&client_secret=4887bbc58790c7a242a8dafcb035c0a01dc2a199&" +
             "code=" + code;
-        console.log("url a enviar: " + url);
-        var usr = libGithb.getUsrGithub(url);
-        console.log("Usr: ");
-        console.log(usr);
-        resp.status(200).send("ok");
-
+        authMod.getAutorization(url, api_key, function(err_auth, res_auth) {
+            if (err_auth) {
+                console.log("Error", err_auth);
+                resp.status(200).send(err_auth);
+            } else {
+                console.log("Info", "Authorization granted");
+                resp.status(200).send(res_auth);
+            }
+        });
     } catch (err) {
+        console.error("Error", err);
         next(err);
     }
 });
