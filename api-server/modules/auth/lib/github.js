@@ -1,45 +1,46 @@
 var request = require('request');
 var winston = require('winston');
 var USER_AGENT = "api-server";
-exports.getUsrGithub = function(url) {
+exports.getUsrGithub = function(url, callback) {
 	try {
-		console.log("url recibida: " + url);
 		request.get({
 			url: url,
 			headers: {
 				'Accept': 'application/json'
 			}
 		}, function(err, resp, body) {
-			console.log('info', "Token github: ");
-			console.log("body: ");
-			console.log(body);
 			body = JSON.parse(body);
 			var axs_tkn = body.access_token;
-			console.log('axs_tkn: '+ axs_tkn);
-			var usr = getUsr(axs_tkn);
-			console.log("User: ");
-			console.log(usr);
-			return usr;
+			getUsr(axs_tkn, function(error, res) {
+				if (error) {
+					console.log("error", error);
+					return callback(error, null);
+				}
+				console.log("return data user");
+				return callback(null, res);
+			});
 		});
 	} catch (error) {
-		//return callback(error, null);
-		console.log("error");
+		console.log("error", error);
+		return callback(error, null);
 	}
 
 };
 
-getUsr = function(axs_tkn) {
-	console.log("recibiendo axs_tkn: " + axs_tkn);
+getUsr = function(axs_tkn, callback) {
 	var url = "https://api.github.com/user?access_token=" + axs_tkn;
-	request.get({
-		url: url,
-		headers: {
-			'User-Agent': USER_AGENT,
-			'Accept': 'application/json'
-		}
-	}, function(err, resp, body) {
-		console.log('info', "User github: ");
-		console.log(body);
-		return body;
-	});
+	try {
+		request.get({
+			url: url,
+			headers: {
+				'User-Agent': USER_AGENT,
+				'Accept': 'application/json'
+			}
+		}, function(err, resp, body) {
+			return callback(null, body);
+		});
+	} catch (error) {
+		return callback(error, null);
+	}
+
 };
