@@ -69,19 +69,19 @@ button:active {
     
 }
 #div-Edit1 {
-    left: 20%;
+    left: 16.5%;
     top: 0.5%;
-    width: 60.5%;
+    width: 63.5%;
     height: 8%;
-    display:inline-block;
+    display: inline-block;
     position:absolute; 
 }
 
 #div-Edit2 {
-    left: 27%;
+    left: 23.5%;
     top: 1.8%;
-    display:inline-block;
-    width: 40%;
+    display: inline-block;
+    width: 42%;
     height: 6%;
     position:absolute;
 }

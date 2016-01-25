@@ -16,34 +16,37 @@ function FermatEdit() {
             }
         };
 
-    var self = this;
+    var WIDTH = window.innerWidth,
+        HEIGHT = window.innerHeight;
 
+   // var ID = 0;
+
+    var self = this;
 
     /**
      * @author Ricardo Delgado
      */
     this.init = function(){
-        createButton();
-        
+        //createAllFields();
     };
 
-    function createButton(){
+    function createAllFields(){
 
         var button,
             text,
             x,
             type;
 
-            createSesionPlatform();
-            createSesionType();
-            createSesionName();
-            createSesionAutor();
-            createSesionDifficulty();
-            createSesionMaintainer();
-            createSesionState();
+            sesionPlatform();
+            sesionType();
+            sesionName();
+            sesionAutor();
+            sesionDifficulty();
+            sesionMaintainer();
+            sesionState();
             createbutton();
-            
-        function createSesionPlatform(){
+       
+        function sesionPlatform(){
 
             var id = 'label-Platform'; text = 'Select the Platform : '; type = 'label';
 
@@ -56,11 +59,12 @@ function FermatEdit() {
             var optgroup = "<optgroup label = Platform>",
                 option = "";
 
+
             for(var i in groups){
 
                 if(i != "size"){
     
-                    option += "<option value = "+i+">"+i+"</option>";
+                    option += "<option value = "+i+" >"+i+"</option>";
                 }
 
             }
@@ -75,7 +79,7 @@ function FermatEdit() {
 
                 if(i != "size"){
 
-                    option += "<option value = "+i+">"+i+"</option>";
+                    option += "<option value = "+i+" >"+i+"</option>";
                 }
 
             }
@@ -84,17 +88,17 @@ function FermatEdit() {
 
             $("#"+id).html(optgroup);
 
-            createSesionLayer();
+            sesionLayer();
 
-            changeSesionLayer(document.getElementById(id).value);
+            changeLayer(document.getElementById(id).value);
 
-            $("#"+id).change('click', function() {
+           $("#"+id).change('click', function() {
             
-                changeSesionLayer(document.getElementById(id).value);
+                changeLayer(document.getElementById(id).value);
             });
         }
 
-        function createSesionLayer(){
+        function sesionLayer(){
 
             var id = 'label-layer'; text = 'Select the Layer : '; type = 'label';
 
@@ -106,7 +110,7 @@ function FermatEdit() {
           
         }
 
-        function changeSesionLayer(platform){
+        function changeLayer(platform){
 
             var state = false;
 
@@ -126,7 +130,7 @@ function FermatEdit() {
             $("#select-layer").html(option);          
         }
 
-        function createSesionType(){
+        function sesionType(){
 
             var id = 'label-Type'; text = 'Select the Type : '; type = 'label';
 
@@ -148,7 +152,7 @@ function FermatEdit() {
 
         }
 
-        function createSesionName(){
+        function sesionName(){
 
             var id = 'label-Name'; text = 'Enter Name : '; type = 'label';
 
@@ -182,7 +186,7 @@ function FermatEdit() {
 
         }
 
-        function createSesionAutor(){
+        function sesionAutor(){
 
             var id = 'label-Autor'; text = 'Enter Autor : '; type = 'label';
 
@@ -220,7 +224,7 @@ function FermatEdit() {
 
         }
 
-        function createSesionDifficulty(){
+        function sesionDifficulty(){
 
             var id = 'label-Difficulty'; text = 'Select Difficulty : '; type = 'label';
 
@@ -248,7 +252,7 @@ function FermatEdit() {
 
         }
 
-        function createSesionMaintainer(){
+        function sesionMaintainer(){
 
             var id = 'label-Maintainer'; text = 'Enter Maintainer : '; type = 'label';
 
@@ -282,7 +286,7 @@ function FermatEdit() {
 
         }
 
-        function createSesionState(){
+        function sesionState(){
 
             var id = 'label-State'; text = 'Select the State : '; type = 'label';
 
@@ -290,14 +294,14 @@ function FermatEdit() {
 
             id = 'select-State'; text = ''; type = 'select';
 
-            addFields(id, text, null, type);
+            addFields(id, text, 8, type);
 
             var option = "";
 
-            option += "<option value = concept>concept</option>";
-            option += "<option value = development>development</option>";
-            option += "<option value = production>production</option>";
-            option += "<option value = qa>qa</option>";
+            option += "<option value = concept>Concept</option>";
+            option += "<option value = development>Development</option>";
+            option += "<option value = production>Production</option>";
+            option += "<option value = qa>QA</option>";
 
             $("#"+id).html(option);
 
@@ -310,6 +314,13 @@ function FermatEdit() {
             var button = addFields(id, text, 20, type, 2);
 
             button.className = 'actionButton';
+
+            
+            button.addEventListener('click', function() {
+
+                        self.removeAllFields();
+            });
+
         }
     }
 
@@ -352,7 +363,7 @@ function FermatEdit() {
         window.helper.show(button, 1000);
 
         return button;
-    };
+    }
 
     function createDiv(row){
 
@@ -366,10 +377,76 @@ function FermatEdit() {
 
         window.helper.show(div, 1000);
 
+    }
 
+   /*function fillFields(){
+
+        var tile = window.table[ID]; 
+
+        var elementSelect = document.getElementById('select-Platform');
+            elementSelect.value = tile.group;
+
+        elementSelect = document.getElementById('select-layer');
+        elementSelect.value = tile.group;
+
+        elementSelect = document.getElementById('select-Platform');
+        elementSelect.value = tile.group;
+
+        elementSelect = document.getElementById('select-Platform');
+        elementSelect.value = tile.group;
+
+        elementSelect = document.getElementById('select-Platform');
+        elementSelect.value = tile.group;        
+
+        /* document.forms['mi_Form']['mi_Select'].value = 'op2'
+        window.table[i].type === "Android" && 
+        window.table[i].group === _group && 
+        window.table[i].layer === _layer && 
+        window.table[i].name === _wallet*/
+    //}
+
+    this.createButtonAction = function(){
+
+        self.removeAllFields();
+        buttonsManager.createButtons('buttonNew', 'New Component', createAllFields);
+        
+    }
+
+    this.removeAllFields = function(){
+
+        if(objects.row1.buttons.length !== 0 || objects.row2.buttons.length !== 0){
+
+            var row = 'row1';
+
+            if(objects[row].buttons.length === 0)
+                row = 'row2';
+
+            var actualButton = objects[row].buttons.shift();
+
+            if( $('#'+actualButton.id) != null ) 
+                window.helper.hide($('#'+actualButton.id), 1000); 
+            
+                self.removeAllFields();
+        }
+        else {
+
+            if( $('#'+objects.row1.div) != null ) 
+                window.helper.hide($('#'+objects.row1.div), 1000);
+
+            if( $('#'+objects.row2.div) != null ) 
+                window.helper.hide($('#'+objects.row2.div), 1000);
+
+            objects.row1.div = null;
+            objects.row2.div = null;
+        }
+    };
+
+    this.addButtonEdit = function(id){
+        self.removeAllFields();
+        //ID = id;
+        buttonsManager.createButtons('buttonEdit', 'Edit Component', createAllFields);
     }
 
 }
-//funcion para ver las capas CLI.query(layers,function(el){return (el.super_layer === false)})
-//groups platform
-//superLayers super layer Autor del componente.
+
+

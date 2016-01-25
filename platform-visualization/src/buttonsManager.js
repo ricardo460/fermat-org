@@ -8,6 +8,7 @@ function ButtonsManager() {
     };
 
     var self = this;
+
     /**
      * @author Ricardo Delgado
      * All the buttons and their functions are added.
@@ -25,6 +26,8 @@ function ButtonsManager() {
         }
 
         window.screenshotsAndroid.showButtonScreenshot(id);
+
+        window.fermatEdit.addButtonEdit(id);
 
         window.flowManager.getAndShowFlows(id);//Always stop last
     };
@@ -64,10 +67,11 @@ function ButtonsManager() {
 
       	button.addEventListener('click', function() {
       		
+      			self.removeAllButtons();
+
                 if(typeof(callback) === 'function')
                     callback(); 
 
-                self.removeAllButtons();
         	});
 
       	document.body.appendChild(button);
