@@ -649,7 +649,18 @@ exports.getPltf = function (req, next) {
  * @return {[type]}   [description]
  */
 exports.uptPltf = function (req, next) {
-
+    'use strict';
+    try {
+        platfrmMod.updatePlatfrmById(req.params.pltf_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
 }
 
 /**
