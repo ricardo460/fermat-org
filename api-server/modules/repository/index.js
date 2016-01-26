@@ -1,4 +1,5 @@
 var libxml = require('libxmljs');
+var lockMod = require('./lock');
 var procMod = require('./process');
 var compMod = require('./component');
 var layerMod = require('./layer');
@@ -8,7 +9,6 @@ var docMod = require('./doc');
 var devMod = require('./developer');
 var loadMod = require('./lib/loader');
 var syncMod = require('./lib/syncer');
-
 /**
  * Get all components
  * @method getComps
@@ -55,7 +55,6 @@ exports.getComps = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * Function to List Process filter by   
  * 
@@ -75,17 +74,13 @@ exports.getProcs = function (req, next) {
             var suprlay_code = req.query.superlayer ? req.query.superlayer.toUpperCase() : null,
                 layer_name = req.query.layer ? req.query.layer.toLowerCase() : null,
                 comp_name = req.query.component ? req.query.component.toLowerCase() : null;
-            procMod.findProcsByComp(platfrm_code,
-                suprlay_code,
-                layer_name,
-                comp_name,
-                function (err, res) {
-                    if (err) {
-                        next(err, null);
-                    } else {
-                        next(null, res);
-                    }
-                });
+            procMod.findProcsByComp(platfrm_code, suprlay_code, layer_name, comp_name, function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
         } else if (req.query.platform && req.query.name) {
             platfrm_code = req.query.platform ? req.query.platform.toUpperCase() : null;
             var name = req.query.name ? req.query.name.toLowerCase() : null;
@@ -97,7 +92,6 @@ exports.getProcs = function (req, next) {
                 }
             });
         } else {
-
             procMod.getAllProces(function (err, res) {
                 if (err) {
                     next(err, null);
@@ -110,7 +104,6 @@ exports.getProcs = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * Gets the repository Readme
  * @method getReadme
@@ -134,7 +127,6 @@ exports.getReadme = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * Gets the documentation repository
  * @method getBook
@@ -158,7 +150,6 @@ exports.getBook = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * Gets the documentation given a specific type
  *
@@ -174,9 +165,7 @@ exports.getDocs = function (req, next) {
     try {
         var type = req.param('type');
         var style = req.query.style;
-
         if (type == 'book') {
-
             docMod.getBookPdf(style, function (err, res) {
                 if (err) {
                     next(err, null);
@@ -184,7 +173,6 @@ exports.getDocs = function (req, next) {
                     next(null, res);
                 }
             });
-
         } else if (type == 'readme') {
             docMod.getReadmePdf(style, function (err, res) {
                 if (err) {
@@ -193,7 +181,6 @@ exports.getDocs = function (req, next) {
                     next(null, res);
                 }
             });
-
         } else if (type == 'paper') {
             docMod.getPaperPdf(style, function (err, res) {
                 if (err) {
@@ -203,12 +190,10 @@ exports.getDocs = function (req, next) {
                 }
             });
         }
-
     } catch (err) {
         next(err, null);
     }
 };
-
 /**
  * [getDevs description]
  *
@@ -232,8 +217,7 @@ exports.getDevs = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-}
-
+};
 /**
  * [loadComps description]
  *
@@ -257,8 +241,7 @@ exports.loadComps = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-}
-
+};
 /**
  * [updComps description]
  *
@@ -282,8 +265,7 @@ exports.updComps = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-}
-
+};
 /**
  * [updBook description]
  *
@@ -307,8 +289,7 @@ exports.updBook = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-}
-
+};
 /**
  * [checkManifest description]
  *
@@ -322,15 +303,11 @@ exports.updBook = function (req, next) {
 exports.checkManifest = function (req, next) {
     'use strict';
     try {
-
         loadMod.getManifestWithExt('xsd', function (err_xsd, res_xsd) {
-
             if (err_xsd) {
-                    next(err_xsd, null);
+                next(err_xsd, null);
             } else {
-
                 try {
-
                     var xsdDoc = libxml.parseXml(res_xsd);
                     loadMod.getManifestWithExt('xml', function (err_xml, res_xml) {
                         if (err_xml) {
@@ -339,25 +316,56 @@ exports.checkManifest = function (req, next) {
                             try {
                                 var xmlDoc = libxml.parseXml(res_xml);
                                 xmlDoc.validate(xsdDoc)
-                                if(xmlDoc.validationErrors.length>0){
+                                if (xmlDoc.validationErrors.length > 0) {
                                     return next(null, xmlDoc.validationErrors);
                                 }
                                 return next(null, "FermatManifest Cool");
                             } catch (e) {
-                                return next(null, {"message": e.message, "location":e});
+                                return next(null, {
+                                    "message": e.message,
+                                    "location": e
+                                });
                             }
-                            
                         }
                     });
-                        
                 } catch (e) {
-                    return next(null, {"message": e.message, "location":e});
+                    return next(null, {
+                        "message": e.message,
+                        "location": e
+                    });
                 }
-                    
             }
         });
-
     } catch (err) {
         next(err, null);
     }
-}
+};
+/**
+ * [doLock description]
+ *
+ * @method doLock
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.doLock = function (req, next) {
+    try {
+        if (req.params.usr_id && req.params.item_id && req.body.item_type && req.body.priority) {
+            lockMod.insOrUpdLock(req.params.usr_id, // user that wants the lock
+                req.params.item_id, // item to lock
+                req.body.item_type, // type of item
+                req.body.priority || 5, // lock priority
+                function (err_lck, res_lck) {
+                    if (err_lck) {
+                        next(err_lck, null);
+                    } else {
+                        next(null, res_lck);
+                    }
+                });
+        }
+    } catch (err) {
+        next(err, null);
+    }
+};
