@@ -136,3 +136,50 @@ exports.findPlatfrmById = function(_id, callback){
         return callback(null, res_plat);
     });
 };
+
+/**
+ * [updatePlatfrmById description]
+ *
+ * @method updatePlatfrmById
+ *
+ *
+ * @param  {[type]}     _platfrm_id         [description]
+ * @param  {[type]}     code            [description]
+ * @param  {[type]}     name            [description]
+ * @param  {[type]}     logo            [description]
+ * @param  {[type]}     deps            [description]
+ * @param  {[type]}     order           [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updatePlatfrmById =  function (_platfrm_id, code, name, logo, deps, order, callback) {
+    'use strict';
+    try {
+        var set_obj = {};
+        if (code) {
+            set_obj.code = code;
+        }
+        if (name) {
+            set_obj.name = name;
+        }
+        if (logo) {
+            set_obj.logo = logo;
+        }
+        if (deps) {
+            set_obj.deps = deps;
+        }
+        if (order) {
+            set_obj.order = order;
+        }
+
+        platfrmSrv.updateLayerById(_platfrm_id, set_obj, function (err, plat) {
+            if (err) {
+                return callback(err, null);
+            }
+            return callback(null, plat);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};

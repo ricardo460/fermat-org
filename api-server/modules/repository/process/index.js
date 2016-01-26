@@ -506,4 +506,52 @@ exports.delAllProcs = function (callback) {
         return callback(err, null);
     }
 };
+
+/**
+ * [updateProcById description]
+ *
+ * @method updateProcById
+ *
+ *
+ * @param  {[type]}     _proc_id        [description]
+ * @param  {[type]}     platfrm         [description]
+ * @param  {[type]}     name            [description]
+ * @param  {[type]}     desc            [description]
+ * @param  {[type]}     prev            [description]
+ * @param  {[type]}     next            [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updateProcById =  function (_proc_id, platfrm, name, desc, prev, next, callback) {
+    'use strict';
+    try {
+        var set_obj = {};
+        if (platfrm) {
+            set_obj.platfrm = platfrm;
+        }
+        if (name) {
+            set_obj.name = name;
+        }
+        if (desc) {
+            set_obj.desc = desc;
+        }
+        if (prev) {
+            set_obj.prev = prev;
+        }
+        if (next) {
+            set_obj.next = next;
+        }
+
+        procSrv.updateProcById(_proc_id, set_obj, function (err, proc) {
+            if (err) {
+                return callback(err, null);
+            }
+            return callback(null, proc);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
 /*jshint +W069 */

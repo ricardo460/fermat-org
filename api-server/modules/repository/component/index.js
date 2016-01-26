@@ -390,4 +390,73 @@ exports.delAllComps = function (callback) {
         return callback(err, null);
     }
 };
+
+/**
+ * [updateCompById description]
+ *
+ * @method updateCompById
+ *
+ *
+ * @param  {[type]}     _comp_id        [description]
+ * @param  {[type]}     _platfrm_id     [description]
+ * @param  {[type]}     _suprlay_id     [description]
+ * @param  {[type]}     _layer_id       [description]
+ * @param  {[type]}     type            [description]
+ * @param  {[type]}     description     [description]
+ * @param  {[type]}     difficulty      [description]
+ * @param  {[type]}     code_level      [description]
+ * @param  {[type]}     repo_dir        [description]
+ * @param  {[type]}     scrnshts        [description]
+ * @param  {[type]}     found           [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updateCompById = function(_comp_id, _platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, scrnshts, found, callback){
+
+    var set_obj = {};
+    if (_platfrm_id) {
+        set_obj._platfrm_id = _platfrm_id;
+    }
+    if (_suprlay_id) {
+        set_obj._suprlay_id = _suprlay_id;
+    }
+    if (_layer_id) {
+        set_obj._layer_id = _layer_id;
+    }
+    if (name) {
+        set_obj.name = name;
+    }
+    if (type) {
+        set_obj.type = type;
+    }
+    if (description) {
+        set_obj.description = description;
+    }
+    if (difficulty) {
+        set_obj.difficulty = difficulty;
+    }
+    if (code_level) {
+        set_obj.code_level = code_level;
+    }
+    if (repo_dir) {
+        set_obj.repo_dir = repo_dir;
+    }
+    if (scrnshts) {
+        set_obj.scrnshts = scrnshts;
+    }
+    if (found) {
+        set_obj.found = found;
+    }
+
+    compSrv.updateCompById(_comp_id, set_obj, function (err, comp) {
+        if (err) {
+            return callback(err, null);
+        }
+        return callback(null, comp);
+    });
+
+
+}
+
 /*jshint +W069 */
