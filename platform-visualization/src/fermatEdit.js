@@ -13,7 +13,8 @@ function FermatEdit() {
                 div : null,
                 buttons : [],
                 y : 30
-            }
+            },
+            idButtons : { }
         };
 
     var WIDTH = window.innerWidth,
@@ -26,6 +27,35 @@ function FermatEdit() {
 
     var self = this;
 
+    var testDataUser = [
+            {
+               "_id": null,
+               "usrnm": "campol",
+               "upd_at": null,
+               "bio": null,
+               "url": "https://github.com/campol",
+               "avatar_url": "https://avatars3.githubusercontent.com/u/12051946?v=3&s=400",
+               "location": null,
+               "bday": null,
+               "name": "Luis Campo",
+               "email": "campusprize@gmail.com",
+               "__v": null
+            },
+            {
+               "_id": null,
+               "usrnm": "Miguelcldn",
+               "upd_at": null,
+               "bio": null,
+               "url": "https://github.com/Miguelcldn",
+               "avatar_url": "https://avatars1.githubusercontent.com/u/5544266?v=3&s=400",
+               "location": null,
+               "bday": null,
+               "name": "Miguel Celedon",
+               "email": "miguelceledon@outlook.com",
+               "__v": null 
+            }
+        ];
+
     /**
      * @author Ricardo Delgado
      */
@@ -34,7 +64,7 @@ function FermatEdit() {
             sesionPlatform();
             sesionType();
             sesionName();
-            sesionAutor();
+            sesionAuthor();
             sesionDifficulty();
             sesionMaintainer();
             sesionState();
@@ -55,6 +85,7 @@ function FermatEdit() {
         var optgroup = "<optgroup label = Platform>",
             option = "";
 
+        objects.idButtons.platform = id;
 
         for(var i in groups){
 
@@ -103,6 +134,8 @@ function FermatEdit() {
         id = 'select-layer'; text = ''; type = 'select';
 
         addFields(id, text, null, type);
+
+        objects.idButtons.layer = id;
       
     }
 
@@ -136,13 +169,14 @@ function FermatEdit() {
 
         addFields(id, text, null, type);
 
+        objects.idButtons.type = id;        
+
         var option = "";
 
         option += "<option value = Addon>Addon</option>";
         option += "<option value = Android>Android</option>";
         option += "<option value = Library>Library</option>";
         option += "<option value = Plugin>Plugin</option>";
-
 
         $("#"+id).html(option);
 
@@ -160,6 +194,8 @@ function FermatEdit() {
             id : "imput-Name",
             text : "textfield"
           };
+
+        objects.idButtons.name = object.id;
 
         var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
 
@@ -182,18 +218,20 @@ function FermatEdit() {
 
     }
 
-    function sesionAutor(){
+    function sesionAuthor(){
 
-        var id = 'label-Autor'; text = 'Enter Autor : '; type = 'label';
+        var id = 'label-author'; text = 'Enter Author : '; type = 'label';
 
         addFields(id, text, 15, type, 2);
 
         idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
 
         var object = {
-            id : "imput-autor",
+            id : "imput-author",
             text : "textfield"
           };
+
+        objects.idButtons.author = object.id;
 
         var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
 
@@ -212,6 +250,7 @@ function FermatEdit() {
 
         button.addEventListener('blur', function() {
 
+            console.log(fillCode(document.getElementById(object.id).value));
         });
 
         window.helper.show(button, 1000);
@@ -229,6 +268,8 @@ function FermatEdit() {
         id = 'select-Difficulty'; text = ''; type = 'select';
 
         addFields(id, text, null, type);
+
+        objects.idButtons.difficulty = id;
 
         var option = "";
 
@@ -261,6 +302,8 @@ function FermatEdit() {
             text : "textfield"
           };
 
+        objects.idButtons.maintainer = object.id;
+
         var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
 
         $("#"+objects.row2.div).append(imput);
@@ -292,6 +335,8 @@ function FermatEdit() {
 
         addFields(id, text, 8, type);
 
+        objects.idButtons.state = id;
+
         var option = "";
 
         option += "<option value = concept>Concept</option>";
@@ -310,11 +355,11 @@ function FermatEdit() {
         var button = addFields(id, text, 20, type, 2);
 
         button.className = 'actionButton';
-
         
         button.addEventListener('click', function() {
 
-                    self.removeAllFields();
+                    drawTile();
+                    //self.removeAllFields();
         });
 
     }
@@ -386,11 +431,9 @@ function FermatEdit() {
         if(tile.layer != undefined)        
             document.getElementById('select-layer').value = tile.layer;
 
-        if(tile.type != undefined){
+        if(tile.type != undefined)
             document.getElementById('select-Type').value = tile.type;
-            console.log(tile.type);
-        }
-
+        
         if(tile.difficulty != undefined)
             document.getElementById('select-Difficulty').value = tile.difficulty; 
 
@@ -406,15 +449,32 @@ function FermatEdit() {
         if(tile.maintainer != undefined)
             document.getElementById('imput-Maintainer').value = tile.maintainer; 
 
-        console.log(id) 
-       ;
+    }
+
+    function fillCode(text){
+
+        var code = '',
+            words = text.split(" "),
+            cantWord = words.length,
+            end = 1;
+
+        if(cantWord === 1)       
+            end = 3;
+        else if(cantWord === 2)
+            end = 2;
+
+        for(var i = 0; i < words.length; i++){
+
+            code += words[i].substr(0, end);
+        }
+
+        return code;
     }
 
     this.createButtonAction = function(){
 
         self.removeAllFields();
-        buttonsManager.createButtons('buttonNew', 'New Component', self.init);
-        
+        buttonsManager.createButtons('buttonNew', 'New Component', self.init);  
     }
 
     this.removeAllFields = function(){
@@ -443,10 +503,12 @@ function FermatEdit() {
 
             objects.row1.div = null;
             objects.row2.div = null;
+            objects.idButtons = {};
         }
     };
 
     this.addButtonEdit = function(id){
+
         self.removeAllFields();
 
         buttonsManager.createButtons('buttonEdit', 'Edit Component', function (){
@@ -456,6 +518,90 @@ function FermatEdit() {
             fillFields(id);
         });
     }
+
+    function drawTile(){
+
+        var table = {},
+            data;
+
+        table.group = document.getElementById(objects.idButtons.platform).value;
+        table.layer = document.getElementById(objects.idButtons.layer).value;
+        table.type = document.getElementById(objects.idButtons.type).value;
+        table.state = document.getElementById(objects.idButtons.state).value;
+        table.difficulty = document.getElementById(objects.idButtons.difficulty).value;
+        table.name = document.getElementById(objects.idButtons.name).value;
+        table.code = fillCode(document.getElementById(objects.idButtons.name).value);
+        table.author = document.getElementById(objects.idButtons.author).value;
+        table.maintainer = document.getElementById(objects.idButtons.maintainer).value;
+
+        data = dataUser(table.author);
+
+        table.picture = data.picture;
+        table.authorRealName = data.authorRealName;
+
+        data = dataUser(table.maintainer);
+
+        table.maintainerPicture = data.picture;
+        table.maintainerRealName = data.authorRealName;
+
+        console.log(table);
+    }
+
+    function dataUser(user){
+
+        var data = {};
+
+        for(var i = 0; i < testDataUser.length; i++){
+
+            if(user === testDataUser[i].usrnm){
+
+                data.picture = testDataUser[i].avatar_url;
+                data.authorRealName = testDataUser[i].name;
+                data.authorEmail = testDataUser[i].email;
+            }
+        }
+
+        return data;
+    }
+
+    function createElement(id, table) {
+
+        var mesh,
+            texture,
+            tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
+            tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING,
+            scale = 2;//this 5 high
+
+        texture = tileManager.createTexture(id, 'high', tileWidth, tileHeight, scale, table);
+
+        mesh = new THREE.Mesh(
+            new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
+            new THREE.MeshBasicMaterial({
+                    side: THREE.DoubleSide,
+                    transparent : true,
+                    map : texture
+            })
+        );
+        mesh.userData = {
+            id: id,
+            onClick : onClick
+        };
+
+        var newCenter = new THREE.Vector3(0, 0, 0);
+        newCenter = window.viewManager.translateToSection(view, newCenter);
+
+        object.position.x = Math.random() * 80000 - 40000;
+        object.position.y = Math.random() * 80000 - 40000;
+        object.position.z = 80000 * 2;
+        object.rotation.x = Math.random() * 180;
+        object.rotation.y = Math.random() * 180;
+        object.rotation.z = Math.random() * 180;
+
+        mesh.renderOrder = 1;
+
+        return mesh;
+    }
+    
 
 }
 
