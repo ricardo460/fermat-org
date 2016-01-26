@@ -25,7 +25,9 @@ exports.getUsrGithub = function(url, callback) {
 				}
 				console.log("return data user");
 				res_usr = JSON.parse(res_usr);
-				res_usr.set('github_tkn', axs_tkn);
+				//usr.set('github_tkn', axs_tkn);
+				res_usr.github_tkn = axs_tkn;
+				console.log(res_usr);
 				return callback(null, res_usr);
 			});
 		});

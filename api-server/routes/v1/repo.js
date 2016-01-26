@@ -8,6 +8,7 @@ var router = express.Router();
 var repMod = require('../../modules/repository');
 var authMod = require('../../modules/auth');
 var Cache = require('../../lib/route-cache');
+var mongoose = require('mongoose');
 // creation of object cache
 var cache = new Cache({
     type: 'file',
@@ -64,7 +65,7 @@ router.get('/getAutorization', function(req, resp, next) {
     try {
         console.log("Get autorization");
         var code = req.query['code'];
-        var api_key = req.query['api_key'];
+        var api_key = new mongoose.Types.ObjectId(req.query['api_key']);
         var url = "https://github.com/login/oauth/access_token?client_id=6cac9cc2c2cb584c5bf4&client_secret=4887bbc58790c7a242a8dafcb035c0a01dc2a199&" +
             "code=" + code;
         authMod.getAutorization(url, api_key, function(err_auth, res_auth) {
