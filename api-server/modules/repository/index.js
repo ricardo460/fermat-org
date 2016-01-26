@@ -902,6 +902,31 @@ exports.doLock = function (req, next) {
         next(err, null);
     }
 };
+/**
+ * [doRelease description]
+ *
+ * @method doRelease
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.doRelease = function (req, next) {
-    try {} catch (err) {}
+    try {
+        if (req.body.usr_id && //
+            req.body.item_id) {
+            lockMod.delLock(req.body.usr_id, //
+                req.body.item_id, //
+                function (err_lck, res_lck) {
+                    if (err_lck) {
+                        next(err_lck, null);
+                    } else {
+                        next(null, res_lck);
+                    }
+                });
+        }
+    } catch (err) {
+        next(err, null);
+    }
 };

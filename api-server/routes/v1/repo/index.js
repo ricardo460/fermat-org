@@ -6,7 +6,7 @@ var passport = require('passport');
 var winston = require('winston');
 var security = require('../../../lib/utils/security');
 var repMod = require('../../../modules/repository');
-//var authMod = require('../../modules/auth');
+var authMod = require('../../../modules/auth');
 var Cache = require('../../../lib/route-cache');
 var layerRout = require('./layer');
 // creation of object cache
@@ -47,7 +47,7 @@ router.use("/usrs/:usr_id/layers", auth, layerRout);
  *
  * @return {[type]} [description]
  */
-/*router.get('/comps/reload', function (req, res, next) {
+router.get('/comps/reload', function (req, res, next) {
     'use strict';
     try {
         repMod.updBook(req, function (error, result) {
@@ -78,7 +78,7 @@ router.use("/usrs/:usr_id/layers", auth, layerRout);
     } catch (err) {
         next(err);
     }
-});*/
+});
 /**
  * Get autorization for use the api
  * @param  {[type]} req   [description]
