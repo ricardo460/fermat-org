@@ -15,8 +15,8 @@ var procMod = require('../process');
 var devMod = require('../developer');
 var Cache = require('../../../lib/route-cache');
 var env = process.env.NODE_ENV || 'development';
-var USER_AGENT = (env === 'development') ? 'kyxer' : 'fuelusumar';
-var TOKEN = (env === 'development') ? '240703b54b7ff62e0205a2981dffa2bb9fa20938' : '4074ff2e5281cba97803fee8a06a91c71984093e'; // fuelusumar
+var USER_AGENT = (env === 'development') ? 'fuelusumar' : 'fuelusumar';
+var TOKEN = (env === 'development') ? '82453641896888fe558d94d4e1b994e45c0d7832' : '82453641896888fe558d94d4e1b994e45c0d7832'; // fuelusumar
 /**
  * [getRepoDir description]
  *
@@ -211,7 +211,6 @@ var processRequestBody = function (body, callback) {
         return callback(err, null);
     }
 };
-
 /**
  * [getManifestWithExt description]
  *
@@ -242,35 +241,27 @@ exports.getManifestWithExt = function (ext, callback) {
                 if (err) {
                     winston.log('info', err.message, err);
                 }*/
-                doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.'+ ext, null, function (err_req, res_req) {
-                    if (err_req) {
-                        return callback(err_req, null);
-                    }
-                    processRequestBody(res_req, function (err_pro, res_pro) {
-                        if (err_pro) {
-                            return callback(err_pro, null);
-                        }
-                        if (typeof res_pro.message != 'undefined' 
-                            && res_pro.message == 'Bad credentials') {
-                            return callback(res_pro.message, null);
-                        }
-                        var strCont = res_pro.split('\n')
-                            .join(' ')
-                            .split('\t')
-                            .join(' ');
-
-                        return callback(null, strCont);
-                        
-                    });
-                });
+        doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/FermatManifest.' + ext, null, function (err_req, res_req) {
+            if (err_req) {
+                return callback(err_req, null);
+            }
+            processRequestBody(res_req, function (err_pro, res_pro) {
+                if (err_pro) {
+                    return callback(err_pro, null);
+                }
+                if (typeof res_pro.message != 'undefined' && res_pro.message == 'Bad credentials') {
+                    return callback(res_pro.message, null);
+                }
+                var strCont = res_pro.split('\n').join(' ').split('\t').join(' ');
+                return callback(null, strCont);
+            });
+        });
         /*    }
         });*/
     } catch (err) {
         return callback(err, null);
     }
-
 };
-
 /**
  * [getManifest description]
  * pasa el manifest a un objeto json
@@ -286,7 +277,6 @@ var getManifest = function (callback) {
         var cwd = process.cwd(),
             env = process.env.NODE_ENV || 'development',
             file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.xml');
-
         fs.lstat(file, function (err, stats) {
             if (!err && stats.isFile()) {
                 // Yes it is

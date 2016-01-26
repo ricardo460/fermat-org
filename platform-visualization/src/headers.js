@@ -30,6 +30,64 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     this.arrows = arrows;
     this.arrowPositions = arrowsPositions;
 
+    var onClick = function(target) { 
+        if(window.actualView === 'workflows')
+            onElementClickHeader(target.userData.id, objects);
+    };
+
+    function onElementClickHeader(id, objects)
+    {
+        var duration = 1000;
+
+        if(camera.getFocus() == null){
+            var camTarget = objects[id].clone();
+            camTarget.position.y -= 2500;
+
+            window.camera.setFocus(camTarget, new THREE.Vector4(0, -2500, 9000, 1), duration);
+
+        for (var i = 0; i < objects.length ; i++) {
+                if(id !== i)
+                    letAloneHeader(objects[i]);
+            }
+
+            helper.showBackButton();
+        }
+
+        flowManager.createColumHeaderFlow(objects[id]);
+    }
+
+    /**
+     * @author Emmanuel Colina
+     * let alone the header
+     * @param {Object} objHeader Header target
+     */
+
+    function letAloneHeader(objHeader){
+        var i, _duration = 2000,
+            distance = camera.getMaxDistance() * 2,
+            out = window.viewManager.translateToSection('workflows', new THREE.Vector3(0, 0, distance));
+
+        var target;
+
+        var animate = function (object, target, dur) {
+
+            new TWEEN.Tween(object.position)
+                .to({
+                    x: target.x,
+                    y: target.y,
+                    z: target.z
+                }, dur)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .onComplete(function () {
+                    object.userData.flying = false;
+                })
+                .start();
+        };
+
+        target = out;
+        objHeader.userData.flying = true;
+        animate(objHeader, target, Math.random() * _duration + _duration);
+    }
 
     // Public method
 
@@ -620,7 +678,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 dependencies[child] = dependencies[child] || [];
             }
         
-        function createHeader(group, width, height) {
+        function createHeader(group, width, height, index) {
             
             var source,
                 levels = [
@@ -638,6 +696,12 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                     new THREE.PlaneBufferGeometry(width, height),
                     new THREE.MeshBasicMaterial({transparent : true, opacity : 0})
                     );
+
+                object.name = group;
+                object.userData = {
+                    id: index,
+                    onClick : onClick
+                };
                 
                 helper.applyTexture(source, object);
 
@@ -658,7 +722,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 width = columnWidth * window.TILE_DIMENSION.width;
                 height = width * 443 / 1379;
 
-                object = createHeader(group, width, height);
+                object = createHeader(group, width, height, column);
                 
                 object.position.copy(window.viewManager.translateToSection('table', window.helper.getOutOfScreenPoint(0)));
                 object.name = group;
@@ -689,7 +753,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 width = columnWidth * window.TILE_DIMENSION.width;
                 height = width * 443 / 1379;
 
-                object = createHeader(slayer, width, height);
+                object = createHeader(slayer, width, height, row);
                 
                 object.position.copy(window.viewManager.translateToSection('table', window.helper.getOutOfScreenPoint(0)));
                 

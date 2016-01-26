@@ -3,10 +3,9 @@ function ClientsViewer(parentNode) {
     BaseNetworkViewer.call(this);
     
     this.parentNode = parentNode;
-    this.nodes = {};
-    this.edges = [];
-    this.NET_RADIOUS = 1000;
     this.childNetwork = null;
+    
+    //this.parentNode.hide(parentNode.userData.id);
 }
 
 ClientsViewer.prototype = Object.create(BaseNetworkViewer.prototype);
@@ -22,15 +21,22 @@ ClientsViewer.prototype.onNodeClick = function(clickedNode) {
     
     if(this.childNetwork === null) {
         
+        TWEEN.removeAll();
+        
         BaseNetworkViewer.prototype.onNodeClick.call(this, clickedNode);
 
-        this.hideEdges(clickedNode.userData.id);
-        this.hideNodes([clickedNode.userData.id]);
+        this.hide([clickedNode.userData.id], clickedNode.userData.id);
+        
         //this.childNetwork = new ClientsViewer(clickedNode);
-        this.childNetwork = {};
+        this.childNetwork = new ServicesViewer(clickedNode);
         
         this.open();
     }
+};
+
+ClientsViewer.prototype.open = function() {
+    
+    this.childNetwork.load();
 };
 
 /**
@@ -41,34 +47,40 @@ ClientsViewer.prototype.onNodeClick = function(clickedNode) {
 ClientsViewer.prototype.drawNodes = function(networkNodes) {
 
     for(var i = 0; i < networkNodes.length; i++) {
+        
+        var halfRadious = this.NET_RADIOUS / 2;
 
         var position = new THREE.Vector3(
             Math.random() * this.NET_RADIOUS,
-            - this.NET_RADIOUS / 2,
+            - (Math.random() * halfRadious + halfRadious),
             Math.random() * this.NET_RADIOUS);
         
         position.add(this.parentNode.position);
 
         var sprite = this.createNode(networkNodes[i], position);
 
-        sprite.scale.set(500, 500, 1.0);
+        sprite.scale.set(1000, 1000, 1.0);
 
         window.scene.add(sprite);
     }
 
     this.createEdges();
+    
+    this.show();
 };
 
 ClientsViewer.prototype.test_load = function() {
     
     var networkNodes = [];
     var NUM_NODES = 5;
+    var TYPES = ['pc', 'phone', 'tablet'];
     
     for(var i = 0; i < NUM_NODES; i++) {
         
         var node = {
             id : i,
-            edges : [{id : this.parentNode.userData.id}]
+            edges : [{id : this.parentNode.userData.id}],
+            subType : TYPES[Math.floor(Math.random() * 10) % 2]
         };
         
         networkNodes.push(node);
@@ -88,8 +100,7 @@ ClientsViewer.prototype.createEdges = function() {
         var lineGeo = new THREE.Geometry();
         lineGeo.vertices.push(origin, dest);
 
-        var line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color : 0x0000ff}));
-        line.visible = false;
+        var line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color : 0x0000ff, transparent : true, opacity : 0}));
 
         scene.add(line);
         
@@ -100,8 +111,6 @@ ClientsViewer.prototype.createEdges = function() {
         });
     }
     
-    this.showEdges();
-    
     //Not needed now
     //BaseNetworkViewer.prototype.createEdges.call(this);
 };
@@ -109,13 +118,14 @@ ClientsViewer.prototype.createEdges = function() {
 /**
  * Hide edges except the one connecting to the parent
  * @author Miguel Celedon
- * @param {string} clickedID The ID of the clicked node to except its edge hiding
+ * @param   {string}      clickedID The ID of the clicked node to except its edge hiding
+ * @returns {TWEEN.Tween} The first in the tween chain
  */
 ClientsViewer.prototype.hideEdges = function(clickedID) {
     
     var edgeID = this.edgeExists(this.parentNode.userData.id, clickedID);
     
-    BaseNetworkViewer.prototype.hideEdges.call(this, [edgeID]);
+    return BaseNetworkViewer.prototype.hideEdges.call(this, [edgeID]);
     
 };
 
@@ -130,8 +140,10 @@ ClientsViewer.prototype.closeChild = function() {
     
     if(this.childNetwork !== null){
         
-        //TODO: Change for a call to childNetwork.closeChild() to keep the chain
-        this.childNetwork = null;
+        //If the child is closed we need the parent to reset focus
+        var parent = this.childNetwork.parentNode;
+        
+        this.childNetwork = this.childNetwork.closeChild();
         
         self = this;
         

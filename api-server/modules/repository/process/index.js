@@ -263,7 +263,7 @@ exports.insOrUpdProc = function (platfrm, name, desc, prev, next, callback) {
  *
  * @return {[type]}     [description]
  */
-exports.findProcById = function(_id, callback){
+exports.findProcById = function (_id, callback) {
     procSrv.findProcById(_id, function (err_proc, res_proc) {
         if (err_proc) {
             return callback(err_proc, null);
@@ -271,28 +271,22 @@ exports.findProcById = function(_id, callback){
         return callback(null, res_proc);
     });
 };
-
-exports.delProcById = function(_id, callback){
-
+exports.delProcById = function (_id, callback) {
     procSrv.findProcById(_id, function (err_proc, res_proc) {
         if (err_proc) {
             return callback(err_proc, null);
         }
-        if(res_proc) {
+        if (res_proc) {
             var steps = res_proc.steps;
-            var loopDelSteeps = function(){
-
-                if(steps.length <= 0){
-
+            var loopDelSteeps = function () {
+                if (steps.length <= 0) {
                     procSrv.delSchemaById(_id, function (err_del_proc, res_del_proc) {
                         if (err_del_proc) {
                             return callback(err_del_proc, null);
                         }
                         return callback(null, res_del_proc);
                     });
-
                 } else {
-
                     var _idStep = steps.pop()
                     stepSrv.delSchemaById(_idStep, function (err_del_step, res_delstep) {
                         if (err_del_step) {
@@ -302,17 +296,13 @@ exports.delProcById = function(_id, callback){
                         }
                     });
                 }
-
             };
-
             loopDelSteeps();
-
         } else {
             return callback(null, null);
         }
     });
 };
-
 /**
  * [insOrUpdStep description]
  *
@@ -337,7 +327,7 @@ exports.insOrUpdStep = function (_proc_id, platfrm_code, suprlay_code, layer_nam
     try {
         findComp(platfrm_code, suprlay_code, layer_name, comp_name, function (err_comp, res_comp) {
             if (err_comp) {
-                winston.log('error', err_comp.message, err_comp);
+                winston.log('info', 'component not found');
             }
             var find_obj = {
                 '$and': []
@@ -563,6 +553,5 @@ exports.updateProcById =  function (_proc_id, platfrm, name, desc, prev, next, c
         return callback(err, null);
     }
 };
-
 
 /*jshint +W069 */

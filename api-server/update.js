@@ -10,15 +10,15 @@ var cache = new Cache({
 var _INTERVAL = 300000;
 var loop = 0;
 winston.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 60);
-setInterval(function () {
+/*setInterval(function () {
     'use strict';
     var mod = loop % 12;
     loop++;
     switch (mod) {
     case 0:
-        /**
+
         baja el manifiesto, lo parsea y lo guarda en la base datos y lo actualiza en la base de datos
-        **/
+
         loadLib.loadComps(function (err, res) {
             if (err) {
                 winston.log('error', err.message, err);
@@ -28,9 +28,9 @@ setInterval(function () {
         });
         break;
     case 1:
-        /**
+
         verifica que cada componente esta dentro en la carpeta que le corresponde
-        **/
+
         loadLib.updComps(function (err, res) {
             if (err) {
                 winston.log('error', err.message, err);
@@ -40,9 +40,9 @@ setInterval(function () {
         });
         break;
     case 2:
-        /**
+
         se descarga la informacion de los developers
-        **/
+
         loadLib.updDevs(function (err, res) {
             if (err) {
                 winston.log('error', err.message, err);
@@ -93,4 +93,4 @@ setInterval(function () {
         });
         break;
     }
-}, _INTERVAL);
+}, _INTERVAL);*/

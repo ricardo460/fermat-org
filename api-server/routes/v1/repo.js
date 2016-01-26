@@ -4,7 +4,7 @@ var request = require('request');
 var express = require('express');
 var passport = require('passport');
 var winston = require('winston');
-var security = require('../../lib/security')
+var security = require('../../lib/utils/security')
 var router = express.Router();
 var repMod = require('../../modules/repository');
 var Cache = require('../../lib/route-cache');
@@ -795,24 +795,21 @@ router.get('/accessToken', function (req, res, next) {
     try {
         console.log("Get acces token");
         var code = req.query;
-        var url = "https://github.com/login/oauth/access_token?client_id=6cac9cc2c2cb584c5bf4&client_secret=4887bbc58790c7a242a8dafcb035c0a01dc2a199&" +
-            "code="+code['code'];
+        var url = "https://github.com/login/oauth/access_token?client_id=6cac9cc2c2cb584c5bf4&client_secret=4887bbc58790c7a242a8dafcb035c0a01dc2a199&" + "code=" + code['code'];
         request.get({
-                url: url,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            }, function (err, resp, body) {
-                console.log("response: ");
-                console.dir(body);
-                res.status(200).send(body);
-            });
-
+            url: url,
+            headers: {
+                'Accept': 'application/json'
+            }
+        }, function (err, resp, body) {
+            console.log("response: ");
+            console.dir(body);
+            res.status(200).send(body);
+        });
     } catch (err) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -1031,7 +1028,6 @@ router.get('/docs/:type', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -1046,20 +1042,43 @@ router.get('/docs/:type', function (req, res, next) {
 router.get('/manifest/check', function (req, res, next) {
     'use strict';
     try {
-
         // we create it
         repMod.checkManifest(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
             } else {
-
                 res.status(200).send(result);
             }
         });
-
     } catch (err) {
         next(err);
     }
 });
-
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.post('/usrs/:usr_id/itms/:itm_id/locks', function (req, res, next) {
+    'use strict';
+    // TODO: insert auth
+    try {
+        repMod.doLock(req, function (error, result) {
+            if (error) {
+                res.status(200).send(error);
+            } else {
+                res.status(200).send(result);
+            }
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+//
 module.exports = router;

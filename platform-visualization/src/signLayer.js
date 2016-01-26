@@ -22,7 +22,7 @@ function SignLayer(){
         canvas.width = width;
         var ctx = canvas.getContext('2d');
         
-        ctx.fillStyle = '#000000';
+        ctx.fillStyle = '#000000'; 
         
         var image = document.createElement('img');
         var texture = new THREE.Texture(canvas);
@@ -45,15 +45,17 @@ function SignLayer(){
 
     /**
  	* @author Emmanuel Colina
- 	* @param   {x}   position X    
-    * @param   {y}   position Y
-    * @param   {titleSign}[string] sign layer     
+ 	* @param   {x}                  position X    
+    * @param   {y}                  position Y
+    * @param   {titleSign} [string] sign layer     
  	* function create a Sign Layer
  	*/
+	this.createSignLayer = function(x, y, titleSign, _group){
 
-	this.createSignLayer = function(x, y, titleSign){
 		var mesh;
 		var source = "images/sign/sign.png";
+
+        window.screenshotsAndroid.setGroup(_group, titleSign);
 
 		var fillBox = function(ctx, image) {
             
@@ -61,13 +63,15 @@ function SignLayer(){
             
             //sign
             var size = 40;
-            ctx.font = 'bold ' + size + 'px Arial';
-            window.helper.drawText(titleSign, 50, 80, ctx, 700, size );
+
+                ctx.font = 'bold ' + size + 'px Arial';
+
+            window.helper.drawText(titleSign, 50, 80, ctx, 700, size);
         };
 
         mesh = createBoxSignLayer(source, fillBox, 720, 140);
 		mesh = self.setPositionSignLayer(mesh, x , y);
-		scene.add(mesh);
+		window.scene.add(mesh);
 	};
 
 	/**

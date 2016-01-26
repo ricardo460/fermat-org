@@ -50,8 +50,7 @@ BaseNetworkViewer.prototype = {
      */
     reset : function() {
 
-        this.showEdges();
-        this.showNodes();
+        this.show();
     },
 
     /**
@@ -91,11 +90,6 @@ BaseNetworkViewer.prototype = {
         texture.minFilter = THREE.NearestFilter;
         
         var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0xffffff, map : texture}));
-        /*var sprite = new THREE.Mesh(
-            new THREE.PlaneGeometry(5, 5),
-            new THREE.MeshBasicMaterial({color : 0xffffff, map : texture})
-        );*/
-        //window.helper.applyTexture(this.PICTURES[nodeData.subType], sprite);
         sprite.renderOrder = 100;
         sprite.material.blending = THREE.NoBlending;
         
@@ -107,7 +101,7 @@ BaseNetworkViewer.prototype = {
             onClick : this.onNodeClick.bind(this)
         };
 
-        sprite.position.copy(startPosition);
+        sprite.position.copy(viewManager.translateToSection('network', helper.getOutOfScreenPoint(startPosition.z)));
 
         this.nodes[id] = nodeData;
         this.nodes[id].sprite = sprite;
@@ -118,30 +112,86 @@ BaseNetworkViewer.prototype = {
     /**
      * Shows the network nodes
      * @author Miguel Celedon
+     * @returns {TWEEN.Tween} The first in the animation chain
      */
     showNodes : function() {
+        
+        var former = null,
+            original = null,
+            duration = 2000;
+        
+        var createTween = function(nodeID, self) {
+            
+            var actual = self.nodes[nodeID].sprite;
+            
+            var next = new TWEEN.Tween(actual.position)
+                        .to({x : actual.userData.originPosition.x,
+                             y : actual.userData.originPosition.y,
+                             z : actual.userData.originPosition.z},
+                            duration);
+            
+            if(former)
+                former.onStart(function() {next.start(); actual.visible = true; });
+            else
+                original = next;
+            
+            former = next;
+            
+        };
 
         for(var nodeID in this.nodes) {
-            this.nodes[nodeID].sprite.visible = true;
+            
+            createTween(nodeID, this);
+            
         }
-        window.render();
+        
+        return original;
     },
 
     /**
      * Hide all nodes
      * @author Miguel Celedon
-     * @param {Array} excludedIDs Array of IDs that will be kept visible
+     * @param {Array}       [excludedIDs] Array of IDs that will be kept visible
+     * @returns {TWEEN.Tween} The first in the animation chain
      */
     hideNodes : function(excludedIDs) {
+        
+        excludedIDs = (typeof excludedIDs !== "undefined") ? excludedIDs : [];
+        
+        var former = null,
+            original = null,
+            duration = 2000;
+        
+        var createTween = function(nodeID, self) {
+            
+            if(!excludedIDs.includes(nodeID)) {
+                
+                var actual = self.nodes[nodeID].sprite;
+                var target = helper.getOutOfScreenPoint(actual.position.z, 'network');
+                
+                var next = new TWEEN.Tween(actual.position)
+                            .to({x : target.x,
+                                 y : target.y,
+                                 z : target.z},
+                                duration)
+                            .onComplete(function() { actual.visible = false; });
+                
+                if(former)
+                    former.onStart(function() { next.start(); });
+                else
+                    original = next;
+                
+                former = next;
+            }
+        };
 
         for(var nodeID in this.nodes) {
-
-            if(!excludedIDs.includes(nodeID)) {
-
-                this.nodes[nodeID].sprite.visible = false;
-            }
+            
+            createTween(nodeID, this);
+        
         }
-        window.render();
+        
+        return original;
     },
 
     /**
@@ -155,7 +205,7 @@ BaseNetworkViewer.prototype = {
             var origin, dest;
             var node = this.nodes[nodeID];
 
-            origin = node.sprite.position;
+            origin = node.sprite.userData.originPosition;
 
             for(var i = 0; i < node.edges.length; i++) {
 
@@ -163,13 +213,12 @@ BaseNetworkViewer.prototype = {
 
                 if(this.nodes.hasOwnProperty(actualEdge.id) && this.edgeExists(nodeID, actualEdge.id) === -1) {
 
-                    dest = this.nodes[actualEdge.id].sprite.position;
+                    dest = this.nodes[actualEdge.id].sprite.userData.originPosition;
 
                     var lineGeo = new THREE.Geometry();
                     lineGeo.vertices.push(origin, dest);
 
-                    var line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color : 0x000000}));
-                    line.visible = false;
+                    var line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({color : 0x000000, transparent : true, opacity : 0}));
 
                     scene.add(line);
                     this.edges.push({
@@ -180,44 +229,86 @@ BaseNetworkViewer.prototype = {
                 }
             }
         }
-
-        this.showEdges();
     },
 
     /**
      * Show the edges
      * @author Miguel Celedon
+     * @returns {TWEEN.Tween} The first in the animation chain
      */
     showEdges : function() {
 
-        var duration = 2000;
+        var duration = 2000,
+            former = null,
+            original = null;
+        
+        var createTween = function(i, self) {
+            
+            var actual = self.edges[i].line;
+            
+            var next = new TWEEN.Tween(actual.material)
+            .to({opacity : 1}, duration);
+            
+            if(former)
+                former.onStart(function() { next.start(); });
+            else
+                original = next;
+            
+            former = next;
+            
+        };
 
         for(var i = 0; i < this.edges.length; i++) {
-            this.edges[i].line.visible = true;
+            createTween(i, this);
         }
-        window.render();
+        
+        return original;
     },
 
     /**
-     * Hides the edges
+     * Hides the edges immediately
      * @author Miguel Celedon
-     * @param {Array} excludedIDs Array of IDs that will be kept visible
+     * @param {Array}         [excludedIDs] Array of IDs that will be kept visible
      */
     hideEdges : function(excludedIDs) {
 
-        var duration = 2000;
-        excludedIDs = excludedIDs || [];
+        var duration = 250;
+        
+        
+        excludedIDs = (typeof excludedIDs !== "undefined") ? excludedIDs : [];
+        
+        var createTween = function(i, self) {
+            
+            if(!excludedIDs.includes(i)) {
+            
+                var actual = self.edges[i].line;
+
+                var next = new TWEEN.Tween(actual.material)
+                            .to({opacity : 0}, duration).start();
+            }
+        };
 
         for(var i = 0; i < this.edges.length; i++) {
-            
-            if(!excludedIDs.includes(i))
-                this.edges[i].line.visible = false;
+            createTween(i, this);
         }
-        window.render();
+    },
+    
+    show : function() {
+        this.showNodes()
+        .chain(this.showEdges())
+        .start();
+        window.helper.forceTweenRender(6000);
+    },
+    
+    hide : function(excludedNodes, excludedEdges) {
+        
+        this.hideEdges(excludedEdges);
+        this.hideNodes(excludedNodes).start();
+        window.helper.forceTweenRender(6000);
     },
 
     /**
-     * Checks if an edge alreedges exists
+     * Checks if an edge already exists
      * @author Miguel Celedon
      * @param   {string} from ID of one node
      * @param   {string} to   ID of the other node
@@ -240,7 +331,7 @@ BaseNetworkViewer.prototype = {
         var NUM_NODES = 25,
             MAX_CONNECTIONS = 10;
         
-        var TYPES = ['pc', 'actor'];
+        var TYPES = ['pc', 'server', 'phone', 'tablet'];
 
         for(var i = 0; i < NUM_NODES; i++) {
 
@@ -271,7 +362,7 @@ BaseNetworkViewer.prototype = {
      * @param {object} clickedNode The clicked node
      */
     onNodeClick : function(clickedNode) {
-
+        
         var goalPosition = new THREE.Vector3(0, -2500, 9000);
         goalPosition.add(clickedNode.position);
 
@@ -294,9 +385,10 @@ BaseNetworkViewer.prototype = {
     close : function() {},
     
     PICTURES : {
-        server : "/images/network/pc.png",
+        server : "/images/network/server.png",
         pc : "/images/network/pc.png",
-        phone : "/images/network/pc.png",
-        actor : "/images/network/actor.png"
+        phone : "/images/network/phone.png",
+        actor : "/images/network/actor.png",
+        tablet : "/images/network/tablet.png"
     }
 };

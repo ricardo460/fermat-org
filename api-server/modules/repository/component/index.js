@@ -412,7 +412,7 @@ exports.delAllComps = function (callback) {
  *
  * @return {[type]}    [description]
  */
-export.updateCompById = function(_comp_id, _platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, scrnshts, found, callback){
+exports.updateCompById = function(_comp_id, _platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, scrnshts, found, callback){
 
     var set_obj = {};
     if (_platfrm_id) {

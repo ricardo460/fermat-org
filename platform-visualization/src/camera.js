@@ -157,9 +157,10 @@ function Camera(position, renderer, renderFunc) {
             $('#sidePanel').fadeTo(1000, 0, function() { $('#sidePanel').remove(); });
             $('#elementPanel').fadeTo(1000, 0, function() { $('#elementPanel').remove(); });
             $('#timelineButton').fadeTo(1000, 0, function() { $('#timelineButton').remove(); });
-            if( $('#developerButton') != null ) helper.hide($('#developerButton'), 1000);
             if( $('#tlContainer') != null ) helper.hide($('#tlContainer'), 1000);
             $(renderer.domElement).fadeTo(1000, 1);
+
+            window.buttonsManager.removeAllButtons();
 
             focus = null;
         }
@@ -325,7 +326,7 @@ function Camera(position, renderer, renderFunc) {
         
         raycaster.setFromCamera(target, camera);
         
-        /* Debug code, draw lines representing the clicks
+        /* Debug code, draw lines representing the clicks 
  
         var mat = new THREE.LineBasicMaterial({color : 0xaaaaaa});
         var g = new THREE.Geometry();

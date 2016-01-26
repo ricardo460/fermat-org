@@ -46,10 +46,12 @@ NetworkViewer.prototype.onNodeClick = function(clickedNode) {
     
     if(this.childNetwork === null) {
         
+        TWEEN.removeAll();
+        
         BaseNetworkViewer.prototype.onNodeClick.call(this, clickedNode);
 
-        this.hideEdges();
-        this.hideNodes([clickedNode.userData.id]);
+        this.hide([clickedNode.userData.id]);
+        
         this.childNetwork = new ClientsViewer(clickedNode);
         
         this.open();
@@ -95,13 +97,13 @@ NetworkViewer.prototype.drawNodes = function(networkNodes) {
         var position = new THREE.Vector3(
             (Math.random() * 2 - 1) * this.NET_RADIOUS,
             (Math.random() * 2 - 1) * this.NET_RADIOUS,
-            ((Math.random() * 2 - 1) * this.NET_RADIOUS) - this.NET_RADIOUS);
+            ((Math.random() * 2 - 1) * this.NET_RADIOUS));
         
         position = window.viewManager.translateToSection('network', position);
 
         var sprite = this.createNode(networkNodes[i], position);
 
-        sprite.scale.set(500, 500, 1.0);
+        sprite.scale.set(1000, 1000, 1.0);
 
         window.scene.add(sprite);
     }
@@ -120,6 +122,9 @@ NetworkViewer.prototype.configureCamera = function() {
     var position = window.viewManager.translateToSection('network', new THREE.Vector3(0,0,0));
     setTimeout(function() {
         window.camera.move(position.x, position.y, self.NET_RADIOUS, 2000);
+        
+        self.show.call(self);
+        
     }, 5000);
 
     setTimeout(function() {
