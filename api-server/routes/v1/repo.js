@@ -29,7 +29,6 @@ var cache = new Cache({
 router.post('/procs', function (req, res, next) {
     'use strict';
     try {
-
             if (!security.isValidData(req.body.platfrm) ||
             !security.isValidData(req.body.name) ||
             !security.isValidData(req.body.desc) ||
@@ -91,13 +90,29 @@ router.get('/simple-procs', function (req, res, next) {
 router.post('/comps', function (req, res, next) {
     'use strict';
     try {
-        repMod.addComp(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
+
+    	if (!security.isValidData(req.body.platfrm_id) ||
+            !security.isValidData(req.body.suprlay_id) ||
+            !security.isValidData(req.body.layer_id) ||
+            !security.isValidData(req.body.name) ||
+            !security.isValidData(req.body.type) ||
+            !security.isValidData(req.body.description) ||
+            !security.isValidData(req.body.difficulty) ||
+            !security.isValidData(req.body.code_level)||
+            !security.isValidData(req.body.repo_dir) ||
+            !security.isValidData(req.body.scrnshts) ||
+            !security.isValidData(req.body.found)) {
+                res.status(412).send('missing or invalid data');
             } else {
-                res.status(200).send(result);
+
+                    repMod.addComp(req, function (error, result) {
+                        if (error) {
+                            res.status(200).send(error);
+                        } else {
+                            res.status(200).send(result);
+                        }
+                    });
             }
-        });
     } catch (err) {
         next(err);
     }
@@ -143,13 +158,21 @@ router.get('/simple-comps', function (req, res, next) {
 router.post('/layers', function (req, res, next) {
     'use strict';
     try {
-        repMod.addLayer(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
+
+          if (!security.isValidData(req.body.name) ||
+              !security.isValidData(req.body.lang) ||
+              !security.isValidData(req.body.suprlay) ||
+              !security.isValidData(req.body.order)) {
+                res.status(412).send('missing or invalid data');
             } else {
-                res.status(200).send(result);
-            }
-        });
+                repMod.addLayer(req, function (error, result) {
+                    if (error) {
+                        res.status(200).send(error);
+                    } else {
+                        res.status(200).send(result);
+                    }
+            });
+         }
     } catch (err) {
         next(err);
     }
@@ -195,13 +218,22 @@ router.get('/layers', function (req, res, next) {
 router.post('/suprlays', function (req, res, next) {
     'use strict';
     try {
-        repMod.addSuprLay(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
-            } else {
-                res.status(200).send(result);
-            }
-        });
+
+        if (!security.isValidData(req.body.code) ||
+              !security.isValidData(req.body.name) ||
+              !security.isValidData(req.body.logo) ||
+              !security.isValidData(req.body.deps) ||
+              !security.isValidData(req.body.order)) {
+                res.status(412).send('missing or invalid data');
+        } else {
+            repMod.addSuprLay(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    res.status(200).send(result);
+                }
+            });
+        }
     } catch (err) {
         next(err);
     }
@@ -246,13 +278,23 @@ router.get('/suprlays', function (req, res, next) {
 router.post('/platforms', function (req, res, next) {
     'use strict';
     try {
-        repMod.addPlatform(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
-            } else {
-                res.status(200).send(result);
-            }
-        });
+
+        if (!security.isValidData(req.body.code) ||
+            !security.isValidData(req.body.name) ||
+            !security.isValidData(req.body.logo) ||
+            !security.isValidData(req.body.deps) ||
+            !security.isValidData(req.body.order)) {
+                res.status(412).send('missing or invalid data');
+        } else {
+
+            repMod.addPlatform(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    res.status(200).send(result);
+                }
+            });
+        }
     } catch (err) {
         next(err);
     }
@@ -300,13 +342,24 @@ router.post('/comps/:comp_id/life-cicles', function (req, res, next) {
 router.post('/comps/:comp_id/comp-devs', function (req, res, next) {
     'use strict';
     try {
-        repMod.addCompDev(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
-            } else {
-                res.status(200).send(result);
-            }
-        });
+
+    	if (!security.isValidData(req.body.comp_id) ||
+            !security.isValidData(req.body.dev_id) ||
+            !security.isValidData(req.body.role) ||
+            !security.isValidData(req.body.scope) ||
+            !security.isValidData(req.body.percnt)) {
+                res.status(412).send('missing or invalid data');
+        } else {
+
+            repMod.addCompDev(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    res.status(200).send(result);
+                }
+            });
+
+        }
     } catch (err) {
         next(err);
     }
@@ -326,13 +379,29 @@ router.post('/comps/:comp_id/comp-devs', function (req, res, next) {
 router.post('/procs/:proc_id/steps', function (req, res, next) {
     'use strict';
     try {
-        repMod.addStep(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
-            } else {
-                res.status(200).send(result);
-            }
-        });
+
+    	if (!security.isValidData(req.body.proc_id) ||
+              !security.isValidData(req.body.platfrm_code) ||
+              !security.isValidData(req.body.suprlay_code) ||
+              !security.isValidData(req.body.layer_name) ||
+              !security.isValidData(req.body.comp_name) ||
+              !security.isValidData(req.body.type)||
+              !security.isValidData(req.body.title) ||
+              !security.isValidData(req.body.desc) ||
+              !security.isValidData( req.body.order)) {
+
+                res.status(412).send('missing or invalid data');
+
+        } else {
+
+            repMod.addStep(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    res.status(200).send(result);
+                }
+            });
+        }
     } catch (err) {
         next(err);
     }
@@ -1054,6 +1123,7 @@ router.get('/manifest/check', function (req, res, next) {
         next(err);
     }
 });
+
 /**
  * [description]
  *
