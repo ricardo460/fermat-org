@@ -69,3 +69,18 @@ exports.findAllTkns = function(query, order, callback) {
 		callback(err, tkn);
 	});
 };
+
+/**
+ * [delTkn description]
+ * @param  {[type]}   axs_key  [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.delTkn = function(axs_key, callback) {
+	'use strict';
+	tknDao.delSchema({
+		'axs_key': axs_key
+	}, function(err, tkn) {
+		callback(err, tkn);
+	});
+};

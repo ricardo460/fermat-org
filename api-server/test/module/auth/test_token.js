@@ -12,7 +12,7 @@ setInterval(function() {
 			console.log('info', 'Starting database connexion');
 			var db = require('../../../db');
 			break;
-		case 1:
+		/*case 1:
 			console.log('info', 'Inserting Tkn 1 ');
 			modTkn.insTkn(new mongoose.Types.ObjectId("569ff8867a833e1f1bd9b4d3"), new mongoose.Types.ObjectId("569ff9157bdc782d1b1f3343"), function(err, res) {
 				if (err) {
@@ -57,10 +57,10 @@ setInterval(function() {
 					console.log(res_tkn);
 				}
 			});
-			break;
+			break;*/
 		case 5:
 			console.log('info', 'Obtaining Tkn by access key: '+accessKey);
-			modTkn.getTkn(accessKey, function(err_res, res_tkn) {
+			modTkn.getTkn(new mongoose.Types.ObjectId("569ff92ec07f1a391b447a37"), function(err_res, res_tkn) {
 				if (err_res) {
 					console.log('error', err_res);
 				} else {
