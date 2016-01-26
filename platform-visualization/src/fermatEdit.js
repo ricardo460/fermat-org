@@ -19,7 +19,10 @@ function FermatEdit() {
     var WIDTH = window.innerWidth,
         HEIGHT = window.innerHeight;
 
-   // var ID = 0;
+    var button,
+        text,
+        x,
+        type;
 
     var self = this;
 
@@ -27,15 +30,6 @@ function FermatEdit() {
      * @author Ricardo Delgado
      */
     this.init = function(){
-        //createAllFields();
-    };
-
-    function createAllFields(){
-
-        var button,
-            text,
-            x,
-            type;
 
             sesionPlatform();
             sesionType();
@@ -45,283 +39,284 @@ function FermatEdit() {
             sesionMaintainer();
             sesionState();
             createbutton();
-       
-        function sesionPlatform(){
-
-            var id = 'label-Platform'; text = 'Select the Platform : '; type = 'label';
-
-            addFields(id, text, null, type);
-
-            id = 'select-Platform'; text = ''; type = 'select';
-
-            addFields(id, text, null, type);
-
-            var optgroup = "<optgroup label = Platform>",
-                option = "";
+    };
 
 
-            for(var i in groups){
+    function sesionPlatform(){
 
-                if(i != "size"){
-    
-                    option += "<option value = "+i+" >"+i+"</option>";
-                }
+        var id = 'label-Platform'; text = 'Select the Platform : '; type = 'label';
 
-            }
+        addFields(id, text, null, type);
 
-            optgroup += option + "</optgroup>";
+        id = 'select-Platform'; text = ''; type = 'select';
 
+        addFields(id, text, null, type);
+
+        var optgroup = "<optgroup label = Platform>",
             option = "";
 
-            optgroup += "<optgroup label = superLayer>";
 
-            for(var i in superLayers){
+        for(var i in groups){
 
-                if(i != "size"){
+            if(i != "size"){
 
-                    option += "<option value = "+i+" >"+i+"</option>";
-                }
-
+                option += "<option value = "+i+" >"+i+"</option>";
             }
 
-            optgroup += option + "</optgroup>";
+        }
 
-            $("#"+id).html(optgroup);
+        optgroup += option + "</optgroup>";
 
-            sesionLayer();
+        option = "";
 
+        optgroup += "<optgroup label = superLayer>";
+
+        for(var i in superLayers){
+
+            if(i != "size"){
+
+                option += "<option value = "+i+" >"+i+"</option>";
+            }
+
+        }
+
+        optgroup += option + "</optgroup>";
+
+        $("#"+id).html(optgroup);
+
+        sesionLayer();
+
+        changeLayer(document.getElementById(id).value);
+
+       $("#"+id).change('click', function() {
+        
             changeLayer(document.getElementById(id).value);
+        });
+    }
 
-           $("#"+id).change('click', function() {
-            
-                changeLayer(document.getElementById(id).value);
-            });
-        }
+    function sesionLayer(){
 
-        function sesionLayer(){
+        var id = 'label-layer'; text = 'Select the Layer : '; type = 'label';
 
-            var id = 'label-layer'; text = 'Select the Layer : '; type = 'label';
+        addFields(id, text, 15, type);
 
-            addFields(id, text, 15, type);
+        id = 'select-layer'; text = ''; type = 'select';
 
-            id = 'select-layer'; text = ''; type = 'select';
+        addFields(id, text, null, type);
+      
+    }
 
-            addFields(id, text, null, type);
-          
-        }
+    function changeLayer(platform){
 
-        function changeLayer(platform){
+        var state = false;
 
-            var state = false;
+        if(typeof groups[platform] === 'undefined')
+            state = platform;
 
-            if(typeof groups[platform] === 'undefined')
-                state = platform;
+        var _layers = CLI.query(window.layers,function(el){return (el.super_layer === state)});
 
-            var _layers = CLI.query(window.layers,function(el){return (el.super_layer === state)});
+        var option = "";
 
-            var option = "";
+        for(var i = 0;i < _layers.length; i++){
 
-            for(var i = 0;i < _layers.length; i++){
-
-                option += "<option value = "+_layers[i]+">"+_layers[i]+"</option>";
-
-            }
-
-            $("#select-layer").html(option);          
-        }
-
-        function sesionType(){
-
-            var id = 'label-Type'; text = 'Select the Type : '; type = 'label';
-
-            addFields(id, text, 15, type);
-
-            id = 'select-Type'; text = ''; type = 'select';
-
-            addFields(id, text, null, type);
-
-            var option = "";
-
-            option += "<option value = addon>Addon</option>";
-            option += "<option value = android>Android</option>";
-            option += "<option value = library>Library</option>";
-            option += "<option value = plugin>Plugin</option>";
-
-
-            $("#"+id).html(option);
+            option += "<option value = '"+_layers[i]+"' >"+_layers[i]+"</option>";
 
         }
 
-        function sesionName(){
+        $("#select-layer").html(option);          
+    }
 
-            var id = 'label-Name'; text = 'Enter Name : '; type = 'label';
+    function sesionType(){
 
-            addFields(id, text, null, type, 2);
+        var id = 'label-Type'; text = 'Select the Type : '; type = 'label';
 
-            idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
+        addFields(id, text, 15, type);
 
-            var object = {
-                id : "imput-Name",
-                text : "textfield"
-              };
+        id = 'select-Type'; text = ''; type = 'select';
 
-            var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
+        addFields(id, text, null, type);
 
-            $("#"+objects.row2.div).append(imput);
+        var option = "";
 
-            var button = document.getElementById(object.id);
+        option += "<option value = Addon>Addon</option>";
+        option += "<option value = Android>Android</option>";
+        option += "<option value = Library>Library</option>";
+        option += "<option value = Plugin>Plugin</option>";
 
-            sucesorButton = document.getElementById(idSucesor);
-                  
-            button.placeholder = 'Component Name';      
-            button.style.position = 'absolute';
-            button.style.top = objects.row2.y + 'px';
-            button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
-            button.style.zIndex = 10;
-            button.style.opacity = 0;
 
-            window.helper.show(button, 1000);
+        $("#"+id).html(option);
 
-            objects.row2.buttons.push(object);
+    }
 
-        }
+    function sesionName(){
 
-        function sesionAutor(){
+        var id = 'label-Name'; text = 'Enter Name : '; type = 'label';
 
-            var id = 'label-Autor'; text = 'Enter Autor : '; type = 'label';
+        addFields(id, text, null, type, 2);
 
-            addFields(id, text, 15, type, 2);
+        idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
 
-            idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
+        var object = {
+            id : "imput-Name",
+            text : "textfield"
+          };
 
-            var object = {
-                id : "imput-autor",
-                text : "textfield"
-              };
+        var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
 
-            var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
+        $("#"+objects.row2.div).append(imput);
 
-            $("#"+objects.row2.div).append(imput);
+        var button = document.getElementById(object.id);
 
-            var button = document.getElementById(object.id);
+        sucesorButton = document.getElementById(idSucesor);
+              
+        button.placeholder = 'Component Name';      
+        button.style.position = 'absolute';
+        button.style.top = objects.row2.y + 'px';
+        button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
+        button.style.zIndex = 10;
+        button.style.opacity = 0;
 
-            sucesorButton = document.getElementById(idSucesor);
+        window.helper.show(button, 1000);
 
-            button.placeholder = 'Github User';     
-            button.style.position = 'absolute';
-            button.style.top = objects.row2.y + 'px';
-            button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
-            button.style.zIndex = 10;
-            button.style.opacity = 0;
+        objects.row2.buttons.push(object);
 
-            button.addEventListener('blur', function() {
+    }
 
-            });
+    function sesionAutor(){
 
-            window.helper.show(button, 1000);
+        var id = 'label-Autor'; text = 'Enter Autor : '; type = 'label';
 
-            objects.row2.buttons.push(object);
+        addFields(id, text, 15, type, 2);
 
-        }
+        idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
 
-        function sesionDifficulty(){
+        var object = {
+            id : "imput-autor",
+            text : "textfield"
+          };
 
-            var id = 'label-Difficulty'; text = 'Select Difficulty : '; type = 'label';
+        var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
 
-            addFields(id, text, 15, type);
+        $("#"+objects.row2.div).append(imput);
 
-            id = 'select-Difficulty'; text = ''; type = 'select';
+        var button = document.getElementById(object.id);
 
-            addFields(id, text, null, type);
+        sucesorButton = document.getElementById(idSucesor);
 
-            var option = "";
+        button.placeholder = 'Github User';     
+        button.style.position = 'absolute';
+        button.style.top = objects.row2.y + 'px';
+        button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
+        button.style.zIndex = 10;
+        button.style.opacity = 0;
 
-            option += "<option value = 0>0</option>";
-            option += "<option value = 1>1</option>";
-            option += "<option value = 2>2</option>";
-            option += "<option value = 3>3</option>";
-            option += "<option value = 4>4</option>";
-            option += "<option value = 5>5</option>";
-            option += "<option value = 6>6</option>";
-            option += "<option value = 7>7</option>";
-            option += "<option value = 8>8</option>";
-            option += "<option value = 9>9</option>";
-            option += "<option value = 10>10</option>";
+        button.addEventListener('blur', function() {
 
-            $("#"+id).html(option);
+        });
 
-        }
+        window.helper.show(button, 1000);
 
-        function sesionMaintainer(){
+        objects.row2.buttons.push(object);
 
-            var id = 'label-Maintainer'; text = 'Enter Maintainer : '; type = 'label';
+    }
 
-            addFields(id, text, 15, type, 2);
+    function sesionDifficulty(){
 
-            idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
+        var id = 'label-Difficulty'; text = 'Select Difficulty : '; type = 'label';
 
-            var object = {
-                id : "imput-Maintainer",
-                text : "textfield"
-              };
+        addFields(id, text, 15, type);
 
-            var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
+        id = 'select-Difficulty'; text = ''; type = 'select';
 
-            $("#"+objects.row2.div).append(imput);
+        addFields(id, text, null, type);
 
-            var button = document.getElementById(object.id);
+        var option = "";
 
-            sucesorButton = document.getElementById(idSucesor);
-                  
-            button.placeholder = 'Github User';      
-            button.style.position = 'absolute';
-            button.style.top = objects.row2.y + 'px';
-            button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
-            button.style.zIndex = 10;
-            button.style.opacity = 0;
+        option += "<option value = 0>0</option>";
+        option += "<option value = 1>1</option>";
+        option += "<option value = 2>2</option>";
+        option += "<option value = 3>3</option>";
+        option += "<option value = 4>4</option>";
+        option += "<option value = 5>5</option>";
+        option += "<option value = 6>6</option>";
+        option += "<option value = 7>7</option>";
+        option += "<option value = 8>8</option>";
+        option += "<option value = 9>9</option>";
+        option += "<option value = 10>10</option>";
 
-            window.helper.show(button, 1000);
+        $("#"+id).html(option);
 
-            objects.row2.buttons.push(object);
+    }
 
-        }
+    function sesionMaintainer(){
 
-        function sesionState(){
+        var id = 'label-Maintainer'; text = 'Enter Maintainer : '; type = 'label';
 
-            var id = 'label-State'; text = 'Select the State : '; type = 'label';
+        addFields(id, text, 15, type, 2);
 
-            addFields(id, text, 15, type);
+        idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
 
-            id = 'select-State'; text = ''; type = 'select';
+        var object = {
+            id : "imput-Maintainer",
+            text : "textfield"
+          };
 
-            addFields(id, text, 8, type);
+        var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
 
-            var option = "";
+        $("#"+objects.row2.div).append(imput);
 
-            option += "<option value = concept>Concept</option>";
-            option += "<option value = development>Development</option>";
-            option += "<option value = production>Production</option>";
-            option += "<option value = qa>QA</option>";
+        var button = document.getElementById(object.id);
 
-            $("#"+id).html(option);
+        sucesorButton = document.getElementById(idSucesor);
+              
+        button.placeholder = 'Github User';      
+        button.style.position = 'absolute';
+        button.style.top = objects.row2.y + 'px';
+        button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
+        button.style.zIndex = 10;
+        button.style.opacity = 0;
 
-        }
+        window.helper.show(button, 1000);
 
-        function createbutton(){
+        objects.row2.buttons.push(object);
 
-            var id = 'button-save'; text = 'Save'; type = 'button';
+    }
 
-            var button = addFields(id, text, 20, type, 2);
+    function sesionState(){
 
-            button.className = 'actionButton';
+        var id = 'label-State'; text = 'Select the State : '; type = 'label';
 
-            
-            button.addEventListener('click', function() {
+        addFields(id, text, 15, type);
 
-                        self.removeAllFields();
-            });
+        id = 'select-State'; text = ''; type = 'select';
 
-        }
+        addFields(id, text, 8, type);
+
+        var option = "";
+
+        option += "<option value = concept>Concept</option>";
+        option += "<option value = development>Development</option>";
+        option += "<option value = production>Production</option>";
+        option += "<option value = qa>QA</option>";
+
+        $("#"+id).html(option);
+
+    }
+
+    function createbutton(){
+
+        var id = 'button-save'; text = 'Save'; type = 'button';
+
+        var button = addFields(id, text, 20, type, 2);
+
+        button.className = 'actionButton';
+
+        
+        button.addEventListener('click', function() {
+
+                    self.removeAllFields();
+        });
+
     }
 
     function addFields(id, text, _x, _type, _row){
@@ -379,36 +374,46 @@ function FermatEdit() {
 
     }
 
-   /*function fillFields(){
+    function fillFields(id){
 
-        var tile = window.table[ID]; 
+        var tile = window.table[id]; 
 
-        var elementSelect = document.getElementById('select-Platform');
-            elementSelect.value = tile.group;
+        if(tile.group != undefined)
+            document.getElementById('select-Platform').value = tile.group;
 
-        elementSelect = document.getElementById('select-layer');
-        elementSelect.value = tile.group;
+        changeLayer(document.getElementById('select-Platform').value);
 
-        elementSelect = document.getElementById('select-Platform');
-        elementSelect.value = tile.group;
+        if(tile.layer != undefined)        
+            document.getElementById('select-layer').value = tile.layer;
 
-        elementSelect = document.getElementById('select-Platform');
-        elementSelect.value = tile.group;
+        if(tile.type != undefined){
+            document.getElementById('select-Type').value = tile.type;
+            console.log(tile.type);
+        }
 
-        elementSelect = document.getElementById('select-Platform');
-        elementSelect.value = tile.group;        
+        if(tile.difficulty != undefined)
+            document.getElementById('select-Difficulty').value = tile.difficulty; 
 
-        /* document.forms['mi_Form']['mi_Select'].value = 'op2'
-        window.table[i].type === "Android" && 
-        window.table[i].group === _group && 
-        window.table[i].layer === _layer && 
-        window.table[i].name === _wallet*/
-    //}
+        if(tile.code_level != undefined)
+            document.getElementById('select-State').value = tile.code_level; 
+
+        if(tile.name != undefined)
+            document.getElementById('imput-Name').value = tile.name;         
+        
+        if(tile.author != undefined)
+            document.getElementById('imput-autor').value = tile.author; 
+
+        if(tile.maintainer != undefined)
+            document.getElementById('imput-Maintainer').value = tile.maintainer; 
+
+        console.log(id) 
+       ;
+    }
 
     this.createButtonAction = function(){
 
         self.removeAllFields();
-        buttonsManager.createButtons('buttonNew', 'New Component', createAllFields);
+        buttonsManager.createButtons('buttonNew', 'New Component', self.init);
         
     }
 
@@ -443,8 +448,13 @@ function FermatEdit() {
 
     this.addButtonEdit = function(id){
         self.removeAllFields();
-        //ID = id;
-        buttonsManager.createButtons('buttonEdit', 'Edit Component', createAllFields);
+
+        buttonsManager.createButtons('buttonEdit', 'Edit Component', function (){
+
+            self.init();
+
+            fillFields(id);
+        });
     }
 
 }
