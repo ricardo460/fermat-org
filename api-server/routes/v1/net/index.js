@@ -3,8 +3,8 @@
 var express = require('express');
 var passport = require('passport');
 var router = express.Router();
-var netMod = require('../../modules/network');
-var Cache = require('../../lib/route-cache');
+var netMod = require('../../../modules/network');
+var Cache = require('../../../lib/route-cache');
 // creation of object cache
 var cache = new Cache({
     type: 'file',
@@ -21,7 +21,7 @@ var cache = new Cache({
  *
  * @return {[type]} [description]
  */
-router.get('/servers', function (req, res, next) {
+router.get('/servrs', function (req, res, next) {
     'use strict';
     try {
         // we search for body in cache
@@ -61,7 +61,7 @@ router.get('/servers', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/nodes/:hash/children', function (req, res, next) {
+router.get('/nodes/:hash/childrn', function (req, res, next) {
     'use strict';
     try {
         // we search for body in cache
@@ -91,4 +91,5 @@ router.get('/nodes/:hash/children', function (req, res, next) {
         next(err);
     }
 });
+// router export
 module.exports = router;

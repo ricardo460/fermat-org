@@ -301,58 +301,53 @@ exports.updBook = function (req, next) {
  * @return {[type]}   [description]
  */
 exports.checkManifest = function (req, next) {
-    'use strict';
-    try {
-        loadMod.getManifestWithExt('xsd', function (err_xsd, res_xsd) {
-            if (err_xsd) {
-                next(err_xsd, null);
-            } else {
-                try {
-                    var xsdDoc = libxml.parseXml(res_xsd);
-                    loadMod.getManifestWithExt('xml', function (err_xml, res_xml) {
-                        if (err_xml) {
-                            next(err_xml, null);
-                        } else {
-                            try {
-                                var xmlDoc = libxml.parseXml(res_xml);
-                                xmlDoc.validate(xsdDoc)
-                                if (xmlDoc.validationErrors.length > 0) {
-                                    return next(null, xmlDoc.validationErrors);
+        'use strict';
+        try {
+            loadMod.getManifestWithExt('xsd', function (err_xsd, res_xsd) {
+                if (err_xsd) {
+                    next(err_xsd, null);
+                } else {
+                    try {
+                        var xsdDoc = libxml.parseXml(res_xsd);
+                        loadMod.getManifestWithExt('xml', function (err_xml, res_xml) {
+                            if (err_xml) {
+                                next(err_xml, null);
+                            } else {
+                                try {
+                                    var xmlDoc = libxml.parseXml(res_xml);
+                                    xmlDoc.validate(xsdDoc)
+                                    if (xmlDoc.validationErrors.length > 0) {
+                                        return next(null, xmlDoc.validationErrors);
+                                    }
+                                    return next(null, "FermatManifest Cool");
+                                } catch (e) {
+                                    return next(null, {
+                                        "message": e.message,
+                                        "location": e
+                                    });
                                 }
-                                return next(null, "FermatManifest Cool");
-                            } catch (e) {
-                                return next(null, {
-                                    "message": e.message,
-                                    "location": e
-                                });
                             }
-
-                        }
-                    });
-                } catch (e) {
-                    return next(null, {
-                        "message": e.message,
-                        "location": e
-                    });
+                        });
+                    } catch (e) {
+                        return next(null, {
+                            "message": e.message,
+                            "location": e
+                        });
+                    }
                 }
-
-            }
-
-        });
-
-    } catch (err) {
-        next(err, null);
+            });
+        } catch (err) {
+            next(err, null);
+        }
     }
-}
-
-/**
- * @method addProc
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
+    /**
+     * @method addProc
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
 exports.addProc = function (req, next) {
     'use strict';
     try {
@@ -367,7 +362,6 @@ exports.addProc = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method getProc
  *
@@ -377,312 +371,283 @@ exports.addProc = function (req, next) {
  * @return {[type]}   [description]
  */
 exports.getProc = function (req, next) {
-    'use strict';
-    try {
-        procMod.findProcById(req.params.proc_id, function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
+        'use strict';
+        try {
+            procMod.findProcById(req.params.proc_id, function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+        } catch (err) {
+            next(err, null);
+        }
     }
-}
-
-/**
- * @method uptProc
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
+    /**
+     * @method uptProc
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
 exports.uptProc = function (req, next) {
-    'use strict';
-    try {
-        procMod.updateProcById(req.params.proc_id, req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
+        'use strict';
+        try {
+            procMod.updateProcById(req.params.proc_id, req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+        } catch (err) {
+            next(err, null);
+        }
     }
-}
-
-/**
- * @method delProc
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
+    /**
+     * @method delProc
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
 exports.delProc = function (req, next) {
-    'use strict';
-    try {
-        procMod.delProcById(req.params.proc_id, function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
+        'use strict';
+        try {
+            procMod.delProcById(req.params.proc_id, function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+        } catch (err) {
+            next(err, null);
+        }
     }
-
-}
-
-/**
- * @method getComp
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
+    /**
+     * @method getComp
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
 exports.getComp = function (req, next) {
-    'use strict';
-    try {
-        compMod.findCompById(req.params.comp_id, function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
+        'use strict';
+        try {
+            compMod.findCompById(req.params.comp_id, function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+        } catch (err) {
+            next(err, null);
+        }
     }
-}
-
-/**
- * @method uptComp
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
+    /**
+     * @method uptComp
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
 exports.uptComp = function (req, next) {
-    'use strict';
-    try {
-        compMod.updateCompById(req.params.comp_id, req.body.platfrm_id, req.body.suprlay_id, req.body.layer_id, req.body.name, req.body.type, req.body.description, req.body.difficulty, req.body.code_level, req.body.repo_dir, req.body.scrnshts, req.body.found, function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
+        'use strict';
+        try {
+            compMod.updateCompById(req.params.comp_id, req.body.platfrm_id, req.body.suprlay_id, req.body.layer_id, req.body.name, req.body.type, req.body.description, req.body.difficulty, req.body.code_level, req.body.repo_dir, req.body.scrnshts, req.body.found, function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+        } catch (err) {
+            next(err, null);
+        }
     }
-
-}
-
-/**
- * @method delComp
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
-exports.delComp = function (req, next) {
-
-}
-
-/**
- * @method getLay
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
+    /**
+     * @method delComp
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
+exports.delComp = function (req, next) {}
+    /**
+     * @method getLay
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
 exports.getLay = function (req, next) {
-    'use strict';
-    try {
-        layerMod.findLayerById(req.params.lay_id, function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
+        'use strict';
+        try {
+            layerMod.findLayerById(req.params.lay_id, function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+        } catch (err) {
+            next(err, null);
+        }
     }
-
-}
-
-/**
- * @method uptLay
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
+    /**
+     * @method uptLay
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
 exports.uptLay = function (req, next) {
-    'use strict';
-    try {
-        layMod.updateLayerById(req.params.lay_id, req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
+        'use strict';
+        try {
+            layMod.updateLayerById(req.params.lay_id, req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+        } catch (err) {
+            next(err, null);
+        }
     }
-
-}
-
-/**
- * @method delLay
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
-exports.delLay = function (req, next) {
-
-}
-
-/**
- * @method getSprlay
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
+    /**
+     * @method delLay
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
+exports.delLay = function (req, next) {}
+    /**
+     * @method getSprlay
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
 exports.getSprlay = function (req, next) {
-    'use strict';
-    try {
-        suprlayMod.findSuprlayById(req.params.sprly_id, function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
+        'use strict';
+        try {
+            suprlayMod.findSuprlayById(req.params.sprly_id, function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+        } catch (err) {
+            next(err, null);
+        }
     }
-
-}
-
-/**
- * @method uptSprlay
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
+    /**
+     * @method uptSprlay
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
 exports.uptSprlay = function (req, next) {
-    'use strict';
-    try {
-        suprlayMod.updateSuprlayById(req.params.sprly_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
+        'use strict';
+        try {
+            suprlayMod.updateSuprlayById(req.params.sprly_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+        } catch (err) {
+            next(err, null);
+        }
     }
-}
-
-/**
- * @method delSprlay
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
-exports.delSprlay = function (req, next) {
-
-}
-
-/**
- * @method getPltf
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
+    /**
+     * @method delSprlay
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
+exports.delSprlay = function (req, next) {}
+    /**
+     * @method getPltf
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
 exports.getPltf = function (req, next) {
-    'use strict';
-    try {
-        platfrmMod.findPlatfrmById(req.params.pltf_id, function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
+        'use strict';
+        try {
+            platfrmMod.findPlatfrmById(req.params.pltf_id, function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+        } catch (err) {
+            next(err, null);
+        }
     }
-
-}
-
-/**
- * @method uptPltf
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
+    /**
+     * @method uptPltf
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
 exports.uptPltf = function (req, next) {
-    'use strict';
-    try {
-        platfrmMod.updatePlatfrmById(req.params.pltf_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
-            if (err) {
-                next(err, null);
-            } else {
-                next(null, res);
-            }
-        });
-    } catch (err) {
-        next(err, null);
+        'use strict';
+        try {
+            platfrmMod.updatePlatfrmById(req.params.pltf_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
+                if (err) {
+                    next(err, null);
+                } else {
+                    next(null, res);
+                }
+            });
+        } catch (err) {
+            next(err, null);
+        }
     }
-}
-
-/**
- * @method delPltf
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
-exports.delPltf = function (req, next) {
-
-}
-
-/**
- * @method listProcs
- *
- * @param  {[type]}   req  [description]
- * @param  {Function} next [description]
- *
- * @return {[type]}   [description]
- */
+    /**
+     * @method delPltf
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
+exports.delPltf = function (req, next) {}
+    /**
+     * @method listProcs
+     *
+     * @param  {[type]}   req  [description]
+     * @param  {Function} next [description]
+     *
+     * @return {[type]}   [description]
+     */
 exports.listProcs = function (req, next) {
     'use strict';
     try {
@@ -697,7 +662,6 @@ exports.listProcs = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method addComp
  *
@@ -720,7 +684,6 @@ exports.addComp = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method listComps
  *
@@ -743,7 +706,6 @@ exports.listComps = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method addLayer
  *
@@ -765,9 +727,7 @@ exports.addLayer = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-
 };
-
 /**
  * @method listLayers
  *
@@ -790,7 +750,6 @@ exports.listLayers = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method addSuprLay
  *
@@ -813,7 +772,6 @@ exports.addSuprLay = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method listSuprLays
  *
@@ -836,7 +794,6 @@ exports.listSuprLays = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method addPlatform
  *
@@ -859,7 +816,6 @@ exports.addPlatform = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * Add one or several life cicle to component
  * @method addLifeCiclesToComp
@@ -869,11 +825,7 @@ exports.addPlatform = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.addLifeCiclesToComp = function (req, next) {
-
-
-};
-
+exports.addLifeCiclesToComp = function (req, next) {};
 /**
  * @method addCompDev
  *
@@ -896,7 +848,6 @@ exports.addCompDev = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method addStep
  *
@@ -931,9 +882,12 @@ exports.addStep = function (req, next) {
  */
 exports.doLock = function (req, next) {
     try {
-        if (req.params.usr_id && req.params.item_id && req.body.item_type && req.body.priority) {
-            lockMod.insOrUpdLock(req.params.usr_id, // user that wants the lock
-                req.params.item_id, // item to lock
+        if (req.body.usr_id && //
+            req.body.item_id && //
+            req.body.item_type && //
+            req.body.priority) {
+            lockMod.insOrUpdLock(req.body.usr_id, // user that wants the lock
+                req.body.item_id, // item to lock
                 req.body.item_type, // type of item
                 req.body.priority || 5, // lock priority
                 function (err_lck, res_lck) {
@@ -947,4 +901,7 @@ exports.doLock = function (req, next) {
     } catch (err) {
         next(err, null);
     }
+};
+exports.doRelease = function (req, next) {
+    try {} catch (err) {}
 };
