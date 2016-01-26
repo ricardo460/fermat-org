@@ -15,7 +15,13 @@ var cache = new Cache({
     time: 36000000
 });
 
-
+function log(req, res, next) {
+    console.log("/////////////////////////////////////////////////////");
+    console.dir(req.params);
+    next();
+}
+//router.all("/usrs*", log);
+router.use("/usrs/:usr_id", log);
 /**
  * [description]
  *
@@ -30,27 +36,21 @@ var cache = new Cache({
 router.post('/usr/:usr_id/procs', function (req, res, next) {
     'use strict';
     try {
-            if (!security.isValidData(req.body.platfrm) ||
-            !security.isValidData(req.body.name) ||
-            !security.isValidData(req.body.desc) ||
-            !security.isValidData(req.body.prev) ||
-            !security.isValidData(req.body.next)) {
-                res.status(412).send('missing or invalid data');
-            } else {
-
-                repMod.addProc(req, function (error, result) {
-                    if (error) {
-                        res.status(200).send(error);
-                    } else {
-                        res.status(200).send(result);
-                    }
-                });
-            }
-    }catch (err) {
+        if (!security.isValidData(req.body.platfrm) || !security.isValidData(req.body.name) || !security.isValidData(req.body.desc) || !security.isValidData(req.body.prev) || !security.isValidData(req.body.next)) {
+            res.status(412).send('missing or invalid data');
+        } else {
+            repMod.addProc(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    res.status(200).send(result);
+                }
+            });
+        }
+    } catch (err) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -76,7 +76,6 @@ router.get('/usr/:usr_id/simple-procs', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -91,34 +90,21 @@ router.get('/usr/:usr_id/simple-procs', function (req, res, next) {
 router.post('/usrs/:usr_id/comps', function (req, res, next) {
     'use strict';
     try {
-
-    	if (!security.isValidData(req.body.platfrm_id) ||
-            !security.isValidData(req.body.suprlay_id) ||
-            !security.isValidData(req.body.layer_id) ||
-            !security.isValidData(req.body.name) ||
-            !security.isValidData(req.body.type) ||
-            !security.isValidData(req.body.description) ||
-            !security.isValidData(req.body.difficulty) ||
-            !security.isValidData(req.body.code_level)||
-            !security.isValidData(req.body.repo_dir) ||
-            !security.isValidData(req.body.scrnshts) ||
-            !security.isValidData(req.body.found)) {
-                res.status(412).send('missing or invalid data');
-            } else {
-
-                    repMod.addComp(req, function (error, result) {
-                        if (error) {
-                            res.status(200).send(error);
-                        } else {
-                            res.status(200).send(result);
-                        }
-                    });
-            }
+        if (!security.isValidData(req.body.platfrm_id) || !security.isValidData(req.body.suprlay_id) || !security.isValidData(req.body.layer_id) || !security.isValidData(req.body.name) || !security.isValidData(req.body.type) || !security.isValidData(req.body.description) || !security.isValidData(req.body.difficulty) || !security.isValidData(req.body.code_level) || !security.isValidData(req.body.repo_dir) || !security.isValidData(req.body.scrnshts) || !security.isValidData(req.body.found)) {
+            res.status(412).send('missing or invalid data');
+        } else {
+            repMod.addComp(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    res.status(200).send(result);
+                }
+            });
+        }
     } catch (err) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -144,7 +130,6 @@ router.get('/usrs/:usr_id/simple-comps', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -159,26 +144,21 @@ router.get('/usrs/:usr_id/simple-comps', function (req, res, next) {
 router.post('/usrs/:usr_id/layers', function (req, res, next) {
     'use strict';
     try {
-
-          if (!security.isValidData(req.body.name) ||
-              !security.isValidData(req.body.lang) ||
-              !security.isValidData(req.body.suprlay) ||
-              !security.isValidData(req.body.order)) {
-                res.status(412).send('missing or invalid data');
-            } else {
-                repMod.addLayer(req, function (error, result) {
-                    if (error) {
-                        res.status(200).send(error);
-                    } else {
-                        res.status(200).send(result);
-                    }
+        if (!security.isValidData(req.body.name) || !security.isValidData(req.body.lang) || !security.isValidData(req.body.suprlay) || !security.isValidData(req.body.order)) {
+            res.status(412).send('missing or invalid data');
+        } else {
+            repMod.addLayer(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    res.status(200).send(result);
+                }
             });
-         }
+        }
     } catch (err) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -191,6 +171,7 @@ router.post('/usrs/:usr_id/layers', function (req, res, next) {
  * @return {[type]} [description]
  */
 router.get('/usrs/:usr_id/layers', function (req, res, next) {
+    console.log("*********************************************************");
     'use strict';
     try {
         repMod.listLayers(req, function (error, result) {
@@ -204,7 +185,6 @@ router.get('/usrs/:usr_id/layers', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -219,13 +199,8 @@ router.get('/usrs/:usr_id/layers', function (req, res, next) {
 router.post('/usrs/:usr_id/suprlays', function (req, res, next) {
     'use strict';
     try {
-
-        if (!security.isValidData(req.body.code) ||
-              !security.isValidData(req.body.name) ||
-              !security.isValidData(req.body.logo) ||
-              !security.isValidData(req.body.deps) ||
-              !security.isValidData(req.body.order)) {
-                res.status(412).send('missing or invalid data');
+        if (!security.isValidData(req.body.code) || !security.isValidData(req.body.name) || !security.isValidData(req.body.logo) || !security.isValidData(req.body.deps) || !security.isValidData(req.body.order)) {
+            res.status(412).send('missing or invalid data');
         } else {
             repMod.addSuprLay(req, function (error, result) {
                 if (error) {
@@ -239,7 +214,6 @@ router.post('/usrs/:usr_id/suprlays', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -279,15 +253,9 @@ router.get('/usrs/:usr_id/suprlays', function (req, res, next) {
 router.post('/usrs/:usr_id/platforms', function (req, res, next) {
     'use strict';
     try {
-
-        if (!security.isValidData(req.body.code) ||
-            !security.isValidData(req.body.name) ||
-            !security.isValidData(req.body.logo) ||
-            !security.isValidData(req.body.deps) ||
-            !security.isValidData(req.body.order)) {
-                res.status(412).send('missing or invalid data');
+        if (!security.isValidData(req.body.code) || !security.isValidData(req.body.name) || !security.isValidData(req.body.logo) || !security.isValidData(req.body.deps) || !security.isValidData(req.body.order)) {
+            res.status(412).send('missing or invalid data');
         } else {
-
             repMod.addPlatform(req, function (error, result) {
                 if (error) {
                     res.status(200).send(error);
@@ -300,8 +268,6 @@ router.post('/usrs/:usr_id/platforms', function (req, res, next) {
         next(err);
     }
 });
-
-
 /**
  * [description]
  *
@@ -327,8 +293,6 @@ router.post('/usrs/:usr_id/comps/:comp_id/life-cicles', function (req, res, next
         next(err);
     }
 });
-
-
 /**
  * [description]
  *
@@ -343,15 +307,9 @@ router.post('/usrs/:usr_id/comps/:comp_id/life-cicles', function (req, res, next
 router.post('/usrs/:usr_id/comps/:comp_id/comp-devs', function (req, res, next) {
     'use strict';
     try {
-
-    	if (!security.isValidData(req.body.comp_id) ||
-            !security.isValidData(req.body.dev_id) ||
-            !security.isValidData(req.body.role) ||
-            !security.isValidData(req.body.scope) ||
-            !security.isValidData(req.body.percnt)) {
-                res.status(412).send('missing or invalid data');
+        if (!security.isValidData(req.body.comp_id) || !security.isValidData(req.body.dev_id) || !security.isValidData(req.body.role) || !security.isValidData(req.body.scope) || !security.isValidData(req.body.percnt)) {
+            res.status(412).send('missing or invalid data');
         } else {
-
             repMod.addCompDev(req, function (error, result) {
                 if (error) {
                     res.status(200).send(error);
@@ -359,13 +317,11 @@ router.post('/usrs/:usr_id/comps/:comp_id/comp-devs', function (req, res, next) 
                     res.status(200).send(result);
                 }
             });
-
         }
     } catch (err) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -380,21 +336,9 @@ router.post('/usrs/:usr_id/comps/:comp_id/comp-devs', function (req, res, next) 
 router.post('/usrs/:usr_id/procs/:proc_id/steps', function (req, res, next) {
     'use strict';
     try {
-
-    	if (!security.isValidData(req.body.proc_id) ||
-              !security.isValidData(req.body.platfrm_code) ||
-              !security.isValidData(req.body.suprlay_code) ||
-              !security.isValidData(req.body.layer_name) ||
-              !security.isValidData(req.body.comp_name) ||
-              !security.isValidData(req.body.type)||
-              !security.isValidData(req.body.title) ||
-              !security.isValidData(req.body.desc) ||
-              !security.isValidData( req.body.order)) {
-
-                res.status(412).send('missing or invalid data');
-
+        if (!security.isValidData(req.body.proc_id) || !security.isValidData(req.body.platfrm_code) || !security.isValidData(req.body.suprlay_code) || !security.isValidData(req.body.layer_name) || !security.isValidData(req.body.comp_name) || !security.isValidData(req.body.type) || !security.isValidData(req.body.title) || !security.isValidData(req.body.desc) || !security.isValidData(req.body.order)) {
+            res.status(412).send('missing or invalid data');
         } else {
-
             repMod.addStep(req, function (error, result) {
                 if (error) {
                     res.status(200).send(error);
@@ -407,7 +351,6 @@ router.post('/usrs/:usr_id/procs/:proc_id/steps', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -426,10 +369,12 @@ router.get('/usrs/:usr_id/procs/:proc_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                if(result) {
+                if (result) {
                     res.status(200).send(result);
                 } else {
-                    res.status(404).send({message:"NOT FOUND"});
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
                 }
             }
         });
@@ -437,7 +382,6 @@ router.get('/usrs/:usr_id/procs/:proc_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -463,7 +407,6 @@ router.put('/usrs/:usr_id/procs/:proc_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -489,7 +432,6 @@ router.delete('/usrs/:usr_id/procs/:proc_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -508,10 +450,12 @@ router.get('/usrs/:usr_id/comps/:comp_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                if(result) {
+                if (result) {
                     res.status(200).send(result);
                 } else {
-                    res.status(404).send({message:"NOT FOUND"});
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
                 }
             }
         });
@@ -519,7 +463,6 @@ router.get('/usrs/:usr_id/comps/:comp_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -545,7 +488,6 @@ router.put('/usrs/:usr_id/comps/:comp_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -571,8 +513,6 @@ router.delete('/usrs/:usr_id/comps/:comp_id', function (req, res, next) {
         next(err);
     }
 });
-
-
 /**
  * [description]
  *
@@ -591,10 +531,12 @@ router.get('/usrs/:usr_id/layers/:lay_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                if(result) {
+                if (result) {
                     res.status(200).send(result);
                 } else {
-                    res.status(404).send({message:"NOT FOUND"});
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
                 }
             }
         });
@@ -602,7 +544,6 @@ router.get('/usrs/:usr_id/layers/:lay_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -628,7 +569,6 @@ router.put('/usrs/:usr_id/layers/:lay_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -654,7 +594,6 @@ router.delete('/usrs/:usr_id/layers/:Lay_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -673,10 +612,12 @@ router.get('/usrs/:usr_id/suprlays/:sprly_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                if(result) {
+                if (result) {
                     res.status(200).send(result);
                 } else {
-                    res.status(404).send({message:"NOT FOUND"});
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
                 }
             }
         });
@@ -684,7 +625,6 @@ router.get('/usrs/:usr_id/suprlays/:sprly_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -710,7 +650,6 @@ router.put('/usrs/:usr_id/suprlays/:sprly_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -736,7 +675,6 @@ router.delete('/usrs/:usr_id/suprlays/:sprly_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -755,10 +693,12 @@ router.get('/usrs/:usr_id/platforms/:pltf_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                if(result) {
+                if (result) {
                     res.status(200).send(result);
                 } else {
-                    res.status(404).send({message:"NOT FOUND"});
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
                 }
             }
         });
@@ -766,7 +706,6 @@ router.get('/usrs/:usr_id/platforms/:pltf_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -792,7 +731,6 @@ router.put('/usrs/:usr_id/platforms/:pltf_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -818,7 +756,6 @@ router.delete('/usrs/:usr_id/platforms/:pltf_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
@@ -857,7 +794,6 @@ router.get('/comps/reload', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * Get autorization for use the api
  * @param  {[type]} req   [description]
@@ -865,28 +801,27 @@ router.get('/comps/reload', function (req, res, next) {
  * @param  {[type]} next) [description]
  * @return {[type]}       [description]
  */
-router.get('/getAutorization', function(req, resp, next) {
+router.get('/getAutorization', function (req, resp, next) {
     'use strict';
     try {
         console.log("Get autorization");
         var code = req.query['code'];
         var api_key = req.query['api_key'];
-        var url = "https://github.com/login/oauth/access_token?client_id=6cac9cc2c2cb584c5bf4&client_secret=4887bbc58790c7a242a8dafcb035c0a01dc2a199&" +
-            "code=" + code;
-        authMod.getAutorization(url, api_key, function(err_auth, res_auth) {
-                if (err_auth) {
-                    console.log("Error", err_auth);
-                    resp.status(200).send(err_auth);
-                } else {
-                    console.log("Info", "Authorization granted");
-                    resp.status(200).send(res_auth);
-                }
-            });
-        } catch (err) {
-            console.error("Error", err);
-            next(err);
-        }
-    });
+        var url = "https://github.com/login/oauth/access_token?client_id=6cac9cc2c2cb584c5bf4&client_secret=4887bbc58790c7a242a8dafcb035c0a01dc2a199&" + "code=" + code;
+        authMod.getAutorization(url, api_key, function (err_auth, res_auth) {
+            if (err_auth) {
+                console.log("Error", err_auth);
+                resp.status(200).send(err_auth);
+            } else {
+                console.log("Info", "Authorization granted");
+                resp.status(200).send(res_auth);
+            }
+        });
+    } catch (err) {
+        console.error("Error", err);
+        next(err);
+    }
+});
 /**
  * [description]
  *
@@ -1131,7 +1066,6 @@ router.get('/manifest/check', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
