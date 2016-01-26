@@ -26,7 +26,7 @@ var cache = new Cache({
  *
  * @return {[type]} [description]
  */
-router.post('/procs', function (req, res, next) {
+router.post('/usr/:usr_id/procs', function (req, res, next) {
     'use strict';
     try {
             if (!security.isValidData(req.body.platfrm) ||
@@ -61,7 +61,7 @@ router.post('/procs', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/simple-procs', function (req, res, next) {
+router.get('/usr/:usr_id/simple-procs', function (req, res, next) {
     'use strict';
     try {
         repMod.listProcs(req, function (error, result) {
@@ -87,7 +87,7 @@ router.get('/simple-procs', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.post('/comps', function (req, res, next) {
+router.post('/usrs/:usr_id/comps', function (req, res, next) {
     'use strict';
     try {
 
@@ -129,7 +129,7 @@ router.post('/comps', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/simple-comps', function (req, res, next) {
+router.get('/usrs/:usr_id/simple-comps', function (req, res, next) {
     'use strict';
     try {
         repMod.listComps(req, function (error, result) {
@@ -155,7 +155,7 @@ router.get('/simple-comps', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.post('/layers', function (req, res, next) {
+router.post('/usrs/:usr_id/layers', function (req, res, next) {
     'use strict';
     try {
 
@@ -189,7 +189,7 @@ router.post('/layers', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/layers', function (req, res, next) {
+router.get('/usrs/:usr_id/layers', function (req, res, next) {
     'use strict';
     try {
         repMod.listLayers(req, function (error, result) {
@@ -215,7 +215,7 @@ router.get('/layers', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.post('/suprlays', function (req, res, next) {
+router.post('/usrs/:usr_id/suprlays', function (req, res, next) {
     'use strict';
     try {
 
@@ -250,7 +250,7 @@ router.post('/suprlays', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/suprlays', function (req, res, next) {
+router.get('/usrs/:usr_id/suprlays', function (req, res, next) {
     'use strict';
     try {
         repMod.listSuprLays(req, function (error, result) {
@@ -275,7 +275,7 @@ router.get('/suprlays', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.post('/platforms', function (req, res, next) {
+router.post('/usrs/:usr_id/platforms', function (req, res, next) {
     'use strict';
     try {
 
@@ -312,7 +312,7 @@ router.post('/platforms', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.post('/comps/:comp_id/life-cicles', function (req, res, next) {
+router.post('/usrs/:usr_id/comps/:comp_id/life-cicles', function (req, res, next) {
     'use strict';
     try {
         repMod.addLifeCiclesToComp(req, function (error, result) {
@@ -339,7 +339,7 @@ router.post('/comps/:comp_id/life-cicles', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.post('/comps/:comp_id/comp-devs', function (req, res, next) {
+router.post('/usrs/:usr_id/comps/:comp_id/comp-devs', function (req, res, next) {
     'use strict';
     try {
 
@@ -376,7 +376,7 @@ router.post('/comps/:comp_id/comp-devs', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.post('/procs/:proc_id/steps', function (req, res, next) {
+router.post('/usrs/:usr_id/procs/:proc_id/steps', function (req, res, next) {
     'use strict';
     try {
 
@@ -418,7 +418,7 @@ router.post('/procs/:proc_id/steps', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/procs/:proc_id', function (req, res, next) {
+router.get('/usrs/:usr_id/procs/:proc_id', function (req, res, next) {
     'use strict';
     try {
         repMod.getProc(req, function (error, result) {
@@ -448,7 +448,7 @@ router.get('/procs/:proc_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.put('/procs/:proc_id', function (req, res, next) {
+router.put('/usrs/:usr_id/procs/:proc_id', function (req, res, next) {
     'use strict';
     try {
         repMod.uptProc(req, function (error, result) {
@@ -474,7 +474,7 @@ router.put('/procs/:proc_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.delete('/procs/:proc_id', function (req, res, next) {
+router.delete('/usrs/:usr_id/procs/:proc_id', function (req, res, next) {
     'use strict';
     try {
         repMod.delProc(req, function (error, result) {
@@ -500,7 +500,7 @@ router.delete('/procs/:proc_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/comps/:comp_id', function (req, res, next) {
+router.get('/usrs/:usr_id/comps/:comp_id', function (req, res, next) {
     'use strict';
     try {
         repMod.getComp(req, function (error, result) {
@@ -530,7 +530,7 @@ router.get('/comps/:comp_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.put('/comps/:comp_id', function (req, res, next) {
+router.put('/usrs/:usr_id/comps/:comp_id', function (req, res, next) {
     'use strict';
     try {
         repMod.uptComp(req, function (error, result) {
@@ -556,7 +556,7 @@ router.put('/comps/:comp_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.delete('/comps/:comp_id', function (req, res, next) {
+router.delete('/usrs/:usr_id/comps/:comp_id', function (req, res, next) {
     'use strict';
     try {
         repMod.delComp(req, function (error, result) {
@@ -583,7 +583,7 @@ router.delete('/comps/:comp_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/layers/:lay_id', function (req, res, next) {
+router.get('/usrs/:usr_id/layers/:lay_id', function (req, res, next) {
     'use strict';
     try {
         repMod.getLay(req, function (error, result) {
@@ -613,7 +613,7 @@ router.get('/layers/:lay_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.put('/layers/:lay_id', function (req, res, next) {
+router.put('/usrs/:usr_id/layers/:lay_id', function (req, res, next) {
     'use strict';
     try {
         repMod.uptLay(req, function (error, result) {
@@ -639,7 +639,7 @@ router.put('/layers/:lay_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.delete('/layers/:Lay_id', function (req, res, next) {
+router.delete('/usrs/:usr_id/layers/:Lay_id', function (req, res, next) {
     'use strict';
     try {
         repMod.delLay(req, function (error, result) {
@@ -665,7 +665,7 @@ router.delete('/layers/:Lay_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/suprlays/:sprly_id', function (req, res, next) {
+router.get('/usrs/:usr_id/suprlays/:sprly_id', function (req, res, next) {
     'use strict';
     try {
         repMod.getSprlay(req, function (error, result) {
@@ -695,7 +695,7 @@ router.get('/suprlays/:sprly_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.put('/suprlays/:sprly_id', function (req, res, next) {
+router.put('/usrs/:usr_id/suprlays/:sprly_id', function (req, res, next) {
     'use strict';
     try {
         repMod.uptSprlay(req, function (error, result) {
@@ -721,7 +721,7 @@ router.put('/suprlays/:sprly_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.delete('/suprlays/:sprly_id', function (req, res, next) {
+router.delete('/usrs/:usr_id/suprlays/:sprly_id', function (req, res, next) {
     'use strict';
     try {
         repMod.delSprlay(req, function (error, result) {
@@ -747,7 +747,7 @@ router.delete('/suprlays/:sprly_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/platforms/:pltf_id', function (req, res, next) {
+router.get('/usrs/:usr_id/platforms/:pltf_id', function (req, res, next) {
     'use strict';
     try {
         repMod.getPltf(req, function (error, result) {
@@ -777,7 +777,7 @@ router.get('/platforms/:pltf_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.put('/platforms/:pltf_id', function (req, res, next) {
+router.put('/usrs/:usr_id/platforms/:pltf_id', function (req, res, next) {
     'use strict';
     try {
         repMod.uptPltf(req, function (error, result) {
@@ -803,7 +803,7 @@ router.put('/platforms/:pltf_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.delete('/platforms/:pltf_id', function (req, res, next) {
+router.delete('/usrs/:usr_id/platforms/:pltf_id', function (req, res, next) {
     'use strict';
     try {
         repMod.delPltf(req, function (error, result) {
