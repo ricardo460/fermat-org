@@ -132,3 +132,44 @@ exports.verifiAxsKeyRelApiKeyAndUsrnm = function(api_key, axs_key, usrnm, callba
 		return callback(err, false);
 	}
 };
+
+
+/**
+ * [logout description]
+ * @param  {[type]}   api_key  [description]
+ * @param  {[type]}   axs_key  [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.logout = function(api_key, axs_key, callback) {
+	try {
+		verifiAxsKeyRelApiKey(api_key, axs_key, function(err, res_del) {
+			if (err) {
+				console.log('error', err);
+				return callback(err, false);
+			}
+			if (res_del) {
+				console.log("Authorization granted")
+				modTkn.delTkn(axs_key, function(err_res, res_tkn) {
+					if (err_res) {
+						console.log('error', err_res);
+						return callback(err_res, false);
+					}
+					if (res_tkn) {
+						console.log('info', 'logout success');
+						return callback(null, true);
+					} else {
+						console.log('info', 'no logout');
+						return callback(null, false);
+					}
+				});
+			} else {
+				console.log("Unauthorized user")
+				return callback(err, false);
+			}
+		});
+	} catch (err) {
+		console.log("Error", error);
+		return callback(err, false);
+	}
+};
