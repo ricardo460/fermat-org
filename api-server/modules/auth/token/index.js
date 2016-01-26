@@ -92,3 +92,23 @@ exports.getTkn = function(axs_key, callback) {
 		return callback(err, null);
 	}
 };
+
+/**
+ * [delTkn description]
+ * @param  {[type]}   axs_key  [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.delTkn = function(axs_key, callback) {
+	'use strict';
+	try {
+		tknSrv.delTkn(axs_key, function(err, tkn) {
+			if (err) {
+				return callback(err, false);
+			}
+			return callback(null, true);
+		});
+	} catch (err) {
+		return callback(err, false);
+	}
+};
