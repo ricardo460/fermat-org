@@ -1,3 +1,4 @@
+var winston = require('winston');
 var express = require('express');
 var router = express.Router();
 var repMod = require('../../../../modules/repository');
@@ -13,7 +14,42 @@ var security = require('../../../../lib/utils/security');
  *
  * @return {[type]} [description]
  */
-router.post('/usr/:usr_id/procs', function (req, res, next) {
+var lock = function (req, res, next) {
+    try {
+        if (req.params.lay_id) {
+            req.body.item_id = req.params.lay_id;
+            req.body.item_type = 'layer';
+            req.body.priority = 5;
+            repMod.doLock(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    next();
+                }
+            });
+        } else {
+            next();
+        }
+    } catch (err) {
+        next(err);
+    }
+};
+/**
+ * using lock for layer routes
+ */
+router.use(lock);
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.post('/', function (req, res, next) {
     'use strict';
     try {
         if (!security.isValidData(req.body.platfrm) || !security.isValidData(req.body.name) || !security.isValidData(req.body.desc) || !security.isValidData(req.body.prev) || !security.isValidData(req.body.next)) {
@@ -42,7 +78,7 @@ router.post('/usr/:usr_id/procs', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/usr/:usr_id/simple-procs', function (req, res, next) {
+router.get('/', function (req, res, next) {
     'use strict';
     try {
         repMod.listProcs(req, function (error, result) {
@@ -67,7 +103,7 @@ router.get('/usr/:usr_id/simple-procs', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.post('/usrs/:usr_id/procs/:proc_id/steps', function (req, res, next) {
+router.post('/:proc_id/steps', function (req, res, next) {
     'use strict';
     try {
         if (!security.isValidData(req.body.proc_id) || !security.isValidData(req.body.platfrm_code) || !security.isValidData(req.body.suprlay_code) || !security.isValidData(req.body.layer_name) || !security.isValidData(req.body.comp_name) || !security.isValidData(req.body.type) || !security.isValidData(req.body.title) || !security.isValidData(req.body.desc) || !security.isValidData(req.body.order)) {
@@ -96,7 +132,7 @@ router.post('/usrs/:usr_id/procs/:proc_id/steps', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/usrs/:usr_id/procs/:proc_id', function (req, res, next) {
+router.get('/:proc_id', function (req, res, next) {
     'use strict';
     try {
         repMod.getProc(req, function (error, result) {
@@ -127,7 +163,7 @@ router.get('/usrs/:usr_id/procs/:proc_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.put('/usrs/:usr_id/procs/:proc_id', function (req, res, next) {
+router.put('/:proc_id', function (req, res, next) {
     'use strict';
     try {
         repMod.uptProc(req, function (error, result) {
@@ -152,7 +188,7 @@ router.put('/usrs/:usr_id/procs/:proc_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.delete('/usrs/:usr_id/procs/:proc_id', function (req, res, next) {
+router.delete('/:proc_id', function (req, res, next) {
     'use strict';
     try {
         repMod.delProc(req, function (error, result) {

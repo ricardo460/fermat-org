@@ -10,6 +10,7 @@ var authMod = require('../../../modules/auth');
 var Cache = require('../../../lib/route-cache');
 var layerRout = require('./layer');
 var suprlayRout = require('./suprlay');
+var procRout = require('./proc');
 // creation of object cache
 var cache = new Cache({
     type: 'file',
@@ -38,6 +39,9 @@ var auth = function (req, res, next) {
  */
 router.use("/usrs/:usr_id/layers", auth, layerRout);
 router.use("/usrs/:usr_id/suprlays", auth, suprlayRout);
+router.use("/usrs/:usr_id/procs", auth, procRout);
+
+
 /**
  * [description]
  *
