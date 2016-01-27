@@ -326,7 +326,6 @@ exports.checkManifest = function (req, next) {
                                     "location": e
                                 });
                             }
-
                         }
                     });
                 } catch (e) {
@@ -335,16 +334,12 @@ exports.checkManifest = function (req, next) {
                         "location": e
                     });
                 }
-
             }
-
         });
-
     } catch (err) {
         next(err, null);
     }
-}
-
+};
 /**
  * @method addProc
  *
@@ -367,7 +362,6 @@ exports.addProc = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method getProc
  *
@@ -389,8 +383,7 @@ exports.getProc = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-}
-
+};
 /**
  * @method uptProc
  *
@@ -412,8 +405,7 @@ exports.uptProc = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-}
-
+};
 /**
  * @method delProc
  *
@@ -435,9 +427,7 @@ exports.delProc = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-
-}
-
+};
 /**
  * @method getComp
  *
@@ -459,8 +449,7 @@ exports.getComp = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-}
-
+};
 /**
  * @method uptComp
  *
@@ -482,9 +471,7 @@ exports.uptComp = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-
-}
-
+};
 /**
  * @method delComp
  *
@@ -493,10 +480,7 @@ exports.uptComp = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delComp = function (req, next) {
-
-}
-
+exports.delComp = function (req, next) {};
 /**
  * @method getLay
  *
@@ -518,9 +502,7 @@ exports.getLay = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-
-}
-
+};
 /**
  * @method uptLay
  *
@@ -542,9 +524,7 @@ exports.uptLay = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-
-}
-
+};
 /**
  * @method delLay
  *
@@ -553,10 +533,7 @@ exports.uptLay = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delLay = function (req, next) {
-
-}
-
+exports.delLay = function (req, next) {};
 /**
  * @method getSprlay
  *
@@ -578,9 +555,7 @@ exports.getSprlay = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-
-}
-
+};
 /**
  * @method uptSprlay
  *
@@ -602,8 +577,7 @@ exports.uptSprlay = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-}
-
+};
 /**
  * @method delSprlay
  *
@@ -612,10 +586,7 @@ exports.uptSprlay = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delSprlay = function (req, next) {
-
-}
-
+exports.delSprlay = function (req, next) {};
 /**
  * @method getPltf
  *
@@ -637,9 +608,7 @@ exports.getPltf = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-
-}
-
+};
 /**
  * @method uptPltf
  *
@@ -661,8 +630,7 @@ exports.uptPltf = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-}
-
+};
 /**
  * @method delPltf
  *
@@ -671,10 +639,7 @@ exports.uptPltf = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delPltf = function (req, next) {
-
-}
-
+exports.delPltf = function (req, next) {};
 /**
  * @method listProcs
  *
@@ -697,7 +662,6 @@ exports.listProcs = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method addComp
  *
@@ -720,7 +684,6 @@ exports.addComp = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method listComps
  *
@@ -743,7 +706,6 @@ exports.listComps = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method addLayer
  *
@@ -765,9 +727,7 @@ exports.addLayer = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-
 };
-
 /**
  * @method listLayers
  *
@@ -790,7 +750,6 @@ exports.listLayers = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method addSuprLay
  *
@@ -813,7 +772,6 @@ exports.addSuprLay = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method listSuprLays
  *
@@ -836,7 +794,6 @@ exports.listSuprLays = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method addPlatform
  *
@@ -859,7 +816,6 @@ exports.addPlatform = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * Add one or several life cicle to component
  * @method addLifeCiclesToComp
@@ -869,11 +825,7 @@ exports.addPlatform = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.addLifeCiclesToComp = function (req, next) {
-
-
-};
-
+exports.addLifeCiclesToComp = function (req, next) {};
 /**
  * @method addCompDev
  *
@@ -896,7 +848,6 @@ exports.addCompDev = function (req, next) {
         next(err, null);
     }
 };
-
 /**
  * @method addStep
  *
@@ -931,11 +882,42 @@ exports.addStep = function (req, next) {
  */
 exports.doLock = function (req, next) {
     try {
-        if (req.params.usr_id && req.params.item_id && req.body.item_type && req.body.priority) {
-            lockMod.insOrUpdLock(req.params.usr_id, // user that wants the lock
-                req.params.item_id, // item to lock
+        if (req.body.usr_id && //
+            req.body.item_id && //
+            req.body.item_type && //
+            req.body.priority) {
+            lockMod.insOrUpdLock(req.body.usr_id, // user that wants the lock
+                req.body.item_id, // item to lock
                 req.body.item_type, // type of item
                 req.body.priority || 5, // lock priority
+                function (err_lck, res_lck) {
+                    if (err_lck) {
+                        next(err_lck, null);
+                    } else {
+                        next(null, res_lck);
+                    }
+                });
+        }
+    } catch (err) {
+        next(err, null);
+    }
+};
+/**
+ * [doRelease description]
+ *
+ * @method doRelease
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.doRelease = function (req, next) {
+    try {
+        if (req.body.usr_id && //
+            req.body.item_id) {
+            lockMod.delLock(req.body.usr_id, //
+                req.body.item_id, //
                 function (err_lck, res_lck) {
                     if (err_lck) {
                         next(err_lck, null);

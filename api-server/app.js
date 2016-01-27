@@ -6,7 +6,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
-
 /**
  * BearerStrategy
  *
@@ -21,12 +20,10 @@ var tokens = {
         scope: "*"
     }
 };
-
 var BearerStrategy = require('passport-http-bearer').Strategy;
-
 passport.use(new BearerStrategy({
     passReqToCallback: true //allows us to pass back the entire request to the callback
-}, function(req, access_token, done) {
+}, function (req, access_token, done) {
     try {
         if (tokens['fermat-org'].access_token === access_token) {
             return done(null, true, tokens['fermat-org'].scope);
@@ -37,17 +34,13 @@ passport.use(new BearerStrategy({
         return done(err, false, null);
     }
 }));
-
 var routes = require('./routes/index');
-var repo = require('./routes/repo');
-var v1 = require('./routes/v1');
-
+//var repo = require('./routes/repo');
+//var v1 = require('./routes/v1');
 var app = express();
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(passport.initialize());
@@ -58,33 +51,28 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     //res.header("Content-Type",'application/json');
     res.header("Access-Control-Allow-Origin", '*');
-    res.header("Access-Control-Allow-Methods", 'GET, POST, PUT');
+    res.header("Access-Control-Allow-Methods", 'GET, POST, PUT, DELETE');
     res.header("Access-Control-Allow-Headers", 'X-Requested-With, Content-Type');
     //res.header("Access-Control-Allow-Credentials", true);
     next();
 });
-
 app.use('/', routes);
-app.use('/repo', repo);
-app.use('/v1', v1);
-
+//app.use('/repo', repo);
+//app.use('/v1', v1);
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
-
 // error handlers
-
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
+    app.use(function (err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -92,15 +80,13 @@ if (app.get('env') === 'development') {
         });
     });
 }
-
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
         error: {}
     });
 });
-
 module.exports = app;
