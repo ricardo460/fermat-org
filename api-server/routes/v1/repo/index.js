@@ -12,6 +12,7 @@ var layerRout = require('./layer');
 var suprlayRout = require('./suprlay');
 var procRout = require('./proc');
 var platfrmRout = require('./platfrm');
+var compRout = require('./comp');
 
 // creation of object cache
 var cache = new Cache({
@@ -43,6 +44,7 @@ router.use("/usrs/:usr_id/layers", auth, layerRout);
 router.use("/usrs/:usr_id/suprlays", auth, suprlayRout);
 router.use("/usrs/:usr_id/procs", auth, procRout);
 router.use("/usrs/:usr_id/platfrms", auth, platfrmRout);
+router.use("/usrs/:usr_id/comps", auth, compRout);
 
 /**
  * [description]
