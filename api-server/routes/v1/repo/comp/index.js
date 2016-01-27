@@ -16,9 +16,9 @@ var security = require('../../../../lib/utils/security');
  */
 var lock = function (req, res, next) {
     try {
-        if (req.params.lay_id) {
-            req.body.item_id = req.params.lay_id;
-            req.body.item_type = 'layer';
+        if (req.params.comp_id) {
+            req.body.item_id = req.params.comp_id;
+            req.body.item_type = 'comp';
             req.body.priority = 5;
             repMod.doLock(req, function (error, result) {
                 if (error) {
@@ -35,7 +35,27 @@ var lock = function (req, res, next) {
     }
 };
 /**
- * using lock for layer routes
+ * [release description]
+ *
+ * @method release
+ *
+ * @param  {[type]} req [description]
+ *
+ * @return {[type]} [description]
+ */
+var release = function (req) {
+    try {
+        repMod.doRelease(req, function (error, result) {
+            if (error) {
+                winston.log('error', 'Error releasing comp lock', err);
+            }
+        });
+    } catch (err) {
+        winston.log('error', 'Error releasing comp lock', err);
+    }
+};
+/**
+ * using lock for comp routes
  */
 router.use(lock);
 /**
@@ -52,7 +72,17 @@ router.use(lock);
 router.post('/', function (req, res, next) {
     'use strict';
     try {
-        if (!security.isValidData(req.body.platfrm_id) || !security.isValidData(req.body.suprlay_id) || !security.isValidData(req.body.layer_id) || !security.isValidData(req.body.name) || !security.isValidData(req.body.type) || !security.isValidData(req.body.description) || !security.isValidData(req.body.difficulty) || !security.isValidData(req.body.code_level) || !security.isValidData(req.body.repo_dir) || !security.isValidData(req.body.scrnshts) || !security.isValidData(req.body.found)) {
+        if (!security.isValidData(req.body.platfrm_id) || //
+            !security.isValidData(req.body.suprlay_id) || //
+            !security.isValidData(req.body.layer_id) || //
+            !security.isValidData(req.body.name) || //
+            !security.isValidData(req.body.type) || //
+            !security.isValidData(req.body.description) || //
+            !security.isValidData(req.body.difficulty) || //
+            !security.isValidData(req.body.code_level) || //
+            !security.isValidData(req.body.repo_dir) || //
+            !security.isValidData(req.body.scrnshts) || //
+            !security.isValidData(req.body.found)) {
             res.status(412).send('missing or invalid data');
         } else {
             repMod.addComp(req, function (error, result) {
@@ -112,6 +142,7 @@ router.post('/:comp_id/life-cicles', function (req, res, next) {
             } else {
                 res.status(200).send(result);
             }
+            release(req);
         });
     } catch (err) {
         next(err);
@@ -131,7 +162,11 @@ router.post('/:comp_id/life-cicles', function (req, res, next) {
 router.post('/:comp_id/comp-devs', function (req, res, next) {
     'use strict';
     try {
-        if (!security.isValidData(req.body.comp_id) || !security.isValidData(req.body.dev_id) || !security.isValidData(req.body.role) || !security.isValidData(req.body.scope) || !security.isValidData(req.body.percnt)) {
+        if (!security.isValidData(req.body.comp_id) || //
+            !security.isValidData(req.body.dev_id) || //
+            !security.isValidData(req.body.role) || //
+            !security.isValidData(req.body.scope) || //
+            !security.isValidData(req.body.percnt)) {
             res.status(412).send('missing or invalid data');
         } else {
             repMod.addCompDev(req, function (error, result) {
@@ -140,6 +175,7 @@ router.post('/:comp_id/comp-devs', function (req, res, next) {
                 } else {
                     res.status(200).send(result);
                 }
+                release(req);
             });
         }
     } catch (err) {
@@ -197,6 +233,7 @@ router.put('/:comp_id', function (req, res, next) {
             } else {
                 res.status(200).send(result);
             }
+            release(req);
         });
     } catch (err) {
         next(err);
@@ -222,6 +259,7 @@ router.delete('/:comp_id', function (req, res, next) {
             } else {
                 res.status(200).send(result);
             }
+            release(req);
         });
     } catch (err) {
         next(err);

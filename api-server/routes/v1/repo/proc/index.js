@@ -16,9 +16,9 @@ var security = require('../../../../lib/utils/security');
  */
 var lock = function (req, res, next) {
     try {
-        if (req.params.lay_id) {
-            req.body.item_id = req.params.lay_id;
-            req.body.item_type = 'layer';
+        if (req.params.proc_id) {
+            req.body.item_id = req.params.proc_id;
+            req.body.item_type = 'proc';
             req.body.priority = 5;
             repMod.doLock(req, function (error, result) {
                 if (error) {
@@ -35,7 +35,27 @@ var lock = function (req, res, next) {
     }
 };
 /**
- * using lock for layer routes
+ * [release description]
+ *
+ * @method release
+ *
+ * @param  {[type]} req [description]
+ *
+ * @return {[type]} [description]
+ */
+var release = function (req) {
+    try {
+        repMod.doRelease(req, function (error, result) {
+            if (error) {
+                winston.log('error', 'Error releasing proc lock', err);
+            }
+        });
+    } catch (err) {
+        winston.log('error', 'Error releasing proc lock', err);
+    }
+};
+/**
+ * using lock for proc routes
  */
 router.use(lock);
 /**
@@ -52,7 +72,11 @@ router.use(lock);
 router.post('/', function (req, res, next) {
     'use strict';
     try {
-        if (!security.isValidData(req.body.platfrm) || !security.isValidData(req.body.name) || !security.isValidData(req.body.desc) || !security.isValidData(req.body.prev) || !security.isValidData(req.body.next)) {
+        if (!security.isValidData(req.body.platfrm) || //
+            !security.isValidData(req.body.name) || //
+            !security.isValidData(req.body.desc) || //
+            !security.isValidData(req.body.prev) || //
+            !security.isValidData(req.body.next)) {
             res.status(412).send('missing or invalid data');
         } else {
             repMod.addProc(req, function (error, result) {
@@ -106,7 +130,15 @@ router.get('/', function (req, res, next) {
 router.post('/:proc_id/steps', function (req, res, next) {
     'use strict';
     try {
-        if (!security.isValidData(req.body.proc_id) || !security.isValidData(req.body.platfrm_code) || !security.isValidData(req.body.suprlay_code) || !security.isValidData(req.body.layer_name) || !security.isValidData(req.body.comp_name) || !security.isValidData(req.body.type) || !security.isValidData(req.body.title) || !security.isValidData(req.body.desc) || !security.isValidData(req.body.order)) {
+        if (!security.isValidData(req.body.proc_id) || //
+            !security.isValidData(req.body.platfrm_code) || //
+            !security.isValidData(req.body.suprlay_code) || //
+            !security.isValidData(req.body.layer_name) || //
+            !security.isValidData(req.body.comp_name) || //
+            !security.isValidData(req.body.type) || //
+            !security.isValidData(req.body.title) || //
+            !security.isValidData(req.body.desc) || //
+            !security.isValidData(req.body.order)) {
             res.status(412).send('missing or invalid data');
         } else {
             repMod.addStep(req, function (error, result) {
@@ -115,6 +147,7 @@ router.post('/:proc_id/steps', function (req, res, next) {
                 } else {
                     res.status(200).send(result);
                 }
+                release(req);
             });
         }
     } catch (err) {
@@ -172,6 +205,7 @@ router.put('/:proc_id', function (req, res, next) {
             } else {
                 res.status(200).send(result);
             }
+            release(req);
         });
     } catch (err) {
         next(err);
@@ -197,6 +231,7 @@ router.delete('/:proc_id', function (req, res, next) {
             } else {
                 res.status(204)
             }
+            release(req);
         });
     } catch (err) {
         next(err);

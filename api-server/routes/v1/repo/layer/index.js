@@ -16,8 +16,8 @@ var security = require('../../../../lib/utils/security');
  */
 var lock = function (req, res, next) {
     try {
-        if (req.params.lay_id) {
-            req.body.item_id = req.params.lay_id;
+        if (req.params.layer_id) {
+            req.body.item_id = req.params.layer_id;
             req.body.item_type = 'layer';
             req.body.priority = 5;
             repMod.doLock(req, function (error, result) {
@@ -126,7 +126,7 @@ router.get('/', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/:lay_id', function (req, res, next) {
+router.get('/:layer_id', function (req, res, next) {
     'use strict';
     try {
         repMod.getLay(req, function (error, result) {
@@ -157,7 +157,7 @@ router.get('/:lay_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.put('/:lay_id', function (req, res, next) {
+router.put('/:layer_id', function (req, res, next) {
     'use strict';
     try {
         repMod.uptLay(req, function (error, result) {
@@ -183,7 +183,7 @@ router.put('/:lay_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.delete('/:lay_id', function (req, res, next) {
+router.delete('/:layer_id', function (req, res, next) {
     'use strict';
     try {
         repMod.delLay(req, function (error, result) {
