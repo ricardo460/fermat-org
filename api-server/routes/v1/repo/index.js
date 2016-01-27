@@ -5,6 +5,7 @@ var router = express.Router();
 var winston = require('winston');
 var security = require('../../../lib/utils/security');
 var repMod = require('../../../modules/repository');
+var authMod = require('../../../modules/auth');
 var Cache = require('../../../lib/route-cache');
 var layerRout = require('./layer');
 var suprlayRout = require('./suprlay');
@@ -92,7 +93,6 @@ router.get('/comps/reload', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * [description]
  *
