@@ -2,7 +2,6 @@
 /*global module*/
 var express = require('express');
 var router = express.Router();
-var passport = require('passport');
 var winston = require('winston');
 var security = require('../../../lib/utils/security');
 var repMod = require('../../../modules/repository');
@@ -30,44 +29,18 @@ var cache = new Cache({
  * @return {[type]}   [description]
  */
 var auth = function (req, res, next) {
-    // TODO: authentication
-    //passport.authenticate('bearer', function (err, access, scope) {
-    //if (access) {
-    // we search for body in cache
-    //} else {
-    //res.status(401).send(null);
-    //}
-    //})(req, res, next);
-    /**
-     * BearerStrategy
-     *
-     * This strategy is used to authenticate users based on an access token (aka a
-     * bearer token).  The user must have previously authorized a client
-     * application, which is issued an access token to make requests on behalf of
-     * the authorizing user.
-     */
-    /*var tokens = {
-        'fermat-org': {
-            access_token: "561fd1a5032e0c5f7e20387d",
-            scope: "*"
+    var axs_key = req.query.axs_key;
+    var digest = req.query.digest;
+    authMod.verifyTkn(axs_key, digest, function (err_auth, res_auth) {
+        if (res_auth) {
+            req.body.usr_id = req.params.usr_id;
+            next();
+        } else {
+            res.status(401).send({
+                'message': err_auth.message
+            });
         }
-    };
-    var BearerStrategy = require('passport-http-bearer').Strategy;
-    passport.use(new BearerStrategy({
-        passReqToCallback: true //allows us to pass back the entire request to the callback
-    }, function (req, access_token, done) {
-        try {
-            if (tokens['fermat-org'].access_token === access_token) {
-                return done(null, true, tokens['fermat-org'].scope);
-            } else {
-                return done(null, false, null);
-            }
-        } catch (err) {
-            return done(err, false, null);
-        }
-    }));*/
-    req.body.usr_id = req.params.usr_id;
-    next();
+    });
 };
 /**
  *
@@ -194,9 +167,6 @@ router.get('/comps', function (req, res, next) {
 router.get('/devs', function (req, res, next) {
     'use strict';
     try {
-        //passport.authenticate('bearer', function (err, access, scope) {
-        //if (access) {
-        // we search for body in cache
         var body = cache.getBody(req);
         if (body) {
             // we send it
@@ -221,10 +191,6 @@ router.get('/devs', function (req, res, next) {
                 }
             });
         }
-        //} else {
-        //res.status(401).send(null);
-        //}
-        //})(req, res, next);
     } catch (err) {
         next(err);
     }

@@ -1,7 +1,6 @@
 /*global require*/
 /*global module*/
 var express = require('express');
-var passport = require('passport');
 var router = express.Router();
 var netMod = require('../../../modules/network');
 var Cache = require('../../../lib/route-cache');

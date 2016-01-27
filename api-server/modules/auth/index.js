@@ -1,7 +1,8 @@
 var appMod = require('./app');
 var tknMod = require('./token');
 var usrMod = require('./user');
-var libGithb = require('./lib/github');
+var githubLib = require('./lib/github');
+var sha256Lib = require('./lib/sha256');
 /**
  * [verifAxsKeyRelApiKey description]
  *
@@ -59,7 +60,7 @@ exports.getAutorization = function (url, api_key, callback) {
 			if (res_app) {
 				console.log('info', 'APi Key found');
 				//Get user data that did login
-				libGithb.getUsrGithub(url, function (error, usr) {
+				githubLib.getUsrGithub(url, function (error, usr) {
 					if (error) {
 						console.error("Error", error);
 						return callback(error, null);
@@ -207,4 +208,41 @@ exports.logout = function (api_key, axs_key, callback) {
 		console.log("Error", err);
 		return callback(err, false);
 	}
+};
+/**
+ * [verifyTkn description]
+ *
+ * @method verifyTkn
+ *
+ * @param  {[type]}   axs_key  [description]
+ * @param  {[type]}   digest   [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.verifyTkn = function (axs_key, digest, callback) {
+	tknMod.getTkn(axs_key, function (err_tkn, res_tkn) {
+		if (res_tkn) {
+			var usr = axs_key._usr_id;
+			var app = axs_key._app_id;
+			var str = usr.usrnm + app.api_key;
+			var hash = sha256Lib.calc(str);
+			console.log('hash: ' + hash);
+			console.log('digest: ' + digest);
+			if (digest == hash) {
+				callback(null, true)
+			} else {
+				tknMod.delTkn(axs_key, function (err_del, res_del) {
+					if (err_del) {
+						return callback(err_del, false);
+					}
+					return callback(new Error('unauthorized user'), false);
+				});
+			}
+		} else if (err_tkn) {
+			return callback(err_tkn, false);
+		} else {
+			return callback(new Error('invalid access key'), false);
+		}
+	});
 };
