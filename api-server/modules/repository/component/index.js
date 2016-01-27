@@ -459,4 +459,39 @@ exports.updateCompById = function(_comp_id, _platfrm_id, _suprlay_id, _layer_id,
 
 }
 
+
+exports.delProcById = function (_id, callback) {
+
+    compSrv.findCompById(_id, function (err_comp, res_comp) {
+        if (err_comp) {
+            return callback(err_comp, null);
+        }
+        if (res_proc) {
+            var steps = res_proc.steps;
+            var loopDelSteeps = function () {
+                if (steps.length <= 0) {
+                    procSrv.delSchemaById(_id, function (err_del_proc, res_del_proc) {
+                        if (err_del_proc) {
+                            return callback(err_del_proc, null);
+                        }
+                        return callback(null, res_del_proc);
+                    });
+                } else {
+                    var _idStep = steps.pop()
+                    stepSrv.delSchemaById(_idStep, function (err_del_step, res_delstep) {
+                        if (err_del_step) {
+                            return callback(err_del_step, null);
+                        } else {
+                            loopDelSteeps();
+                        }
+                    });
+                }
+            };
+            loopDelSteeps();
+        } else {
+            return callback(null, null);
+        }
+    });
+};
+
 /*jshint +W069 */
