@@ -11,6 +11,8 @@ var Cache = require('../../../lib/route-cache');
 var layerRout = require('./layer');
 var suprlayRout = require('./suprlay');
 var procRout = require('./proc');
+var platfrmRout = require('./platfrm');
+
 // creation of object cache
 var cache = new Cache({
     type: 'file',
@@ -40,7 +42,7 @@ var auth = function (req, res, next) {
 router.use("/usrs/:usr_id/layers", auth, layerRout);
 router.use("/usrs/:usr_id/suprlays", auth, suprlayRout);
 router.use("/usrs/:usr_id/procs", auth, procRout);
-
+router.use("/usrs/:usr_id/platfrms", auth, platfrmRout);
 
 /**
  * [description]
