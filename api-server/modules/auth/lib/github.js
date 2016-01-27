@@ -18,26 +18,29 @@ exports.getUsrGithub = function(url, callback) {
 		}, function(err, resp, body) {
 			body = JSON.parse(body);
 			var axs_tkn = body.access_token;
+			if (axs_tkn == undefined) return callback("Bad verification code. The code passed is incorrect or expired.", null);
+			if (err) return callback(err, null);
 			getUsr(axs_tkn, function(error, res_usr) {
 				if (error) {
 					console.log("error", error);
 					return callback(error, null);
 				}
-				console.log("return data user");
-				res_usr = JSON.parse(res_usr);
-				var usr = {};
-				usr.usrnm = res_usr.login;
-				usr.email = res_usr.email;
-				usr.name = res_usr.name;
-				usr.bday = null;
-				usr.location = res_usr.location;
-				usr.avatar_url = res_usr.avatar_url;
-				usr.github_tkn = axs_tkn; 
-				usr.url = res_usr.url;
-				usr.bio = res_usr.bio;
- 				
-				console.log(usr);
-				return callback(null, usr);
+				if (res_usr) {
+					console.log("return data user");
+					res_usr = JSON.parse(res_usr);
+					var usr = {};
+					usr.usrnm = res_usr.login;
+					usr.email = res_usr.email;
+					usr.name = res_usr.name;
+					usr.bday = null;
+					usr.location = res_usr.location;
+					usr.avatar_url = res_usr.avatar_url;
+					usr.github_tkn = axs_tkn;
+					usr.url = res_usr.url;
+					usr.bio = res_usr.bio;
+					console.log(usr);
+					return callback(null, usr);
+				} else return callback("User no found", null);
 			});
 		});
 	} catch (error) {
@@ -63,6 +66,7 @@ getUsr = function(axs_tkn, callback) {
 				'Accept': 'application/json'
 			}
 		}, function(err, resp, body) {
+			if (err) return callback(err, null);
 			return callback(null, body);
 		});
 	} catch (error) {
