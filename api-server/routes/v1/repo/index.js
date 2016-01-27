@@ -26,10 +26,8 @@ var cache = new Cache({
  * @return {[type]}   [description]
  */
 var auth = function (req, res, next) {
-    console.log("/////////////////////////////////////////////////////");
-    console.dir(req.params);
+    // TODO: authentication
     req.body.usr_id = req.params.usr_id;
-    console.log("/////////////////////////////////////////////////////");
     next();
 };
 /**
