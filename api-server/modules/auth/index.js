@@ -10,7 +10,7 @@ var libGithb = require('./lib/github');
  * @param  {Function} callback [description]
  * @return tkn
  */
-exports.getAutorization = function(url, api_key, callback) {
+exports.login = function(url, api_key, callback) {
 	try {
 		//verifies that the API key is registered
 		appMod.findAppByApiKey(api_key, function(err_app, res_app) {
