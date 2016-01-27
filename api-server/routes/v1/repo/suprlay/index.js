@@ -1,3 +1,4 @@
+var winston = require('winston');
 var express = require('express');
 var router = express.Router();
 var repMod = require('../../../../modules/repository');
@@ -13,7 +14,40 @@ var security = require('../../../../lib/utils/security');
  *
  * @return {[type]} [description]
  */
-router.post('/usrs/:usr_id/suprlays', function (req, res, next) {
+var lock = function (req, res, next) {
+    try {
+        if (req.params.lay_id) {
+            req.body.item_id = req.params.lay_id;
+            req.body.item_type = 'layer';
+            req.body.priority = 5;
+            repMod.doLock(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    next();
+                }
+            });
+        } else {
+            next();
+        }
+    } catch (err) {
+        next(err);
+    }
+};
+/**
+ * using lock for layer routes
+ */
+router.use(lock);
+/**
+ * [release description]
+ *
+ * @method release
+ *
+ * @param  {[type]} req [description]
+ *
+ * @return {[type]} [description]
+ */
+router.post('/', function (req, res, next) {
     'use strict';
     try {
         if (!security.isValidData(req.body.code) || !security.isValidData(req.body.name) || !security.isValidData(req.body.logo) || !security.isValidData(req.body.deps) || !security.isValidData(req.body.order)) {
@@ -42,7 +76,7 @@ router.post('/usrs/:usr_id/suprlays', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/usrs/:usr_id/suprlays', function (req, res, next) {
+router.get('/', function (req, res, next) {
     'use strict';
     try {
         repMod.listSuprLays(req, function (error, result) {
@@ -67,7 +101,7 @@ router.get('/usrs/:usr_id/suprlays', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.get('/usrs/:usr_id/suprlays/:sprly_id', function (req, res, next) {
+router.get('/:sprly_id', function (req, res, next) {
     'use strict';
     try {
         repMod.getSprlay(req, function (error, result) {
@@ -98,7 +132,7 @@ router.get('/usrs/:usr_id/suprlays/:sprly_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.put('/usrs/:usr_id/suprlays/:sprly_id', function (req, res, next) {
+router.put('/:sprly_id', function (req, res, next) {
     'use strict';
     try {
         repMod.uptSprlay(req, function (error, result) {
@@ -123,7 +157,7 @@ router.put('/usrs/:usr_id/suprlays/:sprly_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.delete('/usrs/:usr_id/suprlays/:sprly_id', function (req, res, next) {
+router.delete('/:sprly_id', function (req, res, next) {
     'use strict';
     try {
         repMod.delSprlay(req, function (error, result) {
