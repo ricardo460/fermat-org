@@ -13,7 +13,6 @@ var suprlayRout = require('./suprlay');
 var procRout = require('./proc');
 var platfrmRout = require('./platfrm');
 var compRout = require('./comp');
-
 // creation of object cache
 var cache = new Cache({
     type: 'file',
@@ -32,6 +31,41 @@ var cache = new Cache({
  */
 var auth = function (req, res, next) {
     // TODO: authentication
+    //passport.authenticate('bearer', function (err, access, scope) {
+    //if (access) {
+    // we search for body in cache
+    //} else {
+    //res.status(401).send(null);
+    //}
+    //})(req, res, next);
+    /**
+     * BearerStrategy
+     *
+     * This strategy is used to authenticate users based on an access token (aka a
+     * bearer token).  The user must have previously authorized a client
+     * application, which is issued an access token to make requests on behalf of
+     * the authorizing user.
+     */
+    /*var tokens = {
+        'fermat-org': {
+            access_token: "561fd1a5032e0c5f7e20387d",
+            scope: "*"
+        }
+    };
+    var BearerStrategy = require('passport-http-bearer').Strategy;
+    passport.use(new BearerStrategy({
+        passReqToCallback: true //allows us to pass back the entire request to the callback
+    }, function (req, access_token, done) {
+        try {
+            if (tokens['fermat-org'].access_token === access_token) {
+                return done(null, true, tokens['fermat-org'].scope);
+            } else {
+                return done(null, false, null);
+            }
+        } catch (err) {
+            return done(err, false, null);
+        }
+    }));*/
     req.body.usr_id = req.params.usr_id;
     next();
 };
@@ -43,7 +77,6 @@ router.use("/usrs/:usr_id/suprlays", auth, suprlayRout);
 router.use("/usrs/:usr_id/procs", auth, procRout);
 router.use("/usrs/:usr_id/platfrms", auth, platfrmRout);
 router.use("/usrs/:usr_id/comps", auth, compRout);
-
 /**
  * [description]
  *
@@ -87,7 +120,6 @@ router.get('/comps/reload', function (req, res, next) {
         next(err);
     }
 });
-
 /**
  * Get autorization for use the api
  * @param  {[type]} req   [description]
@@ -95,28 +127,27 @@ router.get('/comps/reload', function (req, res, next) {
  * @param  {[type]} next) [description]
  * @return {[type]}       [description]
  */
-router.get('/getAutorization', function(req, resp, next) {
+router.get('/getAutorization', function (req, resp, next) {
     'use strict';
     try {
         console.log("Get autorization");
         var code = req.query['code'];
         var api_key = req.query['api_key'];
-        var url = "https://github.com/login/oauth/access_token?client_id=6cac9cc2c2cb584c5bf4&client_secret=4887bbc58790c7a242a8dafcb035c0a01dc2a199&" +
-            "code=" + code;
-        authMod.getAutorization(url, api_key, function(err_auth, res_auth) {
-                if (err_auth) {
-                    console.log("Error", err_auth);
-                    resp.status(200).send(err_auth);
-                } else {
-                    console.log("Info", "Authorization granted");
-                    resp.status(200).send(res_auth);
-                }
-            });
-        } catch (err) {
-            console.error("Error", err);
-            next(err);
-        }
-    });
+        var url = "https://github.com/login/oauth/access_token?client_id=6cac9cc2c2cb584c5bf4&client_secret=4887bbc58790c7a242a8dafcb035c0a01dc2a199&" + "code=" + code;
+        authMod.getAutorization(url, api_key, function (err_auth, res_auth) {
+            if (err_auth) {
+                console.log("Error", err_auth);
+                resp.status(200).send(err_auth);
+            } else {
+                console.log("Info", "Authorization granted");
+                resp.status(200).send(res_auth);
+            }
+        });
+    } catch (err) {
+        console.error("Error", err);
+        next(err);
+    }
+});
 /**
  * [description]
  *
@@ -126,9 +157,6 @@ router.get('/getAutorization', function(req, resp, next) {
 router.get('/comps', function (req, res, next) {
     'use strict';
     try {
-        //passport.authenticate('bearer', function (err, access, scope) {
-        //if (access) {
-        // we search for body in cache
         var body = cache.getBody(req);
         if (body) {
             // we send it
@@ -153,10 +181,6 @@ router.get('/comps', function (req, res, next) {
                 }
             });
         }
-        //} else {
-        //res.status(401).send(null);
-        //}
-        //})(req, res, next);
     } catch (err) {
         next(err);
     }
