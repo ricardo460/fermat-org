@@ -4,7 +4,7 @@ var request = require('request');
 var express = require('express');
 var passport = require('passport');
 var winston = require('winston');
-var security = require('../../lib/utils/security')
+var security = require('../../lib/utils/security');
 var router = express.Router();
 var repMod = require('../../modules/repository');
 var authMod = require('../../modules/auth');
@@ -871,7 +871,7 @@ router.get('/getAutorization', function(req, resp, next) {
     try {
         console.log("Get autorization");
         var code = req.query['code'];
-        var api_key = new mongoose.Types.ObjectId(req.query['api_key']);
+        var api_key = req.query['api_key'];
         var url = "https://github.com/login/oauth/access_token?client_id=6cac9cc2c2cb584c5bf4&client_secret=4887bbc58790c7a242a8dafcb035c0a01dc2a199&" +
             "code=" + code;
         authMod.getAutorization(url, api_key, function(err_auth, res_auth) {
