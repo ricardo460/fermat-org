@@ -14,11 +14,15 @@ function FermatEdit() {
                 buttons : [],
                 y : 30
             },
-            idButtons : { }
+            till : { 
+                mesh : null,
+                target : {}
+            },
+            idFields : {}
         };
 
-    var WIDTH = window.innerWidth,
-        HEIGHT = window.innerHeight;
+    var tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
+        tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
 
     var button,
         text,
@@ -61,14 +65,17 @@ function FermatEdit() {
      */
     this.init = function(){
 
-            sesionPlatform();
-            sesionType();
-            sesionName();
-            sesionAuthor();
-            sesionDifficulty();
-            sesionMaintainer();
-            sesionState();
-            createbutton();
+            drawTile(function(){ 
+
+                sesionPlatform();
+                sesionType();
+                sesionName();
+                sesionAuthor();
+                sesionDifficulty();
+                sesionMaintainer();
+                sesionState();
+                createbutton();
+            });
     };
 
 
@@ -85,7 +92,7 @@ function FermatEdit() {
         var optgroup = "<optgroup label = Platform>",
             option = "";
 
-        objects.idButtons.platform = id;
+        objects.idFields.platform = id;
 
         for(var i in groups){
 
@@ -122,6 +129,7 @@ function FermatEdit() {
        $("#"+id).change('click', function() {
         
             changeLayer(document.getElementById(id).value);
+            changeTexture();
         });
     }
 
@@ -135,7 +143,12 @@ function FermatEdit() {
 
         addFields(id, text, null, type);
 
-        objects.idButtons.layer = id;
+        objects.idFields.layer = id;
+
+        $("#"+id).change('click', function() {
+        
+            changeTexture();
+        });
       
     }
 
@@ -169,7 +182,7 @@ function FermatEdit() {
 
         addFields(id, text, null, type);
 
-        objects.idButtons.type = id;        
+        objects.idFields.type = id;        
 
         var option = "";
 
@@ -179,6 +192,11 @@ function FermatEdit() {
         option += "<option value = Plugin>Plugin</option>";
 
         $("#"+id).html(option);
+
+        $("#"+id).change('click', function() {
+        
+            changeTexture();
+        });
 
     }
 
@@ -195,7 +213,7 @@ function FermatEdit() {
             text : "textfield"
           };
 
-        objects.idButtons.name = object.id;
+        objects.idFields.name = object.id;
 
         var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
 
@@ -216,6 +234,11 @@ function FermatEdit() {
 
         objects.row2.buttons.push(object);
 
+        button.addEventListener('blur', function() {
+
+            changeTexture();
+        });
+
     }
 
     function sesionAuthor(){
@@ -231,7 +254,7 @@ function FermatEdit() {
             text : "textfield"
           };
 
-        objects.idButtons.author = object.id;
+        objects.idFields.author = object.id;
 
         var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
 
@@ -250,7 +273,7 @@ function FermatEdit() {
 
         button.addEventListener('blur', function() {
 
-            console.log(fillCode(document.getElementById(object.id).value));
+            changeTexture();
         });
 
         window.helper.show(button, 1000);
@@ -269,7 +292,7 @@ function FermatEdit() {
 
         addFields(id, text, null, type);
 
-        objects.idButtons.difficulty = id;
+        objects.idFields.difficulty = id;
 
         var option = "";
 
@@ -287,6 +310,11 @@ function FermatEdit() {
 
         $("#"+id).html(option);
 
+        $("#"+id).change('click', function() {
+        
+            changeTexture();
+        });
+
     }
 
     function sesionMaintainer(){
@@ -302,7 +330,7 @@ function FermatEdit() {
             text : "textfield"
           };
 
-        objects.idButtons.maintainer = object.id;
+        objects.idFields.maintainer = object.id;
 
         var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
 
@@ -323,6 +351,11 @@ function FermatEdit() {
 
         objects.row2.buttons.push(object);
 
+        button.addEventListener('blur', function() {
+
+            changeTexture();
+        });        
+
     }
 
     function sesionState(){
@@ -335,7 +368,7 @@ function FermatEdit() {
 
         addFields(id, text, 8, type);
 
-        objects.idButtons.state = id;
+        objects.idFields.state = id;
 
         var option = "";
 
@@ -345,6 +378,11 @@ function FermatEdit() {
         option += "<option value = qa>QA</option>";
 
         $("#"+id).html(option);
+
+        $("#"+id).change('click', function() {
+        
+            changeTexture();
+        });
 
     }
 
@@ -358,8 +396,6 @@ function FermatEdit() {
         
         button.addEventListener('click', function() {
 
-                    drawTile();
-                    //self.removeAllFields();
         });
 
     }
@@ -474,8 +510,9 @@ function FermatEdit() {
     this.createButtonAction = function(){
 
         self.removeAllFields();
+        buttonsManager.removeAllButtons();
         buttonsManager.createButtons('buttonNew', 'New Component', self.init);  
-    }
+    };
 
     this.removeAllFields = function(){
 
@@ -503,7 +540,7 @@ function FermatEdit() {
 
             objects.row1.div = null;
             objects.row2.div = null;
-            objects.idButtons = {};
+            objects.idFields = {};
         }
     };
 
@@ -517,22 +554,53 @@ function FermatEdit() {
 
             fillFields(id);
         });
-    }
+    };
 
-    function drawTile(){
+    function drawTile(callback){
+
+        if(objects.till.mesh === null)
+            createElement();
+
+        mesh = objects.till.mesh;
+
+        if (window.camera.getFocus() === null) {
+
+            window.tileManager.letAlone();
+
+            animate(mesh, objects.till.target, true, 500, function(){ 
+
+                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 2000);
+                
+                window.headers.hideHeaders(2000);
+
+                if(typeof(callback) === 'function')
+                    callback(); 
+                
+                changeTexture();
+
+                window.helper.showBackButton();
+            });
+        }
+
+    } 
+
+    function changeTexture(){
 
         var table = {},
-            data;
+            data = {},
+            scale = 5,
+            mesh = null;
 
-        table.group = document.getElementById(objects.idButtons.platform).value;
-        table.layer = document.getElementById(objects.idButtons.layer).value;
-        table.type = document.getElementById(objects.idButtons.type).value;
-        table.state = document.getElementById(objects.idButtons.state).value;
-        table.difficulty = document.getElementById(objects.idButtons.difficulty).value;
-        table.name = document.getElementById(objects.idButtons.name).value;
-        table.code = fillCode(document.getElementById(objects.idButtons.name).value);
-        table.author = document.getElementById(objects.idButtons.author).value;
-        table.maintainer = document.getElementById(objects.idButtons.maintainer).value;
+        table.group = document.getElementById(objects.idFields.platform).value;
+        table.layer = document.getElementById(objects.idFields.layer).value;
+        table.type = document.getElementById(objects.idFields.type).value;
+        table.code_level = document.getElementById(objects.idFields.state).value;
+        table.difficulty = document.getElementById(objects.idFields.difficulty).value;
+        table.name = document.getElementById(objects.idFields.name).value;
+        table.code = fillCode(document.getElementById(objects.idFields.name).value);
+        table.author = document.getElementById(objects.idFields.author).value;
+        table.maintainer = document.getElementById(objects.idFields.maintainer).value;
+        table.found = true;
 
         data = dataUser(table.author);
 
@@ -544,7 +612,11 @@ function FermatEdit() {
         table.maintainerPicture = data.picture;
         table.maintainerRealName = data.authorRealName;
 
-        console.log(table);
+        mesh = objects.till.mesh;
+
+        mesh.material.map = tileManager.createTexture(null, 'high', tileWidth, tileHeight, scale, table); 
+        mesh.material.needsUpdate = true; 
+
     }
 
     function dataUser(user){
@@ -553,7 +625,7 @@ function FermatEdit() {
 
         for(var i = 0; i < testDataUser.length; i++){
 
-            if(user === testDataUser[i].usrnm){
+            if(user.toLowerCase() === testDataUser[i].usrnm.toLowerCase()){
 
                 data.picture = testDataUser[i].avatar_url;
                 data.authorRealName = testDataUser[i].name;
@@ -564,42 +636,94 @@ function FermatEdit() {
         return data;
     }
 
-    function createElement(id, table) {
+    function createElement() {
 
-        var mesh,
-            texture,
-            tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
-            tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING,
-            scale = 2;//this 5 high
+        var px = Math.random() * 80000 - 40000,
+            py = Math.random() * 80000 - 40000,
+            pz = 80000 * 2,
+            rx = Math.random() * 180,
+            ry = Math.random() * 180,
+            rz = Math.random() * 180,
+            newCenter = new THREE.Vector3(0, 0, 0);
 
-        texture = tileManager.createTexture(id, 'high', tileWidth, tileHeight, scale, table);
+        var mesh = new THREE.Mesh(
+                   new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
+                   new THREE.MeshBasicMaterial({
+                            side: THREE.DoubleSide,
+                            transparent : true,
+                            map : null
+                        })
+                );
 
-        mesh = new THREE.Mesh(
-            new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
-            new THREE.MeshBasicMaterial({
-                    side: THREE.DoubleSide,
-                    transparent : true,
-                    map : texture
-            })
-        );
         mesh.userData = {
-            id: id,
             onClick : onClick
         };
 
-        var newCenter = new THREE.Vector3(0, 0, 0);
-        newCenter = window.viewManager.translateToSection(view, newCenter);
+        newCenter = window.viewManager.translateToSection('table', newCenter);
 
-        object.position.x = Math.random() * 80000 - 40000;
-        object.position.y = Math.random() * 80000 - 40000;
-        object.position.z = 80000 * 2;
-        object.rotation.x = Math.random() * 180;
-        object.rotation.y = Math.random() * 180;
-        object.rotation.z = Math.random() * 180;
+        var target = { x : newCenter.x, y : newCenter.y, z : newCenter.z,
+                       px : px, py : py, pz : pz,
+                       rx : rx, ry : ry, rz : rz };
+
+        mesh.position.set(px, py, pz);
+
+        mesh.rotation.set(rx, ry, rz);
 
         mesh.renderOrder = 1;
 
-        return mesh;
+        scene.add(mesh);
+
+        objects.till.mesh = mesh;
+
+        objects.till.target = target;
+    }
+
+    function animate(mesh, target, state, duration, callback){
+
+        var _duration = duration || 2000,
+            x,
+            y,
+            z,
+            rx,
+            ry,
+            rz;
+
+        if (state) {
+
+           x = target.x;
+           y = target.y;
+           z = target.z;
+
+           rx = 0;
+           ry = 0;
+           rz = 0;
+        } 
+        else {
+
+           x = target.px;
+           y = target.py;
+           z = target.pz;
+           
+           rx = target.rx;
+           ry = target.ry;
+           rz = target.rz; 
+        }  
+
+        _duration = Math.random() * _duration + _duration;
+
+        new TWEEN.Tween(mesh.position)
+            .to({x : x, y : y, z : z}, _duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
+
+        new TWEEN.Tween(mesh.rotation)
+            .to({x: rx, y: ry, z: rz}, _duration + 500)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .onComplete(function () {
+                    if(typeof(callback) === 'function')
+                        callback();   
+                })
+            .start();
     }
     
 
