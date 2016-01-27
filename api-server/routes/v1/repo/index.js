@@ -9,6 +9,7 @@ var repMod = require('../../../modules/repository');
 var authMod = require('../../../modules/auth');
 var Cache = require('../../../lib/route-cache');
 var layerRout = require('./layer');
+var suprlayRout = require('./suprlay');
 // creation of object cache
 var cache = new Cache({
     type: 'file',
@@ -33,9 +34,10 @@ var auth = function (req, res, next) {
     next();
 };
 /**
- * 
+ *
  */
 router.use("/usrs/:usr_id/layers", auth, layerRout);
+router.use("/usrs/:usr_id/suprlays", auth, suprlayRout);
 /**
  * [description]
  *
