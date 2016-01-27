@@ -2,7 +2,6 @@
 /*global module*/
 var express = require('express');
 var router = express.Router();
-var passport = require('passport');
 var winston = require('winston');
 var security = require('../../../lib/utils/security');
 var repMod = require('../../../modules/repository');
@@ -12,7 +11,6 @@ var suprlayRout = require('./suprlay');
 var procRout = require('./proc');
 var platfrmRout = require('./platfrm');
 var compRout = require('./comp');
-
 // creation of object cache
 var cache = new Cache({
     type: 'file',
@@ -30,9 +28,18 @@ var cache = new Cache({
  * @return {[type]}   [description]
  */
 var auth = function (req, res, next) {
-    // TODO: authentication
-    req.body.usr_id = req.params.usr_id;
-    next();
+    var axs_key = req.query.axs_key;
+    var digest = req.query.digest;
+    authMod.verifyTkn(axs_key, digest, function (err_auth, res_auth) {
+        if (res_auth) {
+            req.body.usr_id = req.params.usr_id;
+            next();
+        } else {
+            res.status(401).send({
+                'message': err_auth.message
+            });
+        }
+    });
 };
 /**
  *
@@ -42,7 +49,6 @@ router.use("/usrs/:usr_id/suprlays", auth, suprlayRout);
 router.use("/usrs/:usr_id/procs", auth, procRout);
 router.use("/usrs/:usr_id/platfrms", auth, platfrmRout);
 router.use("/usrs/:usr_id/comps", auth, compRout);
-
 /**
  * [description]
  *
@@ -96,9 +102,6 @@ router.get('/comps/reload', function (req, res, next) {
 router.get('/comps', function (req, res, next) {
     'use strict';
     try {
-        //passport.authenticate('bearer', function (err, access, scope) {
-        //if (access) {
-        // we search for body in cache
         var body = cache.getBody(req);
         if (body) {
             // we send it
@@ -123,10 +126,6 @@ router.get('/comps', function (req, res, next) {
                 }
             });
         }
-        //} else {
-        //res.status(401).send(null);
-        //}
-        //})(req, res, next);
     } catch (err) {
         next(err);
     }
@@ -140,9 +139,6 @@ router.get('/comps', function (req, res, next) {
 router.get('/devs', function (req, res, next) {
     'use strict';
     try {
-        //passport.authenticate('bearer', function (err, access, scope) {
-        //if (access) {
-        // we search for body in cache
         var body = cache.getBody(req);
         if (body) {
             // we send it
@@ -167,10 +163,6 @@ router.get('/devs', function (req, res, next) {
                 }
             });
         }
-        //} else {
-        //res.status(401).send(null);
-        //}
-        //})(req, res, next);
     } catch (err) {
         next(err);
     }
