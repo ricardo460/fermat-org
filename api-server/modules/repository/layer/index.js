@@ -10,27 +10,55 @@ var LayerMdl = require('./models/layer');
  *
  * @return {[type]} [description]
  */
-var slideOrder = function (point, dir, inc, callback) {
-    var query = {
-        'order': {}
-    };
-    if (dir == '>') {
-        query.orger['$gt'] = point;
-    } else if (dir == '<') {
-        query.orger['$lt'] = point;
+var swapOrder = function (action, oldSpot, newSpot, callback) {
+    if (action == 'insert') {
+        var range = newSpot - 1;
+        var query = {
+            'order': {
+                '$gt': range
+            }
+        };
+        var set = {
+            '$inc': {
+                'order': 1
+            }
+        };
+        layerSrv.updateLayers(query, set, function (err_srt, res_srt) {
+            if (err_srt) {
+                return callback(err_srt, null);
+            } else {
+                return callback(null, res_srt);
+            }
+        });
+    } else if (action == 'update') {
+        var rangeMin = oldSpot;
+        var rangeMax = newSpot + 1;
+        var query = {
+            '$and': [{
+                'order': {
+                    '$gt': rangeMin
+                }
+            }, {
+                'order': {
+                    '$lt': rangeMax
+                }
+            }]
+        };
+        var set = {
+            '$inc': {
+                'order': -1
+            }
+        };
+        layerSrv.updateLayers(query, set, function (err_srt, res_srt) {
+            if (err_srt) {
+                return callback(err_srt, null);
+            } else {
+                return callback(null, res_srt);
+            }
+        });
+    } else {
+        return callback(new Error('invalid swap action'), null);
     }
-    var set = {
-        '$inc': {
-            'order': inc
-        }
-    };
-    layerSrv.updateLayers(query, set, function (err_srt, res_srt) {
-        if (err_srt) {
-            callback(err_srt, null);
-        } else {
-            callback(null, res_srt);
-        }
-    });
 };
 /**
  * [insOrUpdLayer description]
@@ -72,7 +100,7 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
                 }
                 if (Object.keys(set_obj).length > 0) {
                     if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
-                        slideOrder(set_obj.order, '>', 1, function (err_sld, res_sld) {
+                        swapOrder('update', res_lay.order, set_obj.order, function (err_sld, res_sld) {
                             if (err_sld) {
                                 return callback(err_sld, null):
                             } else {
@@ -99,7 +127,7 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
                 if (name && lang) {
                     // TODO: pre-ordering
                     var layer = new LayerMdl(name, lang, suprlay || null, order);
-                    slideOrder(layer.order, '>', 1, function (err_sld, res_sld) {
+                    swapOrder('insert', null, layer.order, function (err_sld, res_sld) {
                         if (err_sld) {
                             return callback(err_sld, null):
                         } else {
