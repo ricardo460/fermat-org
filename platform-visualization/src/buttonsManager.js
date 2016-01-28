@@ -4,7 +4,12 @@
 function ButtonsManager() {
 
     this.objects = {
-        buttons : []
+    	left : { 
+        	buttons : []
+        },
+        right : {
+        	buttons : []
+        }
     };
 
     var self = this;
@@ -15,6 +20,8 @@ function ButtonsManager() {
      * @param {String} id  Tile ID.
      */
     this.actionButtons = function(id, callback){
+
+    	self.removeAllButtons();
 
         if(window.table[id].author) {
 
@@ -27,7 +34,7 @@ function ButtonsManager() {
 
         window.screenshotsAndroid.showButtonScreenshot(id);
 
-        window.fermatEdit.addButtonEdit(id);
+        window.fermatEdit.addButton(id);
 
         window.flowManager.getAndShowFlows(id);//Always stop last
     };
@@ -39,7 +46,7 @@ function ButtonsManager() {
      * @param {String} text  Button text.
 	 * @param {Function} callback Function to call when finished.    
      */
-    this.createButtons = function(id, text, callback, _x, _type){
+    this.createButtons = function(id, text, callback, _x, _type, _side){
 
     	var object = {
             id : id,
@@ -48,10 +55,14 @@ function ButtonsManager() {
 
         var x = _x || 5,
         	type = _type || 'button',
+        	side = _side || 'left',
         	idSucesor = "backButton";
 
-      	if(self.objects.buttons.length !== 0)
-      		idSucesor = self.objects.buttons[self.objects.buttons.length - 1].id;
+        if(side === 'right')
+        	idSucesor = 'legendButton';
+
+      	if(self.objects[side].buttons.length !== 0)
+      		idSucesor = self.objects[side].buttons[self.objects[side].buttons.length - 1].id;
 
       	var button = document.createElement(type),
           	sucesorButton = document.getElementById(idSucesor);
@@ -61,7 +72,7 @@ function ButtonsManager() {
 		button.style.position = 'absolute';
 		button.innerHTML = text;
 		button.style.top = '10px';
-		button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + x) + 'px';
+		button.style.left = calculatePosition(sucesorButton, side, x);
 		button.style.zIndex = 10;
 		button.style.opacity = 0;
 
@@ -76,7 +87,7 @@ function ButtonsManager() {
 
       	document.body.appendChild(button);
 
-      	self.objects.buttons.push(object);
+      	self.objects[side].buttons.push(object);
 
       	window.helper.show(button, 1000);
 
@@ -89,12 +100,14 @@ function ButtonsManager() {
      * @param {String}  id  Button ID.
 	 * @param {Function} callback Function to call when finished.    
      */
-    this.deleteButton = function(id, callback){
+    this.deleteButton = function(id, _side, callback){
 
-    	for(var i = 0; i < self.objects.buttons.length; i++){
+    	var side = _side || 'left';
 
-    		if(self.objects.buttons[i].id === id){
-    			self.objects.buttons.splice(i,1);
+    	for(var i = 0; i < self.objects[side].buttons.length; i++){
+
+    		if(self.objects[side].buttons[i].id === id){
+    			self.objects[side].buttons.splice(i,1);
     			window.helper.hide($('#'+id), 1000, callback);
     			
     		}
@@ -107,9 +120,14 @@ function ButtonsManager() {
      */
     this.removeAllButtons = function(){
 
-    	if(self.objects.buttons.length !== 0){
+        if(self.objects.left.buttons.length !== 0 || self.objects.right.buttons.length !== 0){
 
-	    	var actualButton = self.objects.buttons.shift();
+            var side = 'left';
+
+            if(self.objects[side].buttons.length === 0)
+                side = 'right';
+
+	    	var actualButton = self.objects[side].buttons.shift();
 
 	    	if( $('#'+actualButton.id) != null ) 
 	    		window.helper.hide($('#'+actualButton.id), 1000); 
@@ -117,5 +135,15 @@ function ButtonsManager() {
 	    		self.removeAllButtons();
     	}
     };
+
+    function calculatePosition(sucesorButton, side, x){
+
+    	if(side === 'left')
+    		return ((sucesorButton.offsetLeft + sucesorButton.clientWidth + x) + 'px');
+
+    	else 
+			return ((window.innerWidth - sucesorButton.offsetLeft - x) + 'px'); 
+    
+	}
 
 }
