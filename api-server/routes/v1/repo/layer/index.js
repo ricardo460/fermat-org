@@ -24,6 +24,7 @@ var lock = function (req, res, next) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
+                    console.log("en el next del lock");
                     next();
                 }
             });
