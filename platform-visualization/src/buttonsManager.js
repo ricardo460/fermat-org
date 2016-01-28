@@ -72,7 +72,7 @@ function ButtonsManager() {
 		button.style.position = 'absolute';
 		button.innerHTML = text;
 		button.style.top = '10px';
-		button.style.left = calculatePosition(sucesorButton, side, x);
+		button.style[side] = calculatePosition(sucesorButton, side, x);
 		button.style.zIndex = 10;
 		button.style.opacity = 0;
 
@@ -138,11 +138,12 @@ function ButtonsManager() {
 
     function calculatePosition(sucesorButton, side, x){
 
-    	if(side === 'left')
+    	if(side === 'left'){
     		return ((sucesorButton.offsetLeft + sucesorButton.clientWidth + x) + 'px');
-
-    	else 
-			return ((window.innerWidth - sucesorButton.offsetLeft - x) + 'px'); 
+    	}
+    	else {
+			return ((window.innerWidth - sucesorButton.offsetLeft + x) + 'px'); 
+    	}
     
 	}
 

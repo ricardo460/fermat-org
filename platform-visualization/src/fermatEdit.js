@@ -63,27 +63,31 @@ function FermatEdit() {
         drawTile(addAllFilds);
     };
 
-    this.initEdit = function(){
+    this.initEdit = function(id){
 
-        drawTile(addAllFilds);
+        addAllFilds();
+        fillFields(id);
+        drawTile();
     };
 
-    this.addButton = function(_id){
+    this.addButton = function(_id){console.log(_id);
 
         var id = _id || null,
-            text = 'Edit Component';
+            text = 'Edit Component',
+            button = 'buttonFermatEdit',
+            side = null;
 
-        var callback = function(){ self.initEdit(); };
+        var callback = function(){ self.initEdit(id); };
 
         if(id === null){
             callback = function(){ self.initNew(); };
             text = 'Add New Component';
+            button = 'buttonFermatNew'
+            side = 'right';
         }
-        
-        if( $('#buttonEdit') === null || $('#buttonEdit') === undefined){ 
 
-            buttonsManager.createButtons('buttonEdit', 'Edit Component',callback);
-        }    
+        buttonsManager.createButtons(button, text, callback, null, null, side);
+           
     };
 
     this.removeAllFields = function(){
@@ -142,7 +146,7 @@ function FermatEdit() {
             document.getElementById('imput-Name').value = tile.name;         
         
         if(tile.author != undefined)
-            document.getElementById('imput-autor').value = tile.author; 
+            document.getElementById('imput-author').value = tile.author; 
 
         if(tile.maintainer != undefined)
             document.getElementById('imput-Maintainer').value = tile.maintainer; 
@@ -359,26 +363,6 @@ function FermatEdit() {
             
                 changeTexture();
             });
-        }
-
-        function changeLayer(platform){
-
-            var state = false;
-
-            if(typeof groups[platform] === 'undefined')
-                state = platform;
-
-            var _layers = CLI.query(window.layers,function(el){return (el.super_layer === state)});
-
-            var option = "";
-
-            for(var i = 0;i < _layers.length; i++){
-
-                option += "<option value = '"+_layers[i]+"' >"+_layers[i]+"</option>";
-
-            }
-
-            $("#select-layer").html(option);          
         }
 
         function sesionType(){
@@ -609,6 +593,26 @@ function FermatEdit() {
 
         }
 
+    }
+
+    function changeLayer(platform){
+
+        var state = false;
+
+        if(typeof groups[platform] === 'undefined')
+            state = platform;
+
+        var _layers = CLI.query(window.layers,function(el){return (el.super_layer === state)});
+
+        var option = "";
+
+        for(var i = 0;i < _layers.length; i++){
+
+            option += "<option value = '"+_layers[i]+"' >"+_layers[i]+"</option>";
+
+        }
+
+        $("#select-layer").html(option);          
     }
 
     function changeTexture(){
