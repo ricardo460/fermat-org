@@ -16,7 +16,7 @@ var devMod = require('../developer');
 var Cache = require('../../../lib/route-cache');
 var env = process.env.NODE_ENV || 'development';
 var USER_AGENT = (env === 'development') ? 'fuelusumar' : 'fuelusumar';
-var TOKEN = (env === 'development') ? '82453641896888fe558d94d4e1b994e45c0d7832' : '82453641896888fe558d94d4e1b994e45c0d7832'; // fuelusumar
+var TOKEN = (env === 'development') ? '8c28a6c34e2951091d28345af93747b1cf95d702' : '82453641896888fe558d94d4e1b994e45c0d7832'; // fuelusumar
 /**
  * [getRepoDir description]
  *
