@@ -5,7 +5,7 @@
  * @param {Array}  tasks     An array of numbers containing all task ids
  * @param {Object} [container] Container of the created timeline
  */
-function Timeline ( tasks, container ) {
+function Timeline ( tasks, container ) { // nuevo
     
     // Constants
     var CONCEPT_COLOR = 'rgba(170,170,170,1)',
@@ -17,90 +17,119 @@ function Timeline ( tasks, container ) {
     this.items = [];
     this.container = container;
     
-    var id = 0;
+    var id = 0, count = 0;
+
+    function setTask(id){
+
+        for(var x = 0; x < window.TABLE.platafrms.length; x++){
+            for(var y = 0; y < window.TABLE.platafrms[x].layers.length; y++){
+                if(window.TABLE.platafrms[x].layers[y].visible){
+                    for(var z = 0; z < window.TABLE.platafrms[x].layers[y].tile.length; z++){
+                        if(id === count)
+                            return window.TABLE.platafrms[x].layers[y].tile[z];
+
+                        count = count + 1;
+                    }
+                }
+            }
+        }
+        for(var v = 0; v < window.TABLE.superPlatafrms.length; v++){
+            for(var t = 0; t < window.TABLE.superPlatafrms[v].layers.length; t++){
+                for(var q = 0; q < window.TABLE.superPlatafrms[v].layers[t].tile.length; q++){
+                    if(id === count)
+                      return window.TABLE.superPlatafrms[v].layers[t].tile[q];
+
+                    count = count + 1;
+                }
+            }
+        }
+    }
+    
     
     for( var i = 0, tl = tasks.length; i < tl; i++ ) {
+        var task = setTask(tasks[i]);
         
-        var task = table[ tasks[i] ];
-        
-        if ( task != null && task.life_cycle != null ) {
+        if ( task != null && task.life_cycle != null) {
             
-            var schedule = task.life_cycle,
-                tile, wrap,
-                lastTarget = helper.parseDate( schedule[0].reached ),
-                lastReached = lastTarget;
-            
-            var canvas = document.createElement('canvas');
-            var oldCanvas = objects[tasks[i]].children[0].material.map.image;
-            canvas.width = oldCanvas.width;
-            canvas.height = oldCanvas.height;
-            var ctx = canvas.getContext('2d');
-            ctx.drawImage(oldCanvas, 0, 0);
-            
-            tile = canvas;
-            tile.style.position = 'relative';
-            tile.style.display = 'inline-block';
-            
-            this.groups.push ( {
-                id : i,
-                content : tile
-            });
-            
-            // First status marks the start point, not needed here
-            for( var j = 1, sl = schedule.length; j < sl; j++ ) {
+            if(task.life_cycle.length !== 0){
+
+                var schedule = task.life_cycle,
+                    tile, wrap,
+                    lastTarget = helper.parseDate( schedule[0].reached ),
+                    lastReached = lastTarget;
                 
-                var itemColor,
-                    end,
-                    item;
-                    
-                switch(schedule[j-1].name) {
-                    case "Concept":
-                        itemColor = CONCEPT_COLOR; break;
-                    case "Development":
-                        itemColor = DEVEL_COLOR; break;
-                    case "QA":
-                        itemColor = QA_COLOR; break;
-                }
+                var canvas = document.createElement('canvas');
+                var oldCanvas = objects[tasks[i]].children[0].material.map.image;
+                canvas.width = oldCanvas.width;
+                canvas.height = oldCanvas.height;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(oldCanvas, 0, 0);
                 
+                tile = canvas;
+                tile.style.position = 'relative';
+                tile.style.display = 'inline-block';
                 
-                // Planned
-                if(schedule[j].target !== '') {
-                    
-                    end = helper.parseDate( schedule[j].target );
-                    
-                    item = {
-                        id : id++,
-                        content : schedule[j-1].name + ' (plan)',
-                        start : lastTarget,
-                        end : end,
-                        group: i,
-                        subgroup: 'plan',
-                        style: 'background-color:' + itemColor
-                    };
-                    
-                    this.items.push( item );
-                    
-                    lastTarget = end;
-                }
+                this.groups.push ( {
+                    id : i,
+                    content : tile
+                });
                 
-                // Real
-                if(schedule[j].reached !== '') {
+                // First status marks the start point, not needed here
+                for( var j = 1, sl = schedule.length; j < sl; j++ ) {
                     
-                    end = helper.parseDate( schedule[j].reached );
+                    var itemColor,
+                        end,
+                        item;
+                        
+                    switch(schedule[j-1].name) {
+                        case "Concept":
+                            itemColor = CONCEPT_COLOR; break;
+                        case "Development":
+                            itemColor = DEVEL_COLOR; break;
+                        case "QA":
+                            itemColor = QA_COLOR; break;
+                    }
                     
-                    item = {
-                        id : id++,
-                        content : schedule[j-1].name + ' (real)',
-                        start : lastReached,
-                        end : end,
-                        group: i,
-                        subgroup: 'real',
-                        style: 'background-color:' + itemColor
-                    };
                     
-                    this.items.push( item );
+                    // Planned
+                    if(schedule[j].target !== '') {
+                        
+                        end = helper.parseDate( schedule[j].target );
+                        
+                        item = {
+                            id : id++,
+                            content : schedule[j-1].name + ' (plan)',
+                            start : lastTarget,
+                            end : end,
+                            group: i,
+                            subgroup: 'plan',
+                            style: 'background-color:' + itemColor
+                        };
+                        
+                        this.items.push( item );
+                        
+                        lastTarget = end;
+                    }
                     
-                    lastReached = end;
+                    // Real
+                    if(schedule[j].reached !== '') {
+                        
+                        end = helper.parseDate( schedule[j].reached );
+                        
+                        item = {
+                            id : id++,
+                            content : schedule[j-1].name + ' (real)',
+                            start : lastReached,
+                            end : end,
+                            group: i,
+                            subgroup: 'real',
+                            style: 'background-color:' + itemColor
+                        };
+                        
+                        this.items.push( item );
+                        
+                        lastReached = end;
+                    }
                 }
             }
         }

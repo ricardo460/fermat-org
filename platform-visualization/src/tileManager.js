@@ -34,11 +34,11 @@ function TileManager() {
             jsonTile = json;
             callback();
         });
-    }
+    };
     /**
      * Pre-computes the space layout for next draw
      */
-    this.preComputeLayout = function () {
+this.preComputeLayout = function () { 
         
         var SUPER_LAYER_SEPARATION = 3;
 
@@ -46,19 +46,19 @@ function TileManager() {
             superLayerHeight = 0,
             isSuperLayer = [],
             i, actualSuperLayerName = '';
-
+  
         //Initialize
-        for (var key in layers) {
-            if (key == "size") continue;
-            
-            var id = layers[key].index;
-            
-            if(layers[key].super_layer !== actualSuperLayerName) {
+        var id, count = 0, sLayer, index = _firstLayer;
+
+
+        function setSections(id, sLayer){
+                
+            if(sLayer !== actualSuperLayerName) {
                 superLayerHeight = 0;
-                actualSuperLayerName = layers[key].super_layer;
+                actualSuperLayerName = sLayer;
             }
 
-            if (layers[key].super_layer) {
+            if (sLayer) { // if is superlayer(super plataform)
 
                 section[id] = 0;
                 section_size[id] = 0;
@@ -66,7 +66,7 @@ function TileManager() {
 
                 if (superLayerMaxHeight < superLayerHeight) superLayerMaxHeight = superLayerHeight;
             }
-            else {
+            else { // if not superlayer
 
                 var newLayer = [];
 
@@ -80,29 +80,76 @@ function TileManager() {
             isSuperLayer.push(false);
         }
 
-        for (var j = 0; j <= groupsQtty; j++) {
+        for(var m = 0; m < layersQtty; m++){
+
+            for(var w = 0; w < TABLE.platafrms[0].layers.length; w++){
+                if(TABLE.platafrms[0].layers[w].index === index){
+                    sLayer = TABLE.platafrms[0].layers[w].superLayer;
+                    id = TABLE.platafrms[0].layers[w].index;
+                    setSections(id, sLayer);
+                }
+            }
+           
+            for(var j = 0; j < TABLE.superPlatafrms.length; j++){
+                for(var k = 0; k < TABLE.superPlatafrms[j].layers.length; k++){
+                    if(TABLE.superPlatafrms[j].layers[k].index === index){
+                        sLayer = TABLE.superPlatafrms[j].layers[k].superLayer;
+                        id = TABLE.superPlatafrms[j].layers[k].index;
+                        setSections(id, sLayer);
+                    }
+                }
+            }
+            index = index + 1;
+        }
+
+        for (var n = 0; n <= groupsQtty; n++) {
 
             self.elementsByGroup.push([]);
         }
 
         //Set sections sizes
+        
+        //Set sections sizes Plataforms
+        count = 0;
+        var r, c;
+        for(var x = 0; x < TABLE.platafrms.length; x++){
+            for(var y = 0; y < TABLE.platafrms[x].layers.length; y++){
+                if(TABLE.platafrms[x].layers[y].visible){
+                    for(var z = 0; z < TABLE.platafrms[x].layers[y].tile.length; z++){
+                        setSectionsSizes(TABLE.platafrms[x].layers[y].tile[z].layerID, TABLE.platafrms[x].layers[y].tile[z].groupID, TABLE.platafrms[x].layers[y].superLayer);
+                    }
+                }
+            }
+        }
 
-        for (i = 0; i < table.length; i++) {
+        //Set sections sizes Super Plataforms 
 
-            var r = table[i].layerID;
-            var c = table[i].groupID;
+        for(var v = 0; v < TABLE.superPlatafrms.length; v++){
+            for(var t = 0; t < TABLE.superPlatafrms[v].layers.length; t++){
+               for(var q = 0; q < TABLE.superPlatafrms[v].layers[t].tile.length; q++){
+                    setSectionsSizes(TABLE.superPlatafrms[v].layers[t].tile[q].layerID, TABLE.superPlatafrms[v].layers[t].tile[q].groupID, TABLE.superPlatafrms[v].layers[t].superLayer);  
+               }   
+            }
+        }
 
-            self.elementsByGroup[c].push(i);
+        function setSectionsSizes(lID, gID, sL){
 
-            if (layers[table[i].layer].super_layer) {
+            r = lID;
+            c = gID;
+            
+            self.elementsByGroup[c].push(count);
+
+            if (sL) {
 
                 section_size[r]++;
-                isSuperLayer[r] = layers[table[i].layer].super_layer;
+                isSuperLayer[r] = sL;
             } else {
-                
+
                 section_size[r][c]++;
                 if (section_size[r][c] > columnWidth) columnWidth = section_size[r][c];
             }
+
+            count = count + 1;
         }
 
         //Set row height
@@ -365,23 +412,72 @@ function TileManager() {
             _platfrms = list.platfrms,
             _layers = list.layers,
             _comps = list.comps,
-            i, l, code, name;
+            i, l, code, name, count = 0;
+
+        TABLE = {
+  
+                    platafrms:[],
+
+                    superPlatafrms:[]
+                };
 
         for (i = 0, l = _suprlays.length; i < l; i++) {
-            code = _suprlays[i].code;
-            superLayers[code] = {};
-            superLayers[code].name = _suprlays[i].name;
-            superLayers[code].index = _suprlays[i].order;
-            superLayers[code]._id = _suprlays[i]._id;
-            superLayers[code].dependsOn = _suprlays[i].deps;
+
+            TABLE.superPlatafrms[i] =   {
+                                        layers: [],
+                                        namePlataform: _suprlays[i].code,
+                                        name: _suprlays[i].name,
+                                        index: _suprlays[i].order,
+                                        id: _suprlays[i]._id,
+                                        dependsOn: _suprlays[i].deps
+
+                                    };
+
+            for (j = 0, ll = _layers.length; j < ll; j++) { 
+                
+                if(TABLE.superPlatafrms[i].namePlataform === _layers[j].suprlay){
+                    TABLE.superPlatafrms[i].layers[count] = {
+                                                            tile: [], 
+                                                            position: [],
+                                                            nameLayer: helper.capFirstLetter(_layers[j].name),
+                                                            superLayer: _layers[j].suprlay,
+                                                            index: _layers[j].order,
+                                                            id: _layers[j]._id
+                                                        };
+                    count = count + 1;
+                }
+            }
+            count = 0;
         }
 
         for (i = 0, l = _platfrms.length; i < l; i++) {
-            code = _platfrms[i].code;
-            groups[code] = {};
-            groups[code].index = _platfrms[i].order;
-            groups[code].dependsOn = _platfrms[i].deps;
-            groups[code]._id = _platfrms[i]._id;
+
+            TABLE.platafrms[i] =   {
+                                        layers: [],
+                                        namePlataform: _platfrms[i].code,
+                                        name: _platfrms[i].name,
+                                        index: _platfrms[i].order,
+                                        id: _platfrms[i]._id,
+                                        dependsOn: _platfrms[i].deps
+
+                                    };
+
+            for (j = 0, mm = _layers.length; j < mm; j++) { 
+                
+                if(_layers[j].suprlay === false){
+                    TABLE.platafrms[i].layers[count] = {
+                                                            tile: [], 
+                                                            position: [],
+                                                            nameLayer: helper.capFirstLetter(_layers[j].name),
+                                                            superLayer: _layers[j].suprlay,
+                                                            index: _layers[j].order,
+                                                            id: _layers[j]._id,
+                                                            visible: false
+                                                        };
+                    count = count + 1;
+                }
+            }
+            count = 0;
         }
 
         for (i = 0, l = _layers.length; i < l; i++) {
@@ -434,11 +530,32 @@ function TileManager() {
         };
         
         for (i = 0, l = _comps.length; i < l; i++) {
-            table.push(buildElement(i));
+
+            for(var j = 0; j < TABLE.platafrms.length; j++){
+                if(TABLE.platafrms[j].namePlataform === buildElement(i).group){// si hay similitud con el header
+                    for (var k = 0; k < TABLE.platafrms[j].layers.length; k++){
+                        if(buildElement(i).layer === TABLE.platafrms[j].layers[k].nameLayer){
+                            TABLE.platafrms[j].layers[k].tile.push(buildElement(i));
+                            TABLE.platafrms[j].layers[k].visible = true;
+                        }
+                    }
+                }
+            }
+
+            for(var x = 0; x < TABLE.superPlatafrms.length; x++){
+                if(TABLE.superPlatafrms[x].namePlataform === buildElement(i).superLayer){// si hay similitud con el header
+                    for (var y = 0; y < TABLE.superPlatafrms[x].layers.length; y++){
+                        if(buildElement(i).layer === TABLE.superPlatafrms[x].layers[y].nameLayer){
+                            TABLE.superPlatafrms[x].layers[y].tile.push(buildElement(i));
+                        }
+                    }
+                }
+            }
         }
 
-        groupsQtty = groups.size();
-        layersQtty = layers.size();
+        groupsQtty = _platfrms.length;
+        layersQtty = list.layers.length; 
+        _firstLayer = _layers[0].order;
     };
 
     /**
@@ -450,13 +567,13 @@ function TileManager() {
      * @param   {Number} scale      Scale of the pictures, the bigger, the better but heavier
      * @returns {Object} The drawn texture
      */
-    this.createTexture = function (id, quality, tileWidth, tileHeight, scale) {
-
-        var state = table[id].code_level,
-            difficulty = Math.ceil(table[id].difficulty / 2),
-            group = table[id].group || window.layers[table[id].layer].super_layer,
-            type = table[id].type,
-            picture = table[id].picture,
+    this.createTexture = function (id, quality, tileWidth, tileHeight, scale, sL, lyer, grup, _code_level, _difficulty, _type, _picture, _code, _name, _authorRealName, _author, _maintainerPicture, _maintainerRealName, _maintainer, _found) {
+                                                                                
+        var state = _code_level,
+            difficulty = Math.ceil(_difficulty / 2),
+            group = grup || sL,
+            type = _type,
+            picture = _picture,
             base = 'images/tiles/';
 
         var canvas = document.createElement('canvas');
@@ -496,23 +613,23 @@ function TileManager() {
                 src: base + 'rings/' + quality + '/' + state + '_diff_' + difficulty + '.png'
             },
             codeText = {
-                text: table[id].code,
+                text: _code,
                 font: (jsonTile.global.codeText.font * scale) + "px Arial"
             },
             nameText = {
-                text: table[id].name,
+                text: _name,
                 font: (jsonTile.global.nameText.font * scale) + 'px Arial'
             },
             layerText = {
-                text: table[id].layer,
+                text: lyer,
                 font: (jsonTile.global.layerText.font * scale) + 'px Arial'
             },
             authorText = {
-                text: table[id].authorRealName || table[id].author || '',
+                text: _authorRealName || _author || '',
                 font: (jsonTile.global.authorText.font * scale) + 'px Arial'
             },
             picMaintainer = {
-                src: table[id].maintainerPicture || base + 'buster.png'
+                src: _maintainerPicture || base + 'buster.png'
             },
             maintainer = {
                 text: 'Maintainer',
@@ -520,12 +637,12 @@ function TileManager() {
                 color: "#FFFFFF"
             },
             nameMaintainer = {
-                text: table[id].maintainerRealName || table[id].maintainer || '',
+                text: _maintainerRealName || _maintainer || '',
                 font: (jsonTile.global.nameMaintainer.font * scale) + 'px Arial',
                 color: "#FFFFFF"
             },
             userMaintainer = {
-                text: table[id].maintainer || 'No Maintainer yet',
+                text: _maintainer || 'No Maintainer yet',
                 font: (jsonTile.global.userMaintainer.font * scale) + 'px Arial',
                 color: "#E2E2E2"
             };
@@ -612,7 +729,7 @@ function TileManager() {
             userMaintainer
         ];
 
-        if ( table[id].found !== true ) {
+        if ( _found !== true ) {
 
             var stamp = {
                 src: 'images/alt_not_found.png',
@@ -637,7 +754,7 @@ function TileManager() {
      * @returns {DOMElement} The drawable element that represents the tile
      */
      
-    this.createElement = function (id) {
+    this.createElement = function (id, sL, lyer, grup, _code_level, _difficulty, _type, _picture, _code, _name, _authorRealName, _author, _maintainerPicture, _maintainerRealName, _maintainer, _found) {
 
         var mesh,
             element = new THREE.LOD(),
@@ -657,7 +774,7 @@ function TileManager() {
             if (levels[j][0] === 'high') scale = 5;
             else scale = 1;
 
-            texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale);
+            texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale, sL, lyer, grup, _code_level, _difficulty, _type, _picture, _code, _name, _authorRealName, _author, _maintainerPicture, _maintainerRealName, _maintainer, _found);
 
             mesh = new THREE.Mesh(
                 new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
@@ -680,6 +797,7 @@ function TileManager() {
 
         return element;
     };
+
 
     /**
      * Converts the table in another form
@@ -784,80 +902,64 @@ function TileManager() {
     /**
      * Inits and draws the table, also creates the Dimensions object
      */
-    this.drawTable = function () {
-
+    var layerCoordinates = [];
+    this.drawTable = function () { 
+                                   
         this.preComputeLayout();
-        
-        var layerCoordinates = [];
         
         var signRow = null,
             signColumn = null;
 
-        for (var i = 0; i < table.length; i++) {
-
-            var object = this.createElement(i);
-
-            object.position.x = Math.random() * 80000 - 40000;
-            object.position.y = Math.random() * 80000 - 40000;
-            object.position.z = 80000 * 2;
-            object.rotation.x = Math.random() * 180;
-            object.rotation.y = Math.random() * 180;
-            object.rotation.z = Math.random() * 180;
-            
-            object.position.copy(window.viewManager.translateToSection('table', object.position));
-            
-            scene.add(object);
-
-            window.objects.push(object);
-
-            //
-
-            object = new THREE.Object3D();
-
-            //Row (Y)
-            var row = table[i].layerID;
-
-            if (layers[table[i].layer].super_layer) {
-
-                object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
-
-                section[row]++;
-
-            } else {
-
-                //Column (X)
-                var column = table[i].groupID;
-
-                object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
-
-                section[row][column]++;
+        
+        //Set position Plataforms
+        for(var x = 0; x < TABLE.platafrms.length; x++){
+            for(var y = 0; y < TABLE.platafrms[x].layers.length; y++){
+                if(TABLE.platafrms[x].layers[y].visible){
+                    for(var z = 0; z < TABLE.platafrms[x].layers[y].tile.length; z++){
+                        self.setPosition(TABLE.platafrms[x].layers[y].tile[z].layerID, 
+                                         TABLE.platafrms[x].layers[y].tile[z].groupID, 
+                                         TABLE.platafrms[x].layers[y].superLayer, 
+                                         TABLE.platafrms[x].layers[y].tile[z].layer, 
+                                         TABLE.platafrms[x].layers[y].tile[z].group,
+                                         TABLE.platafrms[x].layers[y].tile[z].code_level,
+                                         TABLE.platafrms[x].layers[y].tile[z].difficulty,
+                                         TABLE.platafrms[x].layers[y].tile[z].type,
+                                         TABLE.platafrms[x].layers[y].tile[z].picture,
+                                         TABLE.platafrms[x].layers[y].tile[z].code,
+                                         TABLE.platafrms[x].layers[y].tile[z].name,
+                                         TABLE.platafrms[x].layers[y].tile[z].authorRealName,
+                                         TABLE.platafrms[x].layers[y].tile[z].author,
+                                         TABLE.platafrms[x].layers[y].tile[z].maintainerPicture,
+                                         TABLE.platafrms[x].layers[y].tile[z].maintainerRealName,
+                                         TABLE.platafrms[x].layers[y].tile[z].maintainer,
+                                         TABLE.platafrms[x].layers[y].tile[z].found);
+                    }
+                }
             }
+        }
 
-
-            object.position.y = -((layerPosition[row]) * window.TILE_DIMENSION.height) + (layersQtty * window.TILE_DIMENSION.height / 2);
-            
-            if(typeof layerCoordinates[row] === 'undefined')
-                layerCoordinates[row] = object.position.y;
-
-            object.position.copy(window.viewManager.translateToSection('table', object.position));
-            this.targets.table.push(object);
-
-            if(i === 0 ){ //entra a la primera
-                window.signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer, table[i].group);
-                signRow = table[i].layerID;
-                signColumn = table[i].groupID;
-            }
-
-            if(table[i].layerID !== signRow && table[i].groupID === signColumn && layers[table[i].layer].super_layer === false){ // solo cambio de filas
-                window.signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer, table[i].group);
-                signRow = table[i].layerID;
-                signColumn = table[i].groupID;
-            }
-
-            else if(signColumn !== table[i].groupID && layers[table[i].layer].super_layer === false){ //cambio de columna
-                window.signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer, table[i].group);
-                signRow = table[i].layerID;
-                signColumn = table[i].groupID;
+        //Set position Super Plataforms 
+        for(var v = 0; v < TABLE.superPlatafrms.length; v++){
+            for(var t = 0; t < TABLE.superPlatafrms[v].layers.length; t++){
+               for(var q = 0; q < TABLE.superPlatafrms[v].layers[t].tile.length; q++){
+                    self.setPosition(TABLE.superPlatafrms[v].layers[t].tile[q].layerID, 
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].groupID, 
+                                     TABLE.superPlatafrms[v].layers[t].superLayer, 
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].layer, 
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].group,
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].code_level,
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].difficulty,
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].type,
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].picture,
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].code,
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].name,
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].authorRealName,
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].author,
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].maintainerPicture,
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].maintainerRealName,
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].maintainer,
+                                     TABLE.superPlatafrms[v].layers[t].tile[q].found);
+               }   
             }
         }
 
@@ -869,6 +971,75 @@ function TileManager() {
             superLayerPosition: superLayerPosition,
             layerPositions : layerCoordinates
         };
+    };
+
+    var _count = 0;
+    this.setPosition = function(lID, gID, sL, lyer, grup, _code_level, _difficulty, _type, _picture, _code, _name, _authorRealName, _author, _maintainerPicture, _maintainerRealName, _maintainer, _found){
+
+        var object = this.createElement(_count, sL, lyer, grup, _code_level, _difficulty, _type, _picture, _code, _name, _authorRealName, _author, _maintainerPicture, _maintainerRealName, _maintainer, _found);
+            
+        object.position.x = Math.random() * 80000 - 40000;
+        object.position.y = Math.random() * 80000 - 40000;
+        object.position.z = 80000 * 2;
+        object.rotation.x = Math.random() * 180;
+        object.rotation.y = Math.random() * 180;
+        object.rotation.z = Math.random() * 180;
+        
+        object.position.copy(window.viewManager.translateToSection('table', object.position));
+        
+        scene.add(object);
+
+        window.objects.push(object);
+
+        object = new THREE.Object3D();
+
+        //Row (Y)
+        var row = lID;
+
+        if (sL) {
+
+            object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
+
+            section[row]++;
+
+        } else {
+
+            //Column (X)
+            var column = gID;
+
+            object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
+
+            section[row][column]++;
+        }
+
+
+        object.position.y = -((layerPosition[row]) * window.TILE_DIMENSION.height) + (layersQtty * window.TILE_DIMENSION.height / 2);
+        
+        if(typeof layerCoordinates[row] === 'undefined')
+            layerCoordinates[row] = object.position.y;
+
+        object.position.copy(window.viewManager.translateToSection('table', object.position));
+        this.targets.table.push(object);
+
+        if(_count === 0 ){ //entra a la primera
+            window.signLayer.createSignLayer(object.position.x, object.position.y, lyer, grup);
+            signRow = lID;
+            signColumn = gID;
+        }
+
+        if(lID !== signRow && gID === signColumn && sL === false){ // solo cambio de filas
+            window.signLayer.createSignLayer(object.position.x, object.position.y, lyer, grup);
+            signRow = lID;
+            signColumn = gID;
+        }
+
+        else if(signColumn !== gID && sL === false){ //cambio de columna
+            window.signLayer.createSignLayer(object.position.x, object.position.y, lyer, grup);
+            signRow = lID;
+            signColumn = gID;
+        }
+
+        _count = _count + 1;
     };
 
     /**

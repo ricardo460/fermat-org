@@ -602,47 +602,46 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      * @author Emmanuel Colina
      * Calculate the position header
      */
-     
+    
     var headersPositionsViewWorkFlow = function() {
 
-        var width, height, group, headerData, objectHeaderInWFlowGroup, slayer, column;
+        var width, height, headerData, objectHeaderInWFlowGroup, column;
         
-        for(group in groups){
-            if (window.groups.hasOwnProperty(group) && group !== 'size'){
-                headerData = window.groups[group];
-                column = headerData.index;
+        for(var i = 0; i < TABLE.platafrms.length; i++){
 
-                width = columnWidth * window.TILE_DIMENSION.width;
-                height = width * 443 / 1379;
-   
-                objectHeaderInWFlowGroup = new THREE.Object3D();
-            
-                objectHeaderInWFlowGroup.position.x = ((columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) + 10000;
-                objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
-                objectHeaderInWFlowGroup.name = group;
+            headerData = TABLE.platafrms[i];
+            column = headerData.index;
 
-                objectHeaderInWFlowGroup.position.copy(window.viewManager.translateToSection('workflows', objectHeaderInWFlowGroup.position));
-                positions.workFlow.push(objectHeaderInWFlowGroup);
-            }  
+            width = columnWidth * window.TILE_DIMENSION.width;
+            height = width * 443 / 1379;
+
+            objectHeaderInWFlowGroup = new THREE.Object3D();
+        
+            objectHeaderInWFlowGroup.position.x = ((columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) + 10000;
+            objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
+            objectHeaderInWFlowGroup.name = headerData.namePlataform;
+
+            objectHeaderInWFlowGroup.position.copy(window.viewManager.translateToSection('workflows', objectHeaderInWFlowGroup.position));
+            positions.workFlow.push(objectHeaderInWFlowGroup);
         }
-        for(slayer in superLayers){
-            if (window.superLayers.hasOwnProperty(slayer) && slayer !== 'size'){
-                headerData = window.superLayers[slayer];
 
-                column = headerData.index + 1;
+        for(var j = 0; j < TABLE.superPlatafrms.length; j++){
 
-                width = columnWidth * window.TILE_DIMENSION.width;
-                height = width * 443 / 1379;
-   
-                objectHeaderInWFlowGroup = new THREE.Object3D();
-            
-                objectHeaderInWFlowGroup.position.x = ((columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 15000;
-                objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
-                objectHeaderInWFlowGroup.name = slayer;
+            headerData = TABLE.superPlatafrms[j];
 
-                objectHeaderInWFlowGroup.position.copy(window.viewManager.translateToSection('workflows', objectHeaderInWFlowGroup.position));
-                positions.workFlow.push(objectHeaderInWFlowGroup);
-            }  
+            column = headerData.index + 1;
+
+            width = columnWidth * window.TILE_DIMENSION.width;
+            height = width * 443 / 1379;
+
+            objectHeaderInWFlowGroup = new THREE.Object3D();
+        
+            objectHeaderInWFlowGroup.position.x = ((columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 15000;
+            objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
+            objectHeaderInWFlowGroup.name = headerData.namePlataform;
+
+            objectHeaderInWFlowGroup.position.copy(window.viewManager.translateToSection('workflows', objectHeaderInWFlowGroup.position));
+            positions.workFlow.push(objectHeaderInWFlowGroup);      
         }
     };
 
@@ -713,67 +712,63 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         
         var src, width, height;
             
-        for (group in groups) {
-            if (window.groups.hasOwnProperty(group) && group !== 'size') {
+        for (var i = 0; i < window.TABLE.platafrms.length; i++){
 
-                headerData = window.groups[group];
-                column = headerData.index;
+            headerData = window.TABLE.platafrms[i];
+            column = headerData.index;
 
-                width = columnWidth * window.TILE_DIMENSION.width;
-                height = width * 443 / 1379;
+            width = columnWidth * window.TILE_DIMENSION.width;
+            height = width * 443 / 1379;
 
-                object = createHeader(group, width, height, column);
-                
-                object.position.copy(window.viewManager.translateToSection('table', window.helper.getOutOfScreenPoint(0)));
-                object.name = group;
+            object = createHeader(headerData.namePlataform, width, height, column);
+            
+            object.position.copy(window.viewManager.translateToSection('table', window.helper.getOutOfScreenPoint(0)));
+            object.name = headerData.namePlataform;
 
-                scene.add(object);
-                objects.push(object);
+            scene.add(object);
+            objects.push(object);
 
-                object = new THREE.Object3D();
-                
-                object.position.x = (columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width);
-                object.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
-                object.name = group;         
+            object = new THREE.Object3D();
+            
+            object.position.x = (columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width);
+            object.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
+            object.name = headerData.namePlataform;         
 
-                object.position.copy(window.viewManager.translateToSection('table', object.position));
-                positions.table.push(object);
+            object.position.copy(window.viewManager.translateToSection('table', object.position));
+            positions.table.push(object);
 
-                createChildren(group, headerData.dependsOn);
-            }
+            createChildren(headerData.namePlataform, headerData.dependsOn);
         }
 
-        for (slayer in superLayers) {
-            if (window.superLayers.hasOwnProperty(slayer) && slayer !== 'size') {
+        for (var j = 0; j < window.TABLE.superPlatafrms.length; j++) {
                 
-                headerData = window.superLayers[slayer];
+            headerData = window.TABLE.superPlatafrms[j];
 
-                row = superLayerPosition[headerData.index];
- 
-                width = columnWidth * window.TILE_DIMENSION.width;
-                height = width * 443 / 1379;
+            row = superLayerPosition[headerData.index];
 
-                object = createHeader(slayer, width, height, row);
-                
-                object.position.copy(window.viewManager.translateToSection('table', window.helper.getOutOfScreenPoint(0)));
-                
-                object.name = slayer;
-                
+            width = columnWidth * window.TILE_DIMENSION.width;
+            height = width * 443 / 1379;
 
-                scene.add(object);
-                objects.push(object);
-                
-                object = new THREE.Object3D();
+            object = createHeader(headerData.namePlataform, width, height, row);
+            
+            object.position.copy(window.viewManager.translateToSection('table', window.helper.getOutOfScreenPoint(0)));
+            
+            object.name = headerData.namePlataform;
+            
 
-                object.position.x = -(((groupsQtty + 1) * columnWidth * window.TILE_DIMENSION.width / 2) + window.TILE_DIMENSION.width);
-                object.position.y = -(row * window.TILE_DIMENSION.height) - (superLayerMaxHeight * window.TILE_DIMENSION.height / 2) + (layersQtty * window.TILE_DIMENSION.height / 2);
-                object.name = slayer;
+            scene.add(object);
+            objects.push(object);
+            
+            object = new THREE.Object3D();
 
-                object.position.copy(window.viewManager.translateToSection('table', object.position));
-                positions.table.push(object);
+            object.position.x = -(((groupsQtty + 1) * columnWidth * window.TILE_DIMENSION.width / 2) + window.TILE_DIMENSION.width);
+            object.position.y = -(row * window.TILE_DIMENSION.height) - (superLayerMaxHeight * window.TILE_DIMENSION.height / 2) + (layersQtty * window.TILE_DIMENSION.height / 2);
+            object.name = headerData.namePlataform;
 
-                createChildren(slayer, headerData.dependsOn);
-            }
+            object.position.copy(window.viewManager.translateToSection('table', object.position));
+            positions.table.push(object);
+
+            createChildren(headerData.namePlataform, headerData.dependsOn);
         }
         
         buildGraph();

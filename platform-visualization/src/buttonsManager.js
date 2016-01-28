@@ -21,7 +21,7 @@ function ButtonsManager() {
      */
     this.actionButtons = function(id, callback){
 
-        if(window.table[id].author) {
+        if(existAuthor(id)) {
 
             self.createButtons('developerButton', 'View developer', function(){
 
@@ -115,11 +115,42 @@ function ButtonsManager() {
 
 	    	var actualButton = self.objects.button.shift();
 
-	    	if( $('#'+actualButton.id) != null ) 
+	    	if( $('#'+actualButton.id) != null )  
 	    		window.helper.hide($('#'+actualButton.id), 1000); 
 	    	
 	    		self.removeAllButtons();
     	}
     };
+
+    function existAuthor(id){
+
+        var count = 0, _author;
+
+        for(var x = 0; x < window.TABLE.platafrms.length; x++){
+            for(var y = 0; y < window.TABLE.platafrms[x].layers.length; y++){
+                if(window.TABLE.platafrms[x].layers[y].visible){
+                    for(var z = 0; z < window.TABLE.platafrms[x].layers[y].tile.length; z++){
+                        if(count === id){                  
+                            _author = window.TABLE.platafrms[x].layers[y].tile[z].author;
+                        }
+                        count = count + 1; 
+                    }
+                }
+            }
+        }
+
+        for(var v = 0; v < window.TABLE.superPlatafrms.length; v++){
+            for(var t = 0; t < window.TABLE.superPlatafrms[v].layers.length; t++){
+               for(var q = 0; q < window.TABLE.superPlatafrms[v].layers[t].tile.length; q++){
+                    if(count === id){                
+                        _author = window.TABLE.superPlatafrms[v].layers[t].tile[q].author;
+                    }
+                    count = count + 1; 
+               }   
+            }
+        }
+
+        return _author;
+    }
 
 }

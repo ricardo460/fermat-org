@@ -1,12 +1,11 @@
 //global variables
-var table = [],
-    camera,
+var camera,
     scene = new THREE.Scene(),
     renderer,
     objects = [],
     actualView,
     stats = null,
-//Class
+//Class 
     tileManager = new TileManager(),
     helper = new Helper(),
     logo = new Logo(),
@@ -251,6 +250,30 @@ function changeView(targets) {
 function onElementClick(id) {
     
     var focus = parseInt(id);
+    var count = 0, _element;
+
+    for(var x = 0; x < window.TABLE.platafrms.length; x++){
+        for(var y = 0; y < window.TABLE.platafrms[x].layers.length; y++){
+            if(window.TABLE.platafrms[x].layers[y].visible){
+                for(var z = 0; z < window.TABLE.platafrms[x].layers[y].tile.length; z++){
+                    if(count === id){                  
+                        _element = window.TABLE.platafrms[x].layers[y].tile[z];
+                    }
+                    count = count + 1; 
+                }
+            }
+        }
+    }
+    for(var v = 0; v < window.TABLE.superPlatafrms.length; v++){
+        for(var t = 0; t < window.TABLE.superPlatafrms[v].layers.length; t++){
+           for(var q = 0; q < window.TABLE.superPlatafrms[v].layers[t].tile.length; q++){
+                if(count === id){                
+                    _element = window.TABLE.superPlatafrms[v].layers[t].tile[q];
+                }
+                count = count + 1; 
+           }   
+        }
+    }
 
     if (window.camera.getFocus() == null) {
 
@@ -275,7 +298,7 @@ function onElementClick(id) {
             window.helper.showBackButton();
 
             window.buttonsManager.actionButtons(id, function(){
-                showDeveloper(id);
+                showDeveloper(id, _element);
             });
             
         }, 3000);
@@ -283,35 +306,53 @@ function onElementClick(id) {
         window.camera.disable();   
     }
 
-    function showDeveloper(id) {
+    function showDeveloper(id, _element) {
 
         var relatedTasks = [];
         
-        var image = table[id].picture;
+        //var image = _element.picture;
 
-        var section = 0;
+        var section = 0, count = 0;
         var center = objects[id].position;
         
-        for (var i = 0; i < table.length; i++) {
+        for(var x = 0; x < window.TABLE.platafrms.length; x++){
+            for(var y = 0; y < window.TABLE.platafrms[x].layers.length; y++){
+                if(window.TABLE.platafrms[x].layers[y].visible){
+                    for(var z = 0; z < window.TABLE.platafrms[x].layers[y].tile.length; z++){
+                        animateDeveloper(window.TABLE.platafrms[x].layers[y].tile[z].author);
+                    }
+                }
+            }
+        }
+        for(var v = 0; v < window.TABLE.superPlatafrms.length; v++){
+            for(var t = 0; t < window.TABLE.superPlatafrms[v].layers.length; t++){
+               for(var q = 0; q < window.TABLE.superPlatafrms[v].layers[t].tile.length; q++){
+                    animateDeveloper(window.TABLE.superPlatafrms[v].layers[t].tile[q].author);
+               }   
+            }
+        }
+
+        function animateDeveloper(_author){
             
-            if (table[i].author == table[id].author) {
-                relatedTasks.push(i);
+            if (_author == _element.author) {
+                relatedTasks.push(count);
                 
-                new TWEEN.Tween(objects[i].position)
+                new TWEEN.Tween(objects[count].position)
                 .to({x : center.x + (section % 5) * window.TILE_DIMENSION.width, y : center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height, z : 0}, 2000)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .start();
                 
                 section += 1;
             }
+            count = count + 1;
         }
         
-        createSidePanel(id, image, relatedTasks);
+        createSidePanel(id, _element, relatedTasks);
         camera.enable();
         camera.move(center.x, center.y, center.z + window.TILE_DIMENSION.width * 5);
     }
 
-    function createSidePanel(id, image, relatedTasks) {
+    function createSidePanel(id, _element, relatedTasks) {
 
         var sidePanel = document.createElement('div');
         sidePanel.id = 'sidePanel';
@@ -325,7 +366,7 @@ function onElementClick(id) {
 
         var panelImage = document.createElement('img');
         panelImage.id = 'focusImg';
-        panelImage.src = image;
+        panelImage.src = _element.picture;
         panelImage.style.position = 'relative';
         panelImage.style.width = '50%';
         panelImage.style.opacity = 0;
@@ -335,31 +376,58 @@ function onElementClick(id) {
         userName.style.opacity = 0;
         userName.style.position = 'relative';
         userName.style.fontWeight = 'bold';
-        userName.textContent = table[id].author;
+        userName.textContent = _element.author;
         sidePanel.appendChild(userName);
 
         var realName = document.createElement('p');
         realName.style.opacity = 0;
         realName.style.position = 'relative';
-        realName.textContent = table[id].authorRealName;
+        realName.textContent = _element.authorRealName;
         sidePanel.appendChild(realName);
 
         var email = document.createElement('p');
         email.style.opacity = 0;
         email.style.position = 'relative';
-        email.textContent = table[id].authorEmail;
+        email.textContent = _element.authorEmail;
         sidePanel.appendChild(email);
 
         if (relatedTasks != null && relatedTasks.length > 0) {
             
             var anyTimeline = false;
             
-            var i, l;
+            var i, l, count = 0;
             
             for(i = 0, l = relatedTasks.length; i < l; i++) {
-                if(table[relatedTasks[i]].life_cycle !== undefined && table[relatedTasks[i]].life_cycle.length > 0) {
-                    anyTimeline = true;
+
+                for(var x = 0; x < window.TABLE.platafrms.length; x++){
+                    for(var y = 0; y < window.TABLE.platafrms[x].layers.length; y++){
+                        if(window.TABLE.platafrms[x].layers[y].visible){
+                            for(var z = 0; z < window.TABLE.platafrms[x].layers[y].tile.length; z++){
+                                if(relatedTasks[i] === count){
+                                    if(window.TABLE.platafrms[x].layers[y].tile[z].life_cycle !== undefined && window.TABLE.platafrms[x].layers[y].tile[z].life_cycle.length > 0){
+                                        anyTimeline = true;
+                                    }
+                                }
+                                count = count + 1;
+                            }
+                        }
+                    }
                 }
+
+                for(var v = 0; v < window.TABLE.superPlatafrms.length; v++){
+                    for(var t = 0; t < window.TABLE.superPlatafrms[v].layers.length; t++){
+                        for(var q = 0; q < window.TABLE.superPlatafrms[v].layers[t].tile.length; q++){
+                            if(relatedTasks[i] === count){
+                                if(window.TABLE.superPlatafrms[v].layers[t].tile[q].life_cycle !== undefined && window.TABLE.superPlatafrms[v].layers[t].tile[q].life_cycle.length > 0){
+                                    anyTimeline = true;
+                                }
+                            }
+                            count = count + 1;
+                        }   
+                    }
+                }
+
+                count = 0;
             }
             
             if(anyTimeline) {
