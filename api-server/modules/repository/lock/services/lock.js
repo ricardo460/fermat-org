@@ -167,7 +167,6 @@ exports.updateLockById = function (_id, set, callback) {
  */
 exports.delLockByUsrIdAndItemId = function (_usr_id, _item_id, callback) {
 	'use strict';
-	set.upd_at = new mongoose.Types.ObjectId();
 	lockDao.delSchema({
 		'$and': [{
 			'_item_id': _item_id

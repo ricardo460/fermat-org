@@ -59,29 +59,29 @@ var inspectFile = function inspectFile(file, copy, regExp, callback) {
             return callback(null, true);
         });
     });
-}
+};
 exports.generateBookPdf = function (callback) {
-        var fermatBookLarge = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'fermat-book-big.pdf');
-        var fermatBook = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'fermat-book.pdf');
-        var dir = path.join(process.cwd(), 'cache', env, 'fermat', 'fermat-book');
-        var book = path.join(process.cwd(), 'cache', env, 'fermat', 'fermat-book', 'fermat-book.asciidoc');
-        exec('asciidoctor-pdf -a pdf-style=bookc -a allow-uri-read -d book -o ' + fermatBookLarge + ' ' + book, function (error, stdout, stderr) {
-            if (error) return callback('Error proccesing book big', null);
-            exec('asciidoctor-pdf -a allow-uri-read -d book -o ' + fermatBook + ' ' + book, function (err, std, std) {
-                if (err) return callback('Error proccesing book', null);
-                return callback(null, true);
-            });
+    var fermatBookLarge = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'fermat-book-big.pdf');
+    var fermatBook = path.join(process.cwd(), '..', 'platform-visualization', 'books', 'fermat-book.pdf');
+    var dir = path.join(process.cwd(), 'cache', env, 'fermat', 'fermat-book');
+    var book = path.join(process.cwd(), 'cache', env, 'fermat', 'fermat-book', 'fermat-book.asciidoc');
+    exec('asciidoctor-pdf -a pdf-style=bookc -a allow-uri-read -d book -o ' + fermatBookLarge + ' ' + book, function (error, stdout, stderr) {
+        if (error) return callback('Error proccesing book big', null);
+        exec('asciidoctor-pdf -a allow-uri-read -d book -o ' + fermatBook + ' ' + book, function (err, std, st) {
+            if (err) return callback('Error proccesing book', null);
+            return callback(null, true);
         });
-    }
-    /**
-     * [getBookPdf description]
-     *
-     * @method getBookPdf
-     *
-     * @param  {Function} callback [description]
-     *
-     * @return {[type]}   [description]
-     */
+    });
+};
+/**
+ * [getBookPdf description]
+ *
+ * @method getBookPdf
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
 exports.getBookPdf = function (style, callback) {
     'use strict';
     try {

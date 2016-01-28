@@ -11,14 +11,15 @@ var LayerMdl = require('./models/layer');
  * @return {[type]} [description]
  */
 var swapOrder = function (action, oldSpot, newSpot, callback) {
+    var query, range, set, rangeMin, rangeMax;
     if (action == 'insert') {
-        var range = newSpot - 1;
-        var query = {
+        range = newSpot - 1;
+        query = {
             'order': {
                 '$gt': range
             }
         };
-        var set = {
+        set = {
             '$inc': {
                 'order': 1
             }
@@ -31,9 +32,9 @@ var swapOrder = function (action, oldSpot, newSpot, callback) {
             }
         });
     } else if (action == 'update') {
-        var rangeMin = oldSpot;
-        var rangeMax = newSpot + 1;
-        var query = {
+        rangeMin = oldSpot;
+        rangeMax = newSpot + 1;
+        query = {
             '$and': [{
                 'order': {
                     '$gt': rangeMin
@@ -44,7 +45,7 @@ var swapOrder = function (action, oldSpot, newSpot, callback) {
                 }
             }]
         };
-        var set = {
+        set = {
             '$inc': {
                 'order': -1
             }
@@ -57,13 +58,13 @@ var swapOrder = function (action, oldSpot, newSpot, callback) {
             }
         });
     } else if (action == 'delete') {
-        var range = oldSpot - 1;
-        var query = {
+        range = oldSpot - 1;
+        query = {
             'order': {
                 '$gt': range
             }
         };
-        var set = {
+        set = {
             '$inc': {
                 'order': -1
             }
@@ -295,7 +296,7 @@ exports.deleteLayerById = function (_id, callback) {
                     return callback(err_sld, null);
                 } else {
                     layerSrv.delLayerById(res_lay._id, function (err_del, res_del) {
-                        if (err_upd) {
+                        if (err_del) {
                             return callback(err_del, null);
                         }
                         return callback(null, res_lay);

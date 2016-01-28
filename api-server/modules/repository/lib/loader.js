@@ -147,7 +147,7 @@ var doRequest = function (method, url, params, callback) {
         var form, i;
         url += '?access_token=' + TOKEN;
         if (env === 'development') {
-            url += '&ref=develop'
+            url += '&ref=develop';
         }
         winston.log('info', 'Doing request %s', url);
         switch (method) {
@@ -455,6 +455,109 @@ var parseManifest = function (callback) {
     }
 };
 /**
+ * [getContent description]
+ *Revisa los directorios del repositorio
+ * @method getContent
+ *
+ * @param  {[type]}   repo_dir [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
+var getContent = function (repo_dir, callback) {
+    'use strict';
+    try {
+        var cwd = process.cwd(),
+            env = process.env.NODE_ENV || 'development',
+            dir = path.join(cwd, 'cache', env, 'fermat', repo_dir); // exist = fs.lstatSync(dir);
+        fs.lstat(dir, function (err, stats) {
+            if (!err && stats.isDirectory()) {
+                winston.log('info', 'Read Cache Directory %s', dir);
+                return callback(null, []);
+            } else {
+                doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/' + repo_dir, null, function (err_req, res_req) {
+                    if (err_req) {
+                        return callback(err_req, null);
+                    }
+                    processRequestBody(res_req, function (err_pro, res_pro) {
+                        if (err_pro) {
+                            return callback(err_pro, null);
+                        }
+                        return callback(null, res_pro);
+                    });
+                });
+            }
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+/**
+ * [updateComps description]
+ * Actualiza el repositorio en la base de datos
+ * @method updateComps
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+var updateComps = function (callback) {
+    'use strict';
+    try {
+        compMod.findComps(function (err_comps, res_comps) {
+            if (err_comps) {
+                return callback(err_comps, null);
+            }
+            if (res_comps && Array.isArray(res_comps)) {
+                callback(null, {
+                    'update': true
+                });
+                var loopComps = function (i) {
+                    if (i < res_comps.length) {
+                        var _comp = res_comps[i];
+                        if (_comp.code_level !== 'concept') {
+                            getContent(_comp.repo_dir, function (err_dir, res_dir) {
+                                if (err_dir) {
+                                    winston.log('error', err_dir.message, err_dir);
+                                } else {
+                                    if (res_dir && Array.isArray(res_dir)) {
+                                        compMod.insOrUpdComp(_comp._platfrm_id, // _platfrm_id
+                                            _comp._suprlay_id, // _suprlay_id
+                                            _comp._layer_id, // _layer_id
+                                            _comp.name, // name
+                                            null, // type
+                                            null, // description
+                                            null, // difficulty
+                                            null, // code_level
+                                            null, // repo_dir
+                                            _comp.scrnshts, // scrnshts
+                                            true, // found
+                                            function (err_upd, res_upd) { // callback
+                                                if (err_upd) {
+                                                    winston.log('error', err_upd.message, err_upd);
+                                                } else {
+                                                    winston.log('debug', 'updating %s...', _comp._id + '...');
+                                                }
+                                            });
+                                    }
+                                }
+                            });
+                        }
+                        loopComps(++i);
+                    } else {
+                        winston.log('info', 'done iterating components');
+                        return callback(null, true);
+                    }
+                };
+                return loopComps(0);
+            }
+            return callback(new Error('no developers to iterate'), null);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+/**
  * [saveManifest description]
  * se encarga de recorrer el json generado por el parserManifest y lo guarda en la base de datos
  * @method saveManifest
@@ -493,7 +596,7 @@ var saveManifest = function (callback) {
                                 return;
                             });
                         }
-                    }
+                    };
                     var loopProcs = function (s) {
                         if (s < _procs.length) {
                             var _proc = _procs[s];
@@ -887,109 +990,6 @@ var updateDevs = function (callback) {
         }
         return callback(new Error('no developers to iterate'), null);
     });
-};
-/**
- * [getContent description]
- *Revisa los directorios del repositorio
- * @method getContent
- *
- * @param  {[type]}   repo_dir [description]
- * @param  {Function} callback [description]
- *
- * @return {[type]}   [description]
- */
-var getContent = function (repo_dir, callback) {
-    'use strict';
-    try {
-        var cwd = process.cwd(),
-            env = process.env.NODE_ENV || 'development',
-            dir = path.join(cwd, 'cache', env, 'fermat', repo_dir); // exist = fs.lstatSync(dir);
-        fs.lstat(dir, function (err, stats) {
-            if (!err && stats.isDirectory()) {
-                winston.log('info', 'Read Cache Directory %s', dir);
-                return callback(null, []);
-            } else {
-                doRequest('GET', 'https://api.github.com/repos/bitDubai/fermat/contents/' + repo_dir, null, function (err_req, res_req) {
-                    if (err_req) {
-                        return callback(err_req, null);
-                    }
-                    processRequestBody(res_req, function (err_pro, res_pro) {
-                        if (err_pro) {
-                            return callback(err_pro, null);
-                        }
-                        return callback(null, res_pro);
-                    });
-                });
-            }
-        });
-    } catch (err) {
-        return callback(err, null);
-    }
-};
-/**
- * [updateComps description]
- * Actualiza el repositorio en la base de datos
- * @method updateComps
- *
- * @param  {Function}  callback [description]
- *
- * @return {[type]}    [description]
- */
-var updateComps = function (callback) {
-    'use strict';
-    try {
-        compMod.findComps(function (err_comps, res_comps) {
-            if (err_comps) {
-                return callback(err_comps, null);
-            }
-            if (res_comps && Array.isArray(res_comps)) {
-                callback(null, {
-                    'update': true
-                });
-                var loopComps = function (i) {
-                    if (i < res_comps.length) {
-                        var _comp = res_comps[i];
-                        if (_comp.code_level !== 'concept') {
-                            getContent(_comp.repo_dir, function (err_dir, res_dir) {
-                                if (err_dir) {
-                                    winston.log('error', err_dir.message, err_dir);
-                                } else {
-                                    if (res_dir && Array.isArray(res_dir)) {
-                                        compMod.insOrUpdComp(_comp._platfrm_id, // _platfrm_id
-                                            _comp._suprlay_id, // _suprlay_id
-                                            _comp._layer_id, // _layer_id
-                                            _comp.name, // name
-                                            null, // type
-                                            null, // description
-                                            null, // difficulty
-                                            null, // code_level
-                                            null, // repo_dir
-                                            _comp.scrnshts, // scrnshts
-                                            true, // found
-                                            function (err_upd, res_upd) { // callback
-                                                if (err_upd) {
-                                                    winston.log('error', err_upd.message, err_upd);
-                                                } else {
-                                                    winston.log('debug', 'updating %s...', _comp._id + '...');
-                                                }
-                                            });
-                                    }
-                                }
-                            });
-                        }
-                        loopComps(++i);
-                    } else {
-                        winston.log('info', 'done iterating components');
-                        return callback(null, true);
-                    }
-                };
-                return loopComps(0);
-            }
-            return callback(new Error('no developers to iterate'), null);
-        });
-    } catch (err) {
-        return callback(err, null);
-    }
 };
 /**
  * [updComps description]

@@ -287,7 +287,7 @@ exports.delProcById = function (_id, callback) {
                         return callback(null, res_del_proc);
                     });
                 } else {
-                    var _idStep = steps.pop()
+                    var _idStep = steps.pop();
                     stepSrv.delSchemaById(_idStep, function (err_del_step, res_delstep) {
                         if (err_del_step) {
                             return callback(err_del_step, null);
@@ -472,7 +472,7 @@ exports.getAllProces = function (callback) {
                 } else {
                     return callback(null, procs);
                 }
-            }
+            };
             loopProcs(0);
         });
     } catch (err) {
@@ -506,7 +506,6 @@ exports.delAllProcs = function (callback) {
         return callback(err, null);
     }
 };
-
 /**
  * [updateProcById description]
  *
@@ -523,7 +522,7 @@ exports.delAllProcs = function (callback) {
  *
  * @return {[type]}    [description]
  */
-exports.updateProcById =  function (_proc_id, platfrm, name, desc, prev, next, callback) {
+exports.updateProcById = function (_proc_id, platfrm, name, desc, prev, next, callback) {
     'use strict';
     try {
         var set_obj = {};
@@ -542,7 +541,6 @@ exports.updateProcById =  function (_proc_id, platfrm, name, desc, prev, next, c
         if (next) {
             set_obj.next = next;
         }
-
         procSrv.updateProcById(_proc_id, set_obj, function (err, proc) {
             if (err) {
                 return callback(err, null);
@@ -553,5 +551,4 @@ exports.updateProcById =  function (_proc_id, platfrm, name, desc, prev, next, c
         return callback(err, null);
     }
 };
-
 /*jshint +W069 */
