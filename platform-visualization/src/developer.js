@@ -154,67 +154,38 @@ function Developer (){
             drawPictureDeveloper(data, ctx, texture);
         }
     }
-
 	this.getDeveloper = function(){
-        
-        var find = false, count = 0; 
+		
+		var find = false;
 
-                
-        for(var x = 0; x < window.TABLE.platafrms.length; x++){
-            for(var y = 0; y < window.TABLE.platafrms[x].layers.length; y++){
-                if(window.TABLE.platafrms[x].layers[y].visible){
-                    for(var z = 0; z < window.TABLE.platafrms[x].layers[y].tile.length; z++){
-                        pushDeveloper(window.TABLE.platafrms[x].layers[y].tile[z].picture,
-                                      window.TABLE.platafrms[x].layers[y].tile[z].author,
-                                      window.TABLE.platafrms[x].layers[y].tile[z].authorRealName,
-                                      window.TABLE.platafrms[x].layers[y].tile[z].authorEmail);
-                    }
-                }
-            }
-        }
-        for(var v = 0; v < window.TABLE.superPlatafrms.length; v++){
-            for(var t = 0; t < window.TABLE.superPlatafrms[v].layers.length; t++){
-               for(var q = 0; q < window.TABLE.superPlatafrms[v].layers[t].tile.length; q++){
-                    pushDeveloper(window.TABLE.superPlatafrms[v].layers[t].tile[q].picture,
-                                  window.TABLE.superPlatafrms[v].layers[t].tile[q].author,
-                                  window.TABLE.superPlatafrms[v].layers[t].tile[q].authorRealName,
-                                  window.TABLE.superPlatafrms[v].layers[t].tile[q].authorEmail);
-               }   
-            }
-        }
+		for (var i = 0; i < table.length; i++) {
+			if(i === 0){
+				developerLink.push(table[i].picture);
+				developerAuthor.push(table[i].author);
+				developerAuthorRealName.push(table[i].authorRealName);
+				developerAuthorEmail.push(table[i].authorEmail);
+			}	
+			else{
 
-        function pushDeveloper(_picture, _author, _authorRealName, _authorEmail){
-        
-            if(count === 0){
-                developerLink.push(_picture);
-                developerAuthor.push(_author);
-                developerAuthorRealName.push(_authorRealName);
-                developerAuthorEmail.push(_authorEmail);
-            }
-            else{
-
-                for(var j = 0; j < developerLink.length; j++)
-                    if(developerLink[j] === _picture && find === false){
-                        find = true;
-                    }
-            }
-            if(find === false && count !== 0){
-                if(_picture !== undefined){
-                    developerLink.push(_picture);
-                    developerAuthor.push(_author);
-                    developerAuthorRealName.push(_authorRealName);
-                    developerAuthorEmail.push(_authorEmail);
-                }
-                find = false;
-            }
-            else
-                find = false;
-
-            count = 1;
-        }
-
-        self.createDeveloper(developerLink, developerAuthor, developerAuthorRealName, developerAuthorEmail);
-    };
+				for(var j = 0; j < developerLink.length; j++)
+					if(developerLink[j] === table[i].picture && find === false){
+						find = true;
+					}
+			}
+			if(find === false && i !== 0){
+				if(table[i].picture !== undefined){
+					developerLink.push(table[i].picture);
+					developerAuthor.push(table[i].author);
+					developerAuthorRealName.push(table[i].authorRealName);
+					developerAuthorEmail.push(table[i].authorEmail);
+				}
+				find = false;
+			}
+			else
+				find = false;
+		}
+		self.createDeveloper(developerLink, developerAuthor, developerAuthorRealName, developerAuthorEmail);
+	};
 
 	/**
      * Creates a Texture
@@ -542,38 +513,20 @@ function Developer (){
 
     this.showDeveloperTiles = function(id){
 
-        var section = 0, count = 0;
+        var section = 0;
         var center = objectsDeveloper[id].position;
-        
-        for(var x = 0; x < window.TABLE.platafrms.length; x++){
-            for(var y = 0; y < window.TABLE.platafrms[x].layers.length; y++){
-                if(window.TABLE.platafrms[x].layers[y].visible){
-                    for(var z = 0; z < window.TABLE.platafrms[x].layers[y].tile.length; z++){
-                        animateDeveloperTiles(window.TABLE.platafrms[x].layers[y].tile[z].author);
-                    }
-                }
-            }
-        }
-        for(var v = 0; v < window.TABLE.superPlatafrms.length; v++){
-            for(var t = 0; t < window.TABLE.superPlatafrms[v].layers.length; t++){
-               for(var q = 0; q < window.TABLE.superPlatafrms[v].layers[t].tile.length; q++){
-                    animateDeveloperTiles(window.TABLE.superPlatafrms[v].layers[t].tile[q].author);
-               }   
-            }
-        }
 
-        function animateDeveloperTiles(_author){
+        for (var i = 0; i < table.length; i++) {
             
-             if (_author === objectsDeveloper[id].name && !isNaN(objects[count].position.y)){
+            if (table[i].author === objectsDeveloper[id].name && !isNaN(objects[i].position.y)){
 
-                new TWEEN.Tween(objects[count].position)
+                new TWEEN.Tween(objects[i].position)
                 .to({x : (center.x + (section % 5) * window.TILE_DIMENSION.width) - 750, y : (center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height) - 250, z : 0}, 2000)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .start();
                 
                 section += 1;
             }
-            count = count + 1;
         }
     };
 }

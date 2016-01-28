@@ -53,60 +53,33 @@ function ScreenshotsAndroid() {
 	*/
 	this.init = function () {
 
-		var count = 0;
-
         $.get("json/screenshots.json", {}, function(json) {
-
-        	function initScreenShots(_typeTile, _groupTile, _layerTile, _nameTile){
-
-				if(_typeTile === "Android" && _groupTile === _group && _layerTile === _layer && _nameTile === _wallet){
-					
-					var id = count,
-						name = json[_group][_layer][_wallet].name,
-						position = window.tileManager.targets.table[count].position,
-						show = false,
-						screenshots = {};
-						
-					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
-						show = true;
-
-					for(var _screen in json[_group][_layer][_wallet].screenshots)
-						screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
-
-					fillScreenshots(id, position, name, show, screenshots);
-				}
-
-				count = count + 1;
-			}
 
 	        for(var _group in json){
 
 	        	for(var _layer in json[_group]){
 
 	        		for(var _wallet in json[_group][_layer]){
-	        			count = 0;
-						for(var x = 0; x < window.TABLE.platafrms.length; x++){
-				            for(var y = 0; y < window.TABLE.platafrms[x].layers.length; y++){
-				                if(window.TABLE.platafrms[x].layers[y].visible){
-				                    for(var z = 0; z < window.TABLE.platafrms[x].layers[y].tile.length; z++){
-				                        initScreenShots(window.TABLE.platafrms[x].layers[y].tile[z].type,
-				                                      window.TABLE.platafrms[x].layers[y].tile[z].group,
-				                                      window.TABLE.platafrms[x].layers[y].tile[z].layer,
-				                                      window.TABLE.platafrms[x].layers[y].tile[z].name);
-				                    }
-				                }
-				            }
-				        }
-				        for(var v = 0; v < window.TABLE.superPlatafrms.length; v++){
-				            for(var t = 0; t < window.TABLE.superPlatafrms[v].layers.length; t++){
-				               for(var q = 0; q < window.TABLE.superPlatafrms[v].layers[t].tile.length; q++){
-				                    initScreenShots(window.TABLE.superPlatafrms[v].layers[t].tile[q].type,
-				                                  window.TABLE.superPlatafrms[v].layers[t].tile[q].group,
-				                                  window.TABLE.superPlatafrms[v].layers[t].tile[q].layer,
-				                                  window.TABLE.superPlatafrms[v].layers[t].tile[q].name);
-				               }   
-				            }
-				        }
+
+	        			for (var i = 0; i < window.table.length; i++){
+	        				
+	        				if(window.table[i].type === "Android" && window.table[i].group === _group && window.table[i].layer === _layer && window.table[i].name === _wallet){
+	        					
+	        					var id = i,
+	        						name = json[_group][_layer][_wallet].name,
+	        						position = window.tileManager.targets.table[i].position,
+	        						show = false,
+	        						screenshots = {};
+	        						
+	        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
+	        						show = true;
+
+        						for(var _screen in json[_group][_layer][_wallet].screenshots)
+									screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
+
+								fillScreenshots(id, position, name, show, screenshots);
+	        				}
+	        			}
 	        		}
 	        	}
 	        }

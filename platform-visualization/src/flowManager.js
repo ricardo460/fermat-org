@@ -112,36 +112,11 @@ function FlowManager(){
             }
             actualFlow = null;
         }
-    }; 
+    };
 
     this.getAndShowFlows = function(id) {
-
-        var count = 0, element;
-
-        for(var x = 0; x < window.TABLE.platafrms.length; x++){
-            for(var y = 0; y < window.TABLE.platafrms[x].layers.length; y++){
-                if(window.TABLE.platafrms[x].layers[y].visible){
-                    for(var z = 0; z < window.TABLE.platafrms[x].layers[y].tile.length; z++){
-                        if(count === id){
-                            element = window.TABLE.platafrms[x].layers[y].tile[z];
-                        }
-                        count = count + 1; 
-                    }
-                }
-            }
-        }
-        for(var v = 0; v < window.TABLE.superPlatafrms.length; v++){
-            for(var t = 0; t < window.TABLE.superPlatafrms[v].layers.length; t++){
-               for(var q = 0; q < window.TABLE.superPlatafrms[v].layers[t].tile.length; q++){
-                    if(count === id){
-                        element = window.TABLE.superPlatafrms[v].layers[t].tile[q];
-                    }
-                    count = count + 1; 
-               }   
-            }
-        }
-
-        //var element =_element;
+        
+        var element = window.table[id];
         
         var button = buttonsManager.createButtons('showFlows', 'Loading flows...');
         

@@ -307,51 +307,18 @@ function Helper() {
         if(typeof elementFullName !== 'string') return -1;
         
         var group,
-            components = elementFullName.split('/'), count = 0, indice = 0;
+            components = elementFullName.split('/');
+        
+        if(components.length === 3) {
+        
+            for(var i = 0, l = table.length; i < l; i++) {
 
-        function searchElementtoLowerCase(_group, _sL, _layer, _name){
+                group = table[i].group || window.layers[table[i].layer].super_layer;
 
-            group = _group || _sL;
-
-            if(group.toLowerCase() === components[0].toLowerCase() &&
-               _layer.toLowerCase() === components[1].toLowerCase() &&
-               _name.toLowerCase() === components[2].toLowerCase()){
-                    indice = count;
-                    return indice;
-            }
-            count = count + 1;
-        }
-            
-        if(components.length === 3) {  
-
-            for(var x = 0; x < window.TABLE.platafrms.length; x++){
-                for(var y = 0; y < window.TABLE.platafrms[x].layers.length; y++){
-                    if(window.TABLE.platafrms[x].layers[y].visible){
-                        for(var z = 0; z < window.TABLE.platafrms[x].layers[y].tile.length; z++){
-                            searchElementtoLowerCase(window.TABLE.platafrms[x].layers[y].tile[z].group,
-                                                  window.TABLE.platafrms[x].layers[y].superLayer,
-                                                  window.TABLE.platafrms[x].layers[y].tile[z].layer,
-                                                  window.TABLE.platafrms[x].layers[y].tile[z].name);
-
-                            if(indice !== 0)
-                                return indice;
-                        }
-                    }
-                }
-            }
- 
-            for(var v = 0; v < window.TABLE.superPlatafrms.length; v++){
-                for(var t = 0; t < window.TABLE.superPlatafrms[v].layers.length; t++){
-                   for(var q = 0; q < window.TABLE.superPlatafrms[v].layers[t].tile.length; q++){
-                        searchElementtoLowerCase(window.TABLE.superPlatafrms[v].layers[t].tile[q].author,
-                                              window.TABLE.superPlatafrms[v].layers[t].superLayer,
-                                              window.TABLE.superPlatafrms[v].layers[t].layer,
-                                              window.TABLE.superPlatafrms[v].layers[t].name);
-
-                        if(indice !== 0)
-                                return indice;
-                   }   
-                }
+                if(group.toLowerCase() === components[0].toLowerCase() &&
+                   table[i].layer.toLowerCase() === components[1].toLowerCase() &&
+                   table[i].name.toLowerCase() === components[2].toLowerCase())
+                    return i;
             }
         }
 
