@@ -13,7 +13,7 @@ function ScreenshotsAndroid() {
 					  texture : {}
 					}			
 		};
-
+		
     // Private Variables
 	var self = this,
 		POSITION_X = 231,
@@ -360,40 +360,11 @@ function ScreenshotsAndroid() {
 	function addTextureWallet(_id, wallet, i) {
 
 		var _texture,
-			canvas,
-			ctx,
-			image;
-
-		canvas = document.createElement('canvas');
-		canvas.width  = 538;
-		canvas.height = 948;
-
-		ctx = canvas.getContext("2d");
-
-		drawPicture(_id, wallet, ctx);
-
-		image = new THREE.Texture(canvas);
-		image.needsUpdate = true;  
-		image.minFilter = THREE.NearestFilter;
-
-		_texture = { id : i, wallet : wallet, image : image };
-
-		self.objects.texture.push(_texture);
-	}
-
-	/**
-	* @author Ricardo Delgado
-	* Wallet drawn and added required.
-	* @param {String}    wallet    Wallet draw.
-    * @param {Object} 	  ctx      Canvas context
-	*/ 
-	function drawPicture(id, wallet, ctx){
-
-		var img = new Image(),
+			image,
 			cant = 0,
 			place;
 
-		for (var i in SCREENSHOTS[id].screenshots)
+		for (var f in SCREENSHOTS[_id].screenshots)
 			cant++;
 
 		place = Math.floor(Math.random()* cant + 1);
@@ -402,18 +373,20 @@ function ScreenshotsAndroid() {
 
 			CONTROL[wallet]["picture"+place] = place;
 
-			img.src = SCREENSHOTS[id].screenshots['Screenshots_'+place];
+			image = new THREE.ImageUtils.loadTexture(SCREENSHOTS[_id].screenshots['Screenshots_'+place]);
+			image.needsUpdate = true;  
+			image.minFilter = THREE.NearestFilter;
 
-			img.onload = function () {
+			_texture = { id : i, wallet : wallet, image : image };
 
-				ctx.drawImage(img, 0, 0);
+			self.objects.texture.push(_texture);
 
-			};
 		}
 		else{
 			
-			drawPicture(id, wallet, ctx);
-		}
+			addTextureWallet(_id, wallet, i);
+		}	
+
 	}
 
 	/**
