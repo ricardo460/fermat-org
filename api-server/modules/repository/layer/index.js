@@ -56,6 +56,25 @@ var swapOrder = function (action, oldSpot, newSpot, callback) {
                 return callback(null, res_srt);
             }
         });
+    } else if (action == 'delete') {
+        var range = oldSpot - 1;
+        var query = {
+            'order': {
+                '$gt': range
+            }
+        };
+        var set = {
+            '$inc': {
+                'order': -1
+            }
+        };
+        layerSrv.updateLayers(query, set, function (err_srt, res_srt) {
+            if (err_srt) {
+                return callback(err_srt, null);
+            } else {
+                return callback(null, res_srt);
+            }
+        });
     } else {
         return callback(new Error('invalid swap action'), null);
     }
@@ -102,7 +121,7 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
                     if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
                         swapOrder('update', res_lay.order, set_obj.order, function (err_sld, res_sld) {
                             if (err_sld) {
-                                return callback(err_sld, null):
+                                return callback(err_sld, null);
                             } else {
                                 layerSrv.updateLayerById(res_lay._id, set_obj, function (err_upd, res_upd) {
                                     if (err_upd) {
@@ -129,7 +148,7 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
                     var layer = new LayerMdl(name, lang, suprlay || null, order);
                     swapOrder('insert', null, layer.order, function (err_sld, res_sld) {
                         if (err_sld) {
-                            return callback(err_sld, null):
+                            return callback(err_sld, null);
                         } else {
                             layerSrv.insertLayer(layer, function (err_ins, res_ins) {
                                 if (err_ins) {
@@ -271,9 +290,9 @@ exports.deleteLayerById = function (_id, callback) {
                 return callback(err_lay, null);
             }
             // ordering function
-            slideOrder(res_lay.order, '>', -1, function (err_sld, res_sld) {
+            swapOrder('delete', res_lay.order, null, function (err_sld, res_sld) {
                 if (err_sld) {
-                    return callback(err_sld, null):
+                    return callback(err_sld, null);
                 } else {
                     layerSrv.delLayerById(res_lay._id, function (err_del, res_del) {
                         if (err_upd) {
