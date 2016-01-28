@@ -12,12 +12,30 @@ var TknMdl = require('./models/tkn');
 exports.insTkn = function(_usr_id, _app_id, callback) {
 	'use strict';
 	try {
-		var tkn = new TknMdl(_usr_id, _app_id);
-		tknSrv.insTkn(tkn, function(err_ins, res_ins) {
-			if (err_ins) {
-				return callback(err_ins, null);
+		tknSrv.findTknByUsrIdAppId(_usr_id, _app_id, function(err, tkn) {
+			if (err) {
+				return callback(err, null);
 			}
-			return callback(null, res_ins);
+			if (tkn) {
+				var set_obj = {};
+				set_obj.upd_at = new mongoose.Types.ObjectId();
+				if (Object.keys(set_obj).length > 0) {
+					tknSrv.updateTknByAxsKey(tkn.axs_key, set_obj, function(err_upd, res_upd) {
+						if (err_upd)
+							return callback(err_upd, null);
+						if (res_upd)
+							return callback(null, tkn);
+					});
+				}
+			} else {
+				var tkn = new TknMdl(_usr_id, _app_id);
+				tknSrv.insTkn(tkn, function(err_ins, res_ins) {
+					if (err_ins) {
+						return callback(err_ins, null);
+					}
+					return callback(null, res_ins);
+				});
+			}
 		});
 	} catch (err) {
 		return callback(err, null);
