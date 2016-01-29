@@ -12,6 +12,7 @@ var table = [],
     logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),
+    fermatEdit = null,
     browserManager = null,
     screenshotsAndroid = null,
     headers = null,
@@ -78,6 +79,9 @@ function init() {
     magazine = new Magazine();
     flowManager = new FlowManager();
     buttonsManager = new ButtonsManager();
+    //fermatEdit = new FermatEdit();
+
+    //fermatEdit.init();
 
     //View Manager
     viewManager = new ViewManager();
@@ -156,11 +160,13 @@ function goToView ( targetView ) {
     setTimeout(function() { camera.moving = false; }, transition);
     
     if(window.map.views[targetView] != null) {
-        viewManager.views[targetView].enter();
-        
-        if(actualView)
-            viewManager.views[actualView].exit();
-        
+        if(actualView != targetView){
+            
+            if(actualView)
+                viewManager.views[actualView].exit();
+
+            viewManager.views[targetView].enter();
+        }
         actualView = targetView;
     }
     else {
@@ -187,13 +193,11 @@ function initPage() {
     				if(window.map.views[view].enabled !== undefined && window.map.views[view].enabled)
     					goToView(view);
     			}
-
             }
             else{
                 goToView(window.location.hash.slice(1));
             }
 		}
-
     });
 
 }
@@ -261,6 +265,8 @@ function onElementClick(id) {
         window.headers.hideHeaders(2000);
 
         window.camera.setFocus(objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 2000);
+
+        window.buttonsManager.removeAllButtons();
         
         setTimeout(function() {
             

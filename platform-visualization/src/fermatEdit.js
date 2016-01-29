@@ -14,7 +14,7 @@ function FermatEdit() {
                 buttons : [],
                 y : 30
             },
-            till : { 
+            tile : { 
                 mesh : null,
                 target : {}
             },
@@ -52,41 +52,50 @@ function FermatEdit() {
                "name": "Miguel Celedon",
                "email": "miguelceledon@outlook.com",
                "__v": null 
+            },
+            {
+               "_id": null,
+               "usrnm": "fvasquezjatar",
+               "upd_at": null,
+               "bio": null,
+               "url": "https://github.com/fvasquezjatar",
+               "avatar_url": "https://avatars2.githubusercontent.com/u/8290154?v=3&s=400",
+               "location": null,
+               "bday": null,
+               "name": "Francisco Vasquez",
+               "email": "fvasquezjatar@gmail.com",
+               "__v": null 
             }
         ];
 
     /**
      * @author Ricardo Delgado
      */
-    this.initNew = function(){
 
-        drawTile(addAllFilds);
-    };
-
-    this.initEdit = function(id){
-
-        addAllFilds();
-        fillFields(id);
-        drawTile();
-    };
-
-    this.addButton = function(_id){console.log(_id);
+    this.addButton = function(_id){
 
         var id = _id || null,
             text = 'Edit Component',
             button = 'buttonFermatEdit',
             side = null;
 
-        var callback = function(){ self.initEdit(id); };
+        var callback = function(){ 
+                addAllFilds();
+                fillFields(id);
+                drawTile(id); 
+            };
 
         if(id === null){
-            callback = function(){ self.initNew(); };
+            callback = function(){ 
+                drawTile(null, addAllFilds);
+            };
+
             text = 'Add New Component';
-            button = 'buttonFermatNew'
+            button = 'buttonFermatNew';
             side = 'right';
         }
 
-        buttonsManager.createButtons(button, text, callback, null, null, side);
+        window.buttonsManager.createButtons(button, text, callback, null, null, side);
            
     };
 
@@ -118,6 +127,8 @@ function FermatEdit() {
             objects.row2.div = null;
             objects.idFields = {};
             deleteMesh();
+            //self.addButton();
+
         }
     };
 
@@ -125,30 +136,30 @@ function FermatEdit() {
 
         var tile = window.table[id]; 
 
-        if(tile.group != undefined)
+        if(tile.group !== undefined)
             document.getElementById('select-Platform').value = tile.group;
 
         changeLayer(document.getElementById('select-Platform').value);
 
-        if(tile.layer != undefined)        
+        if(tile.layer !== undefined)        
             document.getElementById('select-layer').value = tile.layer;
 
-        if(tile.type != undefined)
+        if(tile.type !== undefined)
             document.getElementById('select-Type').value = tile.type;
         
-        if(tile.difficulty != undefined)
+        if(tile.difficulty !== undefined)
             document.getElementById('select-Difficulty').value = tile.difficulty; 
 
-        if(tile.code_level != undefined)
+        if(tile.code_level !== undefined)
             document.getElementById('select-State').value = tile.code_level; 
 
-        if(tile.name != undefined)
+        if(tile.name !== undefined)
             document.getElementById('imput-Name').value = tile.name;         
         
-        if(tile.author != undefined)
+        if(tile.author !== undefined)
             document.getElementById('imput-author').value = tile.author; 
 
-        if(tile.maintainer != undefined)
+        if(tile.maintainer !== undefined)
             document.getElementById('imput-Maintainer').value = tile.maintainer; 
     }
 
@@ -172,7 +183,7 @@ function FermatEdit() {
                 );
 
         mesh.userData = {
-            onClick : onClick
+           // onClick : onClick
         };
 
         newCenter = window.viewManager.translateToSection('table', newCenter);
@@ -189,23 +200,23 @@ function FermatEdit() {
 
         scene.add(mesh);
 
-        objects.till.mesh = mesh;
+        objects.tile.mesh = mesh;
 
-        objects.till.target = target;
+        objects.tile.target = target;
     }
 
-    function drawTile(callback){
+    function drawTile(id, callback){
 
-        if(objects.till.mesh === null)
+        if(objects.tile.mesh === null)
             createElement();
 
-        mesh = objects.till.mesh;
+        var mesh = objects.tile.mesh;
 
         if (window.camera.getFocus() === null) {
 
             window.tileManager.letAlone();
 
-            animate(mesh, objects.till.target, true, 500, function(){ 
+            animate(mesh, objects.tile.target, true, 500, function(){ 
 
                 window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 2000);
                 
@@ -216,9 +227,26 @@ function FermatEdit() {
                 
                 changeTexture();
 
+                window.camera.disable(); 
+
                 window.helper.showBackButton();
 
             });
+        }
+        else{
+
+            var position = window.tileManager.targets.table[id].position;
+
+            animate(window.objects[id], objects.tile.target, false, 2000);
+
+            changeTexture();
+
+            animate(mesh, position, true, 1500, function(){ 
+
+                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 1000);
+
+            });
+
         }
     } 
 
@@ -323,11 +351,11 @@ function FermatEdit() {
 
             optgroup += "<optgroup label = superLayer>";
 
-            for(var i in superLayers){
+            for(var _i in superLayers){
 
-                if(i != "size"){
+                if(_i != "size"){
 
-                    option += "<option value = "+i+" >"+i+"</option>";
+                    option += "<option value = "+_i+" >"+_i+"</option>";
                 }
 
             }
@@ -399,7 +427,7 @@ function FermatEdit() {
 
             createField(id, text, null, type, 2);
 
-            idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
+            var idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
 
             var object = {
                 id : "imput-Name",
@@ -414,7 +442,7 @@ function FermatEdit() {
 
             var button = document.getElementById(object.id);
 
-            sucesorButton = document.getElementById(idSucesor);
+            var sucesorButton = document.getElementById(idSucesor);
                   
             button.placeholder = 'Component Name';      
             button.style.position = 'absolute';
@@ -440,7 +468,7 @@ function FermatEdit() {
 
             createField(id, text, 15, type, 2);
 
-            idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
+            var idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
 
             var object = {
                 id : "imput-author",
@@ -455,7 +483,7 @@ function FermatEdit() {
 
             var button = document.getElementById(object.id);
 
-            sucesorButton = document.getElementById(idSucesor);
+            var sucesorButton = document.getElementById(idSucesor);
 
             button.placeholder = 'Github User';     
             button.style.position = 'absolute';
@@ -516,7 +544,7 @@ function FermatEdit() {
 
             createField(id, text, 15, type, 2);
 
-            idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
+            var idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
 
             var object = {
                 id : "imput-Maintainer",
@@ -531,7 +559,7 @@ function FermatEdit() {
 
             var button = document.getElementById(object.id);
 
-            sucesorButton = document.getElementById(idSucesor);
+            var sucesorButton = document.getElementById(idSucesor);
                   
             button.placeholder = 'Github User';      
             button.style.position = 'absolute';
@@ -602,7 +630,7 @@ function FermatEdit() {
         if(typeof groups[platform] === 'undefined')
             state = platform;
 
-        var _layers = CLI.query(window.layers,function(el){return (el.super_layer === state)});
+        var _layers = window.CLI.query(window.layers,function(el){return (el.super_layer === state);});
 
         var option = "";
 
@@ -643,9 +671,9 @@ function FermatEdit() {
         table.maintainerPicture = data.picture;
         table.maintainerRealName = data.authorRealName;
 
-        mesh = objects.till.mesh;
+        mesh = objects.tile.mesh;
 
-        mesh.material.map = tileManager.createTexture(null, 'high', tileWidth, tileHeight, scale, table); 
+        mesh.material.map = window.tileManager.createTexture(null, 'high', tileWidth, tileHeight, scale, table); 
         mesh.material.needsUpdate = true; 
 
         function dataUser(user){
@@ -688,15 +716,15 @@ function FermatEdit() {
 
     function deleteMesh(){
 
-        var mesh = objects.till.mesh;
+        var mesh = objects.tile.mesh;
 
         if(mesh != null){
 
-            animate(mesh, objects.till.target, false, 1500, function(){ 
+            animate(mesh, objects.tile.target, false, 1500, function(){ 
                     window.scene.remove(mesh);
                 });
 
-            objects.till.mesh = null;
+            objects.tile.mesh = null;
         }
     }
 
