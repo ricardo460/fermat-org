@@ -48,6 +48,7 @@
         "Developer" : true,
         "FlowManager" : true,
         "ActionFlow" : true,
-        "ButtonsManager" : true
+        "ButtonsManager" : true,
+        "FermatEdit" : true
     }
 }
