@@ -48,7 +48,7 @@ var release = function (req) {
     try {
         repMod.doRelease(req, function (error, result) {
             if (error) {
-                winston.log('error', 'Error releasing layer lock', err);
+                winston.log('error', 'Error releasing layer lock', error);
             }
         });
     } catch (err) {

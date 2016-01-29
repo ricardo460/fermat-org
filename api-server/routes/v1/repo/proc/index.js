@@ -47,7 +47,7 @@ var release = function (req) {
     try {
         repMod.doRelease(req, function (error, result) {
             if (error) {
-                winston.log('error', 'Error releasing proc lock', err);
+                winston.log('error', 'Error releasing proc lock', error);
             }
         });
     } catch (err) {
@@ -229,7 +229,7 @@ router.delete('/:proc_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                res.status(204)
+                res.status(204);
             }
             release(req);
         });

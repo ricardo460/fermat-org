@@ -315,7 +315,7 @@ exports.checkManifest = function (req, next) {
                         } else {
                             try {
                                 var xmlDoc = libxml.parseXml(res_xml);
-                                xmlDoc.validate(xsdDoc)
+                                xmlDoc.validate(xsdDoc);
                                 if (xmlDoc.validationErrors.length > 0) {
                                     return next(null, xmlDoc.validationErrors);
                                 }
@@ -514,7 +514,7 @@ exports.getLay = function (req, next) {
 exports.uptLay = function (req, next) {
     'use strict';
     try {
-        layMod.updateLayerById(req.params.lay_id, req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
+        layerMod.updateLayerById(req.params.lay_id, req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
             if (err) {
                 next(err, null);
             } else {
@@ -717,7 +717,7 @@ exports.listComps = function (req, next) {
 exports.addLayer = function (req, next) {
     'use strict';
     try {
-        layMod.insOrUpdLayer(req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
+        layerMod.insOrUpdLayer(req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
             if (err) {
                 next(err, null);
             } else {

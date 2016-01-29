@@ -49,7 +49,7 @@ var verifAxsKeyRelApiKey = function (api_key, axs_key, callback) {
  * @param  {Function} callback [description]
  * @return tkn
  */
-exports.getAutorization = function (url, api_key, callback) {
+exports.login = function (url, api_key, callback) {
 	try {
 		//verifies that the API key is registered
 		appMod.findAppByApiKey(api_key, function (err_app, res_app) {
@@ -62,10 +62,9 @@ exports.getAutorization = function (url, api_key, callback) {
 				//Get user data that did login
 				githubLib.getUsrGithub(url, function (error, usr) {
 					if (error) {
-						console.error("Error", error);
 						return callback(error, null);
-					} else {
-						console.log("Get user");
+					} if (usr) {
+						console.log("Inserting user");
 						//Registering the user and developer in the database
 						usrMod.insOrUpdUsr(usr.usrnm, usr.email, usr.name, usr.bday, usr.location, usr.avatar_url, usr.github_tkn, usr.url, usr.bio, function (err_usr, res_usr) {
 							if (err_usr) {
@@ -96,7 +95,7 @@ exports.getAutorization = function (url, api_key, callback) {
 								});
 							} else return callback("Unauthorized. Error logging the user", null);
 						});
-					}
+					} else return callback("Unauthorized. User no found", null); 
 				});
 			} else return callback("Unauthorized. Api key no found", null);
 		});
