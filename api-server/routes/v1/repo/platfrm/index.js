@@ -47,7 +47,7 @@ var release = function (req) {
     try {
         repMod.doRelease(req, function (error, result) {
             if (error) {
-                winston.log('error', 'Error releasing platfrm lock', err);
+                winston.log('error', 'Error releasing platfrm lock', error);
             }
         });
     } catch (err) {

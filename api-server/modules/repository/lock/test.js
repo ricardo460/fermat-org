@@ -122,7 +122,7 @@ var indexOf = function (array, element) {
 		if (element.key == array[i].key) return i;
 	}
 	return -1;
-}
+};
 for (var i = 0; i < array_of_chars.length; i++) {
 	var ch = {
 		key: array_of_chars[i],
@@ -162,7 +162,7 @@ var fib = function (n) {
 		}
 	}
 	return res;
-}
+};
 console.dir(fib(7));
 
 function r(n) {

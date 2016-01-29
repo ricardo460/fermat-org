@@ -338,7 +338,6 @@ exports.updCompDevAndLifCyc = function (_comp_id, devs, life_cycle, callback) {
         return callback(err, null);
     }
 };
-
 /**
  * [findCompById description]
  *
@@ -349,7 +348,7 @@ exports.updCompDevAndLifCyc = function (_comp_id, devs, life_cycle, callback) {
  *
  * @return {[type]}     [description]
  */
-exports.findCompById = function(_id, callback){
+exports.findCompById = function (_id, callback) {
     compSrv.findCompById(_id, function (err_comp, res_comp) {
         if (err_comp) {
             return callback(err_comp, null);
@@ -357,7 +356,6 @@ exports.findCompById = function(_id, callback){
         return callback(null, res_comp);
     });
 };
-
 /**
  * [delAllComps description]
  *
@@ -390,7 +388,6 @@ exports.delAllComps = function (callback) {
         return callback(err, null);
     }
 };
-
 /**
  * [updateCompById description]
  *
@@ -412,8 +409,7 @@ exports.delAllComps = function (callback) {
  *
  * @return {[type]}    [description]
  */
-exports.updateCompById = function(_comp_id, _platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, scrnshts, found, callback){
-
+exports.updateCompById = function (_comp_id, _platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, scrnshts, found, callback) {
     var set_obj = {};
     if (_platfrm_id) {
         set_obj._platfrm_id = _platfrm_id;
@@ -448,20 +444,14 @@ exports.updateCompById = function(_comp_id, _platfrm_id, _suprlay_id, _layer_id,
     if (found) {
         set_obj.found = found;
     }
-
     compSrv.updateCompById(_comp_id, set_obj, function (err, comp) {
         if (err) {
             return callback(err, null);
         }
         return callback(null, comp);
     });
-
-
-}
-
-
+};
 exports.delProcById = function (_id, callback) {
-
     compSrv.findCompById(_id, function (err_comp, res_comp) {
         if (err_comp) {
             return callback(err_comp, null);
@@ -477,7 +467,7 @@ exports.delProcById = function (_id, callback) {
                         return callback(null, res_del_proc);
                     });
                 } else {
-                    var _idStep = steps.pop()
+                    var _idStep = steps.pop();
                     stepSrv.delSchemaById(_idStep, function (err_del_step, res_delstep) {
                         if (err_del_step) {
                             return callback(err_del_step, null);
@@ -493,5 +483,4 @@ exports.delProcById = function (_id, callback) {
         }
     });
 };
-
 /*jshint +W069 */

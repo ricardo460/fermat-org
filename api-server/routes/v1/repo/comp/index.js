@@ -47,7 +47,7 @@ var release = function (req) {
     try {
         repMod.doRelease(req, function (error, result) {
             if (error) {
-                winston.log('error', 'Error releasing comp lock', err);
+                winston.log('error', 'Error releasing comp lock', error);
             }
         });
     } catch (err) {

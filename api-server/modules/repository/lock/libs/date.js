@@ -28,7 +28,7 @@ var isObjectID = function (_obj_id) {
         str = str + '';
         if (validator.isAlphanumeric(str)) {
             var len = str.length;
-            valid = false;
+            var valid = false;
             if (len == 12 || len == 24) {
                 valid = /^[0-9a-fA-F]+$/.test(str);
             }

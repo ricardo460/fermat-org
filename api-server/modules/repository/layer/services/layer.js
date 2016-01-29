@@ -2,14 +2,12 @@ var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var layerMdl = require('../models/layer');
 var layerSch = require('../schemas/layer');
-
 /**
  * [layerDao description]
  *
  * @type {Dao}
  */
 var layerDao = new Dao('Layer', layerSch, layerMdl);
-
 /**
  * [insertLayer description]
  *
@@ -26,7 +24,6 @@ exports.insertLayer = function (layer_mdl, callback) {
         callback(err, layer);
     });
 };
-
 /**
  * [findLayerById description]
  *
@@ -43,7 +40,6 @@ exports.findLayerById = function (_id, callback) {
         callback(err, layer);
     });
 };
-
 /**
  * [findLayerByCode description]
  *
@@ -62,7 +58,6 @@ exports.findLayerByLang = function (lang, callback) {
         callback(err, layer);
     });
 };
-
 /**
  * [findLayerByName description]
  *
@@ -81,7 +76,6 @@ exports.findLayerByName = function (name, callback) {
         callback(err, layer);
     });
 };
-
 /**
  * [findLayers description]
  *
@@ -100,7 +94,6 @@ exports.findLayers = function (query, limit, order, callback) {
         callback(err, layer);
     });
 };
-
 /**
  * [findAllLayers description]
  *
@@ -118,7 +111,6 @@ exports.findAllLayers = function (query, order, callback) {
         callback(err, layer);
     });
 };
-
 /**
  * [findLayerById description]
  *
@@ -135,7 +127,6 @@ exports.findLayerById = function (_id, callback) {
         callback(err, layer);
     });
 };
-
 /**
  * [updateLayerById description]
  *
@@ -156,7 +147,6 @@ exports.updateLayerById = function (_id, set, callback) {
         callback(err, layer);
     });
 };
-
 /**
  * [delAllLayers description]
  *
@@ -169,6 +159,44 @@ exports.updateLayerById = function (_id, set, callback) {
 exports.delAllLayers = function (callback) {
     'use strict';
     layerDao.delAllSchemas(function (err, layer) {
+        callback(err, layer);
+    });
+};
+/**
+ * [delLayerById description]
+ *
+ * @method delLayerById
+ *
+ * @param  {[type]}     _id      [description]
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.delLayerById = function (_id, callback) {
+    'use strict';
+    layerDao.delSchema({
+        _id: _id
+    }, function (err, layer) {
+        callback(err, layer);
+    });
+};
+/**
+ * [updateLayer description]
+ *
+ * @method updateLayer
+ *
+ * @param  {[type]}    query    [description]
+ * @param  {[type]}    set      [description]
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updateLayers = function (query, set, callback) {
+    'use strict';
+    set.upd_at = new mongoose.Types.ObjectId();
+    layerDao.updateSchema(query, set, {
+        multi: true
+    }, function (err, layer) {
         callback(err, layer);
     });
 };
