@@ -34,7 +34,7 @@ function TileManager() {
             jsonTile = json;
             callback();
         });
-    }
+    };
     /**
      * Pre-computes the space layout for next draw
      */
