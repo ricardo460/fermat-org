@@ -859,7 +859,7 @@ exports.addCompDev = function (req, next) {
 exports.addStep = function (req, next) {
     'use strict';
     try {
-        procMod.insOrUpdStep(req.body.proc_id, req.body.platfrm_code, req.body.suprlay_code, req.body.layer_name, req.body.comp_name, req.body.type, req.body.title, req.body.desc, req.body.order, next, function (err, res) {
+        procMod.insOrUpdStep(req.params.proc_id, req.body.platfrm_code, req.body.suprlay_code, req.body.layer_name, req.body.comp_name, req.body.type, req.body.title, req.body.desc, req.body.order, next, function (err, res) {
             if (err) {
                 next(err, null);
             } else {
@@ -869,6 +869,28 @@ exports.addStep = function (req, next) {
     } catch (err) {
         next(err, null);
     }
+};
+/**
+ * @method uptStep
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.uptStep = function (req, next) {
+    /*'use strict';
+    try {
+        procMod.updateStepById(req.params.proc_id, req.body.platfrm_code, req.body.suprlay_code, req.body.layer_name, req.body.comp_name, req.body.type, req.body.title, req.body.desc, req.body.order, next, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }*/
 };
 /**
  * [doLock description]

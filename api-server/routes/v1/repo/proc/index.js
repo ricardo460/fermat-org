@@ -130,7 +130,7 @@ router.get('/', function (req, res, next) {
 router.post('/:proc_id/steps', function (req, res, next) {
     'use strict';
     try {
-        if (!security.isValidData(req.body.proc_id) || //
+        if (!security.isValidData(req.params.proc_id) || //
             !security.isValidData(req.body.platfrm_code) || //
             !security.isValidData(req.body.suprlay_code) || //
             !security.isValidData(req.body.layer_name) || //
@@ -142,6 +142,45 @@ router.post('/:proc_id/steps', function (req, res, next) {
             res.status(412).send('missing or invalid data');
         } else {
             repMod.addStep(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    res.status(200).send(result);
+                }
+                release(req);
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+});
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.put('/:proc_id/steps/:step_id', function (req, res, next) {
+    'use strict';
+    try {
+        if (!security.isValidData(req.params.proc_id) || //
+            !security.isValidData(req.params.step_id) || //
+            !security.isValidData(req.body.platfrm_code) || //
+            !security.isValidData(req.body.suprlay_code) || //
+            !security.isValidData(req.body.layer_name) || //
+            !security.isValidData(req.body.comp_name) || //
+            !security.isValidData(req.body.type) || //
+            !security.isValidData(req.body.title) || //
+            !security.isValidData(req.body.desc) || //
+            !security.isValidData(req.body.order)) {
+            res.status(412).send('missing or invalid data');
+        } else {
+            repMod.uptStep(req, function (error, result) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
