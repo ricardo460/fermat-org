@@ -78,6 +78,8 @@ button:active {
     cursor: pointer;
 }
 
+
+
 .colorBox {
     width: 10px;
     height: 10px;
@@ -86,6 +88,45 @@ button:active {
     position: relative;
 }
 
+/**     START
+* @author Ricardo Delgado.
+* CSS FOR FERMAT EDIT FIELD. 
+*/
+
+#div-Edit1 {
+    left: 16.5%;
+    top: 0.5%;
+    width: 63.5%;
+    height: 8%;
+    display: inline-block;
+    position: absolute; 
+}
+
+#div-Edit2 {
+    left: 23.5%;
+    top: 1.8%;
+    display: inline-block;
+    width: 42%;
+    height: 6%;
+    position:absolute;
+}
+
+.edit-Fermat {
+    color: rgba(127,127,127,1);
+}
+
+#select-layer {
+    width:18.3%;
+}
+
+/** 
+END
+*/
+
+/**     START
+* @author Ricardo Delgado.
+* CSS FOR THE BOOK. 
+*/ 
 .flipbook-viewport{
     position:absolute;
     top:50%;
@@ -209,6 +250,10 @@ button:active {
 	-ms-border-radius:10px;
 	border-radius:10px;
 }
+
+/**     
+END
+*/ 
 
 @font-face {
     font-family: Canaro;
