@@ -34,7 +34,7 @@ function ButtonsManager() {
 
         window.screenshotsAndroid.showButtonScreenshot(id);
 
-        window.fermatEdit.addButton(id);
+        //window.fermatEdit.addButton(id);
 
         window.flowManager.getAndShowFlows(id);//Always stop last
     };
@@ -48,50 +48,53 @@ function ButtonsManager() {
      */
     this.createButtons = function(id, text, callback, _x, _type, _side){
 
-    	var object = {
-            id : id,
-            text : text
-          };
+    	if(!document.getElementById(id)){ 
 
-        var x = _x || 5,
-        	type = _type || 'button',
-        	side = _side || 'left',
-        	idSucesor = "backButton";
+	    	var object = {
+	            id : id,
+	            text : text
+	          };
 
-        if(side === 'right')
-        	idSucesor = 'legendButton';
+	        var x = _x || 5,
+	        	type = _type || 'button',
+	        	side = _side || 'left',
+	        	idSucesor = "backButton";
 
-      	if(self.objects[side].buttons.length !== 0)
-      		idSucesor = self.objects[side].buttons[self.objects[side].buttons.length - 1].id;
+	        if(side === 'right')
+	        	idSucesor = 'legendButton';
 
-      	var button = document.createElement(type),
-          	sucesorButton = document.getElementById(idSucesor);
-                  
-  		button.id = id;
-		button.className = 'actionButton';
-		button.style.position = 'absolute';
-		button.innerHTML = text;
-		button.style.top = '10px';
-		button.style[side] = calculatePosition(sucesorButton, side, x);
-		button.style.zIndex = 10;
-		button.style.opacity = 0;
+	      	if(self.objects[side].buttons.length !== 0)
+	      		idSucesor = self.objects[side].buttons[self.objects[side].buttons.length - 1].id;
 
-      	button.addEventListener('click', function() {
-      		
-      			self.removeAllButtons();
+	      	var button = document.createElement(type),
+	          	sucesorButton = document.getElementById(idSucesor);
+	                  
+	  		button.id = id;
+			button.className = 'actionButton';
+			button.style.position = 'absolute';
+			button.innerHTML = text;
+			button.style.top = '10px';
+			button.style[side] = calculatePosition(sucesorButton, side, x);
+			button.style.zIndex = 10;
+			button.style.opacity = 0;
 
-                if(typeof(callback) === 'function')
-                    callback(); 
+	      	button.addEventListener('click', function() {
+	      		
+	      			self.removeAllButtons();
 
-        	});
+	                if(typeof(callback) === 'function')
+	                    callback(); 
 
-      	document.body.appendChild(button);
+	        	});
 
-      	self.objects[side].buttons.push(object);
+	      	document.body.appendChild(button);
 
-      	window.helper.show(button, 1000);
+	      	self.objects[side].buttons.push(object);
 
-      	return button;
+	      	window.helper.show(button, 1000);
+
+	      	return button;
+	    }
     };
 
     /**
@@ -133,6 +136,9 @@ function ButtonsManager() {
 	    		window.helper.hide($('#'+actualButton.id), 1000); 
 	    	
 	    		self.removeAllButtons();
+    	}
+    	else{
+    		//window.fermatEdit.removeAllFields();
     	}
     };
 

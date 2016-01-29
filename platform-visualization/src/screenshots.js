@@ -40,7 +40,7 @@ function ScreenshotsAndroid() {
 
     	if(typeof SCREENSHOTS[id] !== 'undefined'){
 
-    		buttonsManager.createButtons('showScreenshots', 'View Screenshots', function(){
+    		window.buttonsManager.createButtons('showScreenshots', 'View Screenshots', function(){
     			
     			showScreenshotsButton(id);
     		});
@@ -62,23 +62,26 @@ function ScreenshotsAndroid() {
 	        		for(var _wallet in json[_group][_layer]){
 
 	        			for (var i = 0; i < window.table.length; i++){
-	        				
-	        				if(window.table[i].type === "Android" && window.table[i].group === _group && window.table[i].layer === _layer && window.table[i].name === _wallet){
-	        					
-	        					var id = i,
-	        						name = json[_group][_layer][_wallet].name,
-	        						position = window.tileManager.targets.table[i].position,
-	        						show = false,
-	        						screenshots = {};
-	        						
-	        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
-	        						show = true;
 
-        						for(var _screen in json[_group][_layer][_wallet].screenshots)
-									screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
+	        				if(window.table[i].type === "Plugin" || window.table[i].type === "Android"){ 
 
-								fillScreenshots(id, position, name, show, screenshots);
-	        				}
+		        				if(window.table[i].group === _group && window.table[i].layer === _layer && window.table[i].name === _wallet){
+		        					
+		        					var id = i,
+		        						name = json[_group][_layer][_wallet].name,
+		        						position = window.tileManager.targets.table[i].position,
+		        						show = false,
+		        						screenshots = {};
+		        						
+		        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
+		        						show = true;
+
+	        						for(var _screen in json[_group][_layer][_wallet].screenshots)
+										screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
+
+									fillScreenshots(id, position, name, show, screenshots);
+		        				}
+		        			}
 	        			}
 	        		}
 	        	}
@@ -440,7 +443,9 @@ function ScreenshotsAndroid() {
 		var wallet = SCREENSHOTS[_id].name,
 			position = SCREENSHOTS[_id].position,
 			id = 0,
-			mesh;
+			mesh = null,
+            target = {};
+            
 
 		for(var i = 0; i < self.objects.mesh.length; i++){
 			if(self.objects.mesh[i].userData.wallet === wallet){
@@ -451,7 +456,7 @@ function ScreenshotsAndroid() {
 
 		action.state = true; action.mesh = id;
 
-		tileManager.letAlone();
+		window.tileManager.letAlone();
 
 		target = { x: position.x, y : position.y, z : 0 };
 
