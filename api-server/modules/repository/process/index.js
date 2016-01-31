@@ -8,6 +8,88 @@ var platfrmSrv = require('../platform/services/platfrm');
 var suprlaySrv = require('../superlayer/services/suprlay');
 var layerSrv = require('../layer/services/layer');
 var compSrv = require('../component/services/comp');
+
+/**
+ * [sort description]
+ *
+ * @method sort
+ *
+ * @param  {[type]} point [description]
+ * @param  {[type]} dir   [description]
+ *
+ * @return {[type]} [description]
+ */
+var swapOrder = function (action, oldSpot, newSpot, callback) {
+    var query, range, set, rangeMin, rangeMax;
+    if (action == 'insert') {
+        range = newSpot - 1;
+        query = {
+            'order': {
+                '$gt': range
+            }
+        };
+        set = {
+            '$inc': {
+                'order': 1
+            }
+        };
+        procSrv.updateProcs(query, set, function (err_srt, res_srt) {
+            if (err_srt) {
+                return callback(err_srt, null);
+            } else {
+                return callback(null, res_srt);
+            }
+        });
+    } else if (action == 'update') {
+        rangeMin = oldSpot;
+        rangeMax = newSpot + 1;
+        query = {
+            '$and': [{
+                'order': {
+                    '$gt': rangeMin
+                }
+            }, {
+                'order': {
+                    '$lt': rangeMax
+                }
+            }]
+        };
+        set = {
+            '$inc': {
+                'order': -1
+            }
+        };
+        procSrv.updateProcs(query, set, function (err_srt, res_srt) {
+            if (err_srt) {
+                return callback(err_srt, null);
+            } else {
+                return callback(null, res_srt);
+            }
+        });
+    } else if (action == 'delete') {
+        range = oldSpot - 1;
+        query = {
+            'order': {
+                '$gt': range
+            }
+        };
+        set = {
+            '$inc': {
+                'order': -1
+            }
+        };
+        procSrv.updateProcs(query, set, function (err_srt, res_srt) {
+            if (err_srt) {
+                return callback(err_srt, null);
+            } else {
+                return callback(null, res_srt);
+            }
+        });
+    } else {
+        return callback(new Error('invalid swap action'), null);
+    }
+};
+
 /**
  * [findComp description]
  *
@@ -271,6 +353,16 @@ exports.findProcById = function (_id, callback) {
         return callback(null, res_proc);
     });
 };
+/**
+ * [delProcById description]
+ *
+ * @method delProcById
+ *
+ * @param  {[type]}     _id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
 exports.delProcById = function (_id, callback) {
     procSrv.findProcById(_id, function (err_proc, res_proc) {
         if (err_proc) {
@@ -551,4 +643,90 @@ exports.updateProcById = function (_proc_id, platfrm, name, desc, prev, next, ca
         return callback(err, null);
     }
 };
+
+/**
+ * [insertStep description]
+ *
+ * @method insertStep
+ *
+ *
+ * @param  {[type]}     _proc_id        [description]
+ * @param  {[type]}     _comp_id        [description]
+ * @param  {[type]}     type            [description]
+ * @param  {[type]}     title           [description]
+ * @param  {[type]}     desc            [description]
+ * @param  {[type]}     order           [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+
+exports.insertStep = function (_proc_id, _comp_id, type, title, desc, order, callback) {
+
+    var step = new StepMdl(_proc_id, _comp_id, type, title, desc, order, []);
+    stepSrv.insertStep(step, function (err_ins, res_ins) {
+        if (err_ins) {
+            return callback(err_ins, null);
+        }
+        procSrv.pushStepToProcById(_proc_id, res_ins._id, function(err_push_step, res_push_step){
+
+            if (err_push_step) {
+                return callback(err_push_step, null);
+            }
+            return callback(null, res_ins);
+        });
+
+    });
+
+};
+
+/**
+ * [updateStepById description]
+ *
+ * @method updateStepById
+ *
+ * @param  {[type]}     _step_id        [description]
+ * @param  {[type]}     _comp_id        [description]
+ * @param  {[type]}     type            [description]
+ * @param  {[type]}     title           [description]
+ * @param  {[type]}     desc            [description]
+ * @param  {[type]}     order           [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+
+exports.updateStepById = function (_step_id, _comp_id, type, title, desc, order, callback) {
+    'use strict';
+    try {
+        var set_obj = {};
+        if (_comp_id) {
+            set_obj._comp_id = _comp_id;
+        }
+        if (type) {
+            set_obj.type = type;
+        }
+        if (title) {
+            set_obj.title = title;
+        }
+        if (desc) {
+            set_obj.desc = desc;
+        }
+        if (typeof order != "undefined") {
+            set_obj.order = order;
+        }
+
+        stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
+            if (err_upt) {
+                return callback(err_upt, null);
+            }
+            return callback(null, set_obj);
+        });
+
+    } catch (err) {
+        return callback(err, null);
+    }
+
+};
+
 /*jshint +W069 */

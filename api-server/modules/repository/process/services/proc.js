@@ -179,3 +179,46 @@ exports.delAllProcs = function (callback) {
         callback(err, comp);
     });
 };
+
+/**
+ * [updateProcs description]
+ *
+ * @method updateProcs
+ *
+ * @param  {[type]}    query    [description]
+ * @param  {[type]}    set      [description]
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updateProcs = function (query, set, callback) {
+    'use strict';
+    set.upd_at = new mongoose.Types.ObjectId();
+    procDao.updateSchema(query, set, {
+        multi: true
+    }, function (err, layer) {
+        callback(err, layer);
+    });
+};
+
+/**
+ * [pushStepToProcById description]
+ *
+ * @method pushStepToProcById
+ *
+ * @param  {[type]}          _id         [description]
+ * @param  {[type]}          _step_id    [description]
+ * @param  {Function}        callback    [description]
+ *
+ * @return {[type]}          [description]
+ */
+exports.pushStepToProcById = function (_id, _step_id, callback) {
+    'use strict';
+    procDao.pushToArray({
+        _id: _id
+    }, 'steps', _step_id, {
+        multi: false
+    }, function (err, comp) {
+        callback(err, comp);
+    });
+};

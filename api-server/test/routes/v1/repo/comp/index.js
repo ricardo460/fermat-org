@@ -144,9 +144,9 @@ describe("COMP",function(){
 
       if (err) return done(err);
 
-      res.body._platfrm_id.should.equal(dataComp.platfrm_id.toString());
-      res.body._suprlay_id.should.equal(dataComp.suprlay_id.toString());
-      res.body._layer_id.should.equal(dataComp.layer_id.toString());
+      res.body._platfrm_id.should.equal(dataComp.platfrm_id);
+      res.body._suprlay_id.should.equal(dataComp.suprlay_id);
+      res.body._layer_id.should.equal(dataComp.layer_id);
       res.body.name.should.equal(dataComp.name);
       res.body.type.should.equal(dataComp.type);
       res.body.description.should.equal(dataComp.description);
@@ -205,7 +205,7 @@ describe("COMP",function(){
       if (err) return done(err);
 
       res.body._comp_id.should.equal(comp._id.toString());
-      res.body._dev_id.should.equal(dataCompDev.dev_id.toString());
+      res.body._dev_id.should.equal(dataCompDev.dev_id);
       res.body.role.should.equal(dataCompDev.role);
       res.body.percnt.should.equal(dataCompDev.percnt);
       res.body.should.have.property('_id');
@@ -227,7 +227,7 @@ describe("COMP",function(){
       if (err) return done(err);
 
       res.body._comp_id.should.equal(comp._id.toString());
-      res.body._dev_id.should.equal(dataCompDev.dev_id.toString());
+      res.body._dev_id.should.equal(dataCompDev.dev_id);
       res.body.role.should.equal(dataCompDev.role);
       res.body.percnt.should.equal(dataCompDev.percnt);
       return done();
