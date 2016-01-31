@@ -83,7 +83,7 @@ router.post('/', function (req, res, next) {
             !security.isValidData(req.body.repo_dir) || //
             !security.isValidData(req.body.scrnshts) || //
             !security.isValidData(req.body.found)) {
-            res.status(412).send('missing or invalid data');
+            res.status(412).send({"message": "missing or invalid data"});
         } else {
             repMod.addComp(req, function (error, result) {
                 if (error) {
@@ -167,7 +167,7 @@ router.post('/:comp_id/comp-devs', function (req, res, next) {
             !security.isValidData(req.body.role) || //
             !security.isValidData(req.body.scope) || //
             !security.isValidData(req.body.percnt)) {
-            res.status(412).send('missing or invalid data');
+            res.status(412).send({"message": "missing or invalid data"});
         } else {
             repMod.addCompDev(req, function (error, result) {
                 if (error) {
@@ -257,7 +257,13 @@ router.delete('/:comp_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                res.status(200).send(result);
+                if (result) {
+                    res.status(204).send();
+                } else {
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
+                }
             }
             release(req);
         });

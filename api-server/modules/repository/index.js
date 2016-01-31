@@ -480,7 +480,21 @@ exports.uptComp = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delComp = function (req, next) {};
+exports.delComp = function (req, next) {
+    'use strict';
+    try {
+        compMod.delCompById(req.params.comp_id, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+
+};
 /**
  * @method getLay
  *

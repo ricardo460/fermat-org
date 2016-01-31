@@ -438,49 +438,82 @@ exports.updateCompById = function (_comp_id, _platfrm_id, _suprlay_id, _layer_id
     if (repo_dir) {
         set_obj.repo_dir = repo_dir;
     }
-    if (scrnshts) {
+    if (typeof scrnshts != "undefined") {
         set_obj.scrnshts = scrnshts;
     }
-    if (found) {
+    if (typeof found != "undefined") {
         set_obj.found = found;
     }
     compSrv.updateCompById(_comp_id, set_obj, function (err, comp) {
         if (err) {
             return callback(err, null);
         }
-        return callback(null, comp);
+        //because return updated object
+        return callback(null, set_obj);
     });
 };
-exports.delProcById = function (_id, callback) {
+
+/**
+ * [delCompById description]
+ *
+ * @method updateCompById
+ *
+ *
+ * @param  {[type]}     _comp_id        [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.delCompById = function (_id, callback) {
+
     compSrv.findCompById(_id, function (err_comp, res_comp) {
         if (err_comp) {
             return callback(err_comp, null);
         }
-        if (res_proc) {
-            var steps = res_proc.steps;
-            var loopDelSteeps = function () {
-                if (steps.length <= 0) {
-                    procSrv.delSchemaById(_id, function (err_del_proc, res_del_proc) {
-                        if (err_del_proc) {
-                            return callback(err_del_proc, null);
-                        }
-                        return callback(null, res_del_proc);
-                    });
-                } else {
-                    var _idStep = steps.pop();
-                    stepSrv.delSchemaById(_idStep, function (err_del_step, res_delstep) {
-                        if (err_del_step) {
-                            return callback(err_del_step, null);
+        if (res_comp) {
+            var comp_devs = res_comp.devs;
+            var life_cicles = res_comp.life_cycle;
+            var loopDelCompDevs = function () {
+                if (comp_devs.length <= 0) {
+                    var loopDelLifeCicles = function(){
+
+                        if (life_cicles.length <= 0) {
+                            compSrv.delCompById(_id, function (err_del_comp, res_del_comp) {
+                                if (err_del_comp) {
+                                    return callback(err_del_comp, null);
+                                }
+                                return callback(null, res_del_comp);
+                            });
                         } else {
-                            loopDelSteeps();
+
+                            var _id_status = life_cicles.pop();
+                            statusSrv.delStatusById(_id_status, function (err_del_status, res_del_status) {
+                                if (err_del_status) {
+                                    return callback(err_del_status, null);
+                                } else {
+                                    loopDelLifeCicles();
+                                }
+                            });
+                        }
+                    };
+                    loopDelLifeCicles();
+
+                } else {
+                    var _id_comp_dev = comp_devs.pop();
+                    compDevSrv.delCompDevById(_id_comp_dev, function (err_del_comp_dev, res_del_comp_dev) {
+                        if (err_del_comp_dev) {
+                            return callback(err_del_comp_dev, null);
+                        } else {
+                            loopDelCompDevs();
                         }
                     });
                 }
             };
-            loopDelSteeps();
+            loopDelCompDevs();
         } else {
             return callback(null, null);
         }
     });
 };
+
 /*jshint +W069 */
