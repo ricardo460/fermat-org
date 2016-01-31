@@ -182,7 +182,65 @@ describe("COMP",function(){
     server
     .post(pathTest+"/"+comp._id+"/life-cicles")
     .send(dataLifeCicle)
+    .expect("Content-type",/json/)
     .expect(200) // This is HTTP response
+    .end(function(err,res){
+
+      if (err) return done(err);
+
+      return done();
+    });
+
+  });
+
+  it("#POST addCompDev",function(done){
+
+    var dataCompDev = dataHelper.generateDataCompDev();
+    server
+    .post(pathTest+"/"+comp._id+"/comp-devs")
+    .send(dataCompDev)
+    .expect("Content-type",/json/)
+    .expect(200) // This is HTTP response
+    .end(function(err,res){
+      if (err) return done(err);
+
+      res.body._comp_id.should.equal(comp._id.toString());
+      res.body._dev_id.should.equal(dataCompDev.dev_id.toString());
+      res.body.role.should.equal(dataCompDev.role);
+      res.body.percnt.should.equal(dataCompDev.percnt);
+      res.body.should.have.property('_id');
+      return done();
+    });
+
+  });
+
+  it("#PUT uptCompDev",function(done){
+
+    var dataCompDev = dataHelper.generateDataCompDev();
+    server
+    .put(pathTest+"/"+comp._id+"/comp-devs/"+compDevIds[0])
+    .send(dataCompDev)
+    .expect("Content-type",/json/)
+    .expect(200) // This is HTTP response
+    .end(function(err,res){
+
+      if (err) return done(err);
+
+      res.body._comp_id.should.equal(comp._id.toString());
+      res.body._dev_id.should.equal(dataCompDev.dev_id.toString());
+      res.body.role.should.equal(dataCompDev.role);
+      res.body.percnt.should.equal(dataCompDev.percnt);
+      return done();
+    });
+
+  });
+
+  it("#DELETE delCompDev",function(done){
+
+    var dataCompDev = dataHelper.generateDataCompDev();
+    server
+    .delete(pathTest+"/"+comp._id+"/comp-devs/"+compDevIds[0])
+    .expect(204) // This is HTTP response
     .end(function(err,res){
 
       if (err) return done(err);

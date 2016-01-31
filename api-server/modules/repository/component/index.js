@@ -454,6 +454,51 @@ exports.updateCompById = function (_comp_id, _platfrm_id, _suprlay_id, _layer_id
 };
 
 /**
+ * [updateCompById description]
+ *
+ * @method updateCompById
+ *
+ * @param  {[type]}     _comp_dev_id    [description]
+ * @param  {[type]}     _comp_id        [description]
+ * @param  {[type]}     _dev_id         [description]
+ * @param  {[type]}     role            [description]
+ * @param  {[type]}     scope           [description]
+ * @param  {[type]}     percnt          [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updateCompDevById = function (_comp_dev_id, _comp_id, _dev_id, role, scope, percnt, callback) {
+    var set_obj = {};
+    if (_comp_id) {
+        set_obj._comp_id = _comp_id;
+    }
+    if (_dev_id) {
+        set_obj._dev_id = _dev_id;
+    }
+    if (role) {
+        set_obj.role = role;
+    }
+    if (scope) {
+        set_obj.scope = scope;
+    }
+    if (percnt) {
+        set_obj.percnt = percnt;
+    }
+    compDevSrv.updateCompDevById(_comp_dev_id, set_obj, function (err, comp_dev) {
+        if (err) {
+            return callback(err, null);
+        } else if(comp_dev){
+            //because return updated object
+            return callback(null, set_obj);
+        } else {
+            return callback(null, null);
+        }
+
+    });
+};
+
+/**
  * [delCompById description]
  *
  * @method updateCompById
@@ -515,5 +560,29 @@ exports.delCompById = function (_id, callback) {
         }
     });
 };
+
+/**
+ * [delCompDevById description]
+ *
+ * @method updateCompById
+ *
+ *
+ * @param  {[type]}     _comp_id        [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.delCompDevById = function (_id, callback){
+    compDevSrv.delCompDevById(_id, function (err_comp_dev, res_comp_dev) {
+        if (err_comp_dev) {
+            return callback(err_comp_dev, null);
+        } else if (res_comp_dev) {
+            return callback(null, res_comp_dev);
+        } else {
+            return callback(null, null);
+        }
+    });
+};
+
 
 /*jshint +W069 */

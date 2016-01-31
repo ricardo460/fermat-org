@@ -875,7 +875,62 @@ exports.addLifeCiclesToComp = function (req, next) {
 exports.addCompDev = function (req, next) {
     'use strict';
     try {
-        compMod.insOrUpdCompDev(req.body.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function (err, res) {
+        compMod.insOrUpdCompDev(req.params.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+
+                compServ.pushDevToCompById(req.params.comp_id, res._id, function(err_push_dev, res_push_dev){
+
+                    if (err_push_dev) {
+                        next(err_push_dev, null);
+                    } else {
+                        next(null, res);
+                    }
+
+                });
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+};
+
+/**
+ * @method uptCompDev
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.uptCompDev = function (req, next) {
+    'use strict';
+    try {
+        compMod.updateCompDevById(req.params.comp_dev_id, req.params.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+};
+
+/**
+ * @method delCompDev
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.delCompDev = function (req, next) {
+    'use strict';
+    try {
+        compMod.delCompDevById(req.params.comp_dev_id, function (err, res) {
             if (err) {
                 next(err, null);
             } else {
