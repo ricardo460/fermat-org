@@ -365,4 +365,58 @@ function Helper() {
     this.hideBackButton = function() {
         window.helper.hide('backButton', 1000, true);
     };
+
+    this.fillTarget = function(x, y, z, view){
+
+        var target = {  show : { },
+                        hide : { },
+                        showR : { },
+                        hideR : { }
+                    };
+
+        var object = new THREE.Object3D();
+
+            object.position.x = Math.random() * 80000 - 40000;
+            object.position.y = Math.random() * 80000 - 40000;
+            object.position.z = 80000 * 2;
+
+            object.position.copy(window.viewManager.translateToSection(view, object.position));
+
+            object.rotation.x = Math.random() * 180;
+            object.rotation.y = Math.random() * 180;
+            object.rotation.z = Math.random() * 180;
+
+        target.hide = object;
+        target.hideR = object;
+
+            object.position.x = x;
+            object.position.y = y;
+            object.position.z = z;
+
+            object.rotation.x = 0;
+            object.rotation.y = 0;
+            object.rotation.z = 0;
+
+        target.show = object;
+        target.showR = object;
+
+        return target;
+    };
+
+    this.getLastValueArray = function(array){
+
+        var value = array[array.length - 1];
+
+        return value;
+    }
+
+    this.getCountObject = function(object){
+
+        var count = 0;
+
+        for(var i in object)
+            count++; 
+
+        return count;
+    }
 }

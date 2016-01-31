@@ -86,10 +86,8 @@ function ScreenshotsAndroid() {
 	        		}
 	        	}
 	        }
-
 	        setScreenshot();
     	});
-		
 	};
     
     	/**

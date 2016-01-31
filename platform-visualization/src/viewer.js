@@ -6,6 +6,7 @@ var table = [],
     objects = [],
     actualView,
     stats = null,
+    TABLE = {},
 //Class
     tileManager = new TileManager(),
     helper = new Helper(),
@@ -47,7 +48,8 @@ function createScene(){
         
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xFFFFFF);
+    //renderer.setClearColor(0xFFFFFF);
+    renderer.setClearColor(0x313131);//Modo Prueba.
     document.getElementById('container').appendChild(renderer.domElement);
 
     camera = new Camera(new THREE.Vector3(0, 0, 90000),
@@ -79,9 +81,7 @@ function init() {
     magazine = new Magazine();
     flowManager = new FlowManager();
     buttonsManager = new ButtonsManager();
-    //fermatEdit = new FermatEdit();
-
-    //fermatEdit.init();
+    fermatEdit = new FermatEdit();
 
     //View Manager
     viewManager = new ViewManager();
@@ -100,6 +100,8 @@ function init() {
     // groups icons
     headers = new Headers(dimensions.columnWidth, dimensions.superLayerMaxHeight, dimensions.groupsQtty,
                           dimensions.layersQtty, dimensions.superLayerPosition);
+
+    addNewTableObjects();
 
     // uncomment for testing
     //create_stats();
@@ -138,6 +140,68 @@ function init() {
     }, 2000);*/
 
     //TWEEN.removeAll();
+}
+
+function fillNewTable(x, y, layer, platform){
+
+
+    if(typeof TABLE[platform] === 'undefined'){
+        TABLE[platform] = {   
+            layers : {},
+            x : x 
+        };
+    }
+
+    if(typeof TABLE[platform].layers[layer] === 'undefined'){ 
+        TABLE[platform].layers[layer] = {   
+            objects : [],
+            y : y 
+        };
+    }
+}
+
+function addNewTableObjects(){
+
+    var x, y, z;
+
+    for (var i = 0; i < table.length; i++) {
+
+        var mesh = tileManager.createElement(i);      
+
+        var platform = table[i].group || window.layers[table[i].layer].super_layer,
+            layer = table[i].layer,
+            object = { 
+                mesh : null,
+                data : {},
+                target : {}
+            };
+
+        var lastObject = helper.getLastValueArray(TABLE[platform].layers[layer].objects);
+
+        x = 0;
+
+        if(!lastObject)
+            x = TABLE[platform].x;
+        else
+            x = lastObject.target.show.position.x + TILE_DIMENSION.width;
+
+        y = TABLE[platform].layers[layer].y;
+
+        z = 0;
+
+        var target = helper.fillTarget(x, y, z, 'table');
+
+        mesh.position.copy(target.hide.position);
+
+        mesh.rotation.copy(target.hideR.rotation);
+
+        object.mesh = mesh;
+        object.data = table[i];
+        object.target = target;
+
+        TABLE[platform].layers[layer].objects.push(object);
+    }
+
 }
 
 /**
@@ -252,7 +316,7 @@ function changeView(targets) {
  * Triggered when the user clicks a tile
  * @param {Number} id The ID (position on table) of the element
  */
-function onElementClick(id) {
+function onElementClick(id) {console.log(id);
     
     var focus = parseInt(id);
 

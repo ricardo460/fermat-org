@@ -34,7 +34,7 @@ function ButtonsManager() {
 
         window.screenshotsAndroid.showButtonScreenshot(id);
 
-        //window.fermatEdit.addButton(id);
+        window.fermatEdit.addButton(id);
 
         window.flowManager.getAndShowFlows(id);//Always stop last
     };
@@ -64,7 +64,7 @@ function ButtonsManager() {
 	        	idSucesor = 'legendButton';
 
 	      	if(self.objects[side].buttons.length !== 0)
-	      		idSucesor = self.objects[side].buttons[self.objects[side].buttons.length - 1].id;
+	      		idSucesor = helper.getLastValueArray(self.objects[side].buttons).id;
 
 	      	var button = document.createElement(type),
 	          	sucesorButton = document.getElementById(idSucesor);
@@ -138,7 +138,7 @@ function ButtonsManager() {
 	    		self.removeAllButtons();
     	}
     	else{
-    		//window.fermatEdit.removeAllFields();
+    		window.fermatEdit.removeAllFields();
     	}
     };
 
