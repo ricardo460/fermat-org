@@ -346,12 +346,17 @@ exports.insOrUpdProc = function (platfrm, name, desc, prev, next, callback) {
  * @return {[type]}     [description]
  */
 exports.findProcById = function (_id, callback) {
-    procSrv.findProcById(_id, function (err_proc, res_proc) {
-        if (err_proc) {
-            return callback(err_proc, null);
-        }
-        return callback(null, res_proc);
-    });
+    'use strict';
+    try {
+        procSrv.findProcById(_id, function (err_proc, res_proc) {
+            if (err_proc) {
+                return callback(err_proc, null);
+            }
+            return callback(null, res_proc);
+        });
+    } catch (err) {
+        callback(err, null);
+    }
 };
 /**
  * [delProcById description]
@@ -364,36 +369,41 @@ exports.findProcById = function (_id, callback) {
  * @return {[type]}     [description]
  */
 exports.delProcById = function (_id, callback) {
-    procSrv.findProcById(_id, function (err_proc, res_proc) {
-        if (err_proc) {
-            return callback(err_proc, null);
-        }
-        if (res_proc) {
-            var steps = res_proc.steps;
-            var loopDelSteeps = function () {
-                if (steps.length <= 0) {
-                    procSrv.delSchemaById(_id, function (err_del_proc, res_del_proc) {
-                        if (err_del_proc) {
-                            return callback(err_del_proc, null);
-                        }
-                        return callback(null, res_del_proc);
-                    });
-                } else {
-                    var _idStep = steps.pop();
-                    stepSrv.delSchemaById(_idStep, function (err_del_step, res_delstep) {
-                        if (err_del_step) {
-                            return callback(err_del_step, null);
-                        } else {
-                            loopDelSteeps();
-                        }
-                    });
-                }
-            };
-            loopDelSteeps();
-        } else {
-            return callback(null, null);
-        }
-    });
+    'use strict';
+    try {
+        procSrv.findProcById(_id, function (err_proc, res_proc) {
+            if (err_proc) {
+                return callback(err_proc, null);
+            }
+            if (res_proc) {
+                var steps = res_proc.steps;
+                var loopDelSteeps = function () {
+                    if (steps.length <= 0) {
+                        procSrv.delSchemaById(_id, function (err_del_proc, res_del_proc) {
+                            if (err_del_proc) {
+                                return callback(err_del_proc, null);
+                            }
+                            return callback(null, res_del_proc);
+                        });
+                    } else {
+                        var _idStep = steps.pop();
+                        stepSrv.delStepById(_idStep, function (err_del_step, res_delstep) {
+                            if (err_del_step) {
+                                return callback(err_del_step, null);
+                            } else {
+                                loopDelSteeps();
+                            }
+                        });
+                    }
+                };
+                loopDelSteeps();
+            } else {
+                return callback(null, null);
+            }
+        });
+    } catch (err) {
+        callback(err, null);
+    }
 };
 /**
  * [insOrUpdStep description]
@@ -662,22 +672,25 @@ exports.updateProcById = function (_proc_id, platfrm, name, desc, prev, next, ca
  */
 
 exports.insertStep = function (_proc_id, _comp_id, type, title, desc, order, callback) {
-
-    var step = new StepMdl(_proc_id, _comp_id, type, title, desc, order, []);
-    stepSrv.insertStep(step, function (err_ins, res_ins) {
-        if (err_ins) {
-            return callback(err_ins, null);
-        }
-        procSrv.pushStepToProcById(_proc_id, res_ins._id, function(err_push_step, res_push_step){
-
-            if (err_push_step) {
-                return callback(err_push_step, null);
+    'use strict';
+    try {
+        var step = new StepMdl(_proc_id, _comp_id, type, title, desc, order, []);
+        stepSrv.insertStep(step, function (err_ins, res_ins) {
+            if (err_ins) {
+                return callback(err_ins, null);
             }
-            return callback(null, res_ins);
+            procSrv.pushStepToProcById(_proc_id, res_ins._id, function(err_push_step, res_push_step){
+
+                if (err_push_step) {
+                    return callback(err_push_step, null);
+                }
+                return callback(null, res_ins);
+            });
+
         });
-
-    });
-
+    } catch (err) {
+        return callback(err, null);
+    }
 };
 
 /**
@@ -727,6 +740,30 @@ exports.updateStepById = function (_step_id, _comp_id, type, title, desc, order,
         return callback(err, null);
     }
 
+};
+/**
+ * [delStepById description]
+ *
+ * @method delStepById
+ *
+ * @param  {[type]}     _id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.delStepById = function (_id, callback) {
+    'use strict';
+    try {
+        stepSrv.delStepById(_id, function (err_del_step, res_del_step) {
+            if (err_del_step) {
+                return callback(err_del_step, null);
+            } else {
+                return callback(null, res_del_step);
+            }
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
 };
 
 /*jshint +W069 */

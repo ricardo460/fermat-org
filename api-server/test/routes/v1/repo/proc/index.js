@@ -57,6 +57,31 @@ describe("PROC",function(){
 
   });
 
+    it("#POST addProc",function(done){
+
+        var dataProc = dataHelper.generateDataProc();
+
+        server
+        .post(pathTest+"/")
+        .send(dataProc)
+        .expect("Content-type",/json/)
+        .expect(201) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+            res.body._comp_id.should.equal(dataStep.comp_id);
+            res.body.type.should.equal(dataStep.type);
+            res.body.title.should.equal(dataStep.title);
+            res.body.desc.should.equal(dataStep.desc);
+            res.body.order.should.equal(dataStep.order);
+            res.status.should.equal(200);
+
+          return done();
+        });
+
+    });
+
 
 
   it("#POST addStep",function(done){
@@ -67,7 +92,7 @@ describe("PROC",function(){
     .post(pathTest+"/"+proc._id+"/steps")
     .send(dataStep)
     .expect("Content-type",/json/)
-    .expect(200) // This is HTTP response
+    .expect(201) // This is HTTP response
     .end(function(err,res){
 
       if (err) return done(err);
@@ -79,7 +104,6 @@ describe("PROC",function(){
       res.body.desc.should.equal(dataStep.desc);
       res.body.order.should.equal(dataStep.order);
       res.body.should.have.property('_id');
-      res.status.should.equal(200);
 
       return done();
     });
@@ -107,6 +131,20 @@ describe("PROC",function(){
         res.status.should.equal(200);
 
       return done();
+    });
+
+  });
+
+  it("#DELETE delStep",function(done){
+
+    server
+    .delete(pathTest+"/"+proc._id+"/steps/"+stepIds[0])
+    .expect(204) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+        return done();
     });
 
   });

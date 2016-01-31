@@ -985,6 +985,29 @@ exports.uptStep = function (req, next) {
         next(err, null);
     }
 };
+
+/**
+ * @method delStep
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.delStep = function (req, next) {
+    'use strict';
+    try {
+        procMod.delStepById(req.params.step_id, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+};
 /**
  * [doLock description]
  *
