@@ -91,6 +91,7 @@ router.post('/', function (req, res, next) {
                 } else {
                     res.status(200).send(result);
                 }
+                release(req);
             });
         }
     } catch (err) {
@@ -140,7 +141,13 @@ router.post('/:comp_id/life-cicles', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                res.status(200).send(result);
+               if (result) {
+                    res.status(200).send(result);
+                } else {
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
+                }
             }
             release(req);
         });
@@ -207,6 +214,7 @@ router.get('/:comp_id', function (req, res, next) {
                         message: "NOT FOUND"
                     });
                 }
+                release(req);
             }
         });
     } catch (err) {

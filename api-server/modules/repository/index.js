@@ -2,6 +2,7 @@ var libxml = require('libxmljs');
 var lockMod = require('./lock');
 var procMod = require('./process');
 var compMod = require('./component');
+var compServ = require('./component/services/comp');
 var layerMod = require('./layer');
 var suprlayMod = require('./superlayer');
 var platfrmMod = require('./platform');
@@ -839,7 +840,30 @@ exports.addPlatform = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.addLifeCiclesToComp = function (req, next) {};
+exports.addLifeCiclesToComp = function (req, next) {
+    'use strict';
+    try {
+        compMod.insOrUpdStatus(req.params.comp_id, req.body.name, req.body.target, req.body.reached, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else if(res) {
+                compServ.pushStatusToCompLifeCycleById(req.params.comp_id, res._id, function(err_push_status, res_push_status){
+                    if (err_push_status) {
+                        next(err_push_status, null);
+                    } else {
+                        next(null, res);
+                    }
+                });
+            } else {
+                next(null, null);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+
+
+};
 /**
  * @method addCompDev
  *

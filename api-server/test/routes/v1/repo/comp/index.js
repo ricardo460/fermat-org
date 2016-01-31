@@ -4,8 +4,8 @@ var mongoose = require("mongoose");
 var server = supertest.agent("http://localhost:3002");
 //var auth = require("../../../herlpers/v1/auth")
 var dataHelper = require("../../../../helpers/v1/dataHelper");
-var compServ = require("../../../../../modules/repository/component");
-var prtCompServ = require("../../../../../modules/repository/component/services/comp");
+var compMod = require("../../../../../modules/repository/component");
+var compServ = require("../../../../../modules/repository/component/services/comp");
 var pathTest = "/v1/repo/usrs/1/comps"
 
 mongoose.connect('mongodb://localhost/fermat-org-dev');
@@ -22,7 +22,7 @@ describe("COMP",function(){
     statusIds = [];
     compDevIds = [];
 
-    compServ.insOrUpdComp(dataComp.platfrm_id, dataComp.suprlay_id, dataComp.layer_id, dataComp.name, dataComp.type, dataComp.description, dataComp.difficulty, dataComp.code_level, dataComp.repo_dir, dataComp.scrnshts, dataComp.found, function(err_comp, res_com){
+    compMod.insOrUpdComp(dataComp.platfrm_id, dataComp.suprlay_id, dataComp.layer_id, dataComp.name, dataComp.type, dataComp.description, dataComp.difficulty, dataComp.code_level, dataComp.repo_dir, dataComp.scrnshts, dataComp.found, function(err_comp, res_com){
 
         if (err_comp) return console.log(err_comp);
         comp = res_com;
@@ -30,11 +30,11 @@ describe("COMP",function(){
         var loopCompDev=function(i){
           if(i<2){
             var dataCompDev = dataHelper.generateDataCompDev();
-            compServ.insOrUpdCompDev(comp._id, dataCompDev.dev_id, dataCompDev.role, dataCompDev.scope, dataCompDev.percnt, function(err_comp_dev, res_comp_dev){
+            compMod.insOrUpdCompDev(comp._id, dataCompDev.dev_id, dataCompDev.role, dataCompDev.scope, dataCompDev.percnt, function(err_comp_dev, res_comp_dev){
 
               if (err_comp_dev) return console.log(err_comp_dev);
 
-              prtCompServ.pushDevToCompById(comp._id, res_comp_dev._id, function(err_push_dev, res_push_dev){
+              compServ.pushDevToCompById(comp._id, res_comp_dev._id, function(err_push_dev, res_push_dev){
 
 
                 compDevIds.push(res_comp_dev._id);
@@ -53,11 +53,11 @@ describe("COMP",function(){
               if(j<2){
 
                 var dataLifeCicle = dataHelper.generateDataLifeCicle();
-                compServ.insOrUpdStatus(comp._id, dataLifeCicle.name, dataLifeCicle.target, dataLifeCicle.reached, function(err_status, res_status){
+                compMod.insOrUpdStatus(comp._id, dataLifeCicle.name, dataLifeCicle.target, dataLifeCicle.reached, function(err_status, res_status){
 
                   if (err_status) return console.log(err_status);
 
-                  prtCompServ.pushStatusToCompLifeCycleById(comp._id, res_status._id, function(err_push_status, res_push_status){
+                  compServ.pushStatusToCompLifeCycleById(comp._id, res_status._id, function(err_push_status, res_push_status){
 
                     statusIds.push(res_status._id);
                     j = j+1;
@@ -171,12 +171,25 @@ describe("COMP",function(){
 
       if (err) return done(err);
 
-
       return done();
     });
 
   });
 
+  it("#POST addLifeCiclesToComp",function(done){
 
+    var dataLifeCicle = dataHelper.generateDataLifeCicle();
+    server
+    .post(pathTest+"/"+comp._id+"/life-cicles")
+    .send(dataLifeCicle)
+    .expect(200) // This is HTTP response
+    .end(function(err,res){
+
+      if (err) return done(err);
+
+      return done();
+    });
+
+  });
 
 });
