@@ -2,7 +2,7 @@ var winston = require('winston');
 var loadLib = require('./modules/repository/lib/loader');
 var syncLib = require('./modules/repository/lib/syncer');
 var loadNet = require('./modules/network/lib/loader');
-var modDoc = require('./modules/repository/doc')
+var modDoc = require('./modules/repository/doc');
 var Cache = require('./lib/route-cache');
 var cache = new Cache({
     type: 'file'
@@ -10,15 +10,13 @@ var cache = new Cache({
 var _INTERVAL = 300000;
 var loop = 0;
 winston.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 60);
-/*setInterval(function () {
+setInterval(function () {
     'use strict';
     var mod = loop % 12;
     loop++;
     switch (mod) {
     case 0:
-
-        baja el manifiesto, lo parsea y lo guarda en la base datos y lo actualiza en la base de datos
-
+        //baja el manifiesto, lo parsea y lo guarda en la base datos y lo actualiza en la base de datos
         loadLib.loadComps(function (err, res) {
             if (err) {
                 winston.log('error', err.message, err);
@@ -28,9 +26,7 @@ winston.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 
         });
         break;
     case 1:
-
-        verifica que cada componente esta dentro en la carpeta que le corresponde
-
+        //verifica que cada componente esta dentro en la carpeta que le corresponde
         loadLib.updComps(function (err, res) {
             if (err) {
                 winston.log('error', err.message, err);
@@ -40,9 +36,7 @@ winston.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 
         });
         break;
     case 2:
-
-        se descarga la informacion de los developers
-
+        //se descarga la informacion de los developers
         loadLib.updDevs(function (err, res) {
             if (err) {
                 winston.log('error', err.message, err);
@@ -64,7 +58,7 @@ winston.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 
         winston.log('info', 'Doing nothing');
         break;
     case 6:
-        modDoc.generateBookPdf(function (err, res) {
+        modDoc.generateBookPdf(function (err) {
             if (err) {
                 winston.log('error', err);
             } else {
@@ -85,7 +79,7 @@ winston.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 
         winston.log('info', 'Doing nothing');
         break;
     case 11:
-        loadNet.getNetwork(function (err, result) {
+        loadNet.getNetwork(function (err) {
             if (err) {
                 winston.log('info', err);
             }
@@ -93,4 +87,4 @@ winston.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 
         });
         break;
     }
-}, _INTERVAL);*/
+}, _INTERVAL);

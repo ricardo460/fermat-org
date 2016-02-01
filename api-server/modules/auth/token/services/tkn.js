@@ -54,7 +54,24 @@ exports.findTknByAxsKey = function(axs_key, callback) {
 	}, '_usr_id _app_id', function(err, tkn) {
 		callback(err, tkn);
 	});
-}
+};
+
+/**
+ * [findTknByUsrIdAppId description]
+ * @param  {[type]}   _usr_id  [description]
+ * @param  {[type]}   _app_id  [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.findTknByUsrIdAppId = function(_usr_id, _app_id, callback) {
+	'use strict';
+	tknDao.findAndPopulateSchema({
+		'_usr_id': _usr_id,
+		'_app_id': _app_id
+	}, '_usr_id _app_id', function(err, tkn) {
+		callback(err, tkn);
+	});
+};
 
 /**
  * [findAllTkns description]

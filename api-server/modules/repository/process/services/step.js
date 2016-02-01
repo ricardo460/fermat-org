@@ -180,3 +180,19 @@ exports.delAllSteps = function (callback) {
         callback(err, comp);
     });
 };
+
+/**
+ * [delStepById description]
+ *
+ * @method delStepById
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.delStepById = function (_id, callback) {
+    'use strict';
+    stepDao.delSchemaById(_id, function (err, comp) {
+        callback(err, comp);
+    });
+};

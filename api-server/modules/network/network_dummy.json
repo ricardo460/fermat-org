@@ -1,5 +1,5 @@
 [{
-	"hash": "server0", //hash256
+	"hash": "server0",
 	"type": "server",
 	"extra": {
 		"os": "linux",

@@ -136,3 +136,19 @@ exports.delAllStatuses = function (callback) {
         callback(err, comp);
     });
 };
+
+/**
+ * [delStatusById description]
+ *
+ * @method delStatusById
+ *
+ * @param  {Function}     callback [description]
+ *
+ * @return {[type]}       [description]
+ */
+exports.delStatusById = function (_id, callback) {
+    'use strict';
+    statusDao.delSchemaById(_id, function (err, comp) {
+        callback(err, comp);
+    });
+};

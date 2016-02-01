@@ -24,6 +24,7 @@ var lock = function (req, res, next) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
+                    console.log("en el next del lock");
                     next();
                 }
             });
@@ -47,7 +48,7 @@ var release = function (req) {
     try {
         repMod.doRelease(req, function (error, result) {
             if (error) {
-                winston.log('error', 'Error releasing layer lock', err);
+                winston.log('error', 'Error releasing layer lock', error);
             }
         });
     } catch (err) {

@@ -49,7 +49,7 @@ var verifAxsKeyRelApiKey = function (api_key, axs_key, callback) {
  * @param  {Function} callback [description]
  * @return tkn
  */
-exports.getAutorization = function (url, api_key, callback) {
+exports.login = function (url, api_key, callback) {
 	try {
 		//verifies that the API key is registered
 		appMod.findAppByApiKey(api_key, function (err_app, res_app) {
@@ -62,10 +62,9 @@ exports.getAutorization = function (url, api_key, callback) {
 				//Get user data that did login
 				githubLib.getUsrGithub(url, function (error, usr) {
 					if (error) {
-						console.error("Error", error);
 						return callback(error, null);
-					} else {
-						console.log("Get user");
+					} if (usr) {
+						console.log("Inserting user");
 						//Registering the user and developer in the database
 						usrMod.insOrUpdUsr(usr.usrnm, usr.email, usr.name, usr.bday, usr.location, usr.avatar_url, usr.github_tkn, usr.url, usr.bio, function (err_usr, res_usr) {
 							if (err_usr) {
@@ -96,7 +95,7 @@ exports.getAutorization = function (url, api_key, callback) {
 								});
 							} else return callback("Unauthorized. Error logging the user", null);
 						});
-					}
+					} else return callback("Unauthorized. User no found", null); 
 				});
 			} else return callback("Unauthorized. Api key no found", null);
 		});
@@ -125,7 +124,7 @@ exports.verifiAxsKeyRelApiKey = function (api_key, axs_key, callback) {
 			} else return callback(null, false);
 		});
 	} catch (err) {
-		console.log("Error", error);
+		console.log("Error", err);
 		return callback(err, false);
 	}
 };
@@ -166,12 +165,12 @@ exports.verifiAxsKeyRelApiKeyAndUsrnm = function (api_key, axs_key, usrnm, callb
 			} else return callback(null, false);
 		});
 	} catch (err) {
-		console.log("Error", error);
+		console.log("Error", err);
 		return callback(err, false);
 	}
 };
 /**
- * [logout description]
+ * [logout]
  * @param  {[type]}   api_key  [description]
  * @param  {[type]}   axs_key  [description]
  * @param  {Function} callback [description]
@@ -185,7 +184,7 @@ exports.logout = function (api_key, axs_key, callback) {
 				return callback(err, false);
 			}
 			if (res_del) {
-				console.log("Authorization granted")
+				console.log("Authorization granted");
 				tknMod.delTkn(axs_key, function (err_res, res_tkn) {
 					if (err_res) {
 						console.log('error', err_res);
@@ -200,7 +199,7 @@ exports.logout = function (api_key, axs_key, callback) {
 					}
 				});
 			} else {
-				console.log("Unauthorized user")
+				console.log("Unauthorized user");
 				return callback(err, false);
 			}
 		});
@@ -230,7 +229,7 @@ exports.verifyTkn = function (axs_key, digest, callback) {
 			console.log('hash: ' + hash);
 			console.log('digest: ' + digest);
 			if (digest == hash) {
-				callback(null, true)
+				callback(null, true);
 			} else {
 				tknMod.delTkn(axs_key, function (err_del, res_del) {
 					if (err_del) {

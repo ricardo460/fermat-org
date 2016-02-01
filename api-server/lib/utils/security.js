@@ -40,11 +40,11 @@ function isValidData(data) {
  * @return {Boolean}     [description]
  */
 function isObjectID(str) {
+    var valid = false;
     if (isValidData(str)) {
         str = str + '';
         if (validator.isAlphanumeric(str)) {
             var len = str.length;
-            valid = false;
             if (len == 12 || len == 24) {
                 valid = /^[0-9a-fA-F]+$/.test(str);
             }
@@ -208,15 +208,6 @@ exports.isValidAccount = function (account) {
  */
 exports.isLengthPassword = function (passwd) {
     return isLengthPassword(passwd);
-};
-
-exports.isValidApiKeyId = function (apikey_id) {
-    if (typeof apikeys[apikey_id] == "undefined") {
-        //console.log('invalid apikey_id');
-        return false;
-    }
-
-    return true;
 };
 
 /**

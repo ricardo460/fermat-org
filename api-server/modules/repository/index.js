@@ -2,6 +2,7 @@ var libxml = require('libxmljs');
 var lockMod = require('./lock');
 var procMod = require('./process');
 var compMod = require('./component');
+var compServ = require('./component/services/comp');
 var layerMod = require('./layer');
 var suprlayMod = require('./superlayer');
 var platfrmMod = require('./platform');
@@ -315,7 +316,7 @@ exports.checkManifest = function (req, next) {
                         } else {
                             try {
                                 var xmlDoc = libxml.parseXml(res_xml);
-                                xmlDoc.validate(xsdDoc)
+                                xmlDoc.validate(xsdDoc);
                                 if (xmlDoc.validationErrors.length > 0) {
                                     return next(null, xmlDoc.validationErrors);
                                 }
@@ -480,7 +481,21 @@ exports.uptComp = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delComp = function (req, next) {};
+exports.delComp = function (req, next) {
+    'use strict';
+    try {
+        compMod.delCompById(req.params.comp_id, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+
+};
 /**
  * @method getLay
  *
@@ -514,7 +529,7 @@ exports.getLay = function (req, next) {
 exports.uptLay = function (req, next) {
     'use strict';
     try {
-        layMod.updateLayerById(req.params.lay_id, req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
+        layerMod.updateLayerById(req.params.lay_id, req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
             if (err) {
                 next(err, null);
             } else {
@@ -717,7 +732,7 @@ exports.listComps = function (req, next) {
 exports.addLayer = function (req, next) {
     'use strict';
     try {
-        layMod.insOrUpdLayer(req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
+        layerMod.insOrUpdLayer(req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
             if (err) {
                 next(err, null);
             } else {
@@ -825,7 +840,30 @@ exports.addPlatform = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.addLifeCiclesToComp = function (req, next) {};
+exports.addLifeCiclesToComp = function (req, next) {
+    'use strict';
+    try {
+        compMod.insOrUpdStatus(req.params.comp_id, req.body.name, req.body.target, req.body.reached, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else if(res) {
+                compServ.pushStatusToCompLifeCycleById(req.params.comp_id, res._id, function(err_push_status, res_push_status){
+                    if (err_push_status) {
+                        next(err_push_status, null);
+                    } else {
+                        next(null, res);
+                    }
+                });
+            } else {
+                next(null, null);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+
+
+};
 /**
  * @method addCompDev
  *
@@ -837,7 +875,62 @@ exports.addLifeCiclesToComp = function (req, next) {};
 exports.addCompDev = function (req, next) {
     'use strict';
     try {
-        compMod.insOrUpdCompDev(req.body.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function (err, res) {
+        compMod.insOrUpdCompDev(req.params.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+
+                compServ.pushDevToCompById(req.params.comp_id, res._id, function(err_push_dev, res_push_dev){
+
+                    if (err_push_dev) {
+                        next(err_push_dev, null);
+                    } else {
+                        next(null, res);
+                    }
+
+                });
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+};
+
+/**
+ * @method uptCompDev
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.uptCompDev = function (req, next) {
+    'use strict';
+    try {
+        compMod.updateCompDevById(req.params.comp_dev_id, req.params.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+};
+
+/**
+ * @method delCompDev
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.delCompDev = function (req, next) {
+    'use strict';
+    try {
+        compMod.delCompDevById(req.params.comp_dev_id, function (err, res) {
             if (err) {
                 next(err, null);
             } else {
@@ -859,7 +952,52 @@ exports.addCompDev = function (req, next) {
 exports.addStep = function (req, next) {
     'use strict';
     try {
-        procMod.insOrUpdStep(req.body.proc_id, req.body.platfrm_code, req.body.suprlay_code, req.body.layer_name, req.body.comp_name, req.body.type, req.body.title, req.body.desc, req.body.order, next, function (err, res) {
+        procMod.insertStep(req.params.proc_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, next, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+};
+/**
+ * @method uptStep
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.uptStep = function (req, next) {
+    'use strict';
+    try {
+        procMod.updateStepById(req.params.step_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+};
+
+/**
+ * @method delStep
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.delStep = function (req, next) {
+    'use strict';
+    try {
+        procMod.delStepById(req.params.step_id, function (err, res) {
             if (err) {
                 next(err, null);
             } else {

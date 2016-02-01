@@ -275,3 +275,19 @@ exports.delAllComps = function (callback) {
         callback(err, comp);
     });
 };
+
+/**
+ * [delCompById description]
+ *
+ * @method delCompById
+ *
+ * @param  {Function}     callback [description]
+ *
+ * @return {[type]}       [description]
+ */
+exports.delCompById = function (_id, callback) {
+    'use strict';
+    compDao.delSchemaById(_id, function (err, comp) {
+        callback(err, comp);
+    });
+};

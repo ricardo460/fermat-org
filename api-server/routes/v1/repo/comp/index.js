@@ -47,7 +47,7 @@ var release = function (req) {
     try {
         repMod.doRelease(req, function (error, result) {
             if (error) {
-                winston.log('error', 'Error releasing comp lock', err);
+                winston.log('error', 'Error releasing comp lock', error);
             }
         });
     } catch (err) {
@@ -83,7 +83,7 @@ router.post('/', function (req, res, next) {
             !security.isValidData(req.body.repo_dir) || //
             !security.isValidData(req.body.scrnshts) || //
             !security.isValidData(req.body.found)) {
-            res.status(412).send('missing or invalid data');
+            res.status(412).send({"message": "missing or invalid data"});
         } else {
             repMod.addComp(req, function (error, result) {
                 if (error) {
@@ -91,6 +91,7 @@ router.post('/', function (req, res, next) {
                 } else {
                     res.status(200).send(result);
                 }
+                release(req);
             });
         }
     } catch (err) {
@@ -136,14 +137,28 @@ router.get('/', function (req, res, next) {
 router.post('/:comp_id/life-cicles', function (req, res, next) {
     'use strict';
     try {
+    	if (!security.isValidData(req.params.comp_id) || //
+            !security.isValidData(req.body.name) || //
+            !security.isValidData(req.body.target) || //
+            !security.isValidData(req.body.reached)) {
+            res.status(412).send({"message": "missing or invalid data"});
+        } else {
         repMod.addLifeCiclesToComp(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                res.status(200).send(result);
+                if (result) {
+                    res.status(200).send(result);
+                } else {
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
+                }
             }
             release(req);
         });
+
+        }
     } catch (err) {
         next(err);
     }
@@ -162,18 +177,97 @@ router.post('/:comp_id/life-cicles', function (req, res, next) {
 router.post('/:comp_id/comp-devs', function (req, res, next) {
     'use strict';
     try {
-        if (!security.isValidData(req.body.comp_id) || //
+        if (!security.isValidData(req.params.comp_id) || //
             !security.isValidData(req.body.dev_id) || //
             !security.isValidData(req.body.role) || //
             !security.isValidData(req.body.scope) || //
             !security.isValidData(req.body.percnt)) {
-            res.status(412).send('missing or invalid data');
+            res.status(412).send({"message": "missing or invalid data"});
         } else {
             repMod.addCompDev(req, function (error, result) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
                     res.status(200).send(result);
+                }
+                release(req);
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+});
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
+    'use strict';
+    try {
+        if (!security.isValidData(req.params.comp_id) || //
+            !security.isValidData(req.params.comp_dev_id) || //
+            !security.isValidData(req.body.dev_id) || //
+            !security.isValidData(req.body.role) || //
+            !security.isValidData(req.body.scope) || //
+            !security.isValidData(req.body.percnt)) {
+            res.status(412).send({"message": "missing or invalid data"});
+        } else {
+            repMod.uptCompDev(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    if (result) {
+                        res.status(200).send(result);
+                    } else {
+                        res.status(404).send({
+                            message: "NOT FOUND"
+                        });
+                    }
+                }
+                release(req);
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+});
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.delete('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
+    'use strict';
+    try {
+        if (!security.isValidData(req.params.comp_id) || //
+            !security.isValidData(req.params.comp_dev_id) //
+            ) {
+            res.status(412).send({"message": "missing or invalid data"});
+        } else {
+            repMod.delCompDev(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    if (result) {
+                        res.status(204).send();
+                    } else {
+                        res.status(404).send({
+                            message: "NOT FOUND"
+                        });
+                    }
                 }
                 release(req);
             });
@@ -207,6 +301,7 @@ router.get('/:comp_id', function (req, res, next) {
                         message: "NOT FOUND"
                     });
                 }
+                release(req);
             }
         });
     } catch (err) {
@@ -274,7 +369,13 @@ router.delete('/:comp_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                res.status(200).send(result);
+                if (result) {
+                    res.status(204).send();
+                } else {
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
+                }
             }
             release(req);
         });
