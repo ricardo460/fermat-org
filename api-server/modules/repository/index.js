@@ -573,7 +573,7 @@ exports.delLay = function (req, next) {
 exports.getSprlay = function (req, next) {
     'use strict';
     try {
-        suprlayMod.findSuprlayById(req.params.sprly_id, function (err, res) {
+        suprlayMod.findSuprlayById(req.params.suprlay_id, function (err, res) {
             if (err) {
                 next(err, null);
             } else {
@@ -614,7 +614,21 @@ exports.uptSprlay = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delSprlay = function (req, next) {};
+exports.delSprlay = function (req, next) {
+    'use strict';
+    try {
+        suprlayMod.delSuprlayById(req.params.suprlay_id, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+
+};
 /**
  * @method getPltf
  *

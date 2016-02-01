@@ -367,7 +367,7 @@ exports.findCompById = function (_id, callback) {
  *
  * @method findCompByLayerId
  *
- * @param  {[type]}     _id       [description]
+ * @param  {[type]}     _layer_id       [description]
  * @param  {[type]}     callback  [description]
  *
  * @return {[type]}     [description]
@@ -383,6 +383,39 @@ exports.findCompsByLayerId = function (_layer_id, callback) {
                 '_layer_id': _layer_id
             });
         }
+        compSrv.findComps(find_obj,{}, function (err_comp, res_comp) {
+            if (err_comp) {
+                return callback(err_comp, null);
+            }
+            return callback(null, res_comp);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
+/**
+ * [findCompsBySuprlayId description]
+ *
+ * @method findCompsBySuprlayId
+ *
+ * @param  {[type]}     _suprlay_id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findCompsBySuprlayId = function (_suprlay_id, callback) {
+    'use strict';
+    try {
+        var find_obj = {
+            '$and': []
+        };
+        if (_suprlay_id) {
+            find_obj['$and'].push({
+                '_suprlay_id': _suprlay_id
+            });
+        }
+
         compSrv.findComps(find_obj,{}, function (err_comp, res_comp) {
             if (err_comp) {
                 return callback(err_comp, null);

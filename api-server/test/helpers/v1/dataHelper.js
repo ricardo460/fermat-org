@@ -69,3 +69,12 @@ exports.generateDataLay = function(){
         "order": 0
     };
 };
+
+exports.generateDataSuprLay = function(){
+    return {
+        "code" : faker.name.firstName(),
+        "name" : faker.name.firstName(),
+        "logo": faker.name.firstName(),
+        "order": 0
+    };
+};

@@ -181,9 +181,9 @@ exports.delLayerById = function (_id, callback) {
     });
 };
 /**
- * [updateLayer description]
+ * [updateLayers description]
  *
- * @method updateLayer
+ * @method updateLayers
  *
  * @param  {[type]}    query    [description]
  * @param  {[type]}    set      [description]

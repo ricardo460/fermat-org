@@ -298,7 +298,6 @@ exports.delLayerById = function (_id, callback) {
     try {
         var delLayer = function(){
             layerSrv.findLayerById(_id, function (err_lay, res_lay) {
-                console.log(arguments);
                 if (err_lay) {
                     return callback(err_lay, null);
                 }
