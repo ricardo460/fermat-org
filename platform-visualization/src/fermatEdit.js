@@ -3,6 +3,8 @@
  */
 function FermatEdit() {
 
+    var DATA_USER = {};
+
     var objects = {
             row1 : {
                 div : null,
@@ -21,52 +23,29 @@ function FermatEdit() {
             idFields : {}
         };
 
+    var actions = { 
+        exit : null
+    };
+
     var tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
         tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
 
     var self = this;
 
-    var testDataUser = [
-            {
-               "_id": null,
-               "usrnm": "campol",
-               "upd_at": null,
-               "bio": null,
-               "url": "https://github.com/campol",
-               "avatar_url": "https://avatars3.githubusercontent.com/u/12051946?v=3&s=400",
-               "location": null,
-               "bday": null,
-               "name": "Luis Campo",
-               "email": "campusprize@gmail.com",
-               "__v": null
-            },
-            {
-               "_id": null,
-               "usrnm": "Miguelcldn",
-               "upd_at": null,
-               "bio": null,
-               "url": "https://github.com/Miguelcldn",
-               "avatar_url": "https://avatars1.githubusercontent.com/u/5544266?v=3&s=400",
-               "location": null,
-               "bday": null,
-               "name": "Miguel Celedon",
-               "email": "miguelceledon@outlook.com",
-               "__v": null 
-            },
-            {
-               "_id": null,
-               "usrnm": "fvasquezjatar",
-               "upd_at": null,
-               "bio": null,
-               "url": "https://github.com/fvasquezjatar",
-               "avatar_url": "https://avatars2.githubusercontent.com/u/8290154?v=3&s=400",
-               "location": null,
-               "bday": null,
-               "name": "Francisco Vasquez",
-               "email": "fvasquezjatar@gmail.com",
-               "__v": null 
-            }
-        ];
+    this.init = function(){
+
+        var url = window.helper.getAPIUrl("user");
+
+        $.ajax({
+            url: url,
+            method: "GET"
+        }).success(
+            function(user) {
+
+                DATA_USER = user;
+
+            });
+    };
 
     /**
      * @author Ricardo Delgado
@@ -86,6 +65,7 @@ function FermatEdit() {
             };
 
         if(id === null){
+
             callback = function(){ 
                 drawTile(null, addAllFilds);
             };
@@ -127,7 +107,14 @@ function FermatEdit() {
             objects.row2.div = null;
             objects.idFields = {};
             deleteMesh();
-            //self.addButton();
+
+            if(actualView === 'table'){ 
+
+                if(typeof(actions.exit) === 'function'){
+                    actions.exit();
+                    actions.exit = null;
+                }
+            }
 
         }
     };
@@ -138,6 +125,8 @@ function FermatEdit() {
 
         if(tile.group !== undefined)
             document.getElementById('select-Platform').value = tile.group;
+        else
+            document.getElementById('select-Platform').value = window.layers[tile.layer].super_layer;
 
         changeLayer(document.getElementById('select-Platform').value);
 
@@ -171,7 +160,9 @@ function FermatEdit() {
             rx = Math.random() * 180,
             ry = Math.random() * 180,
             rz = Math.random() * 180,
-            newCenter = new THREE.Vector3(0, 0, 0);
+            newCenter = helper.getCenterView('table');
+
+        var y = helper.getLastValueArray(window.tileManager.dimensions.layerPositions) + (TILE_DIMENSION.height * 2);
 
         var mesh = new THREE.Mesh(
                    new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
@@ -186,9 +177,9 @@ function FermatEdit() {
            // onClick : onClick
         };
 
-        newCenter = window.viewManager.translateToSection('table', newCenter);
 
-        var target = { x : newCenter.x, y : newCenter.y, z : newCenter.z,
+
+        var target = { x : newCenter.x, y : y, z : newCenter.z,
                        px : px, py : py, pz : pz,
                        rx : rx, ry : ry, rz : rz };
 
@@ -214,13 +205,16 @@ function FermatEdit() {
 
         if (window.camera.getFocus() === null) {
 
-            window.tileManager.letAlone();
+            var exit = function(){
+                window.camera.resetPosition();
+                self.addButton();
+            };
 
-            animate(mesh, objects.tile.target, true, 500, function(){ 
+            actions.exit = exit;
+
+            animate(mesh, objects.tile.target, true, 1000, function(){ 
 
                 window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 2000);
-                
-                window.headers.hideHeaders(2000);
 
                 if(typeof(callback) === 'function')
                     callback(); 
@@ -237,13 +231,19 @@ function FermatEdit() {
 
             var position = window.tileManager.targets.table[id].position;
 
-            animate(window.objects[id], objects.tile.target, false, 2000);
+            animate(window.objects[id], objects.tile.target, false, 1000);
+
+            var exit = function(){
+                self.addButton();
+            };
+
+            actions.exit = exit;
 
             changeTexture();
 
             animate(mesh, position, true, 1500, function(){ 
 
-                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 1000);
+                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 1500);
 
             });
 
@@ -617,6 +617,7 @@ function FermatEdit() {
             
             button.addEventListener('click', function() {
 
+                saveTile();
             });
 
         }
@@ -645,73 +646,17 @@ function FermatEdit() {
 
     function changeTexture(){
 
-        var table = {},
-            data = {},
-            scale = 5,
+        var table = null,
+            scale = 3,
             mesh = null;
 
-        table.group = document.getElementById(objects.idFields.platform).value;
-        table.layer = document.getElementById(objects.idFields.layer).value;
-        table.type = document.getElementById(objects.idFields.type).value;
-        table.code_level = document.getElementById(objects.idFields.state).value;
-        table.difficulty = document.getElementById(objects.idFields.difficulty).value;
-        table.name = document.getElementById(objects.idFields.name).value;
-        table.code = fillCode(document.getElementById(objects.idFields.name).value);
-        table.author = document.getElementById(objects.idFields.author).value;
-        table.maintainer = document.getElementById(objects.idFields.maintainer).value;
-        table.found = true;
-
-        data = dataUser(table.author);
-
-        table.picture = data.picture;
-        table.authorRealName = data.authorRealName;
-
-        data = dataUser(table.maintainer);
-
-        table.maintainerPicture = data.picture;
-        table.maintainerRealName = data.authorRealName;
+        table = fillTable(true);
 
         mesh = objects.tile.mesh;
 
         mesh.material.map = window.tileManager.createTexture(null, 'high', tileWidth, tileHeight, scale, table); 
         mesh.material.needsUpdate = true; 
 
-        function dataUser(user){
-
-            var data = {};
-
-            for(var i = 0; i < testDataUser.length; i++){
-
-                if(user.toLowerCase() === testDataUser[i].usrnm.toLowerCase()){
-
-                    data.picture = testDataUser[i].avatar_url;
-                    data.authorRealName = testDataUser[i].name;
-                    data.authorEmail = testDataUser[i].email;
-                }
-            }
-
-            return data;
-        }
-
-        function fillCode(text){
-
-            var code = '',
-                words = text.split(" "),
-                cantWord = words.length,
-                end = 1;
-
-            if(cantWord === 1)       
-                end = 3;
-            else if(cantWord === 2)
-                end = 2;
-
-            for(var i = 0; i < words.length; i++){
-
-                code += words[i].substr(0, end);
-            }
-
-            return code;
-        }
     }
 
     function deleteMesh(){
@@ -727,6 +672,141 @@ function FermatEdit() {
             objects.tile.mesh = null;
         }
     }
+
+    function saveTile(){
+
+        var table = fillTable(false);
+
+        var x, y, z;
+
+        window.tileManager.transform(tileManager.targets.table);
+        window.signLayer.transformSignLayer();
+
+        var mesh = window.tileManager.createElement(1, table);
+
+        var platform = table.group || window.layers[table.layer].super_layer,
+            layer = table.layer,
+            object = { 
+                mesh : null,
+                data : {},
+                target : {}
+            };
+
+        if(typeof TABLE[platform].layers[layer] === 'undefined'){ 
+            TABLE[platform].layers[layer] = {   
+                objects : [],
+                y : y 
+            };
+        }
+
+        var lastObject = helper.getLastValueArray(TABLE[platform].layers[layer].objects);
+
+        x = 0;
+
+        if(!lastObject)
+            x = TABLE[platform].x;
+        else
+            x = lastObject.target.show.x + TILE_DIMENSION.width;
+
+        y = window.tileManager.dimensions.layerPositions[table.layerID];
+
+        z = 0;
+
+        var target = helper.fillTarget(x, y, z, 'table');
+
+        mesh.position.copy(target.hide);
+        mesh.rotation.copy(target.hideR);
+
+        window.scene.add(mesh);
+
+        object.mesh = mesh;
+        object.data = table;
+        object.target = target;
+
+        camera.loseFocus();
+
+        camera.enable();
+
+        camera.move(target.show.x, target.show.y, target.show.z + 16000, 4000);
+
+        animate(mesh, target.show, true, 5000);
+                
+        TABLE[platform].layers[layer].objects.push(object);
+
+    }
+
+    function modiTile(table){
+
+        var group = table.group || window.layers[table.layer].super_layer;
+
+    }
+
+    function fillTable(state){
+
+        var table = {group : undefined},
+            data = {},
+            group = document.getElementById(objects.idFields.platform).value,
+            layer = document.getElementById(objects.idFields.layer).value,
+            groupID = helper.getCountObject(groups) - 1,
+            layerID = 0,
+            superLayer = false;
+
+        if(groups[group]){
+            table.group = group;
+            groupID = groups[group].index;
+        }
+        else{
+            superLayer = group;
+        }
+
+
+        if(layers[layer])
+            layerID = layers[layer].index;
+
+        table.layer = layer;
+        table.type = document.getElementById(objects.idFields.type).value;
+        table.code_level = document.getElementById(objects.idFields.state).value;
+        table.difficulty = document.getElementById(objects.idFields.difficulty).value;
+        table.name = document.getElementById(objects.idFields.name).value;
+        table.code = helper.getCode(document.getElementById(objects.idFields.name).value);
+        table.author = document.getElementById(objects.idFields.author).value;
+        table.maintainer = document.getElementById(objects.idFields.maintainer).value;
+        table.found = state;
+        table.groupID = groupID;
+        table.layerID = layerID;
+        table.superLayer = superLayer;
+
+        data = dataUser(table.author);
+
+        table.picture = data.picture;
+        table.authorRealName = data.authorRealName;
+        table.authorEmail = data.authorEmail;
+
+        data = dataUser(table.maintainer);
+
+        table.maintainerPicture = data.picture;
+        table.maintainerRealName = data.authorRealName;
+
+        return table;       
+    }
+
+    function dataUser(user){
+
+        var data = {};
+
+        for(var i = 0; i < DATA_USER.length; i++){
+
+            if(user.toLowerCase() === DATA_USER[i].usrnm.toLowerCase()){
+
+                data.picture = DATA_USER[i].avatar_url;
+                data.authorRealName = DATA_USER[i].name;
+                data.authorEmail = DATA_USER[i].email;
+            }
+        }
+
+        return data;
+    }
+
 
     function animate(mesh, target, state, duration, callback){
 
@@ -777,5 +857,3 @@ function FermatEdit() {
     }
     
 }
-
-

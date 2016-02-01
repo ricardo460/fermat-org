@@ -47,7 +47,8 @@ function createScene(){
         
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xFFFFFF);
+    //renderer.setClearColor(0xFFFFFF);
+    renderer.setClearColor(0x313131);//Modo Prueba.
     document.getElementById('container').appendChild(renderer.domElement);
 
     camera = new Camera(new THREE.Vector3(0, 0, 90000),
