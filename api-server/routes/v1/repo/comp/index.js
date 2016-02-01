@@ -137,6 +137,12 @@ router.get('/', function (req, res, next) {
 router.post('/:comp_id/life-cicles', function (req, res, next) {
     'use strict';
     try {
+    	if (!security.isValidData(req.params.comp_id) || //
+            !security.isValidData(req.body.name) || //
+            !security.isValidData(req.body.target) || //
+            !security.isValidData(req.body.reached)) {
+            res.status(412).send({"message": "missing or invalid data"});
+        } else {
         repMod.addLifeCiclesToComp(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
@@ -151,6 +157,8 @@ router.post('/:comp_id/life-cicles', function (req, res, next) {
             }
             release(req);
         });
+
+        }
     } catch (err) {
         next(err);
     }
@@ -313,7 +321,23 @@ router.get('/:comp_id', function (req, res, next) {
  */
 router.put('/:comp_id', function (req, res, next) {
     'use strict';
-    try {
+    try { 
+    	
+        if (!security.isValidData(req.params.comp_id) || //
+          	!security.isValidData(req.body.platfrm_id) || //
+            !security.isValidData(req.body.suprlay_id) || //
+            !security.isValidData(req.body.layer_id) || //
+            !security.isValidData(req.body.name) || //
+            !security.isValidData(req.body.type) || //
+            !security.isValidData(req.body.description) || //
+            !security.isValidData(req.body.difficulty) || //
+            !security.isValidData(req.body.code_level) || //
+            !security.isValidData(req.body.repo_dir) || //
+            !security.isValidData(req.body.scrnshts) || //
+            !security.isValidData(req.body.found)) {
+            res.status(412).send('missing or invalid data');
+        } else {
+
         repMod.uptComp(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
@@ -322,6 +346,7 @@ router.put('/:comp_id', function (req, res, next) {
             }
             release(req);
         });
+        }
     } catch (err) {
         next(err);
     }

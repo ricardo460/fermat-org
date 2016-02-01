@@ -529,7 +529,7 @@ exports.getLay = function (req, next) {
 exports.uptLay = function (req, next) {
     'use strict';
     try {
-        layerMod.updateLayerById(req.params.lay_id, req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
+        layerMod.updateLayerById(req.params.layer_id, req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
             if (err) {
                 next(err, null);
             } else {
@@ -595,7 +595,7 @@ exports.getSprlay = function (req, next) {
 exports.uptSprlay = function (req, next) {
     'use strict';
     try {
-        suprlayMod.updateSuprlayById(req.params.sprly_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
+        suprlayMod.updateSuprlayById(req.params.suprlay_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
             if (err) {
                 next(err, null);
             } else {
