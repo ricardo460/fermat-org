@@ -226,6 +226,9 @@ function Helper() {
             case "nodes":
                 tail = "/v1/network/node";
                 break;
+            case "user":
+                tail = "/v1/repo/devs?access_token=561fd1a5032e0c5f7e20387d&env=development";
+                break;
         }
         
         return SERVER + tail;
@@ -366,39 +369,32 @@ function Helper() {
         window.helper.hide('backButton', 1000, true);
     };
 
-    this.fillTarget = function(x, y, z, view){
+    this.getCenterView = function(view){
 
-        var target = {  show : { },
-                        hide : { },
-                        showR : { },
-                        hideR : { }
-                    };
+        var newCenter = new THREE.Vector3(0, 0, 0);
+
+        newCenter = window.viewManager.translateToSection(view, newCenter);
+
+        return newCenter;
+
+    };
+
+    this.fillTarget = function(x, y, z, view){
 
         var object = new THREE.Object3D();
 
-            object.position.x = Math.random() * 80000 - 40000;
-            object.position.y = Math.random() * 80000 - 40000;
-            object.position.z = 80000 * 2;
+        object.position.x = Math.random() * 80000 - 40000;
+        object.position.y = Math.random() * 80000 - 40000;
+        object.position.z = 80000 * 2;
 
-            object.position.copy(window.viewManager.translateToSection(view, object.position));
+        object.position.copy(window.viewManager.translateToSection(view, object.position));
 
-            object.rotation.x = Math.random() * 180;
-            object.rotation.y = Math.random() * 180;
-            object.rotation.z = Math.random() * 180;
-
-        target.hide = object;
-        target.hideR = object;
-
-            object.position.x = x;
-            object.position.y = y;
-            object.position.z = z;
-
-            object.rotation.x = 0;
-            object.rotation.y = 0;
-            object.rotation.z = 0;
-
-        target.show = object;
-        target.showR = object;
+        var target = {  
+                show : new THREE.Vector3(x, y, z),        
+                hide : object.position,
+                showR : new THREE.Vector3(0, 0, 0),
+                hideR : new THREE.Vector3(Math.random() * 180, Math.random() * 180, Math.random() * 180)                    
+                    };
 
         return target;
     };
@@ -408,7 +404,7 @@ function Helper() {
         var value = array[array.length - 1];
 
         return value;
-    }
+    };
 
     this.getCountObject = function(object){
 
@@ -418,5 +414,5 @@ function Helper() {
             count++; 
 
         return count;
-    }
+    };
 }

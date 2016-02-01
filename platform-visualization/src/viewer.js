@@ -48,8 +48,8 @@ function createScene(){
         
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
-    //renderer.setClearColor(0xFFFFFF);
-    renderer.setClearColor(0x313131);//Modo Prueba.
+    renderer.setClearColor(0xFFFFFF);
+    //renderer.setClearColor(0x313131);//Modo Prueba.
     document.getElementById('container').appendChild(renderer.domElement);
 
     camera = new Camera(new THREE.Vector3(0, 0, 90000),
@@ -82,6 +82,8 @@ function init() {
     flowManager = new FlowManager();
     buttonsManager = new ButtonsManager();
     fermatEdit = new FermatEdit();
+
+    fermatEdit.init();
 
     //View Manager
     viewManager = new ViewManager();
@@ -183,7 +185,7 @@ function addNewTableObjects(){
         if(!lastObject)
             x = TABLE[platform].x;
         else
-            x = lastObject.target.show.position.x + TILE_DIMENSION.width;
+            x = lastObject.target.show.x + TILE_DIMENSION.width;
 
         y = TABLE[platform].layers[layer].y;
 
@@ -191,9 +193,9 @@ function addNewTableObjects(){
 
         var target = helper.fillTarget(x, y, z, 'table');
 
-        mesh.position.copy(target.hide.position);
+        mesh.position.copy(target.hide);
 
-        mesh.rotation.copy(target.hideR.rotation);
+        mesh.rotation.copy(target.hideR);
 
         object.mesh = mesh;
         object.data = table[i];
