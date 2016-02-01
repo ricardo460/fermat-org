@@ -1,6 +1,7 @@
 var layerSrv = require('./services/layer');
 var compMod = require('../component');
 var LayerMdl = require('./models/layer');
+var orderLib = require('../../../lib/order');
 /**
  * [sort description]
  *
@@ -12,74 +13,19 @@ var LayerMdl = require('./models/layer');
  * @return {[type]} [description]
  */
 var swapOrder = function (action, oldSpot, newSpot, callback) {
-    var query, range, set, rangeMin, rangeMax;
-    if (action == 'insert') {
-        range = newSpot - 1;
-        query = {
-            'order': {
-                '$gt': range
-            }
-        };
-        set = {
-            '$inc': {
-                'order': 1
-            }
-        };
-        layerSrv.updateLayers(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else if (action == 'update') {
-        rangeMin = oldSpot;
-        rangeMax = newSpot + 1;
-        query = {
-            '$and': [{
-                'order': {
-                    '$gt': rangeMin
+    orderLib.swapOrder(action, oldSpot, newSpot, function (err, query, set) {
+        if (err) {
+            return callback(err, null);
+        } else {
+            layerSrv.updateLayers(query, set, function (err_srt, res_srt) {
+                if (err_srt) {
+                    return callback(err_srt, null);
+                } else {
+                    return callback(null, res_srt);
                 }
-            }, {
-                'order': {
-                    '$lt': rangeMax
-                }
-            }]
-        };
-        set = {
-            '$inc': {
-                'order': -1
-            }
-        };
-        layerSrv.updateLayers(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else if (action == 'delete') {
-        range = oldSpot - 1;
-        query = {
-            'order': {
-                '$gt': range
-            }
-        };
-        set = {
-            '$inc': {
-                'order': -1
-            }
-        };
-        layerSrv.updateLayers(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else {
-        return callback(new Error('invalid swap action'), null);
-    }
+            });
+        }
+    });
 };
 /**
  * [insOrUpdLayer description]
@@ -240,7 +186,6 @@ exports.findLayerById = function (_id, callback) {
     } catch (err) {
         return callback(err, null);
     }
-
 };
 /**
  * [updateLayerById description]
@@ -296,7 +241,7 @@ exports.updateLayerById = function (_lay_id, name, lang, suprlay, order, callbac
 exports.delLayerById = function (_id, callback) {
     'use strict';
     try {
-        var delLayer = function(){
+        var delLayer = function () {
             layerSrv.findLayerById(_id, function (err_lay, res_lay) {
                 if (err_lay) {
                     return callback(err_lay, null);
@@ -306,7 +251,6 @@ exports.delLayerById = function (_id, callback) {
                     if (err_sld) {
                         return callback(err_sld, null);
                     } else {
-
                         layerSrv.delLayerById(res_lay._id, function (err_del, res_del) {
                             if (err_del) {
                                 return callback(err_del, null);
@@ -317,11 +261,11 @@ exports.delLayerById = function (_id, callback) {
                 });
             });
         };
-        compMod.findCompsByLayerId(_id, function(err_comp, res_comps){
+        compMod.findCompsByLayerId(_id, function (err_comp, res_comps) {
             if (err_comp) {
                 return callback(err_comp, null);
             }
-            if(res_comps) {
+            if (res_comps) {
                 var _comps = res_comps;
                 var loopDelComps = function () {
                     if (_comps.length <= 0) {
@@ -338,12 +282,10 @@ exports.delLayerById = function (_id, callback) {
                     }
                 };
                 loopDelComps();
-
             } else {
                 delLayer();
             }
         });
-
     } catch (err) {
         return callback(err, null);
     }
