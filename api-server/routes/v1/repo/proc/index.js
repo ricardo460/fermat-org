@@ -83,8 +83,9 @@ router.post('/', function (req, res, next) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
-                    res.status(200).send(result);
+                    res.status(201).send(result);
                 }
+                release(req);
             });
         }
     } catch (err) {
@@ -111,6 +112,7 @@ router.get('/', function (req, res, next) {
             } else {
                 res.status(200).send(result);
             }
+
         });
     } catch (err) {
         next(err);
@@ -130,22 +132,106 @@ router.get('/', function (req, res, next) {
 router.post('/:proc_id/steps', function (req, res, next) {
     'use strict';
     try {
-        if (!security.isValidData(req.body.proc_id) || //
-            !security.isValidData(req.body.platfrm_code) || //
-            !security.isValidData(req.body.suprlay_code) || //
-            !security.isValidData(req.body.layer_name) || //
-            !security.isValidData(req.body.comp_name) || //
+        if (!security.isValidData(req.params.proc_id) || //
+            !security.isValidData(req.body.comp_id) ||
             !security.isValidData(req.body.type) || //
             !security.isValidData(req.body.title) || //
             !security.isValidData(req.body.desc) || //
             !security.isValidData(req.body.order)) {
-            res.status(412).send('missing or invalid data');
+            res.status(412).send({message: 'missing or invalid data'});
         } else {
             repMod.addStep(req, function (error, result) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
-                    res.status(200).send(result);
+                    if (result) {
+                        res.status(201).send(result);
+                    } else {
+                        res.status(404).send({
+                            message: "NOT FOUND"
+                        });
+                    }
+                }
+                release(req);
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+});
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.put('/:proc_id/steps/:step_id', function (req, res, next) {
+    'use strict';
+    try {
+        if (!security.isValidData(req.params.proc_id) || //
+            !security.isValidData(req.params.step_id) || //
+            !security.isValidData(req.body.comp_id) ||
+            !security.isValidData(req.body.type) || //
+            !security.isValidData(req.body.title) || //
+            !security.isValidData(req.body.desc) || //
+            !security.isValidData(req.body.order)) {
+            res.status(412).send({message:'missing or invalid data'});
+        } else {
+            repMod.uptStep(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    if (result) {
+                        res.status(200).send(result);
+                    } else {
+                        res.status(404).send({
+                            message: "NOT FOUND"
+                        });
+                    }
+                }
+                release(req);
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+});
+
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.delete('/:proc_id/steps/:step_id', function (req, res, next) {
+    'use strict';
+    try {
+        if (!security.isValidData(req.params.proc_id) || //
+            !security.isValidData(req.params.step_id)
+            ) {
+            res.status(412).send({message:'missing or invalid data'});
+        } else {
+            repMod.delStep(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    if (result) {
+                        res.status(204).send();
+                    } else {
+                        res.status(404).send({
+                            message: "NOT FOUND"
+                        });
+                    }
                 }
                 release(req);
             });
@@ -229,7 +315,13 @@ router.delete('/:proc_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                res.status(204);
+                if (result) {
+                    res.status(204).send();
+                } else {
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
+                }
             }
             release(req);
         });

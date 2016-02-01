@@ -349,13 +349,116 @@ exports.updCompDevAndLifCyc = function (_comp_id, devs, life_cycle, callback) {
  * @return {[type]}     [description]
  */
 exports.findCompById = function (_id, callback) {
-    compSrv.findCompById(_id, function (err_comp, res_comp) {
-        if (err_comp) {
-            return callback(err_comp, null);
-        }
-        return callback(null, res_comp);
-    });
+    'use strict';
+    try {
+        compSrv.findCompById(_id, function (err_comp, res_comp) {
+            if (err_comp) {
+                return callback(err_comp, null);
+            }
+            return callback(null, res_comp);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
 };
+
+/**
+ * [findCompByLayerId description]
+ *
+ * @method findCompByLayerId
+ *
+ * @param  {[type]}     _layer_id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findCompsByLayerId = function (_layer_id, callback) {
+    'use strict';
+    try {
+        var find_obj = {
+            '$and': []
+        };
+        if (_layer_id) {
+            find_obj['$and'].push({
+                '_layer_id': _layer_id
+            });
+        }
+        compSrv.findComps(find_obj,{}, function (err_comp, res_comp) {
+            if (err_comp) {
+                return callback(err_comp, null);
+            }
+            return callback(null, res_comp);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
+/**
+ * [findCompsBySuprlayId description]
+ *
+ * @method findCompsBySuprlayId
+ *
+ * @param  {[type]}     _suprlay_id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findCompsBySuprlayId = function (_suprlay_id, callback) {
+    'use strict';
+    try {
+        var find_obj = {
+            '$and': []
+        };
+        if (_suprlay_id) {
+            find_obj['$and'].push({
+                '_suprlay_id': _suprlay_id
+            });
+        }
+
+        compSrv.findComps(find_obj,{}, function (err_comp, res_comp) {
+            if (err_comp) {
+                return callback(err_comp, null);
+            }
+            return callback(null, res_comp);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
+/**
+ * [findCompByPlatfrmId description]
+ *
+ * @method findCompByPlatfrmId
+ *
+ * @param  {[type]}     _platfrm_id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findCompsByPlatfrmId = function (_platfrm_id, callback) {
+    'use strict';
+    try {
+        var find_obj = {
+            '$and': []
+        };
+        if (_platfrm_id) {
+            find_obj['$and'].push({
+                '_platfrm_id': _platfrm_id
+            });
+        }
+        compSrv.findComps(find_obj,{}, function (err_comp, res_comp) {
+            if (err_comp) {
+                return callback(err_comp, null);
+            }
+            return callback(null, res_comp);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
 /**
  * [delAllComps description]
  *
@@ -410,77 +513,198 @@ exports.delAllComps = function (callback) {
  * @return {[type]}    [description]
  */
 exports.updateCompById = function (_comp_id, _platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, scrnshts, found, callback) {
-    var set_obj = {};
-    if (_platfrm_id) {
-        set_obj._platfrm_id = _platfrm_id;
-    }
-    if (_suprlay_id) {
-        set_obj._suprlay_id = _suprlay_id;
-    }
-    if (_layer_id) {
-        set_obj._layer_id = _layer_id;
-    }
-    if (name) {
-        set_obj.name = name;
-    }
-    if (type) {
-        set_obj.type = type;
-    }
-    if (description) {
-        set_obj.description = description;
-    }
-    if (difficulty) {
-        set_obj.difficulty = difficulty;
-    }
-    if (code_level) {
-        set_obj.code_level = code_level;
-    }
-    if (repo_dir) {
-        set_obj.repo_dir = repo_dir;
-    }
-    if (scrnshts) {
-        set_obj.scrnshts = scrnshts;
-    }
-    if (found) {
-        set_obj.found = found;
-    }
-    compSrv.updateCompById(_comp_id, set_obj, function (err, comp) {
-        if (err) {
-            return callback(err, null);
+    'use strict';
+    try {
+        var set_obj = {};
+        if (_platfrm_id) {
+            set_obj._platfrm_id = _platfrm_id;
         }
-        return callback(null, comp);
-    });
+        if (_suprlay_id) {
+            set_obj._suprlay_id = _suprlay_id;
+        }
+        if (_layer_id) {
+            set_obj._layer_id = _layer_id;
+        }
+        if (name) {
+            set_obj.name = name;
+        }
+        if (type) {
+            set_obj.type = type;
+        }
+        if (description) {
+            set_obj.description = description;
+        }
+        if (difficulty) {
+            set_obj.difficulty = difficulty;
+        }
+        if (code_level) {
+            set_obj.code_level = code_level;
+        }
+        if (repo_dir) {
+            set_obj.repo_dir = repo_dir;
+        }
+        if (typeof scrnshts != "undefined") {
+            set_obj.scrnshts = scrnshts;
+        }
+        if (typeof found != "undefined") {
+            set_obj.found = found;
+        }
+        compSrv.updateCompById(_comp_id, set_obj, function (err, comp) {
+            if (err) {
+                return callback(err, null);
+            }
+            //because return updated object
+            return callback(null, set_obj);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
 };
-exports.delProcById = function (_id, callback) {
-    compSrv.findCompById(_id, function (err_comp, res_comp) {
-        if (err_comp) {
-            return callback(err_comp, null);
+
+/**
+ * [updateCompById description]
+ *
+ * @method updateCompById
+ *
+ * @param  {[type]}     _comp_dev_id    [description]
+ * @param  {[type]}     _comp_id        [description]
+ * @param  {[type]}     _dev_id         [description]
+ * @param  {[type]}     role            [description]
+ * @param  {[type]}     scope           [description]
+ * @param  {[type]}     percnt          [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updateCompDevById = function (_comp_dev_id, _comp_id, _dev_id, role, scope, percnt, callback) {
+    'use strict';
+    try {
+        var set_obj = {};
+        if (_comp_id) {
+            set_obj._comp_id = _comp_id;
         }
-        if (res_proc) {
-            var steps = res_proc.steps;
-            var loopDelSteeps = function () {
-                if (steps.length <= 0) {
-                    procSrv.delSchemaById(_id, function (err_del_proc, res_del_proc) {
-                        if (err_del_proc) {
-                            return callback(err_del_proc, null);
-                        }
-                        return callback(null, res_del_proc);
-                    });
-                } else {
-                    var _idStep = steps.pop();
-                    stepSrv.delSchemaById(_idStep, function (err_del_step, res_delstep) {
-                        if (err_del_step) {
-                            return callback(err_del_step, null);
-                        } else {
-                            loopDelSteeps();
-                        }
-                    });
-                }
-            };
-            loopDelSteeps();
-        } else {
-            return callback(null, null);
+        if (_dev_id) {
+            set_obj._dev_id = _dev_id;
         }
-    });
+        if (role) {
+            set_obj.role = role;
+        }
+        if (scope) {
+            set_obj.scope = scope;
+        }
+        if (percnt) {
+            set_obj.percnt = percnt;
+        }
+        compDevSrv.updateCompDevById(_comp_dev_id, set_obj, function (err, comp_dev) {
+            if (err) {
+                return callback(err, null);
+            } else if(comp_dev){
+                //because return updated object
+                return callback(null, set_obj);
+            } else {
+                return callback(null, null);
+            }
+
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
 };
+
+/**
+ * [delCompById description]
+ *
+ * @method updateCompById
+ *
+ *
+ * @param  {[type]}     _comp_id        [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.delCompById = function (_id, callback) {
+    'use strict';
+    try {
+        compSrv.findCompById(_id, function (err_comp, res_comp) {
+            if (err_comp) {
+                return callback(err_comp, null);
+            }
+            if (res_comp) {
+                var comp_devs = res_comp.devs;
+                var life_cicles = res_comp.life_cycle;
+                var loopDelCompDevs = function () {
+                    if (comp_devs.length <= 0) {
+                        var loopDelLifeCicles = function(){
+
+                            if (life_cicles.length <= 0) {
+                                compSrv.delCompById(_id, function (err_del_comp, res_del_comp) {
+                                    if (err_del_comp) {
+                                        return callback(err_del_comp, null);
+                                    }
+                                    return callback(null, res_del_comp);
+                                });
+                            } else {
+
+                                var _id_status = life_cicles.pop();
+                                statusSrv.delStatusById(_id_status, function (err_del_status, res_del_status) {
+                                    if (err_del_status) {
+                                        return callback(err_del_status, null);
+                                    } else {
+                                        loopDelLifeCicles();
+                                    }
+                                });
+                            }
+                        };
+                        loopDelLifeCicles();
+
+                    } else {
+                        var _id_comp_dev = comp_devs.pop();
+                        compDevSrv.delCompDevById(_id_comp_dev, function (err_del_comp_dev, res_del_comp_dev) {
+                            if (err_del_comp_dev) {
+                                return callback(err_del_comp_dev, null);
+                            } else {
+                                loopDelCompDevs();
+                            }
+                        });
+                    }
+                };
+                loopDelCompDevs();
+            } else {
+                return callback(null, null);
+            }
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
+/**
+ * [delCompDevById description]
+ *
+ * @method updateCompById
+ *
+ *
+ * @param  {[type]}     _comp_id        [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.delCompDevById = function (_id, callback){
+    'use strict';
+    try {
+        compDevSrv.delCompDevById(_id, function (err_comp_dev, res_comp_dev) {
+            if (err_comp_dev) {
+                return callback(err_comp_dev, null);
+            } else if (res_comp_dev) {
+                return callback(null, res_comp_dev);
+            } else {
+                return callback(null, null);
+            }
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
+
 /*jshint +W069 */

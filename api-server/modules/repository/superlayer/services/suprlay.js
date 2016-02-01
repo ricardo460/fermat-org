@@ -141,6 +141,25 @@ exports.updateSuprlayById = function (_id, set, callback) {
 };
 
 /**
+ * [delSuprlayById description]
+ *
+ * @method delSuprlayById
+ *
+ * @param  {[type]}     _id      [description]
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.delSuprlayById = function (_id, callback) {
+    'use strict';
+    suprlayDao.delSchema({
+        _id: _id
+    }, function (err, suprlay) {
+        callback(err, suprlay);
+    });
+};
+
+/**
  * [delAllSuprlays description]
  *
  * @method delAllSuprlays
@@ -152,6 +171,27 @@ exports.updateSuprlayById = function (_id, set, callback) {
 exports.delAllSuprlays = function (callback) {
     'use strict';
     suprlayDao.delAllSchemas(function (err, suprlay) {
+        callback(err, suprlay);
+    });
+};
+
+/**
+ * [updateSuprlays description]
+ *
+ * @method updateSuprlays
+ *
+ * @param  {[type]}    query    [description]
+ * @param  {[type]}    set      [description]
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updateSuprlays = function (query, set, callback) {
+    'use strict';
+    set.upd_at = new mongoose.Types.ObjectId();
+    suprlayDao.updateSchema(query, set, {
+        multi: true
+    }, function (err, suprlay) {
         callback(err, suprlay);
     });
 };

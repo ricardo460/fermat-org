@@ -17,7 +17,7 @@ var LinkMdl = require('./models/link');
  */
 exports.insertLink = function (_wave_id, _chld_nod_id, _prnt_nod_id, type, callback) {
     'use strict';
-    try {        
+    try {
         var link = new LinkMdl(_wave_id, _chld_nod_id, _prnt_nod_id, type);
         linkSrv.insertLink(link, function (err_ins, res_ins) {
             if (err_ins) {
@@ -170,7 +170,7 @@ exports.findChildren = function (_wave_id, _prnt_nod_id, callback) {
  *
  * @return {[type]}         [description]
  */
-exports.findParents = function (_wave_id, _chld_nod_id, callback) {
+exports.findParents = function (_wave_id, _chld_nod_id, type, callback) {
     'use strict';
     try {
         var find_obj = {

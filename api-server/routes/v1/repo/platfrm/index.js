@@ -75,18 +75,45 @@ router.post('/', function (req, res, next) {
         if (!security.isValidData(req.body.code) || //
             !security.isValidData(req.body.name) || //
             !security.isValidData(req.body.logo) || //
-            !security.isValidData(req.body.deps) || //
             !security.isValidData(req.body.order)) {
-            res.status(412).send('missing or invalid data');
+            res.status(412).send({message: 'missing or invalid data'});
         } else {
             repMod.addPlatform(req, function (error, result) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
-                    res.status(200).send(result);
+                    res.status(201).send(result);
                 }
             });
         }
+    } catch (err) {
+        next(err);
+    }
+});
+
+/**
+ * [description]
+ *
+ * @method
+ *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
+ */
+router.get('/', function (req, res, next) {
+    'use strict';
+    try {
+
+        repMod.listPlatforms(req, function (error, result) {
+            if (error) {
+                res.status(200).send(error);
+            } else {
+                res.status(200).send(result);
+            }
+        });
+
     } catch (err) {
         next(err);
     }
@@ -140,7 +167,13 @@ router.put('/:platfrm_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                res.status(200).send(result);
+                if (result) {
+                    res.status(200).send(result);
+                } else {
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
+                }
             }
             release(req);
         });
@@ -164,9 +197,16 @@ router.delete('/:platfrm_id', function (req, res, next) {
     try {
         repMod.delPltf(req, function (error, result) {
             if (error) {
+                console.log(error);
                 res.status(200).send(error);
             } else {
-                res.status(200).send(result);
+                 if (result) {
+                    res.status(204).send();
+                } else {
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
+                }
             }
             release(req);
         });
