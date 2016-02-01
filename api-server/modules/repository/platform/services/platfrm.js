@@ -155,3 +155,43 @@ exports.delAllPlatfrms = function (callback) {
         callback(err, platfrm);
     });
 };
+
+/**
+ * [delPlatfrmById description]
+ *
+ * @method delPlatfrmById
+ *
+ * @param  {[type]}     _id      [description]
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.delPlatfrmById = function (_id, callback) {
+    'use strict';
+    platfrmDao.delSchema({
+        _id: _id
+    }, function (err, platfrm) {
+        callback(err, platfrm);
+    });
+};
+
+/**
+ * [updatePlatfrms description]
+ *
+ * @method updatePlatfrms
+ *
+ * @param  {[type]}    query    [description]
+ * @param  {[type]}    set      [description]
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updatePlatfrms = function (query, set, callback) {
+    'use strict';
+    set.upd_at = new mongoose.Types.ObjectId();
+    platfrmDao.updateSchema(query, set, {
+        multi: true
+    }, function (err, platfrm) {
+        callback(err, platfrm);
+    });
+};

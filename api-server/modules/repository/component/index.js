@@ -426,6 +426,39 @@ exports.findCompsBySuprlayId = function (_suprlay_id, callback) {
         return callback(err, null);
     }
 };
+
+/**
+ * [findCompByPlatfrmId description]
+ *
+ * @method findCompByPlatfrmId
+ *
+ * @param  {[type]}     _platfrm_id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findCompsByPlatfrmId = function (_platfrm_id, callback) {
+    'use strict';
+    try {
+        var find_obj = {
+            '$and': []
+        };
+        if (_platfrm_id) {
+            find_obj['$and'].push({
+                '_platfrm_id': _platfrm_id
+            });
+        }
+        compSrv.findComps(find_obj,{}, function (err_comp, res_comp) {
+            if (err_comp) {
+                return callback(err_comp, null);
+            }
+            return callback(null, res_comp);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
 /**
  * [delAllComps description]
  *

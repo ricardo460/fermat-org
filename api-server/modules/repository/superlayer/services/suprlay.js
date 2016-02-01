@@ -154,8 +154,8 @@ exports.delSuprlayById = function (_id, callback) {
     'use strict';
     suprlayDao.delSchema({
         _id: _id
-    }, function (err, layer) {
-        callback(err, layer);
+    }, function (err, suprlay) {
+        callback(err, suprlay);
     });
 };
 
@@ -191,7 +191,7 @@ exports.updateSuprlays = function (query, set, callback) {
     set.upd_at = new mongoose.Types.ObjectId();
     suprlayDao.updateSchema(query, set, {
         multi: true
-    }, function (err, layer) {
-        callback(err, layer);
+    }, function (err, suprlay) {
+        callback(err, suprlay);
     });
 };

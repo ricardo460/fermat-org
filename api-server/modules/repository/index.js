@@ -627,7 +627,6 @@ exports.delSprlay = function (req, next) {
     } catch (err) {
         next(err, null);
     }
-
 };
 /**
  * @method getPltf
@@ -640,7 +639,30 @@ exports.delSprlay = function (req, next) {
 exports.getPltf = function (req, next) {
     'use strict';
     try {
-        platfrmMod.findPlatfrmById(req.params.pltf_id, function (err, res) {
+        platfrmMod.findPlatfrmById(req.params.platfrm_id, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+};
+
+/**
+ * @method listPlatforms
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.listPlatforms = function (req, next) {
+    'use strict';
+    try {
+        platfrmMod.getPlatfrms(function (err, res) {
             if (err) {
                 next(err, null);
             } else {
@@ -662,7 +684,7 @@ exports.getPltf = function (req, next) {
 exports.uptPltf = function (req, next) {
     'use strict';
     try {
-        platfrmMod.updatePlatfrmById(req.params.pltf_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
+        platfrmMod.updatePlatfrmById(req.params.platfrm_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
             if (err) {
                 next(err, null);
             } else {
@@ -681,7 +703,20 @@ exports.uptPltf = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delPltf = function (req, next) {};
+exports.delPltf = function (req, next) {
+    'use strict';
+    try {
+        platfrmMod.delPlatfrmById(req.params.platfrm_id, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+};
 /**
  * @method listProcs
  *

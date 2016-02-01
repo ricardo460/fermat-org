@@ -78,3 +78,12 @@ exports.generateDataSuprLay = function(){
         "order": 0
     };
 };
+
+exports.generateDataPlatform = function(){
+    return {
+        "code" : faker.name.firstName(),
+        "name" : faker.name.firstName(),
+        "logo": faker.name.firstName(),
+        "order": 0
+    };
+};
