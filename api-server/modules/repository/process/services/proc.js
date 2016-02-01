@@ -222,3 +222,18 @@ exports.pushStepToProcById = function (_id, _step_id, callback) {
         callback(err, comp);
     });
 };
+/**
+ * [delProcById description]
+ *
+ * @method delProcById
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.delProcById = function (_id, callback) {
+    'use strict';
+    procDao.delSchemaById(_id, function (err, comp) {
+        callback(err, comp);
+    });
+};

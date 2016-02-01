@@ -507,7 +507,7 @@ exports.delComp = function (req, next) {
 exports.getLay = function (req, next) {
     'use strict';
     try {
-        layerMod.findLayerById(req.params.lay_id, function (err, res) {
+        layerMod.findLayerById(req.params.layer_id, function (err, res) {
             if (err) {
                 next(err, null);
             } else {
@@ -548,7 +548,20 @@ exports.uptLay = function (req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delLay = function (req, next) {};
+exports.delLay = function (req, next) {
+    'use strict';
+    try {
+        layerMod.delLayerById(req.params.layer_id, function (err, res) {
+            if (err) {
+                next(err, null);
+            } else {
+                next(null, res);
+            }
+        });
+    } catch (err) {
+        next(err, null);
+    }
+};
 /**
  * @method getSprlay
  *

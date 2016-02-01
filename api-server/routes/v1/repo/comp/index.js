@@ -89,7 +89,7 @@ router.post('/', function (req, res, next) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
-                    res.status(200).send(result);
+                    res.status(201).send(result);
                 }
                 release(req);
             });
@@ -142,7 +142,7 @@ router.post('/:comp_id/life-cicles', function (req, res, next) {
                 res.status(200).send(error);
             } else {
                 if (result) {
-                    res.status(200).send(result);
+                    res.status(201).send(result);
                 } else {
                     res.status(404).send({
                         message: "NOT FOUND"
@@ -180,7 +180,7 @@ router.post('/:comp_id/comp-devs', function (req, res, next) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
-                    res.status(200).send(result);
+                    res.status(201).send(result);
                 }
                 release(req);
             });

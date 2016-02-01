@@ -377,9 +377,11 @@ exports.delProcById = function (_id, callback) {
             }
             if (res_proc) {
                 var steps = res_proc.steps;
+                console.log("los eteps");
+                console.log(steps);
                 var loopDelSteeps = function () {
                     if (steps.length <= 0) {
-                        procSrv.delSchemaById(_id, function (err_del_proc, res_del_proc) {
+                        procSrv.delProcById(_id, function (err_del_proc, res_del_proc) {
                             if (err_del_proc) {
                                 return callback(err_del_proc, null);
                             }
@@ -387,7 +389,7 @@ exports.delProcById = function (_id, callback) {
                         });
                     } else {
                         var _idStep = steps.pop();
-                        stepSrv.delStepById(_idStep, function (err_del_step, res_delstep) {
+                        stepSrv.delStepById(_idStep, function (err_del_step, res_del_step) {
                             if (err_del_step) {
                                 return callback(err_del_step, null);
                             } else {
@@ -647,7 +649,7 @@ exports.updateProcById = function (_proc_id, platfrm, name, desc, prev, next, ca
             if (err) {
                 return callback(err, null);
             }
-            return callback(null, proc);
+            return callback(null, set_obj);
         });
     } catch (err) {
         return callback(err, null);

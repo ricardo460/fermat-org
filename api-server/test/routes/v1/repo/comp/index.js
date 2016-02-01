@@ -118,13 +118,12 @@ describe("COMP",function(){
     .post(pathTest+"/")
     .send(dataComp)
     .expect("Content-type",/json/)
-    .expect(200) // This is HTTP response
+    .expect(201) // This is HTTP response
     .end(function(err,res){
 
       if (err) return done(err);
 
       res.body.should.have.property('_id');
-      res.status.should.equal(200);
 
       return done();
     });
@@ -155,7 +154,6 @@ describe("COMP",function(){
       res.body.repo_dir.should.equal(dataComp.repo_dir);
       res.body.scrnshts.should.equal(dataComp.scrnshts);
       res.body.found.should.equal(dataComp.found);
-      res.status.should.equal(200);
 
       return done();
     });
@@ -183,7 +181,7 @@ describe("COMP",function(){
     .post(pathTest+"/"+comp._id+"/life-cicles")
     .send(dataLifeCicle)
     .expect("Content-type",/json/)
-    .expect(200) // This is HTTP response
+    .expect(201) // This is HTTP response
     .end(function(err,res){
 
       if (err) return done(err);
@@ -200,7 +198,7 @@ describe("COMP",function(){
     .post(pathTest+"/"+comp._id+"/comp-devs")
     .send(dataCompDev)
     .expect("Content-type",/json/)
-    .expect(200) // This is HTTP response
+    .expect(201) // This is HTTP response
     .end(function(err,res){
       if (err) return done(err);
 

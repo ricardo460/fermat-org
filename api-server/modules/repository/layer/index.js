@@ -1,4 +1,5 @@
 var layerSrv = require('./services/layer');
+var compMod = require('../component');
 var LayerMdl = require('./models/layer');
 /**
  * [sort description]
@@ -225,12 +226,21 @@ exports.delAllLayers = function (callback) {
  * @return {[type]}     [description]
  */
 exports.findLayerById = function (_id, callback) {
-    layerSrv.findLayerById(_id, function (err_lay, res_lay) {
-        if (err_lay) {
-            return callback(err_lay, null);
-        }
-        return callback(null, res_lay);
-    });
+    'use strict';
+    try {
+        console.log("en el findLayerById");
+        console.log(_id);
+        layerSrv.findLayerById(_id, function (err_lay, res_lay) {
+            console.log(arguments);
+            if (err_lay) {
+                return callback(err_lay, null);
+            }
+            return callback(null, res_lay);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+
 };
 /**
  * [updateLayerById description]
@@ -260,50 +270,81 @@ exports.updateLayerById = function (_lay_id, name, lang, suprlay, order, callbac
         if (suprlay) {
             set_obj.suprlay = suprlay;
         }
-        if (order) {
+        if (typeof order != "undefined") {
             set_obj.order = order;
         }
         layerSrv.updateLayerById(_lay_id, set_obj, function (err, lay) {
             if (err) {
                 return callback(err, null);
             }
-            return callback(null, lay);
+            return callback(null, set_obj);
         });
     } catch (err) {
         return callback(err, null);
     }
 };
 /**
- * [deleteLayerById description]
+ * [delLayerById description]
  *
- * @method deleteLayerById
+ * @method delLayerById
  *
  * @param  {[type]}        _id      [description]
  * @param  {Function}      callback [description]
  *
  * @return {[type]}        [description]
  */
-exports.deleteLayerById = function (_id, callback) {
+exports.delLayerById = function (_id, callback) {
     'use strict';
     try {
-        layerSrv.findLayerById(_id, function (err_lay, res_lay) {
-            if (err_lay) {
-                return callback(err_lay, null);
-            }
-            // ordering function
-            swapOrder('delete', res_lay.order, null, function (err_sld, res_sld) {
-                if (err_sld) {
-                    return callback(err_sld, null);
-                } else {
-                    layerSrv.delLayerById(res_lay._id, function (err_del, res_del) {
-                        if (err_del) {
-                            return callback(err_del, null);
-                        }
-                        return callback(null, res_lay);
-                    });
+        var delLayer = function(){
+            layerSrv.findLayerById(_id, function (err_lay, res_lay) {
+                console.log(arguments);
+                if (err_lay) {
+                    return callback(err_lay, null);
                 }
+                // ordering function
+                swapOrder('delete', res_lay.order, null, function (err_sld, res_sld) {
+                    if (err_sld) {
+                        return callback(err_sld, null);
+                    } else {
+
+                        layerSrv.delLayerById(res_lay._id, function (err_del, res_del) {
+                            if (err_del) {
+                                return callback(err_del, null);
+                            }
+                            return callback(null, res_lay);
+                        });
+                    }
+                });
             });
+        };
+        compMod.findCompsByLayerId(_id, function(err_comp, res_comps){
+            if (err_comp) {
+                return callback(err_comp, null);
+            }
+            if(res_comps) {
+                var _comps = res_comps;
+                var loopDelComps = function () {
+                    if (_comps.length <= 0) {
+                        delLayer();
+                    } else {
+                        var comp = _comps.pop();
+                        compMod.delCompById(comp._id, function (err_del_comp, res_del_comp) {
+                            if (err_del_comp) {
+                                return callback(err_del_comp, null);
+                            } else {
+                                loopDelComps();
+                            }
+                        });
+                    }
+                };
+                loopDelComps();
+
+            } else {
+                delLayer();
+            }
         });
+
     } catch (err) {
         return callback(err, null);
     }

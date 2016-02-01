@@ -23,7 +23,7 @@ describe("PROC",function(){
 
     procMod.insOrUpdProc(dataProc.platfrm, dataProc.name, dataProc.desc, dataProc.prev, dataProc.next, function(err_proc, res_proc){
 
-        if (err_proc) return console.log(err_comp);
+        if (err_proc) return console.log(err_proc);
 
         var dataComp = dataHelper.generateDataComp();
 
@@ -57,6 +57,43 @@ describe("PROC",function(){
 
   });
 
+    it("#GET getProc",function(done){
+
+        server
+        .get(pathTest+"/"+proc._id)
+        .expect("Content-type",/json/)
+        .expect(200) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+            res.body.platfrm.should.equal(proc.platfrm);
+            res.body.name.should.equal(proc.name);
+            res.body.desc.should.equal(proc.desc);
+            res.body.prev.should.equal(proc.prev);
+            res.body.next.should.equal(proc.next);
+            res.body._id.should.equal(proc._id.toString());
+
+          return done();
+        });
+
+    });
+
+    it("#GET listProcs",function(done){
+
+        server
+        .get(pathTest+"/")
+        .expect("Content-type",/json/)
+        .expect(200) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+        });
+
+    });
+
     it("#POST addProc",function(done){
 
         var dataProc = dataHelper.generateDataProc();
@@ -67,17 +104,53 @@ describe("PROC",function(){
         .expect("Content-type",/json/)
         .expect(201) // This is HTTP response
         .end(function(err, res){
+            if (err) return done(err);
+
+            res.body.platfrm.should.equal(dataProc.platfrm.toUpperCase());
+            res.body.name.should.equal(dataProc.name);
+            res.body.desc.should.equal(dataProc.desc);
+            res.body.prev.should.equal(dataProc.prev);
+            res.body.next.should.equal(dataProc.next);
+            res.body.should.have.property('_id');
+
+          return done();
+        });
+
+    });
+
+    it("#PUT uptProc",function(done){
+
+        var dataProc = dataHelper.generateDataProc();
+
+        server
+        .put(pathTest+"/"+proc._id)
+        .send(dataProc)
+        .expect("Content-type",/json/)
+        .expect(200) // This is HTTP response
+        .end(function(err, res){
 
             if (err) return done(err);
 
-            res.body._comp_id.should.equal(dataStep.comp_id);
-            res.body.type.should.equal(dataStep.type);
-            res.body.title.should.equal(dataStep.title);
-            res.body.desc.should.equal(dataStep.desc);
-            res.body.order.should.equal(dataStep.order);
-            res.status.should.equal(200);
+            res.body.platfrm.should.equal(dataProc.platfrm);
+            res.body.name.should.equal(dataProc.name);
+            res.body.desc.should.equal(dataProc.desc);
+            res.body.prev.should.equal(dataProc.prev);
+            res.body.next.should.equal(dataProc.next);
 
           return done();
+        });
+
+    });
+
+    it("#DELETE delProc",function(done){
+
+        server
+        .delete(pathTest+"/"+proc._id)
+        .expect(204) // This is HTTP response
+        .end(function(err, res){
+            if (err) return done(err);
+
+            return done();
         });
 
     });

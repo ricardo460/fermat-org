@@ -6,7 +6,7 @@ exports.generateDataComp = function(){
     return {
         "platfrm_id" : mongoose.Types.ObjectId().toString(),
         "suprlay_id" :  mongoose.Types.ObjectId().toString(),
-        "layer_id" :  mongoose.Types.ObjectId(),
+        "layer_id" :  mongoose.Types.ObjectId().toString(),
         "name" : faker.name.firstName(),
         "type" : "addon",
         "description": faker.lorem.sentence(),
@@ -58,5 +58,14 @@ exports.generateDataProc = function(){
         "desc": faker.lorem.sentence(),
         "prev": faker.lorem.sentence(),
         "next": faker.lorem.sentence()
+    };
+};
+
+exports.generateDataLay = function(){
+    return {
+        "name" : faker.name.firstName(),
+        "lang" : faker.name.firstName(),
+        "suprlay": faker.name.firstName(),
+        "order": 0
     };
 };

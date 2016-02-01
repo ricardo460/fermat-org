@@ -83,8 +83,9 @@ router.post('/', function (req, res, next) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
-                    res.status(200).send(result);
+                    res.status(201).send(result);
                 }
+                release(req);
             });
         }
     } catch (err) {
@@ -141,6 +142,7 @@ router.get('/:layer_id', function (req, res, next) {
                         message: "NOT FOUND"
                     });
                 }
+                release(req);
             }
         });
     } catch (err) {
@@ -191,7 +193,13 @@ router.delete('/:layer_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                res.status(200).send(result);
+                if (result) {
+                    res.status(204).send();
+                } else {
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
+                }
             }
             release(req);
         });
