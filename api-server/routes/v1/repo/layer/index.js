@@ -160,14 +160,22 @@ router.get('/:layer_id', function (req, res, next) {
 router.put('/:layer_id', function (req, res, next) {
     'use strict';
     try {
-        repMod.uptLay(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
-            } else {
-                res.status(200).send(result);
-            }
-            release(req);
+	    if (!security.isValidData(req.params.lay_id) || //
+            !security.isValidData(req.body.name) || //
+            !security.isValidData(req.body.lang) || //
+            !security.isValidData(req.body.suprlay) || //
+            !security.isValidData(req.body.order)) {
+            res.status(412).send('missing or invalid data');
+        } else {
+             repMod.uptLay(req, function (error, result) {
+             if (error) {
+                 res.status(200).send(error);
+             } else {
+                 res.status(200).send(result);
+             }
+                 release(req);
         });
+    } 
     } catch (err) {
         next(err);
     }
