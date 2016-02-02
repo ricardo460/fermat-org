@@ -1,6 +1,7 @@
 var platfrmSrv = require('./services/platfrm');
 var PlatfrmMdl = require('./models/platfrm');
 var compMod = require('../component');
+var orderLib = require('../../../lib/order');
 
 /**
  * [sort description]
@@ -13,74 +14,19 @@ var compMod = require('../component');
  * @return {[type]} [description]
  */
 var swapOrder = function (action, oldSpot, newSpot, callback) {
-    var query, range, set, rangeMin, rangeMax;
-    if (action == 'insert') {
-        range = newSpot - 1;
-        query = {
-            'order': {
-                '$gt': range
-            }
-        };
-        set = {
-            '$inc': {
-                'order': 1
-            }
-        };
-        platfrmSrv.updatePlatfrms(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else if (action == 'update') {
-        rangeMin = oldSpot;
-        rangeMax = newSpot + 1;
-        query = {
-            '$and': [{
-                'order': {
-                    '$gt': rangeMin
+    orderLib.swapOrder(action, oldSpot, newSpot, function (err, query, set) {
+        if (err) {
+            return callback(err, null);
+        } else {
+            platfrmSrv.updatePlatfrms(query, set, function (err_srt, res_srt) {
+                if (err_srt) {
+                    return callback(err_srt, null);
+                } else {
+                    return callback(null, res_srt);
                 }
-            }, {
-                'order': {
-                    '$lt': rangeMax
-                }
-            }]
-        };
-        set = {
-            '$inc': {
-                'order': -1
-            }
-        };
-        platfrmSrv.updatePlatfrms(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else if (action == 'delete') {
-        range = oldSpot - 1;
-        query = {
-            'order': {
-                '$gt': range
-            }
-        };
-        set = {
-            '$inc': {
-                'order': -1
-            }
-        };
-        platfrmSrv.updatePlatfrms(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else {
-        return callback(new Error('invalid swap action'), null);
-    }
+            });
+        }
+    });
 };
 
 /**
@@ -122,24 +68,50 @@ exports.insOrUpdPlatfrm = function (code, name, logo, deps, order, callback) {
                     set_obj.order = order;
                     res_plat.order = order;
                 }
-                if (Object.keys(set_obj)
-                    .length > 0) {
-                    platfrmSrv.updatePlatfrmById(res_plat._id, set_obj, function (err_upd, res_upd) {
-                        if (err_upd) {
-                            return callback(err_upd, null);
-                        }
-                        return callback(null, res_plat);
-                    });
+                if (Object.keys(set_obj).length > 0) {
+
+                    if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+
+                        swapOrder('update', res_plat.order, set_obj.order, function (err_sld, res_sld) {
+                            if (err_sld) {
+                                return callback(err_sld, null);
+                            } else {
+                                platfrmSrv.updatePlatfrmById(res_plat._id, set_obj, function (err, plat) {
+                                    if (err) {
+                                        return callback(err, null);
+                                    }
+                                    return callback(null, set_obj);
+                                });
+                            }
+                        });
+
+                    } else {
+
+                        platfrmSrv.updatePlatfrmById(res_plat._id, set_obj, function (err_upd, res_upd) {
+                            if (err_upd) {
+                                return callback(err_upd, null);
+                            }
+                            return callback(null, set_obj);
+                        });
+
+                    }
+
                 } else {
                     return callback(null, res_plat);
                 }
             } else {
                 var platfrm = new PlatfrmMdl(code, name, logo, deps, order);
-                platfrmSrv.insertPlatfrm(platfrm, function (err_ins, res_ins) {
-                    if (err_ins) {
-                        return callback(err_ins, null);
+                swapOrder('insert', null, platfrm.order, function (err_sld, res_sld) {
+                    if (err_sld) {
+                        return callback(err_sld, null);
+                    } else {
+                        platfrmSrv.insertPlatfrm(platfrm, function (err_ins, res_ins) {
+                            if (err_ins) {
+                                return callback(err_ins, null);
+                            }
+                            return callback(null, res_ins);
+                        });
                     }
-                    return callback(null, res_ins);
                 });
             }
         });
@@ -211,12 +183,17 @@ exports.delAllPlatfrms = function (callback) {
  * @return {[type]}     [description]
  */
 exports.findPlatfrmById = function(_id, callback){
-    platfrmSrv.findPlatfrmById(_id, function (err_plat, res_plat) {
-        if (err_plat) {
-            return callback(err_plat, null);
-        }
-        return callback(null, res_plat);
-    });
+    'use strict';
+    try {
+        platfrmSrv.findPlatfrmById(_id, function (err_plat, res_plat) {
+            if (err_plat) {
+                return callback(err_plat, null);
+            }
+            return callback(null, res_plat);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
 };
 
 /**
@@ -255,12 +232,40 @@ exports.updatePlatfrmById =  function (_platfrm_id, code, name, logo, deps, orde
             set_obj.order = order;
         }
 
-        platfrmSrv.updatePlatfrmById(_platfrm_id, set_obj, function (err, plat) {
-            if (err) {
-                return callback(err, null);
+        platfrmSrv.findPlatfrmById(_platfrm_id, function (err_platfrm, res_platfrm) {
+
+            if (err_platfrm) {
+                return callback(err_platfrm, null);
             }
-            return callback(null, set_obj);
+
+            if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+
+                swapOrder('update', res_platfrm.order, set_obj.order, function (err_sld, res_sld) {
+                    if (err_sld) {
+                        return callback(err_sld, null);
+                    } else {
+                        platfrmSrv.updatePlatfrmById(_platfrm_id, set_obj, function (err, plat) {
+                            if (err) {
+                                return callback(err, null);
+                            }
+                            return callback(null, set_obj);
+                        });
+                    }
+                });
+
+            } else {
+
+                platfrmSrv.updatePlatfrmById(_platfrm_id, set_obj, function (err_upd, res_upd) {
+                    if (err_upd) {
+                        return callback(err_upd, null);
+                    }
+                    return callback(null, set_obj);
+                });
+
+            }
         });
+
+
     } catch (err) {
         return callback(err, null);
     }
