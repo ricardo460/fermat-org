@@ -196,3 +196,24 @@ exports.delStepById = function (_id, callback) {
         callback(err, comp);
     });
 };
+
+/**
+ * [updateSteps description]
+ *
+ * @method updateSteps
+ *
+ * @param  {[type]}    query    [description]
+ * @param  {[type]}    set      [description]
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updateSteps = function (query, set, callback) {
+    'use strict';
+    set.upd_at = new mongoose.Types.ObjectId();
+    stepDao.updateSchema(query, set, {
+        multi: true
+    }, function (err, step) {
+        callback(err, step);
+    });
+};
