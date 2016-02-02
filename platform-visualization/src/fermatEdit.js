@@ -265,6 +265,28 @@ function FermatEdit() {
         sesionMaintainer();
         sesionState();
         createbutton();
+        setTextSize();
+        
+        function setTextSize() {
+            
+            var object = {
+                id : "fermatEditStyle",
+                text : "style"
+              };
+
+            objects.row2.buttons.push(object);
+            
+            var windowHeight = window.innerWidth;
+            var size         = (windowHeight*100)/1920;
+            
+            var style        = document.createElement("style");
+            var styleSheet   = ".edit-Fermat {font-size:"+size+"%;}";
+            var node         = document.createTextNode(styleSheet);
+            
+            style.appendChild(node);
+            document.body.appendChild(style);
+            
+        }
 
         function createDiv(row){
 
@@ -305,10 +327,7 @@ function FermatEdit() {
                       
             button.id = id;
             button.className = 'edit-Fermat';
-            button.style.position = 'absolute';
             button.innerHTML = text;
-            button.style.top = objects['row' + row].y + 'px';
-            button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + x) + 'px';
             button.style.zIndex = 10;
             button.style.opacity = 0;
 
@@ -444,10 +463,8 @@ function FermatEdit() {
 
             var sucesorButton = document.getElementById(idSucesor);
                   
-            button.placeholder = 'Component Name';      
-            button.style.position = 'absolute';
-            button.style.top = objects.row2.y + 'px';
-            button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
+            button.className = 'edit-Fermat';
+            button.placeholder = 'Component Name';
             button.style.zIndex = 10;
             button.style.opacity = 0;
 
@@ -485,10 +502,8 @@ function FermatEdit() {
 
             var sucesorButton = document.getElementById(idSucesor);
 
+            button.className = 'edit-Fermat';
             button.placeholder = 'Github User';     
-            button.style.position = 'absolute';
-            button.style.top = objects.row2.y + 'px';
-            button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
             button.style.zIndex = 10;
             button.style.opacity = 0;
 
@@ -561,10 +576,8 @@ function FermatEdit() {
 
             var sucesorButton = document.getElementById(idSucesor);
                   
-            button.placeholder = 'Github User';      
-            button.style.position = 'absolute';
-            button.style.top = objects.row2.y + 'px';
-            button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
+            button.className = 'edit-Fermat';
+            button.placeholder = 'Github User';    
             button.style.zIndex = 10;
             button.style.opacity = 0;
 
@@ -608,9 +621,18 @@ function FermatEdit() {
         }
 
         function createbutton(){
-
+            
             var id = 'button-save'; text = 'Save'; type = 'button';
+            
+            var button = new ButtonsManager();
+            
+            button.createButtons(id, text, function(){
+                saveTile();
+            }, 5, "button", "right");
 
+            /*
+            var id = 'button-save'; text = 'Save'; type = 'button';
+            
             var button = createField(id, text, 20, type, 2);
 
             button.className = 'actionButton';
@@ -619,7 +641,7 @@ function FermatEdit() {
 
                 saveTile();
             });
-
+            */
         }
 
     }
