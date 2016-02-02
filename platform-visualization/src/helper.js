@@ -368,7 +368,7 @@ function Helper() {
     this.hideBackButton = function() {
         window.helper.hide('backButton', 1000, true);
     };
-
+    
     this.getCenterView = function(view){
 
         var newCenter = new THREE.Vector3(0, 0, 0);
@@ -415,4 +415,5 @@ function Helper() {
 
         return count;
     };
+
 }

@@ -48,8 +48,8 @@ function createScene(){
         
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xFFFFFF);
-    //renderer.setClearColor(0x313131);//Modo Prueba.
+    //renderer.setClearColor(0xFFFFFF);
+    renderer.setClearColor(0x313131);//Modo Prueba.
     document.getElementById('container').appendChild(renderer.domElement);
 
     camera = new Camera(new THREE.Vector3(0, 0, 90000),
@@ -318,9 +318,13 @@ function changeView(targets) {
  * Triggered when the user clicks a tile
  * @param {Number} id The ID (position on table) of the element
  */
-function onElementClick(id) {console.log(id);
+function onElementClick(id) {
     
     var focus = parseInt(id);
+
+    (CBP_Sub App_0).split("_"); 
+    
+    TABLE[variable[0]].layers[variable[1]].objects[variable[2]];
 
     if (window.camera.getFocus() == null) {
 

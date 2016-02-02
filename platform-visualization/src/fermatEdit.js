@@ -27,6 +27,8 @@ function FermatEdit() {
         exit : null
     };
 
+    this.actualTile = null;
+
     var tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
         tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
 
@@ -60,8 +62,10 @@ function FermatEdit() {
 
         var callback = function(){ 
                 addAllFilds();
+                tileManager.transform(tileManager.targets.table, 2000);
                 fillFields(id);
-                drawTile(id); 
+                drawTile(id);
+
             };
 
         if(id === null){
@@ -106,6 +110,7 @@ function FermatEdit() {
             objects.row1.div = null;
             objects.row2.div = null;
             objects.idFields = {};
+            actualTile = null;
             deleteMesh();
 
             if(actualView === 'table'){ 
@@ -122,6 +127,8 @@ function FermatEdit() {
     function fillFields(id){
 
         var tile = window.table[id]; 
+
+        self.actualTile = window.table[id];
 
         if(tile.group !== undefined)
             document.getElementById('select-Platform').value = tile.group;
@@ -677,6 +684,8 @@ function FermatEdit() {
 
         var table = fillTable(false);
 
+        modiTile(table);
+        /*
         var x, y, z;
 
         window.tileManager.transform(tileManager.targets.table);
@@ -732,13 +741,94 @@ function FermatEdit() {
         animate(mesh, target.show, true, 5000);
                 
         TABLE[platform].layers[layer].objects.push(object);
-
+        */
     }
 
     function modiTile(table){
 
-        var group = table.group || window.layers[table.layer].super_layer;
+        var newLayer = table.layer,
+            newGroup = table.group || window.layers[table.layer].super_layer,
+            oldLayer = self.actualTile.layer,
+            oldGroup = self.actualTile.group || window.layers[self.actualTile.layer].super_layer;
 
+        camera.loseFocus();
+
+        camera.enable();
+
+        var positionCamera = TABLE[oldGroup].layers[oldLayer].objects[0].target;
+
+        camera.move(positionCamera.show.x, positionCamera.show.y,positionCamera.show.z + 16000, 1000);
+
+        if(newGroup !== oldGroup || newLayer !== oldLayer)
+            cambio();
+        
+        setTimeout( function() { 
+
+             var positionCamera = TABLE[newGroup].layers[newLayer].objects[0].target;
+
+             camera.move(positionCamera.show.x, positionCamera.show.y,positionCamera.show.z + 16000, 1000);
+
+        }, 9000 );
+
+
+
+        function cambio(){
+
+            var arrayObject = TABLE[oldGroup].layers[oldLayer].objects,
+                newArrayObject = [];
+            
+            for(var i = 0; i < arrayObject.length; i++){
+                
+                if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
+
+                    arrayObject.splice(i,1);
+                }
+            }
+
+            for(var t = 0; t < arrayObject.length; t++){
+
+                var data = arrayObject[t].data,
+                    mesh = arrayObject[t].mesh,
+                    target = null,
+                    object = { 
+                        mesh : null,
+                        data : {},
+                        target : {}
+                    };
+                    
+                var x = 0, y = 0, z = 0;
+
+                var lastObject = helper.getLastValueArray(newArrayObject);
+
+                x = 0;
+
+                if(!lastObject)
+                    x = TABLE[oldGroup].x;
+                else
+                    x = lastObject.target.show.x + TILE_DIMENSION.width;
+
+                y = TABLE[oldGroup].layers[oldLayer].y;
+
+                z = 0;
+                
+                target = helper.fillTarget(x, y, z, 'table');
+
+                object.mesh = mesh;
+                object.data = data;
+                object.target = target;
+
+                animate(mesh, target.show, true, 1500);
+
+                newArrayObject.push(object);
+            }
+
+            TABLE[oldGroup].layers[oldLayer].objects = newArrayObject;
+
+        }
+
+        function nocambio(){
+
+        }
     }
 
     function fillTable(state){
