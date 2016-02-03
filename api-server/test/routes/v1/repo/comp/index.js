@@ -129,6 +129,11 @@ describe("COMP",function(){
     });
 
   });
+//Pegar mi 412 aki
+ 
+//hasta aki
+
+
 
   it("#PUT uptComp",function(done){
 

@@ -19,6 +19,34 @@ exports.generateDataComp = function(){
 
 };
 
+exports.generateDataComp412 = function(){
+
+    return {
+        "platfrm_id" : mongoose.Types.ObjectId().toString(),
+        "suprlay_id" :  mongoose.Types.ObjectId().toString(),
+        "layer_id" :  mongoose.Types.ObjectId().toString(),
+        "name" : faker.name.firstName(),
+        "type" : "addon",
+        "description": faker.lorem.sentence(),
+        "difficulty": 5,
+        "code_level": faker.lorem.sentence(),
+        "repo_dir": "root",
+        "scrnshts": false,
+        "found": false
+    };
+
+};
+
+
+exports.generateData412General= function(){
+
+    return {
+        "default_data" : mongoose.Types.ObjectId().toString(),
+      
+    };
+
+};
+
 exports.generateDataCompDev = function(){
     return {
         "comp_id" : mongoose.Types.ObjectId().toString(),
