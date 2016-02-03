@@ -8,6 +8,7 @@ var platfrmSrv = require('../platform/services/platfrm');
 var suprlaySrv = require('../superlayer/services/suprlay');
 var layerSrv = require('../layer/services/layer');
 var compSrv = require('../component/services/comp');
+var orderLib = require('../../../lib/utils/order');
 
 /**
  * [sort description]
@@ -20,74 +21,19 @@ var compSrv = require('../component/services/comp');
  * @return {[type]} [description]
  */
 var swapOrder = function (action, oldSpot, newSpot, callback) {
-    var query, range, set, rangeMin, rangeMax;
-    if (action == 'insert') {
-        range = newSpot - 1;
-        query = {
-            'order': {
-                '$gt': range
-            }
-        };
-        set = {
-            '$inc': {
-                'order': 1
-            }
-        };
-        procSrv.updateProcs(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else if (action == 'update') {
-        rangeMin = oldSpot;
-        rangeMax = newSpot + 1;
-        query = {
-            '$and': [{
-                'order': {
-                    '$gt': rangeMin
+    orderLib.swapOrder(action, oldSpot, newSpot, function (err, query, set) {
+        if (err) {
+            return callback(err, null);
+        } else {
+            stepSrv.updateSteps(query, set, function (err_srt, res_srt) {
+                if (err_srt) {
+                    return callback(err_srt, null);
+                } else {
+                    return callback(null, res_srt);
                 }
-            }, {
-                'order': {
-                    '$lt': rangeMax
-                }
-            }]
-        };
-        set = {
-            '$inc': {
-                'order': -1
-            }
-        };
-        procSrv.updateProcs(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else if (action == 'delete') {
-        range = oldSpot - 1;
-        query = {
-            'order': {
-                '$gt': range
-            }
-        };
-        set = {
-            '$inc': {
-                'order': -1
-            }
-        };
-        procSrv.updateProcs(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else {
-        return callback(new Error('invalid swap action'), null);
-    }
+            });
+        }
+    });
 };
 
 /**
@@ -312,12 +258,14 @@ exports.insOrUpdProc = function (platfrm, name, desc, prev, next, callback) {
                     res_proc.next = next;
                 }
                 if (Object.keys(set_obj).length > 0) {
+
                     procSrv.updateProcById(res_proc._id, set_obj, function (err_upd, res_upd) {
                         if (err_upd) {
                             return callback(err_upd, null);
                         }
                         return callback(null, res_proc);
                     });
+
                 } else {
                     return callback(null, res_proc);
                 }
@@ -377,8 +325,6 @@ exports.delProcById = function (_id, callback) {
             }
             if (res_proc) {
                 var steps = res_proc.steps;
-                console.log("los eteps");
-                console.log(steps);
                 var loopDelSteeps = function () {
                     if (steps.length <= 0) {
                         procSrv.delProcById(_id, function (err_del_proc, res_del_proc) {
@@ -479,22 +425,51 @@ exports.insOrUpdStep = function (_proc_id, platfrm_code, suprlay_code, layer_nam
                         res_step.next = next;
                     }
                     if (Object.keys(set_obj).length > 0) {
-                        stepSrv.updateStepById(res_step._id, set_obj, function (err_upd, res_upd) {
-                            if (err_upd) {
-                                return callback(err_upd, null);
-                            }
-                            return callback(null, res_step);
-                        });
+                        if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+
+                            swapOrder('update', res_step.order, set_obj.order, function (err_sld, res_sld) {
+                                if (err_sld) {
+                                    return callback(err_sld, null);
+                                } else {
+
+                                    stepSrv.updateStepById(res_step._id, set_obj, function (err_upd, res_upd) {
+                                        if (err_upd) {
+                                            return callback(err_upd, null);
+                                        }
+                                        return callback(null, set_obj);
+                                    });
+                                }
+                            });
+
+                        } else {
+
+                            stepSrv.updateStepById(res_step._id, set_obj, function (err_upd, res_upd) {
+                                if (err_upd) {
+                                    return callback(err_upd, null);
+                                }
+                                return callback(null, set_obj);
+                            });
+
+                        }
+
                     } else {
                         return callback(null, res_step);
                     }
+
                 } else {
+
                     var step = new StepMdl(_proc_id, res_comp ? res_comp._id : null, type, title, desc, order, next);
-                    stepSrv.insertStep(step, function (err_ins, res_ins) {
-                        if (err_ins) {
-                            return callback(err_ins, null);
+                    swapOrder('insert', null, step.order, function (err_sld, res_sld) {
+                        if (err_sld) {
+                            return callback(err_sld, null);
+                        } else {
+                            stepSrv.insertStep(step, function (err_ins, res_ins) {
+                                if (err_ins) {
+                                    return callback(err_ins, null);
+                                }
+                                return callback(null, res_ins);
+                            });
                         }
-                        return callback(null, res_ins);
                     });
                 }
             });
@@ -731,11 +706,36 @@ exports.updateStepById = function (_step_id, _comp_id, type, title, desc, order,
             set_obj.order = order;
         }
 
-        stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
-            if (err_upt) {
-                return callback(err_upt, null);
+        stepSrv.findStepById(_step_id, function (err_step, res_step) {
+            if (err_step) {
+                return callback(err_step, null);
             }
-            return callback(null, set_obj);
+
+            if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+
+                swapOrder('update', res_step.order, set_obj.order, function (err_sld, res_sld) {
+                    if (err_sld) {
+                        return callback(err_sld, null);
+                    } else {
+
+                        stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
+                            if (err_upt) {
+                                return callback(err_upt, null);
+                            }
+                            return callback(null, set_obj);
+                        });
+                    }
+                });
+            } else {
+
+                stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
+                    if (err_upt) {
+                        return callback(err_upt, null);
+                    }
+                    return callback(null, set_obj);
+                });
+
+            }
         });
 
     } catch (err) {
@@ -756,12 +756,23 @@ exports.updateStepById = function (_step_id, _comp_id, type, title, desc, order,
 exports.delStepById = function (_id, callback) {
     'use strict';
     try {
-        stepSrv.delStepById(_id, function (err_del_step, res_del_step) {
-            if (err_del_step) {
-                return callback(err_del_step, null);
-            } else {
-                return callback(null, res_del_step);
+        stepSrv.findStepById(_id, function (err_step, res_step) {
+            if (err_step) {
+                return callback(err_step, null);
             }
+            // ordering function
+            swapOrder('delete', res_step.order, null, function (err_sld, res_sld) {
+                if (err_sld) {
+                    return callback(err_sld, null);
+                } else {
+                    stepSrv.delStepById(res_step._id, function (err_del, res_del) {
+                        if (err_del) {
+                            return callback(err_del, null);
+                        }
+                        return callback(null, res_step);
+                    });
+                }
+            });
         });
     } catch (err) {
         return callback(err, null);

@@ -75,7 +75,7 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
                                     if (err_upd) {
                                         return callback(err_upd, null);
                                     }
-                                    return callback(null, res_lay);
+                                    return callback(null, set_obj);
                                 });
                             }
                         });
@@ -84,7 +84,7 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
                             if (err_upd) {
                                 return callback(err_upd, null);
                             }
-                            return callback(null, res_lay);
+                            return callback(null, set_obj);
                         });
                     }
                 } else {
@@ -174,8 +174,6 @@ exports.delAllLayers = function (callback) {
 exports.findLayerById = function (_id, callback) {
     'use strict';
     try {
-        console.log("en el findLayerById");
-        console.log(_id);
         layerSrv.findLayerById(_id, function (err_lay, res_lay) {
             console.log(arguments);
             if (err_lay) {
@@ -218,11 +216,31 @@ exports.updateLayerById = function (_lay_id, name, lang, suprlay, order, callbac
         if (typeof order != "undefined") {
             set_obj.order = order;
         }
-        layerSrv.updateLayerById(_lay_id, set_obj, function (err, lay) {
-            if (err) {
-                return callback(err, null);
+        layerSrv.findLayerById(_lay_id, function (err_lay, res_lay) {
+            if (err_lay) {
+                return callback(err_lay, null);
             }
-            return callback(null, set_obj);
+            if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+                swapOrder('update', res_lay.order, set_obj.order, function (err_sld, res_sld) {
+                    if (err_sld) {
+                        return callback(err_sld, null);
+                    } else {
+                        layerSrv.updateLayerById(res_lay._id, set_obj, function (err_upd, res_upd) {
+                            if (err_upd) {
+                                return callback(err_upd, null);
+                            }
+                            return callback(null, set_obj);
+                        });
+                    }
+                });
+            } else {
+                layerSrv.updateLayerById(res_lay._id, set_obj, function (err_upd, res_upd) {
+                    if (err_upd) {
+                        return callback(err_upd, null);
+                    }
+                    return callback(null, set_obj);
+                });
+            }
         });
     } catch (err) {
         return callback(err, null);

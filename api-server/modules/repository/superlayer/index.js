@@ -69,22 +69,43 @@ exports.insOrUpdSuprlay = function (code, name, logo, deps, order, callback) {
                     res_supr.order = order;
                 }
                 if (Object.keys(set_obj).length > 0) {
-                    suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
-                        if (err_upd) {
-                            return callback(err_upd, null);
-                        }
-                        return callback(null, res_supr);
-                    });
+                    if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+                        swapOrder('update', res_supr.order, set_obj.order, function (err_sld, res_sld) {
+                            if (err_sld) {
+                                return callback(err_sld, null);
+                            } else {
+                                suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
+                                    if (err_upd) {
+                                        return callback(err_upd, null);
+                                    }
+                                    return callback(null, set_obj);
+                                });
+                            }
+                        });
+                    } else {
+                        suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
+                            if (err_upd) {
+                                return callback(err_upd, null);
+                            }
+                            return callback(null, set_obj);
+                        });
+                    }
                 } else {
                     return callback(null, res_supr);
                 }
             } else {
                 var suprlay = new SuprlayMdl(code, name, logo, deps, order);
-                suprlaySrv.insertSuprlay(suprlay, function (err_ins, res_ins) {
-                    if (err_ins) {
-                        return callback(err_ins, null);
+                swapOrder('insert', null, suprlay.order, function (err_sld, res_sld) {
+                    if (err_sld) {
+                        return callback(err_sld, null);
+                    } else {
+                        suprlaySrv.insertSuprlay(suprlay, function (err_ins, res_ins) {
+                            if (err_ins) {
+                                return callback(err_ins, null);
+                            }
+                            return callback(null, res_ins);
+                        });
                     }
-                    return callback(null, res_ins);
                 });
             }
         });
@@ -192,11 +213,31 @@ exports.updateSuprlayById = function (_sprly_id, code, name, logo, deps, order, 
         if (typeof order != "undefined") {
             set_obj.order = order;
         }
-        suprlaySrv.updateSuprlayById(_sprly_id, set_obj, function (err, sprly) {
-            if (err) {
-                return callback(err, null);
+        suprlaySrv.findSuprlayById(_sprly_id, function (err_supr, res_supr) {
+            if (err_supr) {
+                return callback(err_supr, null);
             }
-            return callback(null, set_obj);
+            if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+                swapOrder('update', res_supr.order, set_obj.order, function (err_sld, res_sld) {
+                    if (err_sld) {
+                        return callback(err_sld, null);
+                    } else {
+                        suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
+                            if (err_upd) {
+                                return callback(err_upd, null);
+                            }
+                            return callback(null, set_obj);
+                        });
+                    }
+                });
+            } else {
+                suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
+                    if (err_upd) {
+                        return callback(err_upd, null);
+                    }
+                    return callback(null, set_obj);
+                });
+            }
         });
     } catch (err) {
         return callback(err, null);

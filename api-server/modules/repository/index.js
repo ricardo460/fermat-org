@@ -992,7 +992,7 @@ exports.uptCompDev = function (req, next) {
 exports.delCompDev = function (req, next) {
     'use strict';
     try {
-        compMod.delCompDevById(req.params.comp_dev_id, function (err, res) {
+        compMod.delCompDevById(req.params.comp_id, req.params.comp_dev_id, function (err, res) {
             if (err) {
                 next(err, null);
             } else {

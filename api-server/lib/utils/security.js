@@ -8,38 +8,39 @@
  **/
 var validator = require('validator'),
     sanitizer = require('sanitizer');
-
-exports.isValidDate = function (date) {
-    return isValidDate(date);
-};
-
 // yyyy-MM-dd'T'HH:mm:ss.SSSZ
-function isValidDate(date) {
+/**
+ * [isValidDate description]
+ *
+ * @method isValidDate
+ *
+ * @param  {[type]}    date [description]
+ *
+ * @return {Boolean}   [description]
+ */
+var isValidDate = function (date) {
     var is_valid = false,
         regex = /^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/;
     is_valid = regex.test(date) && date.length >= 20;
     return is_valid;
-}
-
-
+};
 /**
  * [isValidData description]
  * @param  {[type]}  data [description]
  * @return {Boolean}      [description]
  */
-function isValidData(data) {
+var isValidData = function (data) {
     if (typeof data == 'undefined' || data === null || data === '' || data === "" || data.length === 0 || data === "") {
         //console.log('invalid data');
         return 0;
     } else return 1;
-}
-
+};
 /**
  * [isObjectID description]
  * @param  {[type]}  str [description]
  * @return {Boolean}     [description]
  */
-function isObjectID(str) {
+var isObjectID = function (str) {
     var valid = false;
     if (isValidData(str)) {
         str = str + '';
@@ -57,14 +58,13 @@ function isObjectID(str) {
         //console.log('invalid objectID');
         return 0;
     }
-}
-
+};
 /**
  * [isEmail description]
  * @param  {[type]}  email [description]
  * @return {Boolean}       [description]
  */
-function isEmail(email) {
+var isEmail = function (email) {
     if (isValidData(email)) {
         if (validator.isLength(email, 8, 64)) {
             if (validator.isEmail(email)) {
@@ -74,21 +74,30 @@ function isEmail(email) {
     }
     //console.log('invalid email');
     return 0;
-}
-
+};
 /**
  * [isLengthPassword description]
  * @param  {[type]}  passwd [description]
  * @return {Boolean}        [description]
  */
-function isLengthPassword(passwd) {
+var isLengthPassword = function (passwd) {
     if (isValidData(passwd)) {
         if (validator.isLength(passwd, 8, 16)) return 1;
     }
     //console.log('invalid password');
     return 0;
-}
-
+};
+var isUsername = function (username) {
+    if (isValidData(username)) {
+        if (validator.matches(username, /^[a-zA-Z][a-zA-Z0-9\._\-]{3,14}?[a-zA-Z0-9]{0,2}$/)) return 1;
+        //return 1;
+    }
+    //console.log('invalid username');
+    return 0;
+};
+exports.isValidDate = function (date) {
+    return isValidDate(date);
+};
 /**
  * [isAlphanumeric description]
  * @param  {[type]}  str [description]
@@ -107,7 +116,6 @@ exports.isAlphanumeric = function (str) {
         return 0;
     }
 };
-
 /**
  * [sanitizeArray description]
  * @param  {[type]} array [description]
@@ -125,20 +133,16 @@ exports.sanitizeArray = function (array) {
     }
     return array;
 };
-
 /**
  * [sanitizeItem description]
  * @param  {[type]} item [description]
  * @return {[type]}      [description]
  */
 exports.sanitizeItem = function (item) {
-
     item = sanitizer.sanitize(item);
     item = sanitizer.escape(item);
-
     return item;
 };
-
 /**
  * [apiVersion description]
  * @param  {[type]} api_version [description]
@@ -152,7 +156,6 @@ exports.apiVersion = function (api_version) {
         return 0;
     }
 };
-
 /**
  * [isValidData description]
  * @param  {[type]}  data [description]
@@ -161,7 +164,6 @@ exports.apiVersion = function (api_version) {
 exports.isValidData = function (data) {
     return isValidData(data);
 };
-
 /**
  * [isEmail description]
  * @param  {[type]}  email [description]
@@ -170,7 +172,6 @@ exports.isValidData = function (data) {
 exports.isEmail = function (email) {
     return isEmail(email);
 };
-
 /**
  * [isUsername description]
  * @param  {[type]}  username [description]
@@ -179,16 +180,6 @@ exports.isEmail = function (email) {
 exports.isUsername = function (username) {
     return isUsername(username);
 };
-
-function isUsername(username) {
-    if (isValidData(username)) {
-        if (validator.matches(username, /^[a-zA-Z][a-zA-Z0-9\._\-]{3,14}?[a-zA-Z0-9]{0,2}$/)) return 1;
-        //return 1;
-    }
-    //console.log('invalid username');
-    return 0;
-}
-
 /**
  * Check if an account is valid
  * @param  {[type]}  username [description]
@@ -200,7 +191,6 @@ exports.isValidAccount = function (account) {
     }
     return 0;
 };
-
 /**
  * [isLengthPassword description]
  * @param  {[type]}  passwd [description]
@@ -209,7 +199,6 @@ exports.isValidAccount = function (account) {
 exports.isLengthPassword = function (passwd) {
     return isLengthPassword(passwd);
 };
-
 /**
  * [isObjectID description]
  * @param  {[type]}  str [description]
@@ -218,7 +207,6 @@ exports.isLengthPassword = function (passwd) {
 exports.isObjectID = function (str) {
     return isObjectID(str);
 };
-
 /**
  * [isName description]
  * @param  {[type]}  name [description]
@@ -231,7 +219,6 @@ exports.isName = function (name) {
     //console.log('invalid name');
     return 0;
 };
-
 /**
  * [isDescription description]
  * @param  {[type]}  description [description]
@@ -244,7 +231,6 @@ exports.isDescription = function (description) {
     //console.log('invalid description');
     return 0;
 };
-
 /**
  * [isLang description]
  * @param  {[type]}  lang [description]
@@ -258,7 +244,6 @@ exports.isLang = function (lang) {
     console.log('invalid lang');
     return 0;
 };
-
 /**
  * NOT TESTED
  */
@@ -268,7 +253,6 @@ exports.isChatId = function (chat_id) {
     }
     return 0;
 };
-
 exports.isIdArray = function (idArray) {
     if (Array.isArray(idArray)) {
         idArray.forEach(function (id) {
@@ -278,7 +262,6 @@ exports.isIdArray = function (idArray) {
     }
     return 0;
 };
-
 exports.isUUID = function (uuid) {
     if (validator.isUUID(uuid)) {
         return 1;
