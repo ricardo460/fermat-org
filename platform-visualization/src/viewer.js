@@ -157,7 +157,7 @@ function fillNewTable(x, y, layer, platform){
     if(typeof TABLE[platform].layers[layer] === 'undefined'){ 
         TABLE[platform].layers[layer] = {   
             objects : [],
-            y : y 
+            y : y
         };
     }
 }
@@ -168,7 +168,7 @@ function addNewTableObjects(){
 
     for (var i = 0; i < table.length; i++) {
 
-        var mesh = tileManager.createElement(i);      
+        var mesh = window.objects[i];      
 
         var platform = table[i].group || window.layers[table[i].layer].super_layer,
             layer = table[i].layer,
@@ -195,7 +195,7 @@ function addNewTableObjects(){
 
         mesh.position.copy(target.hide);
 
-        mesh.rotation.copy(target.hideR);
+        mesh.rotation.set(target.hideR.x, target.hideR.y, target.hideR.z);
 
         object.mesh = mesh;
         object.data = table[i];
@@ -321,10 +321,6 @@ function changeView(targets) {
 function onElementClick(id) {
     
     var focus = parseInt(id);
-
-    (CBP_Sub App_0).split("_"); 
-    
-    TABLE[variable[0]].layers[variable[1]].objects[variable[2]];
 
     if (window.camera.getFocus() == null) {
 

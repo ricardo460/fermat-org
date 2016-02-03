@@ -27,8 +27,11 @@ function ButtonsManager() {
 
             self.createButtons('developerButton', 'View developer', function(){
 
+                self.removeAllButtons();
+                
             	if(typeof(callback) === 'function')
                 	callback();
+
             });
         }
 
@@ -79,8 +82,6 @@ function ButtonsManager() {
 			button.style.opacity = 0;
 
 	      	button.addEventListener('click', function() {
-	      		
-	      			self.removeAllButtons();
 
 	                if(typeof(callback) === 'function')
 	                    callback(); 

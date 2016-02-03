@@ -42,6 +42,7 @@ function ScreenshotsAndroid() {
 
     		window.buttonsManager.createButtons('showScreenshots', 'View Screenshots', function(){
     			
+    			window.buttonsManager.removeAllButtons();
     			showScreenshotsButton(id);
     		});
     	}	

@@ -60,17 +60,19 @@ function FermatEdit() {
             button = 'buttonFermatEdit',
             side = null;
 
-        var callback = function(){ 
+        var callback = function(){
+                window.buttonsManager.removeAllButtons(); 
                 addAllFilds();
-                tileManager.transform(tileManager.targets.table, 2000);
+                window.tileManager.transform(tileManager.targets.table, 2000);
+                window.signLayer.transformSignLayer();
                 fillFields(id);
                 drawTile(id);
-
             };
 
         if(id === null){
 
             callback = function(){ 
+                window.buttonsManager.removeAllButtons();
                 drawTile(null, addAllFilds);
             };
 
@@ -283,11 +285,10 @@ function FermatEdit() {
 
             objects.row2.buttons.push(object);
             
-            var windowHeight = window.innerWidth;
-            var size         = (windowHeight*100)/1920;
-            
+            var windowWidth = window.innerWidth;
+            var size         = windowWidth * 0.008;
             var style        = document.createElement("style");
-            var styleSheet   = ".edit-Fermat {font-size:"+size+"%;}";
+            var styleSheet   = ".edit-Fermat {font-size:"+size+"px;}";
             var node         = document.createTextNode(styleSheet);
             
             style.appendChild(node);
@@ -629,26 +630,14 @@ function FermatEdit() {
 
         function createbutton(){
             
-            var id = 'button-save'; text = 'Save'; type = 'button';
+            var id = 'button-save', text = 'Save', type = 'button';
             
-            var button = new ButtonsManager();
-            
-            button.createButtons(id, text, function(){
+            window.buttonsManager.createButtons(id, text, function(){
                 saveTile();
-            }, 5, "button", "right");
+                window.buttonsManager.removeAllButtons();
+                self.addButton();
+            }, null, null, "right");
 
-            /*
-            var id = 'button-save'; text = 'Save'; type = 'button';
-            
-            var button = createField(id, text, 20, type, 2);
-
-            button.className = 'actionButton';
-            
-            button.addEventListener('click', function() {
-
-                saveTile();
-            });
-            */
         }
 
     }
@@ -706,8 +695,8 @@ function FermatEdit() {
 
         var table = fillTable(false);
 
-        modiTile(table);
-        /*
+        //modiTile(table);
+        
         var x, y, z;
 
         window.tileManager.transform(tileManager.targets.table);
@@ -763,7 +752,7 @@ function FermatEdit() {
         animate(mesh, target.show, true, 5000);
                 
         TABLE[platform].layers[layer].objects.push(object);
-        */
+        
     }
 
     function modiTile(table){
@@ -773,32 +762,30 @@ function FermatEdit() {
             oldLayer = self.actualTile.layer,
             oldGroup = self.actualTile.group || window.layers[self.actualTile.layer].super_layer;
 
-        camera.loseFocus();
+        window.camera.loseFocus();
 
-        camera.enable();
+        window.camera.enable();
 
-        var positionCamera = TABLE[oldGroup].layers[oldLayer].objects[0].target;
+        var positionCameraX = TABLE[oldGroup].x,
+            positionCameraY = helper.getPositionYLayer(oldLayer);
 
-        camera.move(positionCamera.show.x, positionCamera.show.y,positionCamera.show.z + 16000, 1000);
+        window.camera.move(positionCameraX, positionCameraY, 10000, 1000);
 
-        if(newGroup !== oldGroup || newLayer !== oldLayer)
-            cambio();
-        
-        setTimeout( function() { 
+        setTimeout( function() {
 
-             var positionCamera = TABLE[newGroup].layers[newLayer].objects[0].target;
+            if(newGroup !== oldGroup || newLayer !== oldLayer)
+                cambio();
+            else
+                nocambio();
 
-             camera.move(positionCamera.show.x, positionCamera.show.y,positionCamera.show.z + 16000, 1000);
-
-        }, 9000 );
-
-
+        }, 2000 );
 
         function cambio(){
 
             var arrayObject = TABLE[oldGroup].layers[oldLayer].objects,
                 newArrayObject = [];
-            
+                TABLE[oldGroup].layers[oldLayer].objects = [];
+   
             for(var i = 0; i < arrayObject.length; i++){
                 
                 if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
@@ -829,28 +816,88 @@ function FermatEdit() {
                 else
                     x = lastObject.target.show.x + TILE_DIMENSION.width;
 
-                y = TABLE[oldGroup].layers[oldLayer].y;
+                y = window.helper.getPositionYLayer(oldLayer);
 
                 z = 0;
                 
-                target = helper.fillTarget(x, y, z, 'table');
+                target = window.helper.fillTarget(x, y, z, 'table');
 
                 object.mesh = mesh;
                 object.data = data;
                 object.target = target;
 
-                animate(mesh, target.show, true, 1500);
+                animate(arrayObject[t].mesh, target.show, true, 1500);
 
                 newArrayObject.push(object);
             }
 
             TABLE[oldGroup].layers[oldLayer].objects = newArrayObject;
 
+            setTimeout( function() { 
+
+                positionCameraX = TABLE[newGroup].x,
+                positionCameraY = window.helper.getPositionYLayer(newLayer);
+                camera.move(positionCameraX, positionCameraY,10000, 1000);
+                createNewElementTile(table);
+
+            }, 2000 );
+
         }
 
         function nocambio(){
 
         }
+    }
+
+    function createNewElementTile(table){
+
+        var x, y, z;
+
+        var mesh = window.tileManager.createElement(1, table);
+
+        var platform = table.group || window.layers[table.layer].super_layer,
+            layer = table.layer,
+            object = { 
+                mesh : null,
+                data : {},
+                target : {}
+            };
+
+        if(typeof TABLE[platform].layers[layer] === 'undefined'){ 
+            TABLE[platform].layers[layer] = {   
+                objects : [],
+                y : window.helper.getPositionYLayer(layer)
+            };
+        }
+
+        var lastObject = helper.getLastValueArray(TABLE[platform].layers[layer].objects);
+
+        x = 0;
+
+        if(!lastObject)
+            x = TABLE[platform].x;
+        else
+            x = lastObject.target.show.x + TILE_DIMENSION.width;
+
+        y = window.helper.getPositionYLayer(layer);
+
+        z = 0;
+
+        var target = helper.fillTarget(x, y, z, 'table');
+
+        mesh.position.copy(target.hide);
+        mesh.rotation.set(target.hideR.x, target.hideR.y, target.hideR.z);
+
+        window.scene.add(mesh);
+
+        object.mesh = mesh;
+        object.data = table;
+        object.target = target;
+
+        animate(mesh, target.show, true, 2500);
+                
+        TABLE[platform].layers[layer].objects.push(object);
+
     }
 
     function fillTable(state){

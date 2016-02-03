@@ -416,4 +416,11 @@ function Helper() {
         return count;
     };
 
+    this.getPositionYLayer = function(layer){
+
+        var index = window.layers[layer].index;
+
+        return window.tileManager.dimensions.layerPositions[index];
+    }
+
 }

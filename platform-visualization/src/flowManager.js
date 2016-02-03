@@ -140,7 +140,7 @@ function FlowManager(){
                     button.innerHTML = 'Show Workflows';
                     button.addEventListener('click', function() {
                         showFlow(flows);
-                        buttonsManager.removeAllButtons();
+                        window.buttonsManager.removeAllButtons();
                     });
                 }
                 else {
