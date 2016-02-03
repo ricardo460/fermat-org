@@ -20,7 +20,7 @@ function getData() {
 
                     window.preLoad(function() {
 
-                        tileManager.fillTable(lists);
+                        window.tileManager.fillTable(lists);
 
                         TWEEN.removeAll();
                         window.logo.stopFade();
