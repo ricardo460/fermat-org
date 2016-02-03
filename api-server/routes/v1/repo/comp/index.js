@@ -335,7 +335,7 @@ router.put('/:comp_id', function (req, res, next) {
             !security.isValidData(req.body.repo_dir) || //
             !security.isValidData(req.body.scrnshts) || //
             !security.isValidData(req.body.found)) {
-            res.status(412).send('missing or invalid data');
+             res.status(412).send({"message": "missing or invalid data"});
         } else {
 
         repMod.uptComp(req, function (error, result) {
