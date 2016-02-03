@@ -1,22 +1,66 @@
 /*global require*/
 /*global module*/
-var request = require('request');
 var express = require('express');
-var passport = require('passport');
-var winston = require('winston');
 var router = express.Router();
-var repMod = require('../../modules/repository');
-var Cache = require('../../lib/route-cache');
+var winston = require('winston');
+var security = require('../../../lib/utils/security');
+var repMod = require('../../../modules/repository');
+var authMod = require('../../../modules/auth');
+var Cache = require('../../../lib/route-cache');
+var layerRout = require('./layer');
+var suprlayRout = require('./suprlay');
+var procRout = require('./proc');
+var platfrmRout = require('./platfrm');
+var compRout = require('./comp');
 // creation of object cache
 var cache = new Cache({
     type: 'file',
     time: 36000000
 });
 /**
+ * [auth description]
+ *
+ * @method auth
+ *
+ * @param  {[type]}   req  [description]
+ * @param  {[type]}   res  [description]
+ * @param  {Function} next [description]
+ *
+ * @return {[type]}   [description]
+ */
+var auth = function (req, res, next) {
+    /*var axs_key = req.query.axs_key;
+    var digest = req.query.digest;
+    authMod.verifyTkn(axs_key, digest, function (err_auth, res_auth) {
+        if (res_auth) {
+            req.body.usr_id = req.params.usr_id;
+            next();
+        } else {
+            res.status(401).send({
+                'message': err_auth.message
+            });
+        }
+    });*/
+    next();
+};
+/**
+ *
+ */
+router.use("/usrs/:usr_id/layers", auth, layerRout);
+router.use("/usrs/:usr_id/suprlays", auth, suprlayRout);
+router.use("/usrs/:usr_id/procs", auth, procRout);
+router.use("/usrs/:usr_id/platfrms", auth, platfrmRout);
+router.use("/usrs/:usr_id/comps", auth, compRout);
+/**
  * [description]
  *
- * @route
+ * @method
  *
+ * @param  {[type]} req   [description]
+ * @param  {[type]} res   [description]
+ * @param  {[type]} next  [description]
+ *
+ * @return {[type]} [description]
  */
 router.get('/comps/reload', function (req, res, next) {
     'use strict';
@@ -51,29 +95,6 @@ router.get('/comps/reload', function (req, res, next) {
     }
 });
 /**
- * Gets the access token and returns
- */
-router.get('/accessToken', function (req, res, next) {
-    'use strict';
-    try {
-        console.log("Get acces token");
-        var code = req.query;
-        var url = "https://github.com/login/oauth/access_token?client_id=6cac9cc2c2cb584c5bf4&client_secret=4887bbc58790c7a242a8dafcb035c0a01dc2a199&" + "code=" + code['code'];
-        request.get({
-            url: url,
-            headers: {
-                'Accept': 'application/json'
-            }
-        }, function (err, resp, body) {
-            console.log("response: ");
-            console.dir(body);
-            res.status(200).send(body);
-        });
-    } catch (err) {
-        next(err);
-    }
-});
-/**
  * [description]
  *
  * @route
@@ -82,9 +103,6 @@ router.get('/accessToken', function (req, res, next) {
 router.get('/comps', function (req, res, next) {
     'use strict';
     try {
-        //passport.authenticate('bearer', function (err, access, scope) {
-        //if (access) {
-        // we search for body in cache
         var body = cache.getBody(req);
         if (body) {
             // we send it
@@ -109,10 +127,6 @@ router.get('/comps', function (req, res, next) {
                 }
             });
         }
-        //} else {
-        //res.status(401).send(null);
-        //}
-        //})(req, res, next);
     } catch (err) {
         next(err);
     }
@@ -126,9 +140,6 @@ router.get('/comps', function (req, res, next) {
 router.get('/devs', function (req, res, next) {
     'use strict';
     try {
-        //passport.authenticate('bearer', function (err, access, scope) {
-        //if (access) {
-        // we search for body in cache
         var body = cache.getBody(req);
         if (body) {
             // we send it
@@ -153,10 +164,6 @@ router.get('/devs', function (req, res, next) {
                 }
             });
         }
-        //} else {
-        //res.status(401).send(null);
-        //}
-        //})(req, res, next);
     } catch (err) {
         next(err);
     }
@@ -307,32 +314,6 @@ router.get('/manifest/check', function (req, res, next) {
     try {
         // we create it
         repMod.checkManifest(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
-            } else {
-                res.status(200).send(result);
-            }
-        });
-    } catch (err) {
-        next(err);
-    }
-});
-/**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
- */
-router.post('/usrs/:usr_id/itms/:itm_id/locks', function (req, res, next) {
-    'use strict';
-    // TODO: insert auth
-    try {
-        repMod.doLock(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
             } else {

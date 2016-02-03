@@ -9,7 +9,7 @@ var DevMdl = require('../../repository/developer/models/dev');
  * @param  {[type]}   email      [description]
  * @param  {[type]}   name       [description]
  * @param  {[type]}   bday       [description]
- * @param  {[type]}   country    [description]
+ * @param  {[type]}   location    [description]
  * @param  {[type]}   avatar_url [description]
  * @param  {[type]}   github_tkn [description]
  * @param  {[type]}   url        [description]
@@ -17,7 +17,7 @@ var DevMdl = require('../../repository/developer/models/dev');
  * @param  {Function} callback   [description]
  * @return {[type]}              [description]
  */
-exports.insOrUpdUsr = function(usrnm, email, name, bday, country, avatar_url, github_tkn, url, bio, callback) {
+exports.insOrUpdUsr = function(usrnm, email, name, bday, location, avatar_url, github_tkn, url, bio, callback) {
 	'use strict';
 	try {
 		usrSrv.findUsrByUsrnm(usrnm, function(err_usr, res_usr) {
@@ -25,7 +25,7 @@ exports.insOrUpdUsr = function(usrnm, email, name, bday, country, avatar_url, gi
 				return callback(err_usr, null);
 			}
 			if (res_usr) {
-				devMod.insOrUpdDev(usrnm, email, name, bday, country, avatar_url, url, bio, function(err, res) {
+				devMod.insOrUpdDev(usrnm, email, name, bday, location, avatar_url, url, bio, function(err, res) {
 					if (err) {
 						return callback(err, null);
 					}
@@ -59,7 +59,7 @@ exports.insOrUpdUsr = function(usrnm, email, name, bday, country, avatar_url, gi
 					return callback(null, res_usr);
 				}
 			} else {
-				var dev = new DevMdl(usrnm, email, name, bday, country, avatar_url, url, bio);
+				var dev = new DevMdl(usrnm, email, name, bday, location, avatar_url, url, bio);
 				var usr = new UsrMdl(usrnm, email, name, avatar_url, github_tkn);
 				usrSrv.insertUsrAndDev(usr, dev, function(err_ins, res_ins) {
 					if (err_ins) {

@@ -91,7 +91,7 @@ var createWave = function (callback) {
  * @return {[type]}   [description]
  */
 var findNodeByHash = function (_nodes, hash, callback) {
-    var l = _nodes.length
+    var l = _nodes.length;
     for (var i = 0; i < l; i++) {
         if (_nodes[i].hash === hash) {
             return callback(null, _nodes[i]);

@@ -2,14 +2,12 @@ var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var suprlayMdl = require('../models/suprlay');
 var suprlaySch = require('../schemas/suprlay');
-
 /**
  * [suprlayDao description]
  *
  * @type {Dao}
  */
 var suprlayDao = new Dao('Suprlay', suprlaySch, suprlayMdl);
-
 /**
  * [insertSuprlay description]
  *
@@ -26,7 +24,6 @@ exports.insertSuprlay = function (suprlay_mdl, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [findSuprlayById description]
  *
@@ -43,7 +40,6 @@ exports.findSuprlayById = function (_id, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [findSuprlayByCode description]
  *
@@ -62,7 +58,6 @@ exports.findSuprlayByCode = function (code, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [findSuprlayByName description]
  *
@@ -81,7 +76,6 @@ exports.findSuprlayByName = function (name, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [findSuprlays description]
  *
@@ -100,7 +94,6 @@ exports.findSuprlays = function (query, limit, order, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [findAllSuprlays description]
  *
@@ -118,7 +111,6 @@ exports.findAllSuprlays = function (query, order, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [updateSuprlayById description]
  *
@@ -139,7 +131,24 @@ exports.updateSuprlayById = function (_id, set, callback) {
         callback(err, suprlay);
     });
 };
-
+/**
+ * [delSuprlayById description]
+ *
+ * @method delSuprlayById
+ *
+ * @param  {[type]}     _id      [description]
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.delSuprlayById = function (_id, callback) {
+    'use strict';
+    suprlayDao.delSchema({
+        _id: _id
+    }, function (err, suprlay) {
+        callback(err, suprlay);
+    });
+};
 /**
  * [delAllSuprlays description]
  *
@@ -152,6 +161,26 @@ exports.updateSuprlayById = function (_id, set, callback) {
 exports.delAllSuprlays = function (callback) {
     'use strict';
     suprlayDao.delAllSchemas(function (err, suprlay) {
+        callback(err, suprlay);
+    });
+};
+/**
+ * [updateSuprlays description]
+ *
+ * @method updateSuprlays
+ *
+ * @param  {[type]}    query    [description]
+ * @param  {[type]}    set      [description]
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.updateSuprlays = function (query, set, callback) {
+    'use strict';
+    set.upd_at = new mongoose.Types.ObjectId();
+    suprlayDao.updateSchema(query, set, {
+        multi: true
+    }, function (err, suprlay) {
         callback(err, suprlay);
     });
 };

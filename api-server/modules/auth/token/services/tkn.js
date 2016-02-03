@@ -54,7 +54,24 @@ exports.findTknByAxsKey = function(axs_key, callback) {
 	}, '_usr_id _app_id', function(err, tkn) {
 		callback(err, tkn);
 	});
-}
+};
+
+/**
+ * [findTknByUsrIdAppId description]
+ * @param  {[type]}   _usr_id  [description]
+ * @param  {[type]}   _app_id  [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.findTknByUsrIdAppId = function(_usr_id, _app_id, callback) {
+	'use strict';
+	tknDao.findAndPopulateSchema({
+		'_usr_id': _usr_id,
+		'_app_id': _app_id
+	}, '_usr_id _app_id', function(err, tkn) {
+		callback(err, tkn);
+	});
+};
 
 /**
  * [findAllTkns description]
@@ -66,6 +83,21 @@ exports.findTknByAxsKey = function(axs_key, callback) {
 exports.findAllTkns = function(query, order, callback) {
 	'use strict';
 	tknDao.findAndPopulateAllSchemaLst(query, order, '_usr_id _app_id', function(err, tkn) {
+		callback(err, tkn);
+	});
+};
+
+/**
+ * [delTkn description]
+ * @param  {[type]}   axs_key  [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.delTkn = function(axs_key, callback) {
+	'use strict';
+	tknDao.delSchema({
+		'axs_key': axs_key
+	}, function(err, tkn) {
 		callback(err, tkn);
 	});
 };

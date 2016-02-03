@@ -124,6 +124,22 @@ exports.updateCompDevById = function (_id, set, callback) {
 };
 
 /**
+ * [delCompDevById description]
+ *
+ * @method delCompDevById
+ *
+ * @param  {Function}     callback [description]
+ *
+ * @return {[type]}       [description]
+ */
+exports.delCompDevById = function (_id, callback) {
+    'use strict';
+    compDevDao.delSchemaById(_id, function (err, comp) {
+        callback(err, comp);
+    });
+};
+
+/**
  * [delAllCompDevs description]
  *
  * @method delAllCompDevs
