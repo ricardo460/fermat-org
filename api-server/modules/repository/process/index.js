@@ -8,7 +8,7 @@ var platfrmSrv = require('../platform/services/platfrm');
 var suprlaySrv = require('../superlayer/services/suprlay');
 var layerSrv = require('../layer/services/layer');
 var compSrv = require('../component/services/comp');
-var orderLib = require('../../../lib/order');
+var orderLib = require('../../../lib/utils/order');
 
 /**
  * [sort description]

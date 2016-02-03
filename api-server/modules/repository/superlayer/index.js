@@ -1,7 +1,7 @@
 var suprlaySrv = require('./services/suprlay');
 var SuprlayMdl = require('./models/suprlay');
 var compMod = require('../component');
-var orderLib = require('../../../lib/order');
+var orderLib = require('../../../lib/utils/order');
 
 /**
  * [sort description]
@@ -18,7 +18,7 @@ var swapOrder = function (action, oldSpot, newSpot, callback) {
         if (err) {
             return callback(err, null);
         } else {
-            layerSrv.updateSuprlays(query, set, function (err_srt, res_srt) {
+            suprlaySrv.updateSuprlays(query, set, function (err_srt, res_srt) {
                 if (err_srt) {
                     return callback(err_srt, null);
                 } else {

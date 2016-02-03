@@ -1,7 +1,7 @@
 var platfrmSrv = require('./services/platfrm');
 var PlatfrmMdl = require('./models/platfrm');
 var compMod = require('../component');
-var orderLib = require('../../../lib/order');
+var orderLib = require('../../../lib/utils/order');
 
 /**
  * [sort description]
