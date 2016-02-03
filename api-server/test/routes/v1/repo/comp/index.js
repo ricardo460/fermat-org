@@ -150,9 +150,6 @@ describe("COMP",function(){
 
   });
 
-
-
-
   it("#PUT uptComp",function(done){
 
     var dataComp = dataHelper.generateDataComp();
@@ -196,17 +193,8 @@ describe("COMP",function(){
 
       if (err) return done(err);
 
-      res.body._platfrm_id.should.equal(dataComp.platfrm_id);
-      res.body._suprlay_id.should.equal(dataComp.suprlay_id);
-      res.body._layer_id.should.equal(dataComp.layer_id);
-      res.body.name.should.equal(dataComp.name);
-      res.body.type.should.equal(dataComp.type);
-      res.body.description.should.equal(dataComp.description);
-      res.body.difficulty.should.equal(dataComp.difficulty);
-      res.body.code_level.should.equal(dataComp.code_level);
-      res.body.repo_dir.should.equal(dataComp.repo_dir);
-      res.body.scrnshts.should.equal(dataComp.scrnshts);
-      res.body.found.should.equal(dataComp.found);
+   
+       res.body.should.have.property('message');
 
       return done();
     });
@@ -260,6 +248,24 @@ describe("COMP",function(){
       res.body.role.should.equal(dataCompDev.role);
       res.body.percnt.should.equal(dataCompDev.percnt);
       res.body.should.have.property('_id');
+      return done();
+    });
+
+  });
+
+    it("#POST addCompDev 412",function(done){
+
+    var dataCompDev = dataHelper.generateData412General();
+    server
+    .post(pathTest+"/"+comp._id+"/comp-devs")
+    .send(dataCompDev)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err,res){
+      if (err) return done(err);
+
+   
+      res.body.should.have.property('message');
       return done();
     });
 

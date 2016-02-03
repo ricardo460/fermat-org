@@ -31,8 +31,9 @@ exports.generateDataComp412 = function(){
         "difficulty": 5,
         "code_level": faker.lorem.sentence(),
         "repo_dir": "root",
-        "scrnshts": false,
-        "found": false
+       "scrnshts": false,
+
+
     };
 
 };
