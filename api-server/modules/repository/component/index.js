@@ -681,22 +681,28 @@ exports.delCompById = function (_id, callback) {
 /**
  * [delCompDevById description]
  *
- * @method updateCompById
+ * @method delCompDevById
  *
  *
  * @param  {[type]}     _comp_id        [description]
+ * @param  {[type]}     _comp_dev_id        [description]
  * @param  {Function}   callback        [description]
  *
  * @return {[type]}    [description]
  */
-exports.delCompDevById = function (_id, callback){
+exports.delCompDevById = function (_comp_id, _comp_dev_id, callback){
     'use strict';
     try {
-        compDevSrv.delCompDevById(_id, function (err_comp_dev, res_comp_dev) {
+        compDevSrv.delCompDevById(_comp_dev_id, function (err_comp_dev, res_comp_dev) {
             if (err_comp_dev) {
                 return callback(err_comp_dev, null);
             } else if (res_comp_dev) {
-                return callback(null, res_comp_dev);
+                compSrv.pullDevFromCompById(_comp_id, _comp_dev_id, function(err_pull, res_pull){
+                    if (err_pull) {
+                        return callback(err_comp_dev, null);
+                    }
+                    return callback(null, res_pull);
+                });
             } else {
                 return callback(null, null);
             }

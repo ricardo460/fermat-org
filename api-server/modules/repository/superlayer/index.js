@@ -1,6 +1,7 @@
 var suprlaySrv = require('./services/suprlay');
 var SuprlayMdl = require('./models/suprlay');
 var compMod = require('../component');
+var orderLib = require('../../../lib/utils/order');
 
 /**
  * [sort description]
@@ -13,75 +14,22 @@ var compMod = require('../component');
  * @return {[type]} [description]
  */
 var swapOrder = function (action, oldSpot, newSpot, callback) {
-    var query, range, set, rangeMin, rangeMax;
-    if (action == 'insert') {
-        range = newSpot - 1;
-        query = {
-            'order': {
-                '$gt': range
-            }
-        };
-        set = {
-            '$inc': {
-                'order': 1
-            }
-        };
-        suprlaySrv.updateSuprlays(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else if (action == 'update') {
-        rangeMin = oldSpot;
-        rangeMax = newSpot + 1;
-        query = {
-            '$and': [{
-                'order': {
-                    '$gt': rangeMin
+    orderLib.swapOrder(action, oldSpot, newSpot, function (err, query, set) {
+        if (err) {
+            return callback(err, null);
+        } else {
+            suprlaySrv.updateSuprlays(query, set, function (err_srt, res_srt) {
+                if (err_srt) {
+                    return callback(err_srt, null);
+                } else {
+                    return callback(null, res_srt);
                 }
-            }, {
-                'order': {
-                    '$lt': rangeMax
-                }
-            }]
-        };
-        set = {
-            '$inc': {
-                'order': -1
-            }
-        };
-        suprlaySrv.updateSuprlays(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else if (action == 'delete') {
-        range = oldSpot - 1;
-        query = {
-            'order': {
-                '$gt': range
-            }
-        };
-        set = {
-            '$inc': {
-                'order': -1
-            }
-        };
-        suprlaySrv.updateSuprlays(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else {
-        return callback(new Error('invalid swap action'), null);
-    }
+            });
+        }
+    });
 };
+
+
 
 /**
  * [insOrUpdSuprlay description]
@@ -124,25 +72,48 @@ exports.insOrUpdSuprlay = function (code, name, logo, deps, order, callback) {
                     set_obj.order = order;
                     res_supr.order = order;
                 }
-                if (Object.keys(set_obj)
-                    .length > 0) {
-                    suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
-                        if (err_upd) {
-                            return callback(err_upd, null);
-                        }
-                        return callback(null, res_supr);
-                    });
+                if (Object.keys(set_obj).length > 0) {
+
+                    if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+                        swapOrder('update', res_supr.order, set_obj.order, function (err_sld, res_sld) {
+                            if (err_sld) {
+                                return callback(err_sld, null);
+                            } else {
+                                suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
+                                    if (err_upd) {
+                                        return callback(err_upd, null);
+                                    }
+                                    return callback(null, set_obj);
+                                });
+                            }
+                        });
+                    } else {
+
+                        suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
+                            if (err_upd) {
+                                return callback(err_upd, null);
+                            }
+                            return callback(null, set_obj);
+                        });
+                    }
                 } else {
                     return callback(null, res_supr);
                 }
             } else {
                 var suprlay = new SuprlayMdl(code, name, logo, deps, order);
-                suprlaySrv.insertSuprlay(suprlay, function (err_ins, res_ins) {
-                    if (err_ins) {
-                        return callback(err_ins, null);
+                swapOrder('insert', null, suprlay.order, function (err_sld, res_sld) {
+                    if (err_sld) {
+                        return callback(err_sld, null);
+                    } else {
+                        suprlaySrv.insertSuprlay(suprlay, function (err_ins, res_ins) {
+                            if (err_ins) {
+                                return callback(err_ins, null);
+                            }
+                            return callback(null, res_ins);
+                        });
                     }
-                    return callback(null, res_ins);
                 });
+
             }
         });
     } catch (err) {
@@ -255,12 +226,37 @@ exports.updateSuprlayById =  function (_sprly_id, code, name, logo, deps, order,
             set_obj.order = order;
         }
 
-        suprlaySrv.updateSuprlayById(_sprly_id, set_obj, function (err, sprly) {
-            if (err) {
-                return callback(err, null);
+        suprlaySrv.findSuprlayById(_sprly_id, function (err_supr, res_supr) {
+
+            if (err_supr) {
+                return callback(err_supr, null);
             }
-            return callback(null, set_obj);
+
+            if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+                swapOrder('update', res_supr.order, set_obj.order, function (err_sld, res_sld) {
+                    if (err_sld) {
+                        return callback(err_sld, null);
+                    } else {
+                        suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
+                            if (err_upd) {
+                                return callback(err_upd, null);
+                            }
+                            return callback(null, set_obj);
+                        });
+                    }
+                });
+            } else {
+
+                suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
+                    if (err_upd) {
+                        return callback(err_upd, null);
+                    }
+                    return callback(null, set_obj);
+                });
+            }
+
         });
+
     } catch (err) {
         return callback(err, null);
     }
