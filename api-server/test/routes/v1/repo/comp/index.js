@@ -129,9 +129,26 @@ describe("COMP",function(){
     });
 
   });
-//Pegar mi 412 aki
- 
-//hasta aki
+  it("#POST addComp 412",function(done){
+
+    var dataComp = dataHelper.generateData412General();
+
+    server
+    .post(pathTest+"/")
+    .send(dataComp)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err,res){
+
+      if (err) return done(err);
+
+      res.body.should.have.property('message');
+
+      return done();
+    });
+
+  });
+
 
 
 
