@@ -1,7 +1,7 @@
 var layerSrv = require('./services/layer');
 var compMod = require('../component');
 var LayerMdl = require('./models/layer');
-var orderLib = require('../../../lib/order');
+var orderLib = require('../../../lib/utils/order');
 /**
  * [sort description]
  *

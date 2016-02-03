@@ -1,7 +1,7 @@
 var platfrmSrv = require('./services/platfrm');
 var PlatfrmMdl = require('./models/platfrm');
 var compMod = require('../component');
-
+var orderLib = require('../../../lib/utils/order');
 /**
  * [sort description]
  *
@@ -13,76 +13,20 @@ var compMod = require('../component');
  * @return {[type]} [description]
  */
 var swapOrder = function (action, oldSpot, newSpot, callback) {
-    var query, range, set, rangeMin, rangeMax;
-    if (action == 'insert') {
-        range = newSpot - 1;
-        query = {
-            'order': {
-                '$gt': range
-            }
-        };
-        set = {
-            '$inc': {
-                'order': 1
-            }
-        };
-        platfrmSrv.updatePlatfrms(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else if (action == 'update') {
-        rangeMin = oldSpot;
-        rangeMax = newSpot + 1;
-        query = {
-            '$and': [{
-                'order': {
-                    '$gt': rangeMin
+    orderLib.swapOrder(action, oldSpot, newSpot, function (err, query, set) {
+        if (err) {
+            return callback(err, null);
+        } else {
+            platfrmSrv.updatePlatfrms(query, set, function (err_srt, res_srt) {
+                if (err_srt) {
+                    return callback(err_srt, null);
+                } else {
+                    return callback(null, res_srt);
                 }
-            }, {
-                'order': {
-                    '$lt': rangeMax
-                }
-            }]
-        };
-        set = {
-            '$inc': {
-                'order': -1
-            }
-        };
-        platfrmSrv.updatePlatfrms(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else if (action == 'delete') {
-        range = oldSpot - 1;
-        query = {
-            'order': {
-                '$gt': range
-            }
-        };
-        set = {
-            '$inc': {
-                'order': -1
-            }
-        };
-        platfrmSrv.updatePlatfrms(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else {
-        return callback(new Error('invalid swap action'), null);
-    }
+            });
+        }
+    });
 };
-
 /**
  * [insOrUpdPlatfrm description]
  *
@@ -122,8 +66,7 @@ exports.insOrUpdPlatfrm = function (code, name, logo, deps, order, callback) {
                     set_obj.order = order;
                     res_plat.order = order;
                 }
-                if (Object.keys(set_obj)
-                    .length > 0) {
+                if (Object.keys(set_obj).length > 0) {
                     platfrmSrv.updatePlatfrmById(res_plat._id, set_obj, function (err_upd, res_upd) {
                         if (err_upd) {
                             return callback(err_upd, null);
@@ -146,9 +89,7 @@ exports.insOrUpdPlatfrm = function (code, name, logo, deps, order, callback) {
     } catch (err) {
         callback(err, null);
     }
-
 };
-
 /**
  * [getPlatfrms description]
  *
@@ -173,10 +114,7 @@ exports.getPlatfrms = function (callback) {
     } catch (err) {
         callback(err, null);
     }
-
 };
-
-
 /**
  * [delAllPlatfrms description]
  *
@@ -199,7 +137,6 @@ exports.delAllPlatfrms = function (callback) {
         return callback(err, null);
     }
 };
-
 /**
  * [findPlatfrmById description]
  *
@@ -210,7 +147,7 @@ exports.delAllPlatfrms = function (callback) {
  *
  * @return {[type]}     [description]
  */
-exports.findPlatfrmById = function(_id, callback){
+exports.findPlatfrmById = function (_id, callback) {
     platfrmSrv.findPlatfrmById(_id, function (err_plat, res_plat) {
         if (err_plat) {
             return callback(err_plat, null);
@@ -218,7 +155,6 @@ exports.findPlatfrmById = function(_id, callback){
         return callback(null, res_plat);
     });
 };
-
 /**
  * [updatePlatfrmById description]
  *
@@ -235,7 +171,7 @@ exports.findPlatfrmById = function(_id, callback){
  *
  * @return {[type]}    [description]
  */
-exports.updatePlatfrmById =  function (_platfrm_id, code, name, logo, deps, order, callback) {
+exports.updatePlatfrmById = function (_platfrm_id, code, name, logo, deps, order, callback) {
     'use strict';
     try {
         var set_obj = {};
@@ -254,7 +190,6 @@ exports.updatePlatfrmById =  function (_platfrm_id, code, name, logo, deps, orde
         if (typeof order != "undefined") {
             set_obj.order = order;
         }
-
         platfrmSrv.updatePlatfrmById(_platfrm_id, set_obj, function (err, plat) {
             if (err) {
                 return callback(err, null);
@@ -265,7 +200,6 @@ exports.updatePlatfrmById =  function (_platfrm_id, code, name, logo, deps, orde
         return callback(err, null);
     }
 };
-
 /**
  * [delPlatfrmById description]
  *
@@ -279,7 +213,7 @@ exports.updatePlatfrmById =  function (_platfrm_id, code, name, logo, deps, orde
 exports.delPlatfrmById = function (_id, callback) {
     'use strict';
     try {
-        var delPlatfrm = function(){
+        var delPlatfrm = function () {
             platfrmSrv.findPlatfrmById(_id, function (err_platfrm, res_platfrm) {
                 if (err_platfrm) {
                     return callback(err_platfrm, null);
@@ -289,7 +223,6 @@ exports.delPlatfrmById = function (_id, callback) {
                     if (err_sld) {
                         return callback(err_sld, null);
                     } else {
-
                         platfrmSrv.delPlatfrmById(res_platfrm._id, function (err_del, res_del) {
                             if (err_del) {
                                 return callback(err_del, null);
@@ -300,11 +233,11 @@ exports.delPlatfrmById = function (_id, callback) {
                 });
             });
         };
-        compMod.findCompsByPlatfrmId(_id, function(err_comp, res_comps){
+        compMod.findCompsByPlatfrmId(_id, function (err_comp, res_comps) {
             if (err_comp) {
                 return callback(err_comp, null);
             }
-            if(res_comps) {
+            if (res_comps) {
                 var _comps = res_comps;
                 var loopDelComps = function () {
                     if (_comps.length <= 0) {
@@ -321,12 +254,10 @@ exports.delPlatfrmById = function (_id, callback) {
                     }
                 };
                 loopDelComps();
-
             } else {
                 delPlatfrm();
             }
         });
-
     } catch (err) {
         return callback(err, null);
     }

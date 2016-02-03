@@ -1,7 +1,7 @@
 var suprlaySrv = require('./services/suprlay');
 var SuprlayMdl = require('./models/suprlay');
 var compMod = require('../component');
-
+var orderLib = require('../../../lib/utils/order');
 /**
  * [sort description]
  *
@@ -13,76 +13,20 @@ var compMod = require('../component');
  * @return {[type]} [description]
  */
 var swapOrder = function (action, oldSpot, newSpot, callback) {
-    var query, range, set, rangeMin, rangeMax;
-    if (action == 'insert') {
-        range = newSpot - 1;
-        query = {
-            'order': {
-                '$gt': range
-            }
-        };
-        set = {
-            '$inc': {
-                'order': 1
-            }
-        };
-        suprlaySrv.updateSuprlays(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else if (action == 'update') {
-        rangeMin = oldSpot;
-        rangeMax = newSpot + 1;
-        query = {
-            '$and': [{
-                'order': {
-                    '$gt': rangeMin
+    orderLib.swapOrder(action, oldSpot, newSpot, function (err, query, set) {
+        if (err) {
+            return callback(err, null);
+        } else {
+            suprlaySrv.updateSuprlays(query, set, function (err_srt, res_srt) {
+                if (err_srt) {
+                    return callback(err_srt, null);
+                } else {
+                    return callback(null, res_srt);
                 }
-            }, {
-                'order': {
-                    '$lt': rangeMax
-                }
-            }]
-        };
-        set = {
-            '$inc': {
-                'order': -1
-            }
-        };
-        suprlaySrv.updateSuprlays(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else if (action == 'delete') {
-        range = oldSpot - 1;
-        query = {
-            'order': {
-                '$gt': range
-            }
-        };
-        set = {
-            '$inc': {
-                'order': -1
-            }
-        };
-        suprlaySrv.updateSuprlays(query, set, function (err_srt, res_srt) {
-            if (err_srt) {
-                return callback(err_srt, null);
-            } else {
-                return callback(null, res_srt);
-            }
-        });
-    } else {
-        return callback(new Error('invalid swap action'), null);
-    }
+            });
+        }
+    });
 };
-
 /**
  * [insOrUpdSuprlay description]
  *
@@ -124,8 +68,7 @@ exports.insOrUpdSuprlay = function (code, name, logo, deps, order, callback) {
                     set_obj.order = order;
                     res_supr.order = order;
                 }
-                if (Object.keys(set_obj)
-                    .length > 0) {
+                if (Object.keys(set_obj).length > 0) {
                     suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
                         if (err_upd) {
                             return callback(err_upd, null);
@@ -148,9 +91,7 @@ exports.insOrUpdSuprlay = function (code, name, logo, deps, order, callback) {
     } catch (err) {
         callback(err, null);
     }
-
 };
-
 /**
  * [getSuprlays description]
  *
@@ -176,7 +117,6 @@ exports.getSuprlays = function (callback) {
         callback(err, null);
     }
 };
-
 /**
  * [delAllSuprlays description]
  *
@@ -199,7 +139,6 @@ exports.delAllSuprlays = function (callback) {
         return callback(err, null);
     }
 };
-
 /**
  * [findSuprlayById description]
  *
@@ -210,7 +149,7 @@ exports.delAllSuprlays = function (callback) {
  *
  * @return {[type]}     [description]
  */
-exports.findSuprlayById = function(_id, callback){
+exports.findSuprlayById = function (_id, callback) {
     suprlaySrv.findSuprlayById(_id, function (err_suprlay, res_suprlay) {
         if (err_suprlay) {
             return callback(err_suprlay, null);
@@ -218,7 +157,6 @@ exports.findSuprlayById = function(_id, callback){
         return callback(null, res_suprlay);
     });
 };
-
 /**
  * [updateSuprlayById description]
  *
@@ -235,7 +173,7 @@ exports.findSuprlayById = function(_id, callback){
  *
  * @return {[type]}    [description]
  */
-exports.updateSuprlayById =  function (_sprly_id, code, name, logo, deps, order, callback) {
+exports.updateSuprlayById = function (_sprly_id, code, name, logo, deps, order, callback) {
     'use strict';
     try {
         var set_obj = {};
@@ -251,10 +189,9 @@ exports.updateSuprlayById =  function (_sprly_id, code, name, logo, deps, order,
         if (deps) {
             set_obj.deps = deps;
         }
-        if (typeof order != "undefined" ) {
+        if (typeof order != "undefined") {
             set_obj.order = order;
         }
-
         suprlaySrv.updateSuprlayById(_sprly_id, set_obj, function (err, sprly) {
             if (err) {
                 return callback(err, null);
@@ -265,7 +202,6 @@ exports.updateSuprlayById =  function (_sprly_id, code, name, logo, deps, order,
         return callback(err, null);
     }
 };
-
 /**
  * [delSuprlayById description]
  *
@@ -279,7 +215,7 @@ exports.updateSuprlayById =  function (_sprly_id, code, name, logo, deps, order,
 exports.delSuprlayById = function (_id, callback) {
     'use strict';
     try {
-        var delSuprlay = function(){
+        var delSuprlay = function () {
             suprlaySrv.findSuprlayById(_id, function (err_suprlay, res_suprlay) {
                 if (err_suprlay) {
                     return callback(err_suprlay, null);
@@ -289,7 +225,6 @@ exports.delSuprlayById = function (_id, callback) {
                     if (err_sld) {
                         return callback(err_sld, null);
                     } else {
-
                         suprlaySrv.delSuprlayById(res_suprlay._id, function (err_del, res_del) {
                             if (err_del) {
                                 return callback(err_del, null);
@@ -300,11 +235,11 @@ exports.delSuprlayById = function (_id, callback) {
                 });
             });
         };
-        compMod.findCompsBySuprlayId(_id, function(err_comp, res_comps){
+        compMod.findCompsBySuprlayId(_id, function (err_comp, res_comps) {
             if (err_comp) {
                 return callback(err_comp, null);
             }
-            if(res_comps) {
+            if (res_comps) {
                 var _comps = res_comps;
                 var loopDelComps = function () {
                     if (_comps.length <= 0) {
@@ -321,12 +256,10 @@ exports.delSuprlayById = function (_id, callback) {
                     }
                 };
                 loopDelComps();
-
             } else {
                 delSuprlay();
             }
         });
-
     } catch (err) {
         return callback(err, null);
     }
