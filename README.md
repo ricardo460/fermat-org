@@ -138,6 +138,8 @@ Right now, you have a fork of the fermat-org repository, but you don't have the 
 
 Now, you have a local copy of your fork of the fermat-org repository!
 
+>**Warning:** On Windows, there is a limit for the path lenght, which is 260 characters. As gulp is installed in the repository to save you its configuration, the node.js files goes too deep and can pass that limit, so you should clone the repository direclty in the drive root ("C:\" for most cases). If you work on linux, there's not such limitation.
+
 #####Step 3: Configure Git to sync your fork with the original repository
 
 When you fork a project in order to propose changes to the original repository, you can configure Git to pull changes from the original, or upstream, repository into the local clone of your fork.
