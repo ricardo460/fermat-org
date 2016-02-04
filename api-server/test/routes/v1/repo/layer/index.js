@@ -102,6 +102,26 @@ describe("LAY",function(){
 
     });
 
+      it("#POST addLay 412",function(done){
+
+        var dataLay = dataHelper.generateData412General();
+
+        server
+        .post(pathTest+"/")
+        .send(dataLay)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+            if (err) return done(err);
+
+         
+             res.body.should.have.property('message');
+
+          return done();
+        });
+
+    });
+
     it("#PUT uptLay",function(done){
 
         var dataLay = dataHelper.generateDataLay();
