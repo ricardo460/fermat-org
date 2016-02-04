@@ -1,5 +1,7 @@
 # FERMAT.ORG API ROUTES
 
+Our base URL is at this moment http://api.fermat.org, so, any route starts with it followed by the route to use. E.g. http://api.fermat.org/v1/repo/devs
+
 ## AUTHENTICATION ROUTES
 
 ```javascript
