@@ -147,6 +147,27 @@ describe("LAY",function(){
 
     });
 
+
+       it("#PUT uptLay 412",function(done){
+
+        var dataLay = dataHelper.generateData412General();
+
+        server
+        .put(pathTest+"/"+lay._id)
+        .send(dataLay)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+
+             res.body.should.have.property('message');
+          return done();
+        });
+
+    });
+
     it("#DELETE delLay",function(done){
 
         server

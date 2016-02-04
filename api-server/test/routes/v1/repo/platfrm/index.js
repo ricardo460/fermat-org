@@ -103,6 +103,26 @@ describe("SUPRLAY",function(){
 
     });
 
+
+    it("#POST addPlatform 412",function(done){
+
+        var dataPlatform = dataHelper.generateData412General();
+
+        server
+        .post(pathTest+"/")
+        .send(dataPlatform)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+            if (err) return done(err);
+
+            res.body.should.have.property('message');
+
+          return done();
+        });
+
+    });
+
     it("#PUT uptPltf",function(done){
 
          var dataPlatform = dataHelper.generateDataPlatform();
