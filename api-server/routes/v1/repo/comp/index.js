@@ -83,7 +83,9 @@ router.post('/', function (req, res, next) {
             !security.isValidData(req.body.repo_dir) || //
             !security.isValidData(req.body.scrnshts) || //
             !security.isValidData(req.body.found)) {
-            res.status(412).send({"message": "missing or invalid data"});
+            res.status(412).send({
+                "message": "missing or invalid data"
+            });
         } else {
             repMod.addComp(req, function (error, result) {
                 if (error) {
@@ -134,30 +136,31 @@ router.get('/', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.post('/:comp_id/life-cicles', function (req, res, next) {
+router.put('/:comp_id/life-cicles', function (req, res, next) {
     'use strict';
     try {
-    	if (!security.isValidData(req.params.comp_id) || //
+        if (!security.isValidData(req.params.comp_id) || //
             !security.isValidData(req.body.name) || //
             !security.isValidData(req.body.target) || //
             !security.isValidData(req.body.reached)) {
-            res.status(412).send({"message": "missing or invalid data"});
+            res.status(412).send({
+                "message": "missing or invalid data"
+            });
         } else {
-        repMod.addLifeCiclesToComp(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
-            } else {
-                if (result) {
-                    res.status(201).send(result);
+            repMod.addLifeCiclesToComp(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
                 } else {
-                    res.status(404).send({
-                        message: "NOT FOUND"
-                    });
+                    if (result) {
+                        res.status(201).send(result);
+                    } else {
+                        res.status(404).send({
+                            message: "NOT FOUND"
+                        });
+                    }
                 }
-            }
-            release(req);
-        });
-
+                release(req);
+            });
         }
     } catch (err) {
         next(err);
@@ -182,7 +185,9 @@ router.post('/:comp_id/comp-devs', function (req, res, next) {
             !security.isValidData(req.body.role) || //
             !security.isValidData(req.body.scope) || //
             !security.isValidData(req.body.percnt)) {
-            res.status(412).send({"message": "missing or invalid data"});
+            res.status(412).send({
+                "message": "missing or invalid data"
+            });
         } else {
             repMod.addCompDev(req, function (error, result) {
                 if (error) {
@@ -217,7 +222,9 @@ router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
             !security.isValidData(req.body.role) || //
             !security.isValidData(req.body.scope) || //
             !security.isValidData(req.body.percnt)) {
-            res.status(412).send({"message": "missing or invalid data"});
+            res.status(412).send({
+                "message": "missing or invalid data"
+            });
         } else {
             repMod.uptCompDev(req, function (error, result) {
                 if (error) {
@@ -254,8 +261,10 @@ router.delete('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
     try {
         if (!security.isValidData(req.params.comp_id) || //
             !security.isValidData(req.params.comp_dev_id) //
-            ) {
-            res.status(412).send({"message": "missing or invalid data"});
+        ) {
+            res.status(412).send({
+                "message": "missing or invalid data"
+            });
         } else {
             repMod.delCompDev(req, function (error, result) {
                 if (error) {
@@ -321,10 +330,9 @@ router.get('/:comp_id', function (req, res, next) {
  */
 router.put('/:comp_id', function (req, res, next) {
     'use strict';
-    try { 
-    	
+    try {
         if (!security.isValidData(req.params.comp_id) || //
-          	!security.isValidData(req.body.platfrm_id) || //
+            !security.isValidData(req.body.platfrm_id) || //
             !security.isValidData(req.body.suprlay_id) || //
             !security.isValidData(req.body.layer_id) || //
             !security.isValidData(req.body.name) || //
@@ -337,15 +345,14 @@ router.put('/:comp_id', function (req, res, next) {
             !security.isValidData(req.body.found)) {
             res.status(412).send('missing or invalid data');
         } else {
-
-        repMod.uptComp(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
-            } else {
-                res.status(200).send(result);
-            }
-            release(req);
-        });
+            repMod.uptComp(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    res.status(200).send(result);
+                }
+                release(req);
+            });
         }
     } catch (err) {
         next(err);
