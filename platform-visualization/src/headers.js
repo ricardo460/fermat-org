@@ -734,7 +734,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 
                 object.position.x = (columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width);
                 object.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
-                object.name = group;         
+                object.name = group;        
 
                 object.position.copy(window.viewManager.translateToSection('table', object.position));
                 positions.table.push(object);
@@ -759,7 +759,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 
                 object.name = slayer;
                 
-
                 scene.add(object);
                 objects.push(object);
                 
@@ -768,6 +767,14 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 object.position.x = -(((groupsQtty + 1) * columnWidth * window.TILE_DIMENSION.width / 2) + window.TILE_DIMENSION.width);
                 object.position.y = -(row * window.TILE_DIMENSION.height) - (superLayerMaxHeight * window.TILE_DIMENSION.height / 2) + (layersQtty * window.TILE_DIMENSION.height / 2);
                 object.name = slayer;
+
+                var _layers = window.CLI.query(window.layers,function(el){return (el.super_layer === slayer);});
+
+                for(var i = 0;i < _layers.length; i++){
+
+                    fillNewTable(object.position.x, object.position.y, _layers[i], slayer);
+
+                } 
 
                 object.position.copy(window.viewManager.translateToSection('table', object.position));
                 positions.table.push(object);

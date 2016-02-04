@@ -55,7 +55,7 @@ function ViewManager() {
 
                         window.browserManager.modifyButtonLegend(1,'block');
 
-                        //window.fermatEdit.addButton();
+                        window.fermatEdit.addButton();
 
                         window.tileManager.transform(window.tileManager.targets.table, true, 3000 + transition);
                         
