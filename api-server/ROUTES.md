@@ -7,8 +7,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/auth/login
 ```javascript
 /**
- * @description 
- * @author
+ * @description makes login and register oaf a github user
+ * @author campol
  *
  * @param req.query.code
  * @param req.query.api_key
@@ -19,8 +19,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/auth/logout
 ```javascript
 /**
- * @description 
- * @author
+ * @description makes logout of user owner of axs_key
+ * @author campol
  *
  * @param req.query.axs_key
  * @param req.query.api_key
@@ -34,8 +34,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/net/servrs
 ```javascript
 /**
- * @description
- * @author
+ * @description lists all the servers in the P2P network
+ * @author kyxer
  *
  * 
  */
@@ -45,8 +45,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/net/nodes/:hash/childrn
 ```javascript
 /**
- * @description
- * @author
+ * @description lists all the children connected to a node in the P2P network
+ * @author kyxer
  *
  * @param req.params.hash
  */
@@ -59,8 +59,9 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/repo/comps/reload
 ```javascript
 /**
- * @description
- * @author 
+ * @description reloads the manifest into the database
+ * @deprecated
+ * @author fuelusumar
  */
  ```
 
@@ -68,8 +69,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/repo/comps
 ```javascript
 /**
- * @description
- * @author
+ * @description list all the components, layer, platforms and superlayers in fermat
+ * @author fuelusumar
  */
  ```
 
@@ -77,8 +78,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/repo/devs
 ```javascript
 /**
- * @description
- * @author
+ * @description lists all the developers in fermat
+ * @author fuelusumar
  */
  ```
 
@@ -86,8 +87,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/repo/procs
 ```javascript
 /**
- * @description
- * @author
+ * @description lists all the processes in fermat
+ * @author fuelusumar
  */
  ```
 
@@ -95,8 +96,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/repo/readme
 ```javascript
 /**
- * @description
- * @author
+ * @description gets the fermat readme.md file
+ * @author fuelusumar
  */
  ```
 
@@ -104,8 +105,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/repo/book
 ```javascript
 /**
- * @description
- * @author
+ * @description gets the fermat book
+ * @author kyxer
  */
  ```
 
@@ -113,8 +114,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/repo/docs/:type
 ```javascript
 /**
- * @description
- * @author
+ * @description gets the fermat book in an specific format type
+ * @author kyxer
  *
  * @param req.params.type
  */
@@ -124,8 +125,9 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/repo/manifest/check
 ```javascript
 /**
- * @description
- * @author
+ * @description checks the syntax of the fermat manifest
+ * @deprecated
+ * @author kyxer
  */
  ```
 
@@ -136,8 +138,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/repo/usrs/:usr_id/comps
 ```javascript
 /**
- * @description
- * @author
+ * @description lists all the components
+ * @author kyxer
  *
  * @param req.params.usr_id
  */
@@ -147,8 +149,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **POST** /v1/repo/usrs/:usr_id/comps
 ```javascript
 /**
- * @description
- * @author
+ * @description inserts a component
+ * @author kyxer
  *
  * @param req.params.usr_id
  * @param req.body.platfrm_id
@@ -169,8 +171,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **GET** /v1/repo/usrs/:usr_id/comps/:comp_id
 ```javascript
 /**
- * @description
- * @author
+ * @description gets an specific component
+ * @author kyxer
  *
  * @param req.params.usr_id
  * @param req.params.comp_id
@@ -181,8 +183,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **PUT** /v1/repo/usrs/:usr_id/comps/:comp_id
 ```javascript
 /**
- * @description
- * @author
+ * @description updates a component
+ * @author kyxer
  *
  * @param req.params.usr_id
  * @param req.params.comp_id
@@ -204,8 +206,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **DELETE** /v1/repo/usrs/:usr_id/comps/:comp_id
 ```javascript
 /**
- * @description
- * @author
+ * @description removes a component
+ * @author kyxer
  *
  * @param req.params.usr_id
  * @param req.params.comp_id
@@ -216,8 +218,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **POST** /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs
 ```javascript
 /**
- * @description
- * @author
+ * @description inserts a developer inside a component
+ * @author kyxer
  *
  * @param req.params.usr_id
  * @param req.params.comp_id
@@ -232,8 +234,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **PUT** /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs/:comp_dev_id
 ```javascript
 /**
- * @description
- * @author
+ * @description updates a developer inside a component
+ * @author kyxer
  *
  * @param req.params.usr_id
  * @param req.params.comp_id
@@ -249,8 +251,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **DELETE** /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs/:comp_dev_id
 ```javascript
 /**
- * @description
- * @author
+ * @description deletes a developer from a component
+ * @author kyxer
  *
  * @param req.params.usr_id
  * @param req.params.comp_id
@@ -262,8 +264,8 @@ Our base URL is at this moment api.fermat.org, so, any route starts with it foll
 **PUT** /v1/repo/usrs/:usr_id/comps/:comp_id/life-cicles
 ```javascript
 /**
- * @description
- * @author
+ * @description updates an life-cycle's status inside a component
+ * @author kyxer
  *
  * @param req.params.usr_id
  * @param req.params.comp_id
