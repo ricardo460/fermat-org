@@ -266,7 +266,25 @@ describe("PROC",function(){
 
   });
 
-   
+    it("#PUT uptStep 412",function(done){
+
+    var dataStep = dataHelper.generateData412General();
+
+    server
+    .put(pathTest+"/"+proc._id+"/steps/"+stepIds[0])
+    .send(dataStep)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+           res.body.should.have.property('message');
+
+      return done();
+    });
+
+  });
 
   it("#DELETE delStep",function(done){
 
