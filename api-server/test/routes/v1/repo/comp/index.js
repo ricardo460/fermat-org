@@ -292,6 +292,24 @@ describe("COMP",function(){
 
   });
 
+    it("#PUT uptCompDev 412",function(done){
+
+    var dataCompDev = dataHelper.generateData412General();
+    server
+    .put(pathTest+"/"+comp._id+"/comp-devs/"+compDevIds[0])
+    .send(dataCompDev)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err,res){
+
+      if (err) return done(err);
+
+     res.body.should.have.property('message');
+      return done();
+    });
+
+  });
+
   it("#DELETE delCompDev",function(done){
 
     var dataCompDev = dataHelper.generateDataCompDev();
