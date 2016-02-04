@@ -102,7 +102,7 @@ describe("LAY",function(){
 
     });
 
-      it("#POST addLay 412",function(done){
+       it("#POST addLay 412",function(done){
 
         var dataLay = dataHelper.generateData412General();
 
@@ -114,13 +114,14 @@ describe("LAY",function(){
         .end(function(err, res){
             if (err) return done(err);
 
-         
-             res.body.should.have.property('message');
+      res.body.should.have.property('message');
 
           return done();
         });
 
     });
+
+     
 
     it("#PUT uptLay",function(done){
 
