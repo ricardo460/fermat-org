@@ -77,7 +77,7 @@ router.post('/', function (req, res, next) {
             !security.isValidData(req.body.desc) || //
             !security.isValidData(req.body.prev) || //
             !security.isValidData(req.body.next)) {
-            res.status(412).send('missing or invalid data');
+            res.status(412).send({"message": "missing or invalid data"});
         } else {
             repMod.addProc(req, function (error, result) {
                 if (error) {

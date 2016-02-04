@@ -146,6 +146,26 @@ describe("SUPRLAY",function(){
 
     });
 
+     it("#PUT uptPltf 412",function(done){
+
+         var dataPlatform = dataHelper.generateData412General();
+
+        server
+        .put(pathTest+"/"+platform._id)
+        .send(dataPlatform)
+        .expect("Content-type",/json/)
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+                if (err) return done(err);
+
+            res.body.should.have.property('message');
+
+          return done();
+        });
+
+    });
+
     it("#DELETE delPltf",function(done){
 
         server

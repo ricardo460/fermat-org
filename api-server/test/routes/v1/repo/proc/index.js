@@ -118,6 +118,25 @@ describe("PROC",function(){
 
     });
 
+       it("#POST addProc 412",function(done){
+
+        var dataProc = dataHelper.generateData412General();
+
+        server
+        .post(pathTest+"/")
+        .send(dataProc)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+            if (err) return done(err);
+
+            res.body.should.have.property('message');
+
+          return done();
+        });
+
+    });
+
     it("#PUT uptProc",function(done){
 
         var dataProc = dataHelper.generateDataProc();
@@ -136,6 +155,25 @@ describe("PROC",function(){
             res.body.desc.should.equal(dataProc.desc);
             res.body.prev.should.equal(dataProc.prev);
             res.body.next.should.equal(dataProc.next);
+
+          return done();
+        });
+
+    });
+
+       it("#PUT uptProc 412",function(done){
+
+        var dataProc = dataHelper.generateData412General();
+
+        server
+        .put(pathTest+"/"+proc._id)
+        .send(dataProc)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+            res.body.should.have.property('message');
 
           return done();
         });
