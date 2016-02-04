@@ -11,7 +11,7 @@
  * @param req.query.api_key
  */
 ```
-```**GET** /v1/auth/login```
+**GET** /v1/auth/login
 
 
 ```javascript
@@ -23,7 +23,7 @@
  * @param req.query.api_key
  */
  ```
-```**GET** /v1/auth/logout```
+**GET** /v1/auth/logout
 
 
 
@@ -37,7 +37,7 @@
  * 
  */
  ```
-```**GET** /v1/net/servrs```
+**GET** /v1/net/servrs
 
 
 ```javascript
@@ -48,7 +48,7 @@
  * @param req.params.hash
  */
  ```
-```**GET** /v1/net/nodes/:hash/childrn```
+**GET** /v1/net/nodes/:hash/childrn
 
 
 
@@ -60,7 +60,7 @@
  * @author 
  */
  ```
-```**GET** /v1/repo/comps/reload```
+**GET** /v1/repo/comps/reload
 
 
 ```javascript
@@ -69,7 +69,7 @@
  * @author
  */
  ```
-```**GET** /v1/repo/comps```
+**GET** /v1/repo/comps
 
 
 ```javascript
@@ -78,7 +78,7 @@
  * @author
  */
  ```
-```**GET** /v1/repo/devs```
+**GET** /v1/repo/devs
 
 
 ```javascript
@@ -87,7 +87,7 @@
  * @author
  */
  ```
-```**GET** /v1/repo/procs```
+**GET** /v1/repo/procs
 
 
 ```javascript
@@ -96,7 +96,7 @@
  * @author
  */
  ```
-```**GET** /v1/repo/readme```
+**GET** /v1/repo/readme
 
 
 ```javascript
@@ -105,7 +105,7 @@
  * @author
  */
  ```
-```**GET** /v1/repo/book```
+**GET** /v1/repo/book
 
 
 ```javascript
@@ -116,7 +116,7 @@
  * @param req.params.type
  */
  ```
-```**GET** /v1/repo/docs/:type```
+**GET** /v1/repo/docs/:type
 
 
 ```javascript
@@ -125,7 +125,7 @@
  * @author
  */
  ```
-```**GET** /v1/repo/manifest/check```
+**GET** /v1/repo/manifest/check
 
 
 
@@ -139,7 +139,7 @@
  * @param req.params.usr_id
  */
  ```
-```**GET** /v1/repo/usrs/:usr_id/comps```
+**GET** /v1/repo/usrs/:usr_id/comps
 
 
 ```javascript
@@ -161,7 +161,7 @@
  * @param req.body.found
  */
  ```
-```**POST** /v1/repo/usrs/:usr_id/comps```
+**POST** /v1/repo/usrs/:usr_id/comps
 
 
 ```javascript
@@ -173,7 +173,7 @@
  * @param req.params.comp_id
  */
  ```
-```**GET** /v1/repo/usrs/:usr_id/comps/:comp_id```
+**GET** /v1/repo/usrs/:usr_id/comps/:comp_id
 
 
 ```javascript
@@ -196,7 +196,7 @@
  * @param req.body.found
  */
  ```
-```**PUT** /v1/repo/usrs/:usr_id/comps/:comp_id```
+**PUT** /v1/repo/usrs/:usr_id/comps/:comp_id
 
 
 ```javascript
@@ -208,7 +208,7 @@
  * @param req.params.comp_id
  */
  ```
-```**DELETE** /v1/repo/usrs/:usr_id/comps/:comp_id```
+**DELETE** /v1/repo/usrs/:usr_id/comps/:comp_id
 
 
 ```javascript
@@ -224,7 +224,7 @@
  * @param req.body.percnt
  */
  ```
-```**POST** /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs```
+**POST** /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs
 
 
 ```javascript
@@ -241,7 +241,7 @@
  * @param req.body.percnt
  */
  ```
-```**PUT** /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs/:comp_dev_id```
+**PUT** /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs/:comp_dev_id
 
 
 ```javascript
@@ -254,7 +254,7 @@
  * @param req.params.comp_dev_id
  */
  ```
-```**DELETE** /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs/:comp_dev_id```
+**DELETE** /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs/:comp_dev_id
 
 
 ```javascript
@@ -269,4 +269,4 @@
  * @param req.body.reached
  */
  ```
-```**PUT** /v1/repo/usrs/:usr_id/comps/:comp_id/life-cicles```
+**PUT** /v1/repo/usrs/:usr_id/comps/:comp_id/life-cicles
