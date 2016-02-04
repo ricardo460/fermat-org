@@ -24,6 +24,7 @@ var lock = function (req, res, next) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
+                    console.log("en el next del lock");
                     next();
                 }
             });
@@ -82,8 +83,9 @@ router.post('/', function (req, res, next) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
-                    res.status(200).send(result);
+                    res.status(201).send(result);
                 }
+                release(req);
             });
         }
     } catch (err) {
@@ -140,6 +142,7 @@ router.get('/:layer_id', function (req, res, next) {
                         message: "NOT FOUND"
                     });
                 }
+                release(req);
             }
         });
     } catch (err) {
@@ -160,14 +163,23 @@ router.get('/:layer_id', function (req, res, next) {
 router.put('/:layer_id', function (req, res, next) {
     'use strict';
     try {
-        repMod.uptLay(req, function (error, result) {
-            if (error) {
-                res.status(200).send(error);
-            } else {
-                res.status(200).send(result);
-            }
+
+	    if (!security.isValidData(req.params.layer_id) || //
+            !security.isValidData(req.body.name) || //
+            !security.isValidData(req.body.lang) || //
+            !security.isValidData(req.body.suprlay) || //
+            !security.isValidData(req.body.order)) {
+            res.status(412).send({message: 'missing or invalid data'});
+        } else {
+            repMod.uptLay(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    res.status(200).send(result);
+                }
             release(req);
         });
+    }
     } catch (err) {
         next(err);
     }
@@ -190,7 +202,13 @@ router.delete('/:layer_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                res.status(200).send(result);
+                if (result) {
+                    res.status(204).send();
+                } else {
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
+                }
             }
             release(req);
         });

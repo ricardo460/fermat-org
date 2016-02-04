@@ -1,3 +1,4 @@
+/** client-side sha256
 // SHA-256 hash function. Copyright-free.
 // Requires typed arrays.
 SHA256 = {};
@@ -140,3 +141,4 @@ window.calculate = function () {
     span.innerHTML = SHA256.hash(message);
     input.focus();
 }
+client-side sha256*/

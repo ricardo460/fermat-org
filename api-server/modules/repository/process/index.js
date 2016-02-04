@@ -8,6 +8,34 @@ var platfrmSrv = require('../platform/services/platfrm');
 var suprlaySrv = require('../superlayer/services/suprlay');
 var layerSrv = require('../layer/services/layer');
 var compSrv = require('../component/services/comp');
+var orderLib = require('../../../lib/utils/order');
+
+/**
+ * [sort description]
+ *
+ * @method sort
+ *
+ * @param  {[type]} point [description]
+ * @param  {[type]} dir   [description]
+ *
+ * @return {[type]} [description]
+ */
+var swapOrder = function (action, oldSpot, newSpot, callback) {
+    orderLib.swapOrder(action, oldSpot, newSpot, function (err, query, set) {
+        if (err) {
+            return callback(err, null);
+        } else {
+            stepSrv.updateSteps(query, set, function (err_srt, res_srt) {
+                if (err_srt) {
+                    return callback(err_srt, null);
+                } else {
+                    return callback(null, res_srt);
+                }
+            });
+        }
+    });
+};
+
 /**
  * [findComp description]
  *
@@ -230,12 +258,14 @@ exports.insOrUpdProc = function (platfrm, name, desc, prev, next, callback) {
                     res_proc.next = next;
                 }
                 if (Object.keys(set_obj).length > 0) {
+
                     procSrv.updateProcById(res_proc._id, set_obj, function (err_upd, res_upd) {
                         if (err_upd) {
                             return callback(err_upd, null);
                         }
                         return callback(null, res_proc);
                     });
+
                 } else {
                     return callback(null, res_proc);
                 }
@@ -264,44 +294,64 @@ exports.insOrUpdProc = function (platfrm, name, desc, prev, next, callback) {
  * @return {[type]}     [description]
  */
 exports.findProcById = function (_id, callback) {
-    procSrv.findProcById(_id, function (err_proc, res_proc) {
-        if (err_proc) {
-            return callback(err_proc, null);
-        }
-        return callback(null, res_proc);
-    });
+    'use strict';
+    try {
+        procSrv.findProcById(_id, function (err_proc, res_proc) {
+            if (err_proc) {
+                return callback(err_proc, null);
+            }
+            return callback(null, res_proc);
+        });
+    } catch (err) {
+        callback(err, null);
+    }
 };
+/**
+ * [delProcById description]
+ *
+ * @method delProcById
+ *
+ * @param  {[type]}     _id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
 exports.delProcById = function (_id, callback) {
-    procSrv.findProcById(_id, function (err_proc, res_proc) {
-        if (err_proc) {
-            return callback(err_proc, null);
-        }
-        if (res_proc) {
-            var steps = res_proc.steps;
-            var loopDelSteeps = function () {
-                if (steps.length <= 0) {
-                    procSrv.delSchemaById(_id, function (err_del_proc, res_del_proc) {
-                        if (err_del_proc) {
-                            return callback(err_del_proc, null);
-                        }
-                        return callback(null, res_del_proc);
-                    });
-                } else {
-                    var _idStep = steps.pop();
-                    stepSrv.delSchemaById(_idStep, function (err_del_step, res_delstep) {
-                        if (err_del_step) {
-                            return callback(err_del_step, null);
-                        } else {
-                            loopDelSteeps();
-                        }
-                    });
-                }
-            };
-            loopDelSteeps();
-        } else {
-            return callback(null, null);
-        }
-    });
+    'use strict';
+    try {
+        procSrv.findProcById(_id, function (err_proc, res_proc) {
+            if (err_proc) {
+                return callback(err_proc, null);
+            }
+            if (res_proc) {
+                var steps = res_proc.steps;
+                var loopDelSteeps = function () {
+                    if (steps.length <= 0) {
+                        procSrv.delProcById(_id, function (err_del_proc, res_del_proc) {
+                            if (err_del_proc) {
+                                return callback(err_del_proc, null);
+                            }
+                            return callback(null, res_del_proc);
+                        });
+                    } else {
+                        var _idStep = steps.pop();
+                        stepSrv.delStepById(_idStep, function (err_del_step, res_del_step) {
+                            if (err_del_step) {
+                                return callback(err_del_step, null);
+                            } else {
+                                loopDelSteeps();
+                            }
+                        });
+                    }
+                };
+                loopDelSteeps();
+            } else {
+                return callback(null, null);
+            }
+        });
+    } catch (err) {
+        callback(err, null);
+    }
 };
 /**
  * [insOrUpdStep description]
@@ -375,22 +425,51 @@ exports.insOrUpdStep = function (_proc_id, platfrm_code, suprlay_code, layer_nam
                         res_step.next = next;
                     }
                     if (Object.keys(set_obj).length > 0) {
-                        stepSrv.updateStepById(res_step._id, set_obj, function (err_upd, res_upd) {
-                            if (err_upd) {
-                                return callback(err_upd, null);
-                            }
-                            return callback(null, res_step);
-                        });
+                        if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+
+                            swapOrder('update', res_step.order, set_obj.order, function (err_sld, res_sld) {
+                                if (err_sld) {
+                                    return callback(err_sld, null);
+                                } else {
+
+                                    stepSrv.updateStepById(res_step._id, set_obj, function (err_upd, res_upd) {
+                                        if (err_upd) {
+                                            return callback(err_upd, null);
+                                        }
+                                        return callback(null, set_obj);
+                                    });
+                                }
+                            });
+
+                        } else {
+
+                            stepSrv.updateStepById(res_step._id, set_obj, function (err_upd, res_upd) {
+                                if (err_upd) {
+                                    return callback(err_upd, null);
+                                }
+                                return callback(null, set_obj);
+                            });
+
+                        }
+
                     } else {
                         return callback(null, res_step);
                     }
+
                 } else {
+
                     var step = new StepMdl(_proc_id, res_comp ? res_comp._id : null, type, title, desc, order, next);
-                    stepSrv.insertStep(step, function (err_ins, res_ins) {
-                        if (err_ins) {
-                            return callback(err_ins, null);
+                    swapOrder('insert', null, step.order, function (err_sld, res_sld) {
+                        if (err_sld) {
+                            return callback(err_sld, null);
+                        } else {
+                            stepSrv.insertStep(step, function (err_ins, res_ins) {
+                                if (err_ins) {
+                                    return callback(err_ins, null);
+                                }
+                                return callback(null, res_ins);
+                            });
                         }
-                        return callback(null, res_ins);
                     });
                 }
             });
@@ -545,10 +624,159 @@ exports.updateProcById = function (_proc_id, platfrm, name, desc, prev, next, ca
             if (err) {
                 return callback(err, null);
             }
-            return callback(null, proc);
+            return callback(null, set_obj);
         });
     } catch (err) {
         return callback(err, null);
     }
 };
+
+/**
+ * [insertStep description]
+ *
+ * @method insertStep
+ *
+ *
+ * @param  {[type]}     _proc_id        [description]
+ * @param  {[type]}     _comp_id        [description]
+ * @param  {[type]}     type            [description]
+ * @param  {[type]}     title           [description]
+ * @param  {[type]}     desc            [description]
+ * @param  {[type]}     order           [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+
+exports.insertStep = function (_proc_id, _comp_id, type, title, desc, order, callback) {
+    'use strict';
+    try {
+        var step = new StepMdl(_proc_id, _comp_id, type, title, desc, order, []);
+        stepSrv.insertStep(step, function (err_ins, res_ins) {
+            if (err_ins) {
+                return callback(err_ins, null);
+            }
+            procSrv.pushStepToProcById(_proc_id, res_ins._id, function(err_push_step, res_push_step){
+
+                if (err_push_step) {
+                    return callback(err_push_step, null);
+                }
+                return callback(null, res_ins);
+            });
+
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
+/**
+ * [updateStepById description]
+ *
+ * @method updateStepById
+ *
+ * @param  {[type]}     _step_id        [description]
+ * @param  {[type]}     _comp_id        [description]
+ * @param  {[type]}     type            [description]
+ * @param  {[type]}     title           [description]
+ * @param  {[type]}     desc            [description]
+ * @param  {[type]}     order           [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+
+exports.updateStepById = function (_step_id, _comp_id, type, title, desc, order, callback) {
+    'use strict';
+    try {
+        var set_obj = {};
+        if (_comp_id) {
+            set_obj._comp_id = _comp_id;
+        }
+        if (type) {
+            set_obj.type = type;
+        }
+        if (title) {
+            set_obj.title = title;
+        }
+        if (desc) {
+            set_obj.desc = desc;
+        }
+        if (typeof order != "undefined") {
+            set_obj.order = order;
+        }
+
+        stepSrv.findStepById(_step_id, function (err_step, res_step) {
+            if (err_step) {
+                return callback(err_step, null);
+            }
+
+            if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+
+                swapOrder('update', res_step.order, set_obj.order, function (err_sld, res_sld) {
+                    if (err_sld) {
+                        return callback(err_sld, null);
+                    } else {
+
+                        stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
+                            if (err_upt) {
+                                return callback(err_upt, null);
+                            }
+                            return callback(null, set_obj);
+                        });
+                    }
+                });
+            } else {
+
+                stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
+                    if (err_upt) {
+                        return callback(err_upt, null);
+                    }
+                    return callback(null, set_obj);
+                });
+
+            }
+        });
+
+    } catch (err) {
+        return callback(err, null);
+    }
+
+};
+/**
+ * [delStepById description]
+ *
+ * @method delStepById
+ *
+ * @param  {[type]}     _id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.delStepById = function (_id, callback) {
+    'use strict';
+    try {
+        stepSrv.findStepById(_id, function (err_step, res_step) {
+            if (err_step) {
+                return callback(err_step, null);
+            }
+            // ordering function
+            swapOrder('delete', res_step.order, null, function (err_sld, res_sld) {
+                if (err_sld) {
+                    return callback(err_sld, null);
+                } else {
+                    stepSrv.delStepById(res_step._id, function (err_del, res_del) {
+                        if (err_del) {
+                            return callback(err_del, null);
+                        }
+                        return callback(null, res_step);
+                    });
+                }
+            });
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+
 /*jshint +W069 */

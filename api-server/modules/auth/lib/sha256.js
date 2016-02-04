@@ -1,5 +1,6 @@
 // SHA-256 hash function. Copyright-free.
 // Requires typed arrays.
+/* global unescape */
 var SHA256 = {};
 SHA256.K = [
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b,
@@ -31,8 +32,8 @@ SHA256.digest = function (message) {
     if (typeof message == 'string') {
         var s = unescape(encodeURIComponent(message)); // UTF-8
         message = new Uint8Array(s.length);
-        for (var i = 0; i < s.length; i++) {
-            message[i] = s.charCodeAt(i) & 0xff;
+        for (var k = 0; k < s.length; k++) {
+            message[k] = s.charCodeAt(k) & 0xff;
         }
     }
     var length = message.length;
@@ -60,13 +61,14 @@ SHA256.digest = function (message) {
         for (i = 0; i < 16; i++) {
             w[i] = words[j + i];
         }
+        var s0, s1;
         for (i = 16; i < 64; i++) {
             var v = w[i - 15];
-            var s0 = (v >>> 7) | (v << 25);
+            s0 = (v >>> 7) | (v << 25);
             s0 ^= (v >>> 18) | (v << 14);
             s0 ^= (v >>> 3);
             v = w[i - 2];
-            var s1 = (v >>> 17) | (v << 15);
+            s1 = (v >>> 17) | (v << 15);
             s1 ^= (v >>> 19) | (v << 13);
             s1 ^= (v >>> 10);
             w[i] = (w[i - 16] + s0 + w[i - 7] + s1) & 0xffffffff;
@@ -90,9 +92,9 @@ SHA256.digest = function (message) {
             s0 ^= (a >>> 22) | (a << 10);
             var maj = (a & b) ^ (a & c) ^ (b & c);
             var temp2 = (s0 + maj) & 0xffffffff;
-            h = g
-            g = f
-            f = e
+            h = g;
+            g = f;
+            f = e;
             e = (d + temp1) & 0xffffffff;
             d = c;
             c = b;
@@ -126,7 +128,7 @@ SHA256.digest = function (message) {
 SHA256.hash = function (message) {
     var digest = SHA256.digest(message);
     var hex = '';
-    for (i = 0; i < digest.length; i++) {
+    for (var i = 0; i < digest.length; i++) {
         var s = '0' + digest[i].toString(16);
         hex += s.length > 2 ? s.substring(1) : s;
     }

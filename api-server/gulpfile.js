@@ -1,15 +1,14 @@
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
-var stylish = require('jshint-stylish');
 //
 gulp.task('jslint', function () {
 	return gulp.src([
 		'bin/*',
-		'lib/**/*.js*',
-		'modules/**/*.js*',
-		'routes/**/*.js*',
+		'lib/**/*.{js,json}',
+		'modules/**/*.{js,json}',
+		'routes/**/*.{js,json}',
 		'!node_modules/**/*',
-		'*.js*'
+		'*.{js,json}'
 	]).pipe(jshint({
 		'undef': true,
 		'unused': false,
@@ -17,16 +16,18 @@ gulp.task('jslint', function () {
 		'nomen': true,
 		'plusplus': false,
 		'latedef': true
-	})).pipe(jshint.reporter(stylish));
+	})).pipe(jshint.reporter('jshint-stylish'));
+	//.pipe(jshint.reporter('fail'))
+	//.pipe(gulp.dest('dist'));
 });
 //
 gulp.task('watch', function () {
 	gulp.watch([
 		'bin/*',
-		'lib/**/*.js*',
-		'modules/**/*.js*',
-		'routes/**/*.js*',
+		'lib/**/*.{js,json}',
+		'modules/**/*.{js,json}',
+		'routes/**/*.{js,json}',
 		'!node_modules/**/*',
-		'*.js*'
+		'*.{js,json}'
 	], ['jslint']);
 });
