@@ -136,23 +136,23 @@ router.get('/', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
-router.put('/:comp_id/life-cicles', function (req, res, next) {
+router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
     'use strict';
     try {
         if (!security.isValidData(req.params.comp_id) || //
-            !security.isValidData(req.body.name) || //
+            !security.isValidData(req.params.life_cicle_id) || //
             !security.isValidData(req.body.target) || //
             !security.isValidData(req.body.reached)) {
             res.status(412).send({
                 "message": "missing or invalid data"
             });
         } else {
-            repMod.addLifeCiclesToComp(req, function (error, result) {
+            repMod.uptLifeCiclesToComp(req, function (error, result) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
                     if (result) {
-                        res.status(201).send(result);
+                        res.status(200).send(result);
                     } else {
                         res.status(404).send({
                             message: "NOT FOUND"

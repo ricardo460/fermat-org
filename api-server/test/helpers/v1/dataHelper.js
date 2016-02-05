@@ -32,8 +32,6 @@ exports.generateDataCompDev = function(){
 
 exports.generateDataLifeCicle = function(){
     return {
-        "comp_id" : mongoose.Types.ObjectId().toString(),
-        "name" : faker.name.firstName(),
         "target": Date(),
         "reached": Date()
     };

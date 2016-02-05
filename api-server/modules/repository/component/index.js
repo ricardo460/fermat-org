@@ -339,6 +339,41 @@ exports.updCompDevAndLifCyc = function (_comp_id, devs, life_cycle, callback) {
     }
 };
 /**
+ * [uptLifeCiclesById description]
+ *
+ * @method uptLifeCiclesById
+ *
+ * @param  {[type]}     _life_cicle_id  [description]
+ * @param  {[type]}     target          [description]
+ * @param  {[type]}     reached          [description]
+ * @param  {Function}   callback        [description]
+ *
+ * @return {[type]}    [description]
+ */
+exports.uptLifeCiclesById = function (_life_cicle_id, target, reached, callback) {
+    'use strict';
+    try {
+        var set_obj = {};
+        if (target) {
+            set_obj.target = target;
+        }
+        if (reached) {
+            set_obj.reached = reached;
+        }
+        statusSrv.updateStatusById(_life_cicle_id, set_obj, function (err_upd, res_upd) {
+            if (err_upd) {
+                return callback(err_upd, null);
+            } else if(res_upd) {
+                return callback(null, set_obj);
+            } else {
+                return callback(null, null);
+            }
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
+/**
  * [findCompById description]
  *
  * @method findCompById
