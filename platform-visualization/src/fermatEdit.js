@@ -59,49 +59,28 @@ function FermatEdit() {
         var id = _id || null,
             text = 'Edit Component',
             button = 'buttonFermatEdit',
-            side = null,
-            callback = null;
+            side = null;
 
-        callback = function(){
-
-            actions.type = "modify";
-
-            window.buttonsManager.removeAllButtons(); 
-            addAllFilds();
-            fillFields(id);
-            drawTile(id);
-        };
+        var callback = function(){
+                window.buttonsManager.removeAllButtons(); 
+                addAllFilds();
+                window.tileManager.transform(tileManager.targets.table, 2000);
+                window.signLayer.transformSignLayer();
+                fillFields(id);
+                drawTile(id);
+                actions.type = "modify";
+            };
 
         if(id === null){
 
             callback = function(){ 
-
-                actions.type = "new";
-
                 window.buttonsManager.removeAllButtons();
                 drawTile(null, addAllFilds);
+                actions.type = "new";
             };
 
             text = 'Add New Component';
             button = 'buttonFermatNew';
-            side = 'right';
-        }
-        else{
-
-            window.buttonsManager.createButtons(button, text, callback, null, null, side);
-
-            callback = function(){
-
-                if(confirm("Really remove this component?")){ 
-            
-                    window.buttonsManager.removeAllButtons();
-                    self.addButton();
-                    deleteTile(id);
-                }
-            };
-
-            text = 'Delete Component';
-            button = 'buttonFermatDelete';
             side = 'right';
         }
 
@@ -187,7 +166,13 @@ function FermatEdit() {
 
     function createElement() {
 
-        var newCenter = helper.getCenterView('table');
+        var px = Math.random() * 80000 - 40000,
+            py = Math.random() * 80000 - 40000,
+            pz = 80000 * 2,
+            rx = Math.random() * 180,
+            ry = Math.random() * 180,
+            rz = Math.random() * 180,
+            newCenter = helper.getCenterView('table');
 
         var y = helper.getLastValueArray(window.tileManager.dimensions.layerPositions) + (TILE_DIMENSION.height * 2);
 
@@ -200,15 +185,23 @@ function FermatEdit() {
                         })
                 );
 
-        var target = window.helper.fillTarget(newCenter.x, y, newCenter.z, 'table');
+        mesh.userData = {
+           // onClick : onClick
+        };
 
-        mesh.position.copy(target.hide);
 
-        mesh.rotation.copy(target.hideR);
+
+        var target = { x : newCenter.x, y : y, z : newCenter.z,
+                       px : px, py : py, pz : pz,
+                       rx : rx, ry : ry, rz : rz };
+
+        mesh.position.set(px, py, pz);
+
+        mesh.rotation.set(rx, ry, rz);
 
         mesh.renderOrder = 1;
 
-        window.scene.add(mesh);
+        scene.add(mesh);
 
         objects.tile.mesh = mesh;
 
@@ -222,7 +215,7 @@ function FermatEdit() {
 
         var mesh = objects.tile.mesh;
 
-        if(actions.type === "new") {
+        if (window.camera.getFocus() === null) {
 
             var exit = function(){
                 window.camera.resetPosition();
@@ -231,7 +224,7 @@ function FermatEdit() {
 
             actions.exit = exit;
 
-            animate(mesh, objects.tile.target.show, objects.tile.target.showR, 1000, function(){ 
+            animate(mesh, objects.tile.target, true, 1000, function(){ 
 
                 window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 2000);
 
@@ -248,6 +241,10 @@ function FermatEdit() {
         }
         else{
 
+            var position = window.tileManager.targets.table[id].position;
+
+            animate(window.objects[id], objects.tile.target, false, 1000);
+
             var exit = function(){
                 self.addButton();
             };
@@ -256,16 +253,9 @@ function FermatEdit() {
 
             changeTexture();
 
-            animate(mesh, objects.tile.target.show, objects.tile.target.showR, 1000, function(){ 
+            animate(mesh, position, true, 1500, function(){ 
 
                 window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 1500);
-
-                window.tileManager.transform(tileManager.targets.table, 1000);
-                window.signLayer.transformSignLayer();
-
-                setTimeout( function() {
-                    animate(window.objects[id], objects.tile.target.hide, objects.tile.target.hideR, 1000);
-                }, 2000 );
 
             });
 
@@ -299,7 +289,7 @@ function FermatEdit() {
             objects.row2.buttons.push(object);
             
             var windowWidth = window.innerWidth;
-            var size         = windowWidth * 0.0085;
+            var size         = windowWidth * 0.008;
             var style        = document.createElement("style");
             var styleSheet   = ".edit-Fermat {font-size:"+size+"px;}";
             var node         = document.createTextNode(styleSheet);
@@ -647,16 +637,8 @@ function FermatEdit() {
             
             window.buttonsManager.createButtons(id, text, function(){
                 saveTile();
-
-                if(actions.type === 'new'){
-
-                    actions.exit = null;
-                    window.camera.cleanFocus();
-                    window.helper.hideBackButton();
-                    window.buttonsManager.removeAllButtons();
-                }
-                
-
+                window.buttonsManager.removeAllButtons();
+                self.addButton();
             }, null, null, "right");
 
         }
@@ -704,7 +686,7 @@ function FermatEdit() {
 
         if(mesh != null){
 
-            animate(mesh, objects.tile.target.hide, objects.tile.target.hideR, 1500, function(){ 
+            animate(mesh, objects.tile.target, false, 1500, function(){ 
                     window.scene.remove(mesh);
                 });
 
@@ -737,14 +719,14 @@ function FermatEdit() {
                 target : {}
             };
 
-        if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
-            window.TABLE[platform].layers[layer] = {   
+        if(typeof TABLE[platform].layers[layer] === 'undefined'){ 
+            TABLE[platform].layers[layer] = {   
                 objects : [],
                 y : y 
             };
         }
 
-        var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
+        var lastObject = helper.getLastValueArray(TABLE[platform].layers[layer].objects);
 
         x = 0;
 
@@ -768,13 +750,15 @@ function FermatEdit() {
         object.data = table;
         object.target = target;
 
-        window.camera.enable();
+        camera.loseFocus();
 
-        window.camera.move(target.show.x, target.show.y, target.show.z + 8000, 4000);
+        camera.enable();
 
-        animate(mesh, target.show, target.showR, 4500);
+        camera.move(target.show.x, target.show.y, target.show.z + 16000, 4000);
+
+        animate(mesh, target.show, true, 5000);
                 
-        window.TABLE[platform].layers[layer].objects.push(object);
+        TABLE[platform].layers[layer].objects.push(object);
     }
 
     function modifyTile(table){
@@ -784,17 +768,6 @@ function FermatEdit() {
             oldLayer = self.actualTile.layer,
             oldGroup = self.actualTile.group || window.layers[self.actualTile.layer].super_layer;
 
-        var arrayObject = TABLE[oldGroup].layers[oldLayer].objects;
-
-        for(var i = 0; i < arrayObject.length; i++){
-            
-            if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
-
-                window.scene.remove(arrayObject[i].mesh);
-                
-            }
-        }
-
         window.camera.loseFocus();
 
         window.camera.enable();
@@ -802,7 +775,7 @@ function FermatEdit() {
         var positionCameraX = TABLE[oldGroup].x,
             positionCameraY = helper.getPositionYLayer(oldLayer);
 
-        window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
+        window.camera.move(positionCameraX, positionCameraY, 10000, 1000);
 
         setTimeout( function() {
 
@@ -815,7 +788,8 @@ function FermatEdit() {
 
         function change(){
 
-            var newArrayObject = [];
+            var arrayObject = TABLE[oldGroup].layers[oldLayer].objects,
+                newArrayObject = [];
                 TABLE[oldGroup].layers[oldLayer].objects = [];
    
             for(var i = 0; i < arrayObject.length; i++){
@@ -858,7 +832,7 @@ function FermatEdit() {
                 object.data = data;
                 object.target = target;
 
-                animate(arrayObject[t].mesh, target.show, target.showR, 1500);
+                animate(arrayObject[t].mesh, target.show, true, 1500);
 
                 newArrayObject.push(object);
             }
@@ -869,7 +843,7 @@ function FermatEdit() {
 
                 positionCameraX = TABLE[newGroup].x,
                 positionCameraY = window.helper.getPositionYLayer(newLayer);
-                camera.move(positionCameraX, positionCameraY,8000, 2000);
+                camera.move(positionCameraX, positionCameraY,10000, 1000);
                 createNewElementTile(table);
 
             }, 2000 );
@@ -877,24 +851,6 @@ function FermatEdit() {
         }
 
         function notChange(){
-
-            var arrayObject = TABLE[oldGroup].layers[oldLayer].objects;
-            var mesh = window.tileManager.createElement(1, table);
-            var target = null;
-
-            window.scene.add(mesh);
-
-            for(var i = 0; i < arrayObject.length; i++){
-                
-                if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
-
-                    TABLE[oldGroup].layers[oldLayer].objects[i].mesh = mesh;
-                    TABLE[oldGroup].layers[oldLayer].objects[i].data = table;
-                    target = TABLE[oldGroup].layers[oldLayer].objects[i].target;
-                }
-            }
-            
-            animate(mesh, target.show, target.showR, 2000);
 
         }
     }
@@ -944,7 +900,7 @@ function FermatEdit() {
         object.data = table;
         object.target = target;
 
-        animate(mesh, target.show, target.showR, 2500);
+        animate(mesh, target.show, true, 2500);
                 
         TABLE[platform].layers[layer].objects.push(object);
 
@@ -1016,98 +972,37 @@ function FermatEdit() {
         return data;
     }
 
-    function deleteTile(id){
 
-        var oldLayer = window.table[id].layer,
-            oldGroup = window.table[id].group || window.layers[window.table[id].layer].super_layer,
-            _mesh = null,
-            arrayObject = TABLE[oldGroup].layers[oldLayer].objects;
-
-        var positionCameraX = TABLE[oldGroup].x,
-            positionCameraY = helper.getPositionYLayer(oldLayer);
-
-        window.camera.loseFocus();
-        window.camera.enable();
-
-        window.tileManager.transform(tileManager.targets.table, 1000);
-        window.signLayer.transformSignLayer();
-
-        window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
-
-        setTimeout( function() {
-
-            var newArrayObject = [];
-
-            TABLE[oldGroup].layers[oldLayer].objects = [];
-       
-            for(var i = 0; i < arrayObject.length; i++){
-                
-                if(arrayObject[i].data.author === window.table[id].author && arrayObject[i].data.name === window.table[id].name){
-
-                    _mesh = arrayObject[i].mesh;
-
-                    animate(arrayObject[i].mesh, arrayObject[i].target.hide, arrayObject[i].target.hideR, 1500, function(){
-                        window.scene.remove(_mesh);
-                    });
-
-                    arrayObject.splice(i,1);
-                }
-            }
-
-            for(var t = 0; t < arrayObject.length; t++){
-
-                var data = arrayObject[t].data,
-                    mesh = arrayObject[t].mesh,
-                    target = null,
-                    object = { 
-                        mesh : null,
-                        data : {},
-                        target : {}
-                    };
-                    
-                var x = 0, y = 0, z = 0;
-
-                var lastObject = helper.getLastValueArray(newArrayObject);
-
-                x = 0;
-
-                if(!lastObject)
-                    x = TABLE[oldGroup].x;
-                else
-                    x = lastObject.target.show.x + TILE_DIMENSION.width;
-
-                y = window.helper.getPositionYLayer(oldLayer);
-
-                z = 0;
-                
-                target = window.helper.fillTarget(x, y, z, 'table');
-
-                object.mesh = mesh;
-                object.data = data;
-                object.target = target;
-
-                animate(arrayObject[t].mesh, target.show, target.showR, 1500);
-
-                newArrayObject.push(object);
-            }
-
-            TABLE[oldGroup].layers[oldLayer].objects = newArrayObject;
-
-
-        }, 3500 );
- 
-    }
-
-
-    function animate(mesh, target, rotation, duration, callback){
+    function animate(mesh, target, state, duration, callback){
 
         var _duration = duration || 2000,
-            x = target.x,
-            y = target.y,
-            z = target.z,
-            rx = rotation.x,
-            ry = rotation.y,
-            rz = rotation.z; 
+            x,
+            y,
+            z,
+            rx,
+            ry,
+            rz;
+
+        if (state) {
+
+           x = target.x;
+           y = target.y;
+           z = target.z;
+
+           rx = 0;
+           ry = 0;
+           rz = 0;
+        } 
+        else {
+
+           x = target.px;
+           y = target.py;
+           z = target.pz;
+           
+           rx = target.rx;
+           ry = target.ry;
+           rz = target.rz; 
+        }  
 
         _duration = Math.random() * _duration + _duration;
 
@@ -1127,4 +1022,8 @@ function FermatEdit() {
     }
     
 }
+
+
+
+
 
