@@ -2,14 +2,12 @@ var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var suprlayMdl = require('../models/suprlay');
 var suprlaySch = require('../schemas/suprlay');
-
 /**
  * [suprlayDao description]
  *
  * @type {Dao}
  */
 var suprlayDao = new Dao('Suprlay', suprlaySch, suprlayMdl);
-
 /**
  * [insertSuprlay description]
  *
@@ -26,7 +24,6 @@ exports.insertSuprlay = function (suprlay_mdl, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [findSuprlayById description]
  *
@@ -43,7 +40,6 @@ exports.findSuprlayById = function (_id, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [findSuprlayByCode description]
  *
@@ -62,7 +58,6 @@ exports.findSuprlayByCode = function (code, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [findSuprlayByName description]
  *
@@ -81,7 +76,6 @@ exports.findSuprlayByName = function (name, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [findSuprlays description]
  *
@@ -100,7 +94,6 @@ exports.findSuprlays = function (query, limit, order, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [findAllSuprlays description]
  *
@@ -118,7 +111,6 @@ exports.findAllSuprlays = function (query, order, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [updateSuprlayById description]
  *
@@ -139,7 +131,6 @@ exports.updateSuprlayById = function (_id, set, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [delSuprlayById description]
  *
@@ -158,7 +149,6 @@ exports.delSuprlayById = function (_id, callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [delAllSuprlays description]
  *
@@ -174,7 +164,6 @@ exports.delAllSuprlays = function (callback) {
         callback(err, suprlay);
     });
 };
-
 /**
  * [updateSuprlays description]
  *

@@ -2,14 +2,12 @@ var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var platfrmMdl = require('../models/platfrm');
 var platfrmSch = require('../schemas/platfrm');
-
 /**
  * [platfrmDao description]
  *
  * @type {Dao}
  */
 var platfrmDao = new Dao('Platfrm', platfrmSch, platfrmMdl);
-
 /**
  * [insertPlatfrm description]
  *
@@ -26,7 +24,6 @@ exports.insertPlatfrm = function (platfrm_mdl, callback) {
         callback(err, platfrm);
     });
 };
-
 /**
  * [findPlatfrmById description]
  *
@@ -43,7 +40,6 @@ exports.findPlatfrmById = function (_id, callback) {
         callback(err, platfrm);
     });
 };
-
 /**
  * [findPlatfrmByCode description]
  *
@@ -62,7 +58,6 @@ exports.findPlatfrmByCode = function (code, callback) {
         callback(err, platfrm);
     });
 };
-
 /**
  * [findPlatfrmByName description]
  *
@@ -81,7 +76,6 @@ exports.findPlatfrmByName = function (name, callback) {
         callback(err, platfrm);
     });
 };
-
 /**
  * [findPlatfrms description]
  *
@@ -100,7 +94,6 @@ exports.findPlatfrms = function (query, limit, order, callback) {
         callback(err, platfrm);
     });
 };
-
 /**
  * [findAllPlatfrms description]
  *
@@ -118,7 +111,6 @@ exports.findAllPlatfrms = function (query, order, callback) {
         callback(err, platfrm);
     });
 };
-
 /**
  * [updatePlatfrmById description]
  *
@@ -139,7 +131,6 @@ exports.updatePlatfrmById = function (_id, set, callback) {
         callback(err, platfrm);
     });
 };
-
 /**
  * [delAllPlatfrms description]
  *
@@ -155,7 +146,6 @@ exports.delAllPlatfrms = function (callback) {
         callback(err, platfrm);
     });
 };
-
 /**
  * [delPlatfrmById description]
  *
@@ -174,7 +164,6 @@ exports.delPlatfrmById = function (_id, callback) {
         callback(err, platfrm);
     });
 };
-
 /**
  * [updatePlatfrms description]
  *
