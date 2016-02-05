@@ -152,7 +152,7 @@ router.get('/:suprlay_id', function (req, res, next) {
  * @param  {[type]} req   [description]
  * @param  {[type]} res   [description]
  * @param  {[type]} next  [description]
- *
+ *f
  * @return {[type]} [description]
  */
 router.put('/:suprlay_id', function (req, res, next) {
