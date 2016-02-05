@@ -220,15 +220,14 @@ exports.updateSuprlayById = function (_sprly_id, code, name, logo, deps, order, 
         suprlaySrv.findSuprlayById(_sprly_id, function (err_supr, res_supr) {
             if (err_supr) {
                 return callback(err_supr, null);
-<<<<<<< HEAD
 
             }else if (res_supr){
 
               if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
-=======
+
             }
             if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
->>>>>>> upstream/master
+
                 swapOrder('update', res_supr.order, set_obj.order, function (err_sld, res_sld) {
                     if (err_sld) {
                         return callback(err_sld, null);
@@ -249,7 +248,7 @@ exports.updateSuprlayById = function (_sprly_id, code, name, logo, deps, order, 
                     return callback(null, set_obj);
                 });
             }
-<<<<<<< HEAD
+
 
             }else{
                return callback(null, null);
@@ -258,8 +257,6 @@ exports.updateSuprlayById = function (_sprly_id, code, name, logo, deps, order, 
 
            
 
-=======
->>>>>>> upstream/master
         });
     } catch (err) {
         return callback(err, null);
