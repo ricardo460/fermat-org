@@ -74,7 +74,7 @@ router.post('/', function (req, res, next) {
             !security.isValidData(req.body.name) || //
             !security.isValidData(req.body.logo) || //
             !security.isValidData(req.body.order)) {
-            res.status(412).send('missing or invalid data');
+                  res.status(412).send({message: 'missing or invalid data'});
         } else {
             repMod.addSuprLay(req, function (error, result) {
                 if (error) {
