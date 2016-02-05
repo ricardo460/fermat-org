@@ -160,21 +160,15 @@ router.get('/:platfrm_id', function (req, res, next) {
  *
  * @return {[type]} [description]
  */
+
+ 
 router.put('/:platfrm_id', function (req, res, next) {
     'use strict';
-    //platfrmMod.updatePlatfrmById(
-        /*req.params.platfrm_id,
-          req.body.code, 
-          req.body.name, 
-          req.body.logo, 
-          req.body.deps,
-           req.body.order,
-         */
     try {
         if (!security.isValidData(req.params.platfrm_id) || //
             !security.isValidData(req.body.code) || //
-            !security.isValidData( req.body.name) || //
-             !security.isValidData(req.body.logo) || //
+            !security.isValidData(req.body.name) || //
+            !security.isValidData(req.body.logo) || //
             !security.isValidData(req.body.deps) || //
             !security.isValidData(req.body.order)) {
                res.status(412).send({"message": "missing or invalid data"});

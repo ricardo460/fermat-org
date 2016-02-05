@@ -155,7 +155,7 @@ describe("SUPRLAY",function(){
         .put(pathTest+"/"+platform._id)
         .send(dataPlatform)
         .expect("Content-type",/json/)
-        .expect(404) // This is HTTP response
+        .expect(412) // This is HTTP response
         .end(function(err, res){
 
                 if (err) return done(err);
