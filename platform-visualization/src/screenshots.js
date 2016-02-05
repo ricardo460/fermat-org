@@ -61,11 +61,11 @@ function ScreenshotsAndroid() {
 
 	        		for(var _wallet in json[_group][_layer]){
 
-	        			for (var i = 0; i < window.table.length; i++){
+	        			for (var i = 0; i < window.tilesQtty; i++){
 
-	        				if(window.table[i].type === "Plugin" || window.table[i].type === "Android"){ 
+	        				if(window.helper.getTileSpecific(i).type === "Plugin" || window.helper.getTileSpecific(i).type === "Android"){ 
 
-		        				if(window.table[i].group === _group && window.table[i].layer === _layer && window.table[i].name === _wallet){
+		        				if(window.helper.getTileSpecific(i).group === _group && window.helper.getTileSpecific(i).layer === _layer && window.helper.getTileSpecific(i).name === _wallet){
 		        					
 		        					var id = i,
 		        						name = json[_group][_layer][_wallet].name,

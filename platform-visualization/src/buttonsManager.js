@@ -23,7 +23,7 @@ function ButtonsManager() {
 
     	self.removeAllButtons();
 
-        if(window.table[id].author) {
+        if(window.helper.getTileSpecific(id).author) {
 
             self.createButtons('developerButton', 'View developer', function(){
 

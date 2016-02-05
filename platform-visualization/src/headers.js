@@ -737,6 +737,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 object.name = group;         
 
                 object.position.copy(window.viewManager.translateToSection('table', object.position));
+
+                window.TABLE[group].x = object.position.x;
                 positions.table.push(object);
 
                 createChildren(group, headerData.dependsOn);
@@ -770,6 +772,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 object.name = slayer;
 
                 object.position.copy(window.viewManager.translateToSection('table', object.position));
+
+                window.TABLE[slayer].x = object.position.x;
                 positions.table.push(object);
 
                 createChildren(slayer, headerData.dependsOn);

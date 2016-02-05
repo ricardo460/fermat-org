@@ -158,26 +158,26 @@ function Developer (){
 		
 		var find = false;
 
-		for (var i = 0; i < table.length; i++) {
+		for (var i = 0; i < window.tilesQtty; i++) {
 			if(i === 0){
-				developerLink.push(table[i].picture);
-				developerAuthor.push(table[i].author);
-				developerAuthorRealName.push(table[i].authorRealName);
-				developerAuthorEmail.push(table[i].authorEmail);
+				developerLink.push(window.helper.getTileSpecific(i).picture);
+				developerAuthor.push(window.helper.getTileSpecific(i).author);
+				developerAuthorRealName.push(window.helper.getTileSpecific(i).authorRealName);
+				developerAuthorEmail.push(window.helper.getTileSpecific(i).authorEmail);
 			}	
 			else{
 
 				for(var j = 0; j < developerLink.length; j++)
-					if(developerLink[j] === table[i].picture && find === false){
+					if(developerLink[j] === window.helper.getTileSpecific(i).picture && find === false){
 						find = true;
 					}
 			}
 			if(find === false && i !== 0){
-				if(table[i].picture !== undefined){
-					developerLink.push(table[i].picture);
-					developerAuthor.push(table[i].author);
-					developerAuthorRealName.push(table[i].authorRealName);
-					developerAuthorEmail.push(table[i].authorEmail);
+				if(window.helper.getTileSpecific(i).picture !== undefined){
+					developerLink.push(window.helper.getTileSpecific(i).picture);
+					developerAuthor.push(window.helper.getTileSpecific(i).author);
+					developerAuthorRealName.push(window.helper.getTileSpecific(i).authorRealName);
+					developerAuthorEmail.push(window.helper.getTileSpecific(i).authorEmail);
 				}
 				find = false;
 			}
@@ -516,9 +516,9 @@ function Developer (){
         var section = 0;
         var center = objectsDeveloper[id].position;
 
-        for (var i = 0; i < table.length; i++) {
+        for (var i = 0; i < window.tilesQtty; i++) {
             
-            if (table[i].author === objectsDeveloper[id].name && !isNaN(objects[i].position.y)){
+            if (window.helper.getTileSpecific(i).author === objectsDeveloper[id].name && !isNaN(objects[i].position.y)){
 
                 new TWEEN.Tween(objects[i].position)
                 .to({x : (center.x + (section % 5) * window.TILE_DIMENSION.width) - 750, y : (center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height) - 250, z : 0}, 2000)
