@@ -25,6 +25,105 @@ function ScreenshotsAndroid() {
 
 	var onClick = function(target) {
 		change(target.userData.id);
+		window.buttonsManager.removeAllButtons();
+	};
+
+	this.getScreenshots = function(){
+		return SCREENSHOTS;
+	}
+
+	this.changePositionScreenshots = function(id, x, y){
+
+		for(var t in SCREENSHOTS){
+
+			if(SCREENSHOTS[t].id === id){
+
+				SCREENSHOTS[t].position = new THREE.Vector3(x, y, 0);
+
+				for(var i = 0; i < self.objects.mesh.length; i++){
+
+					if(self.objects.mesh[i].userData.wallet === SCREENSHOTS[t].name){
+
+						var mesh = self.objects.mesh[i];
+
+						var target = {x : x, y : y + 240, z : 0};
+
+						self.objects.target[i].x = target.x;
+						self.objects.target[i].y = target.y;
+						self.objects.target[i].z = target.z;
+
+						animate(mesh, target, true);
+					}
+				}
+			}
+		}
+	};
+
+	this.deleteScreenshots = function(id){
+
+		var newObjects = {};
+
+		for(var t in SCREENSHOTS){
+
+			if(SCREENSHOTS[t].id === id){
+
+				for(var i = 0; i < self.objects.mesh.length; i++){
+
+					if(SCREENSHOTS[t].name === self.objects.mesh[i].userData.wallet){
+
+						var mesh = self.objects.mesh[i];
+
+						var target = self.objects.target[i];
+
+						self.objects.mesh.splice(i,1);
+						self.objects.target.splice(i,1);
+
+						animate(mesh, target, false, 1000, function(){
+
+							window.scene.remove(mesh);
+						});
+					}
+				}
+			}
+			else{
+				newObjects[t] = SCREENSHOTS[t];
+			}
+		}
+
+		SCREENSHOTS = newObjects;
+
+	};
+
+	this.hidePositionScreenshots = function(newGroup, newLayer){
+
+		var layer = window.CLI.query(window.layers,function(el){return (el.super_layer === false);});
+
+		if(typeof groups[newGroup] !== 'undefined'){
+
+			if(newLayer === layer[0] || newLayer === layer[1] || newLayer === layer[2]){
+
+				for(var t in SCREENSHOTS){
+
+					var id = SCREENSHOTS[t].id;
+					var data = id.split("_");
+
+					if(data[0] === newGroup && data[1] === 'Sub App'){
+
+						for(var i = 0; i < self.objects.mesh.length; i++){
+
+							if(self.objects.mesh[i].userData.wallet === SCREENSHOTS[t].name){
+
+								var mesh = self.objects.mesh[i];
+
+								self.objects.target[i].z = 160000;
+
+								animate(mesh, self.objects.target[i], false);
+							}
+						}
+					}
+				}
+			}
+		}
 	};
 
     // Public method
@@ -42,6 +141,7 @@ function ScreenshotsAndroid() {
 
     		window.buttonsManager.createButtons('showScreenshots', 'View Screenshots', function(){
     			
+    			window.buttonsManager.removeAllButtons();
     			showScreenshotsButton(id);
     		});
     	}	
@@ -70,6 +170,7 @@ function ScreenshotsAndroid() {
 		        					var id = i,
 		        						name = json[_group][_layer][_wallet].name,
 		        						position = window.tileManager.targets.table[i].position,
+		        						_id = _group + "_" + _layer + "_" + name,
 		        						show = false,
 		        						screenshots = {};
 		        						
@@ -79,17 +180,15 @@ function ScreenshotsAndroid() {
 	        						for(var _screen in json[_group][_layer][_wallet].screenshots)
 										screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
 
-									fillScreenshots(id, position, name, show, screenshots);
+									fillScreenshots(id, _id, position, name, show, screenshots);
 		        				}
 		        			}
 	        			}
 	        		}
 	        	}
 	        }
-
 	        setScreenshot();
     	});
-		
 	};
     
     	/**
@@ -162,7 +261,7 @@ function ScreenshotsAndroid() {
 			var random = Math.random() * 80000,
 				_position = {x : random, y : random};
 			for (cant; cant <= 4; cant++)
-				addMesh(_position , lost, false);
+				addMesh('1', _position , lost, false);
 		}
 
 		addTitle();
@@ -177,13 +276,14 @@ function ScreenshotsAndroid() {
     * @param {String}   wallet     Wallet group to which it belongs.
     * @param {Array}  screenshots  All routes screenshot.
 	*/ 
-	function fillScreenshots(id, position, name, show, screenshots){
+	function fillScreenshots(id, _id, position, name, show, screenshots){
 
 		SCREENSHOTS[id] = {};
 		SCREENSHOTS[id].name = name;
 		SCREENSHOTS[id].position = position;
 		SCREENSHOTS[id].show = show;		
 		SCREENSHOTS[id].screenshots = screenshots;
+		SCREENSHOTS[id].id = _id;
 	}
 
 	/**
@@ -235,8 +335,6 @@ function ScreenshotsAndroid() {
 	function addMesh(_position, wallet, state) {
 
 		var id = self.objects.mesh.length,
-			px = Math.random() * 80000 - 40000,
-			py = Math.random() * 80000 - 40000,
 			pz = 80000 * 2,
 			rx = Math.random() * 180,
 			ry = Math.random() * 180,
@@ -244,7 +342,7 @@ function ScreenshotsAndroid() {
 			x = _position.x,
 			y = 0,
 			z = 0,
-			_texture = null;
+			_texture = null; 
 
         if (state){ 
             _texture = searchWallet (wallet, 1);
@@ -268,15 +366,17 @@ function ScreenshotsAndroid() {
 			onClick : onClick
 		};
 
+		var _target = window.helper.fillTarget(x, y, z, 'table');
+
 		mesh.material.opacity = 1;
 
 		mesh.scale.set(4, 4, 4);
 
 		var target = { x : x, y : y, z : z,
-					   px : px, py : py, pz : pz,
+					   px : _target.hide.x, py : _target.hide.y, pz : _target.hide.z,
 					   rx : rx, ry : ry, rz : rz };
 
-		mesh.position.set(px, py, pz);
+		mesh.position.copy(_target.show);
 		mesh.rotation.set(rx, ry, rz);
 
 		window.scene.add(mesh);
@@ -679,6 +779,6 @@ function ScreenshotsAndroid() {
                         callback();   
                 })
 			.start();
-   }
+    }
 
 }

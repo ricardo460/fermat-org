@@ -141,6 +141,9 @@ function FermatEdit() {
 
             if(actualView === 'table'){ 
 
+                if(window.camera.getFocus() === null)
+                    self.addButton();
+
                 if(typeof(actions.exit) === 'function'){
                     actions.exit();
                     actions.exit = null;
@@ -226,7 +229,6 @@ function FermatEdit() {
 
             var exit = function(){
                 window.camera.resetPosition();
-                self.addButton();
             };
 
             actions.exit = exit;
@@ -249,7 +251,7 @@ function FermatEdit() {
         else{
 
             var exit = function(){
-                self.addButton();
+                window.camera.resetPosition();
             };
 
             actions.exit = exit;
@@ -289,6 +291,13 @@ function FermatEdit() {
         createbutton();
         setTextSize();
         
+        function setSelectImages(select) {
+            
+            select.style.backgroundSize = select.offsetHeight+"px";
+            select.style.width = select.offsetWidth+select.offsetHeight+"px";
+            
+        }
+        
         function setTextSize() {
             
             var object = {
@@ -297,9 +306,9 @@ function FermatEdit() {
               };
 
             objects.row2.buttons.push(object);
-            
-            var windowWidth = window.innerWidth;
-            var size         = windowWidth * 0.0085;
+
+            var windowWidth  = window.innerWidth;
+            var size         = windowWidth * 0.009 /*0.008*/;
             var style        = document.createElement("style");
             var styleSheet   = ".edit-Fermat {font-size:"+size+"px;}";
             var node         = document.createTextNode(styleSheet);
@@ -413,6 +422,8 @@ function FermatEdit() {
                 changeLayer(document.getElementById(id).value);
                 changeTexture();
             });
+            
+            setSelectImages(document.getElementById(id));
         }
 
         function sesionLayer(){
@@ -431,6 +442,8 @@ function FermatEdit() {
             
                 changeTexture();
             });
+            
+            setSelectImages(document.getElementById(id));
         }
 
         function sesionType(){
@@ -458,6 +471,8 @@ function FermatEdit() {
             
                 changeTexture();
             });
+            
+            setSelectImages(document.getElementById(id));
 
         }
 
@@ -571,6 +586,8 @@ function FermatEdit() {
             
                 changeTexture();
             });
+            
+            setSelectImages(document.getElementById(id));
 
         }
 
@@ -638,6 +655,8 @@ function FermatEdit() {
             
                 changeTexture();
             });
+            
+            setSelectImages(document.getElementById(id));
 
         }
 
@@ -646,16 +665,8 @@ function FermatEdit() {
             var id = 'button-save', text = 'Save', type = 'button';
             
             window.buttonsManager.createButtons(id, text, function(){
-                saveTile();
-
-                if(actions.type === 'new'){
-
-                    actions.exit = null;
-                    window.camera.cleanFocus();
-                    window.helper.hideBackButton();
-                    window.buttonsManager.removeAllButtons();
-                }
-                
+                actions.exit = null;
+                saveTile();            
 
             }, null, null, "right");
 
@@ -680,7 +691,8 @@ function FermatEdit() {
 
         }
 
-        $("#select-layer").html(option);          
+        $("#select-layer").html(option);  
+        
     }
 
     function changeTexture(){
@@ -715,6 +727,9 @@ function FermatEdit() {
     function saveTile(){
 
         var table = fillTable(false);
+
+        window.camera.loseFocus();
+        window.camera.enable();
 
         if(actions.type === "new")
             newTile(table);
@@ -772,7 +787,10 @@ function FermatEdit() {
 
         window.camera.move(target.show.x, target.show.y, target.show.z + 8000, 4000);
 
-        animate(mesh, target.show, target.showR, 4500);
+        animate(mesh, target.show, target.showR, 4500, function(){
+
+           window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
+        });
                 
         window.TABLE[platform].layers[layer].objects.push(object);
     }
@@ -795,10 +813,6 @@ function FermatEdit() {
             }
         }
 
-        window.camera.loseFocus();
-
-        window.camera.enable();
-
         var positionCameraX = TABLE[oldGroup].x,
             positionCameraY = helper.getPositionYLayer(oldLayer);
 
@@ -816,7 +830,10 @@ function FermatEdit() {
         function change(){
 
             var newArrayObject = [];
-                TABLE[oldGroup].layers[oldLayer].objects = [];
+                TABLE[oldGroup].layers[oldLayer].objects = [],
+                idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
+
+                window.screenshotsAndroid.deleteScreenshots(idScreenshot);
    
             for(var i = 0; i < arrayObject.length; i++){
                 
@@ -851,6 +868,10 @@ function FermatEdit() {
                 y = window.helper.getPositionYLayer(oldLayer);
 
                 z = 0;
+
+                var idScreenshots = oldGroup + "_" + oldLayer + "_" + data.name;
+
+                window.screenshotsAndroid.changePositionScreenshots(idScreenshots, x, y);
                 
                 target = window.helper.fillTarget(x, y, z, 'table');
 
@@ -871,6 +892,7 @@ function FermatEdit() {
                 positionCameraY = window.helper.getPositionYLayer(newLayer);
                 camera.move(positionCameraX, positionCameraY,8000, 2000);
                 createNewElementTile(table);
+                window.screenshotsAndroid.hidePositionScreenshots(newGroup, newLayer);
 
             }, 2000 );
 
@@ -881,6 +903,11 @@ function FermatEdit() {
             var arrayObject = TABLE[oldGroup].layers[oldLayer].objects;
             var mesh = window.tileManager.createElement(1, table);
             var target = null;
+
+            var idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
+
+            if(self.actualTile.name !== table.name)
+                window.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
             window.scene.add(mesh);
 
@@ -894,7 +921,9 @@ function FermatEdit() {
                 }
             }
             
-            animate(mesh, target.show, target.showR, 2000);
+            animate(mesh, target.show, target.showR, 2000,function(){
+                window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
+            });
 
         }
     }
@@ -1021,7 +1050,10 @@ function FermatEdit() {
         var oldLayer = window.table[id].layer,
             oldGroup = window.table[id].group || window.layers[window.table[id].layer].super_layer,
             _mesh = null,
-            arrayObject = TABLE[oldGroup].layers[oldLayer].objects;
+            arrayObject = TABLE[oldGroup].layers[oldLayer].objects,
+            idScreenshot = oldGroup + "_" + oldLayer + "_" + table[id].name;
+
+            window.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
         var positionCameraX = TABLE[oldGroup].x,
             positionCameraY = helper.getPositionYLayer(oldLayer);
@@ -1079,6 +1111,10 @@ function FermatEdit() {
                 y = window.helper.getPositionYLayer(oldLayer);
 
                 z = 0;
+
+                var idScreenshots = oldGroup + "_" + oldLayer + "_" + data.name;
+
+                window.screenshotsAndroid.changePositionScreenshots(idScreenshots, x, y);
                 
                 target = window.helper.fillTarget(x, y, z, 'table');
 
@@ -1093,11 +1129,9 @@ function FermatEdit() {
 
             TABLE[oldGroup].layers[oldLayer].objects = newArrayObject;
 
-
         }, 3500 );
  
     }
-
 
     function animate(mesh, target, rotation, duration, callback){
 
@@ -1127,8 +1161,4 @@ function FermatEdit() {
     }
     
 }
-
-
-
-
 
