@@ -129,6 +129,26 @@ describe("COMP",function(){
 
   });
 
+  it("#POST addComp 412",function(done){
+
+    var dataComp = dataHelper.generateData412General();
+
+    server
+    .post(pathTest+"/")
+    .send(dataComp)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err,res){
+
+      if (err) return done(err);
+
+      res.body.should.have.property('message');
+
+      return done();
+    });
+
+  });
+
   it("#PUT uptComp",function(done){
 
     var dataComp = dataHelper.generateDataComp();
@@ -153,6 +173,27 @@ describe("COMP",function(){
       res.body.repo_dir.should.equal(dataComp.repo_dir);
       res.body.scrnshts.should.equal(dataComp.scrnshts);
       res.body.found.should.equal(dataComp.found);
+
+      return done();
+    });
+
+  });
+
+   it("#PUT uptComp 412",function(done){
+
+    var dataComp = dataHelper.generateData412General();
+
+    server
+    .put(pathTest+"/"+comp._id)
+    .send(dataComp)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err,res){
+
+      if (err) return done(err);
+
+   
+       res.body.should.have.property('message');
 
       return done();
     });
@@ -211,6 +252,24 @@ describe("COMP",function(){
 
   });
 
+    it("#POST addCompDev 412",function(done){
+
+    var dataCompDev = dataHelper.generateData412General();
+    server
+    .post(pathTest+"/"+comp._id+"/comp-devs")
+    .send(dataCompDev)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err,res){
+      if (err) return done(err);
+
+   
+      res.body.should.have.property('message');
+      return done();
+    });
+
+  });
+
   it("#PUT uptCompDev",function(done){
 
     var dataCompDev = dataHelper.generateDataCompDev();
@@ -227,6 +286,24 @@ describe("COMP",function(){
       res.body._dev_id.should.equal(dataCompDev.dev_id);
       res.body.role.should.equal(dataCompDev.role);
       res.body.percnt.should.equal(dataCompDev.percnt);
+      return done();
+    });
+
+  });
+
+    it("#PUT uptCompDev 412",function(done){
+
+    var dataCompDev = dataHelper.generateData412General();
+    server
+    .put(pathTest+"/"+comp._id+"/comp-devs/"+compDevIds[0])
+    .send(dataCompDev)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err,res){
+
+      if (err) return done(err);
+
+     res.body.should.have.property('message');
       return done();
     });
 

@@ -77,7 +77,7 @@ router.post('/', function (req, res, next) {
             !security.isValidData(req.body.desc) || //
             !security.isValidData(req.body.prev) || //
             !security.isValidData(req.body.next)) {
-            res.status(412).send('missing or invalid data');
+            res.status(412).send({"message": "missing or invalid data"});
         } else {
             repMod.addProc(req, function (error, result) {
                 if (error) {
@@ -285,6 +285,16 @@ router.get('/:proc_id', function (req, res, next) {
 router.put('/:proc_id', function (req, res, next) {
     'use strict';
     try {
+       
+        
+         if (!security.isValidData(req.params.proc_id) || //
+            !security.isValidData(req.body.platfrm) || //
+            !security.isValidData(req.body.name) ||
+            !security.isValidData(req.body.desc) || //
+            !security.isValidData(req.body.prev) || //
+            !security.isValidData( req.body.next)) {
+            res.status(412).send({message:'missing or invalid data'});
+        } else {
         repMod.uptProc(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
@@ -293,6 +303,7 @@ router.put('/:proc_id', function (req, res, next) {
             }
             release(req);
         });
+         } 
     } catch (err) {
         next(err);
     }
