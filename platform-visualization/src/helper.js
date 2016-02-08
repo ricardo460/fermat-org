@@ -313,11 +313,11 @@ function Helper() {
         
             for(var i = 0, l = window.tilesQtty; i < l; i++) {
 
-                group = this.getTileSpecific(i).group || window.layers[this.getTileSpecific(i).layer].super_layer;
+                group = this.getSpecificTile(i).data.group || window.layers[this.getSpecificTile(i).data.layer].super_layer;
 
                 if(group.toLowerCase() === components[0].toLowerCase() &&
-                   this.getTileSpecific(i).layer.toLowerCase() === components[1].toLowerCase() &&
-                   this.getTileSpecific(i).name.toLowerCase() === components[2].toLowerCase())
+                   this.getSpecificTile(i).data.layer.toLowerCase() === components[1].toLowerCase() &&
+                   this.getSpecificTile(i).data.name.toLowerCase() === components[2].toLowerCase())
                     return i;
             }
         }
@@ -391,47 +391,13 @@ function Helper() {
         .start();
     };
 
-    this.getLastValueArray = function(array){ 
-
-        var value = array[array.length - 1];
-
-        return value;
-    };
-
-    this.getCountObject = function(object){ 
-
-        var count = 0;
-
-        for(var i in object)
-            count++; 
-
-        return count;
-    };
-
-    this.getTileSpecific = function(id){
+    this.getSpecificTile = function(id){
 
         for(var platfrm in window.TABLE){
-            if(platfrm !== 'layers'){
-                for (var layer in window.TABLE[platfrm].layers){
-                    for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
-                        if(id === window.TABLE[platfrm].layers[layer].objects[i].ID){
-                            return window.TABLE[platfrm].layers[layer].objects[i].data;
-                        }
-                    }
-                }
-            }
-        }
-    };
-
-    this.getTileSpecificAnimate = function(id){
-
-        for(var platfrm in window.TABLE){
-            if(platfrm !== 'layers'){
-                for (var layer in window.TABLE[platfrm].layers){
-                    for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
-                        if(id === window.TABLE[platfrm].layers[layer].objects[i].ID){
-                            return window.TABLE[platfrm].layers[layer].objects[i];
-                        }
+            for (var layer in window.TABLE[platfrm].layers){
+                for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
+                    if(id === window.TABLE[platfrm].layers[layer].objects[i].ID){
+                        return window.TABLE[platfrm].layers[layer].objects[i];
                     }
                 }
             }

@@ -1,10 +1,7 @@
 function Developer (){
 
 	var objectsDeveloper = [];
-	var developerLink = [];
-	var developerAuthor = [];
-	var developerAuthorRealName = [];
-	var developerAuthorEmail = [];
+	var developers = {};
 	var self = this;
 	var position = {
 		target : [],
@@ -154,37 +151,29 @@ function Developer (){
             drawPictureDeveloper(data, ctx, texture);
         }
     }
+    
 	this.getDeveloper = function(){
 		
-		var find = false;
-
-		for (var i = 0; i < window.tilesQtty; i++) {
-			if(i === 0){
-				developerLink.push(window.helper.getTileSpecific(i).picture);
-				developerAuthor.push(window.helper.getTileSpecific(i).author);
-				developerAuthorRealName.push(window.helper.getTileSpecific(i).authorRealName);
-				developerAuthorEmail.push(window.helper.getTileSpecific(i).authorEmail);
-			}	
-			else{
-
-				for(var j = 0; j < developerLink.length; j++)
-					if(developerLink[j] === window.helper.getTileSpecific(i).picture && find === false){
-						find = true;
-					}
-			}
-			if(find === false && i !== 0){
-				if(window.helper.getTileSpecific(i).picture !== undefined){
-					developerLink.push(window.helper.getTileSpecific(i).picture);
-					developerAuthor.push(window.helper.getTileSpecific(i).author);
-					developerAuthorRealName.push(window.helper.getTileSpecific(i).authorRealName);
-					developerAuthorEmail.push(window.helper.getTileSpecific(i).authorEmail);
-				}
-				find = false;
-			}
-			else
-				find = false;
-		}
-		self.createDeveloper(developerLink, developerAuthor, developerAuthorRealName, developerAuthorEmail);
+		var id = 0;
+        
+        for(var i = 0; i < window.tilesQtty; i++) {
+            
+            var tile = window.helper.getSpecificTile(i).data;
+            
+            if(tile.author && developers[tile.author] === undefined)
+            {
+                developers[tile.author] = {
+                    id : id,
+                    author : tile.author,
+                    picture : tile.picture,
+                    authorRealName : tile.authorRealName,
+                    authorEmail : tile.authorEmail
+                };
+                id++;
+            }
+        }
+        
+		self.createDevelopers();
 	};
 
 	/**
@@ -197,7 +186,7 @@ function Developer (){
      * @returns {texture} 	 Texture of the developer
      * @author Emmanuel Colina
      */
-	this.createTextureDeveloper = function(id, developerLink, developerAuthor, developerAuthorRealName, developerAuthorEmail){
+	this.createTextureDeveloper = function(developer){
 		
 		var canvas = document.createElement('canvas');
         canvas.width = 183 * 5 ;
@@ -213,7 +202,7 @@ function Developer (){
         texture.magFilter = THREE.LinearFilter;
 
 		var pic = {
-            src: developerLink[id],
+            src: developer.picture,
             alpha: 0.8
         };
         pic.x = 26.5;
@@ -239,7 +228,7 @@ function Developer (){
         ringDeveloper.h = 82.7 * 2.0;
 
         var nameDeveloper = {
-            text: developerAuthorRealName[id],
+            text: developer.authorRealName,
             font: (9 * 2.2) + 'px Roboto Bold'
         };
         nameDeveloper.x = 250;
@@ -247,7 +236,7 @@ function Developer (){
         nameDeveloper.color = "#FFFFFF";
         
         var nickDeveloper = {
-            text: developerAuthor[id],
+            text: developer.author,
             font: (5 * 2.2) + 'px Canaro'
         };
         nickDeveloper.x = 250;
@@ -255,7 +244,7 @@ function Developer (){
         nickDeveloper.color = "#00B498";
 
         var emailDeveloper = {
-            text: developerAuthorEmail[id],
+            text: developer.authorEmail,
             font: (5 * 2.2) + 'px Roboto Medium'
         };
         emailDeveloper.x = 250;
@@ -263,12 +252,12 @@ function Developer (){
         emailDeveloper.color = "#E05A52";
 
 		var data = [
-		pic,
-		background,
-		ringDeveloper,
-		nameDeveloper,
-        nickDeveloper,
-		emailDeveloper
+            pic,
+            background,
+            ringDeveloper,
+            nameDeveloper,
+            nickDeveloper,
+            emailDeveloper
 		];
 
         drawPictureDeveloper(data, ctx, texture);
@@ -284,24 +273,26 @@ function Developer (){
      * @param   {object}     developerAuthorEmail email of the developer
      * @author Emmanuel Colina
      */
-	this.createDeveloper = function (developerLink, developerAuthor, developerAuthorRealName, developerAuthorEmail){
+	this.createDevelopers = function (){
 
 		var mesh, texture, lastTarget;
+        var i = 0;
 
-		position.target = self.setPositionDeveloper(developerLink);
+        //Just need the number of developers
+		position.target = self.setPositionDeveloper(Object.keys(developers));
 
-		for(var i = 0; i < developerLink.length; i++){
+		for(var key in developers){
 
 			lastTarget = window.helper.getOutOfScreenPoint(0);
 			position.lastTarget.push(lastTarget);
 
-			texture = self.createTextureDeveloper(i, developerLink, developerAuthor, developerAuthorRealName, developerAuthorEmail);
+			texture = self.createTextureDeveloper(developers[key]);
 
 			mesh = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(230, 120),
             new THREE.MeshBasicMaterial({ transparent : true, color : 0xFFFFFF}));
             mesh.userData = {
-                id: i,
+                id: developers[key].id,
                 onClick : onClick
             };
             mesh.material.map = texture;
@@ -310,10 +301,12 @@ function Developer (){
         	mesh.position.y = position.lastTarget[i].y;
         	mesh.position.z = position.lastTarget[i].z;
 
-        	mesh.name = developerAuthor[i];
+        	mesh.name = developers[key].author;
         	mesh.scale.set(5, 5, 5);
         	scene.add(mesh);
         	objectsDeveloper.push(mesh);
+            
+            i++;
 		}
 	};
 
@@ -441,18 +434,10 @@ function Developer (){
 	                    count = count + 1;
 	                }
 
-	                if((positionX + 500) === center.x + 1500) {
-	                    positionX = positionX + 1000;
-	                }
-	                else
-	                    positionX = positionX + 1000;
+	                positionX = positionX + 1000;
 	            }
 
-	            if((positionY - 250) === center.y - 1500) {
-	                positionY = positionY - 500;
-	            }
-	            else
-	                positionY = positionY - 500;     
+	            positionY = positionY - 500;     
 	        }      
 	    }
 
@@ -501,10 +486,7 @@ function Developer (){
             helper.hideObject(objectsDeveloper[i], false, _duration);
         }
         objectsDeveloper = [];
-        developerLink = [];
-		developerAuthor = [];
-		developerAuthorRealName = [];
-		developerAuthorEmail = [];
+        developers = {};
 		position = {
 			target : [],
 			lastTarget : []
@@ -518,7 +500,7 @@ function Developer (){
 
         for (var i = 0; i < window.tilesQtty; i++) {
             
-            if (window.helper.getTileSpecific(i).author === objectsDeveloper[id].name && !isNaN(objects[i].position.y)){
+            if (window.helper.getSpecificTile(i).data.author === objectsDeveloper[id].name && !isNaN(objects[i].position.y)){
 
                 new TWEEN.Tween(objects[i].position)
                 .to({x : (center.x + (section % 5) * window.TILE_DIMENSION.width) - 750, y : (center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height) - 250, z : 0}, 2000)

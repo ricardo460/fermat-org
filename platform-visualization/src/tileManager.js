@@ -90,16 +90,18 @@ function TileManager() {
         //Set sections sizes
 
         for(i = 0; i < window.tilesQtty; i++){
+            
+            var tile = window.helper.getSpecificTile(i).data;
 
-            var r = window.helper.getTileSpecific(i).layerID; 
-            var c = window.helper.getTileSpecific(i).groupID;
+            var r = tile.layerID; 
+            var c = tile.groupID;
 
             self.elementsByGroup[c].push(i);
 
-            if (layers[window.helper.getTileSpecific(i).layer].super_layer) {
+            if (layers[tile.layer].super_layer) {
 
                 section_size[r]++;
-                isSuperLayer[r] = layers[window.helper.getTileSpecific(i).layer].super_layer;
+                isSuperLayer[r] = layers[tile.layer].super_layer;
             } else {
                 
                 section_size[r][c]++;
@@ -167,7 +169,7 @@ function TileManager() {
             _comps = list.comps,
             i, l, code, name;
 
-        TABLE = { layers : {}};
+        TABLE = {};
 
         for (i = 0, l = _suprlays.length; i < l; i++) {
             code = _suprlays[i].code;
@@ -236,40 +238,37 @@ function TileManager() {
         };
         
         for (i = 0, l = _comps.length; i < l; i++) {
-            //table.push(buildElement(i));
+            
+            var element = buildElement(i);
 
-            var platform = buildElement(i).group || buildElement(i).superLayer,
-                layer = buildElement(i).layer;
+            //An element is always inside a platform (known as group) or a superlayer
+            var platform = element.group || element.superLayer,
+                layer = element.layer;
 
             if(typeof TABLE[platform] === 'undefined'){
                 TABLE[platform] = {   
                     layers : {},
-                    ID: buildElement(i).groupID,
-                    isSlayer: buildElement(i).superLayer,
+                    ID: element.groupID,
+                    isSlayer: element.superLayer,
                     x : 0 
                 };
             }
-            //TABLE[platform] = {layers: {}, x: 0, ID: buildElement(i).groupID, isSlayer: buildElement(i).superLayer};
 
             if(typeof TABLE[platform].layers[layer] === 'undefined'){ 
                 TABLE[platform].layers[layer] = {   
                     objects : [],
                     y : 0,
-                    ID: buildElement(i).layerID
+                    ID: element.layerID
                 };
             }
 
             var lastObject = TABLE[platform].layers[layer].objects.length;
-            var count = 0;
-
-            if(lastObject === 0)
-                count = 0;
-            else
-                count = lastObject;
+            var count = lastObject;
+            
 
             var objectTile = { 
                 mesh : null,
-                data : buildElement(i),
+                data : element,
                 target : {},
                 ID: i,
                 _ID: platform + '_' + layer + '_' + count
@@ -294,12 +293,14 @@ function TileManager() {
      * @returns {Object} The drawn texture
      */
     this.createTexture = function (id, quality, tileWidth, tileHeight, scale) {
+        
+        var tile = window.helper.getSpecificTile(id).data;
 
-        var state = window.helper.getTileSpecific(id).code_level,
-            difficulty = Math.ceil(window.helper.getTileSpecific(id).difficulty / 2),
-            group = window.helper.getTileSpecific(id).group || window.layers[window.helper.getTileSpecific(id).layer].super_layer,
-            type = window.helper.getTileSpecific(id).type,
-            picture = window.helper.getTileSpecific(id).picture,
+        var state = tile.code_level,
+            difficulty = Math.ceil(tile.difficulty / 2),
+            group = tile.group || window.layers[tile.layer].super_layer,
+            type = tile.type,
+            picture = tile.picture,
             base = 'images/tiles/';
 
         var canvas = document.createElement('canvas');
@@ -339,23 +340,23 @@ function TileManager() {
                 src: base + 'rings/' + quality + '/' + state + '_diff_' + difficulty + '.png'
             },
             codeText = {
-                text: window.helper.getTileSpecific(id).code,
+                text: tile.code,
                 font: (jsonTile.global.codeText.font * scale) + "px Arial"
             },
             nameText = {
-                text: window.helper.getTileSpecific(id).name,
+                text: tile.name,
                 font: (jsonTile.global.nameText.font * scale) + 'px Arial'
             },
             layerText = {
-                text: window.helper.getTileSpecific(id).layer,
+                text: tile.layer,
                 font: (jsonTile.global.layerText.font * scale) + 'px Arial'
             },
             authorText = {
-                text: window.helper.getTileSpecific(id).authorRealName || window.helper.getTileSpecific(id).author || '',
+                text: tile.authorRealName || tile.author || '',
                 font: (jsonTile.global.authorText.font * scale) + 'px Arial'
             },
             picMaintainer = {
-                src: window.helper.getTileSpecific(id).maintainerPicture || base + 'buster.png'
+                src: tile.maintainerPicture || base + 'buster.png'
             },
             maintainer = {
                 text: 'Maintainer',
@@ -363,12 +364,12 @@ function TileManager() {
                 color: "#FFFFFF"
             },
             nameMaintainer = {
-                text: window.helper.getTileSpecific(id).maintainerRealName || window.helper.getTileSpecific(id).maintainer || '',
+                text: tile.maintainerRealName || tile.maintainer || '',
                 font: (jsonTile.global.nameMaintainer.font * scale) + 'px Arial',
                 color: "#FFFFFF"
             },
             userMaintainer = {
-                text: window.helper.getTileSpecific(id).maintainer || 'No Maintainer yet',
+                text: tile.maintainer || 'No Maintainer yet',
                 font: (jsonTile.global.userMaintainer.font * scale) + 'px Arial',
                 color: "#E2E2E2"
             };
@@ -455,7 +456,7 @@ function TileManager() {
             userMaintainer
         ];
 
-        if ( window.helper.getTileSpecific(id).found !== true ) {
+        if ( tile.found !== true ) {
 
             var stamp = {
                 src: 'images/alt_not_found.png',
@@ -577,8 +578,10 @@ function TileManager() {
                 for(j = 0; j < self.elementsByGroup[k].length; j++) {
 
                     var index = self.elementsByGroup[k][j];
+                    
+                    var target = window.helper.getSpecificTile(index);
 
-                    var animation = animate(window.helper.getTileSpecificAnimate(index).mesh, window.helper.getTileSpecificAnimate(index).target.show[0], delay);
+                    var animation = animate(target.mesh, target.target.show[0], delay);
 
                     animation.start();
                 }
@@ -588,7 +591,9 @@ function TileManager() {
             
             for(i = 0; i < window.tilesQtty; i++) {
                 
-                animate(window.helper.getTileSpecificAnimate(i).mesh, window.helper.getTileSpecificAnimate(i).target.show[0], 0).start();
+                var tile = window.helper.getSpecificTile(i);
+                
+                animate(tile.mesh, tile.target.show[0], 0).start();
                 
             }
             
@@ -664,9 +669,10 @@ function TileManager() {
             object = new THREE.Object3D();
 
             //Row (Y)
-            var row = window.helper.getTileSpecific(i).layerID;
+            var tile = window.helper.getSpecificTile(i).data;
+            var row = tile.layerID;
 
-            if (layers[window.helper.getTileSpecific(i).layer].super_layer) {
+            if (layers[tile.layer].super_layer) {
 
                 object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
@@ -675,7 +681,7 @@ function TileManager() {
             } else {
 
                 //Column (X)
-                var column = window.helper.getTileSpecific(i).groupID;
+                var column = tile.groupID;
 
                 object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
@@ -696,24 +702,24 @@ function TileManager() {
             setPositionTileTarget(targetTile, i);
 
             if(i === 0 ){ //entra a la primera
-                window.signLayer.createSignLayer(object.position.x, object.position.y, window.helper.getTileSpecific(i).layer, window.helper.getTileSpecific(i).group);
-                signRow = window.helper.getTileSpecific(i).layerID;
-                signColumn = window.helper.getTileSpecific(i).groupID;
-                window.TABLE[window.helper.getTileSpecific(i).group].layers[window.helper.getTileSpecific(i).layer].y = object.position.y;
+                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.group);
+                signRow = tile.layerID;
+                signColumn = tile.groupID;
+                window.TABLE[tile.group].layers[tile.layer].y = object.position.y;
             }
 
-            if(window.helper.getTileSpecific(i).layerID !== signRow && window.helper.getTileSpecific(i).groupID === signColumn && layers[window.helper.getTileSpecific(i).layer].super_layer === false){ // solo cambio de filas
-                window.signLayer.createSignLayer(object.position.x, object.position.y, window.helper.getTileSpecific(i).layer, window.helper.getTileSpecific(i).group);
-                signRow = window.helper.getTileSpecific(i).layerID;
-                signColumn = window.helper.getTileSpecific(i).groupID;
-                window.TABLE[window.helper.getTileSpecific(i).group].layers[window.helper.getTileSpecific(i).layer].y = object.position.y;
+            if(tile.layerID !== signRow && tile.groupID === signColumn && layers[tile.layer].super_layer === false){ // solo cambio de filas
+                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.group);
+                signRow = tile.layerID;
+                signColumn = tile.groupID;
+                window.TABLE[tile.group].layers[tile.layer].y = object.position.y;
             }
 
-            else if(signColumn !== window.helper.getTileSpecific(i).groupID && layers[window.helper.getTileSpecific(i).layer].super_layer === false){ //cambio de columna
-                window.signLayer.createSignLayer(object.position.x, object.position.y, window.helper.getTileSpecific(i).layer, window.helper.getTileSpecific(i).group);
-                signRow = window.helper.getTileSpecific(i).layerID;
-                signColumn = window.helper.getTileSpecific(i).groupID;
-                window.TABLE[window.helper.getTileSpecific(i).group].layers[window.helper.getTileSpecific(i).layer].y = object.position.y;
+            else if(signColumn !== tile.groupID && layers[tile.layer].super_layer === false){ //cambio de columna
+                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.group);
+                signRow = tile.layerID;
+                signColumn = tile.groupID;
+                window.TABLE[tile.group].layers[tile.layer].y = object.position.y;
             }
         }
 
@@ -762,15 +768,17 @@ function TileManager() {
         };
 
         for (i = 0; i < window.tilesQtty; i++) {
+            
+            var tile = window.helper.getSpecificTile(i);
 
             if (ids.indexOf(i) !== -1) {
-                target =  window.helper.getTileSpecificAnimate(i).target.show[0].position;
+                target =  tile.target.show[0].position;
             } else {
                 target = out;
-                window.helper.getTileSpecificAnimate(i).mesh.userData.flying = true;
+                tile.mesh.userData.flying = true;
             }
 
-            animate(window.helper.getTileSpecificAnimate(i).mesh, target, Math.random() * _duration + _duration);
+            animate(tile.mesh, target, Math.random() * _duration + _duration);
         }
 
         new TWEEN.Tween(this)

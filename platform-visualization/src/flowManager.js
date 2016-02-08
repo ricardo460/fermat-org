@@ -116,9 +116,9 @@ function FlowManager(){
 
     this.getAndShowFlows = function(id) {
         
-        var element = window.helper.getTileSpecific(id);
+        var element = window.helper.getSpecificTile(id).data;
         
-        var button = buttonsManager.createButtons('showFlows', 'Loading flows...');
+        var button = window.buttonsManager.createButtons('showFlows', 'Loading flows...');
         
         var url = window.helper.getAPIUrl("procs");
         url += '?platform=' + (element.group || element.superLayer) + '&layer=' + element.layer + '&component=' + element.name;
@@ -140,11 +140,11 @@ function FlowManager(){
                     button.innerHTML = 'Show Workflows';
                     button.addEventListener('click', function() {
                         showFlow(flows);
-                        buttonsManager.removeAllButtons();
+                        window.buttonsManager.removeAllButtons();
                     });
                 }
                 else {
-                    buttonsManager.deleteButton('showFlows');
+                    window.buttonsManager.deleteButton('showFlows');
                 } 
             }
         );
