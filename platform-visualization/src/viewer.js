@@ -295,14 +295,16 @@ function onElementClick(id) {
 
         var relatedTasks = [];
         
-        var image = window.helper.getTileSpecific(id).picture;
+        var image = window.helper.getSpecificTile(id).data.picture;
 
         var section = 0;
         var center = objects[id].position;
         
         for (var i = 0; i < tilesQtty; i++) {
             
-            if (window.helper.getTileSpecific(i).author == window.helper.getTileSpecific(id).author) {
+            var tile = window.helper.getSpecificTile(i).data;
+            
+            if (tile.author == tile.author) {
                 relatedTasks.push(i);
                 
                 new TWEEN.Tween(objects[i].position)
@@ -320,6 +322,8 @@ function onElementClick(id) {
     }
 
     function createSidePanel(id, image, relatedTasks) {
+        
+        var tileData = window.helper.getSpecificTile(id).data;
 
         var sidePanel = document.createElement('div');
         sidePanel.id = 'sidePanel';
@@ -343,19 +347,19 @@ function onElementClick(id) {
         userName.style.opacity = 0;
         userName.style.position = 'relative';
         userName.style.fontWeight = 'bold';
-        userName.textContent = window.helper.getTileSpecific(id).author;
+        userName.textContent = tileData.author;
         sidePanel.appendChild(userName);
 
         var realName = document.createElement('p');
         realName.style.opacity = 0;
         realName.style.position = 'relative';
-        realName.textContent = window.helper.getTileSpecific(id).authorRealName;
+        realName.textContent = tileData.authorRealName;
         sidePanel.appendChild(realName);
 
         var email = document.createElement('p');
         email.style.opacity = 0;
         email.style.position = 'relative';
-        email.textContent = window.helper.getTileSpecific(id).authorEmail;
+        email.textContent = tileData.authorEmail;
         sidePanel.appendChild(email);
 
         if (relatedTasks != null && relatedTasks.length > 0) {
@@ -365,7 +369,10 @@ function onElementClick(id) {
             var i, l;
             
             for(i = 0, l = relatedTasks.length; i < l; i++) {
-                if(window.helper.getTileSpecific(relatedTasks[i]).life_cycle !== undefined && window.helper.getTileSpecific(relatedTasks[i]).life_cycle.length > 0) {
+                
+                var lifeCycle = window.helper.getSpecificTile(relatedTasks[i]).data.life_cycle;
+                
+                if(lifeCycle !== undefined && lifeCycle.length > 0) {
                     anyTimeline = true;
                 }
             }

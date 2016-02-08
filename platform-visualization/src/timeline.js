@@ -21,7 +21,7 @@ function Timeline ( tasks, container ) {
     
     for( var i = 0, tl = tasks.length; i < tl; i++ ) {
         
-        var task = window.helper.getTileSpecific(tasks[i]);
+        var task = window.helper.getSpecificTile(tasks[i]).data;
         
         if ( task != null && task.life_cycle != null ) {
             
