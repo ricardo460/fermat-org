@@ -77,7 +77,7 @@ router.post('/', function (req, res, next) {
             !security.isValidData(req.body.lang) || //
             !security.isValidData(req.body.suprlay) || //
             !security.isValidData(req.body.order)) {
-            res.status(412).send('missing or invalid data');
+                res.status(412).send({"message": "missing or invalid data"});
         } else {
             repMod.addLayer(req, function (error, result) {
                 if (error) {
@@ -169,7 +169,8 @@ router.put('/:layer_id', function (req, res, next) {
             !security.isValidData(req.body.lang) || //
             !security.isValidData(req.body.suprlay) || //
             !security.isValidData(req.body.order)) {
-            res.status(412).send({message: 'missing or invalid data'});
+      
+          res.status(412).send({"message": "missing or invalid data"});
         } else {
             repMod.uptLay(req, function (error, result) {
                 if (error) {
