@@ -336,7 +336,7 @@ function FermatEdit() {
 
             objects.idFields.platform = id;
 
-            for(var i in groups){
+            for(var i in platforms){
 
                 if(i != "size"){
 
@@ -627,7 +627,7 @@ function FermatEdit() {
 
         var state = false;
 
-        if(typeof groups[platform] === 'undefined')
+        if(typeof platforms[platform] === 'undefined')
             state = platform;
 
         var _layers = window.CLI.query(window.layers,function(el){return (el.super_layer === state);});

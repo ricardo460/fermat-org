@@ -94,7 +94,7 @@ function TileManager() {
             var tile = window.helper.getSpecificTile(i).data;
 
             var r = tile.layerID; 
-            var c = tile.groupID;
+            var c = tile.platformID;
 
             self.elementsByGroup[c].push(i);
 
@@ -182,10 +182,10 @@ function TileManager() {
 
         for (i = 0, l = _platfrms.length; i < l; i++) {
             code = _platfrms[i].code;
-            groups[code] = {};
-            groups[code].index = _platfrms[i].order;
-            groups[code].dependsOn = _platfrms[i].deps;
-            groups[code]._id = _platfrms[i]._id;
+            platforms[code] = {};
+            platforms[code].index = _platfrms[i].order;
+            platforms[code].dependsOn = _platfrms[i].deps;
+            platforms[code]._id = _platfrms[i]._id;
         }
 
         for (i = 0, l = _layers.length; i < l; i++) {
@@ -205,8 +205,8 @@ function TileManager() {
             var layerID = _layer.order;
             layerID = (layerID === undefined) ? layers.size() : layerID;
 
-            var groupID = _platfrm ? _platfrm.order : undefined;
-            groupID = (groupID === undefined) ? groups.size() : groupID;
+            var platformID = _platfrm ? _platfrm.order : undefined;
+            platformID = (platformID === undefined) ? platforms.size() : platformID;
 
             var _author = getBestDev(_comp.devs, "author");
             var _maintainer = getBestDev(_comp.devs, "maintainer");
@@ -214,8 +214,8 @@ function TileManager() {
             _layer = helper.capFirstLetter(_layer.name);
 
             var element = {
-                group: _platfrm ? _platfrm.code : undefined,
-                groupID: groupID,
+                platform: _platfrm ? _platfrm.code : undefined,
+                platformID: platformID,
                 superLayer : layers[_layer].super_layer,
                 code: helper.getCode(_comp.name),
                 name: helper.capFirstLetter(_comp.name),
@@ -242,27 +242,27 @@ function TileManager() {
             var element = buildElement(i);
 
             //An element is always inside a platform (known as group) or a superlayer
-            var platform = element.group || element.superLayer,
+            var group = element.platform || element.superLayer,
                 layer = element.layer;
 
-            if(typeof TABLE[platform] === 'undefined'){
-                TABLE[platform] = {   
+            if(typeof TABLE[group] === 'undefined'){
+                TABLE[group] = {   
                     layers : {},
-                    ID: element.groupID,
+                    ID: element.platformID,
                     isSlayer: element.superLayer,
                     x : 0 
                 };
             }
 
-            if(typeof TABLE[platform].layers[layer] === 'undefined'){ 
-                TABLE[platform].layers[layer] = {   
+            if(typeof TABLE[group].layers[layer] === 'undefined'){ 
+                TABLE[group].layers[layer] = {   
                     objects : [],
                     y : 0,
                     ID: element.layerID
                 };
             }
 
-            var lastObject = TABLE[platform].layers[layer].objects.length;
+            var lastObject = TABLE[group].layers[layer].objects.length;
             var count = lastObject;
             
 
@@ -271,10 +271,10 @@ function TileManager() {
                 data : element,
                 target : {},
                 ID: i,
-                _ID: platform + '_' + layer + '_' + count
+                _ID: group + '_' + layer + '_' + count
             };
 
-            TABLE[platform].layers[layer].objects.push(objectTile);
+            TABLE[group].layers[layer].objects.push(objectTile);
         }
 
         groupsQtty = _platfrms.length;
@@ -298,7 +298,7 @@ function TileManager() {
 
         var state = tile.code_level,
             difficulty = Math.ceil(tile.difficulty / 2),
-            group = tile.group || window.layers[tile.layer].super_layer,
+            group = tile.platform || window.layers[tile.layer].super_layer,
             type = tile.type,
             picture = tile.picture,
             base = 'images/tiles/';
@@ -681,7 +681,7 @@ function TileManager() {
             } else {
 
                 //Column (X)
-                var column = tile.groupID;
+                var column = tile.platformID;
 
                 object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
@@ -702,24 +702,24 @@ function TileManager() {
             setPositionTileTarget(targetTile, i);
 
             if(i === 0 ){ //entra a la primera
-                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.group);
+                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.platform);
                 signRow = tile.layerID;
-                signColumn = tile.groupID;
-                window.TABLE[tile.group].layers[tile.layer].y = object.position.y;
+                signColumn = tile.platformID;
+                window.TABLE[tile.platform].layers[tile.layer].y = object.position.y;
             }
 
-            if(tile.layerID !== signRow && tile.groupID === signColumn && layers[tile.layer].super_layer === false){ // solo cambio de filas
-                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.group);
+            if(tile.layerID !== signRow && tile.platformID === signColumn && layers[tile.layer].super_layer === false){ // solo cambio de filas
+                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.platform);
                 signRow = tile.layerID;
-                signColumn = tile.groupID;
-                window.TABLE[tile.group].layers[tile.layer].y = object.position.y;
+                signColumn = tile.platformID;
+                window.TABLE[tile.platform].layers[tile.layer].y = object.position.y;
             }
 
-            else if(signColumn !== tile.groupID && layers[tile.layer].super_layer === false){ //cambio de columna
-                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.group);
+            else if(signColumn !== tile.platformID && layers[tile.layer].super_layer === false){ //cambio de columna
+                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.platform);
                 signRow = tile.layerID;
-                signColumn = tile.groupID;
-                window.TABLE[tile.group].layers[tile.layer].y = object.position.y;
+                signColumn = tile.platformID;
+                window.TABLE[tile.platform].layers[tile.layer].y = object.position.y;
             }
         }
 

@@ -121,7 +121,7 @@ function FlowManager(){
         var button = window.buttonsManager.createButtons('showFlows', 'Loading flows...');
         
         var url = window.helper.getAPIUrl("procs");
-        url += '?platform=' + (element.group || element.superLayer) + '&layer=' + element.layer + '&component=' + element.name;
+        url += '?group=' + (element.platform || element.superLayer) + '&layer=' + element.layer + '&component=' + element.name;
         
         $.ajax({
             url: url,
