@@ -161,16 +161,11 @@ router.get('/:platfrm_id', function (req, res, next) {
  * @return {[type]} [description]
  */
 
- 
+
 router.put('/:platfrm_id', function (req, res, next) {
     'use strict';
     try {
-        if (!security.isValidData(req.params.platfrm_id) || //
-            !security.isValidData(req.body.code) || //
-            !security.isValidData(req.body.name) || //
-            !security.isValidData(req.body.logo) || //
-            !security.isValidData(req.body.deps) || //
-            !security.isValidData(req.body.order)) {
+        if (!security.isValidData(req.params.platfrm_id)) {
                res.status(412).send({"message": "missing or invalid data"});
         } else {
         repMod.uptPltf(req, function (error, result) {
