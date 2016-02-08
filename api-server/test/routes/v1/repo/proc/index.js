@@ -1,7 +1,7 @@
 var supertest = require("supertest");
 var should = require("should");
 var mongoose = require("mongoose");
-var server = supertest.agent("http://localhost:3002");
+var server = supertest.agent("http://localhost:8081");
 var procMod = require("../../../../../modules/repository/process");
 var compMod = require("../../../../../modules/repository/component");
 //var auth = require("../../../herlpers/v1/auth")
@@ -118,6 +118,25 @@ describe("PROC",function(){
 
     });
 
+       it("#POST addProc 412",function(done){
+
+        var dataProc = dataHelper.generateData412General();
+
+        server
+        .post(pathTest+"/")
+        .send(dataProc)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+            if (err) return done(err);
+
+            res.body.should.have.property('message');
+
+          return done();
+        });
+
+    });
+
     it("#PUT uptProc",function(done){
 
         var dataProc = dataHelper.generateDataProc();
@@ -136,6 +155,25 @@ describe("PROC",function(){
             res.body.desc.should.equal(dataProc.desc);
             res.body.prev.should.equal(dataProc.prev);
             res.body.next.should.equal(dataProc.next);
+
+          return done();
+        });
+
+    });
+
+       it("#PUT uptProc 412",function(done){
+
+        var dataProc = dataHelper.generateData412General();
+
+        server
+        .put(pathTest+"/"+proc._id)
+        .send(dataProc)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+            res.body.should.have.property('message');
 
           return done();
         });
@@ -183,6 +221,26 @@ describe("PROC",function(){
 
   });
 
+
+  it("#POST addStep 412",function(done){
+
+    var dataStep = dataHelper.generateData412General();
+
+    server
+    .post(pathTest+"/"+proc._id+"/steps")
+    .send(dataStep)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err,res){
+
+      if (err) return done(err);
+
+        res.body.should.have.property('message');
+      return done();
+    });
+
+  });
+
   it("#PUT uptStep",function(done){
 
     var dataStep = dataHelper.generateDataStep();
@@ -202,6 +260,26 @@ describe("PROC",function(){
         res.body.desc.should.equal(dataStep.desc);
         res.body.order.should.equal(dataStep.order);
         res.status.should.equal(200);
+
+      return done();
+    });
+
+  });
+
+    it("#PUT uptStep 412",function(done){
+
+    var dataStep = dataHelper.generateData412General();
+
+    server
+    .put(pathTest+"/"+proc._id+"/steps/"+stepIds[0])
+    .send(dataStep)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+           res.body.should.have.property('message');
 
       return done();
     });
