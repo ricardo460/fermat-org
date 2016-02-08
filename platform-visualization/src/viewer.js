@@ -1,5 +1,6 @@
 //global variables
-var table = [],
+
+var tilesQtty,
     camera,
     scene = new THREE.Scene(),
     renderer,
@@ -207,11 +208,12 @@ function initMenu() {
     var button = document.getElementById('table');
     button.addEventListener('click', function(event) {
 
-        changeView(tileManager.targets.table);
+        changeView();
 
     }, false);
 
-    button = document.getElementById('sphere');
+    
+    /*button = document.getElementById('sphere');
     button.addEventListener('click', function(event) {
 
         changeView(tileManager.targets.sphere);
@@ -230,11 +232,11 @@ function initMenu() {
 
         changeView(tileManager.targets.grid);
 
-    }, false);
+    }, false);*/
 }
 
 
-function changeView(targets) {
+function changeView() {
 
     camera.enable();
     camera.loseFocus();
@@ -243,9 +245,9 @@ function changeView(targets) {
     
     flowManager.getActualFlow();
 
-    if (targets != null) {
-        tileManager.transform(targets, 2000);
-    }
+    //if (targets != null) {
+    tileManager.transform(2000);
+    //}
 }
 
 /**
@@ -293,14 +295,14 @@ function onElementClick(id) {
 
         var relatedTasks = [];
         
-        var image = table[id].picture;
+        var image = window.helper.getTileSpecific(id).picture;
 
         var section = 0;
         var center = objects[id].position;
         
-        for (var i = 0; i < table.length; i++) {
+        for (var i = 0; i < tilesQtty; i++) {
             
-            if (table[i].author == table[id].author) {
+            if (window.helper.getTileSpecific(i).author == window.helper.getTileSpecific(id).author) {
                 relatedTasks.push(i);
                 
                 new TWEEN.Tween(objects[i].position)
@@ -341,19 +343,19 @@ function onElementClick(id) {
         userName.style.opacity = 0;
         userName.style.position = 'relative';
         userName.style.fontWeight = 'bold';
-        userName.textContent = table[id].author;
+        userName.textContent = window.helper.getTileSpecific(id).author;
         sidePanel.appendChild(userName);
 
         var realName = document.createElement('p');
         realName.style.opacity = 0;
         realName.style.position = 'relative';
-        realName.textContent = table[id].authorRealName;
+        realName.textContent = window.helper.getTileSpecific(id).authorRealName;
         sidePanel.appendChild(realName);
 
         var email = document.createElement('p');
         email.style.opacity = 0;
         email.style.position = 'relative';
-        email.textContent = table[id].authorEmail;
+        email.textContent = window.helper.getTileSpecific(id).authorEmail;
         sidePanel.appendChild(email);
 
         if (relatedTasks != null && relatedTasks.length > 0) {
@@ -363,7 +365,7 @@ function onElementClick(id) {
             var i, l;
             
             for(i = 0, l = relatedTasks.length; i < l; i++) {
-                if(table[relatedTasks[i]].life_cycle !== undefined && table[relatedTasks[i]].life_cycle.length > 0) {
+                if(window.helper.getTileSpecific(relatedTasks[i]).life_cycle !== undefined && window.helper.getTileSpecific(relatedTasks[i]).life_cycle.length > 0) {
                     anyTimeline = true;
                 }
             }
