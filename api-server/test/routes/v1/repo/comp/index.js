@@ -1,7 +1,7 @@
 var supertest = require("supertest");
 var should = require("should");
 var mongoose = require("mongoose");
-var server = supertest.agent("http://localhost:3002");
+var server = supertest.agent("http://localhost:8081");
 //var auth = require("../../../herlpers/v1/auth")
 var dataHelper = require("../../../../helpers/v1/dataHelper");
 var compMod = require("../../../../../modules/repository/component");
@@ -87,7 +87,6 @@ describe("COMP",function(){
     .expect(200) // This is HTTP response
     .end(function(err,res){
       if (err) return done(err);
-
       res.status.should.equal(200);
 
       return done();
@@ -215,14 +214,14 @@ describe("COMP",function(){
 
   });
 
-  it("#POST addLifeCiclesToComp",function(done){
+  it("#PUT uptLifeCiclesToComp",function(done){
 
     var dataLifeCicle = dataHelper.generateDataLifeCicle();
     server
-    .post(pathTest+"/"+comp._id+"/life-cicles")
+    .put(pathTest+"/"+comp._id+"/life-cicles/"+statusIds[0])
     .send(dataLifeCicle)
     .expect("Content-type",/json/)
-    .expect(201) // This is HTTP response
+    .expect(200) // This is HTTP response
     .end(function(err,res){
 
       if (err) return done(err);

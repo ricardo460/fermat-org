@@ -1,7 +1,7 @@
 var supertest = require("supertest");
 var should = require("should");
 var mongoose = require("mongoose");
-var server = supertest.agent("http://localhost:3002");
+var server = supertest.agent("http://localhost:8081");
 var platfMod = require("../../../../../modules/repository/platform");
 var compMod = require("../../../../../modules/repository/component");
 //var auth = require("../../../herlpers/v1/auth")
@@ -146,6 +146,7 @@ describe("SUPRLAY",function(){
 
     });
 
+  ///Aki esta bien
      it("#PUT uptPltf 412",function(done){
 
          var dataPlatform = dataHelper.generateData412General();
@@ -154,7 +155,7 @@ describe("SUPRLAY",function(){
         .put(pathTest+"/"+platform._id)
         .send(dataPlatform)
         .expect("Content-type",/json/)
-        .expect(404) // This is HTTP response
+        .expect(412) // This is HTTP response
         .end(function(err, res){
 
                 if (err) return done(err);
