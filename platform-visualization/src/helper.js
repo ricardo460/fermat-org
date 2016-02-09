@@ -315,7 +315,7 @@ function Helper() {
 
                 group = this.getSpecificTile(i).data.platform || window.layers[this.getSpecificTile(i).data.layer].super_layer;
 
-                if(group.toLowerCase() === components[0].toLowerCase() &&
+                if(group && group.toLowerCase() === components[0].toLowerCase() &&
                    this.getSpecificTile(i).data.layer.toLowerCase() === components[1].toLowerCase() &&
                    this.getSpecificTile(i).data.name.toLowerCase() === components[2].toLowerCase())
                     return i;
