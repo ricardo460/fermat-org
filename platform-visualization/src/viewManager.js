@@ -53,8 +53,6 @@ function ViewManager() {
                 case 'table':
                     enter = function() {
 
-                        window.browserManager.modifyButtonLegend(1,'block');
-
                         //window.fermatEdit.addButton();
 
                         window.tileManager.transform(true, 3000 + transition);
@@ -103,7 +101,6 @@ function ViewManager() {
 
                         window.helper.hideBackButton();
 
-                        window.browserManager.modifyButtonLegend(0,'none');
                     };
 
                     break;

@@ -403,4 +403,59 @@ function Helper() {
             }
         }
     };
+
+
+    this.getCenterView = function(view){
+
+        var newCenter = new THREE.Vector3(0, 0, 0);
+
+        newCenter = window.viewManager.translateToSection(view, newCenter);
+
+        return newCenter;
+
+    };
+
+    this.fillTarget = function(x, y, z, view){
+
+        var object = new THREE.Object3D();
+
+        object.position.x = Math.random() * 80000 - 40000;
+        object.position.y = Math.random() * 80000 - 40000;
+        object.position.z = 80000 * 2;
+
+        object.position.copy(window.viewManager.translateToSection(view, object.position));
+
+        var target = {  
+                show : new THREE.Vector3(x, y, z),        
+                hide : object.position,
+                showR : new THREE.Vector3(0, 0, 0),
+                hideR : new THREE.Vector3(Math.random() * 180, Math.random() * 180, Math.random() * 180)                    
+                    };
+
+        return target;
+    };
+
+    this.getLastValueArray = function(array){
+
+        var value = array[array.length - 1];
+
+        return value;
+    };
+
+    this.getCountObject = function(object){
+
+        var count = 0;
+
+        for(var i in object)
+            count++; 
+
+        return count;
+    };
+
+    this.getPositionYLayer = function(layer){
+
+        var index = window.layers[layer].index;
+
+        return window.tileManager.dimensions.layerPositions[index];
+    };
 }
