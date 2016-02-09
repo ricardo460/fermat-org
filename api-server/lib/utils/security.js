@@ -30,7 +30,7 @@ var isValidDate = function (date) {
  * @return {Boolean}      [description]
  */
 var isValidData = function (data) {
-    if (typeof data == 'undefined' || data === null || data === '' || data === "" || data.length === 0 || data === "") {
+    if (typeof data == 'undefined' || data === null || data === '' || data === "" || data.length === 0) {
         //console.log('invalid data');
         return 0;
     } else return 1;

@@ -192,7 +192,7 @@ describe("COMP",function(){
 
       if (err) return done(err);
 
-   
+
        res.body.should.have.property('message');
 
       return done();
@@ -279,7 +279,7 @@ describe("COMP",function(){
     .end(function(err,res){
       if (err) return done(err);
 
-   
+
       res.body.should.have.property('message');
       return done();
     });
