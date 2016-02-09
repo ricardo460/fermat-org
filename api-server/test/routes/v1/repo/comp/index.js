@@ -232,10 +232,10 @@ describe("COMP",function(){
   });
 
 
-        it("#GET addLifeCiclesToComp 404",function(done){
+        it("#PUT uptLifeCiclesToComp 404",function(done){
 
         server
-        .get(pathTest+"/"+mongoose.Types.ObjectId().toString())
+        .put(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/life-cicles/"+statusIds[0])
         .expect("Content-type",/json/)
         .expect(404) // This is HTTP response
         .end(function(err, res){
@@ -286,6 +286,21 @@ describe("COMP",function(){
 
   });
 
+            it("#POST addCompDev 404",function(done){
+
+        server
+        .post(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/comp-devs")
+        .expect("Content-type",/json/)
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+        });
+
+    });
+
   it("#PUT uptCompDev",function(done){
 
     var dataCompDev = dataHelper.generateDataCompDev();
@@ -324,6 +339,22 @@ describe("COMP",function(){
     });
 
   });
+
+
+  it("#PUT uptCompDev  404",function(done){
+
+        server
+        .put(pathTest+"/"+comp._id+"/comp-devs/"+compDevIds[0])
+        .expect("Content-type",/json/)
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+        });
+
+    });
 
   it("#DELETE delCompDev",function(done){
 

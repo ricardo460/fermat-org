@@ -220,6 +220,10 @@ exports.updateSuprlayById = function (_sprly_id, code, name, logo, deps, order, 
         suprlaySrv.findSuprlayById(_sprly_id, function (err_supr, res_supr) {
             if (err_supr) {
                 return callback(err_supr, null);
+<<<<<<< HEAD
+
+=======
+>>>>>>> c614f930674df5c530fcae0128a6253725fdf68d
 
             }else if (res_supr){
 
