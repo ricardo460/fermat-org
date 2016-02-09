@@ -2,9 +2,9 @@
 
 # fermat-org
 
-With *fermat-org* or *fermat.org * we name the 3D interface of the whole Fermat platform currently available in http://dev.fermat.org. Its main goal is to help everyone to understand and see the current status of the wide ecosystem of components that makes Fermat a reality. To be able to show such a complex structure we needed to make use of three dimensions taking advantage of the Web advantages such as WebGL to use the device's graphics hardware to render cool 3D or to render in a HTML canvas if there is not a graphics device available, and to help the development we use the fine WebGL library Three.js which saves us a lot of work and has a lot of useful stuff. In fermat-org we don't just show the Fermat's components, we also show the relations between different platforms and super layers, the developers currently working on any Fermat component, the processes to show some of the principal tasks made by Fermat and even 3D books where you can read and learn all about Fermat. This is a complex task but we enjoy adventuring in new technologies, libraries and crazy things to get the job done and show everyone the face of a system as alive as Fermat.
+With *fermat-org* or *fermat.org* we name the 3D interface of the whole Fermat platform, currently available in http://dev.fermat.org. Its main goal is to help everyone understand and see the current status of the wide ecosystem of components that makes Fermat a reality. To be able to show such a complex structure we needed to make use of three dimensions, making use of certain Web Advantages such as WebGL to use the device's graphics hardware to render cool 3D or to render in a HTML canvas if there is not a graphics device available; and to help the development we use the fine WebGL library Three.js, which saves us a lot of work and has a lot of useful stuff. In fermat-org we don't just show the Fermat's components, we also show the relations between different platforms and super layers, the developers currently working on any Fermat component, the processes to show some of the principal tasks made by Fermat and even 3D books where you can read and learn all about Fermat. This is a complex task, but we enjoy adventuring in new technologies, libraries and crazy things to get the job done and show everyone the face of a system as alive as Fermat.
 
-Don't hesitate to watch the website by yourself and if you like what you see and you want to explore some new tools and contribute the website development fork us! You are invited to join the family. Here is everything you need to know to get started with the development.
+Don't hesitate to watch the website by yourself, and if you like what you see and want to explore some new tools and contribute the website development then fork us! You are invited to join the family. Here's everything you need to know to get started with the development.
 
 ## Installation Guide
 
@@ -12,7 +12,7 @@ Don't hesitate to watch the website by yourself and if you like what you see and
 
 Overview
 
-Fermat-org the system is divided into two modules which are the server and the client. To work in these modules first thing to do is install the version control system (Git), to keep track of source code and allow other programmers to collaborate on development.
+Fermat-org the system is divided into two modules which are the server and the client. To work in these modules, first thing to do is install the version control system (Git), to keep track of source code and allow other programmers to collaborate on development.
 
 To work on the server side the following programs must be installed:
 
@@ -49,11 +49,11 @@ $ git config --global user.name "User Name"
 $ git config --global user.email name123@example.com
 ```
 
-Alternatively I can download another application client function as Git, such SourceTree Atlassian.
+Alternatively, you can download another application client function as Git, such as SourceTree Atlassian.
 
 #### Installing Xampp.
 
-Simple download the executable from their official website and install.
+Simply download the executable from their official website and install.
 
 #### Installing Node.js.
 Installation for Windows.
@@ -76,7 +76,7 @@ Go to the [official website](http://brackets.io/) and download the executable fi
 
 #### Installing JsHint.
 
-The analyzer JsHint is a JavaScript code to avoid mistakes, it is a more permissive than JSLint version, this analyzer must download it from the brackets or other if applicable.
+The analyzer JsHint is a JavaScript code to avoid mistakes, it is a more permissive than JSLint version. This analyzer must be downloaded for Adobe Brackets or other text editor that supports it.
 
 Go to Extensions Manager and look Jshint and install.
 
@@ -93,14 +93,13 @@ In the case of brackets, open the preferences file and add the following to the 
     }
 ```
 
-For other text editors do have to edit the file .jshintrc for ours, which is in-visualization platform.
+In other text editors you have to edit the file .jshintrc for ours, which is in-visualization platform.
 
 ### Part II: Downloading the repository Fermat-org.
 
 #### Creating a fork of a repository Fermat-org.
 
-A fork is a copy of a repository. Forking a repository allows you to freely experiment with changes without 
-affecting the original project.
+A fork is a copy of a repository. Forking a repository allows you to freely experiment with changes without affecting the original project.
 
 To create a fork follow these steps:
 
@@ -138,7 +137,7 @@ Right now, you have a fork of the fermat-org repository, but you don't have the 
 
 Now, you have a local copy of your fork of the fermat-org repository!
 
->**Warning:** On Windows, there is a limit for the path lenght, which is 260 characters. As gulp is installed in the repository to save you its configuration, the node.js files goes too deep and can pass that limit, so you should clone the repository direclty in the drive root ("C:\" for most cases). If you work on linux, there's not such limitation.
+>**Warning:** On Windows, there is a limit for the path length, which is 260 characters. As gulp is installed in the repository to save you its configuration, the node.js files goe too deep and can pass that limit, so you should clone the repository directly in the drive root ("C:\" for most cases). If you work on linux, there's not such limitation.
 
 #####Step 3: Configure Git to sync your fork with the original repository
 
