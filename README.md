@@ -2,6 +2,10 @@
 
 # fermat-org
 
+With *fermat-org* or *fermat.org * we name the 3D interface of the whole Fermat platform currently available in http://dev.fermat.org. Its main goal is to help everyone to understand and see the current status of the wide ecosystem of components that makes Fermat a reality. To be able to show such a complex structure we needed to make use of three dimensions taking advantage of the Web advantages such as WebGL to use the device's graphics hardware to render cool 3D or to render in a HTML canvas if there is not a graphics device available, and to help the development we use the fine WebGL library Three.js which saves us a lot of work and has a lot of useful stuff. In fermat-org we don't just show the Fermat's components, we also show the relations between different platforms and super layers, the developers currently working on any Fermat component, the processes to show some of the principal tasks made by Fermat and even 3D books where you can read and learn all about Fermat. This is a complex task but we enjoy adventuring in new technologies, libraries and crazy things to get the job done and show everyone the face of a system as alive as Fermat.
+
+Don't hesitate to watch the website by yourself and if you like what you see and you want to explore some new tools and contribute the website development fork us! You are invited to join the family. Here is everything you need to know to get started with the development.
+
 ## Installation Guide
 
 ### Part I: Setting Up the Environment.
@@ -134,6 +138,8 @@ Right now, you have a fork of the fermat-org repository, but you don't have the 
 
 Now, you have a local copy of your fork of the fermat-org repository!
 
+>**Warning:** On Windows, there is a limit for the path lenght, which is 260 characters. As gulp is installed in the repository to save you its configuration, the node.js files goes too deep and can pass that limit, so you should clone the repository direclty in the drive root ("C:\" for most cases). If you work on linux, there's not such limitation.
+
 #####Step 3: Configure Git to sync your fork with the original repository
 
 When you fork a project in order to propose changes to the original repository, you can configure Git to pull changes from the original, or upstream, repository into the local clone of your fork.
@@ -145,8 +151,8 @@ When you fork a project in order to propose changes to the original repository, 
 * Type git remote -v and press Enter. You'll see the current configured remote repository for your fork.
 ```bash
   git remote -v
-# origin  https://github.com/YOUR_USERNAME/fermat-org.git (fetch)
-# origin  https://github.com/YOUR_USERNAME/fermat-org.git (push)
+    # origin  https://github.com/YOUR_USERNAME/fermat-org.git (fetch)
+    # origin  https://github.com/YOUR_USERNAME/fermat-org.git (push)
 ```
 * Type git remote add upstream, and then paste the URL of the original repository press Enter. It will look like this:
 ```bash
@@ -155,10 +161,10 @@ git remote add upstream https://github.com/ORIGINAL_OWNER/fermat-org.git
 * To verify the new upstream repository you've specified for your fork, type git remote -v again. You should see the URL for your fork as origin, and the URL for the original repository as upstream.
 ```bash
 git remote -v
-# origin    https://github.com/YOUR_USERNAME/fermat-org.git (fetch)
-# origin    https://github.com/YOUR_USERNAME/fermat-org.git (push)
-# upstream  https://github.com/ORIGINAL_OWNER/fermat-org.git (fetch)
-# upstream  https://github.com/ORIGINAL_OWNER/fermat-org.git (push)
+    # origin    https://github.com/YOUR_USERNAME/fermat-org.git (fetch)
+    # origin    https://github.com/YOUR_USERNAME/fermat-org.git (push)
+    # upstream  https://github.com/ORIGINAL_OWNER/fermat-org.git (fetch)
+    # upstream  https://github.com/ORIGINAL_OWNER/fermat-org.git (push)
 ```
 
 ### Part III: Synchronize fork and make pull request.
@@ -186,7 +192,7 @@ git fetch upstream
 
 ```bash
 git checkout master
-# Switched to branch 'master'
+    # Switched to branch 'master'
 ```
 Merge the changes from upstream/master into your local master branch. This brings your fork's master branch into sync with the upstream repository, without losing your local changes.
 
@@ -410,7 +416,7 @@ function foo() {
   }
 }
 
-//Correct, this way way cargar will be called for every iteration of for and with its respective values
+//Correct, this way "cargar" will be called for every iteration of for and with its respective values
 function foo() {
   //...
   var cargar = function(textura) {

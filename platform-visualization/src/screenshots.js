@@ -161,11 +161,13 @@ function ScreenshotsAndroid() {
 
 	        		for(var _wallet in json[_group][_layer]){
 
-	        			for (var i = 0; i < window.table.length; i++){
+	        			for (var i = 0; i < window.tilesQtty; i++){
+                            
+                            var tile = window.helper.getSpecificTile(i).data;
 
-	        				if(window.table[i].type === "Plugin" || window.table[i].type === "Android"){ 
+	        				if(tile.type === "Plugin" || tile.type === "Android"){ 
 
-		        				if(window.table[i].group === _group && window.table[i].layer === _layer && window.table[i].name === _wallet){
+		        				if(tile.group === _group && tile.layer === _layer && tile.name === _wallet){
 		        					
 		        					var id = i,
 		        						name = json[_group][_layer][_wallet].name,

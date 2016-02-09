@@ -57,7 +57,7 @@ function ViewManager() {
 
                         //window.fermatEdit.addButton();
 
-                        window.tileManager.transform(window.tileManager.targets.table, true, 3000 + transition);
+                        window.tileManager.transform(true, 3000 + transition);
                         
                         setTimeout(function(){
                             window.signLayer.transformSignLayer();
@@ -74,7 +74,7 @@ function ViewManager() {
                     
                     backButton = function() {
                         
-                        window.changeView(tileManager.targets.table);
+                        window.changeView();
             
                         setTimeout(function(){
                             window.signLayer.transformSignLayer();
@@ -200,7 +200,7 @@ function ViewManager() {
                             window.developer.animateDeveloper();
                         }, 4000);
                         
-                        window.changeView(tileManager.targets.table);
+                        window.changeView();
                     };
 
                     break;

@@ -311,13 +311,13 @@ function Helper() {
         
         if(components.length === 3) {
         
-            for(var i = 0, l = table.length; i < l; i++) {
+            for(var i = 0, l = window.tilesQtty; i < l; i++) {
 
-                group = table[i].group || window.layers[table[i].layer].super_layer;
+                group = this.getSpecificTile(i).data.group || window.layers[this.getSpecificTile(i).data.layer].super_layer;
 
                 if(group.toLowerCase() === components[0].toLowerCase() &&
-                   table[i].layer.toLowerCase() === components[1].toLowerCase() &&
-                   table[i].name.toLowerCase() === components[2].toLowerCase())
+                   this.getSpecificTile(i).data.layer.toLowerCase() === components[1].toLowerCase() &&
+                   this.getSpecificTile(i).data.name.toLowerCase() === components[2].toLowerCase())
                     return i;
             }
         }
@@ -391,50 +391,16 @@ function Helper() {
         .start();
     };
 
-    this.getCenterView = function(view){
+    this.getSpecificTile = function(id){
 
-        var newCenter = new THREE.Vector3(0, 0, 0);
-
-        newCenter = window.viewManager.translateToSection(view, newCenter);
-
-        return newCenter;
-
-    };
-
-    this.fillTarget = function(x, y, z, view){
-
-        var object = new THREE.Object3D();
-
-        object.position.x = Math.random() * 80000 - 40000;
-        object.position.y = Math.random() * 80000 - 40000;
-        object.position.z = 80000 * 2;
-
-        object.position.copy(window.viewManager.translateToSection(view, object.position));
-
-        var target = {  
-                show : new THREE.Vector3(x, y, z),        
-                hide : object.position,
-                showR : new THREE.Vector3(0, 0, 0),
-                hideR : new THREE.Vector3(Math.random() * 180, Math.random() * 180, Math.random() * 180)                    
-                    };
-
-        return target;
-    };
-
-    this.getLastValueArray = function(array){
-
-        var value = array[array.length - 1];
-
-        return value;
-    };
-
-    this.getCountObject = function(object){
-
-        var count = 0;
-
-        for(var i in object)
-            count++; 
-
-        return count;
+        for(var platfrm in window.TABLE){
+            for (var layer in window.TABLE[platfrm].layers){
+                for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
+                    if(id === window.TABLE[platfrm].layers[layer].objects[i].ID){
+                        return window.TABLE[platfrm].layers[layer].objects[i];
+                    }
+                }
+            }
+        }
     };
 }
