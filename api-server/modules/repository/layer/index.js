@@ -216,14 +216,11 @@ exports.updateLayerById = function (_lay_id, name, lang, suprlay, order, callbac
         if (typeof order != "undefined") {
             set_obj.order = order;
         }
-        layerSrv.findLayerById(_lay_id, function(err_lay, res_lay){
-
+        layerSrv.findLayerById(_lay_id, function (err_lay, res_lay) {
             if (err_lay) {
                 return callback(err_lay, null);
             }
-
             if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
-
                 swapOrder('update', res_lay.order, set_obj.order, function (err_sld, res_sld) {
                     if (err_sld) {
                         return callback(err_sld, null);
@@ -236,20 +233,15 @@ exports.updateLayerById = function (_lay_id, name, lang, suprlay, order, callbac
                         });
                     }
                 });
-
             } else {
-
                 layerSrv.updateLayerById(res_lay._id, set_obj, function (err_upd, res_upd) {
                     if (err_upd) {
                         return callback(err_upd, null);
                     }
                     return callback(null, set_obj);
                 });
-
             }
-
         });
-
     } catch (err) {
         return callback(err, null);
     }

@@ -2,7 +2,6 @@ var platfrmSrv = require('./services/platfrm');
 var PlatfrmMdl = require('./models/platfrm');
 var compMod = require('../component');
 var orderLib = require('../../../lib/utils/order');
-
 /**
  * [sort description]
  *
@@ -28,7 +27,6 @@ var swapOrder = function (action, oldSpot, newSpot, callback) {
         }
     });
 };
-
 /**
  * [insOrUpdPlatfrm description]
  *
@@ -69,9 +67,7 @@ exports.insOrUpdPlatfrm = function (code, name, logo, deps, order, callback) {
                     res_plat.order = order;
                 }
                 if (Object.keys(set_obj).length > 0) {
-
                     if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
-
                         swapOrder('update', res_plat.order, set_obj.order, function (err_sld, res_sld) {
                             if (err_sld) {
                                 return callback(err_sld, null);
@@ -84,18 +80,14 @@ exports.insOrUpdPlatfrm = function (code, name, logo, deps, order, callback) {
                                 });
                             }
                         });
-
                     } else {
-
                         platfrmSrv.updatePlatfrmById(res_plat._id, set_obj, function (err_upd, res_upd) {
                             if (err_upd) {
                                 return callback(err_upd, null);
                             }
                             return callback(null, set_obj);
                         });
-
                     }
-
                 } else {
                     return callback(null, res_plat);
                 }
@@ -118,9 +110,7 @@ exports.insOrUpdPlatfrm = function (code, name, logo, deps, order, callback) {
     } catch (err) {
         callback(err, null);
     }
-
 };
-
 /**
  * [getPlatfrms description]
  *
@@ -145,10 +135,7 @@ exports.getPlatfrms = function (callback) {
     } catch (err) {
         callback(err, null);
     }
-
 };
-
-
 /**
  * [delAllPlatfrms description]
  *
@@ -171,7 +158,6 @@ exports.delAllPlatfrms = function (callback) {
         return callback(err, null);
     }
 };
-
 /**
  * [findPlatfrmById description]
  *
@@ -182,7 +168,7 @@ exports.delAllPlatfrms = function (callback) {
  *
  * @return {[type]}     [description]
  */
-exports.findPlatfrmById = function(_id, callback){
+exports.findPlatfrmById = function (_id, callback) {
     'use strict';
     try {
         platfrmSrv.findPlatfrmById(_id, function (err_plat, res_plat) {
@@ -195,7 +181,6 @@ exports.findPlatfrmById = function(_id, callback){
         return callback(err, null);
     }
 };
-
 /**
  * [updatePlatfrmById description]
  *
@@ -212,7 +197,7 @@ exports.findPlatfrmById = function(_id, callback){
  *
  * @return {[type]}    [description]
  */
-exports.updatePlatfrmById =  function (_platfrm_id, code, name, logo, deps, order, callback) {
+exports.updatePlatfrmById = function (_platfrm_id, code, name, logo, deps, order, callback) {
     'use strict';
     try {
         var set_obj = {};
@@ -231,15 +216,11 @@ exports.updatePlatfrmById =  function (_platfrm_id, code, name, logo, deps, orde
         if (typeof order != "undefined") {
             set_obj.order = order;
         }
-
         platfrmSrv.findPlatfrmById(_platfrm_id, function (err_platfrm, res_platfrm) {
-
             if (err_platfrm) {
                 return callback(err_platfrm, null);
             }
-
             if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
-
                 swapOrder('update', res_platfrm.order, set_obj.order, function (err_sld, res_sld) {
                     if (err_sld) {
                         return callback(err_sld, null);
@@ -252,25 +233,19 @@ exports.updatePlatfrmById =  function (_platfrm_id, code, name, logo, deps, orde
                         });
                     }
                 });
-
             } else {
-
                 platfrmSrv.updatePlatfrmById(_platfrm_id, set_obj, function (err_upd, res_upd) {
                     if (err_upd) {
                         return callback(err_upd, null);
                     }
                     return callback(null, set_obj);
                 });
-
             }
         });
-
-
     } catch (err) {
         return callback(err, null);
     }
 };
-
 /**
  * [delPlatfrmById description]
  *
@@ -284,7 +259,7 @@ exports.updatePlatfrmById =  function (_platfrm_id, code, name, logo, deps, orde
 exports.delPlatfrmById = function (_id, callback) {
     'use strict';
     try {
-        var delPlatfrm = function(){
+        var delPlatfrm = function () {
             platfrmSrv.findPlatfrmById(_id, function (err_platfrm, res_platfrm) {
                 if (err_platfrm) {
                     return callback(err_platfrm, null);
@@ -294,7 +269,6 @@ exports.delPlatfrmById = function (_id, callback) {
                     if (err_sld) {
                         return callback(err_sld, null);
                     } else {
-
                         platfrmSrv.delPlatfrmById(res_platfrm._id, function (err_del, res_del) {
                             if (err_del) {
                                 return callback(err_del, null);
@@ -305,11 +279,11 @@ exports.delPlatfrmById = function (_id, callback) {
                 });
             });
         };
-        compMod.findCompsByPlatfrmId(_id, function(err_comp, res_comps){
+        compMod.findCompsByPlatfrmId(_id, function (err_comp, res_comps) {
             if (err_comp) {
                 return callback(err_comp, null);
             }
-            if(res_comps) {
+            if (res_comps) {
                 var _comps = res_comps;
                 var loopDelComps = function () {
                     if (_comps.length <= 0) {
@@ -326,12 +300,10 @@ exports.delPlatfrmById = function (_id, callback) {
                     }
                 };
                 loopDelComps();
-
             } else {
                 delPlatfrm();
             }
         });
-
     } catch (err) {
         return callback(err, null);
     }
