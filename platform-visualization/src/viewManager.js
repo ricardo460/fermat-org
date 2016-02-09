@@ -19,17 +19,19 @@ function ViewManager() {
      */
     this.translateToSection = function(sectionName, vector) {
         
-        sectionName = window.map.views[sectionName] || window.map.start;
-        var section = sectionName.section || [0, 0];
-        var newVector = vector.clone();
+    //    if(window.map.views[sectionName].title !== "Render") {
+            sectionName = window.map.views[sectionName] || window.map.start;
+            var section = sectionName.section || [0, 0];
+            var newVector = vector.clone();
         
-        if(typeof section !== 'undefined') {
+            if(typeof section !== 'undefined') {
         
-            newVector.x = vector.x + section[0] * SECTION_SIZE;
-            newVector.y = vector.y + section[1] * SECTION_SIZE;
-        }
+                newVector.x = vector.x + section[0] * SECTION_SIZE;
+                newVector.y = vector.y + section[1] * SECTION_SIZE;
+            }
         
-        return newVector;
+            return newVector;
+    //    }
     };
     
     /**
@@ -110,6 +112,18 @@ function ViewManager() {
                 case 'home':
                     enter = function() {
                         window.logo.stopFade(2000);
+                    };
+                    
+                    break;
+                case 'canvas':
+                    enter = function() {
+                        window.currentRender = createScene(window.currentRender, "canvas");
+                    };
+
+                    break;
+                case 'webgl':
+                    enter = function() {
+                        window.currentRender = createScene(window.currentRender, "webgl");
                     };
 
                     break;
