@@ -371,4 +371,20 @@ describe("COMP",function(){
 
   });
 
+  
+  it("#DELETE delCompDev  404",function(done){
+
+        server
+    .delete(pathTest+"/"+comp._id+"/comp-devs/"+compDevIds[0])
+        .expect("Content-type",/json/)
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+        });
+
+    });
+
 });
