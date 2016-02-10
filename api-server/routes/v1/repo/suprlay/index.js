@@ -169,7 +169,16 @@ router.put('/:suprlay_id', function (req, res, next) {
                if (error) {
                   res.status(200).send(error);
                } else {
-                  res.status(200).send(result);
+                 
+                        //new
+                           if (result) {
+                            res.status(200).send(result);
+                        } else {
+                            res.status(404).send({
+                                message: "NOT FOUND"
+                            });
+                        }
+                        //end new
                }
                   release(req);
         });
