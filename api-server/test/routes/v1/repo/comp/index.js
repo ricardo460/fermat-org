@@ -218,6 +218,24 @@ describe("COMP",function(){
 
   });
 
+    it("#PUT uptComp 404",function(done){
+
+    var dataLifeCicle = dataHelper.generateDataLifeCicle();
+
+    server
+    .put(pathTest+"/"+mongoose.Types.ObjectId().toString())
+    .send(dataLifeCicle)
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+      return done();
+    });
+
+  });
+
   it("#DELETE delComp",function(done){
 
     server
@@ -228,6 +246,21 @@ describe("COMP",function(){
       if (err) return done(err);
 
       return done();
+    });
+
+  });
+
+    it("#DELETE delComp  404",function(done){
+
+    server
+    .delete(pathTest+"/"+mongoose.Types.ObjectId().toString())
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+          return done();
     });
 
   });
@@ -359,6 +392,8 @@ describe("COMP",function(){
     });
 
   });
+
+
 
 
   it("#PUT uptCompDev 404",function(done){
