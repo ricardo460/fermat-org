@@ -146,8 +146,7 @@ describe("SUPRLAY",function(){
 
     });
 
-  ///Aki esta bien
-     it("#PUT uptPltf 412",function(done){
+    /*it("#PUT uptPltf 412",function(done){
 
          var dataPlatform = dataHelper.generateData412General();
 
@@ -165,7 +164,7 @@ describe("SUPRLAY",function(){
           return done();
         });
 
-    });
+    });*/
 
     it("#DELETE delPltf",function(done){
 
