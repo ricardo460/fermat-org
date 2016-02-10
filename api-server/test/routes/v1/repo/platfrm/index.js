@@ -1,7 +1,7 @@
 var supertest = require("supertest");
 var should = require("should");
 var mongoose = require("mongoose");
-var server = supertest.agent("http://localhost:3002");
+var server = supertest.agent("http://localhost:8081");
 var platfMod = require("../../../../../modules/repository/platform");
 var compMod = require("../../../../../modules/repository/component");
 //var auth = require("../../../herlpers/v1/auth")
@@ -103,6 +103,26 @@ describe("SUPRLAY",function(){
 
     });
 
+
+    it("#POST addPlatform 412",function(done){
+
+        var dataPlatform = dataHelper.generateData412General();
+
+        server
+        .post(pathTest+"/")
+        .send(dataPlatform)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+            if (err) return done(err);
+
+            res.body.should.have.property('message');
+
+          return done();
+        });
+
+    });
+
     it("#PUT uptPltf",function(done){
 
          var dataPlatform = dataHelper.generateDataPlatform();
@@ -125,6 +145,26 @@ describe("SUPRLAY",function(){
         });
 
     });
+
+    /*it("#PUT uptPltf 412",function(done){
+
+         var dataPlatform = dataHelper.generateData412General();
+
+        server
+        .put(pathTest+"/"+platform._id)
+        .send(dataPlatform)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+
+                if (err) return done(err);
+
+            res.body.should.have.property('message');
+
+          return done();
+        });
+
+    });*/
 
     it("#DELETE delPltf",function(done){
 

@@ -1,7 +1,7 @@
 var express = require('express');
-var passport = require('passport');
 var router = express.Router();
 var authMod = require('../../../modules/auth');
+var config = require('../../../config.js');
 /**
  * Get autorization for use the api
  * @param  {[type]} req   [description]
@@ -15,7 +15,7 @@ router.get('/login', function (req, resp, next) {
         console.log("Login...");
         var code = req.query.code;
         var api_key = req.query.api_key;
-        var url = "https://github.com/login/oauth/access_token?client_id=6cac9cc2c2cb584c5bf4&client_secret=4887bbc58790c7a242a8dafcb035c0a01dc2a199&" + "code=" + code;
+        var url = "https://github.com/login/oauth/access_token?client_id="+config.client_id+"&client_secret="+config.client_secret+"&" + "code=" + code;
         authMod.login(url, api_key, function (err_auth, res_auth) {
             if (err_auth) {
                 console.log("Error", err_auth);

@@ -1,7 +1,7 @@
 var supertest = require("supertest");
 var should = require("should");
 var mongoose = require("mongoose");
-var server = supertest.agent("http://localhost:3002");
+var server = supertest.agent("http://localhost:8081");
 var suprlayMod = require("../../../../../modules/repository/superlayer");
 var compMod = require("../../../../../modules/repository/component");
 //var auth = require("../../../herlpers/v1/auth")
@@ -64,6 +64,22 @@ describe("SUPRLAY",function(){
 
     });
 
+
+       it("#GET getSprlay 404",function(done){
+
+        server
+        .get(pathTest+"/"+mongoose.Types.ObjectId().toString())
+        .expect("Content-type",/json/)
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+        });
+
+    });
+
     it("#GET listSuprLays",function(done){
 
         server
@@ -101,6 +117,47 @@ describe("SUPRLAY",function(){
         });
 
     });
+
+     it("#POST addSuprLay 412",function(done){
+
+        var dataSuprLay = dataHelper.generateData412General();
+
+        server
+        .post(pathTest+"/")
+        .send(dataSuprLay)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+            if (err) return done(err);
+
+               res.body.should.have.property('message');
+
+          return done();
+        });
+
+    });
+
+
+    it("#PUT uptSprlay 412",function(done){
+
+        var dataSuprLay = dataHelper.generateData412General();
+
+        server
+        .put(pathTest+"/"+suprlay._id)
+        .send(dataSuprLay)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+
+           res.body.should.have.property('message');
+          return done();
+        });
+
+    });
+
 
     it("#PUT uptLay",function(done){
 

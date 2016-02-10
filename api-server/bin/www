@@ -93,5 +93,5 @@ server.on('listening', onListening);
  * Uncaught exceptions handler
  */
 process.on('uncaughtException', function (err) {
-    winston.log('error', 'Mongoose default connection error', err);
+    winston.log('error', err.message, err);
 });

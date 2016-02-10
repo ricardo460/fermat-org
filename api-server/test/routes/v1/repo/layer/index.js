@@ -1,7 +1,7 @@
 var supertest = require("supertest");
 var should = require("should");
 var mongoose = require("mongoose");
-var server = supertest.agent("http://localhost:3002");
+var server = supertest.agent("http://localhost:8081");
 var layMod = require("../../../../../modules/repository/layer");
 var compMod = require("../../../../../modules/repository/component");
 //var auth = require("../../../herlpers/v1/auth")
@@ -102,6 +102,27 @@ describe("LAY",function(){
 
     });
 
+       it("#POST addLay 412",function(done){
+
+        var dataLay = dataHelper.generateData412General();
+
+        server
+        .post(pathTest+"/")
+        .send(dataLay)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+            if (err) return done(err);
+
+      res.body.should.have.property('message');
+
+          return done();
+        });
+
+    });
+
+     
+
     it("#PUT uptLay",function(done){
 
         var dataLay = dataHelper.generateDataLay();
@@ -121,6 +142,27 @@ describe("LAY",function(){
             res.body.suprlay.should.equal(dataLay.suprlay);
             res.body.order.should.equal(dataLay.order);
 
+          return done();
+        });
+
+    });
+
+
+       it("#PUT uptLay 412",function(done){
+
+        var dataLay = dataHelper.generateData412General();
+
+        server
+        .put(pathTest+"/"+lay._id)
+        .send(dataLay)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+
+             res.body.should.have.property('message');
           return done();
         });
 

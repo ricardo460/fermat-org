@@ -1,7 +1,7 @@
 var supertest = require("supertest");
 var should = require("should");
 var mongoose = require("mongoose");
-var server = supertest.agent("http://localhost:3002");
+var server = supertest.agent("http://localhost:8081");
 //var auth = require("../../../herlpers/v1/auth")
 var dataHelper = require("../../../../helpers/v1/dataHelper");
 var compMod = require("../../../../../modules/repository/component");
@@ -87,7 +87,6 @@ describe("COMP",function(){
     .expect(200) // This is HTTP response
     .end(function(err,res){
       if (err) return done(err);
-
       res.status.should.equal(200);
 
       return done();
@@ -130,6 +129,26 @@ describe("COMP",function(){
 
   });
 
+  it("#POST addComp 412",function(done){
+
+    var dataComp = dataHelper.generateData412General();
+
+    server
+    .post(pathTest+"/")
+    .send(dataComp)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err,res){
+
+      if (err) return done(err);
+
+      res.body.should.have.property('message');
+
+      return done();
+    });
+
+  });
+
   it("#PUT uptComp",function(done){
 
     var dataComp = dataHelper.generateDataComp();
@@ -160,6 +179,27 @@ describe("COMP",function(){
 
   });
 
+   it("#PUT uptComp 412",function(done){
+
+    var dataComp = dataHelper.generateData412General();
+
+    server
+    .put(pathTest+"/"+comp._id)
+    .send(dataComp)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err,res){
+
+      if (err) return done(err);
+
+
+       res.body.should.have.property('message');
+
+      return done();
+    });
+
+  });
+
   it("#DELETE delComp",function(done){
 
     server
@@ -174,17 +214,35 @@ describe("COMP",function(){
 
   });
 
-  it("#POST addLifeCiclesToComp",function(done){
+  it("#PUT uptLifeCiclesToComp",function(done){
 
     var dataLifeCicle = dataHelper.generateDataLifeCicle();
     server
-    .post(pathTest+"/"+comp._id+"/life-cicles")
+    .put(pathTest+"/"+comp._id+"/life-cicles/"+statusIds[0])
     .send(dataLifeCicle)
     .expect("Content-type",/json/)
-    .expect(201) // This is HTTP response
+    .expect(200) // This is HTTP response
     .end(function(err,res){
 
       if (err) return done(err);
+
+      return done();
+    });
+
+  });
+
+  it("#PUT uptLifeCiclesToComp 404",function(done){
+
+    var dataLifeCicle = dataHelper.generateDataLifeCicle();
+
+    server
+    .put(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/life-cicles/"+"56ba95f0d9a8a64c30c75341")
+    .send(dataLifeCicle)
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
 
       return done();
     });
@@ -212,6 +270,39 @@ describe("COMP",function(){
 
   });
 
+  it("#POST addCompDev 412",function(done){
+
+    var dataCompDev = dataHelper.generateData412General();
+    server
+    .post(pathTest+"/"+comp._id+"/comp-devs")
+    .send(dataCompDev)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err,res){
+      if (err) return done(err);
+
+
+      res.body.should.have.property('message');
+      return done();
+    });
+
+  });
+
+  it("#POST addCompDev 404"/*,function(done){
+
+    server
+    .post(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/comp-devs")
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+      return done();
+    });
+
+  }*/);
+
   it("#PUT uptCompDev",function(done){
 
     var dataCompDev = dataHelper.generateDataCompDev();
@@ -233,6 +324,43 @@ describe("COMP",function(){
 
   });
 
+  it("#PUT uptCompDev 412",function(done){
+
+    var dataCompDev = dataHelper.generateData412General();
+    server
+    .put(pathTest+"/"+comp._id+"/comp-devs/"+compDevIds[0])
+    .send(dataCompDev)
+    .expect("Content-type",/json/)
+    .expect(412) // This is HTTP response
+    .end(function(err,res){
+
+      if (err) return done(err);
+
+     res.body.should.have.property('message');
+      return done();
+    });
+
+  });
+
+
+  it("#PUT uptCompDev 404",function(done){
+
+    var dataCompDev = dataHelper.generateDataCompDev();
+
+    server
+    .put(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/comp-devs/"+mongoose.Types.ObjectId().toString())
+    .send(dataCompDev)
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+    });
+
+  });
+
   it("#DELETE delCompDev",function(done){
 
     var dataCompDev = dataHelper.generateDataCompDev();
@@ -244,6 +372,22 @@ describe("COMP",function(){
       if (err) return done(err);
 
       return done();
+    });
+
+  });
+
+
+  it("#DELETE delCompDev  404",function(done){
+
+    server
+    .delete(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/comp-devs/"+mongoose.Types.ObjectId().toString())
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+          return done();
     });
 
   });

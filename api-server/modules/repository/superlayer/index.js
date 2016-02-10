@@ -174,8 +174,12 @@ exports.findSuprlayById = function (_id, callback) {
     suprlaySrv.findSuprlayById(_id, function (err_suprlay, res_suprlay) {
         if (err_suprlay) {
             return callback(err_suprlay, null);
-        }
-        return callback(null, res_suprlay);
+        }else if (res_suprlay) {
+            return callback(null, res_suprlay);
+
+         }else{
+            return callback(null, null);
+         }
     });
 };
 /**
@@ -216,27 +220,35 @@ exports.updateSuprlayById = function (_sprly_id, code, name, logo, deps, order, 
         suprlaySrv.findSuprlayById(_sprly_id, function (err_supr, res_supr) {
             if (err_supr) {
                 return callback(err_supr, null);
-            }
-            if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
-                swapOrder('update', res_supr.order, set_obj.order, function (err_sld, res_sld) {
-                    if (err_sld) {
-                        return callback(err_sld, null);
-                    } else {
-                        suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
-                            if (err_upd) {
-                                return callback(err_upd, null);
-                            }
-                            return callback(null, set_obj);
-                        });
-                    }
-                });
-            } else {
-                suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
-                    if (err_upd) {
-                        return callback(err_upd, null);
-                    }
-                    return callback(null, set_obj);
-                });
+
+            }else if (res_supr){
+
+                if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+
+                    swapOrder('update', res_supr.order, set_obj.order, function (err_sld, res_sld) {
+                        if (err_sld) {
+                            return callback(err_sld, null);
+                        } else {
+                            suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
+                                if (err_upd) {
+                                    return callback(err_upd, null);
+                                }
+                                return callback(null, set_obj);
+                            });
+                        }
+                    });
+
+                } else {
+                    suprlaySrv.updateSuprlayById(res_supr._id, set_obj, function (err_upd, res_upd) {
+                        if (err_upd) {
+                            return callback(err_upd, null);
+                        }
+                        return callback(null, set_obj);
+                    });
+                }
+
+            }else{
+               return callback(null, null);
             }
         });
     } catch (err) {

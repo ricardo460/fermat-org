@@ -74,7 +74,7 @@ router.post('/', function (req, res, next) {
             !security.isValidData(req.body.name) || //
             !security.isValidData(req.body.logo) || //
             !security.isValidData(req.body.order)) {
-            res.status(412).send('missing or invalid data');
+                  res.status(412).send({message: 'missing or invalid data'});
         } else {
             repMod.addSuprLay(req, function (error, result) {
                 if (error) {
@@ -152,7 +152,7 @@ router.get('/:suprlay_id', function (req, res, next) {
  * @param  {[type]} req   [description]
  * @param  {[type]} res   [description]
  * @param  {[type]} next  [description]
- *
+ *f
  * @return {[type]} [description]
  */
 router.put('/:suprlay_id', function (req, res, next) {
@@ -169,7 +169,16 @@ router.put('/:suprlay_id', function (req, res, next) {
                if (error) {
                   res.status(200).send(error);
                } else {
-                  res.status(200).send(result);
+                 
+                        //new
+                           if (result) {
+                            res.status(200).send(result);
+                        } else {
+                            res.status(404).send({
+                                message: "NOT FOUND"
+                            });
+                        }
+                        //end new
                }
                   release(req);
         });
