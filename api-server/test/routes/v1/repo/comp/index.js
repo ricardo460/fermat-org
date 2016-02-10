@@ -109,6 +109,24 @@ describe("COMP",function(){
     });
   });
 
+    it("#GET getComp 404",function(done){
+
+    var dataLifeCicle = dataHelper.generateDataLifeCicle();
+
+    server
+    .put(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/life-cicles/"+"56ba95f0d9a8a64c30c75341")
+    .send(dataLifeCicle)
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+      return done();
+    });
+
+  });
+
   it("#POST addComp",function(done){
 
     var dataComp = dataHelper.generateDataComp();
