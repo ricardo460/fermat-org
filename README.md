@@ -93,7 +93,7 @@ In the case of brackets, open the preferences file and add the following to the 
     }
 ```
 
-In other text editors you have to edit the file .jshintrc for ours, which is in-visualization platform.
+In other text editors you have to edit the file .jshintrc to match ours, which is in-visualization platform.
 
 ### Part II: Downloading the repository Fermat-org.
 
@@ -135,9 +135,9 @@ Right now, you have a fork of the fermat-org repository, but you don't have the 
 ```
 * Press Enter. Your local clone will be created.
 
-Now, you have a local copy of your fork of the fermat-org repository!
+Now you have a local copy of your fork of the fermat-org repository!
 
->**Warning:** On Windows, there is a limit for the path length, which is 260 characters. As gulp is installed in the repository to save you its configuration, the node.js files goe too deep and can pass that limit, so you should clone the repository directly in the drive root ("C:\" for most cases). If you work on linux, there's not such limitation.
+>**Warning:** On Windows, there is a limit for the path length, which is 260 characters. As gulp is installed in the repository to save you its configuration, the node.js files go too deep and can pass that limit, so you should clone the repository directly in the drive root ("C:\" for most cases). If you work on linux, there's not such limitation.
 
 #####Step 3: Configure Git to sync your fork with the original repository
 
@@ -228,8 +228,8 @@ The origin repository will be updated.
 
 * The easiest and most visual way to do this is through GitHub. In order to do so, we have to head to our Fork, and on the left margin you'll see an green button that says: New Pull Request, click it. The web will show you a screen with a series of scrollable menus in which it indicates:
 
-    ¿To whom you wish to make the Pull Request? ¿To what branch?
-    ¿From where do you wish to make the Pull Request? ¿To what branch?
+    To whom you wish to make the Pull Request? To what branch?
+    From where do you wish to make the Pull Request? To what branch?
 
 * Be sure to pick the fork of your Responsible, the master branch on the first, and your fork and the master branch on the second.
 
@@ -251,20 +251,20 @@ Once you've downloaded the repository, you must generate the file main.js to ons
 * **From the console go to the repository folder Fermat-org/platform-visualization.**
 * **Write gulp, to run.**
 
-And ready, gulp runs in this window every pending changes made to files to regenerate main.js whenever any change, please note that when you start programming you repeat these steps, so that the main js this always updated with your changes.
+Once set, gulp runs in this window to regenerate main.js whenever a change is made to a file. Please note that when you start programming you must repeat these steps so that the main.js is always updated with your changes.
 
 #### Running Fermat-org.
 
 - __With internet:__ Just go to the browser.
 
-- __Without Internet:__ You must modify the Fermat-org / platform-visualization / src / file getData.js and comment on the $ .ajax des comment setTimeout and ready.
+- __Without Internet:__ You must modify the file getData.js, located in fermat-org/platform-visualization/src. Comment the $.ajax and uncomment setTimeout.
 
 
 ## Code agreement
 
 ### About naming variables
 
-- __Variable names:__ The variables will be named using _lowerCamelCase_ and they will be as descriptive, short and concise as possible. _lowerCamelCase_ is one of the most common classifications in programming and is a name that includes several words, it will be written without separation and the first letter of each word except the first, is capitalized. Example:
+- __Variable names:__ The variables will be named using _lowerCamelCase_ and they will be as descriptive, short and concise as possible. _lowerCamelCase_ is one of the most common classifications in programming and is a name that includes several words, it will be written without separation and the first letter of each word, except the first, is capitalized. Example:
 ```javascript
 var edades_de_personas; //BAD
 var edadesdepersonas; //BAD
@@ -272,7 +272,7 @@ var arrEdadesDePersonas; //BAD, the name must be descriptive enough to provide i
 var edadesPersonas; //GOOD
 ```
 
-- __Global:__ When reading Global variables they will be set for `window.` To check it in order it is global, the global present in other code files will be used only for reading or calling not to change its value. Example:
+- __Global:__ When reading Global variables, they will be set for `window.` to check that it is global. The global present in other code files will be used only for reading or calling, not to change its value. Example:
 ```javascript
 var global = 3;
 
@@ -302,8 +302,8 @@ if(condicion)
   
   ...
 
-/*If the if is a single line but has an else , and else has several, it will be drawn with keys, the else will go on the bottom line,
-some editors have trouble if the else is put on the same line where it closes  */
+/*If the "if" is a single line but has an else, and else has several lines, it will be drawn with keys
+and the else will go on the bottom line. Some editors have trouble if the else is put on the same line where it closes*/
 if(condicion) {
   accion();
 }
@@ -312,7 +312,7 @@ else {
   masAcciones();
 }
 
-//If otherwise, both if and else have a single line , there won’t be a problem to leave them without keys
+//If otherwise, both if and else have a single line, there won’t be a problem to leave them without keys
 if(condicion)
   accion();
 else
@@ -373,7 +373,7 @@ function myClase(parametros) {
   
 }
 
-//Public methods if multiple instances of the same object will be used
+//Public methods (if multiple instances of the same object will be used)
 myClase.prototype.funcionPublica = function(params) {
   //...
 }
