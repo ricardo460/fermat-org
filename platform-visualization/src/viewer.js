@@ -8,7 +8,6 @@ var tilesQtty,
     actualView,
     stats = null,
     headersUp = false,
-    newRender = null,
 //Class
     tileManager = new TileManager(),
     helper = new Helper(),
@@ -176,31 +175,26 @@ function init() {
  */
 function goToView ( targetView ) {
     
-    //if(targetView) {
-       // if(window.map.views[targetView].title !== "Render") {
-            var newCenter = new THREE.Vector3(0, 0, 0);
-            var transition = 5000;
+    var newCenter = new THREE.Vector3(0, 0, 0);
+    var transition = 5000;
 
-            newCenter = viewManager.translateToSection(targetView, newCenter);
-            camera.moving = true;
-            camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition, true);
-            camera.lockPan();
+    newCenter = viewManager.translateToSection(targetView, newCenter);
+    camera.moving = true;
+    camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition, true);
+    camera.lockPan();
         
-            setTimeout(function() { camera.moving = false; }, transition);
-        //}
-    //}
+    setTimeout(function() { camera.moving = false; }, transition);
 
     if(window.map.views[targetView] != null) {
         if(actualView != targetView){
             
-            if(actualView /*&& window.map.views[targetView].title !== "Render"*/)
+            if(actualView)
                 viewManager.views[actualView].exit();
 
             viewManager.views[targetView].enter();
         }
 
-        //if(window.map.views[targetView].title !== "Render")
-            actualView = targetView;
+        actualView = targetView;
     }
     else
         goToView(window.map.start);

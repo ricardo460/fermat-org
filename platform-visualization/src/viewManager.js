@@ -84,14 +84,12 @@ function ViewManager() {
                     };                    
                     
                     exit = function() {
-                        console.log("exit");
                         window.tileManager.rollBack();
 
                         buttonsManager.removeAllButtons();
                     };
 
                     reset = function() {
-                        console.log("reset");
                         window.tileManager.rollBack();
 
                         setTimeout(function(){
