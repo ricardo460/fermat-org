@@ -13,6 +13,7 @@ var tilesQtty,
     logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),
+    login = new Login(),
     fermatEdit = null,
     browserManager = null,
     screenshotsAndroid = null,
@@ -21,6 +22,7 @@ var tilesQtty,
     viewManager = null,
     magazine = null,
     networkViewer = null,
+    isLogin,
     buttonsManager = null;
 //Global constants
 var TILE_DIMENSION = {
@@ -31,7 +33,10 @@ var TILE_DIMENSION = {
 
 createScene();
 
-getData();
+if(isLogin !== true)
+    $('#login').click(function() {
+        window.login.getAuthCode();
+    });
 
 /**
  * Creates the rendering environment
@@ -48,15 +53,17 @@ function createScene(){
         
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
+    renderer.domElement.id = "canvas";
     renderer.setClearColor(0xFFFFFF);
     document.getElementById('container').appendChild(renderer.domElement);
 
     camera = new Camera(new THREE.Vector3(0, 0, 90000),
         renderer,
         render);
-
+    animate();
     logo.startFade();
 }
+
 
 function webglAvailable() {
     try {
@@ -124,7 +131,10 @@ function init() {
             $(legend).fadeTo(1000, 1);
         }
     });
-
+    
+    $('#logout').click(function() {
+        window.login.logout();
+    });
             
     $('#container').click(onClick);
 

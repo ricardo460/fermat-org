@@ -209,7 +209,7 @@ function Helper() {
      */
     this.getAPIUrl = function(route) {
         
-        var SERVER = "http://52.35.117.6:3000";
+        var SERVER = "http://52.35.117.6";
         var tail = "";
         
         switch(route) {
@@ -225,6 +225,12 @@ function Helper() {
                 break;
             case "nodes":
                 tail = "/v1/network/node";
+                break;
+            case "login":
+                tail = "/v1/auth/login";
+                break;
+            case "logout":
+                tail = "/v1/auth/logout";
                 break;
         }
         
