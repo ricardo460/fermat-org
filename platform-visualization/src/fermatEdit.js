@@ -700,7 +700,7 @@ function FermatEdit() {
     function changeTexture(){
 
         var table = null,
-            scale = 3, //5
+            scale = 5, //5
             mesh = null;
 
         table = fillTable(true);
