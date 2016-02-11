@@ -79,6 +79,7 @@ function FermatEdit() {
                 actions.type = "new";
 
                 window.buttonsManager.removeAllButtons();
+
                 drawTile(null, addAllFilds);
             };
 
@@ -155,9 +156,9 @@ function FermatEdit() {
 
     function fillFields(id){
 
-        var tile = window.table[id]; 
+        var tile = window.helper.getSpecificTile_(id).data; 
 
-        self.actualTile = window.table[id];
+        self.actualTile = tile;
 
         if(tile.group !== undefined)
             document.getElementById('select-Platform').value = tile.group;
@@ -205,9 +206,9 @@ function FermatEdit() {
 
         var target = window.helper.fillTarget(newCenter.x, y, newCenter.z, 'table');
 
-        mesh.position.copy(target.hide);
+        mesh.position.copy(target.hide.position);
 
-        mesh.rotation.copy(target.hideR);
+        mesh.rotation.copy(target.hide.rotation);
 
         mesh.renderOrder = 1;
 
@@ -233,7 +234,7 @@ function FermatEdit() {
 
             actions.exit = exit;
 
-            animate(mesh, objects.tile.target.show, objects.tile.target.showR, 1000, function(){ 
+            animate(mesh, objects.tile.target.show, 1000, function(){ 
 
                 window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 2000);
 
@@ -258,7 +259,7 @@ function FermatEdit() {
 
             changeTexture();
 
-            animate(mesh, objects.tile.target.show, objects.tile.target.showR, 1000, function(){ 
+            animate(mesh, objects.tile.target.show, 1000, function(){ 
 
                 window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 1500);
 
@@ -266,7 +267,8 @@ function FermatEdit() {
                 window.signLayer.transformSignLayer();
 
                 setTimeout( function() {
-                    animate(window.objects[id], objects.tile.target.hide, objects.tile.target.hideR, 1000);
+                    var data = helper.getSpecificTile_(id);
+                    animate(data.mesh, data.target.hide, 1000);
                 }, 2000 );
 
             });
@@ -293,8 +295,8 @@ function FermatEdit() {
         
         function setSelectImages(select) {
             
-            select.style.backgroundSize = select.offsetHeight+"px";
-            select.style.width = select.offsetWidth+select.offsetHeight+"px";
+            select.style.backgroundSize = select.offsetHeight + "px";
+            select.style.width = select.offsetWidth + select.offsetHeight + "px";
             
         }
         
@@ -698,7 +700,7 @@ function FermatEdit() {
     function changeTexture(){
 
         var table = null,
-            scale = 3,
+            scale = 3, //5
             mesh = null;
 
         table = fillTable(true);
@@ -716,7 +718,7 @@ function FermatEdit() {
 
         if(mesh != null){
 
-            animate(mesh, objects.tile.target.hide, objects.tile.target.hideR, 1500, function(){ 
+            animate(mesh, objects.tile.target.hide, 1500, function(){ 
                     window.scene.remove(mesh);
                 });
 
@@ -742,14 +744,14 @@ function FermatEdit() {
 
         var x, y, z;
 
-        var mesh = window.tileManager.createElement(1, table);
-
         var platform = table.group || window.layers[table.layer].super_layer,
             layer = table.layer,
             object = { 
                 mesh : null,
                 data : {},
-                target : {}
+                target : {},
+                _ID : null,
+                ID : null
             };
 
         if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
@@ -761,12 +763,18 @@ function FermatEdit() {
 
         var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
 
+        var count = TABLE[platform].layers[layer].objects.length;
+
+        object._ID = platform + '_' + layer + '_' + count;
+
+        var mesh = window.tileManager.createElement(object._ID, table);
+
         x = 0;
 
         if(!lastObject)
             x = TABLE[platform].x;
         else
-            x = lastObject.target.show.x + TILE_DIMENSION.width;
+            x = lastObject.target.show.position.x + TILE_DIMENSION.width;
 
         y = window.tileManager.dimensions.layerPositions[table.layerID];
 
@@ -774,8 +782,8 @@ function FermatEdit() {
 
         var target = helper.fillTarget(x, y, z, 'table');
 
-        mesh.position.copy(target.hide);
-        mesh.rotation.copy(target.hideR);
+        mesh.position.copy(target.hide.position);
+        mesh.rotation.copy(target.hide.rotation);
 
         window.scene.add(mesh);
 
@@ -785,9 +793,9 @@ function FermatEdit() {
 
         window.camera.enable();
 
-        window.camera.move(target.show.x, target.show.y, target.show.z + 8000, 4000);
+        window.camera.move(target.show.position.x, target.show.position.y, target.show.position.z + 8000, 4000);
 
-        animate(mesh, target.show, target.showR, 4500, function(){
+        animate(mesh, target.show, 4500, function(){
 
            window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
         });
@@ -829,11 +837,10 @@ function FermatEdit() {
 
         function change(){
 
-            var newArrayObject = [];
-                TABLE[oldGroup].layers[oldLayer].objects = [],
-                idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
+            TABLE[oldGroup].layers[oldLayer].objects = [];
+            var idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
 
-                window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+            window.screenshotsAndroid.deleteScreenshots(idScreenshot);
    
             for(var i = 0; i < arrayObject.length; i++){
                 
@@ -843,48 +850,7 @@ function FermatEdit() {
                 }
             }
 
-            for(var t = 0; t < arrayObject.length; t++){
-
-                var data = arrayObject[t].data,
-                    mesh = arrayObject[t].mesh,
-                    target = null,
-                    object = { 
-                        mesh : null,
-                        data : {},
-                        target : {}
-                    };
-                    
-                var x = 0, y = 0, z = 0;
-
-                var lastObject = helper.getLastValueArray(newArrayObject);
-
-                x = 0;
-
-                if(!lastObject)
-                    x = TABLE[oldGroup].x;
-                else
-                    x = lastObject.target.show.x + TILE_DIMENSION.width;
-
-                y = window.helper.getPositionYLayer(oldLayer);
-
-                z = 0;
-
-                var idScreenshots = oldGroup + "_" + oldLayer + "_" + data.name;
-
-                window.screenshotsAndroid.changePositionScreenshots(idScreenshots, x, y);
-                
-                target = window.helper.fillTarget(x, y, z, 'table');
-
-                object.mesh = mesh;
-                object.data = data;
-                object.target = target;
-
-                animate(arrayObject[t].mesh, target.show, target.showR, 1500);
-
-                newArrayObject.push(object);
-            }
-
-            TABLE[oldGroup].layers[oldLayer].objects = newArrayObject;
+            TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
 
             setTimeout( function() { 
 
@@ -901,28 +867,34 @@ function FermatEdit() {
         function notChange(){
 
             var arrayObject = TABLE[oldGroup].layers[oldLayer].objects;
-            var mesh = window.tileManager.createElement(1, table);
             var target = null;
+            var _ID = null;
+            var id = 0;
 
             var idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
 
             if(self.actualTile.name !== table.name)
                 window.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
-            window.scene.add(mesh);
-
             for(var i = 0; i < arrayObject.length; i++){
                 
                 if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
 
-                    TABLE[oldGroup].layers[oldLayer].objects[i].mesh = mesh;
+                    id = i;
                     TABLE[oldGroup].layers[oldLayer].objects[i].data = table;
                     target = TABLE[oldGroup].layers[oldLayer].objects[i].target;
+                    _ID = TABLE[oldGroup].layers[oldLayer].objects[i]._ID;
                 }
             }
+
+            var mesh = window.tileManager.createElement(_ID, table);
+
+            TABLE[oldGroup].layers[oldLayer].objects[id].mesh = mesh;
+
+            window.scene.add(mesh);
             
-            animate(mesh, target.show, target.showR, 2000,function(){
-                window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
+            animate(mesh, target.show, 2000,function(){
+                window.screenshotsAndroid.hidePositionScreenshots(oldGroup, oldLayer); 
             });
 
         }
@@ -932,14 +904,14 @@ function FermatEdit() {
 
         var x, y, z;
 
-        var mesh = window.tileManager.createElement(1, table);
-
         var platform = table.group || window.layers[table.layer].super_layer,
             layer = table.layer,
             object = { 
                 mesh : null,
                 data : {},
-                target : {}
+                target : {},
+                _ID : null,
+                ID : null
             };
 
         if(typeof TABLE[platform].layers[layer] === 'undefined'){ 
@@ -949,14 +921,20 @@ function FermatEdit() {
             };
         }
 
-        var lastObject = helper.getLastValueArray(TABLE[platform].layers[layer].objects);
+        var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
 
+        var count = TABLE[platform].layers[layer].objects.length;
+
+        object._ID = platform + '_' + layer + '_' + count;
+
+        var mesh = window.tileManager.createElement(object._ID, table);
+    
         x = 0;
 
         if(!lastObject)
             x = TABLE[platform].x;
         else
-            x = lastObject.target.show.x + TILE_DIMENSION.width;
+            x = lastObject.target.show.position.x + TILE_DIMENSION.width;
 
         y = window.helper.getPositionYLayer(layer);
 
@@ -964,8 +942,8 @@ function FermatEdit() {
 
         var target = helper.fillTarget(x, y, z, 'table');
 
-        mesh.position.copy(target.hide);
-        mesh.rotation.set(target.hideR.x, target.hideR.y, target.hideR.z);
+        mesh.position.copy(target.hide.position);
+        mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
 
         window.scene.add(mesh);
 
@@ -973,7 +951,7 @@ function FermatEdit() {
         object.data = table;
         object.target = target;
 
-        animate(mesh, target.show, target.showR, 2500);
+        animate(mesh, target.show, 2500);
                 
         TABLE[platform].layers[layer].objects.push(object);
 
@@ -1047,13 +1025,14 @@ function FermatEdit() {
 
     function deleteTile(id){
 
-        var oldLayer = window.table[id].layer,
-            oldGroup = window.table[id].group || window.layers[window.table[id].layer].super_layer,
-            _mesh = null,
-            arrayObject = TABLE[oldGroup].layers[oldLayer].objects,
-            idScreenshot = oldGroup + "_" + oldLayer + "_" + table[id].name;
+        var table = helper.getSpecificTile_(id).data;
 
-            window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+        var oldLayer = table.layer,
+            oldGroup = table.group || window.layers[table.layer].super_layer,
+            arrayObject = TABLE[oldGroup].layers[oldLayer].objects,
+            idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
+
+        window.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
         var positionCameraX = TABLE[oldGroup].x,
             positionCameraY = helper.getPositionYLayer(oldLayer);
@@ -1068,80 +1047,94 @@ function FermatEdit() {
 
         setTimeout( function() {
 
-            var newArrayObject = [];
-
             TABLE[oldGroup].layers[oldLayer].objects = [];
        
-            for(var i = 0; i < arrayObject.length; i++){
-                
-                if(arrayObject[i].data.author === window.table[id].author && arrayObject[i].data.name === window.table[id].name){
+            id = id.split("_");
 
-                    _mesh = arrayObject[i].mesh;
+            id = parseInt(id[2]);
 
-                    animate(arrayObject[i].mesh, arrayObject[i].target.hide, arrayObject[i].target.hideR, 1500, function(){
-                        window.scene.remove(_mesh);
-                    });
+            var mesh = arrayObject[id].mesh;
 
-                    arrayObject.splice(i,1);
-                }
-            }
+            var target =  window.helper.fillTarget(0, 0, 160000, 'table');
 
-            for(var t = 0; t < arrayObject.length; t++){
+            animate(mesh, target.hide, 1500, function(){
+                window.scene.remove(mesh);
+            });
 
-                var data = arrayObject[t].data,
-                    mesh = arrayObject[t].mesh,
-                    target = null,
-                    object = { 
-                        mesh : null,
-                        data : {},
-                        target : {}
-                    };
-                    
-                var x = 0, y = 0, z = 0;
+            arrayObject.splice(id, 1);
 
-                var lastObject = helper.getLastValueArray(newArrayObject);
-
-                x = 0;
-
-                if(!lastObject)
-                    x = TABLE[oldGroup].x;
-                else
-                    x = lastObject.target.show.x + TILE_DIMENSION.width;
-
-                y = window.helper.getPositionYLayer(oldLayer);
-
-                z = 0;
-
-                var idScreenshots = oldGroup + "_" + oldLayer + "_" + data.name;
-
-                window.screenshotsAndroid.changePositionScreenshots(idScreenshots, x, y);
-                
-                target = window.helper.fillTarget(x, y, z, 'table');
-
-                object.mesh = mesh;
-                object.data = data;
-                object.target = target;
-
-                animate(arrayObject[t].mesh, target.show, target.showR, 1500);
-
-                newArrayObject.push(object);
-            }
-
-            TABLE[oldGroup].layers[oldLayer].objects = newArrayObject;
+            TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
 
         }, 3500 );
  
     }
 
-    function animate(mesh, target, rotation, duration, callback){
+    function modifyRowTable(arrayObject, oldGroup, oldLayer){
+
+        var newArrayObject = [];
+
+        for(var t = 0; t < arrayObject.length; t++){
+
+            var data = arrayObject[t].data,
+                mesh = arrayObject[t].mesh,
+                target = null,
+                object = { 
+                    mesh : null,
+                    data : {},
+                    target : {},
+                    _ID : null,
+                    ID : null
+                };
+                
+            var x = 0, y = 0, z = 0;
+
+            var lastObject = helper.getLastValueArray(newArrayObject);
+
+            var count = newArrayObject.length;
+
+            object._ID = oldGroup + '_' + oldLayer + '_' + count;
+
+            for(var i = 0; i < mesh.levels.length; i++)
+                mesh.levels[i].object.userData.id = object._ID;
+
+            x = 0;
+
+            if(!lastObject)
+                x = TABLE[oldGroup].x;
+            else
+                x = lastObject.target.show.position.x + TILE_DIMENSION.width;
+
+            y = window.helper.getPositionYLayer(oldLayer);
+
+            z = 0;
+
+            var idScreenshots = oldGroup + "_" + oldLayer + "_" + data.name;
+
+            window.screenshotsAndroid.changePositionScreenshots(idScreenshots, x, y);
+            
+            target = window.helper.fillTarget(x, y, z, 'table');
+
+            object.mesh = mesh;
+            object.data = data;
+            object.target = target;
+
+            animate(object.mesh, target.show, 1500);
+
+            newArrayObject.push(object);
+        }
+
+        return newArrayObject;
+    }
+
+    function animate(mesh, target, duration, callback){
 
         var _duration = duration || 2000,
-            x = target.x,
-            y = target.y,
-            z = target.z,
-            rx = rotation.x,
-            ry = rotation.y,
-            rz = rotation.z; 
+            x = target.position.x,
+            y = target.position.y,
+            z = target.position.z,
+            rx = target.rotation.x,
+            ry = target.rotation.y,
+            rz = target.rotation.z; 
 
         _duration = Math.random() * _duration + _duration;
 

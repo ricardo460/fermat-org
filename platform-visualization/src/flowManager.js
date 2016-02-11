@@ -116,7 +116,7 @@ function FlowManager(){
 
     this.getAndShowFlows = function(id) {
         
-        var element = window.helper.getSpecificTile(id).data;
+        var element = window.helper.getSpecificTile_(id).data;
         
         var button = window.buttonsManager.createButtons('showFlows', 'Loading flows...');
         

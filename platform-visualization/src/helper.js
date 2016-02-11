@@ -226,6 +226,9 @@ function Helper() {
             case "nodes":
                 tail = "/v1/network/node";
                 break;
+            case "user":
+                tail = "/v1/repo/devs?access_token=561fd1a5032e0c5f7e20387d&env=development";
+                break;
         }
         
         return SERVER + tail;
@@ -304,22 +307,32 @@ function Helper() {
      */
     this.searchElement = function(elementFullName) {
         
-        if(typeof elementFullName !== 'string') return -1;
+        if(typeof elementFullName !== 'string' || elementFullName === 'undefined/undefined/undefined')
+            return -1;
         
         var group,
             components = elementFullName.split('/');
         
         if(components.length === 3) {
         
-            for(var i = 0, l = window.tilesQtty; i < l; i++) {
+            for(var platfrm in window.TABLE){
 
-                group = this.getSpecificTile(i).data.group || window.layers[this.getSpecificTile(i).data.layer].super_layer;
+                for (var layer in window.TABLE[platfrm].layers){
 
-                if(group.toLowerCase() === components[0].toLowerCase() &&
-                   this.getSpecificTile(i).data.layer.toLowerCase() === components[1].toLowerCase() &&
-                   this.getSpecificTile(i).data.name.toLowerCase() === components[2].toLowerCase())
-                    return i;
+                    for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
+                    
+                        var tile = window.TABLE[platfrm].layers[layer].objects[i];
+                
+                        group = tile.data.group || window.layers[tile.data.layer].super_layer;
+
+                        if(group.toLowerCase() === components[0].toLowerCase() &&
+                           this.getSpecificTile(i).data.layer.toLowerCase() === components[1].toLowerCase() &&
+                           this.getSpecificTile(i).data.name.toLowerCase() === components[2].toLowerCase())
+                            return i;
+                    }
+                }
             }
+            
         }
 
         return -1;
@@ -417,23 +430,35 @@ function Helper() {
 
     this.fillTarget = function(x, y, z, view){
 
-        var object = new THREE.Object3D();
+        var object3D = new THREE.Object3D();
 
-        object.position.x = Math.random() * 80000 - 40000;
-        object.position.y = Math.random() * 80000 - 40000;
-        object.position.z = 80000 * 2;
+        var target = {
+                show : {},
+                hide : {}
+            };
 
-        object.position.copy(window.viewManager.translateToSection(view, object.position));
+        object3D.position.x = Math.random() * 80000 - 40000;
+        object3D.position.y = Math.random() * 80000 - 40000;
+        object3D.position.z = 80000 * 2;
 
-        var target = {  
-                show : new THREE.Vector3(x, y, z),        
-                hide : object.position,
-                showR : new THREE.Vector3(0, 0, 0),
-                hideR : new THREE.Vector3(Math.random() * 180, Math.random() * 180, Math.random() * 180)                    
-                    };
+        object3D.position.copy(window.viewManager.translateToSection(view, object3D.position));
+
+        target.hide.position = new THREE.Vector3(object3D.position.x, object3D.position.y, object3D.position.z);
+        target.hide.rotation = new THREE.Vector3(Math.random() * 180, Math.random() * 180, Math.random() * 180);
+
+        target.show.position = new THREE.Vector3(x, y, z);
+        target.show.rotation = new THREE.Vector3(0, 0, 0);
 
         return target;
     };
+
+    this.getSpecificTile_ = function(_id){
+
+        var id = _id.split("_");
+
+        return window.TABLE[id[0]].layers[id[1]].objects[id[2]];
+
+    }
 
     this.getLastValueArray = function(array){
 
