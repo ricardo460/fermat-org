@@ -160,7 +160,20 @@ describe("SUPRLAY",function(){
 
     });
 
-   
+    it("#PUT uptSprlay 404",function(done){
+
+        server
+        .get(pathTest+"/"+mongoose.Types.ObjectId().toString())
+        .expect("Content-type",/json/)
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+        });
+
+    });
 
 
     it("#PUT uptLay",function(done){
