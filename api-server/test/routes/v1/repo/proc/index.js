@@ -221,6 +221,21 @@ describe("PROC",function(){
 
   });
 
+      it("#POST addStep 404"/*,function(done){
+
+        server
+        .post(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/steps")
+        .expect("Content-type",/json/)
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+        });
+
+    }*/);
+
 
   it("#POST addStep 412",function(done){
 
@@ -266,6 +281,21 @@ describe("PROC",function(){
 
   });
 
+      it("#POST uptStep 404"/*,function(done){
+
+        server
+        .put(pathTest+"/"+mongoose.Types.ObjectId()+"/steps/"+"56ba95f0d9a8a64c30c75341")
+        .expect("Content-type",/json/)
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+        });
+
+    } */);
+
     it("#PUT uptStep 412",function(done){
 
     var dataStep = dataHelper.generateData412General();
@@ -296,6 +326,20 @@ describe("PROC",function(){
         if (err) return done(err);
 
         return done();
+    });
+
+  });
+
+  it("#DELETE delStep  404",function(done){
+
+    server
+    .delete(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/comp-devs/"+mongoose.Types.ObjectId().toString())
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+          return done();
     });
 
   });
