@@ -600,8 +600,10 @@ function TileManager() {
         }
 
         if(window.actualView === 'table') {
-            
-            headers.showHeaders(duration);
+            if(!window.headersUp) {
+                headers.showHeaders(duration);
+                window.headersUp = true;
+            }
         }
         
 
