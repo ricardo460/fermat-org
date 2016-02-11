@@ -7,7 +7,6 @@ var tilesQtty,
     objects = [],
     actualView,
     stats = null,
-    headersUp = false,
 //Class
     tileManager = new TileManager(),
     helper = new Helper(),

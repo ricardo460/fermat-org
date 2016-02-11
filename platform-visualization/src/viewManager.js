@@ -101,10 +101,7 @@ function ViewManager() {
                 case 'stack':
                     enter = function() {
 
-                        if(!window.headersUp) {
-                            headers.showHeaders(transition);
-                            window.headersUp = true;
-                        }
+
                         window.headers.transformStack(transition);
 
                         window.helper.hideBackButton();
