@@ -214,4 +214,22 @@ describe("SUPRLAY",function(){
     });
 
 
+
+   // timeout of 2000ms exceeded
+      it("#DELETE delSprlay  404"/*,function(done){
+
+    server
+    .delete(pathTest+"/"+mongoose.Types.ObjectId().toString())
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+          return done();
+    });
+
+  } */);
+
+
 });

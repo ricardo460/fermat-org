@@ -219,12 +219,9 @@ describe("COMP",function(){
   });
 
     it("#PUT uptComp 404",function(done){
-
-    var dataLifeCicle = dataHelper.generateDataLifeCicle();
-
+    
     server
     .put(pathTest+"/"+mongoose.Types.ObjectId().toString())
-    .send(dataLifeCicle)
     .expect("Content-type",/json/)
     .expect(404) // This is HTTP response
     .end(function(err, res){
