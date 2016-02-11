@@ -36,7 +36,7 @@ function ScreenshotsAndroid() {
 
 		for(var t in SCREENSHOTS){
 
-			if(SCREENSHOTS[t].id === id){
+			if(SCREENSHOTS[t].id === id && SCREENSHOTS[t].show === true){
 
 				SCREENSHOTS[t].position = new THREE.Vector3(x, y, 0);
 
@@ -169,7 +169,7 @@ function ScreenshotsAndroid() {
 
 		        				if(tile.group === _group && tile.layer === _layer && tile.name === _wallet){
 		        					
-		        					var id = i,
+		        					var id = window.helper.getSpecificTile(i)._ID,
 		        						name = json[_group][_layer][_wallet].name,
 		        						position = window.tileManager.targets.table[i].position,
 		        						_id = _group + "_" + _layer + "_" + name,
@@ -375,10 +375,10 @@ function ScreenshotsAndroid() {
 		mesh.scale.set(4, 4, 4);
 
 		var target = { x : x, y : y, z : z,
-					   px : _target.hide.x, py : _target.hide.y, pz : _target.hide.z,
+					   px : _target.hide.position.x, py : _target.hide.position.y, pz : _target.hide.position.z,
 					   rx : rx, ry : ry, rz : rz };
 
-		mesh.position.copy(_target.show);
+		mesh.position.copy(_target.hide.position);
 		mesh.rotation.set(rx, ry, rz);
 
 		window.scene.add(mesh);
