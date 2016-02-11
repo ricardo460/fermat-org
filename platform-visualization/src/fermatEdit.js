@@ -28,7 +28,7 @@ function FermatEdit() {
         type : null
     };
 
-    this.actualTile = null;
+    var actualTile = null;
 
     var tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
         tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
@@ -140,7 +140,7 @@ function FermatEdit() {
             actualTile = null;
             deleteMesh();
 
-            if(actualView === 'table'){ 
+            if(window.actualView === 'table'){ 
 
                 if(window.camera.getFocus() === null)
                     self.addButton();
@@ -193,7 +193,7 @@ function FermatEdit() {
 
         var newCenter = helper.getCenterView('table');
 
-        var y = helper.getLastValueArray(window.tileManager.dimensions.layerPositions) + (TILE_DIMENSION.height * 2);
+        var y = helper.getLastValueArray(window.tileManager.dimensions.layerPositions) + (window.TILE_DIMENSION.height * 2);
 
         var mesh = new THREE.Mesh(
                    new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
@@ -225,10 +225,12 @@ function FermatEdit() {
             createElement();
 
         var mesh = objects.tile.mesh;
+        
+        var exit = null;
 
         if(actions.type === "new") {
 
-            var exit = function(){
+            exit = function(){
                 window.camera.resetPosition();
             };
 
@@ -251,7 +253,7 @@ function FermatEdit() {
         }
         else{
 
-            var exit = function(){
+            exit = function(){
                 window.camera.resetPosition();
             };
 
@@ -263,7 +265,7 @@ function FermatEdit() {
 
                 window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 1500);
 
-                window.tileManager.transform(tileManager.targets.table, 1000);
+                window.tileManager.transform(window.tileManager.targets.table, 1000);
                 window.signLayer.transformSignLayer();
 
                 setTimeout( function() {
@@ -700,7 +702,7 @@ function FermatEdit() {
     function changeTexture(){
 
         var table = null,
-            scale = 5, //5
+            scale = 3, //5
             mesh = null;
 
         table = fillTable(true);
@@ -763,7 +765,7 @@ function FermatEdit() {
 
         var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
 
-        var count = TABLE[platform].layers[layer].objects.length;
+        var count = window.TABLE[platform].layers[layer].objects.length;
 
         object._ID = platform + '_' + layer + '_' + count;
 
@@ -772,9 +774,9 @@ function FermatEdit() {
         x = 0;
 
         if(!lastObject)
-            x = TABLE[platform].x;
+            x = window.TABLE[platform].x;
         else
-            x = lastObject.target.show.position.x + TILE_DIMENSION.width;
+            x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
 
         y = window.tileManager.dimensions.layerPositions[table.layerID];
 
@@ -810,7 +812,7 @@ function FermatEdit() {
             oldLayer = self.actualTile.layer,
             oldGroup = self.actualTile.group || window.layers[self.actualTile.layer].super_layer;
 
-        var arrayObject = TABLE[oldGroup].layers[oldLayer].objects;
+        var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
 
         for(var i = 0; i < arrayObject.length; i++){
             
@@ -821,7 +823,7 @@ function FermatEdit() {
             }
         }
 
-        var positionCameraX = TABLE[oldGroup].x,
+        var positionCameraX = window.TABLE[oldGroup].x,
             positionCameraY = helper.getPositionYLayer(oldLayer);
 
         window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
@@ -837,7 +839,7 @@ function FermatEdit() {
 
         function change(){
 
-            TABLE[oldGroup].layers[oldLayer].objects = [];
+            window.TABLE[oldGroup].layers[oldLayer].objects = [];
             var idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
 
             window.screenshotsAndroid.deleteScreenshots(idScreenshot);
@@ -850,11 +852,11 @@ function FermatEdit() {
                 }
             }
 
-            TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+            window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
 
             setTimeout( function() { 
 
-                positionCameraX = TABLE[newGroup].x,
+                positionCameraX = window.TABLE[newGroup].x,
                 positionCameraY = window.helper.getPositionYLayer(newLayer);
                 camera.move(positionCameraX, positionCameraY,8000, 2000);
                 createNewElementTile(table);
@@ -866,7 +868,7 @@ function FermatEdit() {
 
         function notChange(){
 
-            var arrayObject = TABLE[oldGroup].layers[oldLayer].objects;
+            var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
             var target = null;
             var _ID = null;
             var id = 0;
@@ -881,15 +883,15 @@ function FermatEdit() {
                 if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
 
                     id = i;
-                    TABLE[oldGroup].layers[oldLayer].objects[i].data = table;
-                    target = TABLE[oldGroup].layers[oldLayer].objects[i].target;
-                    _ID = TABLE[oldGroup].layers[oldLayer].objects[i]._ID;
+                    window.TABLE[oldGroup].layers[oldLayer].objects[i].data = table;
+                    target = window.TABLE[oldGroup].layers[oldLayer].objects[i].target;
+                    _ID = window.TABLE[oldGroup].layers[oldLayer].objects[i]._ID;
                 }
             }
 
             var mesh = window.tileManager.createElement(_ID, table);
 
-            TABLE[oldGroup].layers[oldLayer].objects[id].mesh = mesh;
+            window.TABLE[oldGroup].layers[oldLayer].objects[id].mesh = mesh;
 
             window.scene.add(mesh);
             
@@ -914,8 +916,8 @@ function FermatEdit() {
                 ID : null
             };
 
-        if(typeof TABLE[platform].layers[layer] === 'undefined'){ 
-            TABLE[platform].layers[layer] = {   
+        if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
+            window.TABLE[platform].layers[layer] = {   
                 objects : [],
                 y : window.helper.getPositionYLayer(layer)
             };
@@ -923,7 +925,7 @@ function FermatEdit() {
 
         var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
 
-        var count = TABLE[platform].layers[layer].objects.length;
+        var count = window.TABLE[platform].layers[layer].objects.length;
 
         object._ID = platform + '_' + layer + '_' + count;
 
@@ -932,9 +934,9 @@ function FermatEdit() {
         x = 0;
 
         if(!lastObject)
-            x = TABLE[platform].x;
+            x = window.TABLE[platform].x;
         else
-            x = lastObject.target.show.position.x + TILE_DIMENSION.width;
+            x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
 
         y = window.helper.getPositionYLayer(layer);
 
@@ -953,7 +955,7 @@ function FermatEdit() {
 
         animate(mesh, target.show, 2500);
                 
-        TABLE[platform].layers[layer].objects.push(object);
+        window.TABLE[platform].layers[layer].objects.push(object);
 
     }
 
@@ -1029,25 +1031,25 @@ function FermatEdit() {
 
         var oldLayer = table.layer,
             oldGroup = table.group || window.layers[table.layer].super_layer,
-            arrayObject = TABLE[oldGroup].layers[oldLayer].objects,
+            arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects,
             idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
 
         window.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
-        var positionCameraX = TABLE[oldGroup].x,
+        var positionCameraX = window.TABLE[oldGroup].x,
             positionCameraY = helper.getPositionYLayer(oldLayer);
 
         window.camera.loseFocus();
         window.camera.enable();
 
-        window.tileManager.transform(tileManager.targets.table, 1000);
+        window.tileManager.transform(window.tileManager.targets.table, 1000);
         window.signLayer.transformSignLayer();
 
         window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
 
         setTimeout( function() {
 
-            TABLE[oldGroup].layers[oldLayer].objects = [];
+            window.TABLE[oldGroup].layers[oldLayer].objects = [];
        
             id = id.split("_");
 
@@ -1063,7 +1065,7 @@ function FermatEdit() {
 
             arrayObject.splice(id, 1);
 
-            TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+            window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
 
         }, 3500 );
  
@@ -1100,9 +1102,9 @@ function FermatEdit() {
             x = 0;
 
             if(!lastObject)
-                x = TABLE[oldGroup].x;
+                x = window.TABLE[oldGroup].x;
             else
-                x = lastObject.target.show.position.x + TILE_DIMENSION.width;
+                x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
 
             y = window.helper.getPositionYLayer(oldLayer);
 
@@ -1154,3 +1156,4 @@ function FermatEdit() {
     }
     
 }
+
