@@ -23,7 +23,7 @@ function ButtonsManager() {
 
         self.removeAllButtons();
 
-        if(window.helper.getSpecificTile(id).data.author) {
+        if(window.helper.getSpecificTile_(id).data.author) {
 
             self.createButtons('developerButton', 'View developer', function(){
 
