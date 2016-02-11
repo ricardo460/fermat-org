@@ -94,6 +94,7 @@ button:active {
 */
 
 #div-Edit1 {
+    
     top: 0.5%;
     position: relative;
     width: 100%;
@@ -112,9 +113,11 @@ button:active {
     display:-webkit-box;
     -webkit-box-pack:center;
     -webkit-box-align:center;
+    
 }
 
 #div-Edit2 {
+    
     position:relative;
     display: inline-block;
     width:100%;
@@ -131,15 +134,37 @@ button:active {
     display:-webkit-box;
     -webkit-box-pack:center;
     -webkit-box-align:center;
-}
-
-.edit-Fermat {
-    font-size: 52%;
-    color: rgba(127,127,127,1);
+    
 }
 
 #select-layer {
+    
     width:18.3%;
+    
+}
+
+label.edit-Fermat {
+    
+    margin-left: 5px;
+    
+}
+
+select.edit-Fermat {
+    
+    -moz-appearance: none;
+    -webkit-appearance:none;
+    
+    background: url(images/select_arrow.png) no-repeat right;
+    border: 1px solid rgb(15, 184, 157);
+    color: rgba(127,127,127,1);
+    
+}
+
+input.edit-Fermat {
+    
+    border: 1px solid rgb(15, 184, 157);
+    color: rgba(127,127,127,1);
+    
 }
 
 /** 
