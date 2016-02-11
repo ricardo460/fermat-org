@@ -13,26 +13,6 @@
             "enabled" : true
         },
 
-        "canvas": {
-            "up": "",
-            "down": "",
-            "right": "",
-            "left": "",
-            "section" : [],
-            "title" : "Render",
-            "enabled" : true
-        },
-
-        "webgl": {
-            "up": "",
-            "down": "",
-            "right": "",
-            "left": "",
-            "section" : [],
-            "title" : "Render",
-            "enabled" : true
-        },
-
         "learn": {
             "up": "home",
             "down": "book",

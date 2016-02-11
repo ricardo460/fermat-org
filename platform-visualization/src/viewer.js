@@ -8,6 +8,7 @@ var tilesQtty,
     actualView,
     stats = null,
     headersUp = false,
+    newRender = null,
 //Class
     tileManager = new TileManager(),
     helper = new Helper(),
@@ -175,8 +176,8 @@ function init() {
  */
 function goToView ( targetView ) {
     
-    if(targetView) {
-        if(window.map.views[targetView].title !== "Render") {
+    //if(targetView) {
+       // if(window.map.views[targetView].title !== "Render") {
             var newCenter = new THREE.Vector3(0, 0, 0);
             var transition = 5000;
 
@@ -186,19 +187,19 @@ function goToView ( targetView ) {
             camera.lockPan();
         
             setTimeout(function() { camera.moving = false; }, transition);
-        }
-    }
+        //}
+    //}
 
     if(window.map.views[targetView] != null) {
         if(actualView != targetView){
             
-            if(actualView && window.map.views[targetView].title !== "Render")
+            if(actualView /*&& window.map.views[targetView].title !== "Render"*/)
                 viewManager.views[actualView].exit();
 
             viewManager.views[targetView].enter();
         }
 
-        if(window.map.views[targetView].title !== "Render")
+        //if(window.map.views[targetView].title !== "Render")
             actualView = targetView;
     }
     else
@@ -219,11 +220,15 @@ function initPage() {
 
             if(window.actualView !== undefined && window.actualView !== ""){ 
 
-    			if(view !== undefined && view !== ""){
+    			if(view !== undefined && view !== ""  && view !== 'canvas' && view !== 'webgl'){
 
     				if(window.map.views[view].enabled !== undefined && window.map.views[view].enabled)
     					goToView(view);
     			}
+                else if(path === 'canvas' || path === 'webgl'){
+                    currentRender = createScene(currentRender,path);
+                    change = false;
+                }
             }
             else{
                 goToView(window.location.hash.slice(1));

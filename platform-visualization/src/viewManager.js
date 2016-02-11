@@ -84,12 +84,14 @@ function ViewManager() {
                     };                    
                     
                     exit = function() {
+                        console.log("exit");
                         window.tileManager.rollBack();
 
                         buttonsManager.removeAllButtons();
                     };
 
                     reset = function() {
+                        console.log("reset");
                         window.tileManager.rollBack();
 
                         setTimeout(function(){
@@ -118,18 +120,6 @@ function ViewManager() {
                         window.logo.stopFade(2000);
                     };
                     
-                    break;
-                case 'canvas':
-                    enter = function() {
-                        window.currentRender = createScene(window.currentRender, "canvas");
-                    };
-
-                    break;
-                case 'webgl':
-                    enter = function() {
-                        window.currentRender = createScene(window.currentRender, "webgl");
-                    };
-
                     break;
                 case 'book':
                 case 'readme':
