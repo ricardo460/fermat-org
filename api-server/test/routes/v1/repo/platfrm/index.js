@@ -209,7 +209,7 @@ describe("SUPRLAY",function(){
 
     });
 
-     it("#DELETE delPltf 404"/*,function(done){
+     it("#DELETE delPltf 404",function(done){
 
         server
         .delete(pathTest+"/"+mongoose.Types.ObjectId().toString())
@@ -222,7 +222,7 @@ describe("SUPRLAY",function(){
           return done();
         });
 
-    } */);
+    } );
 
 
 });

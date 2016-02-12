@@ -217,7 +217,7 @@ describe("COMP",function(){
     });
 
   });
-
+ ////Akii
     it("#PUT uptComp 404",function(done){
     
     server
@@ -336,7 +336,7 @@ describe("COMP",function(){
 
   });
 
-  it("#POST addCompDev 404"/*,function(done){
+  it("#POST addCompDev 404",function(done){
 
     server
     .post(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/comp-devs")
@@ -349,7 +349,7 @@ describe("COMP",function(){
       return done();
     });
 
-  }*/);
+  });
 
   it("#PUT uptCompDev",function(done){
 
