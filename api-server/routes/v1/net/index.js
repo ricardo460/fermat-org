@@ -10,15 +10,11 @@ var cache = new Cache({
     time: 36000000
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/net/servrs
+ * @apiName GetServer 
+ * @apiGroup Net
+ * @apiDescription [description].
+ * @apiSuccess {[type]} [description]
  */
 router.get('/servrs', function (req, res, next) {
     'use strict';
@@ -50,15 +46,12 @@ router.get('/servrs', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/net/nodes/:hash/childrn
+ * @apiName GetChildren 
+ * @apiGroup Net
+ * @apiDescription Descripcion.
+ * @apiParam {Hash} hash [description].
+ * @apiSuccess {[type]} [description]
  */
 router.get('/nodes/:hash/childrn', function (req, res, next) {
     'use strict';
