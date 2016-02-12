@@ -3,11 +3,12 @@ var router = express.Router();
 var authMod = require('../../../modules/auth');
 var config = require('../../../config.js');
 /**
- * Get autorization for use the api
- * @param  {[type]} req   [description]
- * @param  {[type]} resp  [description]
- * @param  {[type]} next) [description]
- * @return {[type]}       [description]
+ * @api {get} /login
+ * @apiName login
+ * @apiDescription Register the user and returns the authorization to use the api.
+ * @apiParam {Request} req Request of the client.
+ * @apiParam {Response} resp  Response to client.
+ * @apiParam {Callback} next  Represent function asincronous.
  */
 router.get('/login', function (req, resp, next) {
     'use strict';
@@ -31,11 +32,13 @@ router.get('/login', function (req, resp, next) {
     }
 });
 /**
- * [description]
- * @param  {[type]} req   [description]
- * @param  {[type]} resp  [description]
- * @param  {[type]} next) [description]
- * @return {[type]}       [description]
+ * @api {get} /logout
+ * @apiName logout
+ * @apiDescription Removes the token.
+ * @apiParam {Request} req Request of the client.
+ * @apiParam {Response} resp  Response to client.
+ * @apiParam {Callback} next  Represent function asincronous.
+ * @apiSuccess {Boolean} isLogout It indicates that the token has been removed.
  */
 router.get('/logout', function (req, resp, next) {
     'use strict';
