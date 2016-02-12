@@ -1,10 +1,17 @@
-function Login (){
+function Session (){
 
-	var self = this;
+	var isLogin;
 	var api_key = "56a10473b27e63185c6970d6";
 	var axs_key;
 	var usr;
 
+	this.getIsLogin = function(){
+		return isLogin;
+	};
+
+	this.getUserLogin = function(){
+		return usr;
+	};
 	/**
 	 * Login with github and gets the authorization code
 	 */
@@ -29,7 +36,10 @@ function Login (){
 			console.log("Logout", data);
 			if(data !== undefined)
 				if (data === true) {
-					window.location.href = window.location.protocol + "//" + window.location.host;
+					isLogin = false;
+					$("#login").fadeIn(2000);
+					$("#logout").fadeOut(2000);
+					usr = undefined;
 				}
 		});
 	};
@@ -37,9 +47,10 @@ function Login (){
 	/**
 	 * Logged to the user and returns the token
 	 */
-	function login() {
+	this.login = function() {
 		var url = window.helper.getAPIUrl("login") + "?code=" + code + "&api_key=" + api_key;
 		console.log("url: " + url);
+		
 		$.ajax({
 			url : url,
 			type : "GET",
@@ -51,26 +62,24 @@ function Login (){
 			axs_key = tkn.axs_key;
 			if (usr !== undefined) {
 				
-				window.isLogin = true;
+				isLogin = true;
 
 				console.log("Logueado Completamente: " + usr.name);
 
-				getData();
-
-     			$("#login").text("Logout");
-     			$("#login").attr("id", "logout");
+     			$("#login").fadeOut(2000);
+     			$("#logout").fadeIn(2000);
 
      			drawUser(usr);
 			} else
 				console.log("Error:", tkn);
 		});
-	}
+	};
 
 	function drawUser(user){
 		var texture;
 
 		texture = createTextureUser(user);
-		meshUserLogin = new THREE.Mesh(
+		var meshUserLogin = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(230, 120),
             new THREE.MeshBasicMaterial({ transparent : true, color : 0xFFFFFF}));
 
@@ -79,7 +88,7 @@ function Login (){
 		meshUserLogin.scale.set(75, 75, 75);
 		meshUserLogin.position.y = 28500;
 		meshUserLogin.position.x = 50000;
-		scene.add(meshUserLogin);
+		//scene.add(meshUserLogin);
 	}
 
 	function createTextureUser(user){
@@ -87,7 +96,10 @@ function Login (){
 		var canvas = document.createElement('canvas');
         canvas.width = 183 * 5 ;
         canvas.height = 92 * 5;
+        canvas.style.height = '100px';
+        canvas.id = "canvasLogin";
 
+        document.getElementById('containerLogin').appendChild(canvas);
         var ctx = canvas.getContext('2d');
         ctx.globalAlpha = 0;
         ctx.fillStyle = "#FFFFFF";
@@ -203,6 +215,6 @@ function Login (){
 
 	var code = window.location.toString().replace(/.+code=/, '');
 	if ((code.indexOf("/") < 0)) {
-		login();
+		this.login();
 	}
 }

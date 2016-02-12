@@ -209,7 +209,7 @@ function Helper() {
      */
     this.getAPIUrl = function(route) {
         
-        var SERVER = "http://52.35.117.6";
+        var SERVER = "http://52.36.181.25";
         var tail = "";
         
         switch(route) {

@@ -193,16 +193,14 @@ function Camera(position, renderer, renderFunc) {
      */
     this.onKeyDown = function( event ) {
         
-        if(window.actualView !== undefined){
-            if ( event.keyCode === 27 /* ESC */ ) {
-                //TWEEN.removeAll();
-                var duration = 2000;
+        if ( event.keyCode === 27 /* ESC */ ) {
+            //TWEEN.removeAll();
+            var duration = 2000;
 
-                if(viewManager.views && viewManager.views[window.actualView])
-                    viewManager.views[window.actualView].reset();
+            if(viewManager.views && viewManager.views[window.actualView])
+                viewManager.views[window.actualView].reset();
 
-                self.resetPosition(duration);
-            }
+            self.resetPosition(duration);
         }
     };
     

@@ -13,7 +13,7 @@ var tilesQtty,
     logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),
-    login = new Login(),
+    session = new Session(),
     fermatEdit = null,
     browserManager = null,
     screenshotsAndroid = null,
@@ -22,7 +22,6 @@ var tilesQtty,
     viewManager = null,
     magazine = null,
     networkViewer = null,
-    isLogin,
     buttonsManager = null;
 //Global constants
 var TILE_DIMENSION = {
@@ -32,11 +31,16 @@ var TILE_DIMENSION = {
     TILE_SPACING = 20;
 
 createScene();
+getData();
 
-if(isLogin !== true)
-    $('#login').click(function() {
-        window.login.getAuthCode();
-    });
+$('#login').click(function() {
+        window.session.getAuthCode();
+});
+
+$('#logout').click(function() {
+        window.session.logout();
+        document.getElementById("containerLogin").style.display = "none";
+});
 
 /**
  * Creates the rendering environment
@@ -132,9 +136,6 @@ function init() {
         }
     });
     
-    $('#logout').click(function() {
-        window.login.logout();
-    });
             
     $('#container').click(onClick);
 
@@ -509,3 +510,5 @@ function render() {
     //renderer.render( scene, camera );
     camera.render(renderer, scene);
 }
+
+
