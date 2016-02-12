@@ -51,7 +51,6 @@ function SignLayer(){
  	* function create a Sign Layer
  	*/
 	this.createSignLayer = function(x, y, titleSign, _group){
-
 		var mesh;
 		var source = "images/sign/sign.png";
 
@@ -70,9 +69,44 @@ function SignLayer(){
         };
 
         mesh = createBoxSignLayer(source, fillBox, 720, 140);
+        mesh.name = _group.concat(titleSign);
 		mesh = self.setPositionSignLayer(mesh, x , y);
 		window.scene.add(mesh);
 	};
+
+    /**
+    * @author Isaias Taborda
+    * @param   {_group}    [string] sign layer's group    
+    * @param   {titleSign} [string] sign layer's name     
+    * function delete a Sign Layer
+    */
+    this.deleteSignLayer = function(_group, titleSign){
+        var objectsSize = objects.length;
+        for(var i=0; i<objectsSize; i++) {
+            if(objects[i].name === _group.concat(titleSign)) {
+                this.removeSignLayer(i);
+                setTimeout(function(){
+                    window.scene.remove(objects[i]);
+                    objects.splice(i,1);
+                    positions.target.splice(i,1);
+                    positions.lastTarget.splice(i,1);
+                }, 5000);
+                break;
+            }
+        }
+    };
+
+    this.removeSignLayer = function(pos){
+        var duration = 5000;
+        new TWEEN.Tween(objects[pos].position)
+            .to({
+                x : positions.lastTarget[pos].x,
+                y : positions.lastTarget[pos].y,
+                z : positions.lastTarget[pos].z
+            },duration)
+            .easing(TWEEN.Easing.Bounce.In)
+            .start();
+    };
 
 	/**
  	* @author Emmanuel Colina
