@@ -209,7 +209,8 @@ function Helper() {
      */
     this.getAPIUrl = function(route) {
         
-        var SERVER = "http://52.35.117.6:3000";
+        //var SERVER = "http://52.35.117.6:3000";
+        var SERVER = "http://api.fermat.org:3000";
         var tail = "";
         
         switch(route) {
@@ -232,6 +233,65 @@ function Helper() {
         }
         
         return SERVER + tail;
+    };
+
+    this.postRoutesComponents = function(route, params, usr_id, comp_id, doneCallback){
+
+        var SERVER = "http://api.fermat.org:3000",
+            tail = "",
+            method = "",
+            setup = {};
+
+        switch(route) {
+                
+            case "insert":
+                method = "POST";
+                tail = "/v1/repo/usrs/" + usr_id + "/comps";
+                break;
+            case "delete":
+                method = "DELETE";
+                tail = "/v1/repo/usrs/" + usr_id + "/comps/" + comp_id;
+                break;
+            case "update":
+                method = "PUT";
+                tail = "/v1/repo/usrs/" + usr_id + "/comps/" + comp_id;
+                break;
+        }
+
+        setup.method = method;
+        setup.url = SERVER + tail;
+        setup.data = params;
+
+        $.ajax(setup)
+        .done(function(res) {
+        
+            doneCallback(res);
+        })
+        .fail(function(res) {
+        
+            alert("Conexion Fallida");
+        });
+
+            /*
+                params = {
+                usr_id: 1,
+                platfrm_id: 2,
+                suprlay_id: 3,
+                layer_id: 4,
+                name: "",
+                type: "",
+                description: "",
+                difficulty: "",
+                code_level: 123 ,
+                repo_dir: "wqeqwe",
+                scrnshts: false,
+                found: false //verificar si existe
+                };
+
+            */
+            //usr._id
+           // usr.github_tkn
+
     };
     
     /**
