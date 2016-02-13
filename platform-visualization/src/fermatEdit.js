@@ -3,6 +3,8 @@
  */
 function FermatEdit() {
 
+    var DATA_USER = {};
+
     var objects = {
             row1 : {
                 div : null,
@@ -21,52 +23,32 @@ function FermatEdit() {
             idFields : {}
         };
 
+    var actions = { 
+        exit : null,
+        type : null
+    };
+
+    var actualTile = null;
+
     var tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
         tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
 
     var self = this;
 
-    var testDataUser = [
-            {
-               "_id": null,
-               "usrnm": "campol",
-               "upd_at": null,
-               "bio": null,
-               "url": "https://github.com/campol",
-               "avatar_url": "https://avatars3.githubusercontent.com/u/12051946?v=3&s=400",
-               "location": null,
-               "bday": null,
-               "name": "Luis Campo",
-               "email": "campusprize@gmail.com",
-               "__v": null
-            },
-            {
-               "_id": null,
-               "usrnm": "Miguelcldn",
-               "upd_at": null,
-               "bio": null,
-               "url": "https://github.com/Miguelcldn",
-               "avatar_url": "https://avatars1.githubusercontent.com/u/5544266?v=3&s=400",
-               "location": null,
-               "bday": null,
-               "name": "Miguel Celedon",
-               "email": "miguelceledon@outlook.com",
-               "__v": null 
-            },
-            {
-               "_id": null,
-               "usrnm": "fvasquezjatar",
-               "upd_at": null,
-               "bio": null,
-               "url": "https://github.com/fvasquezjatar",
-               "avatar_url": "https://avatars2.githubusercontent.com/u/8290154?v=3&s=400",
-               "location": null,
-               "bday": null,
-               "name": "Francisco Vasquez",
-               "email": "fvasquezjatar@gmail.com",
-               "__v": null 
-            }
-        ];
+    this.init = function(){
+
+        var url = window.helper.getAPIUrl("user");
+
+        $.ajax({
+            url: url,
+            method: "GET"
+        }).success(
+            function(user) {
+
+                DATA_USER = user;
+
+            });
+    };
 
     /**
      * @author Ricardo Delgado
@@ -77,21 +59,50 @@ function FermatEdit() {
         var id = _id || null,
             text = 'Edit Component',
             button = 'buttonFermatEdit',
-            side = null;
+            side = null,
+            callback = null;
 
-        var callback = function(){ 
-                addAllFilds();
-                fillFields(id);
-                drawTile(id); 
-            };
+        callback = function(){
+
+            actions.type = "modify";
+
+            window.buttonsManager.removeAllButtons(); 
+            addAllFilds();
+            fillFields(id);
+            drawTile(id);
+        };
 
         if(id === null){
+
             callback = function(){ 
+
+                actions.type = "new";
+
+                window.buttonsManager.removeAllButtons();
+
                 drawTile(null, addAllFilds);
             };
 
             text = 'Add New Component';
             button = 'buttonFermatNew';
+            side = 'right';
+        }
+        else{
+
+            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+
+            callback = function(){
+
+                if(confirm("Really remove this component?")){ 
+            
+                    window.buttonsManager.removeAllButtons();
+                    self.addButton();
+                    deleteTile(id);
+                }
+            };
+
+            text = 'Delete Component';
+            button = 'buttonFermatDelete';
             side = 'right';
         }
 
@@ -126,18 +137,33 @@ function FermatEdit() {
             objects.row1.div = null;
             objects.row2.div = null;
             objects.idFields = {};
+            actualTile = null;
             deleteMesh();
-            //self.addButton();
+
+            if(window.actualView === 'table'){ 
+
+                if(window.camera.getFocus() === null)
+                    self.addButton();
+
+                if(typeof(actions.exit) === 'function'){
+                    actions.exit();
+                    actions.exit = null;
+                }
+            }
 
         }
     };
 
     function fillFields(id){
 
-        var tile = window.table[id]; 
+        var tile = window.helper.getSpecificTile_(id).data; 
+
+        self.actualTile = tile;
 
         if(tile.group !== undefined)
             document.getElementById('select-Platform').value = tile.group;
+        else
+            document.getElementById('select-Platform').value = window.layers[tile.layer].super_layer;
 
         changeLayer(document.getElementById('select-Platform').value);
 
@@ -165,13 +191,9 @@ function FermatEdit() {
 
     function createElement() {
 
-        var px = Math.random() * 80000 - 40000,
-            py = Math.random() * 80000 - 40000,
-            pz = 80000 * 2,
-            rx = Math.random() * 180,
-            ry = Math.random() * 180,
-            rz = Math.random() * 180,
-            newCenter = new THREE.Vector3(0, 0, 0);
+        var newCenter = helper.getCenterView('table');
+
+        var y = helper.getLastValueArray(window.tileManager.dimensions.layerPositions) + (window.TILE_DIMENSION.height * 2);
 
         var mesh = new THREE.Mesh(
                    new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
@@ -182,23 +204,15 @@ function FermatEdit() {
                         })
                 );
 
-        mesh.userData = {
-           // onClick : onClick
-        };
+        var target = window.helper.fillTarget(newCenter.x, y, newCenter.z, 'table');
 
-        newCenter = window.viewManager.translateToSection('table', newCenter);
+        mesh.position.copy(target.hide.position);
 
-        var target = { x : newCenter.x, y : newCenter.y, z : newCenter.z,
-                       px : px, py : py, pz : pz,
-                       rx : rx, ry : ry, rz : rz };
-
-        mesh.position.set(px, py, pz);
-
-        mesh.rotation.set(rx, ry, rz);
+        mesh.rotation.copy(target.hide.rotation);
 
         mesh.renderOrder = 1;
 
-        scene.add(mesh);
+        window.scene.add(mesh);
 
         objects.tile.mesh = mesh;
 
@@ -211,16 +225,20 @@ function FermatEdit() {
             createElement();
 
         var mesh = objects.tile.mesh;
+        
+        var exit = null;
 
-        if (window.camera.getFocus() === null) {
+        if(actions.type === "new") {
 
-            window.tileManager.letAlone();
+            exit = function(){
+                window.camera.resetPosition();
+            };
 
-            animate(mesh, objects.tile.target, true, 500, function(){ 
+            actions.exit = exit;
+
+            animate(mesh, objects.tile.target.show, 1000, function(){ 
 
                 window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 2000);
-                
-                window.headers.hideHeaders(2000);
 
                 if(typeof(callback) === 'function')
                     callback(); 
@@ -235,15 +253,25 @@ function FermatEdit() {
         }
         else{
 
-            var position = window.tileManager.targets.table[id].position;
+            exit = function(){
+                window.camera.resetPosition();
+            };
 
-            animate(window.objects[id], objects.tile.target, false, 2000);
+            actions.exit = exit;
 
             changeTexture();
 
-            animate(mesh, position, true, 1500, function(){ 
+            animate(mesh, objects.tile.target.show, 1000, function(){ 
 
-                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 1000);
+                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 1500);
+
+                window.tileManager.transform(window.tileManager.targets.table, 1000);
+                window.signLayer.transformSignLayer();
+
+                setTimeout( function() {
+                    var data = helper.getSpecificTile_(id);
+                    animate(data.mesh, data.target.hide, 1000);
+                }, 2000 );
 
             });
 
@@ -265,6 +293,34 @@ function FermatEdit() {
         sesionMaintainer();
         sesionState();
         createbutton();
+        setTextSize();
+        
+        function setSelectImages(select) {
+            
+            select.style.backgroundSize = select.offsetHeight + "px";
+            select.style.width = select.offsetWidth + select.offsetHeight + "px";
+            
+        }
+        
+        function setTextSize() {
+            
+            var object = {
+                id : "fermatEditStyle",
+                text : "style"
+              };
+
+            objects.row2.buttons.push(object);
+
+            var windowWidth  = window.innerWidth;
+            var size         = windowWidth * 0.009;
+            var style        = document.createElement("style");
+            var styleSheet   = ".edit-Fermat {font-size:"+size+"px;}";
+            var node         = document.createTextNode(styleSheet);
+            
+            style.appendChild(node);
+            document.body.appendChild(style);
+            
+        }
 
         function createDiv(row){
 
@@ -305,10 +361,7 @@ function FermatEdit() {
                       
             button.id = id;
             button.className = 'edit-Fermat';
-            button.style.position = 'absolute';
             button.innerHTML = text;
-            button.style.top = objects['row' + row].y + 'px';
-            button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + x) + 'px';
             button.style.zIndex = 10;
             button.style.opacity = 0;
 
@@ -373,6 +426,8 @@ function FermatEdit() {
                 changeLayer(document.getElementById(id).value);
                 changeTexture();
             });
+            
+            setSelectImages(document.getElementById(id));
         }
 
         function sesionLayer(){
@@ -391,6 +446,8 @@ function FermatEdit() {
             
                 changeTexture();
             });
+            
+            setSelectImages(document.getElementById(id));
         }
 
         function sesionType(){
@@ -418,6 +475,8 @@ function FermatEdit() {
             
                 changeTexture();
             });
+            
+            setSelectImages(document.getElementById(id));
 
         }
 
@@ -444,10 +503,8 @@ function FermatEdit() {
 
             var sucesorButton = document.getElementById(idSucesor);
                   
-            button.placeholder = 'Component Name';      
-            button.style.position = 'absolute';
-            button.style.top = objects.row2.y + 'px';
-            button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
+            button.className = 'edit-Fermat';
+            button.placeholder = 'Component Name';
             button.style.zIndex = 10;
             button.style.opacity = 0;
 
@@ -485,10 +542,8 @@ function FermatEdit() {
 
             var sucesorButton = document.getElementById(idSucesor);
 
+            button.className = 'edit-Fermat';
             button.placeholder = 'Github User';     
-            button.style.position = 'absolute';
-            button.style.top = objects.row2.y + 'px';
-            button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
             button.style.zIndex = 10;
             button.style.opacity = 0;
 
@@ -535,6 +590,8 @@ function FermatEdit() {
             
                 changeTexture();
             });
+            
+            setSelectImages(document.getElementById(id));
 
         }
 
@@ -561,10 +618,8 @@ function FermatEdit() {
 
             var sucesorButton = document.getElementById(idSucesor);
                   
-            button.placeholder = 'Github User';      
-            button.style.position = 'absolute';
-            button.style.top = objects.row2.y + 'px';
-            button.style.left = (sucesorButton.offsetLeft + sucesorButton.clientWidth + 5) + 'px';
+            button.className = 'edit-Fermat';
+            button.placeholder = 'Github User';    
             button.style.zIndex = 10;
             button.style.opacity = 0;
 
@@ -604,20 +659,20 @@ function FermatEdit() {
             
                 changeTexture();
             });
+            
+            setSelectImages(document.getElementById(id));
 
         }
 
         function createbutton(){
-
-            var id = 'button-save'; text = 'Save'; type = 'button';
-
-            var button = createField(id, text, 20, type, 2);
-
-            button.className = 'actionButton';
             
-            button.addEventListener('click', function() {
+            var id = 'button-save', text = 'Save', type = 'button';
+            
+            window.buttonsManager.createButtons(id, text, function(){
+                actions.exit = null;
+                saveTile();            
 
-            });
+            }, null, null, "right");
 
         }
 
@@ -640,78 +695,23 @@ function FermatEdit() {
 
         }
 
-        $("#select-layer").html(option);          
+        $("#select-layer").html(option);  
+        
     }
 
     function changeTexture(){
 
-        var table = {},
-            data = {},
-            scale = 5,
+        var table = null,
+            scale = 3, //5
             mesh = null;
 
-        table.group = document.getElementById(objects.idFields.platform).value;
-        table.layer = document.getElementById(objects.idFields.layer).value;
-        table.type = document.getElementById(objects.idFields.type).value;
-        table.code_level = document.getElementById(objects.idFields.state).value;
-        table.difficulty = document.getElementById(objects.idFields.difficulty).value;
-        table.name = document.getElementById(objects.idFields.name).value;
-        table.code = fillCode(document.getElementById(objects.idFields.name).value);
-        table.author = document.getElementById(objects.idFields.author).value;
-        table.maintainer = document.getElementById(objects.idFields.maintainer).value;
-        table.found = true;
-
-        data = dataUser(table.author);
-
-        table.picture = data.picture;
-        table.authorRealName = data.authorRealName;
-
-        data = dataUser(table.maintainer);
-
-        table.maintainerPicture = data.picture;
-        table.maintainerRealName = data.authorRealName;
+        table = fillTable(true);
 
         mesh = objects.tile.mesh;
 
         mesh.material.map = window.tileManager.createTexture(null, 'high', tileWidth, tileHeight, scale, table); 
         mesh.material.needsUpdate = true; 
 
-        function dataUser(user){
-
-            var data = {};
-
-            for(var i = 0; i < testDataUser.length; i++){
-
-                if(user.toLowerCase() === testDataUser[i].usrnm.toLowerCase()){
-
-                    data.picture = testDataUser[i].avatar_url;
-                    data.authorRealName = testDataUser[i].name;
-                    data.authorEmail = testDataUser[i].email;
-                }
-            }
-
-            return data;
-        }
-
-        function fillCode(text){
-
-            var code = '',
-                words = text.split(" "),
-                cantWord = words.length,
-                end = 1;
-
-            if(cantWord === 1)       
-                end = 3;
-            else if(cantWord === 2)
-                end = 2;
-
-            for(var i = 0; i < words.length; i++){
-
-                code += words[i].substr(0, end);
-            }
-
-            return code;
-        }
     }
 
     function deleteMesh(){
@@ -720,7 +720,7 @@ function FermatEdit() {
 
         if(mesh != null){
 
-            animate(mesh, objects.tile.target, false, 1500, function(){ 
+            animate(mesh, objects.tile.target.hide, 1500, function(){ 
                     window.scene.remove(mesh);
                 });
 
@@ -728,36 +728,419 @@ function FermatEdit() {
         }
     }
 
-    function animate(mesh, target, state, duration, callback){
+    function saveTile(){
+
+        var table = fillTable(false);
+
+        window.camera.loseFocus();
+        window.camera.enable();
+
+        if(actions.type === "new")
+            newTile(table);
+        else if(actions.type === "modify")
+            modifyTile(table);
+    
+    }
+
+    function newTile(table){
+
+        var x, y, z;
+
+        var platform = table.group || window.layers[table.layer].super_layer,
+            layer = table.layer,
+            object = { 
+                mesh : null,
+                data : {},
+                target : {},
+                _ID : null,
+                ID : null
+            };
+
+        if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
+            window.TABLE[platform].layers[layer] = {   
+                objects : [],
+                y : y 
+            };
+        }
+
+        var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
+
+        var count = window.TABLE[platform].layers[layer].objects.length;
+
+        object._ID = platform + '_' + layer + '_' + count;
+
+        var mesh = window.tileManager.createElement(object._ID, table);
+
+        x = 0;
+
+        if(!lastObject)
+            x = window.TABLE[platform].x;
+        else
+            x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
+
+        y = window.tileManager.dimensions.layerPositions[table.layerID];
+
+        z = 0;
+
+        var target = helper.fillTarget(x, y, z, 'table');
+
+        mesh.position.copy(target.hide.position);
+        mesh.rotation.copy(target.hide.rotation);
+
+        window.scene.add(mesh);
+
+        object.mesh = mesh;
+        object.data = table;
+        object.target = target;
+
+        window.camera.enable();
+
+        window.camera.move(target.show.position.x, target.show.position.y, target.show.position.z + 8000, 4000);
+
+        animate(mesh, target.show, 4500, function(){
+
+           window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
+           window.tileManager.updateElementsByGroup();
+        });
+                
+        window.TABLE[platform].layers[layer].objects.push(object);
+    }
+
+    function modifyTile(table){
+
+        var newLayer = table.layer,
+            newGroup = table.group || window.layers[table.layer].super_layer,
+            oldLayer = self.actualTile.layer,
+            oldGroup = self.actualTile.group || window.layers[self.actualTile.layer].super_layer;
+
+        var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
+
+        for(var i = 0; i < arrayObject.length; i++){
+            
+            if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
+
+                window.scene.remove(arrayObject[i].mesh);
+                
+            }
+        }
+
+        var positionCameraX = window.TABLE[oldGroup].x,
+            positionCameraY = helper.getPositionYLayer(oldLayer);
+
+        window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
+
+        setTimeout( function() {
+
+            if(newGroup !== oldGroup || newLayer !== oldLayer)
+                change();
+            else
+                notChange();
+
+        }, 2000 );
+
+        function change(){
+
+            window.TABLE[oldGroup].layers[oldLayer].objects = [];
+            var idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
+
+            window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+   
+            for(var i = 0; i < arrayObject.length; i++){
+                
+                if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
+
+                    arrayObject.splice(i,1);
+                }
+            }
+
+            window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+
+            setTimeout( function() { 
+
+                positionCameraX = window.TABLE[newGroup].x,
+                positionCameraY = window.helper.getPositionYLayer(newLayer);
+                camera.move(positionCameraX, positionCameraY,8000, 2000);
+                createNewElementTile(table);
+                window.screenshotsAndroid.hidePositionScreenshots(newGroup, newLayer);
+                window.tileManager.updateElementsByGroup();
+
+            }, 2000 );
+
+        }
+
+        function notChange(){
+
+            var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
+            var target = null;
+            var _ID = null;
+            var id = 0;
+
+            var idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
+
+            if(self.actualTile.name !== table.name)
+                window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+
+            for(var i = 0; i < arrayObject.length; i++){
+                
+                if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
+
+                    id = i;
+                    window.TABLE[oldGroup].layers[oldLayer].objects[i].data = table;
+                    target = window.TABLE[oldGroup].layers[oldLayer].objects[i].target;
+                    _ID = window.TABLE[oldGroup].layers[oldLayer].objects[i]._ID;
+                }
+            }
+
+            var mesh = window.tileManager.createElement(_ID, table);
+
+            window.TABLE[oldGroup].layers[oldLayer].objects[id].mesh = mesh;
+
+            window.scene.add(mesh);
+            
+            animate(mesh, target.show, 2000,function(){
+                window.screenshotsAndroid.hidePositionScreenshots(oldGroup, oldLayer); 
+            });
+
+        }
+    }
+
+    function createNewElementTile(table){
+
+        var x, y, z;
+
+        var platform = table.group || window.layers[table.layer].super_layer,
+            layer = table.layer,
+            object = { 
+                mesh : null,
+                data : {},
+                target : {},
+                _ID : null,
+                ID : null
+            };
+
+        if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
+            window.TABLE[platform].layers[layer] = {   
+                objects : [],
+                y : window.helper.getPositionYLayer(layer)
+            };
+        }
+
+        var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
+
+        var count = window.TABLE[platform].layers[layer].objects.length;
+
+        object._ID = platform + '_' + layer + '_' + count;
+
+        var mesh = window.tileManager.createElement(object._ID, table);
+    
+        x = 0;
+
+        if(!lastObject)
+            x = window.TABLE[platform].x;
+        else
+            x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
+
+        y = window.helper.getPositionYLayer(layer);
+
+        z = 0;
+
+        var target = helper.fillTarget(x, y, z, 'table');
+
+        mesh.position.copy(target.hide.position);
+        mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
+
+        window.scene.add(mesh);
+
+        object.mesh = mesh;
+        object.data = table;
+        object.target = target;
+
+        animate(mesh, target.show, 2500);
+                
+        window.TABLE[platform].layers[layer].objects.push(object);
+
+    }
+
+    function fillTable(state){
+
+        var table = {group : undefined},
+            data = {},
+            group = document.getElementById(objects.idFields.platform).value,
+            layer = document.getElementById(objects.idFields.layer).value,
+            groupID = helper.getCountObject(groups) - 1,
+            layerID = 0,
+            superLayer = false;
+
+        if(groups[group]){
+            table.group = group;
+            groupID = groups[group].index;
+        }
+        else{
+            superLayer = group;
+        }
+
+
+        if(layers[layer])
+            layerID = layers[layer].index;
+
+        table.layer = layer;
+        table.type = document.getElementById(objects.idFields.type).value;
+        table.code_level = document.getElementById(objects.idFields.state).value;
+        table.difficulty = document.getElementById(objects.idFields.difficulty).value;
+        table.name = document.getElementById(objects.idFields.name).value;
+        table.code = helper.getCode(document.getElementById(objects.idFields.name).value);
+        table.author = document.getElementById(objects.idFields.author).value;
+        table.maintainer = document.getElementById(objects.idFields.maintainer).value;
+        table.found = state;
+        table.groupID = groupID;
+        table.layerID = layerID;
+        table.superLayer = superLayer;
+
+        data = dataUser(table.author);
+
+        table.picture = data.picture;
+        table.authorRealName = data.authorRealName;
+        table.authorEmail = data.authorEmail;
+
+        data = dataUser(table.maintainer);
+
+        table.maintainerPicture = data.picture;
+        table.maintainerRealName = data.authorRealName;
+
+        return table;       
+    }
+
+    function dataUser(user){
+
+        var data = {};
+
+        for(var i = 0; i < DATA_USER.length; i++){
+
+            if(user.toLowerCase() === DATA_USER[i].usrnm.toLowerCase()){
+
+                data.picture = DATA_USER[i].avatar_url;
+                data.authorRealName = DATA_USER[i].name;
+                data.authorEmail = DATA_USER[i].email;
+            }
+        }
+
+        return data;
+    }
+
+    function deleteTile(id){
+
+        var table = helper.getSpecificTile_(id).data;
+
+        var oldLayer = table.layer,
+            oldGroup = table.group || window.layers[table.layer].super_layer,
+            arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects,
+            idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
+
+        window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+
+        var positionCameraX = window.TABLE[oldGroup].x,
+            positionCameraY = helper.getPositionYLayer(oldLayer);
+
+        window.camera.loseFocus();
+        window.camera.enable();
+
+        window.tileManager.transform(window.tileManager.targets.table, 1000);
+        window.signLayer.transformSignLayer();
+
+        window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
+
+        setTimeout( function() {
+
+            window.TABLE[oldGroup].layers[oldLayer].objects = [];
+       
+            id = id.split("_");
+
+            id = parseInt(id[2]);
+
+            var mesh = arrayObject[id].mesh;
+
+            var target =  window.helper.fillTarget(0, 0, 160000, 'table');
+
+            animate(mesh, target.hide, 1500, function(){
+                window.scene.remove(mesh);
+            });
+
+            arrayObject.splice(id, 1);
+
+            window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+
+            window.tileManager.updateElementsByGroup();
+
+        }, 3500 );
+ 
+    }
+
+    function modifyRowTable(arrayObject, oldGroup, oldLayer){
+
+        var newArrayObject = [];
+
+        for(var t = 0; t < arrayObject.length; t++){
+
+            var data = arrayObject[t].data,
+                mesh = arrayObject[t].mesh,
+                target = null,
+                object = { 
+                    mesh : null,
+                    data : {},
+                    target : {},
+                    _ID : null,
+                    ID : null
+                };
+                
+            var x = 0, y = 0, z = 0;
+
+            var lastObject = helper.getLastValueArray(newArrayObject);
+
+            var count = newArrayObject.length;
+
+            object._ID = oldGroup + '_' + oldLayer + '_' + count;
+
+            for(var i = 0; i < mesh.levels.length; i++)
+                mesh.levels[i].object.userData.id = object._ID;
+
+            x = 0;
+
+            if(!lastObject)
+                x = window.TABLE[oldGroup].x;
+            else
+                x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
+
+            y = window.helper.getPositionYLayer(oldLayer);
+
+            z = 0;
+
+            var idScreenshots = oldGroup + "_" + oldLayer + "_" + data.name;
+
+            window.screenshotsAndroid.changePositionScreenshots(idScreenshots, x, y);
+            
+            target = window.helper.fillTarget(x, y, z, 'table');
+
+            object.mesh = mesh;
+            object.data = data;
+            object.target = target;
+
+            animate(object.mesh, target.show, 1500);
+
+            newArrayObject.push(object);
+        }
+
+        return newArrayObject;
+    }
+
+    function animate(mesh, target, duration, callback){
 
         var _duration = duration || 2000,
-            x,
-            y,
-            z,
-            rx,
-            ry,
-            rz;
-
-        if (state) {
-
-           x = target.x;
-           y = target.y;
-           z = target.z;
-
-           rx = 0;
-           ry = 0;
-           rz = 0;
-        } 
-        else {
-
-           x = target.px;
-           y = target.py;
-           z = target.pz;
-           
-           rx = target.rx;
-           ry = target.ry;
-           rz = target.rz; 
-        }  
+            x = target.position.x,
+            y = target.position.y,
+            z = target.position.z,
+            rx = target.rotation.x,
+            ry = target.rotation.y,
+            rz = target.rotation.z; 
 
         _duration = Math.random() * _duration + _duration;
 
@@ -777,5 +1160,4 @@ function FermatEdit() {
     }
     
 }
-
 

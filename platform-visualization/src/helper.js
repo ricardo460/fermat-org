@@ -209,7 +209,8 @@ function Helper() {
      */
     this.getAPIUrl = function(route) {
         
-        var SERVER = "http://52.35.117.6:3000";
+        //var SERVER = "http://52.35.117.6:3000";
+        var SERVER = "http://api.fermat.org:3000";
         var tail = "";
         
         switch(route) {
@@ -226,9 +227,71 @@ function Helper() {
             case "nodes":
                 tail = "/v1/network/node";
                 break;
+            case "user":
+                tail = "/v1/repo/devs?access_token=561fd1a5032e0c5f7e20387d&env=development";
+                break;
         }
         
         return SERVER + tail;
+    };
+
+    this.postRoutesComponents = function(route, params, usr_id, comp_id, doneCallback){
+
+        var SERVER = "http://api.fermat.org:3000",
+            tail = "",
+            method = "",
+            setup = {};
+
+        switch(route) {
+                
+            case "insert":
+                method = "POST";
+                tail = "/v1/repo/usrs/" + usr_id + "/comps";
+                break;
+            case "delete":
+                method = "DELETE";
+                tail = "/v1/repo/usrs/" + usr_id + "/comps/" + comp_id;
+                break;
+            case "update":
+                method = "PUT";
+                tail = "/v1/repo/usrs/" + usr_id + "/comps/" + comp_id;
+                break;
+        }
+
+        setup.method = method;
+        setup.url = SERVER + tail;
+        setup.data = params;
+
+        $.ajax(setup)
+        .done(function(res) {
+        
+            doneCallback(res);
+        })
+        .fail(function(res) {
+        
+            alert("Conexion Fallida");
+        });
+
+            /*
+                params = {
+                usr_id: 1,
+                platfrm_id: 2,
+                suprlay_id: 3,
+                layer_id: 4,
+                name: "",
+                type: "",
+                description: "",
+                difficulty: "",
+                code_level: 123 ,
+                repo_dir: "wqeqwe",
+                scrnshts: false,
+                found: false //verificar si existe
+                };
+
+            */
+            //usr._id
+           // usr.github_tkn
+
     };
     
     /**
@@ -304,22 +367,32 @@ function Helper() {
      */
     this.searchElement = function(elementFullName) {
         
-        if(typeof elementFullName !== 'string') return -1;
+        if(typeof elementFullName !== 'string' || elementFullName === 'undefined/undefined/undefined')
+            return -1;
         
         var group,
             components = elementFullName.split('/');
         
         if(components.length === 3) {
         
-            for(var i = 0, l = window.tilesQtty; i < l; i++) {
+            for(var platfrm in window.TABLE){
 
-                group = this.getSpecificTile(i).data.group || window.layers[this.getSpecificTile(i).data.layer].super_layer;
+                for (var layer in window.TABLE[platfrm].layers){
 
-                if(group.toLowerCase() === components[0].toLowerCase() &&
-                   this.getSpecificTile(i).data.layer.toLowerCase() === components[1].toLowerCase() &&
-                   this.getSpecificTile(i).data.name.toLowerCase() === components[2].toLowerCase())
-                    return i;
+                    for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
+                    
+                        var tile = window.TABLE[platfrm].layers[layer].objects[i];
+                
+                        group = tile.data.group || window.layers[tile.data.layer].super_layer;
+
+                        if(group.toLowerCase() === components[0].toLowerCase() &&
+                           this.getSpecificTile(i).data.layer.toLowerCase() === components[1].toLowerCase() &&
+                           this.getSpecificTile(i).data.name.toLowerCase() === components[2].toLowerCase())
+                            return i;
+                    }
+                }
             }
+            
         }
 
         return -1;
@@ -402,5 +475,72 @@ function Helper() {
                 }
             }
         }
+    };
+
+
+    this.getCenterView = function(view){
+
+        var newCenter = new THREE.Vector3(0, 0, 0);
+
+        newCenter = window.viewManager.translateToSection(view, newCenter);
+
+        return newCenter;
+
+    };
+
+    this.fillTarget = function(x, y, z, view){
+
+        var object3D = new THREE.Object3D();
+
+        var target = {
+                show : {},
+                hide : {}
+            };
+
+        object3D.position.x = Math.random() * 80000 - 40000;
+        object3D.position.y = Math.random() * 80000 - 40000;
+        object3D.position.z = 80000 * 2;
+
+        object3D.position.copy(window.viewManager.translateToSection(view, object3D.position));
+
+        target.hide.position = new THREE.Vector3(object3D.position.x, object3D.position.y, object3D.position.z);
+        target.hide.rotation = new THREE.Vector3(Math.random() * 180, Math.random() * 180, Math.random() * 180);
+
+        target.show.position = new THREE.Vector3(x, y, z);
+        target.show.rotation = new THREE.Vector3(0, 0, 0);
+
+        return target;
+    };
+
+    this.getSpecificTile_ = function(_id){
+
+        var id = _id.split("_");
+
+        return window.TABLE[id[0]].layers[id[1]].objects[id[2]];
+
+    }
+
+    this.getLastValueArray = function(array){
+
+        var value = array[array.length - 1];
+
+        return value;
+    };
+
+    this.getCountObject = function(object){
+
+        var count = 0;
+
+        for(var i in object)
+            count++; 
+
+        return count;
+    };
+
+    this.getPositionYLayer = function(layer){
+
+        var index = window.layers[layer].index;
+
+        return window.tileManager.dimensions.layerPositions[index];
     };
 }

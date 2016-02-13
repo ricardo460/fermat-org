@@ -1,5 +1,4 @@
 //global variables
-
 var tilesQtty,
     camera,
     scene = new THREE.Scene(),
@@ -49,6 +48,7 @@ function createScene(){
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
     renderer.setClearColor(0xFFFFFF);
+    //renderer.setClearColor(0x313131);//Modo Prueba.
     document.getElementById('container').appendChild(renderer.domElement);
 
     camera = new Camera(new THREE.Vector3(0, 0, 90000),
@@ -80,9 +80,9 @@ function init() {
     magazine = new Magazine();
     flowManager = new FlowManager();
     buttonsManager = new ButtonsManager();
-    //fermatEdit = new FermatEdit();
+    fermatEdit = new FermatEdit();
 
-    //fermatEdit.init();
+    fermatEdit.init();
 
     //View Manager
     viewManager = new ViewManager();
@@ -256,29 +256,29 @@ function changeView() {
  */
 function onElementClick(id) {
     
-    var focus = parseInt(id);
+    var focus = window.helper.getSpecificTile_(id).mesh;
 
     if (window.camera.getFocus() == null) {
 
-        window.tileManager.letAlone(focus, 2000);
+        window.tileManager.letAlone(id, 2000);
 
-        window.objects[focus].getObjectForDistance(0).visible = true;
+        focus.getObjectForDistance(0).visible = true;
 
         window.headers.hideHeaders(2000);
 
-        window.camera.setFocus(objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 2000);
+        window.camera.setFocus(focus, new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 2000);
 
         window.buttonsManager.removeAllButtons();
         
         setTimeout(function() {
             
-            window.tileManager.letAlone(focus, 1000);
+            window.tileManager.letAlone(id, 1000);
 
-            window.objects[focus].getObjectForDistance(0).visible = true;
+            focus.getObjectForDistance(0).visible = true;
 
             window.headers.hideHeaders(1000);
 
-            window.camera.setFocus(objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 1000);
+            window.camera.setFocus(focus, new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 1000);
 
             window.helper.showBackButton();
 
@@ -295,10 +295,10 @@ function onElementClick(id) {
 
         var relatedTasks = [];
         
-        var image = window.helper.getSpecificTile(id).data.picture;
+        var image = window.helper.getSpecificTile_(id).data.picture;
 
         var section = 0;
-        var center = objects[id].position;
+        var center = window.helper.getSpecificTile_(id).mesh.position;
         
         for (var i = 0; i < tilesQtty; i++) {
             
@@ -323,7 +323,7 @@ function onElementClick(id) {
 
     function createSidePanel(id, image, relatedTasks) {
         
-        var tileData = window.helper.getSpecificTile(id).data;
+        var tileData = window.helper.getSpecificTile_(id).data;
 
         var sidePanel = document.createElement('div');
         sidePanel.id = 'sidePanel';
