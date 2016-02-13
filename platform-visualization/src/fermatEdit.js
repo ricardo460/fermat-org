@@ -312,7 +312,7 @@ function FermatEdit() {
             objects.row2.buttons.push(object);
 
             var windowWidth  = window.innerWidth;
-            var size         = windowWidth * 0.009 /*0.008*/;
+            var size         = windowWidth * 0.009;
             var style        = document.createElement("style");
             var styleSheet   = ".edit-Fermat {font-size:"+size+"px;}";
             var node         = document.createTextNode(styleSheet);
@@ -800,6 +800,7 @@ function FermatEdit() {
         animate(mesh, target.show, 4500, function(){
 
            window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
+           window.tileManager.updateElementsByGroup();
         });
                 
         window.TABLE[platform].layers[layer].objects.push(object);
@@ -861,6 +862,7 @@ function FermatEdit() {
                 camera.move(positionCameraX, positionCameraY,8000, 2000);
                 createNewElementTile(table);
                 window.screenshotsAndroid.hidePositionScreenshots(newGroup, newLayer);
+                window.tileManager.updateElementsByGroup();
 
             }, 2000 );
 
@@ -1066,6 +1068,8 @@ function FermatEdit() {
             arrayObject.splice(id, 1);
 
             window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+
+            window.tileManager.updateElementsByGroup();
 
         }, 3500 );
  

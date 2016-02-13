@@ -89,27 +89,33 @@ function TileManager() {
 
         //Set sections sizes
 
-        for(i = 0; i < window.tilesQtty; i++){
-            
-            var tile = window.helper.getSpecificTile(i).data;
+        for(var platfrm in window.TABLE){
 
-            var r = tile.layerID; 
-            var c = tile.groupID;
+            for (var layer in window.TABLE[platfrm].layers){
 
-
-
-            self.elementsByGroup[c].push(i);
-
-            if (layers[tile.layer].super_layer) {
-
-                section_size[r]++;
-                isSuperLayer[r] = layers[tile.layer].super_layer;
-            } else {
+                for(i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
                 
-                section_size[r][c]++;
-                if (section_size[r][c] > columnWidth) columnWidth = section_size[r][c];
+                    var tile = window.TABLE[platfrm].layers[layer].objects[i];
+            
+                    var r = tile.data.layerID; 
+                    var c = tile.data.groupID;
+                    var id = tile._ID;
+
+                    self.elementsByGroup[c].push(id);
+
+                    if (layers[tile.data.layer].super_layer) {
+
+                        section_size[r]++;
+                        isSuperLayer[r] = layers[tile.data.layer].super_layer;
+                    } else {
+                        
+                        section_size[r][c]++;
+                        if (section_size[r][c] > columnWidth) columnWidth = section_size[r][c];
+                    }
+                    
+                }
             }
-        }
+        }  
 
         //Set row height
 
@@ -171,7 +177,7 @@ function TileManager() {
             _comps = list.comps,
             i, l, code, name;
 
-        TABLE = {};
+        window.TABLE = {};
 
         for (i = 0, l = _suprlays.length; i < l; i++) {
             code = _suprlays[i].code;
@@ -203,7 +209,7 @@ function TileManager() {
 
             var _platfrm = getSPL(_comp._platfrm_id, _platfrms);
             var _layer = getSPL(_comp._layer_id, _layers);
-            //console.dir(_layer);
+            
             var layerID = _layer.order;
             layerID = (layerID === undefined) ? layers.size() : layerID;
 
@@ -216,6 +222,7 @@ function TileManager() {
             _layer = helper.capFirstLetter(_layer.name);
 
             var element = {
+                ID: _comp._id,
                 group: _platfrm ? _platfrm.code : undefined,
                 groupID: groupID,
                 superLayer : layers[_layer].super_layer,
@@ -247,23 +254,23 @@ function TileManager() {
             var platform = element.group || element.superLayer,
                 layer = element.layer;
 
-            if(typeof TABLE[platform] === 'undefined'){
-                TABLE[platform] = {   
+            if(typeof window.TABLE[platform] === 'undefined'){
+                window.TABLE[platform] = {   
                     layers : {},
                     ID: element.groupID,
                     isSlayer: element.superLayer
                 };
             }
 
-            if(typeof TABLE[platform].layers[layer] === 'undefined'){ 
-                TABLE[platform].layers[layer] = {   
+            if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
+                window.TABLE[platform].layers[layer] = {   
                     objects : [],
                     y : 0,
                     ID: element.layerID
                 };
             }
 
-            var lastObject = TABLE[platform].layers[layer].objects.length;
+            var lastObject = window.TABLE[platform].layers[layer].objects.length;
             var count = lastObject;
             
 
@@ -275,7 +282,7 @@ function TileManager() {
                 _ID: platform + '_' + layer + '_' + count
             };
 
-            TABLE[platform].layers[layer].objects.push(objectTile);
+            window.TABLE[platform].layers[layer].objects.push(objectTile);
         }
 
         groupsQtty = _platfrms.length;
@@ -506,7 +513,7 @@ function TileManager() {
 
         for (var j = 0, l = levels.length; j < l; j++) {
 
-            if (levels[j][0] === 'high') scale = 5;
+            if (levels[j][0] === 'high') scale = 2;
             else scale = 1;
 
             texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale, table);
@@ -588,7 +595,7 @@ function TileManager() {
 
                     var index = self.elementsByGroup[k][j];
                     
-                    var target = window.helper.getSpecificTile(index);
+                    var target = window.helper.getSpecificTile_(index);
 
                     var animation = animate(target.mesh, target.target.show, delay);
 
@@ -602,7 +609,7 @@ function TileManager() {
 
                 for (var layer in window.TABLE[platfrm].layers){
 
-                    for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
+                    for(i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
                     
                         var tile = window.TABLE[platfrm].layers[layer].objects[i];
                 
@@ -638,7 +645,7 @@ function TileManager() {
     
         helper.show('container', 2000);
     
-        flowManager.getActualFlow();
+        window.flowManager.getActualFlow();
 
         this.transform();
 
@@ -756,7 +763,6 @@ function TileManager() {
      */
     this.letAlone = function (ids, duration) {
 
-
         var i, _duration = duration || 2000,
             distance = camera.getMaxDistance() * 2,
             out = window.viewManager.translateToSection('table', new THREE.Vector3(0, 0, distance));
@@ -810,6 +816,33 @@ function TileManager() {
         
         window.screenshotsAndroid.hide();
         window.signLayer.letAloneSignLayer();
+    };
+
+    this.updateElementsByGroup = function(){
+
+        self.elementsByGroup = [];
+
+        for (var j = 0; j <= groupsQtty; j++) {
+
+            self.elementsByGroup.push([]);
+        }
+
+        for(var platfrm in window.TABLE){
+
+            for(var layer in window.TABLE[platfrm].layers){
+
+                for(i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
+                
+                    var tile = window.TABLE[platfrm].layers[layer].objects[i];
+            
+                    var c = tile.data.groupID;
+                    var id = tile._ID;
+
+                    self.elementsByGroup[c].push(id);
+                    
+                }
+            }
+        }
     };
 
     //Private methods
