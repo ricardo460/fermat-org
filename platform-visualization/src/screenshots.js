@@ -30,7 +30,7 @@ function ScreenshotsAndroid() {
 
 	this.getScreenshots = function(){
 		return SCREENSHOTS;
-	}
+	};
 
 	this.changePositionScreenshots = function(id, x, y){
 
@@ -81,7 +81,7 @@ function ScreenshotsAndroid() {
 						animate(mesh, target, false, 1000, function(){
 
 							window.scene.remove(mesh);
-						});
+						 }); 
 					}
 				}
 			}
