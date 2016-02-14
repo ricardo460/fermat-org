@@ -113,7 +113,6 @@ function ActionFlow(flow) {
 
         if (typeof root.drawn === 'undefined'){
 
-
             drawStep(root, x, y, z);
 
             var childCount = root.next.length,
@@ -306,7 +305,7 @@ function ActionFlow(flow) {
 
             if(typeof used[node.element] !== 'undefined') {
 
-                tile = window.objects[node.element].clone();
+                tile = window.helper.getSpecificTile(node.element).mesh.clone();
                 tile.isClone = true;
 
                 objectsStep.position.origin.push(window.helper.getOutOfScreenPoint(1));
@@ -317,7 +316,7 @@ function ActionFlow(flow) {
             }
             else {
 
-                tile = window.objects[node.element];
+                tile = window.helper.getSpecificTile(node.element).mesh;
                 used[node.element] = true;
 
                 new TWEEN.Tween(tile.position)

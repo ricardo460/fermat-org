@@ -3,12 +3,12 @@
  */
 function TileManager() {
 
-    this.targets = {
+    /*this.targets = {
         table: [],
         sphere: [],
         helix: [],
         grid: []
-    };
+    };*/
    
     this.dimensions = {};
     this.elementsByGroup = [];
@@ -99,7 +99,7 @@ function TileManager() {
             
                     var r = tile.data.layerID; 
                     var c = tile.data.groupID;
-                    var id = tile._ID;
+                    var id = tile.id;
 
                     self.elementsByGroup[c].push(id);
 
@@ -222,7 +222,7 @@ function TileManager() {
             _layer = helper.capFirstLetter(_layer.name);
 
             var element = {
-                ID: _comp._id,
+                id: _comp._id,
                 group: _platfrm ? _platfrm.code : undefined,
                 groupID: groupID,
                 superLayer : layers[_layer].super_layer,
@@ -241,7 +241,8 @@ function TileManager() {
                 difficulty: _comp.difficulty,
                 code_level: _comp.code_level ? _comp.code_level : undefined,
                 life_cycle: _comp.life_cycle,
-                found: _comp.found
+                found: _comp.found,
+                devs: _comp.devs
             };
             return element;
         };
@@ -278,9 +279,10 @@ function TileManager() {
                 mesh : null,
                 data : element,
                 target : {},
-                ID: i,
-                _ID: platform + '_' + layer + '_' + count
+                id: platform + '_' + layer + '_' + count
             };
+
+            window.tilesQtty.push(objectTile.id);
 
             window.TABLE[platform].layers[layer].objects.push(objectTile);
         }
@@ -288,7 +290,6 @@ function TileManager() {
         groupsQtty = _platfrms.length;
         layersQtty = list.layers.length;
         _firstLayer = _layers[0].order;
-        window.tilesQtty =  _comps.length;
     };
 
     /**
@@ -503,13 +504,7 @@ function TileManager() {
             tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
             tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING,
             scale = 2,
-            table = _table || null,
-            _id = null;
-
-        if(typeof id === 'number')
-            _id = window.helper.getSpecificTile(id)._ID;
-        else
-            _id = id;
+            table = _table || null;
 
         for (var j = 0, l = levels.length; j < l; j++) {
 
@@ -528,7 +523,7 @@ function TileManager() {
             );
 
             mesh.userData = {
-                id: _id,
+                id: id,
                 onClick : onClick
             };
             mesh.renderOrder = 1;
@@ -595,7 +590,7 @@ function TileManager() {
 
                     var index = self.elementsByGroup[k][j];
                     
-                    var target = window.helper.getSpecificTile_(index);
+                    var target = window.helper.getSpecificTile(index);
 
                     var animation = animate(target.mesh, target.target.show, delay);
 
@@ -605,20 +600,12 @@ function TileManager() {
         }
         else {
 
-            for(var platfrm in window.TABLE){
+            for(var i = 0; i < window.tilesQtty.length; i++){
 
-                for (var layer in window.TABLE[platfrm].layers){
-
-                    for(i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
+                var tile = window.helper.getSpecificTile(window.tilesQtty[i]);                  
                     
-                        var tile = window.TABLE[platfrm].layers[layer].objects[i];
-                
-                        animate(tile.mesh, tile.target.show, 0).start();
-                        
-                    }
-                }
+                animate(tile.mesh, tile.target.show, 0).start();
             }
-            
         }
 
         if(window.actualView === 'table') {
@@ -664,34 +651,22 @@ function TileManager() {
         var signRow = null,
             signColumn = null;
 
-        for (var i = 0; i < window.tilesQtty; i++) {
+        for(var i = 0; i < window.tilesQtty.length; i++){
 
-            var object = this.createElement(i);
-            var targetTile = {  show : null,
-                                hide : null
-                              };
+            var id = window.tilesQtty[i];
 
-            object.position.x = Math.random() * 80000 - 40000;
-            object.position.y = Math.random() * 80000 - 40000;
-            object.position.z = 80000 * 2;
-            object.rotation.x = Math.random() * 180;
-            object.rotation.y = Math.random() * 180;
-            object.rotation.z = Math.random() * 180;
+            var mesh = this.createElement(id);
             
-            object.position.copy(window.viewManager.translateToSection('table', object.position));
-            
-            scene.add(object);
+            scene.add(mesh);
 
-            window.objects.push(object); // origin
+            window.helper.getSpecificTile(id).mesh = mesh;
 
-            setPositionTileOrigin(object, i);
-
-            targetTile.hide = object;
-
-            object = new THREE.Object3D();
+            var object = new THREE.Object3D();
 
             //Row (Y)
-            var tile = window.helper.getSpecificTile(i).data;
+            var tile = window.helper.getSpecificTile(id).data;
+
+            var group = tile.group || window.layers[tile.layer].super_layer;
 
             var row = tile.layerID;
 
@@ -717,35 +692,42 @@ function TileManager() {
             if(typeof layerCoordinates[row] === 'undefined')
                 layerCoordinates[row] = object.position.y;
 
+            /*start Positioning tiles*/
+
             object.position.copy(window.viewManager.translateToSection('table', object.position));
-            this.targets.table.push(object); // target
 
-            targetTile.show = object;
+            var target = window.helper.fillTarget(object.position.x, object.position.y, object.position.z, 'table');
 
-            setPositionTileTarget(targetTile, i);
+            window.helper.getSpecificTile(id).target = target;
+
+            mesh.position.copy(target.hide.position);
+
+            mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
+
+            /*End*/
 
             if(i === 0 ){ //entra a la primera
-                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.group);
+                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
                 signRow = tile.layerID;
                 signColumn = tile.groupID;
-                window.TABLE[tile.group].layers[tile.layer].y = object.position.y;
+                window.TABLE[group].layers[tile.layer].y = object.position.y;
             }
 
             if(tile.layerID !== signRow && tile.groupID === signColumn && layers[tile.layer].super_layer === false){ // solo cambio de filas
-                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.group);
+                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
                 signRow = tile.layerID;
                 signColumn = tile.groupID;
-                window.TABLE[tile.group].layers[tile.layer].y = object.position.y;
+                window.TABLE[group].layers[tile.layer].y = object.position.y;
             }
 
             else if(signColumn !== tile.groupID && layers[tile.layer].super_layer === false){ //cambio de columna
-                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.group);
+                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
                 signRow = tile.layerID;
                 signColumn = tile.groupID;
-                window.TABLE[tile.group].layers[tile.layer].y = object.position.y;
-            }
+                window.TABLE[group].layers[tile.layer].y = object.position.y;
+            }                               
         }
-
+///
         this.dimensions = {
             columnWidth: columnWidth,
             superLayerMaxHeight: superLayerMaxHeight,
@@ -795,7 +777,7 @@ function TileManager() {
                 
                     var tile = window.TABLE[platfrm].layers[layer].objects[f];
             
-                    if (ids === tile._ID) {
+                    if (ids === tile.id) {
                         target =  tile.target.show.position;
                     } 
                     else {
@@ -822,6 +804,8 @@ function TileManager() {
 
         self.elementsByGroup = [];
 
+        window.tilesQtty = [];
+
         for (var j = 0; j <= groupsQtty; j++) {
 
             self.elementsByGroup.push([]);
@@ -836,7 +820,9 @@ function TileManager() {
                     var tile = window.TABLE[platfrm].layers[layer].objects[i];
             
                     var c = tile.data.groupID;
-                    var id = tile._ID;
+                    var id = tile.id;
+
+                    window.tilesQtty.push(id);
 
                     self.elementsByGroup[c].push(id);
                     
@@ -847,35 +833,6 @@ function TileManager() {
 
     //Private methods
 
-    function setPositionTileOrigin(meshOrigin, id){
-
-        for(var platfrm in window.TABLE){
-            if(platfrm !== 'layers'){
-                for (var layer in window.TABLE[platfrm].layers){
-                    for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
-                        if(id === window.TABLE[platfrm].layers[layer].objects[i].ID){
-                            window.TABLE[platfrm].layers[layer].objects[i].mesh = meshOrigin;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    function setPositionTileTarget(targetTile, id){
-
-        for(var platfrm in window.TABLE){
-            if(platfrm !== 'layers'){
-                for (var layer in window.TABLE[platfrm].layers){
-                    for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
-                        if(id === window.TABLE[platfrm].layers[layer].objects[i].ID){
-                            window.TABLE[platfrm].layers[layer].objects[i].target = targetTile;
-                        }
-                    }
-                }
-            }
-        }
-    }
     /**
      * Draws a picture in canvas
      * @param {Array}  data    The options of the picture

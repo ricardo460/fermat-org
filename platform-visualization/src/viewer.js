@@ -1,9 +1,8 @@
 //global variables
-var tilesQtty,
+var tilesQtty = [],
     camera,
     scene = new THREE.Scene(),
     renderer,
-    objects = [],
     actualView,
     stats = null,
 //Class
@@ -47,8 +46,8 @@ function createScene(){
         
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xFFFFFF);
-    //renderer.setClearColor(0x313131);//Modo Prueba.
+    //renderer.setClearColor(0xFFFFFF);
+    renderer.setClearColor(0x313131);//Modo Prueba.
     document.getElementById('container').appendChild(renderer.domElement);
 
     camera = new Camera(new THREE.Vector3(0, 0, 90000),
@@ -256,7 +255,7 @@ function changeView() {
  */
 function onElementClick(id) {
     
-    var focus = window.helper.getSpecificTile_(id).mesh;
+    var focus = window.helper.getSpecificTile(id).mesh;
 
     if (window.camera.getFocus() == null) {
 
@@ -294,26 +293,31 @@ function onElementClick(id) {
     function showDeveloper(id) {
 
         var relatedTasks = [];
+
+        var tile = window.helper.getSpecificTile(id).data;
         
-        var image = window.helper.getSpecificTile_(id).data.picture;
+        var image = window.helper.getSpecificTile(id).data.picture;
 
         var section = 0;
-        var center = window.helper.getSpecificTile_(id).mesh.position;
+        var center = window.helper.getSpecificTile(id).mesh.position;
         
-        for (var i = 0; i < tilesQtty; i++) {
-            
-            var tile = window.helper.getSpecificTile(i).data;
-            
-            if (tile.author == tile.author) {
-                relatedTasks.push(i);
-                
-                new TWEEN.Tween(objects[i].position)
+        for(var i = 0; i < window.tilesQtty.length; i++){
+
+            var _tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
+
+            var mesh =  window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
+    
+            if (_tile.author == tile.author) {
+
+                relatedTasks.push(id);
+        
+                new TWEEN.Tween(mesh.position)
                 .to({x : center.x + (section % 5) * window.TILE_DIMENSION.width, y : center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height, z : 0}, 2000)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .start();
                 
                 section += 1;
-            }
+            }                     
         }
         
         createSidePanel(id, image, relatedTasks);
@@ -323,7 +327,7 @@ function onElementClick(id) {
 
     function createSidePanel(id, image, relatedTasks) {
         
-        var tileData = window.helper.getSpecificTile_(id).data;
+        var tileData = window.helper.getSpecificTile(id).data;
 
         var sidePanel = document.createElement('div');
         sidePanel.id = 'sidePanel';
