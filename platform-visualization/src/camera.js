@@ -192,9 +192,8 @@ function Camera(position, renderer, renderFunc) {
      * 
      */
     this.onKeyDown = function( event ) {
-    
+        
         if ( event.keyCode === 27 /* ESC */ ) {
-
             //TWEEN.removeAll();
             var duration = 2000;
 

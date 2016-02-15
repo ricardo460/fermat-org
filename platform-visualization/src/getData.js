@@ -2,13 +2,13 @@
 //var URL = "http://52.11.156.16:3000/repo/comps";
 
 function getData() {
-    animate();
+    //animate();
     
     var url = window.helper.getAPIUrl("comps");
     
     //url += "?env=development"; //When needed the development branch, for lab.fermat.org
-    
- $.ajax({
+
+    $.ajax({
         url: url,
         method: "GET"
     }).success(
@@ -29,7 +29,7 @@ function getData() {
                 });
             });
         });
-
+ 
 //Use when you don't want to connect to server
 /*setTimeout(function(){
         var l = JSON.parse(testData);

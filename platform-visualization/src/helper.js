@@ -227,6 +227,12 @@ function Helper() {
             case "nodes":
                 tail = "/v1/network/node";
                 break;
+            case "login":
+                tail = "/v1/auth/login";
+                break;
+            case "logout":
+                tail = "/v1/auth/logout";
+                break;
             case "user":
                 tail = "/v1/repo/devs?access_token=561fd1a5032e0c5f7e20387d&env=development";
                 break;

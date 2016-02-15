@@ -13,6 +13,7 @@ var tilesQtty,
     logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),
+    session = new Session(),
     fermatEdit = null,
     browserManager = null,
     screenshotsAndroid = null,
@@ -31,8 +32,16 @@ var TILE_DIMENSION = {
 
     currentRender = "start";
     currentRender = createScene(currentRender, currentRender);
-
 getData();
+
+$('#login').click(function() {
+        window.session.getAuthCode();
+});
+
+$('#logout').click(function() {
+        window.session.logout();
+        document.getElementById("containerLogin").style.display = "none";
+});
 
 /**
  * Creates the rendering environment
@@ -60,6 +69,7 @@ function createScene(current, option){
 
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.domElement.style.position = 'absolute';
+    renderer.domElement.id = "canvas";
         renderer.setClearColor(0xFFFFFF);
     //renderer.setClearColor(0x313131);//Modo Prueba.
         document.getElementById('container').appendChild(renderer.domElement);
@@ -68,7 +78,6 @@ function createScene(current, option){
             renderer,
             render);
     }
-
     if(window.currentRender === "start")
         logo.startFade();
     if(currentRender !== "start") {
@@ -82,6 +91,7 @@ function createScene(current, option){
 
     return current;
 }
+
 
 function webglAvailable() {
     try {
@@ -149,7 +159,7 @@ function init() {
             $(legend).fadeTo(1000, 1);
         }
     });
-
+    
             
     $('#container').click(onClick);
 
@@ -528,3 +538,5 @@ function render() {
     //renderer.render( scene, camera );
     camera.render(renderer, scene);
 }
+
+

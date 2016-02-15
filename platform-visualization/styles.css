@@ -39,7 +39,7 @@ button:active {
     z-index: 10;
 }
 
-#legendButton {
+#login, #logout {
     color: rgba(127,127,127,1);
     background: transparent;
     outline: 1px solid rgba(127,255,255,0.75);
@@ -52,12 +52,12 @@ button:active {
     z-index: 15;
 }
 
-#legendButton:active {
+#login:active, #logout:active {
     color: #000000;
     background-color: rgba(127,127,127,0.75);  
 }
 
-#legendButton:hover,.backButton:hover, .actionButton:hover  {
+#login:hover, #logout:hover,.backButton:hover, .actionButton:hover  {
     background-color: rgba(127,127,127,0.5);
 }
 
@@ -66,7 +66,12 @@ button:active {
     top : 40px;
     right : 10px;
     z-index: 10;
-    
+}
+#containerLogin{
+    position: fixed;
+    z-index: 1;
+    right: 40px;
+    display: block;
 }
 
 .backButton, .actionButton, #legend {
