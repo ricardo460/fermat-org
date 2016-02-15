@@ -146,21 +146,7 @@ function init() {
             viewManager.views[window.actualView].backButton();
  
     });
-
-    $('#legendButton').click(function() {
-
-        var legend = document.getElementById('legend');
-
-        if (legend.style.opacity == 1) $('#legend').fadeTo(1000, 0, function() {
-            legend.style.display = 'none';
-        });
-        else {
-            legend.style.display = 'block';
-            $(legend).fadeTo(1000, 1);
-        }
-    });
     
-            
     $('#container').click(onClick);
 
     //Disabled Menu

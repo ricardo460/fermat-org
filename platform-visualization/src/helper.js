@@ -389,7 +389,7 @@ function Helper() {
                     
                         var tile = window.TABLE[platfrm].layers[layer].objects[i];
                 
-                        group = tile.data.group || window.layers[tile.data.layer].super_layer;
+                        group = tile.data.platform || window.layers[tile.data.layer].super_layer;
 
                 if(group && group.toLowerCase() === components[0].toLowerCase() &&
                            this.getSpecificTile(i).data.layer.toLowerCase() === components[1].toLowerCase() &&
