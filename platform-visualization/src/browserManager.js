@@ -127,38 +127,37 @@ function BrowserManager() {
      * @param {Number}  center   camera Center.
      * @param {String}  button   position arrow.
      */
-    function addArrow (view, centerX, centerY, button) {
+   function addArrow (view, centerX, centerY, button) {
 
-      var mesh,
-          _position,
-          id = self.objects.mesh.length;
+        var mesh,
+            _position,
+            id = self.objects.mesh.length;
 
-      mesh = new THREE.Mesh(
-             new THREE.PlaneBufferGeometry( 60, 60 ),
-             new THREE.MeshBasicMaterial( { map:null , side: THREE.FrontSide, transparent: true } ));
+        mesh = new THREE.Mesh(
+               new THREE.PlaneBufferGeometry( 60, 60 ),
+               new THREE.MeshBasicMaterial( { map:null , side: THREE.FrontSide, transparent: true } ));
+    
+       _position = calculatePositionArrow (centerX, centerY, button);
 
-      _position = calculatePositionArrow (centerX, centerY, button);
+       mesh.position.set( _position.x, 
+                          _position.y, 
+                          _position.z );
 
-      mesh.position.set( _position.x, 
-                        _position.y, 
-                        _position.z );
+       mesh.scale.set(SCALE, SCALE, SCALE);
 
-      mesh.scale.set(SCALE, SCALE, SCALE);
+       mesh.userData = { 
+        id : id ,
+        arrow : button, 
+        view : view,
+        onClick : onClick };
 
-      mesh.userData = { 
-      id : id ,
-      arrow : button, 
-      view : view,
-      onClick : onClick 
-      };
+       mesh.material.opacity = 1;
+    
+       window.scene.add(mesh);
+    
+       self.objects.mesh.push(mesh);
 
-      mesh.material.opacity = 1;
-
-      window.scene.add(mesh);
-
-      self.objects.mesh.push(mesh);
-
-      addTextura (view, button, mesh);
+       addTextura (view, button, mesh);
 
    }
 
@@ -205,7 +204,7 @@ function BrowserManager() {
      * @param {String}  button   image to use.
      * @param {object}   mesh    button to load texture.
      */
-   function addTextura(view, button, mesh) {
+   function addTextura (view, button, mesh) {
        
         var canvas,
             ctx,
@@ -249,29 +248,29 @@ function BrowserManager() {
      * @param {String}   view    view.
      * @param {String}  button   image to use.
      */
-   function configTexture(view, button) {
+   function configTexture (view, button) {
      
-      var config = {},
-          text = {},
-          image = {},
-          label;
+    var config = {},
+        text = {},
+        image = {},
+        label;
 
-      if (button !== "down") {  
-          image = { x: 100, y : 0, text : 238 };
-      }
-      else { 
-          image = { x: 100, y : 120, text : 108 };
-      }
-   
+    if (button !== "down") {  
+        image = { x: 100, y : 0, text : 238 };
+    }
+    else { 
+        image = { x: 100, y : 120, text : 108 };
+    }
+ 
 
-        label = window.map.views[view].title;
+      label = window.map.views[view].title;
 
 
-      text = { label : label, font: "48px Canaro, Sans-serif", size : 48 };
+    text = { label : label, font: "48px Canaro, Sans-serif", size : 48 };
 
-      config = { image : image, text : text };
+    config = { image : image, text : text };
 
-      return config;
+    return config;
 
    }
 
@@ -282,7 +281,7 @@ function BrowserManager() {
      * @param {Number}     target      The objetive Z position.
      * @param {Number} [duration=2000] Duration of the animation.
      */
-   function animate(mesh, target, duration) {
+   function animate (mesh, target, duration) {
 
         var _duration = duration || 2000,
             z = target;

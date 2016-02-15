@@ -34,7 +34,7 @@ function TileManager() {
             jsonTile = json;
             callback();
         });
-    };
+    }
     /**
      * Pre-computes the space layout for next draw
      */
@@ -450,14 +450,13 @@ function TileManager() {
      * @param   {Number} scale      Scale of the pictures, the bigger, the better but heavier
      * @returns {Object} The drawn texture
      */
-    this.createTexture = function (id, quality, tileWidth, tileHeight, scale, _table) {
+    this.createTexture = function (id, quality, tileWidth, tileHeight, scale) {
 
-        var table = _table || window.table[id],
-            state = table.code_level,
-            difficulty = Math.ceil(table.difficulty / 2),
-            group = table.group || window.layers[table.layer].super_layer,
-            type = table.type,
-            picture = table.picture,
+        var state = table[id].code_level,
+            difficulty = Math.ceil(table[id].difficulty / 2),
+            group = table[id].group || window.layers[table[id].layer].super_layer,
+            type = table[id].type,
+            picture = table[id].picture,
             base = 'images/tiles/';
 
         var canvas = document.createElement('canvas');
@@ -497,23 +496,23 @@ function TileManager() {
                 src: base + 'rings/' + quality + '/' + state + '_diff_' + difficulty + '.png'
             },
             codeText = {
-                text: table.code,
+                text: table[id].code,
                 font: (jsonTile.global.codeText.font * scale) + "px Arial"
             },
             nameText = {
-                text: table.name,
+                text: table[id].name,
                 font: (jsonTile.global.nameText.font * scale) + 'px Arial'
             },
             layerText = {
-                text: table.layer,
+                text: table[id].layer,
                 font: (jsonTile.global.layerText.font * scale) + 'px Arial'
             },
             authorText = {
-                text: table.authorRealName || table.author || '',
+                text: table[id].authorRealName || table[id].author || '',
                 font: (jsonTile.global.authorText.font * scale) + 'px Arial'
             },
             picMaintainer = {
-                src: table.maintainerPicture || base + 'buster.png'
+                src: table[id].maintainerPicture || base + 'buster.png'
             },
             maintainer = {
                 text: 'Maintainer',
@@ -521,12 +520,12 @@ function TileManager() {
                 color: "#FFFFFF"
             },
             nameMaintainer = {
-                text: table.maintainerRealName || table.maintainer || '',
+                text: table[id].maintainerRealName || table[id].maintainer || '',
                 font: (jsonTile.global.nameMaintainer.font * scale) + 'px Arial',
                 color: "#FFFFFF"
             },
             userMaintainer = {
-                text: table.maintainer || 'No Maintainer yet',
+                text: table[id].maintainer || 'No Maintainer yet',
                 font: (jsonTile.global.userMaintainer.font * scale) + 'px Arial',
                 color: "#E2E2E2"
             };
@@ -613,7 +612,7 @@ function TileManager() {
             userMaintainer
         ];
 
-        if ( table.found !== true ) {
+        if ( table[id].found !== true ) {
 
             var stamp = {
                 src: 'images/alt_not_found.png',
@@ -638,7 +637,7 @@ function TileManager() {
      * @returns {DOMElement} The drawable element that represents the tile
      */
      
-    this.createElement = function (id, _table) {
+    this.createElement = function (id) {
 
         var mesh,
             element = new THREE.LOD(),
@@ -651,15 +650,14 @@ function TileManager() {
             texture,
             tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
             tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING,
-            scale = 2,
-            table = _table || null;
+            scale = 2;
 
         for (var j = 0, l = levels.length; j < l; j++) {
 
-            if (levels[j][0] === 'high') scale = 2;
+            if (levels[j][0] === 'high') scale = 5;
             else scale = 1;
 
-            texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale, table);
+            texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale);
 
             mesh = new THREE.Mesh(
                 new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
@@ -798,7 +796,7 @@ function TileManager() {
         for (var i = 0; i < table.length; i++) {
 
             var object = this.createElement(i);
-    
+
             object.position.x = Math.random() * 80000 - 40000;
             object.position.y = Math.random() * 80000 - 40000;
             object.position.z = 80000 * 2;
@@ -822,7 +820,7 @@ function TileManager() {
             if (layers[table[i].layer].super_layer) {
 
                 object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
-                
+
                 section[row]++;
 
             } else {
@@ -850,7 +848,7 @@ function TileManager() {
                 signColumn = table[i].groupID;
             }
 
-            else if(table[i].layerID !== signRow && table[i].groupID === signColumn && layers[table[i].layer].super_layer === false){ // solo cambio de filas
+            if(table[i].layerID !== signRow && table[i].groupID === signColumn && layers[table[i].layer].super_layer === false){ // solo cambio de filas
                 window.signLayer.createSignLayer(object.position.x, object.position.y, table[i].layer, table[i].group);
                 signRow = table[i].layerID;
                 signColumn = table[i].groupID;
@@ -861,7 +859,6 @@ function TileManager() {
                 signRow = table[i].layerID;
                 signColumn = table[i].groupID;
             }
-
         }
 
         this.dimensions = {

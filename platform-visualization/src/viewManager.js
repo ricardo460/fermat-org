@@ -55,8 +55,6 @@ function ViewManager() {
 
                         window.browserManager.modifyButtonLegend(1,'block');
 
-                        window.fermatEdit.addButton();
-
                         window.tileManager.transform(window.tileManager.targets.table, true, 3000 + transition);
                         
                         setTimeout(function(){
@@ -83,8 +81,6 @@ function ViewManager() {
                     
                     exit = function() {
                         window.tileManager.rollBack();
-
-                        buttonsManager.removeAllButtons();
                     };
 
                     reset = function() {
