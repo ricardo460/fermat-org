@@ -279,7 +279,7 @@ function TileManager() {
                 mesh : null,
                 data : element,
                 target : {},
-                id: platform + '_' + layer + '_' + count
+                id: platform + '_' + layer + '_' + count,
                 _ID: platform + '_' + layer + '_' + count
             };
 
