@@ -386,19 +386,10 @@ function Helper() {
         
             for(var i = 0; i < window.tilesQtty.length; i++){
 
-<<<<<<< HEAD
+
                 var tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
         
-                group = tile.group || window.layers[tile.layer].super_layer;
-=======
-                for (var layer in window.TABLE[platfrm].layers){
-
-                    for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
-                    
-                        var tile = window.TABLE[platfrm].layers[layer].objects[i];
-                
-                        group = tile.data.platform || window.layers[tile.data.layer].super_layer;
->>>>>>> origin/master
+                group = tile.platform || window.layers[tile.layer].super_layer;
 
                 if(group && group.toLowerCase() === components[0].toLowerCase() &&
                    tile.layer.toLowerCase() === components[1].toLowerCase() &&

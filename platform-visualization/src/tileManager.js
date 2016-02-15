@@ -98,13 +98,10 @@ function TileManager() {
                     var tile = window.TABLE[platfrm].layers[layer].objects[i];
             
                     var r = tile.data.layerID; 
-<<<<<<< HEAD
-                    var c = tile.data.groupID;
-                    var id = tile.id;
-=======
+
                     var c = tile.data.platformID;
-                    var id = tile._ID;
->>>>>>> origin/master
+                    var id = tile.id;
+
 
                     self.elementsByGroup[c].push(id);
 
@@ -288,13 +285,11 @@ function TileManager() {
                 _ID: platform + '_' + layer + '_' + count
             };
 
-<<<<<<< HEAD
+
             window.tilesQtty.push(objectTile.id);
 
             window.TABLE[platform].layers[layer].objects.push(objectTile);
-=======
-            window.TABLE[group].layers[layer].objects.push(objectTile);
->>>>>>> origin/master
+
         }
 
         groupsQtty = _platfrms.length;
