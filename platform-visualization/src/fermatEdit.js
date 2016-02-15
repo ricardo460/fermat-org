@@ -386,7 +386,7 @@ function FermatEdit() {
 
             objects.idFields.platform = id;
 
-            groups
+            for(var i in groups){ 
 
                 if(i != "size"){
 
@@ -699,7 +699,7 @@ function FermatEdit() {
     function changeTexture(){
 
         var table = null,
-            scale = 3, //5
+            scale = 5, //5
             mesh = null;
 
         table = fillTable(true);
@@ -801,49 +801,37 @@ function FermatEdit() {
         window.TABLE[platform].layers[layer].objects.push(object);
     }
 
-    function modifyTile(table){
+    function modifyTile(table){ 
 
-       // var param = fillParamsData(table);
+        var newLayer = table.layer,
+            newGroup = table.group || window.layers[table.layer].super_layer,
+            oldLayer = self.actualTile.layer,
+            oldGroup = self.actualTile.group || window.layers[self.actualTile.layer].super_layer;
 
+        var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
 
-       // if(!window.helper.postRoutesComponents('update', param, DATA_TEST_USER, self.actualTile.)){
+        for(var i = 0; i < arrayObject.length; i++){
+            
+            if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
 
-        //    if(fillParamsUser(table)){//terminar
-        //        window.helper.postRoutesComponents('update', param, DATA_TEST_USER, self.actualTile.)
-        //    }
-
-
-            var newLayer = table.layer,
-                newGroup = table.group || window.layers[table.layer].super_layer,
-                oldLayer = self.actualTile.layer,
-                oldGroup = self.actualTile.group || window.layers[self.actualTile.layer].super_layer;
-
-            var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
-
-            for(var i = 0; i < arrayObject.length; i++){
+                window.scene.remove(arrayObject[i].mesh);
                 
-                if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
-
-                    window.scene.remove(arrayObject[i].mesh);
-                    
-                }
             }
+        }
 
-            var positionCameraX = window.TABLE[oldGroup].x,
-                positionCameraY = helper.getPositionYLayer(oldLayer);
+        var positionCameraX = window.TABLE[oldGroup].x,
+            positionCameraY = helper.getPositionYLayer(oldLayer);
 
-            window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
+        window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
 
-            setTimeout( function() {
+        setTimeout( function() {
 
-                if(newGroup !== oldGroup || newLayer !== oldLayer)
-                    change();
-                else
-                    notChange();
+            if(newGroup !== oldGroup || newLayer !== oldLayer)
+                change();
+            else
+                notChange();
 
-            }, 2000 );
-
-        //}
+        }, 2000 );
 
         function change(){
 
