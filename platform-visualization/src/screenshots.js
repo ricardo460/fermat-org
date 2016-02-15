@@ -176,7 +176,7 @@ function ScreenshotsAndroid() {
 		        						show = false,
 		        						screenshots = {};
 		        						
-		        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
+		        					if(_layer === "Sub App" && json[_group][0] === "Sub App")
 		        						show = true;
 
 	        						for(var _screen in json[_group][_layer][_wallet].screenshots)

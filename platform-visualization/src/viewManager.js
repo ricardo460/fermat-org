@@ -19,17 +19,19 @@ function ViewManager() {
      */
     this.translateToSection = function(sectionName, vector) {
         
-        sectionName = window.map.views[sectionName] || window.map.start;
-        var section = sectionName.section || [0, 0];
-        var newVector = vector.clone();
+    //    if(window.map.views[sectionName].title !== "Render") {
+            sectionName = window.map.views[sectionName] || window.map.start;
+            var section = sectionName.section || [0, 0];
+            var newVector = vector.clone();
         
-        if(typeof section !== 'undefined') {
+            if(typeof section !== 'undefined') {
         
-            newVector.x = vector.x + section[0] * SECTION_SIZE;
-            newVector.y = vector.y + section[1] * SECTION_SIZE;
-        }
+                newVector.x = vector.x + section[0] * SECTION_SIZE;
+                newVector.y = vector.y + section[1] * SECTION_SIZE;
+            }
         
-        return newVector;
+            return newVector;
+    //    }
     };
     
     /**
@@ -97,6 +99,10 @@ function ViewManager() {
                 case 'stack':
                     enter = function() {
 
+                        if(!window.headersUp) {
+                            headers.showHeaders(transition);
+                            window.headersUp = true;
+                        }
                         window.headers.transformStack(transition);
 
                         window.helper.hideBackButton();
@@ -108,7 +114,7 @@ function ViewManager() {
                     enter = function() {
                         window.logo.stopFade(2000);
                     };
-
+                    
                     break;
                 case 'book':
                 case 'readme':
@@ -130,6 +136,10 @@ function ViewManager() {
                     break;
                 case 'workflows':
                     enter = function() {
+                        if(!window.headersUp) {
+                            headers.showHeaders(transition);
+                            window.headersUp = true;
+                        }
                         window.flowManager.getHeaderFLow();
                         window.headers.transformWorkFlow(transition);
                     };

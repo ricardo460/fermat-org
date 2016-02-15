@@ -35,7 +35,9 @@ function getData() {
         var l = JSON.parse(testData);
         
         window.preLoad(function() {
-        
+            
+            window.tileManager.JsonTile(function() {
+    
                 window.loadMap(function() {
                     tileManager.fillTable(l);
 
@@ -43,7 +45,8 @@ function getData() {
                     logo.stopFade();
                     init();
                 });
-            });
+            })
+        });
 
     }, 6000);*/
 }

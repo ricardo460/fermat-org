@@ -607,9 +607,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
         var width, height, group, headerData, objectHeaderInWFlowGroup, slayer, column;
         
-        for(group in groups){
-            if (window.groups.hasOwnProperty(group) && group !== 'size'){
-                headerData = window.groups[group];
+        for(group in platforms){
+            if (window.platforms.hasOwnProperty(group) && group !== 'size'){
+                headerData = window.platforms[group];
                 column = headerData.index;
 
                 width = columnWidth * window.TILE_DIMENSION.width;
@@ -713,10 +713,10 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         
         var src, width, height;
             
-        for (group in groups) {
-            if (window.groups.hasOwnProperty(group) && group !== 'size') {
+        for (group in platforms) {
+            if (window.platforms.hasOwnProperty(group) && group !== 'size') {
 
-                headerData = window.groups[group];
+                headerData = window.platforms[group];
                 column = headerData.index;
 
                 width = columnWidth * window.TILE_DIMENSION.width;
@@ -772,6 +772,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object.position.copy(window.viewManager.translateToSection('table', object.position));
 
+                if(window.TABLE[slayer])
+                    window.TABLE[slayer].x = object.position.x;
                 positions.table.push(object);
 
                 createChildren(slayer, headerData.dependsOn);

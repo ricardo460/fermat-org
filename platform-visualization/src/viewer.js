@@ -6,6 +6,7 @@ var tilesQtty,
     objects = [],
     actualView,
     stats = null,
+    headersUp = false,
 //Class
     tileManager = new TileManager(),
     helper = new Helper(),
@@ -28,34 +29,58 @@ var TILE_DIMENSION = {
 },
     TILE_SPACING = 20;
 
-createScene();
+    currentRender = "start";
+    currentRender = createScene(currentRender, currentRender);
 
 getData();
 
 /**
  * Creates the rendering environment
  */
-function createScene(){
-
-    var light = new THREE.AmbientLight(0xFFFFFF);
-    scene.add( light );
+function createScene(current, option){
     
-    if(webglAvailable())
+    change = false; 
+    if(option !== "canvas" && webglAvailable() && window.currentRender !== "webgl") {
         renderer = new THREE.WebGLRenderer({antialias : true, alpha : true}); //Logarithmic depth buffer disabled due to sprite - zbuffer issue
-    else
-        renderer = new THREE.CanvasRenderer({antialias : true, alpha : true});
-        
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xFFFFFF);
+        current = "webgl";
+        change = true;
+    }
+    else {
+        if((option === "start" || option === "canvas") && window.currentRender !== "canvas") {
+            renderer = new THREE.CanvasRenderer({antialias : true, alpha : true});
+            current = "canvas";
+            change = true;
+        }
+    }
+    
+    if(change) {
+
+        var light = new THREE.AmbientLight(0xFFFFFF);
+        scene.add( light );
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.domElement.style.position = 'absolute';
+        renderer.setClearColor(0xFFFFFF);
     //renderer.setClearColor(0x313131);//Modo Prueba.
-    document.getElementById('container').appendChild(renderer.domElement);
+        document.getElementById('container').appendChild(renderer.domElement);
 
-    camera = new Camera(new THREE.Vector3(0, 0, 90000),
-        renderer,
-        render);
+        camera = new Camera(new THREE.Vector3(0, 0, 90000),
+            renderer,
+            render);
+    }
 
-    logo.startFade();
+    if(window.currentRender === "start")
+        logo.startFade();
+    if(currentRender !== "start") {
+        if(change)
+            console.log("Switching rendering to",current);
+        else if(currentRender !== option)
+            console.log("Rendering switch failed");
+        else
+            console.log("Already rendering with",currentRender);
+    }
+
+    return current;
 }
 
 function webglAvailable() {
@@ -149,17 +174,17 @@ function init() {
  * @param {String} name The name of the target state
  */
 function goToView ( targetView ) {
-
+    
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
-    
+
     newCenter = viewManager.translateToSection(targetView, newCenter);
     camera.moving = true;
     camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition, true);
     camera.lockPan();
-    
+        
     setTimeout(function() { camera.moving = false; }, transition);
-    
+
     if(window.map.views[targetView] != null) {
         if(actualView != targetView){
             
@@ -168,11 +193,11 @@ function goToView ( targetView ) {
 
             viewManager.views[targetView].enter();
         }
+
         actualView = targetView;
     }
-    else {
+    else
         goToView(window.map.start);
-    }
 }
 
 /**
@@ -189,11 +214,15 @@ function initPage() {
 
             if(window.actualView !== undefined && window.actualView !== ""){ 
 
-    			if(view !== undefined && view !== ""){
+    			if(view !== undefined && view !== ""  && view !== 'canvas' && view !== 'webgl'){
 
     				if(window.map.views[view].enabled !== undefined && window.map.views[view].enabled)
     					goToView(view);
     			}
+                else if(path === 'canvas' || path === 'webgl'){
+                    currentRender = createScene(currentRender,path);
+                    change = false;
+                }
             }
             else{
                 goToView(window.location.hash.slice(1));
