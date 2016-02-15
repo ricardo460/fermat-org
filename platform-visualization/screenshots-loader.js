@@ -87,7 +87,7 @@ function countFolder(directoryName){
 }
 
 function folderData(directoryName, data){
-    var directory = directoryName.split("\\");
+    directory = directoryName.split("\\");
 
     return directory[data];
 }
@@ -105,7 +105,5 @@ function AddScreenshots(fullPath, wallet, directoryName){
 
     num = fullPath.replace(directoryName+"\\", '');
     num = num.replace(".png", '');
-    num = num.replace(".jpeg", '');
-    num = num.replace(".jpg", '');
     SCREENSHOTS[group][layer][wallet].screenshots['Screenshots_'+num] = src;
 }

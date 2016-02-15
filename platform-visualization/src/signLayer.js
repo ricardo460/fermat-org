@@ -57,8 +57,6 @@ function SignLayer(){
 
         window.screenshotsAndroid.setGroup(_group, titleSign);
 
-        fillNewTable(x, y, titleSign, _group);
-
 		var fillBox = function(ctx, image) {
             
             ctx.drawImage(image, 0, 0);

@@ -13,7 +13,7 @@ function ScreenshotsAndroid() {
 					  texture : {}
 					}			
 		};
-		
+
     // Private Variables
 	var self = this,
 		POSITION_X = 231,
@@ -40,9 +40,8 @@ function ScreenshotsAndroid() {
 
     	if(typeof SCREENSHOTS[id] !== 'undefined'){
 
-    		window.buttonsManager.createButtons('showScreenshots', 'View Screenshots', function(){
+    		buttonsManager.createButtons('showScreenshots', 'View Screenshots', function(){
     			
-    			window.buttonsManager.removeAllButtons();
     			showScreenshotsButton(id);
     		});
     	}	
@@ -63,32 +62,31 @@ function ScreenshotsAndroid() {
 	        		for(var _wallet in json[_group][_layer]){
 
 	        			for (var i = 0; i < window.table.length; i++){
+	        				
+	        				if(window.table[i].type === "Android" && window.table[i].group === _group && window.table[i].layer === _layer && window.table[i].name === _wallet){
+	        					
+	        					var id = i,
+	        						name = json[_group][_layer][_wallet].name,
+	        						position = window.tileManager.targets.table[i].position,
+	        						show = false,
+	        						screenshots = {};
+	        						
+	        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
+	        						show = true;
 
-	        				if(window.table[i].type === "Plugin" || window.table[i].type === "Android"){ 
+        						for(var _screen in json[_group][_layer][_wallet].screenshots)
+									screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
 
-		        				if(window.table[i].group === _group && window.table[i].layer === _layer && window.table[i].name === _wallet){
-		        					
-		        					var id = i,
-		        						name = json[_group][_layer][_wallet].name,
-		        						position = window.tileManager.targets.table[i].position,
-		        						show = false,
-		        						screenshots = {};
-		        						
-		        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
-		        						show = true;
-
-	        						for(var _screen in json[_group][_layer][_wallet].screenshots)
-										screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
-
-									fillScreenshots(id, position, name, show, screenshots);
-		        				}
-		        			}
+								fillScreenshots(id, position, name, show, screenshots);
+	        				}
 	        			}
 	        		}
 	        	}
 	        }
+
 	        setScreenshot();
     	});
+		
 	};
     
     	/**
@@ -362,11 +360,40 @@ function ScreenshotsAndroid() {
 	function addTextureWallet(_id, wallet, i) {
 
 		var _texture,
-			image,
+			canvas,
+			ctx,
+			image;
+
+		canvas = document.createElement('canvas');
+		canvas.width  = 538;
+		canvas.height = 948;
+
+		ctx = canvas.getContext("2d");
+
+		drawPicture(_id, wallet, ctx);
+
+		image = new THREE.Texture(canvas);
+		image.needsUpdate = true;  
+		image.minFilter = THREE.NearestFilter;
+
+		_texture = { id : i, wallet : wallet, image : image };
+
+		self.objects.texture.push(_texture);
+	}
+
+	/**
+	* @author Ricardo Delgado
+	* Wallet drawn and added required.
+	* @param {String}    wallet    Wallet draw.
+    * @param {Object} 	  ctx      Canvas context
+	*/ 
+	function drawPicture(id, wallet, ctx){
+
+		var img = new Image(),
 			cant = 0,
 			place;
 
-		for (var f in SCREENSHOTS[_id].screenshots)
+		for (var i in SCREENSHOTS[id].screenshots)
 			cant++;
 
 		place = Math.floor(Math.random()* cant + 1);
@@ -375,20 +402,18 @@ function ScreenshotsAndroid() {
 
 			CONTROL[wallet]["picture"+place] = place;
 
-			image = new THREE.ImageUtils.loadTexture(SCREENSHOTS[_id].screenshots['Screenshots_'+place]);
-			image.needsUpdate = true;  
-			image.minFilter = THREE.NearestFilter;
+			img.src = SCREENSHOTS[id].screenshots['Screenshots_'+place];
 
-			_texture = { id : i, wallet : wallet, image : image };
+			img.onload = function () {
 
-			self.objects.texture.push(_texture);
+				ctx.drawImage(img, 0, 0);
 
+			};
 		}
 		else{
 			
-			addTextureWallet(_id, wallet, i);
-		}	
-
+			drawPicture(id, wallet, ctx);
+		}
 	}
 
 	/**
@@ -442,9 +467,7 @@ function ScreenshotsAndroid() {
 		var wallet = SCREENSHOTS[_id].name,
 			position = SCREENSHOTS[_id].position,
 			id = 0,
-			mesh = null,
-            target = {};
-            
+			mesh;
 
 		for(var i = 0; i < self.objects.mesh.length; i++){
 			if(self.objects.mesh[i].userData.wallet === wallet){
@@ -455,7 +478,7 @@ function ScreenshotsAndroid() {
 
 		action.state = true; action.mesh = id;
 
-		window.tileManager.letAlone();
+		tileManager.letAlone();
 
 		target = { x: position.x, y : position.y, z : 0 };
 
