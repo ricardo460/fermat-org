@@ -6,12 +6,14 @@ var table = [],
     objects = [],
     actualView,
     stats = null,
+    TABLE = {},
 //Class
     tileManager = new TileManager(),
     helper = new Helper(),
     logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),
+    fermatEdit = null,
     browserManager = null,
     screenshotsAndroid = null,
     headers = null,
@@ -46,7 +48,8 @@ function createScene(){
         
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xFFFFFF);
+    //renderer.setClearColor(0xFFFFFF);
+    renderer.setClearColor(0x313131);//Modo Prueba.
     document.getElementById('container').appendChild(renderer.domElement);
 
     camera = new Camera(new THREE.Vector3(0, 0, 90000),
@@ -78,6 +81,9 @@ function init() {
     magazine = new Magazine();
     flowManager = new FlowManager();
     buttonsManager = new ButtonsManager();
+    fermatEdit = new FermatEdit();
+
+    fermatEdit.init();
 
     //View Manager
     viewManager = new ViewManager();
@@ -96,6 +102,8 @@ function init() {
     // groups icons
     headers = new Headers(dimensions.columnWidth, dimensions.superLayerMaxHeight, dimensions.groupsQtty,
                           dimensions.layersQtty, dimensions.superLayerPosition);
+
+    addNewTableObjects();
 
     // uncomment for testing
     //create_stats();
@@ -136,6 +144,68 @@ function init() {
     //TWEEN.removeAll();
 }
 
+function fillNewTable(x, y, layer, platform){
+
+
+    if(typeof TABLE[platform] === 'undefined'){
+        TABLE[platform] = {   
+            layers : {},
+            x : x 
+        };
+    }
+
+    if(typeof TABLE[platform].layers[layer] === 'undefined'){ 
+        TABLE[platform].layers[layer] = {   
+            objects : [],
+            y : y
+        };
+    }
+}
+
+function addNewTableObjects(){
+
+    var x, y, z;
+
+    for (var i = 0; i < table.length; i++) {
+
+        var mesh = window.objects[i];      
+
+        var platform = table[i].group || window.layers[table[i].layer].super_layer,
+            layer = table[i].layer,
+            object = { 
+                mesh : null,
+                data : {},
+                target : {}
+            };
+
+        var lastObject = helper.getLastValueArray(TABLE[platform].layers[layer].objects);
+
+        x = 0;
+
+        if(!lastObject)
+            x = TABLE[platform].x;
+        else
+            x = lastObject.target.show.x + TILE_DIMENSION.width;
+
+        y = TABLE[platform].layers[layer].y;
+
+        z = 0;
+
+        var target = helper.fillTarget(x, y, z, 'table');
+
+        mesh.position.copy(target.hide);
+
+        mesh.rotation.set(target.hideR.x, target.hideR.y, target.hideR.z);
+
+        object.mesh = mesh;
+        object.data = table[i];
+        object.target = target;
+
+        TABLE[platform].layers[layer].objects.push(object);
+    }
+
+}
+
 /**
  * @author Miguel Celedon
  * @lastmodifiedBy Emmanuel Colina
@@ -156,11 +226,13 @@ function goToView ( targetView ) {
     setTimeout(function() { camera.moving = false; }, transition);
     
     if(window.map.views[targetView] != null) {
-        viewManager.views[targetView].enter();
-        
-        if(actualView)
-            viewManager.views[actualView].exit();
-        
+        if(actualView != targetView){
+            
+            if(actualView)
+                viewManager.views[actualView].exit();
+
+            viewManager.views[targetView].enter();
+        }
         actualView = targetView;
     }
     else {
@@ -187,13 +259,11 @@ function initPage() {
     				if(window.map.views[view].enabled !== undefined && window.map.views[view].enabled)
     					goToView(view);
     			}
-
             }
             else{
                 goToView(window.location.hash.slice(1));
             }
 		}
-
     });
 
 }
@@ -261,6 +331,8 @@ function onElementClick(id) {
         window.headers.hideHeaders(2000);
 
         window.camera.setFocus(objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 2000);
+
+        window.buttonsManager.removeAllButtons();
         
         setTimeout(function() {
             

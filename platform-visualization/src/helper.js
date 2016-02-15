@@ -37,7 +37,7 @@ function Helper() {
         if( $('#developerButton') != null ) window.helper.hide($('#developerButton'), 1000);
         if( $('#showFlows') != null ) window.helper.hide($('#showFlows'), 1000);
         if( $('#showScreenshots') != null ) window.helper.hide($('#showScreenshots'), 1000);        
-    };
+    }
     
     /**
      * @author Miguel Celedon
@@ -226,6 +226,9 @@ function Helper() {
             case "nodes":
                 tail = "/v1/network/node";
                 break;
+            case "user":
+                tail = "/v1/repo/devs?access_token=561fd1a5032e0c5f7e20387d&env=development";
+                break;
         }
         
         return SERVER + tail;
@@ -325,25 +328,15 @@ function Helper() {
         return -1;
     };
     
-    /**
-     * Gets a point randomly chosen out of the screen
-     * @author Miguel Celedon
-     * @param   {number}        [z=0]         The desired Z
-     * @param   {string}        [view='home'] The view of the relative center
-     * @returns {THREE.Vector3} A new vector with the point position
-     */
-    this.getOutOfScreenPoint = function(z, view) {
+    this.getOutOfScreenPoint = function(z) {
         
-        z = (typeof z !== "undefined") ? z : 0;
-        view = (typeof view !== "undefined") ? view : 'home';
+        z = (z !== undefined) ? z : 0;
         
         var away = window.camera.getMaxDistance() * 4;
         var point = new THREE.Vector3(0, 0, z);
         
         point.x = Math.random() * away + away * ((Math.floor(Math.random() * 10) % 2) * -1);
         point.y = Math.random() * away + away * ((Math.floor(Math.random() * 10) % 2) * -1);
-        
-        point = window.viewManager.translateToSection(view, point);
         
         return point;
     };
@@ -376,18 +369,58 @@ function Helper() {
         window.helper.hide('backButton', 1000, true);
     };
     
-    /**
-     * Creates an empty tween which calls render() every update
-     * @author Miguel Celedon
-     * @param {number} [duration=2000] Duration of the tween
-     */
-    this.forceTweenRender = function(duration) {
-        
-        duration = (typeof duration !== "undefined") ? duration : 2000;
-        
-        new TWEEN.Tween(window)
-        .to({}, duration)
-        .onUpdate(window.render)
-        .start();
+    this.getCenterView = function(view){
+
+        var newCenter = new THREE.Vector3(0, 0, 0);
+
+        newCenter = window.viewManager.translateToSection(view, newCenter);
+
+        return newCenter;
+
     };
+
+    this.fillTarget = function(x, y, z, view){
+
+        var object = new THREE.Object3D();
+
+        object.position.x = Math.random() * 80000 - 40000;
+        object.position.y = Math.random() * 80000 - 40000;
+        object.position.z = 80000 * 2;
+
+        object.position.copy(window.viewManager.translateToSection(view, object.position));
+
+        var target = {  
+                show : new THREE.Vector3(x, y, z),        
+                hide : object.position,
+                showR : new THREE.Vector3(0, 0, 0),
+                hideR : new THREE.Vector3(Math.random() * 180, Math.random() * 180, Math.random() * 180)                    
+                    };
+
+        return target;
+    };
+
+    this.getLastValueArray = function(array){
+
+        var value = array[array.length - 1];
+
+        return value;
+    };
+
+    this.getCountObject = function(object){
+
+        var count = 0;
+
+        for(var i in object)
+            count++; 
+
+        return count;
+    };
+
+    this.getPositionYLayer = function(layer){
+
+        var index = window.layers[layer].index;
+
+        return window.tileManager.dimensions.layerPositions[index];
+    }
+
 }
