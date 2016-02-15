@@ -241,9 +241,9 @@ function Helper() {
         return SERVER + tail;
     };
 
-    this.postRoutesComponents = function(route, params, usr_id, comp_id, doneCallback){
+    this.postRoutesComponents = function(route, params, usr_id, comp_id){
 
-        var SERVER = "http://api.fermat.org:3000",
+        var SERVER = "http://api.fermat.org:8081",
             tail = "",
             method = "",
             setup = {};
@@ -262,6 +262,8 @@ function Helper() {
                 method = "PUT";
                 tail = "/v1/repo/usrs/" + usr_id + "/comps/" + comp_id;
                 break;
+
+                //PUT /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs/:comp_dev_id
         }
 
         setup.method = method;
@@ -269,13 +271,14 @@ function Helper() {
         setup.data = params;
 
         $.ajax(setup)
-        .done(function(res) {
+        .done(function(res) { 
         
-            doneCallback(res);
+            return res;
         })
         .fail(function(res) {
-        
-            alert("Conexion Fallida");
+
+            alert('Action Not Ejecutada');        
+            return false;
         });
 
             /*
@@ -381,24 +384,17 @@ function Helper() {
         
         if(components.length === 3) {
         
-            for(var platfrm in window.TABLE){
+            for(var i = 0; i < window.tilesQtty.length; i++){
 
-                for (var layer in window.TABLE[platfrm].layers){
-
-                    for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
-                    
-                        var tile = window.TABLE[platfrm].layers[layer].objects[i];
-                
-                        group = tile.data.group || window.layers[tile.data.layer].super_layer;
+                var tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
+        
+                group = tile.group || window.layers[tile.layer].super_layer;
 
                 if(group && group.toLowerCase() === components[0].toLowerCase() &&
-                           this.getSpecificTile(i).data.layer.toLowerCase() === components[1].toLowerCase() &&
-                           this.getSpecificTile(i).data.name.toLowerCase() === components[2].toLowerCase())
-                            return i;
-                    }
-                }
-            }
-            
+                   tile.layer.toLowerCase() === components[1].toLowerCase() &&
+                   tile.name.toLowerCase() === components[2].toLowerCase())
+                    return window.tilesQtty[i];           
+            }  
         }
 
         return -1;
@@ -470,20 +466,6 @@ function Helper() {
         .start();
     };
 
-    this.getSpecificTile = function(id){
-
-        for(var platfrm in window.TABLE){
-            for (var layer in window.TABLE[platfrm].layers){
-                for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
-                    if(id === window.TABLE[platfrm].layers[layer].objects[i].ID){
-                        return window.TABLE[platfrm].layers[layer].objects[i];
-                    }
-                }
-            }
-        }
-    };
-
-
     this.getCenterView = function(view){
 
         var newCenter = new THREE.Vector3(0, 0, 0);
@@ -518,13 +500,13 @@ function Helper() {
         return target;
     };
 
-    this.getSpecificTile_ = function(_id){
+    this.getSpecificTile = function(_id){
 
         var id = _id.split("_");
 
         return window.TABLE[id[0]].layers[id[1]].objects[id[2]];
 
-    }
+    };
 
     this.getLastValueArray = function(array){
 

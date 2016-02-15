@@ -156,10 +156,10 @@ function Developer (){
 		
 		var id = 0;
         
-        for(var i = 0; i < window.tilesQtty; i++) {
-            
-            var tile = window.helper.getSpecificTile(i).data;
-            
+        for(var i = 0; i < window.tilesQtty.length; i++){
+
+            var tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
+
             if(tile.author && developers[tile.author] === undefined)
             {
                 developers[tile.author] = {
@@ -170,7 +170,7 @@ function Developer (){
                     authorEmail : tile.authorEmail
                 };
                 id++;
-            }
+            }              
         }
         
 		self.createDevelopers();
@@ -469,7 +469,9 @@ function Developer (){
      * @author Emmanuel Colina
      */
 	this.delete = function() {
+
         var _duration = 2000;
+
         var moveAndDelete = function(id) {
             
             var target = position.lastTarget[id];
@@ -498,17 +500,21 @@ function Developer (){
         var section = 0;
         var center = objectsDeveloper[id].position;
 
-        for (var i = 0; i < window.tilesQtty; i++) {
-            
-            if (window.helper.getSpecificTile(i).data.author === objectsDeveloper[id].name && !isNaN(objects[i].position.y)){
+        for(var i = 0; i < window.tilesQtty.length; i++){
 
-                new TWEEN.Tween(objects[i].position)
+            var tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
+
+            var mesh = window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
+    
+            if (tile.author === objectsDeveloper[id].name && !isNaN(mesh.position.y)){
+
+                new TWEEN.Tween(mesh.position)
                 .to({x : (center.x + (section % 5) * window.TILE_DIMENSION.width) - 750, y : (center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height) - 250, z : 0}, 2000)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .start();
                 
                 section += 1;
-            }
+            }                            
         }
     };
 }

@@ -161,17 +161,18 @@ function ScreenshotsAndroid() {
 
 	        		for(var _wallet in json[_group][_layer]){
 
-	        			for (var i = 0; i < window.tilesQtty; i++){
+        				for(var i = 0; i < window.TABLE[_group].layers[_layer].objects.length; i++){
+
+        					var id = _group + "_" + _layer + "_" + i;
                             
-                            var tile = window.helper.getSpecificTile(i).data;
+                            var tile = window.helper.getSpecificTile(id).data;        
 
 	        				if(tile.type === "Plugin" || tile.type === "Android"){ 
 
 		        				if(tile.group === _group && tile.layer === _layer && tile.name === _wallet){
 		        					
-		        					var id = window.helper.getSpecificTile(i)._ID,
-		        						name = json[_group][_layer][_wallet].name,
-		        						position = window.tileManager.targets.table[i].position,
+		        					var name = json[_group][_layer][_wallet].name,
+		        						position = window.helper.getSpecificTile(id).target.show.position,
 		        						_id = _group + "_" + _layer + "_" + name,
 		        						show = false,
 		        						screenshots = {};

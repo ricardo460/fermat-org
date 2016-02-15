@@ -50,6 +50,8 @@ function FermatEdit() {
             });
     };
 
+    var DATA_TEST_USER = '5629db85c7479678085a9552';
+
     /**
      * @author Ricardo Delgado
      */
@@ -93,12 +95,8 @@ function FermatEdit() {
 
             callback = function(){
 
-                if(confirm("Really remove this component?")){ 
-            
-                    window.buttonsManager.removeAllButtons();
-                    self.addButton();
-                    deleteTile(id);
-                }
+                if(confirm("Really remove this component?"))           
+                    deleteTile(id);                
             };
 
             text = 'Delete Component';
@@ -106,8 +104,7 @@ function FermatEdit() {
             side = 'right';
         }
 
-        window.buttonsManager.createButtons(button, text, callback, null, null, side);
-           
+        window.buttonsManager.createButtons(button, text, callback, null, null, side);   
     };
 
     this.removeAllFields = function(){
@@ -143,7 +140,7 @@ function FermatEdit() {
             if(window.actualView === 'table'){ 
 
                 if(window.camera.getFocus() === null)
-                    self.addButton();
+                    self.addButton();              
 
                 if(typeof(actions.exit) === 'function'){
                     actions.exit();
@@ -156,7 +153,7 @@ function FermatEdit() {
 
     function fillFields(id){
 
-        var tile = window.helper.getSpecificTile_(id).data; 
+        var tile = window.helper.getSpecificTile(id).data; 
 
         self.actualTile = tile;
 
@@ -265,11 +262,11 @@ function FermatEdit() {
 
                 window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 1500);
 
-                window.tileManager.transform(window.tileManager.targets.table, 1000);
+                window.tileManager.transform(false, 1000);
                 window.signLayer.transformSignLayer();
 
                 setTimeout( function() {
-                    var data = helper.getSpecificTile_(id);
+                    var data = helper.getSpecificTile(id);
                     animate(data.mesh, data.target.hide, 1000);
                 }, 2000 );
 
@@ -702,7 +699,7 @@ function FermatEdit() {
     function changeTexture(){
 
         var table = null,
-            scale = 3, //5
+            scale = 5, //5
             mesh = null;
 
         table = fillTable(true);
@@ -767,9 +764,9 @@ function FermatEdit() {
 
         var count = window.TABLE[platform].layers[layer].objects.length;
 
-        object._ID = platform + '_' + layer + '_' + count;
+        object.id = platform + '_' + layer + '_' + count;
 
-        var mesh = window.tileManager.createElement(object._ID, table);
+        var mesh = window.tileManager.createElement(object.id, table);
 
         x = 0;
 
@@ -793,8 +790,6 @@ function FermatEdit() {
         object.data = table;
         object.target = target;
 
-        window.camera.enable();
-
         window.camera.move(target.show.position.x, target.show.position.y, target.show.position.z + 8000, 4000);
 
         animate(mesh, target.show, 4500, function(){
@@ -806,7 +801,7 @@ function FermatEdit() {
         window.TABLE[platform].layers[layer].objects.push(object);
     }
 
-    function modifyTile(table){
+    function modifyTile(table){ 
 
         var newLayer = table.layer,
             newGroup = table.group || window.layers[table.layer].super_layer,
@@ -887,7 +882,7 @@ function FermatEdit() {
                     id = i;
                     window.TABLE[oldGroup].layers[oldLayer].objects[i].data = table;
                     target = window.TABLE[oldGroup].layers[oldLayer].objects[i].target;
-                    _ID = window.TABLE[oldGroup].layers[oldLayer].objects[i]._ID;
+                    _ID = window.TABLE[oldGroup].layers[oldLayer].objects[i].id;
                 }
             }
 
@@ -901,6 +896,58 @@ function FermatEdit() {
                 window.screenshotsAndroid.hidePositionScreenshots(oldGroup, oldLayer); 
             });
 
+        }
+
+        function fillParamsData(table){
+
+            var param = {};
+
+            var newLayer = table.layer,
+                newGroup = table.group || window.layers[table.layer].super_layer,
+                oldLayer = self.actualTile.layer,
+                oldGroup = self.actualTile.group || window.layers[self.actualTile.layer].super_layer;
+
+            if(newGroup !== oldGroup){
+
+                if(typeof window.groups[newGroup] !== "undefined")
+                    param.platfrm_id = window.groups[newGroup]._id;
+                else
+                    param.suprlay_id = window.superLayers[newGroup]._id;
+            }
+
+            if(newLayer !== oldLayer)
+                param.layer_id = window.layers[newLayer]._id;
+            
+            if(table.name !== self.actualTile.name)
+                param.name = table.name;
+
+            if(table.type !== self.actualTile.type)
+                param.type = table.type;
+
+            if(table.difficulty !== self.actualTile.difficulty)
+                param.difficulty = table.difficulty;
+
+            if(table.code_level !== self.actualTile.code_level)
+                param.code_level = table.code_level;
+
+                param.found = false;
+
+            return param;
+        }
+
+        function fillParamsUser(table){
+            
+            if(table.author !== self.actualTile.author){
+
+                var param = {};
+                    param.dev_id = dataUser(table.author).id;
+                    param.percnt = 100;
+
+                return param;
+            }
+            else {
+                return false;
+            }
         }
     }
 
@@ -929,9 +976,9 @@ function FermatEdit() {
 
         var count = window.TABLE[platform].layers[layer].objects.length;
 
-        object._ID = platform + '_' + layer + '_' + count;
+        object.id = platform + '_' + layer + '_' + count;
 
-        var mesh = window.tileManager.createElement(object._ID, table);
+        var mesh = window.tileManager.createElement(object.id, table);
     
         x = 0;
 
@@ -979,7 +1026,6 @@ function FermatEdit() {
             superLayer = group;
         }
 
-
         if(layers[layer])
             layerID = layers[layer].index;
 
@@ -1021,6 +1067,7 @@ function FermatEdit() {
                 data.picture = DATA_USER[i].avatar_url;
                 data.authorRealName = DATA_USER[i].name;
                 data.authorEmail = DATA_USER[i].email;
+                data.id = DATA_USER[i]._id;
             }
         }
 
@@ -1029,50 +1076,54 @@ function FermatEdit() {
 
     function deleteTile(id){
 
-        var table = helper.getSpecificTile_(id).data;
+        var table = helper.getSpecificTile(id).data;
 
-        var oldLayer = table.layer,
-            oldGroup = table.group || window.layers[table.layer].super_layer,
-            arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects,
-            idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
+        //if(!window.helper.postRoutesComponents('delete', null, DATA_TEST_USER, table.id)){
 
-        window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+            var oldLayer = table.layer,
+                oldGroup = table.group || window.layers[table.layer].super_layer,
+                arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects,
+                idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
 
-        var positionCameraX = window.TABLE[oldGroup].x,
-            positionCameraY = helper.getPositionYLayer(oldLayer);
+            window.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
-        window.camera.loseFocus();
-        window.camera.enable();
+            var positionCameraX = window.TABLE[oldGroup].x,
+                positionCameraY = helper.getPositionYLayer(oldLayer);
 
-        window.tileManager.transform(window.tileManager.targets.table, 1000);
-        window.signLayer.transformSignLayer();
+            window.tileManager.transform(false, 1000);
+            window.signLayer.transformSignLayer();
 
-        window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
+            window.camera.loseFocus();
+            window.camera.enable();
 
-        setTimeout( function() {
+            window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
 
-            window.TABLE[oldGroup].layers[oldLayer].objects = [];
-       
-            id = id.split("_");
+            setTimeout( function() {
 
-            id = parseInt(id[2]);
+                window.TABLE[oldGroup].layers[oldLayer].objects = [];
+           
+                id = id.split("_");
 
-            var mesh = arrayObject[id].mesh;
+                id = parseInt(id[2]);
 
-            var target =  window.helper.fillTarget(0, 0, 160000, 'table');
+                var mesh = arrayObject[id].mesh;
 
-            animate(mesh, target.hide, 1500, function(){
-                window.scene.remove(mesh);
-            });
+                var target =  window.helper.fillTarget(0, 0, 160000, 'table');
 
-            arrayObject.splice(id, 1);
+                animate(mesh, target.hide, 1500, function(){
+                    window.scene.remove(mesh);
+                });
 
-            window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+                arrayObject.splice(id, 1);
 
-            window.tileManager.updateElementsByGroup();
+                window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
 
-        }, 3500 );
- 
+                window.tileManager.updateElementsByGroup();
+
+            }, 3500 );
+
+        //}
+
     }
 
     function modifyRowTable(arrayObject, oldGroup, oldLayer){
@@ -1098,10 +1149,10 @@ function FermatEdit() {
 
             var count = newArrayObject.length;
 
-            object._ID = oldGroup + '_' + oldLayer + '_' + count;
+            object.id = oldGroup + '_' + oldLayer + '_' + count;
 
             for(var i = 0; i < mesh.levels.length; i++)
-                mesh.levels[i].object.userData.id = object._ID;
+                mesh.levels[i].object.userData.id = object.id;
 
             x = 0;
 
