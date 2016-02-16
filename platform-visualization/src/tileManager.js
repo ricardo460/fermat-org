@@ -98,10 +98,10 @@ function TileManager() {
                     var tile = window.TABLE[platfrm].layers[layer].objects[i];
             
                     var r = tile.data.layerID; 
-                    var c = tile.data.groupID;
-                    var id = tile.id;
+                    var c = tile.data.platformID;
+                    var idT = tile.id;
 
-                    self.elementsByGroup[c].push(id);
+                    self.elementsByGroup[c].push(idT);
 
                     if (layers[tile.data.layer].super_layer) {
 
@@ -252,7 +252,7 @@ function TileManager() {
             var element = buildElement(i);
 
             //An element is always inside a platform (known as group) or a superlayer
-            var group = element.platform || element.superLayer,
+            var platform = element.platform || element.superLayer,
                 layer = element.layer;
 
             if(typeof window.TABLE[platform] === 'undefined'){
@@ -601,9 +601,9 @@ function TileManager() {
         }
         else {
 
-            for(var i = 0; i < window.tilesQtty.length; i++){
+            for(var r = 0; r < window.tilesQtty.length; r++){
 
-                var tile = window.helper.getSpecificTile(window.tilesQtty[i]);                  
+                var tile = window.helper.getSpecificTile(window.tilesQtty[r]);                  
                     
                 animate(tile.mesh, tile.target.show, 0).start();
             }
@@ -822,7 +822,7 @@ function TileManager() {
                 
                     var tile = window.TABLE[platfrm].layers[layer].objects[i];
             
-                    var c = tile.data.groupID;
+                    var c = tile.data.platformID;
                     var id = tile.id;
 
                     window.tilesQtty.push(id);

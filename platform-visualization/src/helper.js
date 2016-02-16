@@ -210,7 +210,7 @@ function Helper() {
     this.getAPIUrl = function(route) {
         
         //var SERVER = "http://52.35.117.6:3000";
-        var SERVER = "http://api.fermat.org:3000";
+        var SERVER = "http://api.fermat.org";
         var tail = "";
         
         switch(route) {

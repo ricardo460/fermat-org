@@ -15,7 +15,7 @@ function Session (){
 	/**
 	 * Login with github and gets the authorization code
 	 */
-	this.getAuthCode = function(){
+	this.getAuthCode = function(){                                                                        //ClientID: c25e3b3b1eb9aa35c773 - Web
 		window.location.href = 'https://github.com/login/oauth/authorize?client_id=c25e3b3b1eb9aa35c773'; //ClientID: f079f2a8fa65313179d5 - localhost
 	};
 
