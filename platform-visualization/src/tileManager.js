@@ -100,10 +100,10 @@ function TileManager() {
                     var r = tile.data.layerID; 
 
                     var c = tile.data.platformID;
-                    var id = tile.id;
+                    var idT = tile.id;
 
 
-                    self.elementsByGroup[c].push(id);
+                    self.elementsByGroup[c].push(idT);
 
                     if (layers[tile.data.layer].super_layer) {
 
@@ -604,9 +604,9 @@ function TileManager() {
         }
         else {
 
-            for(var i = 0; i < window.tilesQtty.length; i++){
+            for(var r = 0; r < window.tilesQtty.length; r++){
 
-                var tile = window.helper.getSpecificTile(window.tilesQtty[i]);                  
+                var tile = window.helper.getSpecificTile(window.tilesQtty[r]);                  
                     
                 animate(tile.mesh, tile.target.show, 0).start();
             }
