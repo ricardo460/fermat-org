@@ -210,7 +210,7 @@ function Helper() {
     this.getAPIUrl = function(route) {
         
         //var SERVER = "http://52.35.117.6:3000";
-        var SERVER = "http://api.fermat.org:3000";
+        var SERVER = "http://api.fermat.org";
         var tail = "";
         
         switch(route) {
@@ -386,9 +386,10 @@ function Helper() {
         
             for(var i = 0; i < window.tilesQtty.length; i++){
 
+
                 var tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
         
-                group = tile.group || window.layers[tile.layer].super_layer;
+                group = tile.platform || window.layers[tile.layer].super_layer;
 
                 if(group && group.toLowerCase() === components[0].toLowerCase() &&
                    tile.layer.toLowerCase() === components[1].toLowerCase() &&
