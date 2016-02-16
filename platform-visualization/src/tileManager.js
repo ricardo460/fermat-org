@@ -281,14 +281,13 @@ function TileManager() {
                 mesh : null,
                 data : element,
                 target : {},
-                id: platform + '_' + layer + '_' + count
-                _ID: platform + '_' + layer + '_' + count
+                id: group + '_' + layer + '_' + count
             };
 
 
             window.tilesQtty.push(objectTile.id);
 
-            window.TABLE[platform].layers[layer].objects.push(objectTile);
+            window.TABLE[group].layers[layer].objects.push(objectTile);
 
         }
 
