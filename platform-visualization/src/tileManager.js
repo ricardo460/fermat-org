@@ -2,13 +2,6 @@
  * Controls how tiles behaves
  */
 function TileManager() {
-
-    /*this.targets = {
-        table: [],
-        sphere: [],
-        helix: [],
-        grid: []
-    };*/
    
     this.dimensions = {};
     this.elementsByGroup = [];
@@ -179,8 +172,6 @@ function TileManager() {
             _comps = list.comps,
             i, l, code, name;
 
-        window.TABLE = {};
-
         for (i = 0, l = _suprlays.length; i < l; i++) {
             code = _suprlays[i].code;
             superLayers[code] = {};
@@ -207,6 +198,7 @@ function TileManager() {
         }
 
         var buildElement = function (e) {
+
             var _comp = _comps[e];
 
             var _platfrm = getSPL(_comp._platfrm_id, _platfrms);
@@ -672,7 +664,7 @@ function TileManager() {
             //Row (Y)
             var tile = window.helper.getSpecificTile(id).data;
 
-            var group = tile.group || window.layers[tile.layer].super_layer;
+            var group = tile.platform || window.layers[tile.layer].super_layer;
 
             var row = tile.layerID;
 
@@ -713,27 +705,27 @@ function TileManager() {
             /*End*/
 
             if(i === 0 ){ //entra a la primera
-                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.platform);
+                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
                 signRow = tile.layerID;
                 signColumn = tile.platformID;
-                window.TABLE[tile.platform].layers[tile.layer].y = object.position.y;
+                window.TABLE[group].layers[tile.layer].y = object.position.y;
             }
 
             if(tile.layerID !== signRow && tile.platformID === signColumn && layers[tile.layer].super_layer === false){ // solo cambio de filas
-                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.platform);
+                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
                 signRow = tile.layerID;
                 signColumn = tile.platformID;
-                window.TABLE[tile.platform].layers[tile.layer].y = object.position.y;
+                window.TABLE[group].layers[tile.layer].y = object.position.y;
             }
 
             else if(signColumn !== tile.platformID && layers[tile.layer].super_layer === false){ //cambio de columna
-                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, tile.platform);
+                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
                 signRow = tile.layerID;
                 signColumn = tile.platformID;
-                window.TABLE[tile.platform].layers[tile.layer].y = object.position.y;
+                window.TABLE[group].layers[tile.layer].y = object.position.y;
             }                               
         }
-///
+
         this.dimensions = {
             columnWidth: columnWidth,
             superLayerMaxHeight: superLayerMaxHeight,
@@ -775,28 +767,21 @@ function TileManager() {
 
         };
 
-        for(var platfrm in window.TABLE){
+        for(var i = 0; i < window.tilesQtty.length; i++){
 
-            for (var layer in window.TABLE[platfrm].layers){
-
-                for(var f = 0; f < window.TABLE[platfrm].layers[layer].objects.length; f++){
-                
-                    var tile = window.TABLE[platfrm].layers[layer].objects[f];
-            
-                    if (ids === tile.id) {
-                        target =  tile.target.show.position;
-                    } 
-                    else {
-                        target = out;
-                        tile.mesh.userData.flying = true;
-                    }
-
-                    animate(tile.mesh, target, Math.random() * _duration + _duration);
-                    
-                }
+            var tile = window.helper.getSpecificTile(window.tilesQtty[i]);  
+        
+            if (ids === tile.id) {
+                target =  tile.target.show.position;
+            } 
+            else {
+                target = out;
+                tile.mesh.userData.flying = true;
             }
-        }       
 
+            animate(tile.mesh, target, Math.random() * _duration + _duration);      
+        }
+               
         new TWEEN.Tween(this)
             .to({}, _duration * 2)
             .onUpdate(render)
@@ -817,15 +802,15 @@ function TileManager() {
             self.elementsByGroup.push([]);
         }
 
-        for(var platfrm in window.TABLE){
+        for(var platform in window.TABLE){
 
-            for(var layer in window.TABLE[platfrm].layers){
+            for(var layer in window.TABLE[platform].layers){
 
-                for(i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
+                for(i = 0; i < window.TABLE[platform].layers[layer].objects.length; i++){
                 
-                    var tile = window.TABLE[platfrm].layers[layer].objects[i];
+                    var tile = window.TABLE[platform].layers[layer].objects[i];
             
-                    var c = tile.data.groupID;
+                    var c = tile.data.platformID;
                     var id = tile.id;
 
                     window.tilesQtty.push(id);
