@@ -2,7 +2,7 @@
 //var URL = "http://52.11.156.16:3000/repo/comps";
 
 function getData() {
-    //animate();
+    animate();
     
     var url = window.helper.getAPIUrl("comps");
     
