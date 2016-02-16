@@ -157,8 +157,8 @@ function FermatEdit() {
 
         self.actualTile = tile;
 
-        if(tile.group !== undefined)
-            document.getElementById('select-Platform').value = tile.group;
+        if(tile.platform !== undefined)
+            document.getElementById('select-Platform').value = tile.platform;
         else
             document.getElementById('select-Platform').value = window.layers[tile.layer].super_layer;
 
@@ -386,7 +386,7 @@ function FermatEdit() {
 
             objects.idFields.platform = id;
 
-            for(var i in platforms){
+            for(var i in window.platforms){ 
 
                 if(i != "size"){
 
@@ -401,7 +401,7 @@ function FermatEdit() {
 
             optgroup += "<optgroup label = superLayer>";
 
-            for(var _i in superLayers){
+            for(var _i in window.superLayers){
 
                 if(_i != "size"){
 
@@ -679,7 +679,7 @@ function FermatEdit() {
 
         var state = false;
 
-        if(typeof platforms[platform] === 'undefined')
+        if(typeof window.platforms[platform] === 'undefined')
             state = platform;
 
         var _layers = window.CLI.query(window.layers,function(el){return (el.super_layer === state);});
@@ -743,7 +743,7 @@ function FermatEdit() {
 
         var x, y, z;
 
-        var platform = table.group || window.layers[table.layer].super_layer,
+        var platform = table.platform || window.layers[table.layer].super_layer,
             layer = table.layer,
             object = { 
                 mesh : null,
@@ -804,9 +804,9 @@ function FermatEdit() {
     function modifyTile(table){ 
 
         var newLayer = table.layer,
-            newGroup = table.group || window.layers[table.layer].super_layer,
+            newGroup = table.platform || window.layers[table.layer].super_layer,
             oldLayer = self.actualTile.layer,
-            oldGroup = self.actualTile.group || window.layers[self.actualTile.layer].super_layer;
+            oldGroup = self.actualTile.platform || window.layers[self.actualTile.layer].super_layer;
 
         var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
 
@@ -903,14 +903,14 @@ function FermatEdit() {
             var param = {};
 
             var newLayer = table.layer,
-                newGroup = table.group || window.layers[table.layer].super_layer,
+                newGroup = table.platform || window.layers[table.layer].super_layer,
                 oldLayer = self.actualTile.layer,
-                oldGroup = self.actualTile.group || window.layers[self.actualTile.layer].super_layer;
+                oldGroup = self.actualTile.platform || window.layers[self.actualTile.layer].super_layer;
 
             if(newGroup !== oldGroup){
 
-                if(typeof window.groups[newGroup] !== "undefined")
-                    param.platfrm_id = window.groups[newGroup]._id;
+                if(typeof window.platforms[newGroup] !== "undefined")
+                    param.platfrm_id = window.platforms[newGroup]._id;
                 else
                     param.suprlay_id = window.superLayers[newGroup]._id;
             }
@@ -955,7 +955,7 @@ function FermatEdit() {
 
         var x, y, z;
 
-        var platform = table.group || window.layers[table.layer].super_layer,
+        var platform = table.platform || window.layers[table.layer].super_layer,
             layer = table.layer,
             object = { 
                 mesh : null,
@@ -1014,20 +1014,20 @@ function FermatEdit() {
             data = {},
             group = document.getElementById(objects.idFields.platform).value,
             layer = document.getElementById(objects.idFields.layer).value,
-            groupID = helper.getCountObject(groups) - 1,
+            platformID = helper.getCountObject(window.platforms) - 1,
             layerID = 0,
             superLayer = false;
 
-        if(groups[group]){
-            table.group = group;
-            groupID = groups[group].index;
+        if(window.platforms[group]){
+            table.platform = group;
+            platformID = window.platforms[group].index;
         }
         else{
-            superLayer = group;
+            window.superLayer = group;
         }
 
-        if(layers[layer])
-            layerID = layers[layer].index;
+        if(window.layers[layer])
+            window.layerID = layers[layer].index;
 
         table.layer = layer;
         table.type = document.getElementById(objects.idFields.type).value;
@@ -1038,7 +1038,7 @@ function FermatEdit() {
         table.author = document.getElementById(objects.idFields.author).value;
         table.maintainer = document.getElementById(objects.idFields.maintainer).value;
         table.found = state;
-        table.groupID = groupID;
+        table.platformID = platformID;
         table.layerID = layerID;
         table.superLayer = superLayer;
 
@@ -1081,7 +1081,7 @@ function FermatEdit() {
         //if(!window.helper.postRoutesComponents('delete', null, DATA_TEST_USER, table.id)){
 
             var oldLayer = table.layer,
-                oldGroup = table.group || window.layers[table.layer].super_layer,
+                oldGroup = table.platform || window.layers[table.layer].super_layer,
                 arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects,
                 idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
 

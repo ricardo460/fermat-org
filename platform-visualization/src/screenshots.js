@@ -98,7 +98,7 @@ function ScreenshotsAndroid() {
 
 		var layer = window.CLI.query(window.layers,function(el){return (el.super_layer === false);});
 
-		if(typeof groups[newGroup] !== 'undefined'){
+		if(typeof window.platforms[newGroup] !== 'undefined'){
 
 			if(newLayer === layer[0] || newLayer === layer[1] || newLayer === layer[2]){
 
