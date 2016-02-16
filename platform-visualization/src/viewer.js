@@ -1,5 +1,6 @@
 //global variables
 var tilesQtty = [],
+    TABLE = {},
     camera,
     scene = new THREE.Scene(),
     renderer,
@@ -31,7 +32,7 @@ var TILE_DIMENSION = {
 
     currentRender = "start";
     currentRender = createScene(currentRender, currentRender);
-getData();
+    getData();
 
 $('#login').click(function() {
         window.session.getAuthCode();
@@ -68,15 +69,16 @@ function createScene(current, option){
 
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.domElement.style.position = 'absolute';
-    renderer.domElement.id = "canvas";
+        renderer.domElement.id = "canvas";
         renderer.setClearColor(0xFFFFFF);
-    //renderer.setClearColor(0x313131);//Mode Test.
+        //renderer.setClearColor(0x313131);//Mode Test.
         document.getElementById('container').appendChild(renderer.domElement);
 
         camera = new Camera(new THREE.Vector3(0, 0, 90000),
             renderer,
             render);
     }
+
     if(window.currentRender === "start")
         logo.startFade();
     if(currentRender !== "start") {
