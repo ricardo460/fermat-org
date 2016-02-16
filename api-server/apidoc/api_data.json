@@ -49,7 +49,7 @@
     "title": "",
     "name": "GetChildren",
     "group": "Net",
-    "description": "<p>Descripcion.</p>",
+    "description": "<p>Lists all devices connected to a P2P network node given its hash.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -58,20 +58,7 @@
             "type": "Hash",
             "optional": false,
             "field": "hash",
-            "description": "<p>[description].</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "[type]",
-            "optional": true,
-            "field": "description",
-            "description": ""
+            "description": "<p>It represents the hash node.</p>"
           }
         ]
       }
@@ -86,20 +73,7 @@
     "title": "",
     "name": "GetServer",
     "group": "Net",
-    "description": "<p>[description].</p>",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "[type]",
-            "optional": true,
-            "field": "description",
-            "description": ""
-          }
-        ]
-      }
-    },
+    "description": "<p>List servers connected to the P2P network fermat.</p>",
     "version": "0.0.0",
     "filename": "routes/v1/net/index.js",
     "groupTitle": "Net"
@@ -110,20 +84,7 @@
     "title": "",
     "name": "CheckManifest",
     "group": "REPO",
-    "description": "<p>[description].</p>",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "[type]",
-            "optional": true,
-            "field": "description",
-            "description": ""
-          }
-        ]
-      }
-    },
+    "description": "<p>checks if the manifest has a correct format.</p>",
     "version": "0.0.0",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
@@ -135,19 +96,6 @@
     "name": "GetBook",
     "group": "REPO",
     "description": "<p>Get the contents of the book fermat.</p>",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "[type]",
-            "optional": true,
-            "field": "description",
-            "description": ""
-          }
-        ]
-      }
-    },
     "version": "0.0.0",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
@@ -158,20 +106,7 @@
     "title": "",
     "name": "GetComps",
     "group": "REPO",
-    "description": "<p>[description].</p>",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "[type]",
-            "optional": true,
-            "field": "description",
-            "description": ""
-          }
-        ]
-      }
-    },
+    "description": "<p>List of layers, super layer, platforms, components and processes fermat.</p>",
     "version": "0.0.0",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
@@ -183,19 +118,6 @@
     "name": "GetDevs",
     "group": "REPO",
     "description": "<p>Get information from the developers involved in the repository fermat.</p>",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "[type]",
-            "optional": true,
-            "field": "description",
-            "description": ""
-          }
-        ]
-      }
-    },
     "version": "0.0.0",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
@@ -220,19 +142,6 @@
         ]
       }
     },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "[type]",
-            "optional": true,
-            "field": "description",
-            "description": ""
-          }
-        ]
-      }
-    },
     "version": "0.0.0",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
@@ -243,20 +152,7 @@
     "title": "",
     "name": "GetProcs",
     "group": "REPO",
-    "description": "<p>[description].</p>",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "[type]",
-            "optional": true,
-            "field": "description",
-            "description": ""
-          }
-        ]
-      }
-    },
+    "description": "<p>list processes fermat repository.</p>",
     "version": "0.0.0",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
@@ -268,19 +164,6 @@
     "name": "GetReadme",
     "group": "REPO",
     "description": "<p>Get the contents of the readme of fermat.</p>",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "[type]",
-            "optional": true,
-            "field": "description",
-            "description": ""
-          }
-        ]
-      }
-    },
     "version": "0.0.0",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
@@ -291,20 +174,7 @@
     "title": "",
     "name": "Reload",
     "group": "REPO",
-    "description": "<p>[description].</p>",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "[type]",
-            "optional": true,
-            "field": "description",
-            "description": ""
-          }
-        ]
-      }
-    },
+    "description": "<p>Updates the database repository components fermat.</p>",
     "version": "0.0.0",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
