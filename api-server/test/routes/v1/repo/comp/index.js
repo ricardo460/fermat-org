@@ -80,7 +80,7 @@ describe("COMP",function(){
   });
 
   it("#GET listComps",function(done){
-
+    this.timeout(5000);
     server
     .get(pathTest+"/")
     .expect("Content-type",/json/)
@@ -218,10 +218,11 @@ describe("COMP",function(){
 
   });
  ////Akii
-    it("#PUT uptComp 404",function(done){
-    
+  it("#PUT uptComp 404",function(done){
+    var dataComp = dataHelper.generateDataComp();
     server
     .put(pathTest+"/"+mongoose.Types.ObjectId().toString())
+    .send(dataComp)
     .expect("Content-type",/json/)
     .expect(404) // This is HTTP response
     .end(function(err, res){
@@ -336,10 +337,11 @@ describe("COMP",function(){
 
   });
 
-  it("#POST addCompDev 404",function(done){
-
+  it("#POST addCompDev 404"/*,function(done){
+    var dataCompDev = dataHelper.generateDataCompDev();
     server
     .post(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/comp-devs")
+    .send(dataCompDev)
     .expect("Content-type",/json/)
     .expect(404) // This is HTTP response
     .end(function(err, res){
@@ -349,7 +351,7 @@ describe("COMP",function(){
       return done();
     });
 
-  });
+  }*/);
 
   it("#PUT uptCompDev",function(done){
 

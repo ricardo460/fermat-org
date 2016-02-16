@@ -148,7 +148,7 @@ router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
             });
         } else {
             repMod.uptLifeCiclesToComp(req, function (error, result) {
-             
+
                 if (error) {
                     res.status(200).send(error);
                 } else {
@@ -366,14 +366,7 @@ router.put('/:comp_id', function (req, res, next) {
         } else {
             repMod.uptComp(req, function (error, result) {
                 if (error) {
-                    res.status(200).send(error);
-                } else {
-                    res.status(200).send(result);
-                }
-                release(req);
-           /*
-             if (error) {
-                    res.status(200).send(error);
+                        res.status(200).send(error);
                 } else {
                     if (result) {
                         res.status(200).send(result);
@@ -384,7 +377,7 @@ router.put('/:comp_id', function (req, res, next) {
                     }
                 }
                 release(req);
-                */
+
             });
         }
     } catch (err) {
