@@ -77,10 +77,8 @@ function createScene(current, option){
             renderer,
             render);
     }
-    if(window.currentRender === "start"){
-        animate();
+    if(window.currentRender === "start")
         logo.startFade();
-    }
     if(currentRender !== "start") {
         if(change)
             console.log("Switching rendering to",current);
