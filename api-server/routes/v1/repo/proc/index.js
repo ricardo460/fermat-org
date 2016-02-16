@@ -299,9 +299,17 @@ router.put('/:proc_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                res.status(200).send(result);
+                if (result) {
+                    res.status(200).send(result);
+
+                } else {
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
+                }
             }
             release(req);
+            
         });
          } 
     } catch (err) {

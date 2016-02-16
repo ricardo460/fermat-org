@@ -180,10 +180,13 @@ describe("PROC",function(){
 
     });
 
-      it("#PUT uptProc 404" /*,function(done){
+    it("#PUT uptProc 404" ,function(done){
+
+        var dataProc = dataHelper.generateDataProc();
 
         server
-        .post(pathTest+"/"+mongoose.Types.ObjectId().toString())
+        .put(pathTest+"/"+mongoose.Types.ObjectId().toString())
+        .send(dataProc)
         .expect("Content-type",/json/)
         .expect(404) // This is HTTP response
         .end(function(err, res){
@@ -193,7 +196,7 @@ describe("PROC",function(){
           return done();
         });
 
-    } */);
+    } );
 
        it("#PUT uptProc 412",function(done){
 
@@ -270,10 +273,14 @@ describe("PROC",function(){
 
   });
 
-      it("#POST addStep 404"/*,function(done){
+      it("#POST addStep 404",function(done){
+
+        var dataStep = dataHelper.generateDataStep();
 
         server
-        .post(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/steps")
+       
+        .post(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/steps") 
+        .send(dataStep)
         .expect("Content-type",/json/)
         .expect(404) // This is HTTP response
         .end(function(err, res){
@@ -283,7 +290,7 @@ describe("PROC",function(){
           return done();
         });
 
-    }*/);
+    });
 
 
   it("#POST addStep 412",function(done){
