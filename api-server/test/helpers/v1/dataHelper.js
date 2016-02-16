@@ -11,7 +11,7 @@ exports.generateDataComp = function(){
         "type" : "addon",
         "description": faker.lorem.sentence(),
         "difficulty": 5,
-        "code_level": faker.lorem.sentence(),
+        "code_level": "qa",
         "repo_dir": "root",
         "scrnshts": false,
         "found": false
@@ -43,7 +43,7 @@ exports.generateData412General= function(){
 
     return {
         "default_data" : mongoose.Types.ObjectId().toString(),
-      
+
     };
 
 };

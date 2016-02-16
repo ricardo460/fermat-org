@@ -72,20 +72,20 @@ router.use(lock);
 router.post('/', function (req, res, next) {
     'use strict';
     try {
-        if (!security.isValidData(req.body.platfrm_id) || //
-            !security.isValidData(req.body.suprlay_id) || //
-            !security.isValidData(req.body.layer_id) || //
-            !security.isValidData(req.body.name) || //
-            !security.isValidData(req.body.type) || //
-            !security.isValidData(req.body.description) || //
-            !security.isValidData(req.body.difficulty) || //
-            !security.isValidData(req.body.code_level) || //
-            !security.isValidData(req.body.repo_dir) || //
-            !security.isValidData(req.body.scrnshts) || //
-            !security.isValidData(req.body.found)) {
-            res.status(412).send({
-                "message": "missing or invalid data"
-            });
+        if (!security.isValidData(req.body.layer_id) || // required
+            !security.isValidData(req.body.name) || // required
+            !security.isValidTypeComp(req.body.type) || // required
+            !security.isValidDifficulty(req.body.difficulty) || // required
+            !security.isValidLifeCicle(req.body.code_level) || // required
+            (!(typeof req.body.platfrm_id != "undefined" && security.isValidData(req.body.platfrm_id)) &&
+            !(typeof req.body.suprlay_id != "undefined" && security.isValidData(req.body.suprlay_id))) ||
+            !(typeof req.body.description == "undefined" ||
+             (typeof req.body.description != "undefined" && security.isValidData(req.body.description))) ||
+            !(typeof req.body.repo_dir == "undefined" ||
+             (typeof req.body.repo_dir != "undefined" && security.isValidData(req.body.repo_dir)))) {
+                res.status(412).send({
+                    "message": "missing or invalid data"
+                });
         } else {
             repMod.addComp(req, function (error, result) {
                 if (error) {
