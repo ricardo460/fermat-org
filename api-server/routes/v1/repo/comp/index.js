@@ -148,6 +148,7 @@ router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
             });
         } else {
             repMod.uptLifeCiclesToComp(req, function (error, result) {
+             
                 if (error) {
                     res.status(200).send(error);
                 } else {
@@ -190,12 +191,28 @@ router.post('/:comp_id/comp-devs', function (req, res, next) {
             });
         } else {
             repMod.addCompDev(req, function (error, result) {
+               /*
                 if (error) {
                     res.status(200).send(error);
                 } else {
                     res.status(201).send(result);
                 }
                 release(req);
+                    */
+                  if (error) {
+                    res.status(200).send(error);
+                  } else {
+                     if (result) {
+                        res.status(201).send(result);
+                     } else {
+                        res.status(404).send({
+                            message: "NOT FOUND"
+                        });
+                     }
+                }
+                release(req);
+
+
             });
         }
     } catch (err) {
@@ -227,6 +244,7 @@ router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
             });
         } else {
             repMod.uptCompDev(req, function (error, result) {
+
                 if (error) {
                     res.status(200).send(error);
                 } else {
@@ -239,6 +257,7 @@ router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
                     }
                 }
                 release(req);
+
             });
         }
     } catch (err) {
@@ -352,6 +371,20 @@ router.put('/:comp_id', function (req, res, next) {
                     res.status(200).send(result);
                 }
                 release(req);
+           /*
+             if (error) {
+                    res.status(200).send(error);
+                } else {
+                    if (result) {
+                        res.status(200).send(result);
+                    } else {
+                        res.status(404).send({
+                            message: "NOT FOUND"
+                        });
+                    }
+                }
+                release(req);
+                */
             });
         }
     } catch (err) {

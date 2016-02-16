@@ -195,10 +195,46 @@ router.put('/:layer_id', function (req, res, next) {
  * @param  {[type]} next  [description]
  *
  * @return {[type]} [description]
+ router.delete('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
+    'use strict';
+    try {
+        if (!security.isValidData(req.params.comp_id) || //
+            !security.isValidData(req.params.comp_dev_id) //
+        ) {
+            res.status(412).send({
+                "message": "missing or invalid data"
+            });
+        } else {
+            repMod.delCompDev(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    if (result) {
+                        res.status(204).send();
+                    } else {
+                        res.status(404).send({
+                            message: "NOT FOUND"
+                        });
+                    }
+                }
+                release(req);
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+});
+
+req.params.layer_id,
  */
 router.delete('/:layer_id', function (req, res, next) {
     'use strict';
     try {
+         if (!security.isValidData(req.params.layer_id) )  {
+            res.status(412).send({
+                "message": "missing or invalid data"
+            });
+        } else {
         repMod.delLay(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
@@ -213,6 +249,7 @@ router.delete('/:layer_id', function (req, res, next) {
             }
             release(req);
         });
+        }
     } catch (err) {
         next(err);
     }

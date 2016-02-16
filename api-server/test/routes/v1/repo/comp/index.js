@@ -109,6 +109,24 @@ describe("COMP",function(){
     });
   });
 
+    it("#GET getComp 404",function(done){
+
+    var dataLifeCicle = dataHelper.generateDataLifeCicle();
+
+    server
+    .put(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/life-cicles/"+"56ba95f0d9a8a64c30c75341")
+    .send(dataLifeCicle)
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+      return done();
+    });
+
+  });
+
   it("#POST addComp",function(done){
 
     var dataComp = dataHelper.generateDataComp();
@@ -199,6 +217,21 @@ describe("COMP",function(){
     });
 
   });
+ ////Akii
+    it("#PUT uptComp 404",function(done){
+    
+    server
+    .put(pathTest+"/"+mongoose.Types.ObjectId().toString())
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+      return done();
+    });
+
+  });
 
   it("#DELETE delComp",function(done){
 
@@ -210,6 +243,21 @@ describe("COMP",function(){
       if (err) return done(err);
 
       return done();
+    });
+
+  });
+
+    it("#DELETE delComp  404",function(done){
+
+    server
+    .delete(pathTest+"/"+mongoose.Types.ObjectId().toString())
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+          return done();
     });
 
   });
@@ -288,7 +336,7 @@ describe("COMP",function(){
 
   });
 
-  it("#POST addCompDev 404"/*,function(done){
+  it("#POST addCompDev 404",function(done){
 
     server
     .post(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/comp-devs")
@@ -301,7 +349,7 @@ describe("COMP",function(){
       return done();
     });
 
-  }*/);
+  });
 
   it("#PUT uptCompDev",function(done){
 
@@ -341,6 +389,8 @@ describe("COMP",function(){
     });
 
   });
+
+
 
 
   it("#PUT uptCompDev 404",function(done){

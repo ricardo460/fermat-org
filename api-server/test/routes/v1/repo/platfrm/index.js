@@ -65,6 +65,21 @@ describe("SUPRLAY",function(){
 
     });
 
+        it("#GET getPltf 404",function(done){
+
+        server
+        .get(pathTest+"/"+mongoose.Types.ObjectId().toString())
+        .expect("Content-type",/json/)
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+        });
+
+    });
+
     it("#GET listPlatforms",function(done){
 
         server
@@ -146,6 +161,21 @@ describe("SUPRLAY",function(){
 
     });
 
+      it("#PUT uptPltf 404",function(done){
+
+        server
+        .get(pathTest+"/"+mongoose.Types.ObjectId().toString())
+        .expect("Content-type",/json/)
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+        });
+
+    });
+
     /*it("#PUT uptPltf 412",function(done){
 
          var dataPlatform = dataHelper.generateData412General();
@@ -178,6 +208,21 @@ describe("SUPRLAY",function(){
         });
 
     });
+
+     it("#DELETE delPltf 404",function(done){
+
+        server
+        .delete(pathTest+"/"+mongoose.Types.ObjectId().toString())
+        .expect("Content-type",/json/)
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+        });
+
+    } );
 
 
 });
