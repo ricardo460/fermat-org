@@ -80,7 +80,7 @@ describe("COMP",function(){
   });
 
   it("#GET listComps",function(done){
-
+    this.timeout(5000);
     server
     .get(pathTest+"/")
     .expect("Content-type",/json/)
@@ -109,14 +109,32 @@ describe("COMP",function(){
     });
   });
 
-  it("#POST addComp",function(done){
+    it("#GET getComp 404",function(done){
 
+    var dataLifeCicle = dataHelper.generateDataLifeCicle();
+
+    server
+    .put(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/life-cicles/"+"56ba95f0d9a8a64c30c75341")
+    .send(dataLifeCicle)
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+      return done();
+    });
+
+  });
+
+  it("#POST addComp",function(done){
+    this.timeout(5000);
     var dataComp = dataHelper.generateDataComp();
 
     server
     .post(pathTest+"/")
     .send(dataComp)
-    .expect("Content-type",/json/)
+    //.expect("Content-type",/json/)
     .expect(201) // This is HTTP response
     .end(function(err,res){
 
@@ -199,6 +217,22 @@ describe("COMP",function(){
     });
 
   });
+ ////Akii
+  it("#PUT uptComp 404",function(done){
+    var dataComp = dataHelper.generateDataComp();
+    server
+    .put(pathTest+"/"+mongoose.Types.ObjectId().toString())
+    .send(dataComp)
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+      return done();
+    });
+
+  });
 
   it("#DELETE delComp",function(done){
 
@@ -210,6 +244,21 @@ describe("COMP",function(){
       if (err) return done(err);
 
       return done();
+    });
+
+  });
+
+    it("#DELETE delComp  404",function(done){
+
+    server
+    .delete(pathTest+"/"+mongoose.Types.ObjectId().toString())
+    .expect("Content-type",/json/)
+    .expect(404) // This is HTTP response
+    .end(function(err, res){
+
+        if (err) return done(err);
+
+          return done();
     });
 
   });
@@ -289,9 +338,10 @@ describe("COMP",function(){
   });
 
   it("#POST addCompDev 404"/*,function(done){
-
+    var dataCompDev = dataHelper.generateDataCompDev();
     server
     .post(pathTest+"/"+mongoose.Types.ObjectId().toString()+"/comp-devs")
+    .send(dataCompDev)
     .expect("Content-type",/json/)
     .expect(404) // This is HTTP response
     .end(function(err, res){
@@ -341,6 +391,8 @@ describe("COMP",function(){
     });
 
   });
+
+
 
 
   it("#PUT uptCompDev 404",function(done){

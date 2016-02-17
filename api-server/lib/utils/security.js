@@ -35,6 +35,43 @@ var isValidData = function (data) {
         return 0;
     } else return 1;
 };
+
+/**
+ * [isValidTypeComp description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+var isValidTypeComp = function (data) {
+    if (data === 'library' || data === 'library' || data === 'addon' || data === 'plugin') {
+        //console.log('invalid data');
+        return 1;
+    } else return 0;
+};
+
+/**
+ * [isValidLifeCicle description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+var isValidLifeCicle = function (data) {
+    if (data == 'design' || data === 'development' || data === 'qa' || data === 'production') {
+        //console.log('invalid data');
+        return 1;
+    } else return 0;
+};
+
+/**
+ * [isValidDifficulty description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+var isValidDifficulty = function (data) {
+    if (data == parseInt(data, 10) && data >= 0 && data <= 10 ) {
+        //console.log('invalid data');
+        return 1;
+    } else return 0;
+};
+
 /**
  * [isObjectID description]
  * @param  {[type]}  str [description]
@@ -164,6 +201,34 @@ exports.apiVersion = function (api_version) {
 exports.isValidData = function (data) {
     return isValidData(data);
 };
+
+/**
+ * [isValidTypeComp description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+exports.isValidTypeComp = function (data) {
+    return isValidTypeComp(data);
+};
+
+/**
+ * [isValidLifeCicle description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+exports.isValidLifeCicle = function (data) {
+    return isValidLifeCicle(data);
+};
+
+/**
+ * [isValidDifficulty description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+exports.isValidDifficulty = function (data) {
+    return isValidDifficulty(data);
+};
+
 /**
  * [isEmail description]
  * @param  {[type]}  email [description]

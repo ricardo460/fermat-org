@@ -64,6 +64,21 @@ describe("LAY",function(){
 
     });
 
+    it("#GET getLay 404",function(done){
+
+        server
+        .get(pathTest+"/"+mongoose.Types.ObjectId().toString())
+        .expect("Content-type",/json/)
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+        });
+
+    });
+
     it("#GET listLayers",function(done){
 
         server
@@ -102,7 +117,7 @@ describe("LAY",function(){
 
     });
 
-       it("#POST addLay 412",function(done){
+    it("#POST addLay 412",function(done){
 
         var dataLay = dataHelper.generateData412General();
 
@@ -121,7 +136,7 @@ describe("LAY",function(){
 
     });
 
-     
+
 
     it("#PUT uptLay",function(done){
 
@@ -147,8 +162,23 @@ describe("LAY",function(){
 
     });
 
+    it("#GET uptLay 404",function(done){
 
-       it("#PUT uptLay 412",function(done){
+        server
+        .get(pathTest+"/"+mongoose.Types.ObjectId().toString())
+        .expect("Content-type",/json/)
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
+        });
+
+    });
+
+
+    it("#PUT uptLay 412",function(done){
 
         var dataLay = dataHelper.generateData412General();
 
@@ -177,6 +207,20 @@ describe("LAY",function(){
             if (err) return done(err);
 
             return done();
+        });
+
+    });
+
+    it("#DELETE delLay 404" ,function(done){
+
+        server
+        .delete(pathTest+"/"+mongoose.Types.ObjectId().toString())
+        .expect(404) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+          return done();
         });
 
     });
