@@ -13,8 +13,7 @@ var cache = new Cache({
  * @api {get} /v1/net/servrs
  * @apiName GetServer 
  * @apiGroup Net
- * @apiDescription [description].
- * @apiSuccess {[type]} [description]
+ * @apiDescription List servers connected to the P2P network fermat.
  */
 router.get('/servrs', function (req, res, next) {
     'use strict';
@@ -49,9 +48,8 @@ router.get('/servrs', function (req, res, next) {
  * @api {get} /v1/net/nodes/:hash/childrn
  * @apiName GetChildren 
  * @apiGroup Net
- * @apiDescription Descripcion.
- * @apiParam {Hash} hash [description].
- * @apiSuccess {[type]} [description]
+ * @apiDescription Lists all devices connected to a P2P network node given its hash.
+ * @apiParam {Hash} hash It represents the hash node.
  */
 router.get('/nodes/:hash/childrn', function (req, res, next) {
     'use strict';

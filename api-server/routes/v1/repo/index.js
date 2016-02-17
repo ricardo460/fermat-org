@@ -56,8 +56,7 @@ router.use("/usrs/:usr_id/comps", auth, compRout);
  * @api {get} /v1/repo/comps/reload
  * @apiName Reload 
  * @apiGroup REPO
- * @apiDescription [description].
- * @apiSuccess {[type]} [description]
+ * @apiDescription Updates the database repository components fermat.
  */
 router.get('/comps/reload', function (req, res, next) {
     'use strict';
@@ -96,8 +95,7 @@ router.get('/comps/reload', function (req, res, next) {
  * @api {get} /v1/repo/comps
  * @apiName GetComps 
  * @apiGroup REPO
- * @apiDescription [description].
- * @apiSuccess {[type]} [description]
+ * @apiDescription List of layers, super layer, platforms, components and processes fermat.
  */
 router.get('/comps', function (req, res, next) {
     'use strict';
@@ -135,7 +133,6 @@ router.get('/comps', function (req, res, next) {
  * @apiName GetDevs
  * @apiGroup REPO
  * @apiDescription Get information from the developers involved in the repository fermat.
- * @apiSuccess {[type]} [description]
  */
 router.get('/devs', function (req, res, next) {
     'use strict';
@@ -172,8 +169,7 @@ router.get('/devs', function (req, res, next) {
  * @api {get} /v1/repo/procs
  * @apiName GetProcs
  * @apiGroup REPO
- * @apiDescription [description].
- * @apiSuccess {[type]} [description]
+ * @apiDescription list processes fermat repository.
  */
 router.get('/procs', function (req, res, next) {
     'use strict';
@@ -212,7 +208,6 @@ router.get('/procs', function (req, res, next) {
  * @apiName GetReadme
  * @apiGroup REPO
  * @apiDescription Get the contents of the readme of fermat.
- * @apiSuccess {[type]} [description]
  */
 router.get('/readme', function (req, res, next) {
     'use strict';
@@ -233,7 +228,6 @@ router.get('/readme', function (req, res, next) {
  * @apiName GetBook
  * @apiGroup REPO
  * @apiDescription Get the contents of the book fermat.
- * @apiSuccess {[type]} [description]
  */
 router.get('/book', function (req, res, next) {
     'use strict';
@@ -255,7 +249,6 @@ router.get('/book', function (req, res, next) {
  * @apiGroup REPO
  * @apiDescription Get the contents of the readme fermat.
  * @apiParam {String} type Represents the type of documentation (book, readme, paper).
- * @apiSuccess {[type]} [description]
  */
 router.get('/docs/:type', function (req, res, next) {
     'use strict';
@@ -288,8 +281,7 @@ router.get('/docs/:type', function (req, res, next) {
  * @api {get} /v1/repo/manifest/check
  * @apiName CheckManifest
  * @apiGroup REPO
- * @apiDescription [description].
- * @apiSuccess {[type]} [description]
+ * @apiDescription checks if the manifest has a correct format.
  */
 router.get('/manifest/check', function (req, res, next) {
     'use strict';
