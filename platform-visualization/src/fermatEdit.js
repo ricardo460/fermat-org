@@ -727,16 +727,34 @@ function FermatEdit() {
 
     function saveTile(){
 
-        var table = fillTable(false);
+        if(validateFields() === ''){ 
 
-        window.camera.loseFocus();
-        window.camera.enable();
+            var table = fillTable(false);
 
-        if(actions.type === "new")
-            newTile(table);
-        else if(actions.type === "modify")
-            modifyTile(table);
-    
+            window.camera.loseFocus();
+            window.camera.enable();
+
+            if(actions.type === "new")
+                newTile(table);
+            else if(actions.type === "modify")
+                modifyTile(table);
+        }
+        else{
+            alert(validateFields());
+        }
+    }
+
+    function validateFields(){
+        var msj = '';
+
+        var name = document.getElementById('imput-Name');
+
+        if(name.value === ""){
+            msj += 'The component must have a name \n';
+            name.focus();
+        }
+
+        return msj;
     }
 
     function newTile(table){
@@ -1010,7 +1028,7 @@ function FermatEdit() {
 
     function fillTable(state){
 
-        var table = {group : undefined},
+        var table = {platform : undefined},
             data = {},
             group = document.getElementById(objects.idFields.platform).value,
             layer = document.getElementById(objects.idFields.layer).value,
@@ -1090,11 +1108,11 @@ function FermatEdit() {
             var positionCameraX = window.TABLE[oldGroup].x,
                 positionCameraY = helper.getPositionYLayer(oldLayer);
 
-            window.tileManager.transform(false, 1000);
-            window.signLayer.transformSignLayer();
-
             window.camera.loseFocus();
             window.camera.enable();
+
+            window.tileManager.transform(false, 1000);
+            window.signLayer.transformSignLayer();
 
             window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
 
