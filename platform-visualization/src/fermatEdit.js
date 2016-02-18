@@ -66,7 +66,7 @@ function FermatEdit() {
 
         callback = function(){
 
-            actions.type = "modify";
+            actions.type = "update";
 
             window.buttonsManager.removeAllButtons(); 
             addAllFilds();
@@ -78,7 +78,7 @@ function FermatEdit() {
 
             callback = function(){ 
 
-                actions.type = "new";
+                actions.type = "insert";
 
                 window.buttonsManager.removeAllButtons();
 
@@ -95,7 +95,7 @@ function FermatEdit() {
 
             callback = function(){
 
-                if(confirm("Really remove this component?"))           
+                if(window.confirm("Really remove this component?"))           
                     deleteTile(id);                
             };
 
@@ -225,7 +225,7 @@ function FermatEdit() {
         
         var exit = null;
 
-        if(actions.type === "new") {
+        if(actions.type === "insert") {
 
             exit = function(){
                 window.camera.resetPosition();
@@ -734,14 +734,27 @@ function FermatEdit() {
             window.camera.loseFocus();
             window.camera.enable();
 
-            if(actions.type === "new")
-                newTile(table);
-            else if(actions.type === "modify")
+            if(actions.type === "insert")
+                createTile(table);
+            else if(actions.type === "update")
                 modifyTile(table);
+            
+            sendChanges(actions.type, table);
         }
         else{
-            alert(validateFields());
+            window.alert(validateFields());
         }
+    }
+    
+    /**
+     * Sends the changes made locally to the API server
+     * @author Miguel Celedon
+     * @param {string} action Can be "insert", "update" or "delete"
+     * @param {object} data   The parameters of the changes
+     */
+    function sendChanges(action, data) {
+        
+        
     }
 
     function validateFields(){
@@ -757,7 +770,7 @@ function FermatEdit() {
         return msj;
     }
 
-    function newTile(table){
+    function createTile(table){
 
         var x, y, z;
 
@@ -870,7 +883,7 @@ function FermatEdit() {
 
             setTimeout( function() { 
 
-                positionCameraX = window.TABLE[newGroup].x,
+                positionCameraX = window.TABLE[newGroup].x;
                 positionCameraY = window.helper.getPositionYLayer(newLayer);
                 camera.move(positionCameraX, positionCameraY,8000, 2000);
                 createNewElementTile(table);
@@ -1026,7 +1039,7 @@ function FermatEdit() {
 
     }
 
-    function fillTable(state){
+    function fillTable(found) {
 
         var table = {platform : undefined},
             data = {},
@@ -1055,7 +1068,7 @@ function FermatEdit() {
         table.code = helper.getCode(document.getElementById(objects.idFields.name).value);
         table.author = document.getElementById(objects.idFields.author).value;
         table.maintainer = document.getElementById(objects.idFields.maintainer).value;
-        table.found = state;
+        table.found = found;
         table.platformID = platformID;
         table.layerID = layerID;
         table.superLayer = superLayer;
@@ -1071,7 +1084,7 @@ function FermatEdit() {
         table.maintainerPicture = data.picture;
         table.maintainerRealName = data.authorRealName;
 
-        return table;       
+        return table;
     }
 
     function dataUser(user){
@@ -1095,6 +1108,8 @@ function FermatEdit() {
     function deleteTile(id){
 
         var table = helper.getSpecificTile(id).data;
+        
+        sendChanges("delete", table);
 
         //if(!window.helper.postRoutesComponents('delete', null, DATA_TEST_USER, table.id)){
 
