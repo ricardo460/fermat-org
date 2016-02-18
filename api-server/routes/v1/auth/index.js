@@ -3,8 +3,9 @@ var router = express.Router();
 var authMod = require('../../../modules/auth');
 var config = require('../../../config.js');
 /**
- * @api {get} /v1/auth/login
+ * @api {get} /v1/auth/login sign in and/or log in
  * @apiName Login
+ * @apiVersion 0.0.1
  * @apiGroup Auth
  * @apiDescription Register the user and returns the authorization to use the api.
  * @apiSuccessExample {json} Success-Response:
@@ -38,8 +39,9 @@ router.get('/login', function (req, resp, next) {
     }
 });
 /**
- * @api {get} /v1/auth/logout
+ * @api {get} /v1/auth/logout logout
  * @apiName Logout
+ * @apiVersion 0.0.1
  * @apiGroup Auth
  * @apiDescription Removes the token.
  * @apiSuccess {Boolean} isLogout It indicates that the token has been removed.
