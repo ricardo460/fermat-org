@@ -169,15 +169,15 @@ function ScreenshotsAndroid() {
 
 	        				if(tile.type === "Plugin" || tile.type === "Android"){ 
 
-		        				if(tile.group === _group && tile.layer === _layer && tile.name === _wallet){
+		        				if(tile.name === _wallet){
 		        					
 		        					var name = json[_group][_layer][_wallet].name,
 		        						position = window.helper.getSpecificTile(id).target.show.position,
 		        						_id = _group + "_" + _layer + "_" + name,
 		        						show = false,
 		        						screenshots = {};
-		        						
-		        					if(_layer === "Sub App" && json[_group][0] === "Sub App")
+
+		        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
 		        						show = true;
 
 	        						for(var _screen in json[_group][_layer][_wallet].screenshots)
