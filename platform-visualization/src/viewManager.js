@@ -109,6 +109,10 @@ function ViewManager() {
 
                     };
 
+                    exit = function() {
+                        window.headers.deleteArrows(5000);
+                    };
+
                     break;
                 case 'home':
                     enter = function() {
@@ -208,6 +212,10 @@ function ViewManager() {
                         }, 4000);
                         
                         window.changeView();
+                    };
+
+                    exit = function() {
+                        window.developer.delete();
                     };
 
                     break;

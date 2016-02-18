@@ -98,6 +98,7 @@ function FlowManager(){
 
                 headerFlow[i].deleteAll();
                 window.helper.hideObject(headerFlow[i].objects[0], false, _duration);
+                window.scene.remove(headerFlow[i]);
             }
         }
         
