@@ -160,6 +160,9 @@ function TileManager() {
                 inSuperLayer = false;
                 actualHeight++;
             }
+            
+            if(actualHeight == 6)   //Separates GUI section
+                actualHeight += 2;
 
             layerPosition[i] = actualHeight;
         }
@@ -710,7 +713,7 @@ function TileManager() {
                     signColumn = tile.platformID;
                     window.TABLE[group].layers[tile.layer].y = object.position.y;
                 }
-                
+
                 if(tile.layerID !== signRow && tile.platformID === signColumn && layers[tile.layer].super_layer === false){ // solo cambio de filas
                     window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
                     signRow = tile.layerID;
