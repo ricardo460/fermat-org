@@ -299,8 +299,13 @@ exports.findProcById = function (_id, callback) {
         procSrv.findProcById(_id, function (err_proc, res_proc) {
             if (err_proc) {
                 return callback(err_proc, null);
+            } else if (res_proc){
+                return callback(null, res_proc);
+            }else{
+                return callback(null, null);
+
             }
-            return callback(null, res_proc);
+           
         });
     } catch (err) {
         callback(err, null);
