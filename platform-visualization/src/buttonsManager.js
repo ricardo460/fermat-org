@@ -64,7 +64,7 @@ function ButtonsManager() {
                 idSucesor = "backButton";
 
             if(side === 'right')
-                idSucesor = 'login';
+                idSucesor = 'containerLogin';
 
             if(self.objects[side].buttons.length !== 0)
                 idSucesor = helper.getLastValueArray(self.objects[side].buttons).id;
