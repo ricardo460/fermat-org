@@ -61,7 +61,7 @@ router.use(lock);
 /**
  * @api {post} /v1/repo/comp/ add components
  * @apiVersion 0.0.1
- * @apiName AddComp 
+ * @apiName AddComp
  * @apiGroup Repo-Comp
  * @apiDescription Add a component to the architecture fermat.
  */
@@ -97,7 +97,7 @@ router.post('/', function (req, res, next) {
 /**
  * @api {get} /v1/repo/comp/ list comps
  * @apiVersion 0.0.1
- * @apiName ListComps 
+ * @apiName ListComps
  * @apiGroup Repo-Comp
  * @apiDescription Get a list of components of the architecture fermat.
  */
@@ -177,24 +177,16 @@ router.post('/:comp_id/comp-devs', function (req, res, next) {
             });
         } else {
             repMod.addCompDev(req, function (error, result) {
-               /*
                 if (error) {
                     res.status(200).send(error);
                 } else {
-                    res.status(201).send(result);
-                }
-                release(req);
-                    */
-                  if (error) {
-                    res.status(200).send(error);
-                  } else {
-                     if (result) {
+                    if (result) {
                         res.status(201).send(result);
-                     } else {
+                    } else {
                         res.status(404).send({
                             message: "NOT FOUND"
                         });
-                     }
+                    }
                 }
                 release(req);
 

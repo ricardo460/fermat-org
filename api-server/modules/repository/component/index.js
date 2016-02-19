@@ -386,7 +386,7 @@ exports.uptLifeCiclesById = function (_life_cicle_id, target, reached, callback)
 exports.findCompById = function (_id, callback) {
     'use strict';
     try {
-        compSrv.findCompById(_id, function (err_comp, res_comp) {
+        compSrv.findAndPopulateCompById(_id, 'life_cycle devs', function (err_comp, res_comp) {
             if (err_comp) {
                 return callback(err_comp, null);
             }
