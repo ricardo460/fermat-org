@@ -54,7 +54,7 @@ router.use("/usrs/:usr_id/comps", auth, compRout);
 
 /**
  * @api {get} /v1/repo/comps/reload
- * @apiName Reload 
+ * @apiName Reload
  * @apiGroup REPO
  * @apiDescription Updates the database repository components fermat.
  */
@@ -93,14 +93,14 @@ router.get('/comps/reload', function (req, res, next) {
 
 /**
  * @api {get} /v1/repo/comps
- * @apiName GetComps 
+ * @apiName GetComps
  * @apiGroup REPO
  * @apiDescription List of layers, super layer, platforms, components and processes fermat.
  */
 router.get('/comps', function (req, res, next) {
     'use strict';
     try {
-        var body = cache.getBody(req);
+        /*var body = cache.getBody(req);
         if (body) {
             // we send it
             res.status(200).send(body);
@@ -112,18 +112,18 @@ router.get('/comps', function (req, res, next) {
                     cache.setBody(req, result);
                 }
             });
-        } else {
+        } else {*/
             // we create it
             repMod.getComps(req, function (error, result) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
                     // we save it
-                    cache.setBody(req, result);
+                    //cache.setBody(req, result);
                     res.status(200).send(result);
                 }
             });
-        }
+        //}
     } catch (err) {
         next(err);
     }
@@ -137,7 +137,7 @@ router.get('/comps', function (req, res, next) {
 router.get('/devs', function (req, res, next) {
     'use strict';
     try {
-        var body = cache.getBody(req);
+        /*var body = cache.getBody(req);
         if (body) {
             // we send it
             res.status(200).send(body);
@@ -149,7 +149,7 @@ router.get('/devs', function (req, res, next) {
                     cache.setBody(req, result);
                 }
             });
-        } else {
+        } else {*/
             // we create it
             repMod.getDevs(req, function (error, result) {
                 if (error) {
@@ -160,7 +160,7 @@ router.get('/devs', function (req, res, next) {
                     res.status(200).send(result);
                 }
             });
-        }
+        //}
     } catch (err) {
         next(err);
     }
@@ -175,7 +175,7 @@ router.get('/procs', function (req, res, next) {
     'use strict';
     try {
         // we search for body in cache
-        var body = cache.getBody(req);
+        /*var body = cache.getBody(req);
         if (body) {
             // we send it
             res.status(200).send(body);
@@ -187,7 +187,7 @@ router.get('/procs', function (req, res, next) {
                     cache.setBody(req, result);
                 }
             });
-        } else {
+        } else {*/
             // we create it
             repMod.getProcs(req, function (error, result) {
                 if (error) {
@@ -198,7 +198,7 @@ router.get('/procs', function (req, res, next) {
                     res.status(200).send(result);
                 }
             });
-        }
+        //}
     } catch (err) {
         next(err);
     }
