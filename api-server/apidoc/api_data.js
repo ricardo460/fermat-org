@@ -6,6 +6,26 @@ define({ "api": [
     "name": "Login",
     "version": "0.0.1",
     "group": "Auth",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Represents the authorization code to access the registered application on github.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "api_key",
+            "description": "<p>Represents the key to the application registered on the server.</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>Register the user and returns the authorization to use the api.</p>",
     "success": {
       "examples": [
@@ -26,6 +46,26 @@ define({ "api": [
     "name": "Logout",
     "version": "0.0.1",
     "group": "Auth",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "api_key",
+            "description": "<p>Represents the key to the application registered on the server.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "axs_key",
+            "description": "<p>Represents the access key to use the api.</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>Removes the token.</p>",
     "success": {
       "fields": {
@@ -46,8 +86,9 @@ define({ "api": [
   {
     "type": "get",
     "url": "/v1/net/nodes/:hash/childrn",
-    "title": "",
+    "title": "get children",
     "name": "GetChildren",
+    "version": "0.0.1",
     "group": "Net",
     "description": "<p>Lists all devices connected to a P2P network node given its hash.</p>",
     "parameter": {
@@ -63,72 +104,72 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "routes/v1/net/index.js",
     "groupTitle": "Net"
   },
   {
     "type": "get",
     "url": "/v1/net/servrs",
-    "title": "",
-    "name": "GetServer",
+    "title": "get server network",
+    "name": "GetServerNetwork",
+    "version": "0.0.1",
     "group": "Net",
     "description": "<p>List servers connected to the P2P network fermat.</p>",
-    "version": "0.0.0",
     "filename": "routes/v1/net/index.js",
     "groupTitle": "Net"
   },
   {
     "type": "get",
     "url": "/v1/repo/manifest/check",
-    "title": "",
+    "title": "check manifest",
     "name": "CheckManifest",
+    "version": "0.0.1",
     "group": "REPO",
     "description": "<p>checks if the manifest has a correct format.</p>",
-    "version": "0.0.0",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
   },
   {
     "type": "get",
     "url": "/v1/repo/book",
-    "title": "",
+    "title": "get book",
     "name": "GetBook",
+    "version": "0.0.1",
     "group": "REPO",
-    "description": "<p>Get the contents of the book fermat.</p>",
-    "version": "0.0.0",
+    "description": "<p>Get the contents of the book of fermat.</p>",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
   },
   {
     "type": "get",
     "url": "/v1/repo/comps",
-    "title": "",
+    "title": "get components",
     "name": "GetComps",
+    "version": "0.0.1",
     "group": "REPO",
-    "description": "<p>List of layers, super layer, platforms, components and processes fermat.</p>",
-    "version": "0.0.0",
+    "description": "<p>List of layers, super layer, platforms, components and processes from architecture of fermat.</p>",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
   },
   {
     "type": "get",
     "url": "/v1/repo/devs",
-    "title": "",
+    "title": "get developers",
     "name": "GetDevs",
+    "version": "0.0.1",
     "group": "REPO",
     "description": "<p>Get information from the developers involved in the repository fermat.</p>",
-    "version": "0.0.0",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
   },
   {
     "type": "get",
     "url": "/v1/repo/docs/:type",
-    "title": "",
+    "title": "get docs",
     "name": "GetDocs",
+    "version": "0.0.1",
     "group": "REPO",
-    "description": "<p>Get the contents of the readme fermat.</p>",
+    "description": "<p>Get the contents of the documentation of fermat.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -142,40 +183,39 @@ define({ "api": [
         ]
       }
     },
-    "version": "0.0.0",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
   },
   {
     "type": "get",
     "url": "/v1/repo/procs",
-    "title": "",
+    "title": "get process",
     "name": "GetProcs",
+    "version": "0.0.1",
     "group": "REPO",
-    "description": "<p>list processes fermat repository.</p>",
-    "version": "0.0.0",
+    "description": "<p>Get list processes from architecture of fermat.</p>",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
   },
   {
     "type": "get",
     "url": "/v1/repo/readme",
-    "title": "",
+    "title": "get readme",
     "name": "GetReadme",
+    "version": "0.0.1",
     "group": "REPO",
     "description": "<p>Get the contents of the readme of fermat.</p>",
-    "version": "0.0.0",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
   },
   {
     "type": "get",
     "url": "/v1/repo/comps/reload",
-    "title": "",
+    "title": "reload",
     "name": "Reload",
+    "version": "0.0.1",
     "group": "REPO",
     "description": "<p>Updates the database repository components fermat.</p>",
-    "version": "0.0.0",
     "filename": "routes/v1/repo/index.js",
     "groupTitle": "REPO"
   },
@@ -609,5 +649,60 @@ define({ "api": [
     "description": "<p>Updates a step of a process.</p>",
     "filename": "routes/v1/repo/proc/index.js",
     "groupTitle": "Repo_Proc"
+  },
+  {
+    "type": "post",
+    "url": "/v1/repo/suprlay/",
+    "title": "add super layer",
+    "version": "0.0.1",
+    "name": "AddSuprLay",
+    "group": "Repo_SuprLay",
+    "description": "<p>Add a super layer to the architecture of fermat.</p>",
+    "filename": "routes/v1/repo/suprlay/index.js",
+    "groupTitle": "Repo_SuprLay"
+  },
+  {
+    "type": "delete",
+    "url": "/v1/repo/suprlay/:suprlay_id",
+    "title": "delete super layer",
+    "version": "0.0.1",
+    "name": "DelSprlay",
+    "group": "Repo_SuprLay",
+    "description": "<p>Delete super layer from architecture of fermat.</p>",
+    "filename": "routes/v1/repo/suprlay/index.js",
+    "groupTitle": "Repo_SuprLay"
+  },
+  {
+    "type": "get",
+    "url": "/v1/repo/suprlay/:suprlay_id",
+    "title": "get super layer",
+    "version": "0.0.1",
+    "name": "GetSprlay",
+    "group": "Repo_SuprLay",
+    "description": "<p>Get super layer from architecture of fermat.</p>",
+    "filename": "routes/v1/repo/suprlay/index.js",
+    "groupTitle": "Repo_SuprLay"
+  },
+  {
+    "type": "get",
+    "url": "/v1/repo/suprlay/",
+    "title": "list super layers",
+    "version": "0.0.1",
+    "name": "ListSuprLays",
+    "group": "Repo_SuprLay",
+    "description": "<p>Get list super layer from architecture of fermat.</p>",
+    "filename": "routes/v1/repo/suprlay/index.js",
+    "groupTitle": "Repo_SuprLay"
+  },
+  {
+    "type": "put",
+    "url": "/v1/repo/suprlay/:suprlay_id",
+    "title": "update super layer",
+    "version": "0.0.1",
+    "name": "UptSprlay",
+    "group": "Repo_SuprLay",
+    "description": "<p>Update super layer from architecture of fermat.</p>",
+    "filename": "routes/v1/repo/suprlay/index.js",
+    "groupTitle": "Repo_SuprLay"
   }
 ] });
