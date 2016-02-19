@@ -112,6 +112,7 @@ router.post('/', function (req, res, next) {
  * @apiVersion 0.0.1
  * @apiName ListComps 
  * @apiGroup Repo-Comp
+
  * @apiDescription Get a list of components of the architecture fermat.
  */
 router.get('/', function (req, res, next) {
@@ -128,14 +129,18 @@ router.get('/', function (req, res, next) {
         next(err);
     }
 });
+
 /**
  * @api {put} /v1/repo/comp/:comp_id/life-cicles/:life_cicle_id update lifecicles to component
  * @apiVersion 0.0.1
  * @apiName UptLifeCiclesToComp
+ * @apiParam {ObjectId} comp_id  layer unique identifier.
+ * @apiParam {ObjectId} life_cicle_id   life cicle unique identifier..
+ * @apiParam {Date} target    estimated completion date.
+ * @apiParam {Date} reached    true date of completion.
  * @apiGroup Repo-Comp
  * @apiDescription updates the lifecycle of a component of the architecture fermat.
- * @apiParam {ObjectId} comp_id Represents the component identifier.
- * @apiParam {ObjectId} life_cicle_id Represents the component identifier.
+ 
  */
 router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
     'use strict';
