@@ -58,17 +58,25 @@ var release = function (req) {
  * using lock for comp routes
  */
 router.use(lock);
+
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {post} /v1/repo/comp/ add components
+ * @apiVersion 0.0.1
+ * @apiName AddComp 
+ * @apiGroup Repo-Comp
+ * @apiParam {type} layer_id  layer unique identifier 
+ * @apiParam {String} name    component name
+ * @apiParam {String} type    component type
+ * @apiParam {Number} difficulty
+ * @apiParam {String} code_level
+ * @apiParam {ObjectId} platfrm_id   layer unique platfrtm 
+ * @apiParam {ObjectId} suprlay_id   suprlay unique platfrtm 
+ * @apiParam {String} description  description of  components
+ * @apiParam {String} repo_dir      directory of repo
+
+ * @apiDescription Add a component to the architecture fermat.
  */
+
 router.post('/', function (req, res, next) {
     'use strict';
     try {
