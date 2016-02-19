@@ -143,6 +143,12 @@ router.get('/', function (req, res, next) {
  * @param  {[type]} next  [description]
  *
  * @return {[type]} [description]
+
+
+
+
+
+ 
  */
 router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
     'use strict';
