@@ -755,30 +755,34 @@ exports.addComp = function (req, next) {
             if (err) {
                 next(err, null);
             } else {
-                var loopInsertLifeCicles = function(i){
-                    var name;
-                    switch(i){
-                        case 0: name="design"; break;
-                        case 1: name="development"; break;
-                        case 2: name="qa"; break;
-                        case 3: name="production"; break;
-                        default: next(null, res); break;
-                    }
-                    compMod.insOrUpdStatus(res._id, name, new Date(), new Date(), function(err_stat, res_stat){
-                        if (err_stat) {
-                            next(err_stat, null);
+                if(res.life_cycle.length == 0) {
+                    var loopInsertLifeCicles = function(i){
+                        var name;
+                        switch(i){
+                            case 0: name="design"; break;
+                            case 1: name="development"; break;
+                            case 2: name="qa"; break;
+                            case 3: name="production"; break;
+                            default: next(null, res); break;
                         }
-                        res.life_cycle.push(res_stat._id);
-                        compMod.pushStatusToCompLifeCycleById(res._id, res_stat._id, function(err_push, res_push){
-                            if (err_push) {
-                                next(err_push, null);
+                        compMod.insOrUpdStatus(res._id, name, new Date(), new Date(), function(err_stat, res_stat){
+                            if (err_stat) {
+                                next(err_stat, null);
                             }
-                            i = i +1;
-                            loopInsertLifeCicles(i);
+                            res.life_cycle.push(res_stat._id);
+                            compMod.pushStatusToCompLifeCycleById(res._id, res_stat._id, function(err_push, res_push){
+                                if (err_push) {
+                                    next(err_push, null);
+                                }
+                                i = i +1;
+                                loopInsertLifeCicles(i);
+                            });
                         });
-                    });
-                };
-                loopInsertLifeCicles(0);
+                    };
+                    loopInsertLifeCicles(0);
+                } else {
+                    next(null, res);
+                }
             }
         });
     } catch (err) {
