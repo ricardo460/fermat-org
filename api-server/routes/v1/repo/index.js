@@ -51,16 +51,13 @@ router.use("/usrs/:usr_id/suprlays", auth, suprlayRout);
 router.use("/usrs/:usr_id/procs", auth, procRout);
 router.use("/usrs/:usr_id/platfrms", auth, platfrmRout);
 router.use("/usrs/:usr_id/comps", auth, compRout);
+
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/repo/comps/reload reload
+ * @apiName Reload
+ * @apiVersion 0.0.1
+ * @apiGroup REPO
+ * @apiDescription Updates the database repository components fermat.
  */
 router.get('/comps/reload', function (req, res, next) {
     'use strict';
@@ -94,16 +91,18 @@ router.get('/comps/reload', function (req, res, next) {
         next(err);
     }
 });
+
 /**
- * [description]
- *
- * @route
- *
+ * @api {get} /v1/repo/comps get components
+ * @apiName GetComps
+ * @apiVersion 0.0.1
+ * @apiGroup REPO
+ * @apiDescription List of layers, super layer, platforms, components and processes from architecture of fermat.
  */
 router.get('/comps', function (req, res, next) {
     'use strict';
     try {
-        var body = cache.getBody(req);
+        /*var body = cache.getBody(req);
         if (body) {
             // we send it
             res.status(200).send(body);
@@ -115,32 +114,33 @@ router.get('/comps', function (req, res, next) {
                     cache.setBody(req, result);
                 }
             });
-        } else {
+        } else {*/
             // we create it
             repMod.getComps(req, function (error, result) {
                 if (error) {
                     res.status(200).send(error);
                 } else {
                     // we save it
-                    cache.setBody(req, result);
+                    //cache.setBody(req, result);
                     res.status(200).send(result);
                 }
             });
-        }
+        //}
     } catch (err) {
         next(err);
     }
 });
 /**
- * [description]
- *
- * @route
- *
+ * @api {get} /v1/repo/devs get developers
+ * @apiName GetDevs
+ * @apiVersion 0.0.1
+ * @apiGroup REPO
+ * @apiDescription Get information from the developers involved in the repository fermat.
  */
 router.get('/devs', function (req, res, next) {
     'use strict';
     try {
-        var body = cache.getBody(req);
+        /*var body = cache.getBody(req);
         if (body) {
             // we send it
             res.status(200).send(body);
@@ -152,7 +152,7 @@ router.get('/devs', function (req, res, next) {
                     cache.setBody(req, result);
                 }
             });
-        } else {
+        } else {*/
             // we create it
             repMod.getDevs(req, function (error, result) {
                 if (error) {
@@ -163,27 +163,23 @@ router.get('/devs', function (req, res, next) {
                     res.status(200).send(result);
                 }
             });
-        }
+        //}
     } catch (err) {
         next(err);
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/repo/procs get process
+ * @apiName GetProcs
+ * @apiVersion 0.0.1
+ * @apiGroup REPO
+ * @apiDescription Get list processes from architecture of fermat.
  */
 router.get('/procs', function (req, res, next) {
     'use strict';
     try {
         // we search for body in cache
-        var body = cache.getBody(req);
+        /*var body = cache.getBody(req);
         if (body) {
             // we send it
             res.status(200).send(body);
@@ -195,7 +191,7 @@ router.get('/procs', function (req, res, next) {
                     cache.setBody(req, result);
                 }
             });
-        } else {
+        } else {*/
             // we create it
             repMod.getProcs(req, function (error, result) {
                 if (error) {
@@ -206,21 +202,17 @@ router.get('/procs', function (req, res, next) {
                     res.status(200).send(result);
                 }
             });
-        }
+        //}
     } catch (err) {
         next(err);
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/repo/readme get readme
+ * @apiName GetReadme
+ * @apiVersion 0.0.1
+ * @apiGroup REPO
+ * @apiDescription Get the contents of the readme of fermat.
  */
 router.get('/readme', function (req, res, next) {
     'use strict';
@@ -237,15 +229,11 @@ router.get('/readme', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/repo/book get book
+ * @apiName GetBook
+ * @apiVersion 0.0.1
+ * @apiGroup REPO
+ * @apiDescription Get the contents of the book of fermat.
  */
 router.get('/book', function (req, res, next) {
     'use strict';
@@ -262,15 +250,12 @@ router.get('/book', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {:type book, readme, paper
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/repo/docs/:type get docs
+ * @apiName GetDocs
+ * @apiVersion 0.0.1
+ * @apiGroup REPO
+ * @apiDescription Get the contents of the documentation of fermat.
+ * @apiParam {String} type Represents the type of documentation (book, readme, paper).
  */
 router.get('/docs/:type', function (req, res, next) {
     'use strict';
@@ -298,16 +283,13 @@ router.get('/docs/:type', function (req, res, next) {
         next(err);
     }
 });
+
 /**
- * [description]
- *
- * @method
- *
- * @param  {:type book, readme, paper
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/repo/manifest/check check manifest
+ * @apiName CheckManifest
+ * @apiVersion 0.0.1
+ * @apiGroup REPO
+ * @apiDescription checks if the manifest has a correct format.
  */
 router.get('/manifest/check', function (req, res, next) {
     'use strict';

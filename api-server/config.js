@@ -7,15 +7,15 @@ if (config.env == 'development') {
     config.database.server = '127.0.0.1';
     config.database.port = '27017';
     config.database.name = 'fermat-org-dev';
-    config.client_id =  'f079f2a8fa65313179d5';
-	config.client_secret = '15fb8131f6bf71cf39f16dcfea52c28c0d413b69';
+    config.client_id =  'c25e3b3b1eb9aa35c773';
+	config.client_secret = '9a89a6b7ff1f43141a8f748ba27446fbe6430e45';
 } else {
     config.database = {};
     config.database.server = '127.0.0.1';
     config.database.port = '27017';
     config.database.name = 'fermat-org';
-    config.client_id =  'f079f2a8fa65313179d5';
-	config.client_secret = '15fb8131f6bf71cf39f16dcfea52c28c0d413b69';
+    config.client_id =  'c25e3b3b1eb9aa35c773';
+	config.client_secret = '9a89a6b7ff1f43141a8f748ba27446fbe6430e45';
 }
 
 //ssh -i FermatBitcoin.pem ubuntu@52.11.156.16
