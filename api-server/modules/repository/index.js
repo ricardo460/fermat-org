@@ -759,7 +759,7 @@ exports.addComp = function (req, next) {
                     var loopInsertLifeCicles = function(i){
                         var name;
                         switch(i){
-                            case 0: name="design"; break;
+                            case 0: name="concept"; break;
                             case 1: name="development"; break;
                             case 2: name="qa"; break;
                             case 3: name="production"; break;
