@@ -42,8 +42,7 @@ exports.generateDataComp412 = function(){
 exports.generateData412General= function(){
 
     return {
-        "default_data" : mongoose.Types.ObjectId().toString(),
-
+        "default_data" : mongoose.Types.ObjectId().toString()
     };
 
 };

@@ -351,17 +351,24 @@ router.put('/:comp_id', function (req, res, next) {
     'use strict';
     try {
         if (!security.isValidData(req.params.comp_id) ||
-            !security.isValidData(req.body.layer_id) || // required
-            !security.isValidData(req.body.name) || // required
-            !security.isValidTypeComp(req.body.type) || // required
-            !security.isValidDifficulty(req.body.difficulty) || // required
-            !security.isValidLifeCicle(req.body.code_level) || // required
-            (!(typeof req.body.platfrm_id != "undefined" && security.isValidData(req.body.platfrm_id)) &&
-            !(typeof req.body.suprlay_id != "undefined" && security.isValidData(req.body.suprlay_id))) ||
+            !(typeof req.body.layer_id == "undefined" ||
+            (typeof req.body.layer_id != "undefined" && security.isValidData(req.body.layer_id))) ||
+            !(typeof req.body.name == "undefined" ||
+            (typeof req.body.name != "undefined" && security.isValidData(req.body.name))) ||
+            !(typeof req.body.type == "undefined" ||
+            (typeof req.body.type != "undefined" && security.isValidTypeComp(req.body.type))) ||
+            !(typeof req.body.difficulty == "undefined" ||
+            (typeof req.body.difficulty != "undefined" && security.isValidDifficulty(req.body.difficulty))) ||
+            !(typeof req.body.code_level == "undefined" ||
+            (typeof req.body.code_level != "undefined" && security.isValidLifeCicle(req.body.code_level))) ||
+            !(typeof req.body.platfrm_id == "undefined" ||
+            (typeof req.body.platfrm_id != "undefined" && security.isValidData(req.body.platfrm_id))) ||
+            !(typeof req.body.suprlay_id == "undefined" ||
+            (typeof req.body.suprlay_id != "undefined" && security.isValidData(req.body.suprlay_id))) ||
             !(typeof req.body.description == "undefined" ||
-             (typeof req.body.description != "undefined" && security.isValidData(req.body.description))) ||
+            (typeof req.body.description != "undefined" && security.isValidData(req.body.description))) ||
             !(typeof req.body.repo_dir == "undefined" ||
-             (typeof req.body.repo_dir != "undefined" && security.isValidData(req.body.repo_dir)))) {
+            (typeof req.body.repo_dir != "undefined" && security.isValidData(req.body.repo_dir)))) {
              res.status(412).send({"message": "missing or invalid data"});
         } else {
             repMod.uptComp(req, function (error, result) {
