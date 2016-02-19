@@ -7,6 +7,8 @@ var config = require('../../../config.js');
  * @apiName Login
  * @apiVersion 0.0.1
  * @apiGroup Auth
+ * @apiParam {ObjectId} code Represents the authorization code to access the registered application on github.
+ * @apiParam {ObjectId} api_key Represents the key to the application registered on the server.
  * @apiDescription Register the user and returns the authorization to use the api.
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -43,6 +45,8 @@ router.get('/login', function (req, resp, next) {
  * @apiName Logout
  * @apiVersion 0.0.1
  * @apiGroup Auth
+ * @apiParam {ObjectId} api_key Represents the key to the application registered on the server.
+ * @apiParam {ObjectId} axs_key Represents the access key to use the api.
  * @apiDescription Removes the token.
  * @apiSuccess {Boolean} isLogout It indicates that the token has been removed.
  */
