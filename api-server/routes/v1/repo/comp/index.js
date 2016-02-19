@@ -129,10 +129,12 @@ router.get('/', function (req, res, next) {
 router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
     'use strict';
     try {
-        if (!security.isValidData(req.params.comp_id) || //
-            !security.isValidData(req.params.life_cicle_id) || //
-            !security.isValidData(req.body.target) || //
-            !security.isValidData(req.body.reached)) {
+        if (!security.isValidData(req.params.comp_id) || // required
+            !security.isValidData(req.params.life_cicle_id) || // required
+            !(typeof req.body.target == "undefined" ||
+             (typeof req.body.target != "undefined" && security.isValidData(req.body.target))) ||
+            !(typeof req.body.reached == "undefined" ||
+             (typeof req.body.reached != "undefined" && security.isValidData(req.body.reached)))) {
             res.status(412).send({
                 "message": "missing or invalid data"
             });
@@ -215,12 +217,16 @@ router.post('/:comp_id/comp-devs', function (req, res, next) {
 router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
     'use strict';
     try {
-        if (!security.isValidData(req.params.comp_id) || //
-            !security.isValidData(req.params.comp_dev_id) || //
-            !security.isValidData(req.body.dev_id) || //
-            !security.isValidData(req.body.role) || //
-            !security.isValidData(req.body.scope) || //
-            !security.isValidData(req.body.percnt)) {
+        if (!security.isValidData(req.params.comp_id) || // required
+            !security.isValidData(req.params.comp_dev_id) || // required
+            !(typeof req.body.dev_id == "undefined" ||
+             (typeof req.body.dev_id != "undefined" && security.isValidData(req.body.dev_id))) ||
+            !(typeof req.body.role == "undefined" ||
+             (typeof req.body.role != "undefined" && security.isValidData(req.body.role))) ||
+            !(typeof req.body.scope == "undefined" ||
+             (typeof req.body.scope != "undefined" && security.isValidData(req.body.scope))) ||
+            !(typeof req.body.percnt == "undefined" ||
+             (typeof req.body.percnt != "undefined" && security.isValidData(req.body.percnt)))) {
             res.status(412).send({
                 "message": "missing or invalid data"
             });
