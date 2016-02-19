@@ -569,6 +569,47 @@ define({ "api": [
     "version": "0.0.1",
     "name": "AddProc",
     "group": "Repo_Proc",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "platfrm",
+            "description": "<p>Platform data.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Process name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "desc",
+            "description": "<p>Process description</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "prev",
+            "description": "<p>Id of the previous process.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "next",
+            "description": "<p>Id the next process.</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>Add a process to the architecture of fermat.</p>",
     "filename": "routes/v1/repo/proc/index.js",
     "groupTitle": "Repo_Proc"
@@ -580,6 +621,54 @@ define({ "api": [
     "version": "0.0.1",
     "name": "AddStep",
     "group": "Repo_Proc",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "proc_id",
+            "description": "<p>Unique identifier of the process.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "comp_id",
+            "description": "<p>Unique identifier of the component.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>Step type.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Step title.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "desc",
+            "description": "<p>Step description.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "order",
+            "description": "<p>Indicates the position where the step this with respect to other.</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>Adds a step to the process.</p>",
     "filename": "routes/v1/repo/proc/index.js",
     "groupTitle": "Repo_Proc"
@@ -591,6 +680,19 @@ define({ "api": [
     "version": "0.0.1",
     "name": "DelProc",
     "group": "Repo_Proc",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "proc_id",
+            "description": "<p>Unique identifier of the process.</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>Update process architecture fermat.</p>",
     "filename": "routes/v1/repo/proc/index.js",
     "groupTitle": "Repo_Proc"
@@ -602,6 +704,26 @@ define({ "api": [
     "version": "0.0.1",
     "name": "DelStep",
     "group": "Repo_Proc",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "proc_id",
+            "description": "<p>Unique identifier of the process.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "step_id",
+            "description": "<p>Unique identifier of the step.</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>Delete a step of a process.</p>",
     "filename": "routes/v1/repo/proc/index.js",
     "groupTitle": "Repo_Proc"
@@ -613,6 +735,19 @@ define({ "api": [
     "version": "0.0.1",
     "name": "GetProc",
     "group": "Repo_Proc",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "proc_id",
+            "description": "<p>Unique identifier of the process.</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>Get process architecture fermat.</p>",
     "filename": "routes/v1/repo/proc/index.js",
     "groupTitle": "Repo_Proc"
@@ -635,6 +770,54 @@ define({ "api": [
     "version": "0.0.1",
     "name": "UptProc",
     "group": "Repo_Proc",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "proc_id",
+            "description": "<p>Unique identifier of the process.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "platfrm",
+            "description": "<p>Platform data.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Process name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "desc",
+            "description": "<p>Process description.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "prev",
+            "description": "<p>Id of the previous process.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "next",
+            "description": "<p>Id the next process.</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>Update process architecture fermat.</p>",
     "filename": "routes/v1/repo/proc/index.js",
     "groupTitle": "Repo_Proc"
@@ -646,6 +829,61 @@ define({ "api": [
     "version": "0.0.1",
     "name": "UptStep",
     "group": "Repo_Proc",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "proc_id",
+            "description": "<p>Unique identifier of the process.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "step_id",
+            "description": "<p>Unique identifier of the step.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "comp_id",
+            "description": "<p>Unique identifier of the component.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>Step type.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Step title.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "desc",
+            "description": "<p>Step description.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "order",
+            "description": "<p>Indicates the position where the step this with respect to other.</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>Updates a step of a process.</p>",
     "filename": "routes/v1/repo/proc/index.js",
     "groupTitle": "Repo_Proc"
@@ -657,6 +895,40 @@ define({ "api": [
     "version": "0.0.1",
     "name": "AddSuprLay",
     "group": "Repo_SuprLay",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Superlay code.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Superlay name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "logo",
+            "description": "<p>Superlay logo.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "order",
+            "description": "<p>Indicates the position where the suprlay this with respect to other.</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>Add a super layer to the architecture of fermat.</p>",
     "filename": "routes/v1/repo/suprlay/index.js",
     "groupTitle": "Repo_SuprLay"
@@ -668,6 +940,19 @@ define({ "api": [
     "version": "0.0.1",
     "name": "DelSprlay",
     "group": "Repo_SuprLay",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "suprlay_id",
+            "description": "<p>Unique identifier of the suprlay.</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>Delete super layer from architecture of fermat.</p>",
     "filename": "routes/v1/repo/suprlay/index.js",
     "groupTitle": "Repo_SuprLay"
@@ -679,7 +964,20 @@ define({ "api": [
     "version": "0.0.1",
     "name": "GetSprlay",
     "group": "Repo_SuprLay",
-    "description": "<p>Get super layer from architecture of fermat.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "suprlay_id",
+            "description": "<p>Unique identifier of the suprlay.</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get superlayer from architecture of fermat.</p>",
     "filename": "routes/v1/repo/suprlay/index.js",
     "groupTitle": "Repo_SuprLay"
   },
@@ -701,6 +999,47 @@ define({ "api": [
     "version": "0.0.1",
     "name": "UptSprlay",
     "group": "Repo_SuprLay",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "suprlay_id",
+            "description": "<p>Unique identifier of the suprlay.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Superlay code.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Superlay name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "logo",
+            "description": "<p>Superlay logo.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "order",
+            "description": "<p>Indicates the position where the suprlay this with respect to other.</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>Update super layer from architecture of fermat.</p>",
     "filename": "routes/v1/repo/suprlay/index.js",
     "groupTitle": "Repo_SuprLay"
