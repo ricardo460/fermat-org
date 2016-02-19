@@ -386,7 +386,7 @@ exports.uptLifeCiclesById = function (_life_cicle_id, target, reached, callback)
 exports.findCompById = function (_id, callback) {
     'use strict';
     try {
-        compSrv.findCompById(_id, function (err_comp, res_comp) {
+        compSrv.findAndPopulateCompById(_id, 'life_cycle devs', function (err_comp, res_comp) {
             if (err_comp) {
                 return callback(err_comp, null);
             }
@@ -576,10 +576,10 @@ exports.updateCompById = function (_comp_id, _platfrm_id, _suprlay_id, _layer_id
     'use strict';
     try {
         var set_obj = {};
-        if (_platfrm_id) {
+        if (_platfrm_id || _platfrm_id == null) {
             set_obj._platfrm_id = _platfrm_id;
         }
-        if (_suprlay_id) {
+        if (_suprlay_id || _suprlay_id == null) {
             set_obj._suprlay_id = _suprlay_id;
         }
         if (_layer_id) {
