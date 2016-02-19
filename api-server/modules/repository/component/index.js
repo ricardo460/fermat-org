@@ -576,10 +576,10 @@ exports.updateCompById = function (_comp_id, _platfrm_id, _suprlay_id, _layer_id
     'use strict';
     try {
         var set_obj = {};
-        if (_platfrm_id) {
+        if (_platfrm_id || _platfrm_id == null) {
             set_obj._platfrm_id = _platfrm_id;
         }
-        if (_suprlay_id) {
+        if (_suprlay_id || _suprlay_id == null) {
             set_obj._suprlay_id = _suprlay_id;
         }
         if (_layer_id) {
