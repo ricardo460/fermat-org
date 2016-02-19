@@ -277,7 +277,7 @@ function Helper() {
         })
         .fail(function(res) {
 
-            alert('Action Not Ejecutada');        
+            window.alert('Action Not Executed');
             return false;
         });
 
