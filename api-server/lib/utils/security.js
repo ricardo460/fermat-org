@@ -42,7 +42,7 @@ var isValidData = function (data) {
  * @return {Boolean}      [description]
  */
 var isValidTypeComp = function (data) {
-    if (data === 'library' || data === 'library' || data === 'addon' || data === 'plugin') {
+    if (data === 'android' || data === 'library' || data === 'addon' || data === 'plugin') {
         //console.log('invalid data');
         return 1;
     } else return 0;
@@ -54,7 +54,7 @@ var isValidTypeComp = function (data) {
  * @return {Boolean}      [description]
  */
 var isValidLifeCicle = function (data) {
-    if (data == 'design' || data === 'development' || data === 'qa' || data === 'production') {
+    if (data == 'concept' || data === 'development' || data === 'qa' || data === 'production') {
         //console.log('invalid data');
         return 1;
     } else return 0;
