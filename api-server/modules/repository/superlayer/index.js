@@ -272,9 +272,8 @@ exports.delSuprlayById = function (_id, callback) {
             suprlaySrv.findSuprlayById(_id, function (err_suprlay, res_suprlay) {
                 if (err_suprlay) {
                     return callback(err_suprlay, null);
-                }
-                // ordering function
-                swapOrder('delete', res_suprlay.order, null, function (err_sld, res_sld) {
+                }else if (res_suprlay){
+                    swapOrder('delete', res_suprlay.order, null, function (err_sld, res_sld) {
                     if (err_sld) {
                         return callback(err_sld, null);
                     } else {
@@ -286,6 +285,12 @@ exports.delSuprlayById = function (_id, callback) {
                         });
                     }
                 });
+
+                }else{
+                      return callback(null, null);
+                }
+                // ordering function
+               
             });
         };
         compMod.findCompsBySuprlayId(_id, function (err_comp, res_comps) {
