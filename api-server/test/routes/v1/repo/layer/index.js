@@ -180,7 +180,7 @@ describe("LAY",function(){
 
     it("#PUT uptLay 412",function(done){
 
-        var dataLay = dataHelper.generateData412General();
+        var dataLay = dataHelper.generateDataLay412();
 
         server
         .put(pathTest+"/"+lay._id)

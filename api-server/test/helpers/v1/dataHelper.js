@@ -106,6 +106,15 @@ exports.generateDataLay = function(){
     };
 };
 
+exports.generateDataLay412 = function(){
+    return {
+        "name" : faker.name.firstName(),
+        "lang" : faker.name.firstName(),
+        "suprlay": null,
+        "order": 0
+    };
+};
+
 exports.generateDataSuprLay = function(){
     return {
         "code" : faker.name.firstName(),

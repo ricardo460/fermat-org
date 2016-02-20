@@ -159,11 +159,11 @@ router.put('/:layer_id', function (req, res, next) {
     try {
 
 	    if (!security.isValidData(req.params.layer_id) || //
-            !security.isValidData(req.body.name) || //
-            !security.isValidData(req.body.lang) || //
-            !security.isValidData(req.body.suprlay) || //
-            !security.isValidData(req.body.order)) {
-      
+            !security.ifExistIsValidData(req.body.name) || //
+            !security.ifExistIsValidData (req.body.lang) ||
+            !security.ifExistIsValidData (req.body.suprlay) ||
+            !security.ifExistIsValidData(req.body.order)) {
+
           res.status(412).send({"message": "missing or invalid data"});
         } else {
             repMod.uptLay(req, function (error, result) {
