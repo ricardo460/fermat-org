@@ -146,6 +146,15 @@ exports.generateDataSuprLay = function(){
     };
 };
 
+exports.generateDataSuprLay412 = function(){
+    return {
+        "code" : faker.name.firstName(),
+        "name" : faker.name.firstName(),
+        "logo": null,
+        "order": 0
+    };
+};
+
 exports.generateDataPlatform = function(){
     return {
         "code" : faker.name.firstName(),
