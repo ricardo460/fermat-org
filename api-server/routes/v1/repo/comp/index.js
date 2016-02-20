@@ -58,11 +58,24 @@ var release = function (req) {
  * using lock for comp routes
  */
 router.use(lock);
+
+
+
+
 /**
  * @api {post} /v1/repo/comp/ add components
  * @apiVersion 0.0.1
  * @apiName AddComp
  * @apiGroup Repo-Comp
+ * @apiParam {type} layer_id  layer unique identifier.
+ * @apiParam {String} name    component name.
+ * @apiParam {String} type    component type.
+ * @apiParam {Number} difficulty component complexity developed  rank (0- 10).
+ * @apiParam {String} code_level   developing state api.
+ * @apiParam {ObjectId} platfrm_id   layer unique platfrtm.
+ * @apiParam {ObjectId} suprlay_id   suprlay unique platfrtm. 
+ * @apiParam {String} description  description of  components.
+ * @apiParam {String} repo_dir      directory of repo.
  * @apiDescription Add a component to the architecture fermat.
  */
 router.post('/', function (req, res, next) {
@@ -99,6 +112,7 @@ router.post('/', function (req, res, next) {
  * @apiVersion 0.0.1
  * @apiName ListComps
  * @apiGroup Repo-Comp
+
  * @apiDescription Get a list of components of the architecture fermat.
  */
 router.get('/', function (req, res, next) {
@@ -115,14 +129,18 @@ router.get('/', function (req, res, next) {
         next(err);
     }
 });
+
 /**
  * @api {put} /v1/repo/comp/:comp_id/life-cicles/:life_cicle_id update lifecicles to component
  * @apiVersion 0.0.1
  * @apiName UptLifeCiclesToComp
+ * @apiParam {ObjectId} comp_id  component unique identifier.
+ * @apiParam {ObjectId} life_cicle_id   life cicle unique identifier..
+ * @apiParam {Date} target    estimated completion date.
+ * @apiParam {Date} reached    true date of completion.
  * @apiGroup Repo-Comp
  * @apiDescription updates the lifecycle of a component of the architecture fermat.
- * @apiParam {ObjectId} comp_id Represents the component identifier.
- * @apiParam {ObjectId} life_cicle_id Represents the component identifier.
+ 
  */
 router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
     'use strict';
@@ -161,6 +179,11 @@ router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
  * @api {post} /v1/repo/comp/:comp_id/comp-devs add component developer
  * @apiVersion 0.0.1
  * @apiName AddCompDev
+ * @apiParam {ObjectId} comp_id    component unique identifier.
+ * @apiParam {ObjectId} dev_id    component unique identifier.
+ * @apiParam {String} role    xxxx.
+ * @apiParam {String} scope    xxxxx.
+ * @apiParam {Number} percnt    xxxx.
  * @apiGroup Repo-Comp
  * @apiDescription Add component to developer.
  */

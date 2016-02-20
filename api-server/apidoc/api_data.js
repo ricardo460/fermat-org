@@ -226,6 +226,75 @@ define({ "api": [
     "version": "0.0.1",
     "name": "AddComp",
     "group": "Repo_Comp",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "type",
+            "optional": false,
+            "field": "layer_id",
+            "description": "<p>layer unique identifier.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>component name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>component type.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "difficulty",
+            "description": "<p>component complexity developed  rank (0- 10).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code_level",
+            "description": "<p>developing state api.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "platfrm_id",
+            "description": "<p>layer unique platfrtm.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "suprlay_id",
+            "description": "<p>suprlay unique platfrtm.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>description of  components.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "repo_dir",
+            "description": "<p>directory of repo.</p>"
+          }
+        ]
+      }
+    },
     "description": "<p>Add a component to the architecture fermat.</p>",
     "filename": "routes/v1/repo/comp/index.js",
     "groupTitle": "Repo_Comp"
@@ -349,8 +418,6 @@ define({ "api": [
     "title": "update lifecicles to component",
     "version": "0.0.1",
     "name": "UptLifeCiclesToComp",
-    "group": "Repo_Comp",
-    "description": "<p>updates the lifecycle of a component of the architecture fermat.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -359,18 +426,34 @@ define({ "api": [
             "type": "ObjectId",
             "optional": false,
             "field": "comp_id",
-            "description": "<p>Represents the component identifier.</p>"
+            "description": "<p>layer unique identifier.</p>"
           },
           {
             "group": "Parameter",
             "type": "ObjectId",
             "optional": false,
             "field": "life_cicle_id",
-            "description": "<p>Represents the component identifier.</p>"
+            "description": "<p>life cicle unique identifier..</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "target",
+            "description": "<p>estimated completion date.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "reached",
+            "description": "<p>true date of completion.</p>"
           }
         ]
       }
     },
+    "group": "Repo_Comp",
+    "description": "<p>updates the lifecycle of a component of the architecture fermat.</p>",
     "filename": "routes/v1/repo/comp/index.js",
     "groupTitle": "Repo_Comp"
   },
