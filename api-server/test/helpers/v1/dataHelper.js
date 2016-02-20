@@ -87,10 +87,32 @@ exports.generateDataStep = function(){
     };
 };
 
+exports.generateDataStep412 = function(){
+
+    return {
+        "proc_id" : mongoose.Types.ObjectId().toString(),
+        "comp_id" : mongoose.Types.ObjectId().toString(),
+        "type": null,
+        "title": faker.lorem.sentence(),
+        "desc": faker.lorem.sentence(),
+        "order": 0
+    };
+};
+
 exports.generateDataProc = function(){
     return {
         "platfrm" : faker.name.firstName(),
         "name" : faker.name.firstName(),
+        "desc": faker.lorem.sentence(),
+        "prev": faker.lorem.sentence(),
+        "next": faker.lorem.sentence()
+    };
+};
+
+exports.generateDataProc412 = function(){
+    return {
+        "platfrm" : faker.name.firstName(),
+        "name" : null,
         "desc": faker.lorem.sentence(),
         "prev": faker.lorem.sentence(),
         "next": faker.lorem.sentence()

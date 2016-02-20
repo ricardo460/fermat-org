@@ -499,6 +499,8 @@ exports.getAllProces = function (callback) {
             if (err) {
                 return callback(err, null);
             }
+            console.log("en el getAllProces");
+            console.log(procs);
             var loopProcs = function (j) {
                 if (j < procs.length) {
                     var _proc = procs[j];
