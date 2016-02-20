@@ -80,7 +80,7 @@ describe("COMP",function(){
   });
 
   it("#GET listComps",function(done){
-    this.timeout(5000);
+    this.timeout(10000);
     server
     .get(pathTest+"/")
     .expect("Content-type",/json/)
@@ -199,7 +199,7 @@ describe("COMP",function(){
 
    it("#PUT uptComp 412",function(done){
 
-    var dataComp = dataHelper.generateData412General();
+    var dataComp = dataHelper.generateDataComp412();
 
     server
     .put(pathTest+"/"+comp._id)
@@ -209,7 +209,6 @@ describe("COMP",function(){
     .end(function(err,res){
 
       if (err) return done(err);
-
 
        res.body.should.have.property('message');
 

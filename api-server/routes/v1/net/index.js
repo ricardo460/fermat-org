@@ -10,15 +10,11 @@ var cache = new Cache({
     time: 36000000
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/net/servrs get server network
+ * @apiName GetServerNetwork
+ * @apiVersion 0.0.1
+ * @apiGroup Net
+ * @apiDescription List servers connected to the P2P network fermat.
  */
 router.get('/servrs', function (req, res, next) {
     'use strict';
@@ -50,15 +46,12 @@ router.get('/servrs', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/net/nodes/:hash/childrn get children
+ * @apiName GetChildren 
+ * @apiVersion 0.0.1
+ * @apiGroup Net
+ * @apiDescription Lists all devices connected to a P2P network node given its hash.
+ * @apiParam {Hash} hash It represents the hash node.
  */
 router.get('/nodes/:hash/childrn', function (req, res, next) {
     'use strict';

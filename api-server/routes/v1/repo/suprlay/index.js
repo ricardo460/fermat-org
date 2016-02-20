@@ -59,13 +59,15 @@ var release = function (req) {
  */
 router.use(lock);
 /**
- * [release description]
- *
- * @method release
- *
- * @param  {[type]} req [description]
- *
- * @return {[type]} [description]
+ * @api {post} /v1/repo/suprlay/ add super layer
+ * @apiVersion 0.0.1
+ * @apiName AddSuprLay
+ * @apiGroup Repo-SuprLay
+ * @apiParam {String} code Superlay code.
+ * @apiParam {String} name Superlay name.
+ * @apiParam {String} logo Superlay logo.
+ * @apiParam {Number} order Indicates the position where the suprlay this with respect to other.
+ * @apiDescription Add a super layer to the architecture of fermat.
  */
 router.post('/', function (req, res, next) {
     'use strict';
@@ -89,15 +91,11 @@ router.post('/', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/repo/suprlay/ list super layers
+ * @apiVersion 0.0.1
+ * @apiName ListSuprLays
+ * @apiGroup Repo-SuprLay
+ * @apiDescription Get list super layer from architecture of fermat.
  */
 router.get('/', function (req, res, next) {
     'use strict';
@@ -114,15 +112,12 @@ router.get('/', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/repo/suprlay/:suprlay_id get super layer
+ * @apiVersion 0.0.1
+ * @apiName GetSprlay
+ * @apiGroup Repo-SuprLay
+ * @apiParam {ObjectId} suprlay_id Unique identifier of the suprlay.
+ * @apiDescription Get superlayer from architecture of fermat.
  */
 router.get('/:suprlay_id', function (req, res, next) {
     'use strict';
@@ -145,15 +140,16 @@ router.get('/:suprlay_id', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *f
- * @return {[type]} [description]
+ * @api {put} /v1/repo/suprlay/:suprlay_id update super layer
+ * @apiVersion 0.0.1
+ * @apiName UptSprlay
+ * @apiGroup Repo-SuprLay
+ * @apiParam {ObjectId} suprlay_id Unique identifier of the suprlay.
+ * @apiParam {String} code Superlay code.
+ * @apiParam {String} name Superlay name.
+ * @apiParam {String} logo Superlay logo.
+ * @apiParam {Number} order Indicates the position where the suprlay this with respect to other.
+ * @apiDescription Update super layer from architecture of fermat.
  */
 router.put('/:suprlay_id', function (req, res, next) {
     'use strict';
@@ -188,15 +184,12 @@ router.put('/:suprlay_id', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {delete} /v1/repo/suprlay/:suprlay_id delete super layer
+ * @apiVersion 0.0.1
+ * @apiName DelSprlay
+ * @apiGroup Repo-SuprLay
+ * @apiParam {ObjectId} suprlay_id Unique identifier of the suprlay.
+ * @apiDescription Delete super layer from architecture of fermat.
  */
 router.delete('/:suprlay_id', function (req, res, next) {
     'use strict';

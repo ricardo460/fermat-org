@@ -3,12 +3,21 @@ var router = express.Router();
 var authMod = require('../../../modules/auth');
 var config = require('../../../config.js');
 /**
- * @api {get} /login
- * @apiName login
+ * @api {get} /v1/auth/login sign in and/or log in
+ * @apiName Login
+ * @apiVersion 0.0.1
+ * @apiGroup Auth
+ * @apiParam {ObjectId} code Represents the authorization code to access the registered application on github.
+ * @apiParam {ObjectId} api_key Represents the key to the application registered on the server.
  * @apiDescription Register the user and returns the authorization to use the api.
- * @apiParam {Request} req Request of the client.
- * @apiParam {Response} resp  Response to client.
- * @apiParam {Callback} next  Represent function asincronous.
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "_id": "56b8c4c4288ff76e0f8225d3",
+ *       "_usr_id": "object usr",
+ *       "_app_id": "object app",
+ *       "axs_key": "56b8c4c4288ff76e0f8225d1"
+ *     }
  */
 router.get('/login', function (req, resp, next) {
     'use strict';
@@ -32,12 +41,13 @@ router.get('/login', function (req, resp, next) {
     }
 });
 /**
- * @api {get} /logout
- * @apiName logout
+ * @api {get} /v1/auth/logout logout
+ * @apiName Logout
+ * @apiVersion 0.0.1
+ * @apiGroup Auth
+ * @apiParam {ObjectId} api_key Represents the key to the application registered on the server.
+ * @apiParam {ObjectId} axs_key Represents the access key to use the api.
  * @apiDescription Removes the token.
- * @apiParam {Request} req Request of the client.
- * @apiParam {Response} resp  Response to client.
- * @apiParam {Callback} next  Represent function asincronous.
  * @apiSuccess {Boolean} isLogout It indicates that the token has been removed.
  */
 router.get('/logout', function (req, resp, next) {

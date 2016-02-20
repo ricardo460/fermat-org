@@ -65,7 +65,38 @@ exports.findCompById = function (_id, callback) {
 exports.findAndPopulateCompById = function (_id, path, callback) {
     'use strict';
     compDao.findAndPopulateSchemaById(_id, path, function (err, comp) {
-        callback(err, comp);
+        if (err) {
+            callback(err, null);
+        } else {
+            var _compDevs = comp.devs;
+            if (_compDevs.length > 0) {
+                var _devs = [];
+                var loopCompDevs = function (j) {
+                    if (j < _compDevs.length) {
+                        var _compDev = {};
+                        devSrv.findDevById(_compDevs[j]._dev_id, function (err_dev, res_dev) {
+                            if (err_dev) {
+                                loopCompDevs(++j);
+                            } else {
+                                _compDev.dev = res_dev;
+                                _compDev.role = _compDevs[j].role;
+                                _compDev.scope = _compDevs[j].scope;
+                                _compDev.percnt = _compDevs[j].percnt;
+                                _devs.push(_compDev);
+                                loopCompDevs(++j);
+                            }
+                        });
+                    } else {
+                        comp.devs = _devs;
+                        callback(null, comp);
+                    }
+                };
+                loopCompDevs(0);
+            } else {
+                callback(null, comp);
+            }
+
+        }
     });
 };
 /**

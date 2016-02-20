@@ -10,6 +10,10 @@
   "scripts": {
     "start": "sh starter.sh"
   },
+  "apidoc": {
+    "title": "Custom apiDoc browser title",
+    "url": "http://api.fermat.org"
+  },
   "dependencies": {
     "async": "^1.4.2",
     "body-parser": "~1.13.2",
@@ -38,14 +42,15 @@
     "sanitizer": "0.1.3"
   },
   "devDependencies": {
-    "mocha": "^2.4.4",
-    "should": "^8.2.1",
-    "supertest": "^1.1.0",
     "gulp": "^3.9.0",
     "gulp-jshint": "^2.0.0",
     "gulp-jsonlint": "^1.1.1",
     "gulp-jsvalidate": "^2.1.0",
     "jshint": "^2.9.1",
-    "jshint-stylish": "^2.1.0"
+    "jshint-stylish": "^2.1.0",
+    "mocha": "^2.4.4",
+    "node-gyp": "^3.2.1",
+    "should": "^8.2.1",
+    "supertest": "^1.1.0"
   }
 }
