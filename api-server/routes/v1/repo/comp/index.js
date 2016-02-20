@@ -274,6 +274,8 @@ router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
  * @api {delete} /v1/repo/comp/:comp_id/comp-devs/:comp_dev_id delete component developer
  * @apiVersion 0.0.1
  * @apiName DelCompDev
+ * @apiParam {ObjectId} comp_id    component unique identifier.
+ * @apiParam {ObjectId} dev_id    component unique identifier.
  * @apiGroup Repo-Comp
  * @apiDescription Delete component to developer.
  */
