@@ -392,6 +392,7 @@ router.put('/:comp_id', function (req, res, next) {
  * @api {delete} /v1/repo/comp/:comp_id delete component
  * @apiVersion 0.0.1
  * @apiName DelComp
+ * @apiParam {ObjectId} comp_id    Unique identifier of the component.
  * @apiGroup Repo-Comp
  * @apiParam {ObjectId} comp_id Represents the component identifier.
  */
