@@ -224,6 +224,11 @@ router.post('/:comp_id/comp-devs', function (req, res, next) {
  * @api {put} /v1/repo/comp/:comp_id/comp-devs/:comp_dev_id update component developer
  * @apiVersion 0.0.1
  * @apiName UptCompDev
+ * @apiParam {ObjectId} comp_id    component unique identifier.
+ * @apiParam {ObjectId} dev_id    component unique identifier.
+ * @apiParam {String} role    xxxx.
+ * @apiParam {String} scope    xxxxx.
+ * @apiParam {Number} percnt    xxxx.
  * @apiGroup Repo-Comp
  * @apiDescription Update component to developer.
  */
