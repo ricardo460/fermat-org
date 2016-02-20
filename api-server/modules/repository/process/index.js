@@ -305,7 +305,7 @@ exports.findProcById = function (_id, callback) {
                 return callback(null, null);
 
             }
-           
+
         });
     } catch (err) {
         callback(err, null);
@@ -705,7 +705,7 @@ exports.insertStep = function (_proc_id, _comp_id, type, title, desc, order, cal
             }
 
          })
-       
+
     } catch (err) {
         return callback(err, null);
     }
@@ -750,32 +750,37 @@ exports.updateStepById = function (_step_id, _comp_id, type, title, desc, order,
         stepSrv.findStepById(_step_id, function (err_step, res_step) {
             if (err_step) {
                 return callback(err_step, null);
-            }
 
-            if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+            } else if(res_step) {
 
-                swapOrder('update', res_step.order, set_obj.order, function (err_sld, res_sld) {
-                    if (err_sld) {
-                        return callback(err_sld, null);
-                    } else {
+                if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
 
-                        stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
-                            if (err_upt) {
-                                return callback(err_upt, null);
-                            }
-                            return callback(null, set_obj);
-                        });
-                    }
-                });
+                    swapOrder('update', res_step.order, set_obj.order, function (err_sld, res_sld) {
+                        if (err_sld) {
+                            return callback(err_sld, null);
+                        } else {
+
+                            stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
+                                if (err_upt) {
+                                    return callback(err_upt, null);
+                                }
+                                return callback(null, set_obj);
+                            });
+                        }
+                    });
+
+                } else {
+
+                    stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
+                        if (err_upt) {
+                            return callback(err_upt, null);
+                        }
+                        return callback(null, set_obj);
+                    });
+
+                }
             } else {
-
-                stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
-                    if (err_upt) {
-                        return callback(err_upt, null);
-                    }
-                    return callback(null, set_obj);
-                });
-
+                return callback(null, null);
             }
         });
 
