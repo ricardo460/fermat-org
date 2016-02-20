@@ -64,7 +64,7 @@ router.use(lock);
  * @apiName AddPlatform
  * @apiParam {String} code    xxxxx.
  * @apiParam {String} name    Platform name.
- * @apiParam {String} logo platform logo.
+ * @apiParam {String} logo Platform logo.
  * @apiParam {Number} order Indicates the position where the platform this with respect to other.
  * @apiGroup Repo-Platform
  * @apiDescription Add a platform to the architecture of fermat.

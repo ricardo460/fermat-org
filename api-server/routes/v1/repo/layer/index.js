@@ -63,10 +63,10 @@ router.use(lock);
  * @api {post} /v1/repo/layer/ add layer
  * @apiVersion 0.0.1
  * @apiName AddLayer
- * @apiParam {String} name    Component name.
+ * @apiParam {String} name    Layer name.
  * @apiParam {String} lang    xxxxx.
  * @apiParam {String} suprlay    xxxxx.
- * @apiParam {Number} order Indicates the position where the suprlay this with respect to other.
+ * @apiParam {Number} order Indicates the position where the layer this with respect to other.
  * @apiGroup Repo-Layer
  * @apiDescription Add a layer to the architecture of fermat.
  */
@@ -148,10 +148,10 @@ router.get('/:layer_id', function (req, res, next) {
  * @apiName UptLay
  * @apiGroup Repo-Layer
  * @apiParam {ObjectId} layer_id Represents the identifier of the layer
-* @apiParam {String} name    Component name.
+* @apiParam {String} name    Layer name.
  * @apiParam {String} lang    xxxxx.
  * @apiParam {String} suprlay    xxxxx.
- * @apiParam {Number} order Indicates the position where the suprlay this with respect to other.
+ * @apiParam {Number} order Indicates the position where the layer this with respect to other.
  * @apiDescription Update layer to the architecture of fermat.
  */
 router.put('/:layer_id', function (req, res, next) {

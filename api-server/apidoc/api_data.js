@@ -234,63 +234,63 @@ define({ "api": [
             "type": "type",
             "optional": false,
             "field": "layer_id",
-            "description": "<p>layer unique identifier.</p>"
+            "description": "<p>Unique identifier of the layer.</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "name",
-            "description": "<p>component name.</p>"
+            "description": "<p>Component name.</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "type",
-            "description": "<p>component type.</p>"
+            "description": "<p>Component type.</p>"
           },
           {
             "group": "Parameter",
             "type": "Number",
             "optional": false,
             "field": "difficulty",
-            "description": "<p>component complexity developed  rank (0- 10).</p>"
+            "description": "<p>Component complexity developed  rank (0- 10).</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "code_level",
-            "description": "<p>developing state api.</p>"
+            "description": "<p>Developing state api.</p>"
           },
           {
             "group": "Parameter",
             "type": "ObjectId",
             "optional": false,
             "field": "platfrm_id",
-            "description": "<p>layer unique platfrtm.</p>"
+            "description": "<p>Unique identifier of the  platfrtm.</p>"
           },
           {
             "group": "Parameter",
             "type": "ObjectId",
             "optional": false,
             "field": "suprlay_id",
-            "description": "<p>suprlay unique platfrtm.</p>"
+            "description": "<p>Unique identifier of the  suprlay .</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "description",
-            "description": "<p>description of  components.</p>"
+            "description": "<p>Description of  components.</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "repo_dir",
-            "description": "<p>directory of repo.</p>"
+            "description": "<p>Directory of repo.</p>"
           }
         ]
       }
@@ -305,6 +305,47 @@ define({ "api": [
     "title": "add component developer",
     "version": "0.0.1",
     "name": "AddCompDev",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "comp_id",
+            "description": "<p>Unique identifier of the component.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "dev_id",
+            "description": "<p>Unique identifier of the developer.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "role",
+            "description": "<p>xxxx.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "scope",
+            "description": "<p>xxxxx.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "percnt",
+            "description": "<p>xxxx.</p>"
+          }
+        ]
+      }
+    },
     "group": "Repo_Comp",
     "description": "<p>Add component to developer.</p>",
     "filename": "routes/v1/repo/comp/index.js",
@@ -316,7 +357,6 @@ define({ "api": [
     "title": "delete component",
     "version": "0.0.1",
     "name": "DelComp",
-    "group": "Repo_Comp",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -325,11 +365,12 @@ define({ "api": [
             "type": "ObjectId",
             "optional": false,
             "field": "comp_id",
-            "description": "<p>Represents the component identifier.</p>"
+            "description": "<p>Unique identifier of the component.</p>"
           }
         ]
       }
     },
+    "group": "Repo_Comp",
     "filename": "routes/v1/repo/comp/index.js",
     "groupTitle": "Repo_Comp"
   },
@@ -339,6 +380,26 @@ define({ "api": [
     "title": "delete component developer",
     "version": "0.0.1",
     "name": "DelCompDev",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "comp_id",
+            "description": "<p>Unique identifier of the component.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "dev_id",
+            "description": "<p>Unique identifier of the developer.</p>"
+          }
+        ]
+      }
+    },
     "group": "Repo_Comp",
     "description": "<p>Delete component to developer.</p>",
     "filename": "routes/v1/repo/comp/index.js",
@@ -350,7 +411,6 @@ define({ "api": [
     "title": "get component",
     "version": "0.0.1",
     "name": "GetComp",
-    "group": "Repo_Comp",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -359,11 +419,12 @@ define({ "api": [
             "type": "ObjectId",
             "optional": false,
             "field": "comp_id",
-            "description": "<p>Represents the component identifier.</p>"
+            "description": "<p>Unique identifier of the component.</p>"
           }
         ]
       }
     },
+    "group": "Repo_Comp",
     "filename": "routes/v1/repo/comp/index.js",
     "groupTitle": "Repo_Comp"
   },
@@ -384,7 +445,6 @@ define({ "api": [
     "title": "update component",
     "version": "0.0.1",
     "name": "UptComp",
-    "group": "Repo_Comp",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -393,11 +453,61 @@ define({ "api": [
             "type": "ObjectId",
             "optional": false,
             "field": "comp_id",
-            "description": "<p>Represents the component identifier.</p>"
+            "description": "<p>Unique identifier of the component.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "layer_id",
+            "description": "<p>Unique identifier of the layer.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Component name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>Component type.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "difficulty",
+            "description": "<p>Component complexity developed  rank (0- 10).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code_level",
+            "description": "<p>Developing state api.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Description of  components.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "repo_dir",
+            "description": "<p>Directory of repo.</p>"
           }
         ]
       }
     },
+    "group": "Repo_Comp",
     "filename": "routes/v1/repo/comp/index.js",
     "groupTitle": "Repo_Comp"
   },
@@ -407,6 +517,47 @@ define({ "api": [
     "title": "update component developer",
     "version": "0.0.1",
     "name": "UptCompDev",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "comp_id",
+            "description": "<p>Unique identifier of the component.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "dev_id",
+            "description": "<p>Unique identifier of the developer.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "role",
+            "description": "<p>xxxx.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "scope",
+            "description": "<p>xxxxx.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "percnt",
+            "description": "<p>xxxx.</p>"
+          }
+        ]
+      }
+    },
     "group": "Repo_Comp",
     "description": "<p>Update component to developer.</p>",
     "filename": "routes/v1/repo/comp/index.js",
@@ -426,28 +577,28 @@ define({ "api": [
             "type": "ObjectId",
             "optional": false,
             "field": "comp_id",
-            "description": "<p>layer unique identifier.</p>"
+            "description": "<p>Unique identifier of the component.</p>"
           },
           {
             "group": "Parameter",
             "type": "ObjectId",
             "optional": false,
             "field": "life_cicle_id",
-            "description": "<p>life cicle unique identifier..</p>"
+            "description": "<p>Unique identifier of the  life cicle.</p>"
           },
           {
             "group": "Parameter",
             "type": "Date",
             "optional": false,
             "field": "target",
-            "description": "<p>estimated completion date.</p>"
+            "description": "<p>Estimated completion date.</p>"
           },
           {
             "group": "Parameter",
             "type": "Date",
             "optional": false,
             "field": "reached",
-            "description": "<p>true date of completion.</p>"
+            "description": "<p>True date of completion.</p>"
           }
         ]
       }
@@ -463,6 +614,40 @@ define({ "api": [
     "title": "add layer",
     "version": "0.0.1",
     "name": "AddLayer",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Component name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "lang",
+            "description": "<p>xxxxx.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "suprlay",
+            "description": "<p>xxxxx.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "order",
+            "description": "<p>Indicates the position where the suprlay this with respect to other.</p>"
+          }
+        ]
+      }
+    },
     "group": "Repo_Layer",
     "description": "<p>Add a layer to the architecture of fermat.</p>",
     "filename": "routes/v1/repo/layer/index.js",
@@ -507,7 +692,7 @@ define({ "api": [
             "type": "ObjectId",
             "optional": false,
             "field": "layer_id",
-            "description": "<p>Represents the identifier of the layer</p>"
+            "description": "<p>Unique identifier of the layer.</p>"
           }
         ]
       }
@@ -543,6 +728,34 @@ define({ "api": [
             "optional": false,
             "field": "layer_id",
             "description": "<p>Represents the identifier of the layer</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Component name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "lang",
+            "description": "<p>xxxxx.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "suprlay",
+            "description": "<p>xxxxx.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "order",
+            "description": "<p>Indicates the position where the suprlay this with respect to other.</p>"
           }
         ]
       }
@@ -557,6 +770,40 @@ define({ "api": [
     "title": "add platform",
     "version": "0.0.1",
     "name": "AddPlatform",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code",
+            "description": "<p>xxxxx.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Platform name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "logo",
+            "description": "<p>platform logo.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "order",
+            "description": "<p>Indicates the position where the platform this with respect to other.</p>"
+          }
+        ]
+      }
+    },
     "group": "Repo_Platform",
     "description": "<p>Add a platform to the architecture of fermat.</p>",
     "filename": "routes/v1/repo/platfrm/index.js",
