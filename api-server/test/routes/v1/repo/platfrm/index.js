@@ -10,7 +10,7 @@ var pathTest = "/v1/repo/usrs/1/platfrms"
 
 mongoose.connect('mongodb://localhost/fermat-org-dev');
 
-describe("SUPRLAY",function(){
+describe("PLATFRM",function(){
 
     var platform;
 

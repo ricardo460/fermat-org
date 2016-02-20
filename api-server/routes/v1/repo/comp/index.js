@@ -58,11 +58,24 @@ var release = function (req) {
  * using lock for comp routes
  */
 router.use(lock);
+
+
+
+
 /**
  * @api {post} /v1/repo/comp/ add components
  * @apiVersion 0.0.1
  * @apiName AddComp
  * @apiGroup Repo-Comp
+ * @apiParam {type} layer_id   Unique identifier of the layer.
+ * @apiParam {String} name    Component name.
+ * @apiParam {String} type    Component type.
+ * @apiParam {Number} difficulty Component complexity developed  rank (0- 10).
+ * @apiParam {String} code_level   Developing state api.
+ * @apiParam {ObjectId} platfrm_id   Unique identifier of the  platfrtm.
+ * @apiParam {ObjectId} suprlay_id    Unique identifier of the  suprlay . 
+ * @apiParam {String} description  Description of  components.
+ * @apiParam {String} repo_dir      Directory of repo.
  * @apiDescription Add a component to the architecture fermat.
  */
 router.post('/', function (req, res, next) {
@@ -99,6 +112,7 @@ router.post('/', function (req, res, next) {
  * @apiVersion 0.0.1
  * @apiName ListComps
  * @apiGroup Repo-Comp
+
  * @apiDescription Get a list of components of the architecture fermat.
  */
 router.get('/', function (req, res, next) {
@@ -115,14 +129,18 @@ router.get('/', function (req, res, next) {
         next(err);
     }
 });
+
 /**
  * @api {put} /v1/repo/comp/:comp_id/life-cicles/:life_cicle_id update lifecicles to component
  * @apiVersion 0.0.1
  * @apiName UptLifeCiclesToComp
+ * @apiParam {ObjectId} comp_id  Unique identifier of the component.
+ * @apiParam {ObjectId} life_cicle_id  Unique identifier of the  life cicle.
+ * @apiParam {Date} target    Estimated completion date.
+ * @apiParam {Date} reached    True date of completion.
  * @apiGroup Repo-Comp
  * @apiDescription updates the lifecycle of a component of the architecture fermat.
- * @apiParam {ObjectId} comp_id Represents the component identifier.
- * @apiParam {ObjectId} life_cicle_id Represents the component identifier.
+ 
  */
 router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
     'use strict';
@@ -161,6 +179,11 @@ router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
  * @api {post} /v1/repo/comp/:comp_id/comp-devs add component developer
  * @apiVersion 0.0.1
  * @apiName AddCompDev
+ * @apiParam {ObjectId} comp_id    Unique identifier of the component.
+ * @apiParam {ObjectId} dev_id    Unique identifier of the developer.
+ * @apiParam {String} role    xxxx.
+ * @apiParam {String} scope    xxxxx.
+ * @apiParam {Number} percnt    xxxx.
  * @apiGroup Repo-Comp
  * @apiDescription Add component to developer.
  */
@@ -201,6 +224,11 @@ router.post('/:comp_id/comp-devs', function (req, res, next) {
  * @api {put} /v1/repo/comp/:comp_id/comp-devs/:comp_dev_id update component developer
  * @apiVersion 0.0.1
  * @apiName UptCompDev
+ * @apiParam {ObjectId} comp_id    Unique identifier of the component.
+ * @apiParam {ObjectId} dev_id    Unique identifier of the developer.
+ * @apiParam {String} role    xxxx.
+ * @apiParam {String} scope    xxxxx.
+ * @apiParam {Number} percnt    xxxx.
  * @apiGroup Repo-Comp
  * @apiDescription Update component to developer.
  */
@@ -242,6 +270,8 @@ router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
  * @api {delete} /v1/repo/comp/:comp_id/comp-devs/:comp_dev_id delete component developer
  * @apiVersion 0.0.1
  * @apiName DelCompDev
+  * @apiParam {ObjectId} comp_id    Unique identifier of the component.
+ * @apiParam {ObjectId} dev_id    Unique identifier of the developer.
  * @apiGroup Repo-Comp
  * @apiDescription Delete component to developer.
  */
@@ -278,6 +308,7 @@ router.delete('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
  * @api {get} /v1/repo/comp/:comp_id get component
  * @apiVersion 0.0.1
  * @apiName GetComp
+ * @apiParam {ObjectId} comp_id    Unique identifier of the component.
  * @apiGroup Repo-Comp
  * @apiParam {ObjectId} comp_id Represents the component identifier.
  */
@@ -306,6 +337,14 @@ router.get('/:comp_id', function (req, res, next) {
  * @api {put} /v1/repo/comp/:comp_id update component
  * @apiVersion 0.0.1
  * @apiName UptComp
+ * @apiParam {ObjectId} comp_id    Unique identifier of the component.
+ * @apiParam {ObjectId} layer_id   Unique identifier of the layer.
+ * @apiParam {String} name    Component name.
+ * @apiParam {String} type    Component type.
+ * @apiParam {Number} difficulty Component complexity developed  rank (0- 10).
+ * @apiParam {String} code_level   Developing state api.
+ * @apiParam {String} description  Description of  components.
+ * @apiParam {String} repo_dir      Directory of repo.
  * @apiGroup Repo-Comp
  * @apiParam {ObjectId} comp_id Represents the component identifier.
  */
@@ -346,6 +385,7 @@ router.put('/:comp_id', function (req, res, next) {
  * @api {delete} /v1/repo/comp/:comp_id delete component
  * @apiVersion 0.0.1
  * @apiName DelComp
+ * @apiParam {ObjectId} comp_id    Unique identifier of the component.
  * @apiGroup Repo-Comp
  * @apiParam {ObjectId} comp_id Represents the component identifier.
  */
