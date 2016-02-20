@@ -28,10 +28,10 @@ exports.generateDataComp412 = function(){
         "name" : faker.name.firstName(),
         "type" : "addon",
         "description": faker.lorem.sentence(),
-        "difficulty": 5,
+        "difficulty": -1,
         "code_level": faker.lorem.sentence(),
         "repo_dir": "root",
-       "scrnshts": false,
+       "scrnshts": false
 
 
     };
@@ -57,6 +57,16 @@ exports.generateDataCompDev = function(){
     };
 
 };
+
+exports.generateDataCompDev412 = function(){
+    return {
+        "comp_id" : mongoose.Types.ObjectId().toString(),
+        "dev_id" :  mongoose.Types.ObjectId().toString(),
+        "role" : faker.name.firstName(),
+        "scope": faker.name.firstName(),
+        "percnt": null
+    };
+}
 
 exports.generateDataLifeCicle = function(){
     return {

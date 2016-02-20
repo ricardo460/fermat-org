@@ -209,14 +209,10 @@ router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
     try {
         if (!security.isValidData(req.params.comp_id) || // required
             !security.isValidData(req.params.comp_dev_id) || // required
-            !(typeof req.body.dev_id == "undefined" ||
-             (typeof req.body.dev_id != "undefined" && security.isValidData(req.body.dev_id))) ||
-            !(typeof req.body.role == "undefined" ||
-             (typeof req.body.role != "undefined" && security.isValidData(req.body.role))) ||
-            !(typeof req.body.scope == "undefined" ||
-             (typeof req.body.scope != "undefined" && security.isValidData(req.body.scope))) ||
-            !(typeof req.body.percnt == "undefined" ||
-             (typeof req.body.percnt != "undefined" && security.isValidData(req.body.percnt)))) {
+            !security.ifExistIsValidData(req.body.dev_id) ||
+            !security.ifExistIsValidData(req.body.role) ||
+            !security.ifExistIsValidData(req.body.scope) ||
+            !security.ifExistIsValidData(req.body.percnt)) {
             res.status(412).send({
                 "message": "missing or invalid data"
             });
@@ -321,12 +317,9 @@ router.put('/:comp_id', function (req, res, next) {
             !security.ifExistIsValidData(req.body.name) ||
             !security.ifExistIsValidData(req.body.type) ||
             !security.ifExistIsValidDifficulty(req.body.difficulty) ||
-            !(typeof req.body.code_level == "undefined" ||
-            (typeof req.body.code_level != "undefined" && security.isValidLifeCicle(req.body.code_level))) ||
-            !(typeof req.body.description == "undefined" ||
-            (typeof req.body.description != "undefined" && security.isValidData(req.body.description))) ||
-            !(typeof req.body.repo_dir == "undefined" ||
-            (typeof req.body.repo_dir != "undefined" && security.isValidData(req.body.repo_dir)))) {
+            !security.ifExistIsValidLifeCicle(req.body.code_level) ||
+            !security.ifExistIsValidData(req.body.description) ||
+            !security.ifExistIsValidData(req.body.repo_dir)) {
              res.status(412).send({"message": "missing or invalid data"});
         } else {
             repMod.uptComp(req, function (error, result) {

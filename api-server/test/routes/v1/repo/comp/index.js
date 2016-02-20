@@ -375,7 +375,7 @@ describe("COMP",function(){
 
   it("#PUT uptCompDev 412",function(done){
 
-    var dataCompDev = dataHelper.generateData412General();
+    var dataCompDev = dataHelper.generateDataCompDev412();
     server
     .put(pathTest+"/"+comp._id+"/comp-devs/"+compDevIds[0])
     .send(dataCompDev)
