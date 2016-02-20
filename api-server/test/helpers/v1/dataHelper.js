@@ -132,3 +132,12 @@ exports.generateDataPlatform = function(){
         "order": 0
     };
 };
+
+exports.generateDataPlatform412 = function(){
+    return {
+        "code" : faker.name.firstName(),
+        "name" : faker.name.firstName(),
+        "logo": null,
+        "order": 0
+    };
+};

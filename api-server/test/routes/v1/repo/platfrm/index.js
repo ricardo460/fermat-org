@@ -161,7 +161,27 @@ describe("PLATFRM",function(){
 
     });
 
-      it("#PUT uptPltf 404",function(done){
+    it("#PUT uptPltf 412",function(done){
+
+         var dataPlatform = dataHelper.generateDataPlatform412();
+
+        server
+        .put(pathTest+"/"+platform._id)
+        .send(dataPlatform)
+        .expect("Content-type",/json/)
+        .expect(412) // This is HTTP response
+        .end(function(err, res){
+
+            if (err) return done(err);
+
+            res.body.should.have.property('message');
+
+          return done();
+        });
+
+    });
+
+    it("#PUT uptPltf 404",function(done){
 
         server
         .get(pathTest+"/"+mongoose.Types.ObjectId().toString())
