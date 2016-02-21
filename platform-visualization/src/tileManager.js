@@ -93,10 +93,10 @@ function TileManager() {
                     var r = tile.data.layerID; 
 
                     var c = tile.data.platformID;
-                    var id = tile.id;
+                    var idT = tile.id;
 
 
-                    self.elementsByGroup[c].push(id);
+                    self.elementsByGroup[c].push(idT);
 
                     if (layers[tile.data.layer].super_layer) {
 
@@ -174,19 +174,19 @@ function TileManager() {
 
         for (i = 0, l = _suprlays.length; i < l; i++) {
             code = _suprlays[i].code;
-            superLayers[code] = {};
-            superLayers[code].name = _suprlays[i].name;
-            superLayers[code].index = _suprlays[i].order;
-            superLayers[code]._id = _suprlays[i]._id;
-            superLayers[code].dependsOn = _suprlays[i].deps;
+            window.superLayers[code] = {};
+            window.superLayers[code].name = _suprlays[i].name;
+            window.superLayers[code].index = _suprlays[i].order;
+            window.superLayers[code]._id = _suprlays[i]._id;
+            window.superLayers[code].dependsOn = _suprlays[i].deps;
         }
 
         for (i = 0, l = _platfrms.length; i < l; i++) {
             code = _platfrms[i].code;
-            platforms[code] = {};
-            platforms[code].index = _platfrms[i].order;
-            platforms[code].dependsOn = _platfrms[i].deps;
-            platforms[code]._id = _platfrms[i]._id;
+            window.platforms[code] = {};
+            window.platforms[code].index = _platfrms[i].order;
+            window.platforms[code].dependsOn = _platfrms[i].deps;
+            window.platforms[code]._id = _platfrms[i]._id;
         }
 
         for (i = 0, l = _layers.length; i < l; i++) {
@@ -208,7 +208,7 @@ function TileManager() {
             layerID = (layerID === undefined) ? layers.size() : layerID;
 
             var platformID = _platfrm ? _platfrm.order : undefined;
-            platformID = (platformID === undefined) ? platforms.size() : platformID;
+            platformID = (platformID === undefined) ? window.platforms.size() : platformID;
 
             var _author = getBestDev(_comp.devs, "author");
             var _maintainer = getBestDev(_comp.devs, "maintainer");
@@ -245,7 +245,7 @@ function TileManager() {
             
             var element = buildElement(i);
 
-            //An element is always inside a platform (known as group) or a superlayer
+            //An element is always inside a platform or a superlayer
             var group = element.platform || element.superLayer,
                 layer = element.layer;
 
@@ -596,9 +596,9 @@ function TileManager() {
         }
         else {
 
-            for(var i = 0; i < window.tilesQtty.length; i++){
+            for(var r = 0; r < window.tilesQtty.length; r++){
 
-                var tile = window.helper.getSpecificTile(window.tilesQtty[i]);                  
+                var tile = window.helper.getSpecificTile(window.tilesQtty[r]);                  
                     
                 animate(tile.mesh, tile.target.show, 0).start();
             }
@@ -767,7 +767,7 @@ function TileManager() {
 
         };
 
-        for(var i = 0; i < window.tilesQtty.length; i++){
+        for(i = 0; i < window.tilesQtty.length; i++){
 
             var tile = window.helper.getSpecificTile(window.tilesQtty[i]);  
         
@@ -796,6 +796,8 @@ function TileManager() {
         self.elementsByGroup = [];
 
         window.tilesQtty = [];
+        
+        var i = 0;
 
         for (var j = 0; j <= groupsQtty; j++) {
 
