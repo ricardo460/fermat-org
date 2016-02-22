@@ -153,7 +153,7 @@ function Camera(position, renderer, renderFunc) {
         
         if ( focus != null ) {
             var backButton = document.getElementById('backButton');
-            $(backButton).fadeTo(1000, 0, function() { backButton.style.display = 'none'; } );
+            $(backButton).fadeTo(0, 0, function() { backButton.style.display = 'none'; } );
             $('#sidePanel').fadeTo(1000, 0, function() { $('#sidePanel').remove(); });
             $('#elementPanel').fadeTo(1000, 0, function() { $('#elementPanel').remove(); });
             $('#timelineButton').fadeTo(1000, 0, function() { $('#timelineButton').remove(); });

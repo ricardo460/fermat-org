@@ -5,6 +5,8 @@ function FermatEdit() {
 
     var DATA_USER = {};
 
+    var DATA_TEST_USER = '';
+
     var objects = {
             row1 : {
                 div : null,
@@ -37,6 +39,9 @@ function FermatEdit() {
 
     this.init = function(){
 
+        if(window.session.getIsLogin())
+            DATA_TEST_USER = window.session.getUserLogin()._id;
+
         var url = window.helper.getAPIUrl("user");
 
         $.ajax({
@@ -50,8 +55,6 @@ function FermatEdit() {
             });
     };
 
-    var DATA_TEST_USER = '5629db85c7479678085a9552';
-
     /**
      * @author Ricardo Delgado
      */
@@ -64,16 +67,6 @@ function FermatEdit() {
             side = null,
             callback = null;
 
-        callback = function(){
-
-            actions.type = "update";
-
-            window.buttonsManager.removeAllButtons(); 
-            addAllFilds();
-            fillFields(id);
-            drawTile(id);
-        };
-
         if(id === null){
 
             callback = function(){ 
@@ -82,29 +75,66 @@ function FermatEdit() {
 
                 window.buttonsManager.removeAllButtons();
 
+                window.session.displayLoginButton(false);
+
                 drawTile(null, addAllFilds);
             };
 
+            window.session.displayLoginButton(true);
+
             text = 'Add New Component';
             button = 'buttonFermatNew';
-            side = 'right';
-        }
-        else{
+            side = 'left';
 
             window.buttonsManager.createButtons(button, text, callback, null, null, side);
 
-            callback = function(){
+        }
+        else{
 
-                if(window.confirm("Really remove this component?"))           
-                    deleteTile(id);                
-            };
+            if(!window.session.getIsLogin()){
+            
+                callback = function(){ 
+                    window.session.getAuthCode();
+                };
+            }
+            else{
+
+                callback = function(){
+
+                    actions.type = "update";
+                    window.buttonsManager.removeAllButtons(); 
+                    addAllFilds();
+                    fillFields(id);
+                    drawTile(id);
+                };
+            }
+
+            window.session.displayLoginButton(false);
+
+            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+
+            if(!window.session.getIsLogin()){
+            
+                callback = function(){ 
+                    window.session.getAuthCode();
+                };
+            }
+            else{ 
+
+                callback = function(){
+
+                    if(window.confirm("Really remove this component?"))           
+                        deleteTile(id);                
+                };
+            }
 
             text = 'Delete Component';
             button = 'buttonFermatDelete';
             side = 'right';
-        }
 
-        window.buttonsManager.createButtons(button, text, callback, null, null, side);   
+            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+        }   
+    
     };
 
     this.removeAllFields = function(){
@@ -151,6 +181,7 @@ function FermatEdit() {
         }
     };
 
+    // Start editing
     function fillFields(id){
 
         var tile = window.helper.getSpecificTile(id).data; 
@@ -672,7 +703,6 @@ function FermatEdit() {
             }, null, null, "right");
 
         }
-
     }
 
     function changeLayer(platform){
@@ -724,37 +754,23 @@ function FermatEdit() {
             objects.tile.mesh = null;
         }
     }
+    // end
 
+    //Save Tile
     function saveTile(){
 
         if(validateFields() === ''){ 
 
             var table = fillTable(false);
 
-            window.camera.loseFocus();
-            window.camera.enable();
-
             if(actions.type === "insert")
                 createTile(table);
             else if(actions.type === "update")
                 modifyTile(table);
-            
-            sendChanges(actions.type, table);
         }
         else{
-            window.alert(validateFields());
+             window.alert(validateFields());
         }
-    }
-    
-    /**
-     * Sends the changes made locally to the API server
-     * @author Miguel Celedon
-     * @param {string} action Can be "insert", "update" or "delete"
-     * @param {object} data   The parameters of the changes
-     */
-    function sendChanges(action, data) {
-        
-        
     }
 
     function validateFields(){
@@ -769,167 +785,264 @@ function FermatEdit() {
 
         return msj;
     }
+    // end
 
+    //tile action
     function createTile(table){
 
-        var x, y, z;
+        var params = getParamsData(table);
 
-        var platform = table.platform || window.layers[table.layer].super_layer,
-            layer = table.layer,
-            object = { 
-                mesh : null,
-                data : {},
-                target : {},
-                _ID : null,
-                ID : null
+        var dataPost = {
+                usr_id : DATA_TEST_USER
             };
 
-        if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
-            window.TABLE[platform].layers[layer] = {   
-                objects : [],
-                y : y 
-            };
+        window.helper.postRoutesComponents('insert', params, dataPost,
+            function(res){ 
+
+                table.id = res._id;
+
+                postParamsDev(table);
+
+                window.camera.loseFocus();
+                window.camera.enable();
+                    
+                var x, y, z;
+
+                var platform = table.platform || window.layers[table.layer].super_layer,
+                    layer = table.layer,
+                    object = { 
+                        mesh : null,
+                        data : {},
+                        target : {},
+                        id : null
+                    };
+
+                if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
+                    window.TABLE[platform].layers[layer] = {   
+                        objects : [],
+                        y : y 
+                    };
+                }
+
+                var count = window.TABLE[platform].layers[layer].objects.length;
+
+                object.id = platform + '_' + layer + '_' + count;
+
+                var mesh = window.tileManager.createElement(object.id, table);
+
+                var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
+
+                x = 0;
+
+                if(!lastObject)
+                    x = window.TABLE[platform].x;
+                else
+                    x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
+
+                var index = window.layers[layer].index;
+
+                y = window.tileManager.dimensions.layerPositions[index];
+
+                z = 0;
+
+                var target = helper.fillTarget(x, y, z, 'table');
+
+                mesh.position.copy(target.hide.position);
+                mesh.rotation.copy(target.hide.rotation);
+
+                window.scene.add(mesh);
+
+                object.mesh = mesh;
+                object.data = table;
+                object.target = target;
+
+                window.camera.move(target.show.position.x, target.show.position.y, target.show.position.z + 8000, 4000);
+
+                animate(mesh, target.show, 4500, function(){
+
+                   window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
+                   window.tileManager.updateElementsByGroup();
+                });
+                        
+                window.TABLE[platform].layers[layer].objects.push(object);
+            });
+
+        function getParamsData(table){
+
+            var param = { };
+
+            var newLayer = table.layer,
+                newGroup = table.platform || window.layers[table.layer].super_layer;
+
+            if(typeof window.platforms[newGroup] !== "undefined"){
+                param.platfrm_id = window.platforms[newGroup]._id;
+                param.suprlay_id = null;
+            }
+            else{
+                param.suprlay_id = window.superLayers[newGroup]._id;
+                param.platfrm_id = null;
+            }
+            
+            param.layer_id = window.layers[newLayer]._id;
+            
+            param.name = table.name;
+
+            param.type = table.type.toLowerCase();
+
+            param.difficulty = parseInt(table.difficulty);
+
+            param.code_level = table.code_level.toLowerCase();
+
+            param.repo_dir = "root";
+
+            param.scrnshts = false;
+
+            param.found = false;
+
+            param.description = "pending";
+
+            return param;
         }
 
-        var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
+        function postParamsDev(table){
 
-        var count = window.TABLE[platform].layers[layer].objects.length;
+            if(table.author !== '' && table.author !== undefined && table.author !== null){ 
 
-        object.id = platform + '_' + layer + '_' + count;
+                var param = {};
 
-        var mesh = window.tileManager.createElement(object.id, table);
+                param.dev_id = dataUser(table.author).id;
+                param.percnt = 100;
+                param.role = 'author';
+                param.scope = 'implementation';
 
-        x = 0;
+                var dataPost = {
+                        usr_id : DATA_TEST_USER,
+                        comp_id : table.id
+                    };
 
-        if(!lastObject)
-            x = window.TABLE[platform].x;
-        else
-            x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
-
-        y = window.tileManager.dimensions.layerPositions[table.layerID];
-
-        z = 0;
-
-        var target = helper.fillTarget(x, y, z, 'table');
-
-        mesh.position.copy(target.hide.position);
-        mesh.rotation.copy(target.hide.rotation);
-
-        window.scene.add(mesh);
-
-        object.mesh = mesh;
-        object.data = table;
-        object.target = target;
-
-        window.camera.move(target.show.position.x, target.show.position.y, target.show.position.z + 8000, 4000);
-
-        animate(mesh, target.show, 4500, function(){
-
-           window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
-           window.tileManager.updateElementsByGroup();
-        });
-                
-        window.TABLE[platform].layers[layer].objects.push(object);
+                window.helper.postRoutesComponents('insert dev', param, dataPost);
+            }
+        }
     }
 
     function modifyTile(table){ 
 
-        var newLayer = table.layer,
-            newGroup = table.platform || window.layers[table.layer].super_layer,
-            oldLayer = self.actualTile.layer,
-            oldGroup = self.actualTile.platform || window.layers[self.actualTile.layer].super_layer;
+        var params = getParamsData(table);
 
-        var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
+        var dataPost = {
+                usr_id : DATA_TEST_USER,
+                comp_id : self.actualTile.id
+            };
 
-        for(var i = 0; i < arrayObject.length; i++){
-            
-            if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
+        window.helper.postRoutesComponents('update', params, dataPost,
+            function(res){ 
 
-                window.scene.remove(arrayObject[i].mesh);
-                
-            }
-        }
+                //postParamsDev(table);
 
-        var positionCameraX = window.TABLE[oldGroup].x,
-            positionCameraY = helper.getPositionYLayer(oldLayer);
+                window.camera.loseFocus();
+                window.camera.enable();
 
-        window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
+                table.id = self.actualTile.id;
 
-        setTimeout( function() {
+                var newLayer = table.layer,
+                    newGroup = table.platform || window.layers[table.layer].super_layer,
+                    oldLayer = self.actualTile.layer,
+                    oldGroup = self.actualTile.platform || window.layers[self.actualTile.layer].super_layer;
 
-            if(newGroup !== oldGroup || newLayer !== oldLayer)
-                change();
-            else
-                notChange();
+                var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
 
-        }, 2000 );
+                for(var i = 0; i < arrayObject.length; i++){
+                    
+                    if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
 
-        function change(){
-
-            window.TABLE[oldGroup].layers[oldLayer].objects = [];
-            var idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
-
-            window.screenshotsAndroid.deleteScreenshots(idScreenshot);
-   
-            for(var i = 0; i < arrayObject.length; i++){
-                
-                if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
-
-                    arrayObject.splice(i,1);
+                        window.scene.remove(arrayObject[i].mesh);
+                        
+                    }
                 }
-            }
 
-            window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+                var positionCameraX = window.TABLE[oldGroup].x,
+                    positionCameraY = helper.getPositionYLayer(oldLayer);
 
-            setTimeout( function() { 
+                window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
 
-                positionCameraX = window.TABLE[newGroup].x;
-                positionCameraY = window.helper.getPositionYLayer(newLayer);
-                camera.move(positionCameraX, positionCameraY,8000, 2000);
-                createNewElementTile(table);
-                window.screenshotsAndroid.hidePositionScreenshots(newGroup, newLayer);
-                window.tileManager.updateElementsByGroup();
+                setTimeout( function() {
 
-            }, 2000 );
+                    if(newGroup !== oldGroup || newLayer !== oldLayer)
+                        change();
+                    else
+                        notChange();
 
-        }
+                }, 2000 );
+            
 
-        function notChange(){
+            function change(){
 
-            var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
-            var target = null;
-            var _ID = null;
-            var id = 0;
+                window.TABLE[oldGroup].layers[oldLayer].objects = [];
+                var idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
 
-            var idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
-
-            if(self.actualTile.name !== table.name)
                 window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+       
+                for(var i = 0; i < arrayObject.length; i++){
+                    
+                    if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
 
-            for(var i = 0; i < arrayObject.length; i++){
-                
-                if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
-
-                    id = i;
-                    window.TABLE[oldGroup].layers[oldLayer].objects[i].data = table;
-                    target = window.TABLE[oldGroup].layers[oldLayer].objects[i].target;
-                    _ID = window.TABLE[oldGroup].layers[oldLayer].objects[i].id;
+                        arrayObject.splice(i,1);
+                    }
                 }
+
+                window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+
+                setTimeout( function() { 
+
+                    positionCameraX = window.TABLE[newGroup].x;
+                    positionCameraY = window.helper.getPositionYLayer(newLayer);
+                    camera.move(positionCameraX, positionCameraY,8000, 2000);
+                    createNewElementTile(table);
+                    window.screenshotsAndroid.hidePositionScreenshots(newGroup, newLayer);
+                    window.tileManager.updateElementsByGroup();
+
+                }, 2000 );
+
             }
 
-            var mesh = window.tileManager.createElement(_ID, table);
+            function notChange(){
 
-            window.TABLE[oldGroup].layers[oldLayer].objects[id].mesh = mesh;
+                var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
+                var target = null;
+                var _ID = null;
+                var id = 0;
 
-            window.scene.add(mesh);
-            
-            animate(mesh, target.show, 2000,function(){
-                window.screenshotsAndroid.hidePositionScreenshots(oldGroup, oldLayer); 
-            });
+                var idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
 
-        }
+                if(self.actualTile.name !== table.name)
+                    window.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
-        function fillParamsData(table){
+                for(var i = 0; i < arrayObject.length; i++){
+                    
+                    if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
+
+                        id = i;
+                        window.TABLE[oldGroup].layers[oldLayer].objects[i].data = table;
+                        target = window.TABLE[oldGroup].layers[oldLayer].objects[i].target;
+                        _ID = window.TABLE[oldGroup].layers[oldLayer].objects[i].id;
+                    }
+                }
+
+                var mesh = window.tileManager.createElement(_ID, table);
+
+                window.TABLE[oldGroup].layers[oldLayer].objects[id].mesh = mesh;
+
+                window.scene.add(mesh);
+                
+                animate(mesh, target.show, 2000,function(){
+                    window.screenshotsAndroid.hidePositionScreenshots(oldGroup, oldLayer); 
+                });
+
+            }
+
+        });
+
+        function getParamsData(table){
 
             var param = {};
 
@@ -938,50 +1051,131 @@ function FermatEdit() {
                 oldLayer = self.actualTile.layer,
                 oldGroup = self.actualTile.platform || window.layers[self.actualTile.layer].super_layer;
 
-            if(newGroup !== oldGroup){
+            //if(newGroup !== oldGroup){
 
-                if(typeof window.platforms[newGroup] !== "undefined")
+                if(typeof window.platforms[newGroup] !== "undefined"){ 
                     param.platfrm_id = window.platforms[newGroup]._id;
-                else
+                    //param.suprlay_id = null;
+                }
+                else{
                     param.suprlay_id = window.superLayers[newGroup]._id;
-            }
+                    //param.platfrm_id = null;
+                }
+            //}
 
-            if(newLayer !== oldLayer)
+            //if(newLayer !== oldLayer)
                 param.layer_id = window.layers[newLayer]._id;
             
-            if(table.name !== self.actualTile.name)
+            //if(table.name !== self.actualTile.name)
                 param.name = table.name;
 
-            if(table.type !== self.actualTile.type)
-                param.type = table.type;
+            //if(table.type !== self.actualTile.type)
+                param.type = table.type.toLowerCase();
 
-            if(table.difficulty !== self.actualTile.difficulty)
-                param.difficulty = table.difficulty;
+            //if(table.difficulty !== self.actualTile.difficulty)
+                param.difficulty = parseInt(table.difficulty);
 
-            if(table.code_level !== self.actualTile.code_level)
-                param.code_level = table.code_level;
+            //if(table.code_level !== self.actualTile.code_level)
+                param.code_level = table.code_level.toLowerCase();
 
-                param.found = false;
+            param.found = false;
 
             return param;
         }
 
-        function fillParamsUser(table){
-            
-            if(table.author !== self.actualTile.author){
+        function postParamsDev(table){
+        
+            if(table.author !== self.actualTile.author && (table.author !== '' || table.author !== undefined)){
 
                 var param = {};
-                    param.dev_id = dataUser(table.author).id;
-                    param.percnt = 100;
 
-                return param;
+                param.dev_id = dataUser(table.author).id;
+                param.percnt = 100;
+                param.role = 'author';
+                param.scope = 'implementation';
+
+                console.log(param);
+
+                var dataPost = {
+                        usr_id : DATA_TEST_USER,
+                        comp_id : self.actualTile.id,
+                        devs_id : dataUser(self.actualTile.author).id
+                    };
+
+                window.helper.postRoutesComponents('update dev', param, dataPost);
             }
-            else {
-                return false;
+            else if(self.actualTile.author !== '' && self.actualTile.author !== undefined && table.author === '' && table.author === undefined){
+
+                var dataPost = {
+                        usr_id : DATA_TEST_USER,
+                        comp_id : self.actualTile.id,
+                        devs_id : dataUser(self.actualTile.author).id
+                    };
+
+                window.helper.postRoutesComponents('delete dev', false, dataPost);
             }
         }
     }
 
+    function deleteTile(id){
+
+        var table = window.helper.getSpecificTile(id).data;
+
+        var dataPost = {
+                usr_id : DATA_TEST_USER,
+                comp_id : table.id
+            };
+
+        window.helper.postRoutesComponents('delete', false, dataPost,
+            function(res){ 
+
+            var oldLayer = table.layer,
+                oldGroup = table.platform || window.layers[table.layer].super_layer,
+                arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects,
+                idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
+
+            window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+
+            var positionCameraX = window.TABLE[oldGroup].x,
+                positionCameraY = helper.getPositionYLayer(oldLayer);
+
+            window.camera.loseFocus();
+            window.camera.enable();
+
+            window.tileManager.transform(false, 1000);
+            window.signLayer.transformSignLayer();
+
+            window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
+
+            setTimeout( function() {
+
+                window.TABLE[oldGroup].layers[oldLayer].objects = [];
+           
+                id = id.split("_");
+
+                id = parseInt(id[2]);
+
+                var mesh = arrayObject[id].mesh;
+
+                var target =  window.helper.fillTarget(0, 0, 160000, 'table');
+
+                animate(mesh, target.hide, 1500, function(){
+                    window.scene.remove(mesh);
+                });
+
+                arrayObject.splice(id, 1);
+
+                window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+
+                window.tileManager.updateElementsByGroup();
+
+            }, 3500 );
+
+        });
+    }
+    //
+
+    //Tools
     function createNewElementTile(table){
 
         var x, y, z;
@@ -992,8 +1186,7 @@ function FermatEdit() {
                 mesh : null,
                 data : {},
                 target : {},
-                _ID : null,
-                ID : null
+                id : null
             };
 
         if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
@@ -1036,10 +1229,9 @@ function FermatEdit() {
         animate(mesh, target.show, 2500);
                 
         window.TABLE[platform].layers[layer].objects.push(object);
-
     }
 
-    function fillTable(found) {
+    function fillTable(found){
 
         var table = {platform : undefined},
             data = {},
@@ -1084,7 +1276,7 @@ function FermatEdit() {
         table.maintainerPicture = data.picture;
         table.maintainerRealName = data.authorRealName;
 
-        return table;
+        return table;       
     }
 
     function dataUser(user){
@@ -1105,60 +1297,6 @@ function FermatEdit() {
         return data;
     }
 
-    function deleteTile(id){
-
-        var table = helper.getSpecificTile(id).data;
-        
-        sendChanges("delete", table);
-
-        //if(!window.helper.postRoutesComponents('delete', null, DATA_TEST_USER, table.id)){
-
-            var oldLayer = table.layer,
-                oldGroup = table.platform || window.layers[table.layer].super_layer,
-                arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects,
-                idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
-
-            window.screenshotsAndroid.deleteScreenshots(idScreenshot);
-
-            var positionCameraX = window.TABLE[oldGroup].x,
-                positionCameraY = helper.getPositionYLayer(oldLayer);
-
-            window.camera.loseFocus();
-            window.camera.enable();
-
-            window.tileManager.transform(false, 1000);
-            window.signLayer.transformSignLayer();
-
-            window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
-
-            setTimeout( function() {
-
-                window.TABLE[oldGroup].layers[oldLayer].objects = [];
-           
-                id = id.split("_");
-
-                id = parseInt(id[2]);
-
-                var mesh = arrayObject[id].mesh;
-
-                var target =  window.helper.fillTarget(0, 0, 160000, 'table');
-
-                animate(mesh, target.hide, 1500, function(){
-                    window.scene.remove(mesh);
-                });
-
-                arrayObject.splice(id, 1);
-
-                window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
-
-                window.tileManager.updateElementsByGroup();
-
-            }, 3500 );
-
-        //}
-
-    }
-
     function modifyRowTable(arrayObject, oldGroup, oldLayer){
 
         var newArrayObject = [];
@@ -1172,8 +1310,7 @@ function FermatEdit() {
                     mesh : null,
                     data : {},
                     target : {},
-                    _ID : null,
-                    ID : null
+                    id : null
                 };
                 
             var x = 0, y = 0, z = 0;
@@ -1244,4 +1381,3 @@ function FermatEdit() {
     }
     
 }
-

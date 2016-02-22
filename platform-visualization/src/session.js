@@ -12,6 +12,57 @@ function Session (){
 	this.getUserLogin = function(){
 		return usr;
 	};
+
+    /**
+     * @author Ricardo Delgado
+     */
+    this.displayLoginButton = function(display) {
+
+        if(window.session.getIsLogin()){
+
+            if(display){
+
+                window.helper.show('logout', 2000);
+                window.helper.show('containerLogin', 2000);
+            }
+            else{
+
+                window.helper.hide('logout', 2000, true);
+                window.helper.hide('containerLogin', 2000, true);               
+            }
+        }
+        else{
+
+            if(display)
+                window.helper.show('login', 2000);
+            else   
+                window.helper.hide('login', 2000, true);
+        }
+
+    };
+    
+    /**
+     * @author Ricardo Delgado
+     */
+    this.useTestData = function(){
+
+        isLogin = true;
+
+        usr = {
+            _id: "56c257f60eaa035020c11a1d",
+            avatar_url: "https://avatars2.githubusercontent.com/u/9479367?v=3&s=400",
+            email: "luis.github@bitdubai.com",
+            name: "Luis Fernando Molina",
+            upd_at: "56c257f60eaa035020c11a1c",
+            usrnm: "luis-fernando-molina"
+        };
+
+        $("#login").fadeOut(2000);
+        $("#logout").fadeIn(2000);
+
+        drawUser(usr);
+    }
+
 	/**
 	 * Login with github and gets the authorization code
 	 */

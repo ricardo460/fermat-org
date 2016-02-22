@@ -8,27 +8,24 @@ function getData() {
     
     //url += "?env=development"; //When needed the development branch, for lab.fermat.org
 
-    $.ajax({
-        url: url,
-        method: "GET"
-    }).success(
-        function (lists) {
-        
-            window.loadMap(function() {
+    window.helper.getCompsUser(function(list){ 
 
-                window.tileManager.JsonTile(function() {
+        window.loadMap(function() {
 
-                    window.preLoad(function() {
+            window.tileManager.JsonTile(function() {
 
-                        window.tileManager.fillTable(lists);
+                window.preLoad(function() {
 
-                        TWEEN.removeAll();
-                        window.logo.stopFade();
-                        init();
-                    });
+                    window.tileManager.fillTable(list);
+                    TWEEN.removeAll();
+                    window.logo.stopFade();
+                    init();
+
                 });
             });
         });
+    });
+
  
 //Use when you don't want to connect to server
 /*setTimeout(function(){
