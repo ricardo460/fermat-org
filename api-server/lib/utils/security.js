@@ -94,7 +94,6 @@ var ifExistIsValidLifeCicle = function (data) {
  */
 var isValidDifficulty = function (data) {
     if (data == parseInt(data, 10) && parseInt(data) >= 0 && parseInt(data) <= 10 ) {
-        //console.log('invalid data');
         return 1;
     } else return 0;
 };

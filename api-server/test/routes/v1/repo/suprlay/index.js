@@ -64,10 +64,8 @@ describe("SUPRLAY",function(){
 
     });
 
-    
 
-
-       it("#GET getSprlay 404",function(done){
+    it("#GET getSprlay 404",function(done){
 
         server
         .get(pathTest+"/"+mongoose.Types.ObjectId().toString())
@@ -120,7 +118,7 @@ describe("SUPRLAY",function(){
 
     });
 
-     it("#POST addSuprLay 412",function(done){
+    it("#POST addSuprLay 412",function(done){
 
         var dataSuprLay = dataHelper.generateData412General();
 
@@ -142,7 +140,7 @@ describe("SUPRLAY",function(){
 
     it("#PUT uptSprlay 412",function(done){
 
-        var dataSuprLay = dataHelper.generateData412General();
+        var dataSuprLay = dataHelper.generateDataSuprLay412();
 
         server
         .put(pathTest+"/"+suprlay._id)
@@ -216,7 +214,7 @@ describe("SUPRLAY",function(){
 
 
    // timeout of 2000ms exceeded
-      it("#DELETE delSprlay  404"/*,function(done){
+      it("#DELETE delSprlay  404",function(done){
 
     server
     .delete(pathTest+"/"+mongoose.Types.ObjectId().toString())
@@ -229,7 +227,7 @@ describe("SUPRLAY",function(){
           return done();
     });
 
-  } */);
+  } );
 
 
 });

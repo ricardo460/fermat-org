@@ -299,8 +299,13 @@ exports.findProcById = function (_id, callback) {
         procSrv.findProcById(_id, function (err_proc, res_proc) {
             if (err_proc) {
                 return callback(err_proc, null);
+            } else if (res_proc){
+                return callback(null, res_proc);
+            }else{
+                return callback(null, null);
+
             }
-            return callback(null, res_proc);
+
         });
     } catch (err) {
         callback(err, null);
@@ -494,6 +499,8 @@ exports.getAllProces = function (callback) {
             if (err) {
                 return callback(err, null);
             }
+            console.log("en el getAllProces");
+            console.log(procs);
             var loopProcs = function (j) {
                 if (j < procs.length) {
                     var _proc = procs[j];
@@ -623,14 +630,41 @@ exports.updateProcById = function (_proc_id, platfrm, name, desc, prev, next, ca
         procSrv.updateProcById(_proc_id, set_obj, function (err, proc) {
             if (err) {
                 return callback(err, null);
+            } else if(proc.n > 0) {
+                return callback(null, set_obj);
+            } else {
+                return callback(null, null);
             }
-            return callback(null, set_obj);
         });
     } catch (err) {
         return callback(err, null);
     }
 };
 
+/**
+ * [findProcById description]
+ *
+ * @method findProcById
+ *
+ * @param  {[type]}     _id       [description]
+ * @param  {[type]}     callback  [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findProcById = function (_id, callback) {
+    'use strict';
+    try {
+        procSrv.findProcById(_id, function (err_lay, res_lay) {
+            console.log(arguments);
+            if (err_lay) {
+                return callback(err_lay, null);
+            }
+            return callback(null, res_lay);
+        });
+    } catch (err) {
+        return callback(err, null);
+    }
+};
 /**
  * [insertStep description]
  *
@@ -651,20 +685,29 @@ exports.updateProcById = function (_proc_id, platfrm, name, desc, prev, next, ca
 exports.insertStep = function (_proc_id, _comp_id, type, title, desc, order, callback) {
     'use strict';
     try {
-        var step = new StepMdl(_proc_id, _comp_id, type, title, desc, order, []);
-        stepSrv.insertStep(step, function (err_ins, res_ins) {
-            if (err_ins) {
-                return callback(err_ins, null);
+        procSrv.findProcById(_proc_id, function (err_proc, res_proc)  {
+            if (err_proc) {
+                return callback(err_proc, null);
+            }else if(res_proc) {
+                var step = new StepMdl(_proc_id, _comp_id, type, title, desc, order, []);
+                stepSrv.insertStep(step, function (err_ins, res_ins) {
+                    if (err_ins) {
+                        return callback(err_ins, null);
+                    }
+                    procSrv.pushStepToProcById(_proc_id, res_ins._id, function(err_push_step, res_push_step){
+                        if (err_push_step) {
+                            return callback(err_push_step, null);
+                        }
+                        return callback(null, res_ins);
+                    });
+
+                });
+            }else {
+                return callback(null, null);
             }
-            procSrv.pushStepToProcById(_proc_id, res_ins._id, function(err_push_step, res_push_step){
 
-                if (err_push_step) {
-                    return callback(err_push_step, null);
-                }
-                return callback(null, res_ins);
-            });
+         })
 
-        });
     } catch (err) {
         return callback(err, null);
     }
@@ -709,32 +752,37 @@ exports.updateStepById = function (_step_id, _comp_id, type, title, desc, order,
         stepSrv.findStepById(_step_id, function (err_step, res_step) {
             if (err_step) {
                 return callback(err_step, null);
-            }
 
-            if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+            } else if(res_step) {
 
-                swapOrder('update', res_step.order, set_obj.order, function (err_sld, res_sld) {
-                    if (err_sld) {
-                        return callback(err_sld, null);
-                    } else {
+                if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
 
-                        stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
-                            if (err_upt) {
-                                return callback(err_upt, null);
-                            }
-                            return callback(null, set_obj);
-                        });
-                    }
-                });
+                    swapOrder('update', res_step.order, set_obj.order, function (err_sld, res_sld) {
+                        if (err_sld) {
+                            return callback(err_sld, null);
+                        } else {
+
+                            stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
+                                if (err_upt) {
+                                    return callback(err_upt, null);
+                                }
+                                return callback(null, set_obj);
+                            });
+                        }
+                    });
+
+                } else {
+
+                    stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
+                        if (err_upt) {
+                            return callback(err_upt, null);
+                        }
+                        return callback(null, set_obj);
+                    });
+
+                }
             } else {
-
-                stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
-                    if (err_upt) {
-                        return callback(err_upt, null);
-                    }
-                    return callback(null, set_obj);
-                });
-
+                return callback(null, null);
             }
         });
 

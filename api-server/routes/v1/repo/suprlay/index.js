@@ -155,17 +155,17 @@ router.put('/:suprlay_id', function (req, res, next) {
     'use strict';
     try {
            if (!security.isValidData(req.params.suprlay_id) || //
-           	   !security.isValidData(req.body.code) || //
-	           !security.isValidData(req.body.name) || //
-	           !security.isValidData(req.body.logo) || //
-	           !security.isValidData(req.body.order)) {
+           	   !security.ifExistIsValidData(req.body.code) || //
+	           !security.ifExistIsValidData(req.body.name) || //
+	           !security.ifExistIsValidData(req.body.logo) || //
+	           !security.ifExistIsValidData(req.body.order)) {
 	           res.status(412).send({message: 'missing or invalid data'});
 	        } else {
                repMod.uptSprlay(req, function (error, result) {
                if (error) {
                   res.status(200).send(error);
                } else {
-                 
+
                         //new
                            if (result) {
                             res.status(200).send(result);
