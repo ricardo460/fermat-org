@@ -189,11 +189,11 @@ function FermatEdit() {
         self.actualTile = tile;
 
         if(tile.platform !== undefined)
-            document.getElementById('select-Platform').value = tile.platform;
+            document.getElementById('select-Group').value = tile.platform;
         else
-            document.getElementById('select-Platform').value = window.layers[tile.layer].super_layer;
+            document.getElementById('select-Group').value = window.layers[tile.layer].super_layer;
 
-        changeLayer(document.getElementById('select-Platform').value);
+        changeLayer(document.getElementById('select-Group').value);
 
         if(tile.layer !== undefined)        
             document.getElementById('select-layer').value = tile.layer;
@@ -313,7 +313,7 @@ function FermatEdit() {
             x,
             type;
 
-        sesionPlatform();
+        sesionGroup();
         sesionType();
         sesionName();
         sesionAuthor();
@@ -402,20 +402,20 @@ function FermatEdit() {
             return button;
         }
 
-        function sesionPlatform(){
+        function sesionGroup(){
 
-            var id = 'label-Platform'; text = 'Select the Platform : '; type = 'label';
+            var id = 'label-Group'; text = 'Select the Group : '; type = 'label';
 
             createField(id, text, null, type);
 
-            id = 'select-Platform'; text = ''; type = 'select';
+            id = 'select-Group'; text = ''; type = 'select';
 
             createField(id, text, null, type);
 
             var optgroup = "<optgroup label = Platform>",
                 option = "";
 
-            objects.idFields.platform = id;
+            objects.idFields.group = id;
 
             for(var i in window.platforms){ 
 
@@ -1235,7 +1235,7 @@ function FermatEdit() {
 
         var table = {platform : undefined},
             data = {},
-            group = document.getElementById(objects.idFields.platform).value,
+            group = document.getElementById(objects.idFields.group).value,
             layer = document.getElementById(objects.idFields.layer).value,
             platformID = helper.getCountObject(window.platforms) - 1,
             layerID = 0,

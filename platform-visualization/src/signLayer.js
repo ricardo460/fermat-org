@@ -80,6 +80,23 @@ function SignLayer(){
     /**
     * @author Isaias Taborda
     * @param   {_group}    [string] sign layer's group    
+    * @param   {titleSign} [string] sign layer's name 
+    * @returns {boolean}    
+    * checks if a Sign Layer has been drawn
+    */
+    this.findSignLayer = function(group, titleSign){
+        var objectsSize = objects.length;
+        for(var i=0; i<objectsSize; i++) {
+            if(objects[i].name === group.concat(titleSign))
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
+    * @author Isaias Taborda
+    * @param   {_group}    [string] sign layer's group    
     * @param   {titleSign} [string] sign layer's name     
     * function delete a Sign Layer
     */

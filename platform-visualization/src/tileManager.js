@@ -160,6 +160,9 @@ function TileManager() {
                 inSuperLayer = false;
                 actualHeight++;
             }
+            
+            if(actualHeight == 6)   //Separates GUI section
+                actualHeight += 2;
 
             layerPosition[i] = actualHeight;
         }
@@ -703,26 +706,27 @@ function TileManager() {
             mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
 
             /*End*/
+            if(!signLayer.findSignLayer(group,tile.layer)){
+                if(i === 0 ){ //entra a la primera
+                    window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
+                    signRow = tile.layerID;
+                    signColumn = tile.platformID;
+                    window.TABLE[group].layers[tile.layer].y = object.position.y;
+                }
 
-            if(i === 0 ){ //entra a la primera
-                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
-                signRow = tile.layerID;
-                signColumn = tile.platformID;
-                window.TABLE[group].layers[tile.layer].y = object.position.y;
-            }
+                if(tile.layerID !== signRow && tile.platformID === signColumn && layers[tile.layer].super_layer === false){ // solo cambio de filas
+                    window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
+                    signRow = tile.layerID;
+                    signColumn = tile.platformID;
+                    window.TABLE[group].layers[tile.layer].y = object.position.y;
+                }
 
-            if(tile.layerID !== signRow && tile.platformID === signColumn && layers[tile.layer].super_layer === false){ // solo cambio de filas
-                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
-                signRow = tile.layerID;
-                signColumn = tile.platformID;
-                window.TABLE[group].layers[tile.layer].y = object.position.y;
-            }
-
-            else if(signColumn !== tile.platformID && layers[tile.layer].super_layer === false){ //cambio de columna
-                window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
-                signRow = tile.layerID;
-                signColumn = tile.platformID;
-                window.TABLE[group].layers[tile.layer].y = object.position.y;
+                else if(signColumn !== tile.platformID && layers[tile.layer].super_layer === false){ //cambio de columna
+                    window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
+                    signRow = tile.layerID;
+                    signColumn = tile.platformID;
+                    window.TABLE[group].layers[tile.layer].y = object.position.y;
+                }
             }                               
         }
 
