@@ -116,6 +116,24 @@ Login with
 * Username - admin
 * Password - admin 
 
+###Installing Apidoc
+
+apiDoc creates a documentation from API annotations in your source code.
+
+* To install and run apidoc follow these steps:
+
+* Open the terminal and go to the api-server project folder.
+
+* Type the following command in the terminal.
+```bash
+ sudo npm install apidoc -g
+```
+* To generate the html pages of documentation run the following command:
+```bash
+ sh generate_apidoc.sh
+```
+The documentation is generated in the folder api-server/apidoc. For more information visit apidoc tool http://apidocjs.com/
+
 ###Running the project (api-server)
 
 To run the project, follow these steps:
