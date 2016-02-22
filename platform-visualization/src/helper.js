@@ -234,14 +234,14 @@ function Helper() {
                 tail = "/v1/auth/logout";
                 break;
             case "user":
-                tail = "/v1/repo/devs?access_token=561fd1a5032e0c5f7e20387d&env=development";
+                tail = "/v1/repo/devs";
                 break;
         }
         
         return SERVER + tail;
     };
 
-    this.postRoutesComponents = function(route, params, usr_id, comp_id){
+    this.postRoutesComponents = function(route, params, data, doneCallback, failCallback){
 
         var SERVER = "http://api.fermat.org:8081",
             tail = "",
@@ -252,57 +252,182 @@ function Helper() {
                 
             case "insert":
                 method = "POST";
-                tail = "/v1/repo/usrs/" + usr_id + "/comps";
+                tail = "/v1/repo/usrs/" + data.usr_id + "/comps";
                 break;
             case "delete":
                 method = "DELETE";
-                tail = "/v1/repo/usrs/" + usr_id + "/comps/" + comp_id;
+                tail = "/v1/repo/usrs/" + data.usr_id + "/comps/" + data.comp_id;
                 break;
             case "update":
                 method = "PUT";
-                tail = "/v1/repo/usrs/" + usr_id + "/comps/" + comp_id;
+                tail = "/v1/repo/usrs/" + data.usr_id + "/comps/" + data.comp_id;
                 break;
-
-                //PUT /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs/:comp_dev_id
+            case "insert dev":
+                method = "POST";
+                tail = "/v1/repo/usrs/" + data.usr_id + "/comps/" + data.comp_id + "/comp-devs";
+                break;
+            case "delete dev":
+                method = "DELETE";
+                tail = "/v1/repo/usrs/" + data.usr_id + "/comps/" + data.comp_id + "/comp-devs/" + data.devs_id;
+                break;
+            case "update dev":
+                method = "PUT";
+                tail = "/v1/repo/usrs/" + data.usr_id + "/comps/" + data.comp_id + "/comp-devs/" + data.devs_id;
+                break;                    
+                
         }
 
         setup.method = method;
         setup.url = SERVER + tail;
-        setup.data = params;
+        setup.headers = { 
+            "Content-Type": "application/json"
+             };
 
-        $.ajax(setup)
-        .done(function(res) { 
-        
-            return res;
-        })
-        .fail(function(res) {
+        if(params)
+            setup.data = params;
 
-            window.alert('Action Not Executed');
-            return false;
-        });
+        if(route === "delete" || route === "delete dev"){
 
-            /*
-                params = {
-                usr_id: 1,
-                platfrm_id: 2,
-                suprlay_id: 3,
-                layer_id: 4,
-                name: "",
-                type: "",
-                description: "",
-                difficulty: "",
-                code_level: 123 ,
-                repo_dir: "wqeqwe",
-                scrnshts: false,
-                found: false //verificar si existe
-                };
+            $.ajax(setup)
+                .done(function(res) { 
 
-            */
-            //usr._id
-           // usr.github_tkn
+                    if(typeof(doneCallback) === 'function')
+                        doneCallback(res);
+                })
+                .fail(function(res) {
+
+                    window.alert('Action Not Executed');  
+
+                    if(typeof(failCallback) === 'function')
+                        failCallback(res);
+                });
+        }
+        else{
+
+            makeCorsRequest(setup.url, setup.method, setup.data, 
+                function(res){
+            
+                    if(typeof(doneCallback) === 'function')
+                        doneCallback(res);
+                }, 
+                function(res){
+
+                    window.alert('Action Not Executed ');
+
+                    if(typeof(failCallback) === 'function')
+                        failCallback(res);
+                }
+            );
+        }
 
     };
-    
+
+    var makeCorsRequest = function(url, method, params, success, error) {
+
+        var xhr = createCORSRequest(url, method);
+
+        xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+
+          if (!xhr) {
+            alert('CORS not supported');
+            return;
+          }
+
+        xhr.onload = function() {
+
+            var res = JSON.parse(xhr.responseText);
+
+            success(res);
+            
+        };
+
+        xhr.onerror = function() {
+
+            error(arguments);
+
+        };
+
+        if(typeof params !== 'undefined'){
+
+            var data = JSON.stringify(params);
+
+            xhr.send(data);
+        }
+        else{
+            xhr.send();
+        }
+
+        var createCORSRequest = function(url, method) {
+
+            var xhr = new XMLHttpRequest();
+
+            if ("withCredentials" in xhr) 
+                xhr.open(method, url, true);
+            else 
+                xhr = null;
+        
+            return xhr;
+        };
+    };
+
+    this.getCompsUser = function(callback){
+
+        var url = "";
+
+        var list = {};
+
+        if(window.session.getIsLogin()){ 
+
+            var user = window.session.getUserLogin()._id;
+
+            url = "http://api.fermat.org:8081/v1/repo/usrs/"+user+"/";
+
+            callAjax('comps', function(){
+
+                callAjax('layers', function(){
+
+                    callAjax('platfrms', function(){
+                    
+                        callAjax('suprlays', function(){
+
+                            callback(list);
+                
+                        });
+                    });
+                });
+            });
+        }
+        else{
+
+            url = this.getAPIUrl("comps");
+
+            callAjax('', function(){
+
+                callback(list);
+                
+            });
+        }
+
+        function callAjax(route, callback){
+
+            $.ajax({
+                url: url + route,
+                method: "GET"
+            }).success (
+                function (res) {
+
+                    if(route === '')
+                        list = res;
+                    else
+                       list[route] = res; 
+
+                    if(typeof(callback) === 'function')
+                        callback();
+
+                });
+        }
+
+    };   
     /**
      * Loads a texture and applies it to the given mesh
      * @param {String}   source     Address of the image to load
