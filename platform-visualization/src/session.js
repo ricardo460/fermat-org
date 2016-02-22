@@ -12,6 +12,32 @@ function Session (){
 	this.getUserLogin = function(){
 		return usr;
 	};
+
+    this.displayLoginButton = function(display) {
+
+        if(window.session.getIsLogin()){
+
+            if(display){
+
+                window.helper.show('logout', 2000);
+                window.helper.show('containerLogin', 2000);
+            }
+            else{
+
+                window.helper.hide('logout', 2000, true);
+                window.helper.hide('containerLogin', 2000, true);               
+            }
+        }
+        else{
+
+            if(display)
+                window.helper.show('login', 2000);
+            else   
+                window.helper.hide('login', 2000, true);
+        }
+
+    };
+
 	/**
 	 * Login with github and gets the authorization code
 	 */
