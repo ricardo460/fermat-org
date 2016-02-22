@@ -73,9 +73,9 @@ function FermatEdit() {
 
                 actions.type = "insert";
 
-                window.session.displayLoginButton(false);
-
                 window.buttonsManager.removeAllButtons();
+
+                window.session.displayLoginButton(false);
 
                 drawTile(null, addAllFilds);
             };
@@ -86,9 +86,8 @@ function FermatEdit() {
             button = 'buttonFermatNew';
             side = 'left';
 
-            setTimeout( function() {
-                window.buttonsManager.createButtons(button, text, callback, null, null, side);
-            },1500);
+            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+
         }
         else{
 
@@ -132,7 +131,7 @@ function FermatEdit() {
             text = 'Delete Component';
             button = 'buttonFermatDelete';
             side = 'right';
-                
+
             window.buttonsManager.createButtons(button, text, callback, null, null, side);
         }   
     

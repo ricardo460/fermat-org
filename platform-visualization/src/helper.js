@@ -312,7 +312,7 @@ function Helper() {
                 }, 
                 function(res){
 
-                    window.alert('Action Not Executed ');
+                    window.alert('Action Not Executed');
 
                     if(typeof(failCallback) === 'function')
                         failCallback(res);
@@ -329,7 +329,7 @@ function Helper() {
         xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
 
           if (!xhr) {
-            alert('CORS not supported');
+            window.alert('CORS not supported');
             return;
           }
 
@@ -357,7 +357,7 @@ function Helper() {
             xhr.send();
         }
 
-        var createCORSRequest = function(url, method) {
+        function createCORSRequest(url, method) {
 
             var xhr = new XMLHttpRequest();
 
@@ -375,6 +375,8 @@ function Helper() {
         var url = "";
 
         var list = {};
+
+        //window.session.useTestData();
 
         if(window.session.getIsLogin()){ 
 
