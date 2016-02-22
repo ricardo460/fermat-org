@@ -40,7 +40,7 @@ function Session (){
         }
 
     };
-    
+
     /**
      * @author Ricardo Delgado
      */
@@ -50,11 +50,11 @@ function Session (){
 
         usr = {
             _id: "56c257f60eaa035020c11a1d",
-            avatar_url: "https://avatars2.githubusercontent.com/u/9479367?v=3&s=400",
-            email: "luis.github@bitdubai.com",
-            name: "Luis Fernando Molina",
+            avatar_url: "",
+            email: "ricardodelgado460@hotmail.com",
+            name: "Ricardo Delgado",
             upd_at: "56c257f60eaa035020c11a1c",
-            usrnm: "luis-fernando-molina"
+            usrnm: "ricardo460"
         };
 
         $("#login").fadeOut(2000);
