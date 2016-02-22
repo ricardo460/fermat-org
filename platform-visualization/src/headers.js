@@ -151,6 +151,46 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     };
 
     /**
+     * @author Isaias Taborda
+     * Deletes the arrows in the graph when the user leaves the stack view
+     * so they can be drawn from scrath if the user comes back to this view 
+     * @param {Number} [duration=5000] Duration in milliseconds for the animation
+     */
+    this.deleteArrows = function(duration) {
+        var limit = arrows.length;
+
+        for(i = 0; i < limit; i++) {
+            
+            new TWEEN.Tween(arrows[i].position)
+            .to({
+                x : arrowsPositions.origin[i].position.x,
+                y : arrowsPositions.origin[i].position.y,
+                z : arrowsPositions.origin[i].position.z
+            }, Math.random() * duration + duration)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .start();
+
+            new TWEEN.Tween(arrows[i].rotation)
+            .to({
+                x : arrowsPositions.origin[i].rotation.x,
+                y : arrowsPositions.origin[i].rotation.y,
+                z : arrowsPositions.origin[i].rotation.z
+            }, Math.random() * duration + duration)
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .start();
+        }
+
+        setTimeout(function(){
+            arrowsPositions.origin = [];
+            arrowsPositions.stack = [];
+            for(i = 0; i < limit; i++){
+                window.scene.remove(arrows[i]);
+            }
+            arrows = [];
+        }, duration);
+    }
+
+    /**
      * @author Miguel Celedon
      * @lastmodifiedBy Miguel Celedon
      * Arranges the headers by dependency
@@ -230,12 +270,14 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
     /**
      * @author Emmanuel Colina
+     * @lastmodifiedBy Isaias Taborda
      * Calculates the stack target position
      */
     var calculateStackPositions = function() {
         
         var i, j, k, p, q, m, l, n, obj, actualpositionY, rootpositionY, rootlengthX, midpositionX, actuallengthX, positionstart;
         var POSITION_Z = 45000;
+        var rootSeparation = -5000;
 
         // Dummy, send all to center
         for(i = 0; i < objects.length; i++) {
@@ -252,9 +294,10 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                for(i = 0; i < objects.length; i++){
 
                     if(graph.nodes[j].id == objects[i].name){ //Coordenadas de inicio level = 0
-                        positions.stack[i].position.x = 0;
+                        positions.stack[i].position.x = rootSeparation;
                         positions.stack[i].position.y = -15000;
                         positions.stack[i].position.z = POSITION_Z;
+                        rootSeparation += 5000;
                         break;
                     }        
                }
