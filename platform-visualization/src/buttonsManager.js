@@ -135,23 +135,20 @@ function ButtonsManager() {
 
             var actualButton = self.objects[side].buttons.shift();
 
-            if( $('#'+actualButton.id) != null ) 
+            if($('#'+actualButton.id) != null) 
                 window.helper.hide($('#'+actualButton.id), 1000); 
             
                 self.removeAllButtons();
         }
-        else{
+        else
             window.fermatEdit.removeAllFields();
-        }
     };
 
     function calculatePosition(sucesorButton, side, x){
 
-        if(side === 'left'){
+        if(side === 'left')
             return ((sucesorButton.offsetLeft + sucesorButton.clientWidth + x) + 'px');
-        }
         else {
-
             if(!sucesorButton)
                 return (x + 'px'); 
             else

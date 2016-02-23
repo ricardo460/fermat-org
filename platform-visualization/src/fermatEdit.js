@@ -148,17 +148,17 @@ function FermatEdit() {
 
             var actualButton = objects[row].buttons.shift();
 
-            if( $('#'+actualButton.id) != null ) 
+            if($('#'+actualButton.id) != null) 
                 window.helper.hide($('#'+actualButton.id), 1000); 
             
                 self.removeAllFields();
         }
         else {
 
-            if( $('#'+objects.row1.div) != null ) 
+            if($('#'+objects.row1.div) != null) 
                 window.helper.hide($('#'+objects.row1.div), 1000);
 
-            if( $('#'+objects.row2.div) != null ) 
+            if($('#'+objects.row2.div) != null) 
                 window.helper.hide($('#'+objects.row2.div), 1000);
 
             objects.row1.div = null;
@@ -376,7 +376,7 @@ function FermatEdit() {
                 idSucesor = "backButton",
                 row = _row || '1';
 
-            if( objects['row' + row].div === null)
+            if(objects['row' + row].div === null)
                 createDiv(row);
 
             if(objects['row' + row].buttons.length !== 0)
@@ -419,10 +419,8 @@ function FermatEdit() {
 
             for(var i in window.platforms){ 
 
-                if(i != "size"){
-
+                if(i != "size")
                     option += "<option value = "+i+" >"+i+"</option>";
-                }
 
             }
 
@@ -434,10 +432,8 @@ function FermatEdit() {
 
             for(var _i in window.superLayers){
 
-                if(_i != "size"){
-
+                if(_i != "size")
                     option += "<option value = "+_i+" >"+_i+"</option>";
-                }
 
             }
 
@@ -729,7 +725,7 @@ function FermatEdit() {
     function changeTexture(){
 
         var table = null,
-            scale = 5, //5
+            scale = 5,
             mesh = null;
 
         table = fillTable(true);
@@ -768,9 +764,8 @@ function FermatEdit() {
             else if(actions.type === "update")
                 modifyTile(table);
         }
-        else{
+        else
              window.alert(validateFields());
-        }
     }
 
     function validateFields(){
@@ -953,11 +948,8 @@ function FermatEdit() {
 
                 for(var i = 0; i < arrayObject.length; i++){
                     
-                    if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
-
+                    if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name)
                         window.scene.remove(arrayObject[i].mesh);
-                        
-                    }
                 }
 
                 var positionCameraX = window.TABLE[oldGroup].x,
@@ -984,10 +976,8 @@ function FermatEdit() {
        
                 for(var i = 0; i < arrayObject.length; i++){
                     
-                    if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
-
+                    if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name)
                         arrayObject.splice(i,1);
-                    }
                 }
 
                 window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
@@ -1053,14 +1043,12 @@ function FermatEdit() {
 
             //if(newGroup !== oldGroup){
 
-                if(typeof window.platforms[newGroup] !== "undefined"){ 
+                if(typeof window.platforms[newGroup] !== "undefined")
                     param.platfrm_id = window.platforms[newGroup]._id;
                     //param.suprlay_id = null;
-                }
-                else{
+                else
                     param.suprlay_id = window.superLayers[newGroup]._id;
                     //param.platfrm_id = null;
-                }
             //}
 
             //if(newLayer !== oldLayer)
@@ -1245,9 +1233,8 @@ function FermatEdit() {
             table.platform = group;
             platformID = window.platforms[group].index;
         }
-        else{
+        else
             window.superLayer = group;
-        }
 
         if(window.layers[layer])
             window.layerID = layers[layer].index;

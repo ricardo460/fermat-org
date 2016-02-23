@@ -110,7 +110,7 @@ function ViewManager() {
                     };
 
                     exit = function() {
-                        window.headers.deleteArrows(5000);
+                        window.headers.deleteArrows(transition);
                     };
 
                     break;
