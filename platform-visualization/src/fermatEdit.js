@@ -138,6 +138,7 @@ function FermatEdit() {
     };
 
     this.removeAllFields = function(){
+        self = this;
 
         if(objects.row1.buttons.length !== 0 || objects.row2.buttons.length !== 0){
 
@@ -214,7 +215,10 @@ function FermatEdit() {
             document.getElementById('imput-author').value = tile.author; 
 
         if(tile.maintainer !== undefined)
-            document.getElementById('imput-Maintainer').value = tile.maintainer; 
+            document.getElementById('imput-Maintainer').value = tile.maintainer;
+        
+        if(tile.devs !== undefined)
+            document.getElementById('modal-devs').value = tile.devs;
     }
 
     function createElement() {
@@ -317,7 +321,7 @@ function FermatEdit() {
         sesionType();
         sesionName();
         sesionDifficulty();
-        sesionMaintainer();
+        sesionRepoDir();
         sesionState();
         sesionAuthor();
         createbutton();
@@ -575,10 +579,10 @@ function FermatEdit() {
             // Modal
             // START
             
-            if(!document.getElementById("modal-author")){
+            if(!document.getElementById("modal-devs")){
                 
                 var modal = document.createElement("div");
-                modal.id            = "modal-author";
+                modal.id            = "modal-devs";
                 modal.style.left    = (window.innerWidth/2-227)+"px";
                 modal.style.top     = (window.innerHeight/2-186)+"px";
                 modal.value         = [];
@@ -615,7 +619,7 @@ function FermatEdit() {
                         
                         var brk = this.value.find(
                             function(x) {
-                                if (x.usrnm == DATA_USER[i].usrnm)
+                                if (x.dev.usrnm == DATA_USER[i].usrnm)
                                     return true;
                                 else
                                     return false;
@@ -653,9 +657,15 @@ function FermatEdit() {
 
                         btn.onclick = function(e) {
                             
-                            var modal = document.getElementById("modal-author");
+                            var modal = document.getElementById("modal-devs");
+                            self = this;
                             modal.value[modal.value.length] = {
-                                usrnm: this.dataset.usrid,
+                                dev: DATA_USER.find(function(x) {
+                                    
+                                    if(x.usrnm == self.dataset.usrid)
+                                        return x;
+                                    
+                                }),
                                 scope: "",
                                 role: "",
                                 porc: 0
@@ -674,7 +684,7 @@ function FermatEdit() {
                         
                         var brk = this.value.find(
                             function(x) {
-                                if (x.usrnm == DATA_USER[i].usrnm)
+                                if (x.dev.usrnm == DATA_USER[i].usrnm)
                                     return true;
                                 else
                                     return false;
@@ -701,7 +711,7 @@ function FermatEdit() {
                                                             <tr>
                                                                 <td align="right">Scope</td>
                                                                 <td>
-                                                                    <select> <option>implementation</option>
+                                                                    <select class="select-scope" > <option>implementation</option>
                                                                     <option>architect</option>
                                                                     <option>design</option>
                                                                     <option>unit-tests</option>
@@ -711,14 +721,14 @@ function FermatEdit() {
                                                             <tr>
                                                                 <td align="right">Role</td>
                                                                 <td>
-                                                                    <select> <option>maintainer</option>
+                                                                    <select class="select-role" > <option>maintainer</option>
                                                                         <option>author</option>
                                                                     </select>
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td align="right">%</td>
-                                                                <td><input type="text"></input></td>
+                                                                <td><input class="input-prcnt"  type="text"></input></td>
                                                             </tr>
                                                             
                                                         </table>
@@ -740,10 +750,10 @@ function FermatEdit() {
                         btn.onclick = function(e) {
                             
                             var self = this;
-                            var modal = document.getElementById("modal-author");
+                            var modal = document.getElementById("modal-devs");
                             modal.value = modal.value.filter(function(x) {
                                 
-                                if(x.usrnm != self.dataset.usrid)
+                                if(x.dev.usrnm != self.dataset.usrid)
                                     return x;
                                 
                             })
@@ -780,7 +790,7 @@ function FermatEdit() {
                 
                 finder.onclick = function(e) {
                     
-                    document.getElementById("modal-author").updateModal();
+                    document.getElementById("modal-devs").updateModal();
                     
                 }
                 
@@ -792,7 +802,7 @@ function FermatEdit() {
 
             button.addEventListener('click', function() {
                 
-                var modal = document.getElementById("modal-author");
+                var modal = document.getElementById("modal-devs");
                 modal.dataset.state = "show";
                 modal.updateModal();
                 var area = document.createElement("div");
@@ -804,7 +814,7 @@ function FermatEdit() {
             
             document.getElementById("modal-close-button").addEventListener("click", function() {
                 
-                var modal = document.getElementById("modal-author");
+                var modal = document.getElementById("modal-devs");
                 modal.dataset.state = "hidden";
                 var area = document.getElementById("hidden-area");
                 window.helper.hide(area, 1000);
@@ -813,8 +823,37 @@ function FermatEdit() {
             
             document.getElementById("modal-accept-button").addEventListener("click", function() {
                 
-                var modal = document.getElementById("modal-author");
+                var modal = document.getElementById("modal-devs");
                 modal.dataset.state = "hidden";
+                
+                //update data of devs (modal.value)
+                
+                var devDiv = document.getElementsByClassName("dev-active");
+                
+                for(var i=0; i < devDiv.length; i++) {
+                    
+                    var div = devDiv[i];
+                    
+                    var selectRole = div.getElementsByClassName("select-role").value;
+                    var selectScope = div.getElementsByClassName("select-scope").value;
+                    var inputPrcnt = div.getElementsByClassName("input-prcnt").value;
+                    
+                    for(var x=0; x < modal.value.length; x++) {
+                        
+                        if(modal.value[x].dev.usrnm == div.dataset.usrid){
+                            
+                            modal.value[x].role = selectRole;
+                            modal.value[x].scope = selectScope;
+                            modal.value[x].percnt = inputPrcnt;
+                            
+                        }
+                        
+                    };
+                    
+                }
+                
+                //---------------------------------
+                
                 var area = document.getElementById("hidden-area");
                 window.helper.hide(area, 1000);
                 
@@ -862,7 +901,7 @@ function FermatEdit() {
 
         }
 
-        function sesionMaintainer(){
+        function sesionRepoDir(){
 
             var id = 'label-Maintainer'; text = 'Enter Maintainer : '; type = 'label';
 
@@ -1498,24 +1537,20 @@ function FermatEdit() {
         table.name = document.getElementById(objects.idFields.name).value;
         table.code = helper.getCode(document.getElementById(objects.idFields.name).value);
         table.author = document.getElementById(objects.idFields.author).value;
-        table.maintainer = document.getElementById(objects.idFields.maintainer).value;
         table.found = found;
         table.platformID = platformID;
         table.layerID = layerID;
         table.superLayer = superLayer;
+        
+        table.devs = document.getElementById("modal-devs").value;
 
         data = dataUser(table.author);
 
         table.picture = data.picture;
         table.authorRealName = data.authorRealName;
         table.authorEmail = data.authorEmail;
-
-        data = dataUser(table.maintainer);
-
-        table.maintainerPicture = data.picture;
-        table.maintainerRealName = data.authorRealName;
-
-        return table;       
+        
+        return table;
     }
 
     function dataUser(user){

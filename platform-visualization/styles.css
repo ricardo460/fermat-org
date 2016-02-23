@@ -333,7 +333,7 @@ END
     
 }
 
-#modal-author {
+#modal-devs {
     
     z-index: 12;
     width: 455px;
@@ -345,21 +345,21 @@ END
         
 }
 
-#modal-author[data-state="hidden"] {
+#modal-devs[data-state="hidden"] {
     
     opacity: 0;
     display: none;
     
 }
 
-#modal-author[data-state="show"] {
+#modal-devs[data-state="show"] {
     
     opacity: 1;
     display: block;
     
 }
 
-#modal-author #a {
+#modal-devs #a {
     
     width: 49%;
     float: left;
@@ -367,7 +367,7 @@ END
     
 }
 
-#modal-author #a #finder {
+#modal-devs #a #finder {
     
     float: left;
     width: 100%;
@@ -376,7 +376,7 @@ END
     
 }
 
-#modal-author #a #finder input[type="text"] {
+#modal-devs #a #finder input[type="text"] {
     
     width: 76%;
     border: 0px;
@@ -387,7 +387,7 @@ END
     
 }
 
-#modal-author #a #finder input[type="button"] {
+#modal-devs #a #finder input[type="button"] {
     
     width: 15%;
     float: left;
@@ -407,7 +407,7 @@ END
     -webkit-transition: .5s all ease 0s;
 }
 
-#modal-author #a #finder input[type="button"]:hover {
+#modal-devs #a #finder input[type="button"]:hover {
     
     cursor: pointer;
     background-position: center;
@@ -417,7 +417,7 @@ END
     
 }
 
-#modal-author #a #list {
+#modal-devs #a #list {
     
     width: 99%;
     float: left;
@@ -427,7 +427,7 @@ END
     
 }
 
-#modal-author .list-content {
+#modal-devs .list-content {
     
     width: 100%;
     float: left;
@@ -437,7 +437,7 @@ END
     
 }
 
-#modal-author .dev-fermat-edit {
+#modal-devs .dev-fermat-edit {
 	
 	padding: 2px;
 	height: 40px;
@@ -451,14 +451,14 @@ END
     
 }
 
-#modal-author .dev-fermat-edit div img {
+#modal-devs .dev-fermat-edit div img {
 
 	float: left;
 	width: 20%;
 
 }
 
-#modal-author .dev-fermat-edit div label {
+#modal-devs .dev-fermat-edit div label {
 
 	width: 59%;
 	float: left;
@@ -469,7 +469,7 @@ END
 	
 }
 
-#modal-author .dev-fermat-edit div .add_btn {
+#modal-devs .dev-fermat-edit div .add_btn {
 	
 	border: 0;
 	width: 19%;
@@ -488,7 +488,7 @@ END
 
 }
 
-#modal-author .dev-fermat-edit div .add_btn:hover {
+#modal-devs .dev-fermat-edit div .add_btn:hover {
  
     cursor: pointer;
     background-position: center;
@@ -497,7 +497,7 @@ END
     
 }
 
-#modal-author #b {
+#modal-devs #b {
     
     width: 49%;
     float: left;
@@ -506,7 +506,7 @@ END
     
 }
 
-#modal-author #b #list {
+#modal-devs #b #list {
     
     width: 99%;
     float: left;
@@ -516,7 +516,7 @@ END
     
 }
 
-#modal-author .dev-fermat-edit div .rem_btn {
+#modal-devs .dev-fermat-edit div .rem_btn {
 	
 	border: 0;
 	width: 19%;
@@ -535,7 +535,7 @@ END
     
 }
 
-#modal-author .dev-fermat-edit div .rem_btn:hover {
+#modal-devs .dev-fermat-edit div .rem_btn:hover {
  
     cursor: pointer;
     background-position: center;
@@ -544,14 +544,14 @@ END
     
 }
 
-#modal-author #b #buttons {
+#modal-devs #b #buttons {
     
     height: 5%;
     width: 100%;
     
 }
 
-#modal-author #b #buttons button {
+#modal-devs #b #buttons button {
     
     border: 0;
     width: 49%;
@@ -563,19 +563,19 @@ END
     
 }
 
-#modal-author #b .dev-fermat-edit div img:hover {
+#modal-devs #b .dev-fermat-edit div img:hover {
     
     cursor: pointer;
 	
 }
 
-#modal-author .dev-fermat-edit[data-expand="true"] {
+#modal-devs .dev-fermat-edit[data-expand="true"] {
     
     height: 120px;
     
 }
 
-#modal-author .dev-fermat-edit .dev-data {
+#modal-devs .dev-fermat-edit .dev-data {
     
     padding-top: 30px;
 	font-family: sans-serif;
@@ -583,7 +583,7 @@ END
     
 }
 
-#modal-author .dev-fermat-edit .dev-data input[type="text"]{
+#modal-devs .dev-fermat-edit .dev-data input[type="text"]{
     
     border: 0;
     margin: 2px;
@@ -591,7 +591,7 @@ END
     
 }
 
-#modal-author .dev-fermat-edit .dev-data select{
+#modal-devs .dev-fermat-edit .dev-data select{
     
     border: 0;
     margin: 2px;
