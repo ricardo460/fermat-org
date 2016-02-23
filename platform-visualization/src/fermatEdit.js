@@ -138,6 +138,7 @@ function FermatEdit() {
     };
 
     this.removeAllFields = function(){
+        self = this;
 
         if(objects.row1.buttons.length !== 0 || objects.row2.buttons.length !== 0){
 
@@ -214,7 +215,10 @@ function FermatEdit() {
             document.getElementById('imput-author').value = tile.author; 
 
         if(tile.maintainer !== undefined)
-            document.getElementById('imput-Maintainer').value = tile.maintainer; 
+            document.getElementById('imput-Maintainer').value = tile.maintainer;
+        
+        if(tile.devs !== undefined)
+            document.getElementById('modal-devs').value = tile.devs;
     }
 
     function createElement() {
@@ -316,10 +320,10 @@ function FermatEdit() {
         sesionGroup();
         sesionType();
         sesionName();
-        sesionAuthor();
         sesionDifficulty();
-        sesionMaintainer();
+        sesionRepoDir();
         sesionState();
+        sesionAuthor();
         createbutton();
         setTextSize();
         
@@ -547,43 +551,317 @@ function FermatEdit() {
 
         }
 
+        
         function sesionAuthor(){
-
-            var id = 'label-author'; text = 'Enter Author : '; type = 'label';
-
-            createField(id, text, 15, type, 2);
-
+            
             var idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
 
             var object = {
-                id : "imput-author",
-                text : "textfield"
-              };
-
+                id : "button-author",
+                text : "button"
+            };
+            
+            
             objects.idFields.author = object.id;
 
-            var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
+            var input = $('<input />', {"id" : object.id, "type" : "button", "text" : object.text });
 
-            $("#"+objects.row2.div).append(imput);
-
+            $("#"+objects.row2.div).append(input);
+            
             var button = document.getElementById(object.id);
-
-            var sucesorButton = document.getElementById(idSucesor);
-
-            button.className = 'edit-Fermat';
-            button.placeholder = 'Github User';     
+            
+            button.className = 'actionButton edit-Fermat';
             button.style.zIndex = 10;
             button.style.opacity = 0;
+            button.value = "Autores";
+            button.style.marginLeft = "5px";
+            
+            // Modal
+            // START
+            
+            if(!document.getElementById("modal-devs")){
+                
+                var modal = document.createElement("div");
+                modal.id            = "modal-devs";
+                modal.style.left    = (window.innerWidth/2-227)+"px";
+                modal.style.top     = (window.innerHeight/2-186)+"px";
+                modal.value         = [];
+                
+                modal.innerHTML = '<div id="a">'+
+                        '<div id="finder">'+
+                            '<input id="finder-input" type="text" placeholder="Buscar"></input>'+
+                            '<input id="finder-button" type="button" value=""></input>'+
+                        '</div>'+
+                        '<div id="list">'+
+                            '<div id="cont-devs" class="list-content">'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>'+
+                    '<div id="b">'+
+                        '<div id="list">'+
+                            '<div id="cont-devs-actives" class="list-content">'+
+                            '</div>'+
+                        '</div>'+
+                        '<div id="buttons" >'+
+                            '<button id="modal-close-button" >Cancel</button>'+
+                            '<button id="modal-accept-button" style="border-left: 2px solid #00b498;">Aceptar</button>'+
+                        '</div>'+
+                    '</div>';
+                
+                modal.updateModal = function() {
+                    
+                    var cont_list = document.getElementById("cont-devs");
+                    cont_list.innerHTML = "";
+                    
+                    var finder = document.getElementById("finder-input");
+                    
+                    for(var i = 0; i < DATA_USER.length; i++) {
+                        
+                        var brk = this.value.find(
+                            function(x) {
+                                if (x.dev.usrnm == DATA_USER[i].usrnm)
+                                    return true;
+                                else
+                                    return false;
+                            } 
+                        );
+                        
+                        var filt = DATA_USER[i].usrnm.search(finder.value);
+                        
+                        if(!brk && (filt != -1)) {
+                        
+                            var img_src;
 
-            button.addEventListener('blur', function() {
+                            if(DATA_USER[i].avatar_url)
+                                img_src = DATA_USER[i].avatar_url;
+                            else
+                                img_src = "images/modal/person.png";
 
-                changeTexture();
+                            var usr_html  = '<div class="dev-fermat-edit">'+
+                                                '<div>'+
+                                                    '<img crossorigin="anonymous" src="'+img_src+'">'+
+                                                    '<label>'+DATA_USER[i].usrnm+'</label>'+
+                                                    '<button data-usrid="'+DATA_USER[i].usrnm+'" class="add_btn"></button>'+
+                                                '</div>'+
+                                            '</div>';
+
+                            cont_list.innerHTML += usr_html;
+                            
+                        }
+                    }
+                    
+                    var list_btn = document.getElementsByClassName("add_btn");
+                    
+                    for(var i = 0; i < list_btn.length; i++) {
+                        var btn = list_btn[i];
+
+                        btn.onclick = function(e) {
+                            
+                            var modal = document.getElementById("modal-devs");
+                            self = this;
+                            modal.value[modal.value.length] = {
+                                dev: DATA_USER.find(function(x) {
+                                    
+                                    if(x.usrnm == self.dataset.usrid)
+                                        return x;
+                                    
+                                }),
+                                scope: "",
+                                role: "",
+                                porc: 0
+                            };
+                            
+                            modal.updateModal();
+
+                        };
+
+                    }
+                    
+                    var cont_list = document.getElementById("cont-devs-actives");
+                    cont_list.innerHTML = "";
+
+                    for(var i = 0; i < DATA_USER.length; i++) {
+                        
+                        var brk = this.value.find(
+                            function(x) {
+                                if (x.dev.usrnm == DATA_USER[i].usrnm)
+                                    return true;
+                                else
+                                    return false;
+                            }
+                        );
+                        
+                        if(brk) {
+                        
+                            var img_src;
+
+                            if(DATA_USER[i].avatar_url)
+                                img_src = DATA_USER[i].avatar_url;
+                            else
+                                img_src = "images/modal/person.png";
+
+                            var usr_html  = '<div data-expand="false" data-usrid="'+DATA_USER[i].usrnm+'" class="dev-fermat-edit dev-active">'+
+                                                '<div>'+
+                                                    '<img crossorigin="anonymous" class="" src="'+img_src+'">'+
+                                                    '<label>'+DATA_USER[i].usrnm+'</label>'+
+                                                    '<button data-usrid="'+DATA_USER[i].usrnm+'" class="rem_btn"></button>'+
+                                                    '<div class="dev-data">'+
+                                                        `
+                                                        <table width="100%">
+                                                            <tr>
+                                                                <td align="right">Scope</td>
+                                                                <td>
+                                                                    <select class="select-scope" > <option>implementation</option>
+                                                                    <option>architect</option>
+                                                                    <option>design</option>
+                                                                    <option>unit-tests</option>
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="right">Role</td>
+                                                                <td>
+                                                                    <select class="select-role" > <option>maintainer</option>
+                                                                        <option>author</option>
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="right">%</td>
+                                                                <td><input class="input-prcnt"  type="text"></input></td>
+                                                            </tr>
+                                                            
+                                                        </table>
+                                                        `+
+                                                    '</div>'+
+                                                '</div>'+
+                                            '</div>';
+
+                            cont_list.innerHTML += usr_html;
+                            
+                        }
+                    }
+                    
+                    var list_btn = document.getElementsByClassName("rem_btn");
+                    
+                    for(var i = 0; i < list_btn.length; i++) {
+                        var btn = list_btn[i];
+
+                        btn.onclick = function(e) {
+                            
+                            var self = this;
+                            var modal = document.getElementById("modal-devs");
+                            modal.value = modal.value.filter(function(x) {
+                                
+                                if(x.dev.usrnm != self.dataset.usrid)
+                                    return x;
+                                
+                            })
+                            modal.updateModal();
+
+                        };
+
+                    }
+                    
+                    var list_dev = document.getElementsByClassName("dev-active");
+                    
+                    for(var i = 0; i < list_dev.length; i++) {
+                        var dev = list_dev[i];
+
+                        dev.onmouseover = function(e) {
+                            
+                            this.dataset.expand = "true";
+                            
+                        };
+                        
+                        dev.onmouseout = function(e) {
+                            
+                            this.dataset.expand = "false";
+                            
+                        };
+
+                    }
+                    
+                }
+                
+                document.body.appendChild(modal);
+                
+                var finder = document.getElementById("finder-button");
+                
+                finder.onclick = function(e) {
+                    
+                    document.getElementById("modal-devs").updateModal();
+                    
+                }
+                
+            }
+            
+            
+            // END
+            
+
+            button.addEventListener('click', function() {
+                
+                var modal = document.getElementById("modal-devs");
+                modal.dataset.state = "show";
+                modal.updateModal();
+                var area = document.createElement("div");
+                area.id = "hidden-area";
+                document.body.appendChild(area);
+                window.helper.show(area, 1000);
+                
+            });
+            
+            document.getElementById("modal-close-button").addEventListener("click", function() {
+                
+                var modal = document.getElementById("modal-devs");
+                modal.dataset.state = "hidden";
+                var area = document.getElementById("hidden-area");
+                window.helper.hide(area, 1000);
+                
+            });
+            
+            document.getElementById("modal-accept-button").addEventListener("click", function() {
+                
+                var modal = document.getElementById("modal-devs");
+                modal.dataset.state = "hidden";
+                
+                //update data of devs (modal.value)
+                
+                var devDiv = document.getElementsByClassName("dev-active");
+                
+                for(var i=0; i < devDiv.length; i++) {
+                    
+                    var div = devDiv[i];
+                    
+                    var selectRole = div.getElementsByClassName("select-role").value;
+                    var selectScope = div.getElementsByClassName("select-scope").value;
+                    var inputPrcnt = div.getElementsByClassName("input-prcnt").value;
+                    
+                    for(var x=0; x < modal.value.length; x++) {
+                        
+                        if(modal.value[x].dev.usrnm == div.dataset.usrid){
+                            
+                            modal.value[x].role = selectRole;
+                            modal.value[x].scope = selectScope;
+                            modal.value[x].percnt = inputPrcnt;
+                            
+                        }
+                        
+                    };
+                    
+                }
+                
+                //---------------------------------
+                
+                var area = document.getElementById("hidden-area");
+                window.helper.hide(area, 1000);
+                
             });
 
             window.helper.show(button, 1000);
 
             objects.row2.buttons.push(object);
-
         }
 
         function sesionDifficulty(){
@@ -623,7 +901,7 @@ function FermatEdit() {
 
         }
 
-        function sesionMaintainer(){
+        function sesionRepoDir(){
 
             var id = 'label-Maintainer'; text = 'Enter Maintainer : '; type = 'label';
 
@@ -1259,24 +1537,20 @@ function FermatEdit() {
         table.name = document.getElementById(objects.idFields.name).value;
         table.code = helper.getCode(document.getElementById(objects.idFields.name).value);
         table.author = document.getElementById(objects.idFields.author).value;
-        table.maintainer = document.getElementById(objects.idFields.maintainer).value;
         table.found = found;
         table.platformID = platformID;
         table.layerID = layerID;
         table.superLayer = superLayer;
+        
+        table.devs = document.getElementById("modal-devs").value;
 
         data = dataUser(table.author);
 
         table.picture = data.picture;
         table.authorRealName = data.authorRealName;
         table.authorEmail = data.authorEmail;
-
-        data = dataUser(table.maintainer);
-
-        table.maintainerPicture = data.picture;
-        table.maintainerRealName = data.authorRealName;
-
-        return table;       
+        
+        return table;
     }
 
     function dataUser(user){
