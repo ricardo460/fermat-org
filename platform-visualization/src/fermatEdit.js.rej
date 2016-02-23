@@ -1,0 +1,13 @@
+diff a/platform-visualization/src/fermatEdit.js b/platform-visualization/src/fermatEdit.js	(rejected hunks)
+@@ -285,10 +285,10 @@
+         sesionPlatform();
+         sesionType();
+         sesionName();
+-        sesionAuthor();
+         sesionDifficulty();
+         sesionMaintainer();
+         sesionState();
++        sesionAuthor();
+         createbutton();
+         setTextSize();
+         
