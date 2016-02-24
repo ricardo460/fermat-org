@@ -743,7 +743,7 @@ function FermatEdit() {
                         
                         var dev_html = `
 
-<div data-expand="false" data-usrid="` + this.value[i].dev.usrnm + `" class="dev-fermat-edit dev-active">
+<div data-expand="false" data-usrid=` + i +` class="dev-fermat-edit dev-active">
     <div>
         <img crossorigin="anonymous" src="` + img_src + `">
         <label>` + this.value[i].dev.usrnm + `</label>
@@ -787,6 +787,22 @@ function FermatEdit() {
                         
                     }
                     
+                    var devDiv = document.getElementsByClassName("dev-active");
+
+                    for(var i=0; i < devDiv.length; i++) {
+
+                        var div = devDiv[i];
+                        var dev     = modal.value[div.dataset.usrid];
+                        
+                        var role    = div.getElementsByClassName("select-role")[0];
+                        var scope   = div.getElementsByClassName("select-scope")[0];
+                        var prc     = div.getElementsByClassName("input-prcnt")[0];
+                        prc.value   = dev.percnt;
+                        scope.value = dev.scope;
+                        role.value  = dev.role;
+                        
+                    }
+                    
                     var list_btn = document.getElementsByClassName("rem_btn");
                     
                     for(var i = 0; i < list_btn.length; i++) {
@@ -817,6 +833,15 @@ function FermatEdit() {
                         dev.onmouseout = function(e) {
                             
                             this.dataset.expand = "false";
+
+                            var selectRole = this.getElementsByClassName("select-role")[0].value;
+                            var selectScope = this.getElementsByClassName("select-scope")[0].value;
+                            var inputPrcnt = this.getElementsByClassName("input-prcnt")[0].value;
+
+                            modal.value[this.dataset.usrid].role = selectRole;
+                            modal.value[this.dataset.usrid].scope = selectScope;
+                            modal.value[this.dataset.usrid].percnt = inputPrcnt;
+                            
                             
                         };
 
@@ -858,7 +883,7 @@ function FermatEdit() {
                 var modal = document.getElementById("modal-devs");
                 modal.dataset.state = "hidden";
                 var area = document.getElementById("hidden-area");
-                window.helper.hide(area, 1000);
+                window.helper.hide(area, 500);
                 
             });
             
@@ -875,28 +900,20 @@ function FermatEdit() {
                     
                     var div = devDiv[i];
                     
-                    var selectRole = div.getElementsByClassName("select-role").value;
-                    var selectScope = div.getElementsByClassName("select-scope").value;
-                    var inputPrcnt = div.getElementsByClassName("input-prcnt").value;
-                    
-                    for(var x=0; x < modal.value.length; x++) {
-                        
-                        if(modal.value[x].dev.usrnm == div.dataset.usrid){
-                            
-                            modal.value[x].role = selectRole;
-                            modal.value[x].scope = selectScope;
-                            modal.value[x].percnt = inputPrcnt;
-                            
-                        }
-                        
-                    };
+                    var selectRole = div.getElementsByClassName("select-role")[0].value;
+                    var selectScope = div.getElementsByClassName("select-scope")[0].value;
+                    var inputPrcnt = div.getElementsByClassName("input-prcnt")[0].value;
+
+                    modal.value[div.dataset.usrid].role = selectRole;
+                    modal.value[div.dataset.usrid].scope = selectScope;
+                    modal.value[div.dataset.usrid].percnt = inputPrcnt;
                     
                 }
                 
                 //---------------------------------
                 
                 var area = document.getElementById("hidden-area");
-                window.helper.hide(area, 1000);
+                window.helper.hide(area, 500);
                 
             });
 
@@ -1239,8 +1256,6 @@ function FermatEdit() {
                     param.role = table.devs[i].role;
                     param.scope = table.devs[i].scope;
 
-                    console.log(param);
-
                     window.helper.postRoutesComponents('insert dev', param, dataPost);
                 }
             }
@@ -1416,8 +1431,6 @@ function FermatEdit() {
                 param.role = 'author';
                 param.scope = 'implementation';
 
-                console.log(param);
-
                 var dataPost = {
                         usr_id : DATA_TEST_USER,
                         comp_id : self.actualTile.id,
@@ -1585,12 +1598,10 @@ function FermatEdit() {
         table.platformID = platformID;
         table.layerID = layerID;
         table.superLayer = superLayer;
-
-        console.log(document.getElementById("modal-devs").value);
         
-        //table.devs = document.getElementById("modal-devs").value;
+        table.devs = document.getElementById("modal-devs").value;
 
-        table.devs = DATA_DEVS_TEST;
+        //table.devs = DATA_DEVS_TEST;
 
         var _author = getBestDev(table.devs, "author");
 
