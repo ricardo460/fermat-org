@@ -991,8 +991,8 @@ var updateDevs = function (callback) {
 							loopDevs(++i);
 						} else if (res_usr) {
 							if (res_usr.message && res_usr.message == 'Bad credentials') {
-								err_upd = new Error(res_usr.message);
-								winston.log('error', err_upd.message, err_upd);
+								err_usr = new Error(res_usr.message);
+								winston.log('error', err_usr.message, err_usr);
 							} else {
 								devMod.insOrUpdDev(_dev.usrnm, res_usr.email || null, res_usr.name || null, null, res_usr.location || null, res_usr.avatar_url || null, res_usr.html_url || null, res_usr.bio || null, function (err_upd, res_upd) {
 									if (err_upd) {
