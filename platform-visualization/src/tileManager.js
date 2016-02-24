@@ -239,7 +239,9 @@ function TileManager() {
                 code_level: _comp.code_level ? _comp.code_level : undefined,
                 life_cycle: _comp.life_cycle,
                 found: _comp.found,
-                devs: _comp.devs
+                devs: _comp.devs,
+                repo_dir: _comp.repo_dir,
+                description: _comp.description
             };
             return element;
         };
@@ -507,7 +509,7 @@ function TileManager() {
 
         for (var j = 0, l = levels.length; j < l; j++) {
 
-            if (levels[j][0] === 'high') scale = 5;
+            if (levels[j][0] === 'high') scale = 2;
             else scale = 1;
 
             texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale, table);

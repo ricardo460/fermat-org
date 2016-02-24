@@ -376,7 +376,7 @@ function Helper() {
 
         var list = {};
 
-        //window.session.useTestData();
+        window.session.useTestData();
 
         if(window.session.getIsLogin()){ 
 

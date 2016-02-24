@@ -25,6 +25,62 @@ function FermatEdit() {
             idFields : {}
         };
 
+    var DATA_DEVS_TEST = [ 
+
+            {
+                "dev": {
+                    "usrnm": "luis-fernando-molina",
+                    "email": null,
+                    "name": null,
+                    "bday": null,
+                    "location": null,
+                    "avatar_url": null,
+                    "url": null,
+                    "bio": null,
+                    "upd_at": "56c257f60eaa035020c11a1c",
+                    "_id": "56c257f60eaa035020c11a1d"
+                },
+                "role": "author",
+                "scope": "architecture",
+                "percnt": 70
+            },
+            {
+                "dev": {
+                    "usrnm": "luis-fernando-molina",
+                    "email": null,
+                    "name": null,
+                    "bday": null,
+                    "location": null,
+                    "avatar_url": null,
+                    "url": null,
+                    "bio": null,
+                    "upd_at": "56c257f60eaa035020c11a1c",
+                    "_id": "56c257f60eaa035020c11a1d"
+                },
+                "role": "author",
+                "scope": "implementation",
+                "percnt": 100
+            },
+            {
+                "dev": {
+                    "usrnm": "luis-fernando-molina",
+                    "email": null,
+                    "name": null,
+                    "bday": null,
+                    "location": null,
+                    "avatar_url": null,
+                    "url": null,
+                    "bio": null,
+                    "upd_at": "56c257f60eaa035020c11a1c",
+                    "_id": "56c257f60eaa035020c11a1d"
+                },
+                "role": "maintainer",
+                "scope": "implementation",
+                "percnt": 70
+            }
+
+        ];
+
     var actions = { 
         exit : null,
         type : null
@@ -210,9 +266,6 @@ function FermatEdit() {
 
         if(tile.name !== undefined)
             document.getElementById('imput-Name').value = tile.name;         
-        
-        if(tile.author !== undefined)
-            document.getElementById('imput-author').value = tile.author; 
 
         if(tile.maintainer !== undefined)
             document.getElementById('imput-Maintainer').value = tile.maintainer;
@@ -561,12 +614,13 @@ function FermatEdit() {
                 text : "button"
             };
             
-            
             objects.idFields.author = object.id;
 
             var input = $('<input />', {"id" : object.id, "type" : "button", "text" : object.text });
 
             $("#"+objects.row2.div).append(input);
+
+            objects.row2.buttons.push(object);
             
             var button = document.getElementById(object.id);
             
@@ -575,6 +629,13 @@ function FermatEdit() {
             button.style.opacity = 0;
             button.value = "Autores";
             button.style.marginLeft = "5px";
+
+            object = {
+                id : "modal-devs",
+                text : "modal"
+            };
+
+            objects.row2.buttons.push(object);
             
             // Modal
             // START
@@ -666,9 +727,9 @@ function FermatEdit() {
                                         return x;
                                     
                                 }),
-                                scope: "",
-                                role: "",
-                                porc: 0
+                                scope: "implementation",
+                                role: "author",
+                                percnt: 100
                             };
                             
                             modal.updateModal();
@@ -785,14 +846,15 @@ function FermatEdit() {
                 }
                 
                 document.body.appendChild(modal);
-                
-                var finder = document.getElementById("finder-button");
-                
-                finder.onclick = function(e) {
+
+                var finder = document.getElementById("finder-input");
+
+                finder.onkeyup = function() {
                     
                     document.getElementById("modal-devs").updateModal();
                     
-                }
+                };
+
                 
             }
             
@@ -860,8 +922,6 @@ function FermatEdit() {
             });
 
             window.helper.show(button, 1000);
-
-            objects.row2.buttons.push(object);
         }
 
         function sesionDifficulty(){
@@ -1184,21 +1244,26 @@ function FermatEdit() {
 
         function postParamsDev(table){
 
-            if(table.author !== '' && table.author !== undefined && table.author !== null){ 
-
-                var param = {};
-
-                param.dev_id = dataUser(table.author).id;
-                param.percnt = 100;
-                param.role = 'author';
-                param.scope = 'implementation';
+            if(table.devs.length > 0){ 
 
                 var dataPost = {
-                        usr_id : DATA_TEST_USER,
-                        comp_id : table.id
-                    };
+                            usr_id : DATA_TEST_USER,
+                            comp_id : table.id
+                        };
 
-                window.helper.postRoutesComponents('insert dev', param, dataPost);
+                for(var i = 0; i < table.devs.length; i++){
+
+                    var param = {};
+
+                    param.dev_id = table.devs[i].dev._id;
+                    param.percnt = table.devs[i].percnt;
+                    param.role = table.devs[i].role;
+                    param.scope = table.devs[i].scope;
+
+                    console.log(param);
+
+                    window.helper.postRoutesComponents('insert dev', param, dataPost);
+                }
             }
         }
     }
@@ -1517,7 +1582,8 @@ function FermatEdit() {
             layer = document.getElementById(objects.idFields.layer).value,
             platformID = helper.getCountObject(window.platforms) - 1,
             layerID = 0,
-            superLayer = false;
+            superLayer = false,
+            _author;
 
         if(window.platforms[group]){
             table.platform = group;
@@ -1536,19 +1602,29 @@ function FermatEdit() {
         table.difficulty = document.getElementById(objects.idFields.difficulty).value;
         table.name = document.getElementById(objects.idFields.name).value;
         table.code = helper.getCode(document.getElementById(objects.idFields.name).value);
-        table.author = document.getElementById(objects.idFields.author).value;
         table.found = found;
         table.platformID = platformID;
         table.layerID = layerID;
         table.superLayer = superLayer;
+
+        console.log(document.getElementById("modal-devs").value);
         
-        table.devs = document.getElementById("modal-devs").value;
+        //table.devs = document.getElementById("modal-devs").value;
 
-        data = dataUser(table.author);
+        table.devs = DATA_DEVS_TEST;
 
-        table.picture = data.picture;
-        table.authorRealName = data.authorRealName;
-        table.authorEmail = data.authorEmail;
+        var _author = getBestDev(table.devs, "author");
+
+        table.picture = _author.avatar_url ? _author.avatar_url : undefined;
+        table.author = _author.usrnm ? _author.usrnm : undefined;
+        table.authorRealName = _author.name ? _author.name : undefined;
+        table.authorEmail = _author.email ? _author.email : undefined;
+
+        var _maintainer = getBestDev(table.devs, "maintainer");
+
+        table.maintainer = _maintainer.usrnm ? _author.usrnm : undefined;
+        table.maintainerPicture = _maintainer.avatar_url ? _maintainer.avatar_url : undefined;
+        table.maintainerRealName = _maintainer.name ? _maintainer.name : undefined;
         
         return table;
     }
@@ -1625,6 +1701,31 @@ function FermatEdit() {
         }
 
         return newArrayObject;
+    }
+
+    function getBestDev(_devs, role) {
+        var dev = {};
+        if (_devs) {
+            var _dev = {};
+            dev.percnt = 0;
+            for (var i = 0, l = _devs.length; i < l; i++) {
+                _dev = _devs[i];
+                
+                if((role === 'author' && _dev.role === 'author' && _dev.scope === 'implementation') ||
+                   (role === 'maintainer' && _dev.role === 'maintainer')) {
+                
+                    if (_dev.percnt >= dev.percnt) {
+                        
+                        dev.percnt = _dev.percnt;
+                        dev.usrnm = _dev.dev.usrnm;
+                        dev.name = _dev.dev.name;
+                        dev.email = _dev.dev.email;
+                        dev.avatar_url = _dev.dev.avatar_url;
+                    }
+                }
+            }
+        }
+        return dev;
     }
 
     function animate(mesh, target, duration, callback){
