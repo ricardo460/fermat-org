@@ -59,7 +59,7 @@ var release = function (req) {
  */
 router.use(lock);
 /**
- * @api {post} /v1/repo/suprlay/ add super layer
+ * @api {post} /v1/repo/suprlay add super layer
  * @apiVersion 0.0.1
  * @apiName AddSuprLay
  * @apiGroup Repo-SuprLay
@@ -91,7 +91,7 @@ router.post('/', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/suprlay/ list super layers
+ * @api {get} /v1/repo/suprlay list super layers
  * @apiVersion 0.0.1
  * @apiName ListSuprLays
  * @apiGroup Repo-SuprLay

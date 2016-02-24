@@ -63,7 +63,7 @@ router.use(lock);
 
 
 /**
- * @api {post} /v1/repo/comp/ add components
+ * @api {post} /v1/repo/comp add components
  * @apiVersion 0.0.1
  * @apiName AddComp
  * @apiGroup Repo-Comp
@@ -73,9 +73,9 @@ router.use(lock);
  * @apiParam {Number} difficulty Component complexity developed  rank (0- 10).
  * @apiParam {String} code_level   Developing state api.
  * @apiParam {ObjectId} platfrm_id   Unique identifier of the  platfrtm.
- * @apiParam {ObjectId} suprlay_id    Unique identifier of the  suprlay . 
+ * @apiParam {ObjectId} suprlay_id    Unique identifier of the  suprlay. 
  * @apiParam {String} description  Description of  components.
- * @apiParam {String} repo_dir      Directory of repo.
+ * @apiParam {String} repo_dir Directory of repo.
  * @apiDescription Add a component to the architecture fermat.
  */
 router.post('/', function (req, res, next) {
@@ -108,7 +108,7 @@ router.post('/', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/comp/ list comps
+ * @api {get} /v1/repo/comp list comps
  * @apiVersion 0.0.1
  * @apiName ListComps
  * @apiGroup Repo-Comp

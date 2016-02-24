@@ -59,7 +59,7 @@ var release = function (req) {
  */
 router.use(lock);
 /**
- * @api {post} /v1/repo/proc/ add process
+ * @api {post} /v1/repo/procs add process
  * @apiVersion 0.0.1
  * @apiName AddProc
  * @apiGroup Repo-Proc
@@ -94,7 +94,7 @@ router.post('/', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/proc/ lists process
+ * @api {get} /v1/repo/procs lists process
  * @apiVersion 0.0.1
  * @apiName ListProcs
  * @apiGroup Repo-Proc

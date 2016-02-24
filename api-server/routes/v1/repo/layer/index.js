@@ -60,7 +60,7 @@ var release = function (req) {
  */
 router.use(lock);
 /**
- * @api {post} /v1/repo/layer/ add layer
+ * @api {post} /v1/repo/layer add layer
  * @apiVersion 0.0.1
  * @apiName AddLayer
  * @apiParam {String} name    Layer name.
@@ -93,7 +93,7 @@ router.post('/', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/layer/ get list layers
+ * @api {get} /v1/repo/layer get list layers
  * @apiVersion 0.0.1
  * @apiName ListLayers
  * @apiGroup Repo-Layer

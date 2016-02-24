@@ -59,7 +59,7 @@ var release = function (req) {
  */
 router.use(lock);
 /**
- * @api {post} /v1/repo/platfrm/ add platform
+ * @api {post} /v1/repo/platfrm add platform
  * @apiVersion 0.0.1
  * @apiName AddPlatform
  * @apiParam {String} code    xxxxx.
@@ -91,7 +91,7 @@ router.post('/', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/platfrm/ list platforms
+ * @api {get} /v1/repo/platfrm list platforms
  * @apiVersion 0.0.1
  * @apiName ListPlatforms
  * @apiGroup Repo-Platform
