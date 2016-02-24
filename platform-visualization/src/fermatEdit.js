@@ -678,25 +678,16 @@ function FermatEdit() {
                     
                     for(var i = 0; i < DATA_USER.length; i++) {
                         
-                        var brk = this.value.find(
-                            function(x) {
-                                if (x.dev.usrnm == DATA_USER[i].usrnm)
-                                    return true;
-                                else
-                                    return false;
-                            } 
-                        );
-                        
                         var filt = DATA_USER[i].usrnm.search(finder.value);
                         
-                        if(!brk && (filt != -1)) {
+                        if(filt != -1) {
                         
                             var img_src;
 
                             if(DATA_USER[i].avatar_url)
                                 img_src = DATA_USER[i].avatar_url;
                             else
-                                img_src = "images/modal/person.png";
+                                img_src = "images/modal/avatar.png";
 
                             var usr_html  = '<div class="dev-fermat-edit">'+
                                                 '<div>'+
@@ -740,67 +731,76 @@ function FermatEdit() {
                     
                     var cont_list = document.getElementById("cont-devs-actives");
                     cont_list.innerHTML = "";
-
-                    for(var i = 0; i < DATA_USER.length; i++) {
+                    
+                    for(var i = 0; i < this.value.length; i++) {
                         
-                        var brk = this.value.find(
-                            function(x) {
-                                if (x.dev.usrnm == DATA_USER[i].usrnm)
-                                    return true;
-                                else
-                                    return false;
-                            }
-                        );
+                        var img_src;
                         
-                        if(brk) {
+                        if(this.value[i].dev.avatar_url)
+                            img_src = this.value[i].dev.avatar_url;
+                        else
+                            img_src = "images/modal/avatar.png"
                         
-                            var img_src;
+                        var dev_html = `
 
-                            if(DATA_USER[i].avatar_url)
-                                img_src = DATA_USER[i].avatar_url;
-                            else
-                                img_src = "images/modal/person.png";
+<div data-expand="false" data-usrid=` + i +` class="dev-fermat-edit dev-active">
+    <div>
+        <img crossorigin="anonymous" src="` + img_src + `">
+        <label>` + this.value[i].dev.usrnm + `</label>
+        <button data-usrid=` + i + ` class="rem_btn"></button>
+        <div class="dev-data">
+            <table width="100%">
+                <tr>
+                    <td align="right">Scope</td>
+                    <td>
+                        <select class="select-scope">
+                            <option>implementation</option>
+                            <option>architect</option>
+                            <option>design</option>
+                            <option>unit-tests</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">Role</td>
+                    <td>
+                        <select class="select-role">
+                            <option>maintainer</option>
+                            <option>author</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">%</td>
+                    <td><input class="input-prcnt" type="text" value="` + this.value[i].percnt + `"></input></td>
+                </tr>
 
-                            var usr_html  = '<div data-expand="false" data-usrid="'+DATA_USER[i].usrnm+'" class="dev-fermat-edit dev-active">'+
-                                                '<div>'+
-                                                    '<img crossorigin="anonymous" class="" src="'+img_src+'">'+
-                                                    '<label>'+DATA_USER[i].usrnm+'</label>'+
-                                                    '<button data-usrid="'+DATA_USER[i].usrnm+'" class="rem_btn"></button>'+
-                                                    '<div class="dev-data">'+
-                                                        `
-                                                        <table width="100%">
-                                                            <tr>
-                                                                <td align="right">Scope</td>
-                                                                <td>
-                                                                    <select class="select-scope" > <option>implementation</option>
-                                                                    <option>architect</option>
-                                                                    <option>design</option>
-                                                                    <option>unit-tests</option>
-                                                                    </select>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td align="right">Role</td>
-                                                                <td>
-                                                                    <select class="select-role" > <option>maintainer</option>
-                                                                        <option>author</option>
-                                                                    </select>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td align="right">%</td>
-                                                                <td><input class="input-prcnt"  type="text"></input></td>
-                                                            </tr>
-                                                            
-                                                        </table>
-                                                        `+
-                                                    '</div>'+
-                                                '</div>'+
-                                            '</div>';
+            </table>
+        </div>
+    </div>
+</div>
+`
+                        ;
+                        
+                        cont_list.innerHTML += dev_html;
+                        
+                        
+                    }
+                    
+                    var devDiv = document.getElementsByClassName("dev-active");
 
-                            cont_list.innerHTML += usr_html;
-                            
-                        }
+                    for(var i=0; i < devDiv.length; i++) {
+
+                        var div = devDiv[i];
+                        var dev     = modal.value[div.dataset.usrid];
+                        
+                        var role    = div.getElementsByClassName("select-role")[0];
+                        var scope   = div.getElementsByClassName("select-scope")[0];
+                        var prc     = div.getElementsByClassName("input-prcnt")[0];
+                        prc.value   = dev.percnt;
+                        scope.value = dev.scope;
+                        role.value  = dev.role;
+                        
                     }
                     
                     var list_btn = document.getElementsByClassName("rem_btn");
@@ -812,12 +812,7 @@ function FermatEdit() {
                             
                             var self = this;
                             var modal = document.getElementById("modal-devs");
-                            modal.value = modal.value.filter(function(x) {
-                                
-                                if(x.dev.usrnm != self.dataset.usrid)
-                                    return x;
-                                
-                            })
+                            modal.value.splice(this.dataset.usrid, 1);
                             modal.updateModal();
 
                         };
@@ -838,6 +833,15 @@ function FermatEdit() {
                         dev.onmouseout = function(e) {
                             
                             this.dataset.expand = "false";
+
+                            var selectRole = this.getElementsByClassName("select-role")[0].value;
+                            var selectScope = this.getElementsByClassName("select-scope")[0].value;
+                            var inputPrcnt = this.getElementsByClassName("input-prcnt")[0].value;
+
+                            modal.value[this.dataset.usrid].role = selectRole;
+                            modal.value[this.dataset.usrid].scope = selectScope;
+                            modal.value[this.dataset.usrid].percnt = inputPrcnt;
+                            
                             
                         };
 
@@ -879,7 +883,7 @@ function FermatEdit() {
                 var modal = document.getElementById("modal-devs");
                 modal.dataset.state = "hidden";
                 var area = document.getElementById("hidden-area");
-                window.helper.hide(area, 1000);
+                window.helper.hide(area, 500);
                 
             });
             
@@ -896,28 +900,20 @@ function FermatEdit() {
                     
                     var div = devDiv[i];
                     
-                    var selectRole = div.getElementsByClassName("select-role").value;
-                    var selectScope = div.getElementsByClassName("select-scope").value;
-                    var inputPrcnt = div.getElementsByClassName("input-prcnt").value;
-                    
-                    for(var x=0; x < modal.value.length; x++) {
-                        
-                        if(modal.value[x].dev.usrnm == div.dataset.usrid){
-                            
-                            modal.value[x].role = selectRole;
-                            modal.value[x].scope = selectScope;
-                            modal.value[x].percnt = inputPrcnt;
-                            
-                        }
-                        
-                    };
+                    var selectRole = div.getElementsByClassName("select-role")[0].value;
+                    var selectScope = div.getElementsByClassName("select-scope")[0].value;
+                    var inputPrcnt = div.getElementsByClassName("input-prcnt")[0].value;
+
+                    modal.value[div.dataset.usrid].role = selectRole;
+                    modal.value[div.dataset.usrid].scope = selectScope;
+                    modal.value[div.dataset.usrid].percnt = inputPrcnt;
                     
                 }
                 
                 //---------------------------------
                 
                 var area = document.getElementById("hidden-area");
-                window.helper.hide(area, 1000);
+                window.helper.hide(area, 500);
                 
             });
 
@@ -1260,8 +1256,6 @@ function FermatEdit() {
                     param.role = table.devs[i].role;
                     param.scope = table.devs[i].scope;
 
-                    console.log(param);
-
                     window.helper.postRoutesComponents('insert dev', param, dataPost);
                 }
             }
@@ -1437,8 +1431,6 @@ function FermatEdit() {
                 param.role = 'author';
                 param.scope = 'implementation';
 
-                console.log(param);
-
                 var dataPost = {
                         usr_id : DATA_TEST_USER,
                         comp_id : self.actualTile.id,
@@ -1606,12 +1598,10 @@ function FermatEdit() {
         table.platformID = platformID;
         table.layerID = layerID;
         table.superLayer = superLayer;
-
-        console.log(document.getElementById("modal-devs").value);
         
-        //table.devs = document.getElementById("modal-devs").value;
+        table.devs = document.getElementById("modal-devs").value;
 
-        table.devs = DATA_DEVS_TEST;
+        //table.devs = DATA_DEVS_TEST;
 
         var _author = getBestDev(table.devs, "author");
 
