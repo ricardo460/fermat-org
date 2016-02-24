@@ -149,7 +149,7 @@ var doRequest = function (method, url, params, callback) {
 		if (env === 'development') {
 			url += '&ref=develop';
 		}
-		winston.log('info', 'Doing request %s', url);
+		//winston.log('info', 'Doing request %s', url);
 		switch (method) {
 		case 'POST':
 			form = {};
@@ -229,7 +229,7 @@ exports.getManifestWithExt = function (ext, callback) {
 		fs.lstat(file, function (err, stats) {
 		    if (!err && stats.isFile()) {
 		        // Yes it is
-		        winston.log('info', 'Read Cache FermatManifest.'+ ext +' %s', file);
+		        //winston.log('info', 'Read Cache FermatManifest.'+ ext +' %s', file);
 		        fs.readFile(file, function (err_read, res_read) {
 		            if (err_read) {
 		                return callback(err_read, null);
@@ -239,7 +239,7 @@ exports.getManifestWithExt = function (ext, callback) {
 
 		    } else {
 		        if (err) {
-		            winston.log('info', err.message, err);
+		            //winston.log('info', err.message, err);
 		        }*/
 		doRequest('GET', 'https://api.github.com/repos/Fermat-ORG/fermat/contents/FermatManifest.' + ext, null, function (err_req, res_req) {
 			if (err_req) {
@@ -280,7 +280,7 @@ var getManifest = function (callback) {
 		fs.lstat(file, function (err, stats) {
 			if (!err && stats.isFile()) {
 				// Yes it is
-				winston.log('info', 'Read Cache FermatManifest.xml %s', file);
+				//winston.log('info', 'Read Cache FermatManifest.xml %s', file);
 				fs.readFile(file, function (err_read, res_read) {
 					if (err_read) {
 						return callback(err_read, null);
@@ -304,13 +304,17 @@ var getManifest = function (callback) {
 						if (err_pro) {
 							return callback(err_pro, null);
 						}
-						var strCont = res_pro.split('\n').join(' ').split('\t').join(' ');
-						parseString(strCont, function (err_par, res_par) {
-							if (err_par) {
-								return callback(err_par, null);
-							}
-							return callback(null, res_par);
-						});
+						if (res_pro.message && res_pro.message == 'Bad credentials') {
+							return callback(new Error(res_pro.message), null);
+						} else {
+							var strCont = res_pro.split('\n').join(' ').split('\t').join(' ');
+							parseString(strCont, function (err_par, res_par) {
+								if (err_par) {
+									return callback(err_par, null);
+								}
+								return callback(null, res_par);
+							});
+						}
 					});
 				});
 			}
@@ -472,7 +476,7 @@ var getContent = function (repo_dir, callback) {
 			dir = path.join(cwd, 'cache', env, 'fermat', repo_dir); // exist = fs.lstatSync(dir);
 		fs.lstat(dir, function (err, stats) {
 			if (!err && stats.isDirectory()) {
-				winston.log('info', 'Read Cache Directory %s', dir);
+				//winston.log('info', 'Read Cache Directory %s', dir);
 				return callback(null, []);
 			} else {
 				doRequest('GET', 'https://api.github.com/repos/Fermat-ORG/fermat/contents/' + repo_dir, null, function (err_req, res_req) {
@@ -545,7 +549,7 @@ var updateComps = function (callback) {
 						}
 						loopComps(++i);
 					} else {
-						winston.log('info', 'done iterating components');
+						//winston.log('info', 'done iterating components');
 						return callback(null, true);
 					}
 				};
@@ -578,10 +582,10 @@ var saveManifest = function (callback) {
 					var _suprlays = res_load.suprlays;
 					var _procs = res_load.procs;
 					var _lays = res_load.layers;
-					console.log("execute saveManifest");
-					console.log("define loopLays");
+					//console.log("execute saveManifest");
+					//console.log("define loopLays");
 					var loopLays = function (u) {
-						console.log("execute loopLays");
+						//console.log("execute loopLays");
 						if (u < _lays.length) {
 							var _lay = _lays[u];
 							layerMod.insOrUpdLayer(_lay.name ? _lay.name.trim().toLowerCase() : null, _lay.language ? _lay.language.toLowerCase() : null, _lay.super_layer ? _lay.super_layer.trim().toUpperCase() : null, u, function (err_lay, res_lay) {
@@ -595,14 +599,14 @@ var saveManifest = function (callback) {
 								if (err_upd) {
 									winston.log('error', err_upd.message, err_upd);
 								}
-								winston.log('info', 'done loading components');
+								//winston.log('info', 'done loading components');
 								return;
 							});
 						}
 					};
-					console.log("define loopProcs");
+					//console.log("define loopProcs");
 					var loopProcs = function (s) {
-						console.log("execute loopProcs");
+						//console.log("execute loopProcs");
 						if (s < _procs.length) {
 							var _proc = _procs[s];
 							//platfrm, name, desc, prev, next, callback
@@ -649,9 +653,9 @@ var saveManifest = function (callback) {
 							loopLays(0);
 						}
 					};
-					console.log("define loopSuprlays");
+					//console.log("define loopSuprlays");
 					var loopSuprlays = function (n) {
-						console.log("execute loopSuprlays");
+						//console.log("execute loopSuprlays");
 						if (n < _suprlays.length) {
 							var _suprlay = _suprlays[n];
 							suprlayMod.insOrUpdSuprlay(_suprlay.code.trim().toUpperCase(), _suprlay.name.trim().toLowerCase(), _suprlay.logo, _suprlay.dependsOn ? _suprlay.dependsOn.split(' ').join('').split(',') : [], n, function (err_supr, res_supr) {
@@ -765,9 +769,9 @@ var saveManifest = function (callback) {
 							return loopProcs(0);
 						}
 					};
-					console.log("define loopPlatfrms");
+					//console.log("define loopPlatfrms");
 					var loopPlatfrms = function (i) {
-						console.log("execute loopPlatfrms");
+						//console.log("execute loopPlatfrms");
 						if (i < _platfrms.length) {
 							var _platfrm = _platfrms[i];
 							platfrmMod.insOrUpdPlatfrm(_platfrm.code.trim().toUpperCase(), _platfrm.name.trim().toLowerCase(), _platfrm.logo, _platfrm.dependsOn ? _platfrm.dependsOn.split(' ').join('').split(',') : [], i, function (err_plat, res_plat) {
@@ -881,38 +885,38 @@ var saveManifest = function (callback) {
 							return loopSuprlays(0);
 						}
 					};
-					console.log("define callback");
+					//console.log("define callback");
 					callback(null, {
 						'save': true
 					});
 					// deleting previous database
-					console.log("deleting previous database");
+					//console.log("deleting previous database");
 					procMod.delAllProcs(function (err_del, res_del) {
-						winston.log('info', 'deleting proccess...');
+						//winston.log('info', 'deleting proccess...');
 						if (err_del) {
 							winston.log('error', err_del.message, err_del);
 						}
 						compMod.delAllComps(function (err_del, res_del) {
-							winston.log('info', 'deleting components...');
+							//winston.log('info', 'deleting components...');
 							if (err_del) {
 								winston.log('error', err_del.message, err_del);
 							}
 							layerMod.delAllLayers(function (err_del, res_del) {
-								winston.log('info', 'deleting layers...');
+								//winston.log('info', 'deleting layers...');
 								if (err_del) {
 									winston.log('error', err_del.message, err_del);
 								}
 								suprlayMod.delAllSuprlays(function (err_del, res_del) {
-									winston.log('info', 'deleting superlayers...');
+									//winston.log('info', 'deleting superlayers...');
 									if (err_del) {
 										winston.log('error', err_del.message, err_del);
 									}
 									platfrmMod.delAllPlatfrms(function (err_del, res_del) {
-										winston.log('info', 'deleting platforms...');
+										//winston.log('info', 'deleting platforms...');
 										if (err_del) {
 											winston.log('error', err_del.message, err_del);
 										}
-										console.log("define loopPlatfrms(0)");
+										//console.log("define loopPlatfrms(0)");
 										return loopPlatfrms(0);
 									});
 								});
@@ -920,7 +924,7 @@ var saveManifest = function (callback) {
 						});
 					});
 				} else {
-					console.log("not saveManifest");
+					//console.log("not saveManifest");
 					return callback(null, {
 						'save': false
 					});
@@ -995,7 +999,7 @@ var updateDevs = function (callback) {
 					});
 					loopDevs(++i);
 				} else {
-					winston.log('info', 'done loading users');
+					//winston.log('info', 'done loading users');
 					return;
 				}
 			};
