@@ -261,29 +261,35 @@ exports.delPlatfrmById = function (_id, callback) {
     try {
         var delPlatfrm = function () {
             platfrmSrv.findPlatfrmById(_id, function (err_platfrm, res_platfrm) {
+
                 if (err_platfrm) {
                     return callback(err_platfrm, null);
+                } else if (res_platfrm){
+                    swapOrder('delete', res_platfrm.order, null, function (err_sld, res_sld) {
+                        if (err_sld) {
+                            return callback(err_sld, null);
+                        } else {
+                            platfrmSrv.delPlatfrmById(res_platfrm._id, function (err_del, res_del) {
+                                if (err_del) {
+                                    return callback(err_del, null);
+                                }
+                                return callback(null, res_platfrm);
+                            });
+                        }
+                    });
+                }else{
+                    return callback(null, null);
+
                 }
                 // ordering function
-                swapOrder('delete', res_platfrm.order, null, function (err_sld, res_sld) {
-                    if (err_sld) {
-                        return callback(err_sld, null);
-                    } else {
-                        platfrmSrv.delPlatfrmById(res_platfrm._id, function (err_del, res_del) {
-                            if (err_del) {
-                                return callback(err_del, null);
-                            }
-                            return callback(null, res_platfrm);
-                        });
-                    }
-                });
+               
             });
         };
         compMod.findCompsByPlatfrmId(_id, function (err_comp, res_comps) {
             if (err_comp) {
                 return callback(err_comp, null);
             }
-            if (res_comps) {
+            if (res_comps.length > 0) {
                 var _comps = res_comps;
                 var loopDelComps = function () {
                     if (_comps.length <= 0) {

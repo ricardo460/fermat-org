@@ -5,11 +5,8 @@ var v1 = require('./v1');
 //
 router.use('/v1', v1);
 /* GET home page. */
-router.get('/', function (req, res, next) {
-	'use strict';
-	res.render('index', {
-		title: 'Express'
-	});
+router.all('/', function (req, res) {
+	res.render('index.html');
 });
 /*global module*/
 module.exports = router;

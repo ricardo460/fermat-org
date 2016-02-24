@@ -59,15 +59,16 @@ var release = function (req) {
  */
 router.use(lock);
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {post} /v1/repo/proc/ add process
+ * @apiVersion 0.0.1
+ * @apiName AddProc
+ * @apiGroup Repo-Proc
+ * @apiParam {Object} platfrm Platform data.
+ * @apiParam {String} name Process name.
+ * @apiParam {String} desc Process description
+ * @apiParam {String} prev Id of the previous process.
+ * @apiParam {String} next Id the next process.
+ * @apiDescription Add a process to the architecture of fermat.
  */
 router.post('/', function (req, res, next) {
     'use strict';
@@ -93,15 +94,11 @@ router.post('/', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/repo/proc/ lists process
+ * @apiVersion 0.0.1
+ * @apiName ListProcs
+ * @apiGroup Repo-Proc
+ * @apiDescription Get lists of process to the architecture of fermat.
  */
 router.get('/', function (req, res, next) {
     'use strict';
@@ -119,15 +116,17 @@ router.get('/', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {post} /v1/repo/proc/:proc_id/steps add step
+ * @apiVersion 0.0.1
+ * @apiName AddStep
+ * @apiGroup Repo-Proc
+ * @apiParam {ObjectId} proc_id Unique identifier of the process.
+ * @apiParam {ObjectId} comp_id Unique identifier of the component.
+ * @apiParam {String} type Step type.
+ * @apiParam {String} title Step title.
+ * @apiParam {String} desc Step description.
+ * @apiParam {Number} order Indicates the position where the step this with respect to other.
+ * @apiDescription Adds a step to the process.
  */
 router.post('/:proc_id/steps', function (req, res, next) {
     'use strict';
@@ -160,15 +159,18 @@ router.post('/:proc_id/steps', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {put} /v1/repo/proc/:proc_id/steps/:step_id update step
+ * @apiVersion 0.0.1
+ * @apiName UptStep
+ * @apiGroup Repo-Proc
+ * @apiParam {ObjectId} proc_id Unique identifier of the process.
+ * @apiParam {ObjectId} step_id Unique identifier of the step.
+ * @apiParam {ObjectId} comp_id Unique identifier of the component.
+ * @apiParam {String} type Step type.
+ * @apiParam {String} title Step title.
+ * @apiParam {String} desc Step description.
+ * @apiParam {String} order Indicates the position where the step this with respect to other.
+ * @apiDescription Updates a step of a process.
  */
 router.put('/:proc_id/steps/:step_id', function (req, res, next) {
     'use strict';
@@ -201,17 +203,14 @@ router.put('/:proc_id/steps/:step_id', function (req, res, next) {
         next(err);
     }
 });
-
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {delete} /v1/repo/proc/:proc_id/steps/:step_id delete step
+ * @apiVersion 0.0.1
+ * @apiName DelStep
+ * @apiGroup Repo-Proc
+ * @apiParam {ObjectId} proc_id Unique identifier of the process.
+ * @apiParam {ObjectId} step_id Unique identifier of the step.
+ * @apiDescription Delete a step of a process.
  */
 router.delete('/:proc_id/steps/:step_id', function (req, res, next) {
     'use strict';
@@ -241,15 +240,12 @@ router.delete('/:proc_id/steps/:step_id', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {delete} /v1/repo/proc/:proc_id get process
+ * @apiVersion 0.0.1
+ * @apiName GetProc
+ * @apiGroup Repo-Proc
+ * @apiParam {ObjectId} proc_id Unique identifier of the process.
+ * @apiDescription Get process architecture fermat.
  */
 router.get('/:proc_id', function (req, res, next) {
     'use strict';
@@ -272,15 +268,17 @@ router.get('/:proc_id', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {put} /v1/repo/proc/:proc_id update process
+ * @apiVersion 0.0.1
+ * @apiName UptProc
+ * @apiGroup Repo-Proc
+ * @apiParam {ObjectId} proc_id Unique identifier of the process.
+ * @apiParam {Object} platfrm Platform data.
+ * @apiParam {String} name Process name.
+ * @apiParam {String} desc Process description.
+ * @apiParam {String} prev Id of the previous process.
+ * @apiParam {String} next Id the next process.
+ * @apiDescription Update process architecture fermat.
  */
 router.put('/:proc_id', function (req, res, next) {
     'use strict';
@@ -299,9 +297,17 @@ router.put('/:proc_id', function (req, res, next) {
             if (error) {
                 res.status(200).send(error);
             } else {
-                res.status(200).send(result);
+                if (result) {
+                    res.status(200).send(result);
+
+                } else {
+                    res.status(404).send({
+                        message: "NOT FOUND"
+                    });
+                }
             }
             release(req);
+            
         });
          } 
     } catch (err) {
@@ -309,15 +315,12 @@ router.put('/:proc_id', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {put} /v1/repo/proc/:proc_id delete process
+ * @apiVersion 0.0.1
+ * @apiName DelProc
+ * @apiGroup Repo-Proc
+ * @apiParam {ObjectId} proc_id Unique identifier of the process.
+ * @apiDescription Update process architecture fermat.
  */
 router.delete('/:proc_id', function (req, res, next) {
     'use strict';

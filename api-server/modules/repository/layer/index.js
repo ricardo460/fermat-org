@@ -261,29 +261,35 @@ exports.delLayerById = function (_id, callback) {
     try {
         var delLayer = function () {
             layerSrv.findLayerById(_id, function (err_lay, res_lay) {
+
                 if (err_lay) {
                     return callback(err_lay, null);
+                } else if (res_lay) {
+                    // ordering function
+                    swapOrder('delete', res_lay.order, null, function (err_sld, res_sld) {
+                        if (err_sld) {
+                            return callback(err_sld, null);
+                        } else {
+                            layerSrv.delLayerById(res_lay._id, function (err_del, res_del) {
+                                if (err_del) {
+                                    return callback(err_del, null);
+                                }
+                                return callback(null, res_lay);
+                            });
+                        }
+                    }); 
+                }else{
+                    return callback(null, null);
                 }
-                // ordering function
-                swapOrder('delete', res_lay.order, null, function (err_sld, res_sld) {
-                    if (err_sld) {
-                        return callback(err_sld, null);
-                    } else {
-                        layerSrv.delLayerById(res_lay._id, function (err_del, res_del) {
-                            if (err_del) {
-                                return callback(err_del, null);
-                            }
-                            return callback(null, res_lay);
-                        });
-                    }
-                });
+               
             });
         };
         compMod.findCompsByLayerId(_id, function (err_comp, res_comps) {
             if (err_comp) {
                 return callback(err_comp, null);
             }
-            if (res_comps) {
+            if (res_comps.length > 0) {
+
                 var _comps = res_comps;
                 var loopDelComps = function () {
                     if (_comps.length <= 0) {

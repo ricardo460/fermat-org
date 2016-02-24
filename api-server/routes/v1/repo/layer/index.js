@@ -60,15 +60,15 @@ var release = function (req) {
  */
 router.use(lock);
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {post} /v1/repo/layer/ add layer
+ * @apiVersion 0.0.1
+ * @apiName AddLayer
+ * @apiParam {String} name    Layer name.
+ * @apiParam {String} lang    xxxxx.
+ * @apiParam {String} suprlay    xxxxx.
+ * @apiParam {Number} order Indicates the position where the layer this with respect to other.
+ * @apiGroup Repo-Layer
+ * @apiDescription Add a layer to the architecture of fermat.
  */
 router.post('/', function (req, res, next) {
     'use strict';
@@ -93,15 +93,11 @@ router.post('/', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/repo/layer/ get list layers
+ * @apiVersion 0.0.1
+ * @apiName ListLayers
+ * @apiGroup Repo-Layer
+ * @apiDescription get a list of layer to the architecture of fermat.
  */
 router.get('/', function (req, res, next) {
     'use strict';
@@ -118,15 +114,12 @@ router.get('/', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {get} /v1/repo/layer/:layer_id get layer
+ * @apiVersion 0.0.1
+ * @apiName GetLay
+ * @apiGroup Repo-Layer
+ * @apiParam {ObjectId} layer_id Unique identifier of the layer.
+ * @apiDescription Get a layer to the architecture of fermat.
  */
 router.get('/:layer_id', function (req, res, next) {
     'use strict';
@@ -150,26 +143,27 @@ router.get('/:layer_id', function (req, res, next) {
     }
 });
 /**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
+ * @api {put} /v1/repo/layer/:layer_id update layer
+ * @apiVersion 0.0.1
+ * @apiName UptLay
+ * @apiGroup Repo-Layer
+ * @apiParam {ObjectId} layer_id Represents the identifier of the layer
+* @apiParam {String} name    Layer name.
+ * @apiParam {String} lang    xxxxx.
+ * @apiParam {String} suprlay    xxxxx.
+ * @apiParam {Number} order Indicates the position where the layer this with respect to other.
+ * @apiDescription Update layer to the architecture of fermat.
  */
 router.put('/:layer_id', function (req, res, next) {
     'use strict';
     try {
 
 	    if (!security.isValidData(req.params.layer_id) || //
-            !security.isValidData(req.body.name) || //
-            !security.isValidData(req.body.lang) || //
-            !security.isValidData(req.body.suprlay) || //
-            !security.isValidData(req.body.order)) {
-      
+            !security.ifExistIsValidData(req.body.name) || //
+            !security.ifExistIsValidData (req.body.lang) ||
+            !security.ifExistIsValidData (req.body.suprlay) ||
+            !security.ifExistIsValidData(req.body.order)) {
+
           res.status(412).send({"message": "missing or invalid data"});
         } else {
             repMod.uptLay(req, function (error, result) {
@@ -195,10 +189,55 @@ router.put('/:layer_id', function (req, res, next) {
  * @param  {[type]} next  [description]
  *
  * @return {[type]} [description]
+ router.delete('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
+    'use strict';
+    try {
+        if (!security.isValidData(req.params.comp_id) || //
+            !security.isValidData(req.params.comp_dev_id) //
+        ) {
+            res.status(412).send({
+                "message": "missing or invalid data"
+            });
+        } else {
+            repMod.delCompDev(req, function (error, result) {
+                if (error) {
+                    res.status(200).send(error);
+                } else {
+                    if (result) {
+                        res.status(204).send();
+                    } else {
+                        res.status(404).send({
+                            message: "NOT FOUND"
+                        });
+                    }
+                }
+                release(req);
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+});
+
+req.params.layer_id,
+ */
+
+/**
+ * @api {delete} /v1/repo/layer/:layer_id delete layer
+ * @apiVersion 0.0.1
+ * @apiName DelLay
+ * @apiGroup Repo-Layer
+ * @apiParam {ObjectId} layer_id Represents the identifier of the layer
+ * @apiDescription Delete layer to the architecture of fermat.
  */
 router.delete('/:layer_id', function (req, res, next) {
     'use strict';
     try {
+         if (!security.isValidData(req.params.layer_id) )  {
+            res.status(412).send({
+                "message": "missing or invalid data"
+            });
+        } else {
         repMod.delLay(req, function (error, result) {
             if (error) {
                 res.status(200).send(error);
@@ -213,6 +252,7 @@ router.delete('/:layer_id', function (req, res, next) {
             }
             release(req);
         });
+        }
     } catch (err) {
         next(err);
     }

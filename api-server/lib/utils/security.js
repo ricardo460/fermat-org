@@ -24,6 +24,20 @@ var isValidDate = function (date) {
     is_valid = regex.test(date) && date.length >= 20;
     return is_valid;
 };
+
+/**
+ * [ifExistIsValidData description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+var ifExistIsValidData = function (data) {
+    if(typeof data == "undefined" ||
+        (typeof data != "undefined" && isValidData(data)))
+        {
+            return 1;
+    } else return 0;
+};
+
 /**
  * [isValidData description]
  * @param  {[type]}  data [description]
@@ -35,6 +49,68 @@ var isValidData = function (data) {
         return 0;
     } else return 1;
 };
+
+/**
+ * [isValidTypeComp description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+var isValidTypeComp = function (data) {
+    if (data === 'android' || data === 'library' || data === 'addon' || data === 'plugin') {
+        //console.log('invalid data');
+        return 1;
+    } else return 0;
+};
+
+/**
+ * [isValidLifeCicle description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+var isValidLifeCicle = function (data) {
+    if (data == 'concept' || data === 'development' || data === 'qa' || data === 'production') {
+        //console.log('invalid data');
+        return 1;
+    } else return 0;
+};
+
+/**
+ * [ifExistIsValidData description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+var ifExistIsValidLifeCicle = function (data) {
+    if(typeof data == "undefined" ||
+        (typeof data != "undefined" && isValidLifeCicle(data)))
+        {
+            return 1;
+    } else return 0;
+};
+
+/**
+ * [isValidDifficulty description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+var isValidDifficulty = function (data) {
+    if (data == parseInt(data, 10) && parseInt(data) >= 0 && parseInt(data) <= 10 ) {
+        return 1;
+    } else return 0;
+};
+
+/**
+ * [ifExistIsValidData description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+var ifExistIsValidDifficulty = function (data) {
+    if(typeof data == "undefined" ||
+        (typeof data != "undefined" && isValidDifficulty(data)))
+        {
+            return 1;
+    } else return 0;
+};
+
 /**
  * [isObjectID description]
  * @param  {[type]}  str [description]
@@ -164,6 +240,62 @@ exports.apiVersion = function (api_version) {
 exports.isValidData = function (data) {
     return isValidData(data);
 };
+
+/**
+ * [ifExistIsValidData description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+exports.ifExistIsValidData = function (data) {
+    return ifExistIsValidData(data);
+};
+
+/**
+ * [ifExistIsValidDifficulty description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+exports.ifExistIsValidDifficulty = function (data) {
+    return ifExistIsValidDifficulty(data);
+};
+
+/**
+ * [ifExistIsValidLifeCicle description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+exports.ifExistIsValidLifeCicle = function (data) {
+    return ifExistIsValidLifeCicle(data);
+};
+
+
+/**
+ * [isValidTypeComp description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+exports.isValidTypeComp = function (data) {
+    return isValidTypeComp(data);
+};
+
+/**
+ * [isValidLifeCicle description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+exports.isValidLifeCicle = function (data) {
+    return isValidLifeCicle(data);
+};
+
+/**
+ * [isValidDifficulty description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+exports.isValidDifficulty = function (data) {
+    return isValidDifficulty(data);
+};
+
 /**
  * [isEmail description]
  * @param  {[type]}  email [description]
