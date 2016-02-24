@@ -678,25 +678,16 @@ function FermatEdit() {
                     
                     for(var i = 0; i < DATA_USER.length; i++) {
                         
-                        var brk = this.value.find(
-                            function(x) {
-                                if (x.dev.usrnm == DATA_USER[i].usrnm)
-                                    return true;
-                                else
-                                    return false;
-                            } 
-                        );
-                        
                         var filt = DATA_USER[i].usrnm.search(finder.value);
                         
-                        if(!brk && (filt != -1)) {
+                        if(filt != -1) {
                         
                             var img_src;
 
                             if(DATA_USER[i].avatar_url)
                                 img_src = DATA_USER[i].avatar_url;
                             else
-                                img_src = "images/modal/person.png";
+                                img_src = "images/modal/avatar.png";
 
                             var usr_html  = '<div class="dev-fermat-edit">'+
                                                 '<div>'+
@@ -740,67 +731,60 @@ function FermatEdit() {
                     
                     var cont_list = document.getElementById("cont-devs-actives");
                     cont_list.innerHTML = "";
-
-                    for(var i = 0; i < DATA_USER.length; i++) {
+                    
+                    for(var i = 0; i < this.value.length; i++) {
                         
-                        var brk = this.value.find(
-                            function(x) {
-                                if (x.dev.usrnm == DATA_USER[i].usrnm)
-                                    return true;
-                                else
-                                    return false;
-                            }
-                        );
+                        var img_src;
                         
-                        if(brk) {
+                        if(this.value[i].dev.avatar_url)
+                            img_src = this.value[i].dev.avatar_url;
+                        else
+                            img_src = "images/modal/avatar.png"
                         
-                            var img_src;
+                        var dev_html = `
 
-                            if(DATA_USER[i].avatar_url)
-                                img_src = DATA_USER[i].avatar_url;
-                            else
-                                img_src = "images/modal/person.png";
+<div data-expand="false" data-usrid="` + this.value[i].dev.usrnm + `" class="dev-fermat-edit dev-active">
+    <div>
+        <img crossorigin="anonymous" src="` + img_src + `">
+        <label>` + this.value[i].dev.usrnm + `</label>
+        <button data-usrid=` + i + ` class="rem_btn"></button>
+        <div class="dev-data">
+            <table width="100%">
+                <tr>
+                    <td align="right">Scope</td>
+                    <td>
+                        <select class="select-scope">
+                            <option>implementation</option>
+                            <option>architect</option>
+                            <option>design</option>
+                            <option>unit-tests</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">Role</td>
+                    <td>
+                        <select class="select-role">
+                            <option>maintainer</option>
+                            <option>author</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">%</td>
+                    <td><input class="input-prcnt" type="text" value="` + this.value[i].percnt + `"></input></td>
+                </tr>
 
-                            var usr_html  = '<div data-expand="false" data-usrid="'+DATA_USER[i].usrnm+'" class="dev-fermat-edit dev-active">'+
-                                                '<div>'+
-                                                    '<img crossorigin="anonymous" class="" src="'+img_src+'">'+
-                                                    '<label>'+DATA_USER[i].usrnm+'</label>'+
-                                                    '<button data-usrid="'+DATA_USER[i].usrnm+'" class="rem_btn"></button>'+
-                                                    '<div class="dev-data">'+
-                                                        `
-                                                        <table width="100%">
-                                                            <tr>
-                                                                <td align="right">Scope</td>
-                                                                <td>
-                                                                    <select class="select-scope" > <option>implementation</option>
-                                                                    <option>architect</option>
-                                                                    <option>design</option>
-                                                                    <option>unit-tests</option>
-                                                                    </select>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td align="right">Role</td>
-                                                                <td>
-                                                                    <select class="select-role" > <option>maintainer</option>
-                                                                        <option>author</option>
-                                                                    </select>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td align="right">%</td>
-                                                                <td><input class="input-prcnt"  type="text"></input></td>
-                                                            </tr>
-                                                            
-                                                        </table>
-                                                        `+
-                                                    '</div>'+
-                                                '</div>'+
-                                            '</div>';
-
-                            cont_list.innerHTML += usr_html;
-                            
-                        }
+            </table>
+        </div>
+    </div>
+</div>
+`
+                        ;
+                        
+                        cont_list.innerHTML += dev_html;
+                        
+                        
                     }
                     
                     var list_btn = document.getElementsByClassName("rem_btn");
@@ -812,12 +796,7 @@ function FermatEdit() {
                             
                             var self = this;
                             var modal = document.getElementById("modal-devs");
-                            modal.value = modal.value.filter(function(x) {
-                                
-                                if(x.dev.usrnm != self.dataset.usrid)
-                                    return x;
-                                
-                            })
+                            modal.value.splice(this.dataset.usrid, 1);
                             modal.updateModal();
 
                         };
