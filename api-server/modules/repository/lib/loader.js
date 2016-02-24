@@ -16,7 +16,7 @@ var devMod = require('../developer');
 var Cache = require('../../../lib/route-cache');
 var env = process.env.NODE_ENV || 'development';
 var USER_AGENT = (env === 'development') ? 'fuelusumar' : 'fuelusumar';
-var TOKEN = (env === 'development') ? '8c28a6c34e2951091d28345af93747b1cf95d702' : '82453641896888fe558d94d4e1b994e45c0d7832'; // fuelusumar
+var TOKEN = (env === 'development') ? '82f697b59bc346302d21e2a10b70ca4c6e46935b' : '82f697b59bc346302d21e2a10b70ca4c6e46935b'; // fuelusumar
 /**
  * [getRepoDir description]
  *
@@ -990,11 +990,16 @@ var updateDevs = function (callback) {
 							winston.log('error', err_usr.message, err_usr);
 							loopDevs(++i);
 						} else if (res_usr) {
-							devMod.insOrUpdDev(_dev.usrnm, res_usr.email || null, res_usr.name || null, null, res_usr.location || null, res_usr.avatar_url || null, res_usr.html_url || null, res_usr.bio || null, function (err_upd, res_upd) {
-								if (err_upd) {
-									winston.log('error', err_upd.message, err_upd);
-								}
-							});
+							if (res_usr.message && res_usr.message == 'Bad credentials') {
+								err_upd = new Error(res_usr.message);
+								winston.log('error', err_upd.message, err_upd);
+							} else {
+								devMod.insOrUpdDev(_dev.usrnm, res_usr.email || null, res_usr.name || null, null, res_usr.location || null, res_usr.avatar_url || null, res_usr.html_url || null, res_usr.bio || null, function (err_upd, res_upd) {
+									if (err_upd) {
+										winston.log('error', err_upd.message, err_upd);
+									}
+								});
+							}
 						}
 					});
 					loopDevs(++i);
