@@ -60,7 +60,7 @@ var release = function (req) {
  */
 router.use(lock);
 /**
- * @api {post} /v1/repo/layer add layer
+ * @api {post} /v1/repo/layers add layer
  * @apiVersion 0.0.1
  * @apiName AddLayer
  * @apiParam {String} name    Layer name.
@@ -93,7 +93,7 @@ router.post('/', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/layer get list layers
+ * @api {get} /v1/repo/layers get list layers
  * @apiVersion 0.0.1
  * @apiName ListLayers
  * @apiGroup Repo-Layer
@@ -114,7 +114,7 @@ router.get('/', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/layer/:layer_id get layer
+ * @api {get} /v1/repo/layers/:layer_id get layer
  * @apiVersion 0.0.1
  * @apiName GetLay
  * @apiGroup Repo-Layer
@@ -143,7 +143,7 @@ router.get('/:layer_id', function (req, res, next) {
     }
 });
 /**
- * @api {put} /v1/repo/layer/:layer_id update layer
+ * @api {put} /v1/repo/layers/:layer_id update layer
  * @apiVersion 0.0.1
  * @apiName UptLay
  * @apiGroup Repo-Layer
@@ -223,7 +223,7 @@ req.params.layer_id,
  */
 
 /**
- * @api {delete} /v1/repo/layer/:layer_id delete layer
+ * @api {delete} /v1/repo/layers/:layer_id delete layer
  * @apiVersion 0.0.1
  * @apiName DelLay
  * @apiGroup Repo-Layer

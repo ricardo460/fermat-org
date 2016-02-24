@@ -59,7 +59,7 @@ var release = function (req) {
  */
 router.use(lock);
 /**
- * @api {post} /v1/repo/platfrm add platform
+ * @api {post} /v1/repo/platfrms add platform
  * @apiVersion 0.0.1
  * @apiName AddPlatform
  * @apiParam {String} code    xxxxx.
@@ -91,7 +91,7 @@ router.post('/', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/platfrm list platforms
+ * @api {get} /v1/repo/platfrms list platforms
  * @apiVersion 0.0.1
  * @apiName ListPlatforms
  * @apiGroup Repo-Platform
@@ -114,7 +114,7 @@ router.get('/', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/platfrm/:platfrm_id get platform
+ * @api {get} /v1/repo/platfrms/:platfrm_id get platform
  * @apiVersion 0.0.1
  * @apiName GetPlatform
  * @apiGroup Repo-Platform
@@ -142,7 +142,7 @@ router.get('/:platfrm_id', function (req, res, next) {
     }
 });
 /**
- * @api {put} /v1/repo/platfrm/:platfrm_id update platform
+ * @api {put} /v1/repo/platfrms/:platfrm_id update platform
  * @apiVersion 0.0.1
  * @apiName UptPltf
  * @apiGroup Repo-Platform
@@ -178,7 +178,7 @@ router.put('/:platfrm_id', function (req, res, next) {
     }
 });
 /**
- * @api {delete} /v1/repo/platfrm/:platfrm_id delete platform
+ * @api {delete} /v1/repo/platfrms/:platfrm_id delete platform
  * @apiVersion 0.0.1
  * @apiName DelPltf
  * @apiGroup Repo-Platform

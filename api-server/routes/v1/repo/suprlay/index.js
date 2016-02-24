@@ -59,7 +59,7 @@ var release = function (req) {
  */
 router.use(lock);
 /**
- * @api {post} /v1/repo/suprlay add super layer
+ * @api {post} /v1/repo/suprlays add super layer
  * @apiVersion 0.0.1
  * @apiName AddSuprLay
  * @apiGroup Repo-SuprLay
@@ -91,7 +91,7 @@ router.post('/', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/suprlay list super layers
+ * @api {get} /v1/repo/suprlays list super layers
  * @apiVersion 0.0.1
  * @apiName ListSuprLays
  * @apiGroup Repo-SuprLay
@@ -112,7 +112,7 @@ router.get('/', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/suprlay/:suprlay_id get super layer
+ * @api {get} /v1/repo/suprlays/:suprlay_id get super layer
  * @apiVersion 0.0.1
  * @apiName GetSprlay
  * @apiGroup Repo-SuprLay
@@ -140,7 +140,7 @@ router.get('/:suprlay_id', function (req, res, next) {
     }
 });
 /**
- * @api {put} /v1/repo/suprlay/:suprlay_id update super layer
+ * @api {put} /v1/repo/suprlays/:suprlay_id update super layer
  * @apiVersion 0.0.1
  * @apiName UptSprlay
  * @apiGroup Repo-SuprLay
@@ -184,7 +184,7 @@ router.put('/:suprlay_id', function (req, res, next) {
     }
 });
 /**
- * @api {delete} /v1/repo/suprlay/:suprlay_id delete super layer
+ * @api {delete} /v1/repo/suprlays/:suprlay_id delete super layer
  * @apiVersion 0.0.1
  * @apiName DelSprlay
  * @apiGroup Repo-SuprLay
