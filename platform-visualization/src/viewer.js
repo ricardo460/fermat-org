@@ -155,17 +155,6 @@ function init() {
     //initMenu();
 
     setTimeout(function() { initPage(); }, 500);
-    
-    setTimeout(function (){
-        if(actualView === 'home'){
-            helper.showH('navigation');
-            helper.showH('zoom');
-            helper.showH('slide');
-            helper.showH('return');
-            toggleHelp = true;
-        }
-    }, 15000);
-    
 
     /*setTimeout(function() {
         var loader = new Loader();
