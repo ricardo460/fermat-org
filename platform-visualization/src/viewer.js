@@ -8,6 +8,7 @@ var tilesQtty = [],
     stats = null,
     headersUp = false,
     currentRender = "start";
+    toggleHelp = false;
 //Class
     tileManager = new TileManager(),
     helper = new Helper(),
@@ -156,6 +157,17 @@ function init() {
 
     setTimeout(function() { initPage(); }, 500);
     
+    setTimeout(function (){
+        if(actualView === 'home'){
+            helper.showH('navigation');
+            helper.showH('zoom');
+            helper.showH('slide');
+            helper.showH('return');
+            toggleHelp = true;
+        }
+    }, 15000);
+    
+
     /*setTimeout(function() {
         var loader = new Loader();
         loader.findThemAll();
