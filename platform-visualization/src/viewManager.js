@@ -125,6 +125,7 @@ function ViewManager() {
                             window.helper.hide('zoom', 1000, true);
                             window.helper.hide('slide', 1000, true);
                             window.helper.hide('return', 1000, true);
+                            window.toggleHelp = false;
                         }
                     };
                     break;
