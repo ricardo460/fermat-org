@@ -272,6 +272,10 @@ function FermatEdit() {
         
         if(tile.devs !== undefined)
             document.getElementById('modal-devs').value = tile.devs;
+        
+        if(tile.description !== undefined)
+            document.getElementById('modal-desc-textarea').value = tile.description;
+        
     }
 
     function createElement() {
@@ -627,7 +631,7 @@ function FermatEdit() {
             button.className = 'actionButton edit-Fermat';
             button.style.zIndex = 10;
             button.style.opacity = 0;
-            button.value = "Autores";
+            button.value = "Authors";
             button.style.marginLeft = "5px";
 
             object = {
@@ -665,7 +669,7 @@ function FermatEdit() {
                         '</div>'+
                         '<div id="buttons" >'+
                             '<button id="modal-close-button" >Cancel</button>'+
-                            '<button id="modal-accept-button" style="border-left: 2px solid #00b498;">Aceptar</button>'+
+                            '<button id="modal-accept-button" style="border-left: 2px solid #00b498;">Accept</button>'+
                         '</div>'+
                     '</div>';
                 
@@ -871,6 +875,8 @@ function FermatEdit() {
                 var modal = document.getElementById("modal-devs");
                 modal.dataset.state = "show";
                 modal.updateModal();
+                modal.oldValue = eval(modal.value.toSource());
+                
                 var area = document.createElement("div");
                 area.id = "hidden-area";
                 document.body.appendChild(area);
@@ -882,8 +888,11 @@ function FermatEdit() {
                 
                 var modal = document.getElementById("modal-devs");
                 modal.dataset.state = "hidden";
+                modal.value = eval(modal.oldValue.toSource());
+                
                 var area = document.getElementById("hidden-area");
                 window.helper.hide(area, 500);
+                changeTexture();
                 
             });
             
@@ -914,10 +923,13 @@ function FermatEdit() {
                 
                 var area = document.getElementById("hidden-area");
                 window.helper.hide(area, 500);
+                changeTexture();
                 
             });
 
             window.helper.show(button, 1000);
+            changeTexture();
+            
         }
 
         function sesionDifficulty(){
@@ -958,41 +970,98 @@ function FermatEdit() {
         }
 
         function sesionRepoDir(){
-
-            var id = 'label-Maintainer'; text = 'Enter Maintainer : '; type = 'label';
-
-            createField(id, text, 15, type, 2);
-
+            
             var idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
 
             var object = {
-                id : "imput-Maintainer",
-                text : "textfield"
+                id : "button-desc",
+                text : "Description"
               };
 
             objects.idFields.maintainer = object.id;
 
-            var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
+            var input = $('<input />', {"id" : object.id, "type" : "button", "text" : object.text });
 
-            $("#"+objects.row2.div).append(imput);
+            $("#"+objects.row2.div).append(input);
 
             var button = document.getElementById(object.id);
-
-            var sucesorButton = document.getElementById(idSucesor);
-                  
-            button.className = 'edit-Fermat';
-            button.placeholder = 'Github User';    
+            var button = document.getElementById(object.id);
+            
+            button.className = 'actionButton edit-Fermat';
+            button.value = "Description"
+            button.style.marginLeft = "5px";
             button.style.zIndex = 10;
             button.style.opacity = 0;
-
-            window.helper.show(button, 1000);
-
+            
             objects.row2.buttons.push(object);
 
-            button.addEventListener('blur', function() {
+            object = {
+                id : "modal-desc",
+                text : "modal"
+            };
 
-                changeTexture();
-            });        
+            objects.row2.buttons.push(object);
+            
+
+            window.helper.show(button, 1000);
+            
+            if(!document.getElementById("modal-desc")) {
+                
+                var modal = document.createElement("div");
+                modal.id = "modal-desc";
+                modal.style.top = (window.innerHeight / 4) + "px" ;
+                modal.dataset.state = "hidden";
+                
+                modal.innerHTML = `
+                        <label>Description:</label>
+
+                        <textarea id="modal-desc-textarea" rows="12"></textarea>
+
+                        <div>
+                            <button id="modal-desc-cancel">Cancel</button>
+                            <button id="modal-desc-accept">Accept</button>
+                        </div>`;
+                
+                
+                
+                document.body.appendChild(modal);
+            }
+
+
+            button.addEventListener('click', function() {
+                
+                var modal = document.getElementById("modal-desc");
+                modal.dataset.state = "show";
+                
+                modal.oldValue = document.getElementById("modal-desc-textarea").value;
+                
+                var area = document.createElement("div");
+                area.id = "hidden-area";
+                document.body.appendChild(area);
+                window.helper.show(area, 1000);
+                
+            });
+            
+            document.getElementById("modal-desc-cancel").onclick = function() {
+                
+                var modal = document.getElementById("modal-desc");
+                modal.dataset.state = "hidden";
+                document.getElementById("modal-desc-textarea").value = modal.oldValue;
+                
+                var area = document.getElementById("hidden-area");
+                window.helper.hide(area, 500);
+                
+            };
+            
+            document.getElementById("modal-desc-accept").addEventListener("click", function() {
+                
+                var modal = document.getElementById("modal-desc");
+                modal.dataset.state = "hidden";
+                
+                var area = document.getElementById("hidden-area");
+                window.helper.hide(area, 500);
+                
+            });
 
         }
 
@@ -1600,6 +1669,7 @@ function FermatEdit() {
         table.superLayer = superLayer;
         
         table.devs = document.getElementById("modal-devs").value;
+        table.description = document.getElementById("modal-desc-textarea").value;
 
         //table.devs = DATA_DEVS_TEST;
 
