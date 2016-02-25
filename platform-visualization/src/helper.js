@@ -14,14 +14,16 @@ function Helper() {
         var dur = duration || 1000,
             el = element;
 
-        if (typeof(el) === "string") {
+        if(typeof(el) === "string")
             el = document.getElementById(element);
-        }
 
         if(el) {
             $(el).fadeTo(duration, 0, function() {
-                if(keep)
-                    el.style.display = 'none';
+                if(keep) {
+                    el.style.visibility = 'hidden';
+                    el.style.opacity = 0;
+                    el.style.transition = 'visibility 0s 2s, opacity 2s linear';
+                }
                 else
                     $(el).remove();
 
@@ -32,11 +34,28 @@ function Helper() {
 
     };
 
+    this.showHelpText = function(element) {
+
+      var el = element;
+
+      if(typeof(el) === "string")
+          el = document.getElementById(element);
+
+      if(el) {
+          el.style.visibility = 'visible';
+          el.style.opacity = 1;
+          el.style.transition = 'opacity 2s linear';
+      }
+    }
+
     this.hideButtons = function(){
 
-        if( $('#developerButton') != null ) window.helper.hide($('#developerButton'), 1000);
-        if( $('#showFlows') != null ) window.helper.hide($('#showFlows'), 1000);
-        if( $('#showScreenshots') != null ) window.helper.hide($('#showScreenshots'), 1000);        
+        if($('#developerButton') != null) 
+          window.helper.hide($('#developerButton'), 1000);
+        if($('#showFlows') != null) 
+          window.helper.hide($('#showFlows'), 1000);
+        if($('#showScreenshots') != null) 
+          window.helper.hide($('#showScreenshots'), 1000);        
     };
     
     /**
@@ -50,13 +69,12 @@ function Helper() {
         
         duration = duration || 1000;
 
-        if (typeof(element) === "string") {
+        if(typeof(element) === "string")
             element = document.getElementById(element);
-        }
 
         $(element).fadeTo(duration, 1, function() {
                 $(element).show();
-            });
+        });
     };
     
     /**
@@ -97,7 +115,10 @@ function Helper() {
         new TWEEN.Tween(object.material)
             .to({opacity : 0}, duration)
             .onUpdate(function() { this.needsUpdate = true; })
-            .onComplete(function() { if(!keep) window.scene.remove(object); })
+            .onComplete(function() { 
+              if(!keep) 
+                window.scene.remove(object); 
+            })
             .start();
     };
 
@@ -125,7 +146,8 @@ function Helper() {
      */
     this.parseDate = function(date) {
 
-        if (date == null) return null;
+        if(date == null)
+          return null;
 
         var parts = date.split('-');
 
@@ -142,8 +164,9 @@ function Helper() {
         var words = string.split(" ");
         var result = "";
 
-        for (var i = 0; i < words.length; i++)
+        for(var i = 0; i < words.length; i++){
             result += words[i].charAt(0).toUpperCase() + words[i].slice(1) + " ";
+        }
 
         return result.trim();
     };
@@ -158,22 +181,25 @@ function Helper() {
         var words = pluginName.split(" ");
         var code = "";
 
-        if (words.length == 1) { //if N = 1, use whole word or 3 first letters
+        if(words.length == 1) { //if N = 1, use whole word or 3 first letters
 
-            if (words[0].length <= 4)
+            if(words[0].length <= 4)
                 code = this.capFirstLetter(words[0]);
             else
                 code = this.capFirstLetter(words[0].slice(0, 3));
-        } else if (words.length == 2) { //if N = 2 use first cap letter, and second letter
+        } 
+        else if(words.length == 2) { //if N = 2 use first cap letter, and second letter
 
             code += words[0].charAt(0).toUpperCase() + words[0].charAt(1);
             code += words[1].charAt(0).toUpperCase() + words[1].charAt(1);
-        } else { //if N => 3 use the N (up to 4) letters caps
+        } 
+        else { //if N => 3 use the N (up to 4) letters caps
 
             var max = (words.length < 4) ? words.length : 4;
 
-            for (var i = 0; i < max; i++)
+            for(var i = 0; i < max; i++){
                 code += words[i].charAt(0).toUpperCase();
+            }
         }
 
         return code;
@@ -193,12 +219,12 @@ function Helper() {
             _layer = item.layer ? item.layer.toLowerCase().split(' ').join('_') : null,
             _name = item.name ? item.name.toLowerCase().split(' ').join('-') : null;
 
-        if (_group && _type && _layer && _name) {
+        if(_group && _type && _layer && _name) {
             return _group + "/" + _type + "/" + _layer + "/" +
                 _root + "-" + _group.split('_').join('-').toLowerCase() + "-" + _type.split('_').join('-') + "-" + _layer.split('_').join('-') + "-" + _name + "-bitdubai";
-        } else {
+        } 
+        else
             return null;
-        }
     };
     
     /**
@@ -328,7 +354,7 @@ function Helper() {
 
         xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
 
-          if (!xhr) {
+          if(!xhr) {
             window.alert('CORS not supported');
             return;
           }
@@ -353,15 +379,14 @@ function Helper() {
 
             xhr.send(data);
         }
-        else{
+        else
             xhr.send();
-        }
 
         function createCORSRequest(url, method) {
 
             var xhr = new XMLHttpRequest();
 
-            if ("withCredentials" in xhr) 
+            if("withCredentials" in xhr) 
                 xhr.open(method, url, true);
             else 
                 xhr = null;
@@ -479,14 +504,13 @@ function Helper() {
               var testLine = line + words[n] + ' ';
               var metrics = context.measureText(testLine);
               var testWidth = metrics.width;
-              if (testWidth > maxWidth && n > 0) {
+              if(testWidth > maxWidth && n > 0) {
                 context.fillText(line, x, y);
                 line = words[n] + ' ';
                 y += lineHeight;
               }
-              else {
+              else
                 line = testLine;
-              }
             }
             context.fillText(line, x, y);
 
@@ -512,7 +536,6 @@ function Helper() {
         if(components.length === 3) {
         
             for(var i = 0; i < window.tilesQtty.length; i++){
-
 
                 var tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
         
@@ -561,12 +584,10 @@ function Helper() {
         
         var valid = true;
         
-        if(!vector) {
+        if(!vector)
             valid = false;
-        }
-        else if(isNaN(vector.x) || isNaN(vector.y) || isNaN(vector.z)) {
+        else if(isNaN(vector.x) || isNaN(vector.y) || isNaN(vector.z))
             valid = false;
-        }
         
         return valid;
     };
@@ -647,8 +668,9 @@ function Helper() {
 
         var count = 0;
 
-        for(var i in object)
-            count++; 
+        for(var i in object){
+            count++;
+        } 
 
         return count;
     };

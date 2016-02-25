@@ -45,7 +45,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
             window.camera.setFocus(camTarget, new THREE.Vector4(0, -2500, 9000, 1), duration);
 
-        for (var i = 0; i < objects.length ; i++) {
+        for(var i = 0; i < objects.length ; i++) {
                 if(id !== i)
                     letAloneHeader(objects[i]);
             }
@@ -69,7 +69,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
         var target;
 
-        var animate = function (object, target, dur) {
+        var animate = function(object, target, dur) {
 
             new TWEEN.Tween(object.position)
                 .to({
@@ -78,7 +78,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                     z: target.z
                 }, dur)
                 .easing(TWEEN.Easing.Exponential.InOut)
-                .onComplete(function () {
+                .onComplete(function() {
                     object.userData.flying = false;
                 })
                 .start();
@@ -110,9 +110,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
         endY = endY - 300;
 
-        var from = new THREE.Vector3( startX, startY, 0);
+        var from = new THREE.Vector3(startX, startY, 0);
 
-        var to = new THREE.Vector3( endX, endY, 0);
+        var to = new THREE.Vector3(endX, endY, 0);
 
         var direction = to.clone().sub(from);
 
@@ -205,7 +205,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         
         var i, l;
 
-        for (i = 0, l = objects.length; i < l; i++) {
+        for(i = 0, l = objects.length; i < l; i++) {
             new TWEEN.Tween(objects[i].position)
             .to({
                 x : positions.stack[i].position.x,
@@ -232,7 +232,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
         var i, l;
 
-        for (i = 0, l = objects.length; i < l; i++) {
+        for(i = 0, l = objects.length; i < l; i++) {
             new TWEEN.Tween(objects[i].position)
             .to({
                 x : positions.workFlow[i].position.x,
@@ -253,11 +253,11 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      * @author Emmanuel Colina
      * Hide the headers
      */
-    this.hidetransformWorkFlow = function (duration) {
+    this.hidetransformWorkFlow = function(duration) {
         var i, j,
             position;
         
-        for (i = 0; i < objects.length; i++ ) {
+        for(i = 0; i < objects.length; i++) {
             
             position = window.helper.getOutOfScreenPoint(0);
             
@@ -286,7 +286,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             positions.stack.push(obj);
         }
 
-        for (j = 0; j< objects.length; j++) {
+        for(j = 0; j< objects.length; j++) {
             
             //calculando Y
             if(graph.nodes[j].level === 0){
@@ -372,9 +372,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                                             if(positionstart !== 0){
                                                 positions.stack[n].position.x = positions.stack[n].position.x + positionstart;
                                                 for(q = 0; q < objects.length; q++){
-                                                   if(graph.nodes[j-1].id == objects[q].name){
+                                                   if(graph.nodes[j-1].id == objects[q].name)
                                                         positions.stack[n].position.x = positions.stack[n].position.x + positions.stack[q].position.x;//Heredamos la X del padre para construir de ahi una nueva rama y evitar el cruces de ramas
-                                                   }
                                                 } 
                                                 positionstart = positionstart + 5000;
                                                 rootlengthX = dependencies[graph.nodes[j].id].length;
@@ -407,16 +406,16 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         var i, j;
         
         
-        for (i = 0; i < graph.edges.length; i++)
+        for(i = 0; i < graph.edges.length; i++)
         {   
             startX = 0;
             startY = 0;
             endX = 0;
             endY = 0;
             
-            for (j = 0; j < objects.length; j++){
+            for(j = 0; j < objects.length; j++){
                 
-                 if(graph.edges[i].from === objects[j].name){
+                if(graph.edges[i].from === objects[j].name){
                     startX = positions.stack[j].position.x;
                     startY = positions.stack[j].position.y;
                 }
@@ -540,10 +539,10 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      * Shows the headers as a fade
      * @param {Number} duration Milliseconds of fading
      */
-    this.showHeaders = function (duration) {
+    this.showHeaders = function(duration) {
         var i, j;
            
-        for (i = 0; i < objects.length; i++ ) {
+        for(i = 0; i < objects.length; i++) {
 
             new TWEEN.Tween(objects[i].position)
             .to({
@@ -568,11 +567,11 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      * Hides the headers (but donesn't delete them)
      * @param {Number} duration Milliseconds to fade
      */
-    this.hideHeaders = function (duration) {
+    this.hideHeaders = function(duration) {
         var i, j,
             position;
         
-        for (i = 0; i < objects.length; i++ ) {
+        for(i = 0; i < objects.length; i++) {
             
             position = window.helper.getOutOfScreenPoint(0);
             
@@ -606,16 +605,20 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             
         var trace = function(root, parent, _level, _nodes, _edges) {
             
-            if(parent) pending[parent] = true;
+            if(parent) 
+                pending[parent] = true;
             
             var i, l, child,
-                lookup = function(x) { return x.id == child; };
+                lookup = function(x) { 
+                    return x.id == child; 
+                };
 
             for(i = 0, l = root.length; i < l; i++) {
 
                 child = root[i];
 
-                if(_level !== 0) _edges.push({from : parent, to : child});
+                if(_level !== 0) 
+                    _edges.push({from : parent, to : child});
 
                 if($.grep(_nodes, lookup).length === 0)
                 {
@@ -651,7 +654,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         var width, height, group, headerData, objectHeaderInWFlowGroup, slayer, column;
         
         for(group in platforms){
-            if (window.platforms.hasOwnProperty(group) && group !== 'size'){
+            if(window.platforms.hasOwnProperty(group) && group !== 'size'){
                 headerData = window.platforms[group];
                 column = headerData.index;
 
@@ -669,7 +672,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             }  
         }
         for(slayer in superLayers){
-            if (window.superLayers.hasOwnProperty(slayer) && slayer !== 'size'){
+            if(window.superLayers.hasOwnProperty(slayer) && slayer !== 'size'){
                 headerData = window.superLayers[slayer];
 
                 column = headerData.index + 1;
@@ -714,9 +717,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                         actual.push(child);
                     }
                 }
-                else {
+                else
                     dependencies.root.push(child);
-                }
                 
                 dependencies[child] = dependencies[child] || [];
             }
@@ -756,8 +758,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         
         var src, width, height;
             
-        for (group in platforms) {
-            if (window.platforms.hasOwnProperty(group) && group !== 'size') {
+        for(group in platforms) {
+            if(window.platforms.hasOwnProperty(group) && group !== 'size') {
 
                 headerData = window.platforms[group];
                 column = headerData.index;
@@ -787,8 +789,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             }
         }
 
-        for (slayer in superLayers) {
-            if (window.superLayers.hasOwnProperty(slayer) && slayer !== 'size') {
+        for(slayer in superLayers) {
+            if(window.superLayers.hasOwnProperty(slayer) && slayer !== 'size') {
                 
                 headerData = window.superLayers[slayer];
 
@@ -817,6 +819,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 if(window.TABLE[slayer])
                     window.TABLE[slayer].x = object.position.x;
+                
                 positions.table.push(object);
 
                 createChildren(slayer, headerData.dependsOn);

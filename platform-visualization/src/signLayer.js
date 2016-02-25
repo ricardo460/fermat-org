@@ -166,7 +166,7 @@ function SignLayer(){
 		
 		var duration = 3000;
 
-		for (var i = 0, l = objects.length; i < l; i++) {
+		for(var i = 0, l = objects.length; i < l; i++) {
             new TWEEN.Tween(objects[i].position)
             .to({
                 x : positions.target[i].x,
@@ -182,7 +182,7 @@ function SignLayer(){
 
 		var duration = 3000;
             
-        for (var i = 0, l = objects.length; i < l; i++) {
+        for(var i = 0, l = objects.length; i < l; i++) {
         	new TWEEN.Tween(objects[i].position)
             .to({
                 x : positions.lastTarget[i].x,

@@ -22,7 +22,7 @@ function Developer (){
 
             window.camera.setFocus(camTarget, new THREE.Vector4(0, 0, 1000, 1), duration);
 
-            for (var i = 0; i < objectsDevelopers.length ; i++) {
+            for(var i = 0; i < objectsDevelopers.length ; i++) {
                 if(id !== i)
                     letAloneDeveloper(objectsDevelopers[i]);
             }
@@ -46,7 +46,7 @@ function Developer (){
 
         var target;
 
-        var animate = function (object, target, dur) {
+        var animate = function(object, target, dur) {
 
             new TWEEN.Tween(object.position)
                 .to({
@@ -71,23 +71,23 @@ function Developer (){
         var image = new Image();
         var actual = data.shift();
 
-        if (actual.src && actual.src != 'undefined') {
+        if(actual.src && actual.src != 'undefined') {
 
             image.onload = function () {
 
 
-                if (actual.alpha)
+                if(actual.alpha)
                     ctx.globalAlpha = actual.alpha;
 
                 ctx.drawImage(image, actual.x, actual.y, actual.w, actual.h);
-                if (texture)
+                if(texture)
                     texture.needsUpdate = true;
 
                 ctx.globalAlpha = 1;
 
-                if (data.length !== 0) {
+                if(data.length !== 0) {
 
-                    if (data[0].text)
+                    if(data[0].text)
                         drawTextDeveloper(data, ctx, texture);
                     else
                         drawPictureDeveloper(data, ctx, texture);
@@ -95,8 +95,8 @@ function Developer (){
             };
 
             image.onerror = function () {
-                if (data.length !== 0) {
-                    if (data[0].text)
+                if(data.length !== 0) {
+                    if(data[0].text)
                         drawTextDeveloper(data, ctx, texture);
                     else
                         drawPictureDeveloper(data, ctx, texture);
@@ -105,9 +105,10 @@ function Developer (){
 
             image.crossOrigin = "anonymous";
             image.src = actual.src;
-        } else {
-            if (data.length !== 0) {
-                if (data[0].text)
+        } 
+        else {
+            if(data.length !== 0) {
+                if(data[0].text)
                     drawTextDeveloper(data, ctx, texture);
                 else
                     drawPictureDeveloper(data, ctx, texture);
@@ -125,26 +126,26 @@ function Developer (){
 
         var actual = data.shift();
 
-        if (actual.color)
+        if(actual.color)
             ctx.fillStyle = actual.color;
 
         ctx.font = actual.font;
 
-        if (actual.constraint)
-            if (actual.wrap)
+        if(actual.constraint){
+            if(actual.wrap)
                 helper.drawText(actual.text, actual.x, actual.y, ctx, actual.constraint, actual.lineHeight);
             else
                 ctx.fillText(actual.text, actual.x, actual.y, actual.constraint);
+        }
         else
             ctx.fillText(actual.text, actual.x, actual.y);
 
-        if (texture)
+        if(texture)
             texture.needsUpdate = true;
 
         ctx.fillStyle = "#FFFFFF";
 
-        if (data.length !== 0){ 
-
+        if(data.length !== 0){ 
           if(data[0].text)
             drawTextDeveloper(data, ctx, texture); 
           else 
@@ -273,7 +274,7 @@ function Developer (){
      * @param   {object}     developerAuthorEmail email of the developer
      * @author Emmanuel Colina
      */
-	this.createDevelopers = function (){
+	this.createDevelopers = function(){
 
 		var mesh, texture, lastTarget;
         var i = 0;
@@ -324,16 +325,14 @@ function Developer (){
 	    var center = new THREE.Vector3(0, 0, 0);
 	    center = viewManager.translateToSection('developers', center);
 
-	    if (mesh.length === 1) {
-
+	    if(mesh.length === 1)
 	        positionDeveloper.push(center);
-	    }
 
-	    else if (mesh.length === 2) {
+	    else if(mesh.length === 2) {
 
 	        center.x = center.x - 500;
 
-	        for (var k = 0; k < mesh.length; k++) {
+	        for(var k = 0; k < mesh.length; k++) {
 
 	            position = new THREE.Vector3();
 
@@ -346,7 +345,7 @@ function Developer (){
 	        }
 
 	    }
-	    else if (mesh.length > 2) {
+	    else if(mesh.length > 2) {
 
 	        var sqrt, round, column, row, initialY, count, raizC, raizC2;
 	        count = 0;
@@ -382,19 +381,16 @@ function Developer (){
 	                        }
 	                    }
 	                    for(var t = raizC - 1; t >= raizC - count; t--){
-	                        if(mesh.length === t) {
+	                        if(mesh.length === t)
 	                            row = column = sqrt ;
-	                        }
 	                    }
 	                }
-	                if(row !== 0  && column !== 0){
+	                if(row !== 0  && column !== 0)
 	                    break;
-	                }
 	            }
 	        }
-	        else{
+	        else
 	            row = column = Math.sqrt(mesh.length);
-	        }
 
 	        count = 0;
 	        var positionY = center.y - 1500;  
@@ -452,7 +448,7 @@ function Developer (){
 		
 		var duration = 3000;
 
-		for (var i = 0, l = objectsDeveloper.length; i < l; i++) {
+		for(var i = 0, l = objectsDeveloper.length; i < l; i++) {
             new TWEEN.Tween(objectsDeveloper[i].position)
             .to({
                 x : position.target[i].x,
@@ -506,7 +502,7 @@ function Developer (){
 
             var mesh = window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
     
-            if (tile.author === objectsDeveloper[id].name && !isNaN(mesh.position.y)){
+            if(tile.author === objectsDeveloper[id].name && !isNaN(mesh.position.y)){
 
                 new TWEEN.Tween(mesh.position)
                 .to({x : (center.x + (section % 5) * window.TILE_DIMENSION.width) - 750, y : (center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height) - 250, z : 0}, 2000)

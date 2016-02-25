@@ -8,7 +8,7 @@ function getData() {
     
     //url += "?env=development"; //When needed the development branch, for lab.fermat.org
 
-    window.helper.getCompsUser(function(list){ 
+    window.helper.getCompsUser(function (list){ 
 
         window.loadMap(function() {
 
@@ -19,6 +19,7 @@ function getData() {
                     window.tileManager.fillTable(list);
                     TWEEN.removeAll();
                     window.logo.stopFade();
+                    window.helper.hide('welcome', 1000, true);
                     init();
 
                 });
