@@ -19,8 +19,11 @@ function Helper() {
 
         if(el) {
             $(el).fadeTo(duration, 0, function() {
-                if(keep)
-                    el.style.display = 'none';
+                if(keep) {
+                    el.style.visibility = 'hidden';
+                    el.style.opacity = 0;
+                    el.style.transition = 'visibility 0s 2s, opacity 2s linear';
+                }
                 else
                     $(el).remove();
 
@@ -30,6 +33,20 @@ function Helper() {
         }
 
     };
+
+    this.showH = function(element) {
+
+      var el = element;
+
+      if(typeof(el) === "string")
+          el = document.getElementById(element);
+
+      if(el) {
+          el.style.visibility = 'visible';
+          el.style.opacity = 1;
+          el.style.transition = 'opacity 2s linear';
+      }
+    }
 
     this.hideButtons = function(){
 

@@ -1,9 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
         "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-	<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
         <link type="text/css" rel="stylesheet" href="styles.css"/>
         <link type="text/css" rel="stylesheet" href="common/vis.min.css"/>
         <link type="image/png" rel="icon" href="images/favicon.png"/>
@@ -19,19 +19,24 @@
         <script src="common/hash.min.js"></script>
         <script src="common/CanvasRenderer.js"></script>
         <script src="common/Projector.js"></script>
-	</head>
-	<body>
-		
+        </head>
+        <body>
+                
         
         <!--<img src="images/fermat_logo.png" id="splash"/>-->
         <button id="login">Login</button>
         <button id="logout" style="display: none">Logout</button>
 
         <div id="progress-bar" style="width:0%; background-color: #62C2A3; height:5px; color: white; position: absolute; top: 0px; z-index: 10"></div>
-
+        <span id="welcome" style="padding: 5px; top: 180px; left: 11px; width: 285px; height: 20px;">Welcome! Please wait for the site to load</span>
         <button id="backButton" class="backButton" style="opacity : 0; display : none;">BACK</button>
+        
+        <div id="navigation" style="padding: 5px; top: 120px; left: -225px; width: 175px; height: 35px;">To navigate the website, click on the blue arrows.</span>
+        <span id="zoom" style="padding: 7px; line-height: 20px; top: -30px; left: 300px; width: 325px; height: 55px;">You can zoom in, or zoom out, using the scroll wheel. Alternatively, drag your mouse while holding down the key S and left click.</span>
+        <span id="slide" style="padding: 5px; top: 75px; left: -80px; width: 235px; height: 55px;">After you zoom in, hold down left click and drag your mouse to pan across the page view.</span>
+        <span id="return" style="padding: 5px; top: 40px; left: 465px; width: 228px; height: 35px;">Press the key Esc in any view to return to its starting position.</div>
         <div id="containerLogin"></div>
-	<div id="container"></div>        
+        <div id="container"></div>        
         <script src="main.js"></script>
-	</body>
+        </body>
 </html>

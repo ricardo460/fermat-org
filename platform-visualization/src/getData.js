@@ -19,6 +19,7 @@ function getData() {
                     window.tileManager.fillTable(list);
                     TWEEN.removeAll();
                     window.logo.stopFade();
+                    window.helper.hide('welcome', 1000, true);
                     init();
 
                 });
