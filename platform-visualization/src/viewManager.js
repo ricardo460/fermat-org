@@ -119,6 +119,15 @@ function ViewManager() {
                         window.logo.stopFade(2000);
                     };
                     
+                    exit = function() {
+                        if(window.toggleHelp){
+                            window.helper.hide('navigation', 1000, true);
+                            window.helper.hide('zoom', 1000, true);
+                            window.helper.hide('slide', 1000, true);
+                            window.helper.hide('return', 1000, true);
+                            window.toggleHelp = false;
+                        }
+                    };
                     break;
                 case 'book':
                 case 'readme':

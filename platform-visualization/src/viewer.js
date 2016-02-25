@@ -155,7 +155,17 @@ function init() {
     //initMenu();
 
     setTimeout(function() { initPage(); }, 500);
-
+    
+    setTimeout(function (){
+        if(actualView === 'home'){
+            helper.showHelpText('navigation');
+            helper.showHelpText('zoom');
+            helper.showHelpText('slide');
+            helper.showHelpText('return');
+            toggleHelp = true;
+        }
+    }, 15000);
+    
     /*setTimeout(function() {
         var loader = new Loader();
         loader.findThemAll();
