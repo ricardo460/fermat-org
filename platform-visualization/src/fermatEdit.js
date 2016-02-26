@@ -215,6 +215,10 @@ function FermatEdit() {
         
         if(tile.description !== undefined)
             document.getElementById('modal-desc-textarea').value = tile.description;
+        
+        if(tile.repo_dir !== undefined)
+            document.getElementById(objects.idFields.repo).value = tile.repo_dir;
+        
     }
 
     function createElement() {
@@ -316,12 +320,51 @@ function FermatEdit() {
         sesionGroup();
         sesionType();
         sesionName();
+        sesionRepoDir();
         sesionDifficulty();
         sesionDescription();
         sesionState();
         sesionAuthor();
         createbutton();
         setTextSize();
+        
+        function sesionRepoDir() {
+
+            var id = 'label-Repositorio'; text = 'Dir. Repo. : '; type = 'label';
+
+            createField(id, text, null, type, 2);
+
+            var idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
+
+            var object = {
+                id : "input-repodir",
+                text : "textfield"
+              };
+
+            objects.idFields.repo = object.id;
+
+            var input = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
+
+            $("#"+objects.row2.div).append(input);
+
+            var button = document.getElementById(object.id);
+
+            var sucesorButton = document.getElementById(idSucesor);
+                  
+            button.className = 'edit-Fermat';
+            button.placeholder = 'Directory of repository';
+            button.style.zIndex = 10;
+            button.style.opacity = 0;
+
+            window.helper.show(button, 1000);
+
+            objects.row2.buttons.push(object);
+
+            button.addEventListener('blur', function() {
+                changeTexture();
+            });
+
+        }
         
         function setSelectImages(select) {
             
@@ -1735,6 +1778,7 @@ function FermatEdit() {
         var devs = document.getElementById("modal-devs").value;
         
         table.devs = devs.slice(0);
+        table.repo_dir = document.getElementById("input-repodir").value;
         table.description = document.getElementById("modal-desc-textarea").value;
 
         //console.log(table.devs);
