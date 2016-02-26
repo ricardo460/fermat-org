@@ -11,7 +11,7 @@
     "start": "sh starter.sh"
   },
   "apidoc": {
-    "title": "Custom apiDoc browser title",
+    "title": "Doc Api Server",
     "url": "http://api.fermat.org"
   },
   "dependencies": {

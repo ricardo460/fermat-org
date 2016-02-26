@@ -59,7 +59,7 @@ var release = function (req) {
  */
 router.use(lock);
 /**
- * @api {post} /v1/repo/proc/ add process
+ * @api {post} /v1/repo/procs add process
  * @apiVersion 0.0.1
  * @apiName AddProc
  * @apiGroup Repo-Proc
@@ -94,7 +94,7 @@ router.post('/', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/proc/ lists process
+ * @api {get} /v1/repo/procs lists process
  * @apiVersion 0.0.1
  * @apiName ListProcs
  * @apiGroup Repo-Proc
@@ -116,7 +116,7 @@ router.get('/', function (req, res, next) {
     }
 });
 /**
- * @api {post} /v1/repo/proc/:proc_id/steps add step
+ * @api {post} /v1/repo/procs/:proc_id/steps add step
  * @apiVersion 0.0.1
  * @apiName AddStep
  * @apiGroup Repo-Proc
@@ -159,7 +159,7 @@ router.post('/:proc_id/steps', function (req, res, next) {
     }
 });
 /**
- * @api {put} /v1/repo/proc/:proc_id/steps/:step_id update step
+ * @api {put} /v1/repo/procs/:proc_id/steps/:step_id update step
  * @apiVersion 0.0.1
  * @apiName UptStep
  * @apiGroup Repo-Proc
@@ -204,7 +204,7 @@ router.put('/:proc_id/steps/:step_id', function (req, res, next) {
     }
 });
 /**
- * @api {delete} /v1/repo/proc/:proc_id/steps/:step_id delete step
+ * @api {delete} /v1/repo/procs/:proc_id/steps/:step_id delete step
  * @apiVersion 0.0.1
  * @apiName DelStep
  * @apiGroup Repo-Proc
@@ -240,7 +240,7 @@ router.delete('/:proc_id/steps/:step_id', function (req, res, next) {
     }
 });
 /**
- * @api {delete} /v1/repo/proc/:proc_id get process
+ * @api {delete} /v1/repo/procs/:proc_id get process
  * @apiVersion 0.0.1
  * @apiName GetProc
  * @apiGroup Repo-Proc
@@ -268,7 +268,7 @@ router.get('/:proc_id', function (req, res, next) {
     }
 });
 /**
- * @api {put} /v1/repo/proc/:proc_id update process
+ * @api {put} /v1/repo/procs/:proc_id update process
  * @apiVersion 0.0.1
  * @apiName UptProc
  * @apiGroup Repo-Proc
@@ -315,7 +315,7 @@ router.put('/:proc_id', function (req, res, next) {
     }
 });
 /**
- * @api {put} /v1/repo/proc/:proc_id delete process
+ * @api {put} /v1/repo/procs/:proc_id delete process
  * @apiVersion 0.0.1
  * @apiName DelProc
  * @apiGroup Repo-Proc
