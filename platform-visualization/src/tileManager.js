@@ -232,7 +232,7 @@ function TileManager() {
                 author: _author.usrnm ? _author.usrnm : undefined,
                 authorRealName: _author.name ? _author.name : undefined,
                 authorEmail: _author.email ? _author.email : undefined,
-                maintainer : _maintainer.usrnm ? _author.usrnm : undefined,
+                maintainer : _maintainer.usrnm ? _maintainer.usrnm : undefined,
                 maintainerPicture : _maintainer.avatar_url ? _maintainer.avatar_url : undefined,
                 maintainerRealName : _maintainer.name ? _maintainer.name : undefined,
                 difficulty: _comp.difficulty,
@@ -708,7 +708,7 @@ function TileManager() {
             mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
 
             /*End*/
-            if(!signLayer.findSignLayer(group,tile.layer)){
+            if(!signLayer.findSignLayer(group, tile.layer)){
                 if(i === 0 ){ //entra a la primera
                     window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
                     signRow = tile.layerID;

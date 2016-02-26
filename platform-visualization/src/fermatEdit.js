@@ -25,68 +25,12 @@ function FermatEdit() {
             idFields : {}
         };
 
-    var DATA_DEVS_TEST = [ 
-
-            {
-                "dev": {
-                    "usrnm": "luis-fernando-molina",
-                    "email": null,
-                    "name": null,
-                    "bday": null,
-                    "location": null,
-                    "avatar_url": null,
-                    "url": null,
-                    "bio": null,
-                    "upd_at": "56c257f60eaa035020c11a1c",
-                    "_id": "56c257f60eaa035020c11a1d"
-                },
-                "role": "author",
-                "scope": "architecture",
-                "percnt": 70
-            },
-            {
-                "dev": {
-                    "usrnm": "luis-fernando-molina",
-                    "email": null,
-                    "name": null,
-                    "bday": null,
-                    "location": null,
-                    "avatar_url": null,
-                    "url": null,
-                    "bio": null,
-                    "upd_at": "56c257f60eaa035020c11a1c",
-                    "_id": "56c257f60eaa035020c11a1d"
-                },
-                "role": "author",
-                "scope": "implementation",
-                "percnt": 100
-            },
-            {
-                "dev": {
-                    "usrnm": "luis-fernando-molina",
-                    "email": null,
-                    "name": null,
-                    "bday": null,
-                    "location": null,
-                    "avatar_url": null,
-                    "url": null,
-                    "bio": null,
-                    "upd_at": "56c257f60eaa035020c11a1c",
-                    "_id": "56c257f60eaa035020c11a1d"
-                },
-                "role": "maintainer",
-                "scope": "implementation",
-                "percnt": 70
-            }
-
-        ];
-
     var actions = { 
         exit : null,
         type : null
     };
 
-    var actualTile = null;
+    this.actualTile = null;
 
     var tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
         tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
@@ -194,7 +138,6 @@ function FermatEdit() {
     };
 
     this.removeAllFields = function(){
-        self = this;
 
         if(objects.row1.buttons.length !== 0 || objects.row2.buttons.length !== 0){
 
@@ -221,7 +164,7 @@ function FermatEdit() {
             objects.row1.div = null;
             objects.row2.div = null;
             objects.idFields = {};
-            actualTile = null;
+            self.actualTile = null;
             deleteMesh();
 
             if(window.actualView === 'table'){ 
@@ -241,9 +184,9 @@ function FermatEdit() {
     // Start editing
     function fillFields(id){
 
-        var tile = window.helper.getSpecificTile(id).data; 
+        var tile = JSON.parse(JSON.stringify(window.helper.getSpecificTile(id).data));
 
-        self.actualTile = tile;
+        self.actualTile = JSON.parse(JSON.stringify(tile));
 
         if(tile.platform !== undefined)
             document.getElementById('select-Group').value = tile.platform;
@@ -270,19 +213,15 @@ function FermatEdit() {
         if(tile.maintainer !== undefined)
             document.getElementById('imput-Maintainer').value = tile.maintainer;
         
-        if(tile.devs !== undefined)
-            document.getElementById('modal-devs').value = tile.devs;
-        
-        if(tile.description !== undefined)
-            document.getElementById('modal-desc-textarea').value = tile.description;
-        
+        if(tile.devs !== undefined) 
+            document.getElementById('modal-devs').value = tile.devs.slice(0);
     }
 
     function createElement() {
 
-        var newCenter = helper.getCenterView('table');
+        var newCenter = window.helper.getCenterView('table');
 
-        var y = helper.getLastValueArray(window.tileManager.dimensions.layerPositions) + (window.TILE_DIMENSION.height * 2);
+        var y = window.helper.getLastValueArray(window.tileManager.dimensions.layerPositions) + (window.TILE_DIMENSION.height * 2);
 
         var mesh = new THREE.Mesh(
                    new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
@@ -631,7 +570,7 @@ function FermatEdit() {
             button.className = 'actionButton edit-Fermat';
             button.style.zIndex = 10;
             button.style.opacity = 0;
-            button.value = "Authors";
+            button.value = "Autores";
             button.style.marginLeft = "5px";
 
             object = {
@@ -669,7 +608,7 @@ function FermatEdit() {
                         '</div>'+
                         '<div id="buttons" >'+
                             '<button id="modal-close-button" >Cancel</button>'+
-                            '<button id="modal-accept-button" style="border-left: 2px solid #00b498;">Accept</button>'+
+                            '<button id="modal-accept-button" style="border-left: 2px solid #00b498;">Aceptar</button>'+
                         '</div>'+
                     '</div>';
                 
@@ -714,11 +653,11 @@ function FermatEdit() {
                         btn.onclick = function(e) {
                             
                             var modal = document.getElementById("modal-devs");
-                            self = this;
+                            _self = this;
                             modal.value[modal.value.length] = {
                                 dev: DATA_USER.find(function(x) {
                                     
-                                    if(x.usrnm == self.dataset.usrid)
+                                    if(x.usrnm == _self.dataset.usrid)
                                         return x;
                                     
                                 }),
@@ -747,43 +686,43 @@ function FermatEdit() {
                         
                         var dev_html = `
 
-<div data-expand="false" data-usrid=` + i +` class="dev-fermat-edit dev-active">
-    <div>
-        <img crossorigin="anonymous" src="` + img_src + `">
-        <label>` + this.value[i].dev.usrnm + `</label>
-        <button data-usrid=` + i + ` class="rem_btn"></button>
-        <div class="dev-data">
-            <table width="100%">
-                <tr>
-                    <td align="right">Scope</td>
-                    <td>
-                        <select class="select-scope">
-                            <option>implementation</option>
-                            <option>architect</option>
-                            <option>design</option>
-                            <option>unit-tests</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right">Role</td>
-                    <td>
-                        <select class="select-role">
-                            <option>maintainer</option>
-                            <option>author</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right">%</td>
-                    <td><input class="input-prcnt" type="text" value="` + this.value[i].percnt + `"></input></td>
-                </tr>
+                        <div data-expand="false" data-usrid=` + i +` class="dev-fermat-edit dev-active">
+                            <div>
+                                <img crossorigin="anonymous" src="` + img_src + `">
+                                <label>` + this.value[i].dev.usrnm + `</label>
+                                <button data-usrid=` + i + ` class="rem_btn"></button>
+                                <div class="dev-data">
+                                    <table width="100%">
+                                        <tr>
+                                            <td align="right">Scope</td>
+                                            <td>
+                                                <select class="select-scope">
+                                                    <option>implementation</option>
+                                                    <option>architecture</option>
+                                                    <option>design</option>
+                                                    <option>unit-tests</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right">Role</td>
+                                            <td>
+                                                <select class="select-role">
+                                                    <option>maintainer</option>
+                                                    <option>author</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right">%</td>
+                                            <td><input class="input-prcnt" type="text" value="` + this.value[i].percnt + `"></input></td>
+                                        </tr>
 
-            </table>
-        </div>
-    </div>
-</div>
-`
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        `
                         ;
                         
                         cont_list.innerHTML += dev_html;
@@ -814,7 +753,6 @@ function FermatEdit() {
 
                         btn.onclick = function(e) {
                             
-                            var self = this;
                             var modal = document.getElementById("modal-devs");
                             modal.value.splice(this.dataset.usrid, 1);
                             modal.updateModal();
@@ -875,8 +813,6 @@ function FermatEdit() {
                 var modal = document.getElementById("modal-devs");
                 modal.dataset.state = "show";
                 modal.updateModal();
-                modal.oldValue = eval(modal.value.toSource());
-                
                 var area = document.createElement("div");
                 area.id = "hidden-area";
                 document.body.appendChild(area);
@@ -888,11 +824,8 @@ function FermatEdit() {
                 
                 var modal = document.getElementById("modal-devs");
                 modal.dataset.state = "hidden";
-                modal.value = eval(modal.oldValue.toSource());
-                
                 var area = document.getElementById("hidden-area");
                 window.helper.hide(area, 500);
-                changeTexture();
                 
             });
             
@@ -923,13 +856,10 @@ function FermatEdit() {
                 
                 var area = document.getElementById("hidden-area");
                 window.helper.hide(area, 500);
-                changeTexture();
                 
             });
 
             window.helper.show(button, 1000);
-            changeTexture();
-            
         }
 
         function sesionDifficulty(){
@@ -970,98 +900,41 @@ function FermatEdit() {
         }
 
         function sesionRepoDir(){
-            
+
+            var id = 'label-Maintainer'; text = 'Enter Maintainer : '; type = 'label';
+
+            createField(id, text, 15, type, 2);
+
             var idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
 
             var object = {
-                id : "button-desc",
-                text : "Description"
+                id : "imput-Maintainer",
+                text : "textfield"
               };
 
             objects.idFields.maintainer = object.id;
 
-            var input = $('<input />', {"id" : object.id, "type" : "button", "text" : object.text });
+            var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
 
-            $("#"+objects.row2.div).append(input);
+            $("#"+objects.row2.div).append(imput);
 
             var button = document.getElementById(object.id);
-            var button = document.getElementById(object.id);
-            
-            button.className = 'actionButton edit-Fermat';
-            button.value = "Description"
-            button.style.marginLeft = "5px";
+
+            var sucesorButton = document.getElementById(idSucesor);
+                  
+            button.className = 'edit-Fermat';
+            button.placeholder = 'Github User';    
             button.style.zIndex = 10;
             button.style.opacity = 0;
-            
-            objects.row2.buttons.push(object);
-
-            object = {
-                id : "modal-desc",
-                text : "modal"
-            };
-
-            objects.row2.buttons.push(object);
-            
 
             window.helper.show(button, 1000);
-            
-            if(!document.getElementById("modal-desc")) {
-                
-                var modal = document.createElement("div");
-                modal.id = "modal-desc";
-                modal.style.top = (window.innerHeight / 4) + "px" ;
-                modal.dataset.state = "hidden";
-                
-                modal.innerHTML = `
-                        <label>Description:</label>
 
-                        <textarea id="modal-desc-textarea" rows="12"></textarea>
+            objects.row2.buttons.push(object);
 
-                        <div>
-                            <button id="modal-desc-cancel">Cancel</button>
-                            <button id="modal-desc-accept">Accept</button>
-                        </div>`;
-                
-                
-                
-                document.body.appendChild(modal);
-            }
+            button.addEventListener('blur', function() {
 
-
-            button.addEventListener('click', function() {
-                
-                var modal = document.getElementById("modal-desc");
-                modal.dataset.state = "show";
-                
-                modal.oldValue = document.getElementById("modal-desc-textarea").value;
-                
-                var area = document.createElement("div");
-                area.id = "hidden-area";
-                document.body.appendChild(area);
-                window.helper.show(area, 1000);
-                
-            });
-            
-            document.getElementById("modal-desc-cancel").onclick = function() {
-                
-                var modal = document.getElementById("modal-desc");
-                modal.dataset.state = "hidden";
-                document.getElementById("modal-desc-textarea").value = modal.oldValue;
-                
-                var area = document.getElementById("hidden-area");
-                window.helper.hide(area, 500);
-                
-            };
-            
-            document.getElementById("modal-desc-accept").addEventListener("click", function() {
-                
-                var modal = document.getElementById("modal-desc");
-                modal.dataset.state = "hidden";
-                
-                var area = document.getElementById("hidden-area");
-                window.helper.hide(area, 500);
-                
-            });
+                changeTexture();
+            });        
 
         }
 
@@ -1165,7 +1038,7 @@ function FermatEdit() {
         if(validateFields() === ''){ 
 
             var table = fillTable(false);
-
+            
             if(actions.type === "insert")
                 createTile(table);
             else if(actions.type === "update")
@@ -1191,9 +1064,9 @@ function FermatEdit() {
     // end
 
     //tile action
-    function createTile(table){
+    function createTile(_table){
 
-        var params = getParamsData(table);
+        var params = getParamsData(_table);
 
         var dataPost = {
                 usr_id : DATA_TEST_USER
@@ -1202,72 +1075,74 @@ function FermatEdit() {
         window.helper.postRoutesComponents('insert', params, dataPost,
             function(res){ 
 
-                table.id = res._id;
+                _table.id = res._id;
 
-                postParamsDev(table);
+                postParamsDev(_table, function(table){
 
-                window.camera.loseFocus();
-                window.camera.enable();
-                    
-                var x, y, z;
-
-                var platform = table.platform || window.layers[table.layer].super_layer,
-                    layer = table.layer,
-                    object = { 
-                        mesh : null,
-                        data : {},
-                        target : {},
-                        id : null
-                    };
-
-                if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
-                    window.TABLE[platform].layers[layer] = {   
-                        objects : [],
-                        y : y 
-                    };
-                }
-
-                var count = window.TABLE[platform].layers[layer].objects.length;
-
-                object.id = platform + '_' + layer + '_' + count;
-
-                var mesh = window.tileManager.createElement(object.id, table);
-
-                var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
-
-                x = 0;
-
-                if(!lastObject)
-                    x = window.TABLE[platform].x;
-                else
-                    x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
-
-                var index = window.layers[layer].index;
-
-                y = window.tileManager.dimensions.layerPositions[index];
-
-                z = 0;
-
-                var target = helper.fillTarget(x, y, z, 'table');
-
-                mesh.position.copy(target.hide.position);
-                mesh.rotation.copy(target.hide.rotation);
-
-                window.scene.add(mesh);
-
-                object.mesh = mesh;
-                object.data = table;
-                object.target = target;
-
-                window.camera.move(target.show.position.x, target.show.position.y, target.show.position.z + 8000, 4000);
-
-                animate(mesh, target.show, 4500, function(){
-
-                   window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
-                   window.tileManager.updateElementsByGroup();
-                });
+                    window.camera.loseFocus();
+                    window.camera.enable();
                         
-                window.TABLE[platform].layers[layer].objects.push(object);
+                    var x, y, z;
+
+                    var platform = table.platform || window.layers[table.layer].super_layer,
+                        layer = table.layer,
+                        object = { 
+                            mesh : null,
+                            data : {},
+                            target : {},
+                            id : null
+                        };
+
+                    if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
+                        window.TABLE[platform].layers[layer] = {   
+                            objects : [],
+                            y : y 
+                        };
+                    }
+
+                    var count = window.TABLE[platform].layers[layer].objects.length;
+
+                    object.id = platform + '_' + layer + '_' + count;
+
+                    var mesh = window.tileManager.createElement(object.id, table);
+
+                    var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
+
+                    x = 0;
+
+                    if(!lastObject)
+                        x = window.TABLE[platform].x;
+                    else
+                        x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
+
+                    var index = window.layers[layer].index;
+
+                    y = window.tileManager.dimensions.layerPositions[index];
+
+                    z = 0;
+
+                    var target = helper.fillTarget(x, y, z, 'table');
+
+                    mesh.position.copy(target.hide.position);
+                    mesh.rotation.copy(target.hide.rotation);
+
+                    window.scene.add(mesh);
+
+                    object.mesh = mesh;
+                    object.data = table;
+                    object.target = target;
+
+                    window.camera.move(target.show.position.x, target.show.position.y, target.show.position.z + 8000, 4000);
+
+                    animate(mesh, target.show, 4500, function(){
+
+                       window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
+                       window.tileManager.updateElementsByGroup();
+                    });
+                            
+                    window.TABLE[platform].layers[layer].objects.push(object);
+
+                });
             });
 
         function getParamsData(table){
@@ -1307,33 +1182,57 @@ function FermatEdit() {
             return param;
         }
 
-        function postParamsDev(table){
+        function postParamsDev(table, callback){
 
-            if(table.devs.length > 0){ 
+            var devs = table.devs;
 
-                var dataPost = {
-                            usr_id : DATA_TEST_USER,
-                            comp_id : table.id
-                        };
+            var newDevs = [];
 
-                for(var i = 0; i < table.devs.length; i++){
+            postDevs(devs);
+
+            function postDevs(devs){
+
+                if(devs.length > 0){ 
+
+                    var dataPost = {
+                                usr_id : DATA_TEST_USER,
+                                comp_id : table.id
+                            };
 
                     var param = {};
 
-                    param.dev_id = table.devs[i].dev._id;
-                    param.percnt = table.devs[i].percnt;
-                    param.role = table.devs[i].role;
-                    param.scope = table.devs[i].scope;
+                    param.dev_id = devs[0].dev._id;
+                    param.percnt = devs[0].percnt;
+                    param.role = devs[0].role;
+                    param.scope = devs[0].scope;
 
-                    window.helper.postRoutesComponents('insert dev', param, dataPost);
+                    window.helper.postRoutesComponents('insert dev', param, dataPost,
+                        function(res){
+
+                            devs[0]._id = res._id;
+
+                            newDevs.push(devs[0]);
+                            
+                            devs.splice(0,1);
+
+                            postDevs(devs);
+
+                        });
+                
+                }
+                else{
+
+                    table.devs = newDevs;
+
+                    callback(table);
                 }
             }
         }
     }
 
-    function modifyTile(table){ 
+    function modifyTile(_table){ 
 
-        var params = getParamsData(table);
+        var params = getParamsData(_table);
 
         var dataPost = {
                 usr_id : DATA_TEST_USER,
@@ -1343,108 +1242,111 @@ function FermatEdit() {
         window.helper.postRoutesComponents('update', params, dataPost,
             function(res){ 
 
-                //postParamsDev(table);
+                _table.id = self.actualTile.id;
 
-                window.camera.loseFocus();
-                window.camera.enable();
+                postParamsDev(_table, function(table){
 
-                table.id = self.actualTile.id;
-
-                var newLayer = table.layer,
-                    newGroup = table.platform || window.layers[table.layer].super_layer,
-                    oldLayer = self.actualTile.layer,
-                    oldGroup = self.actualTile.platform || window.layers[self.actualTile.layer].super_layer;
-
-                var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
-
-                for(var i = 0; i < arrayObject.length; i++){
-                    
-                    if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
-
-                        window.scene.remove(arrayObject[i].mesh);
+                    var oldTile = JSON.parse(JSON.stringify(self.actualTile)),
+                        newLayer = table.layer,
+                        newGroup = table.platform || window.layers[table.layer].super_layer,
+                        oldLayer = oldTile.layer,
+                        oldGroup = oldTile.platform || window.layers[oldTile.layer].super_layer;
                         
+
+                    window.camera.loseFocus();
+                    window.camera.enable();
+
+                    var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects.slice(0);
+
+                    for(var i = 0; i < arrayObject.length; i++){
+                        
+                        if(arrayObject[i].data.author === oldTile.author && arrayObject[i].data.name === oldTile.name){
+
+                            window.scene.remove(arrayObject[i].mesh);
+                            
+                        }
                     }
-                }
 
-                var positionCameraX = window.TABLE[oldGroup].x,
-                    positionCameraY = helper.getPositionYLayer(oldLayer);
+                    var positionCameraX = window.TABLE[oldGroup].x,
+                        positionCameraY = helper.getPositionYLayer(oldLayer);
 
-                window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
+                    window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
 
-                setTimeout( function() {
+                    setTimeout( function() {
 
-                    if(newGroup !== oldGroup || newLayer !== oldLayer)
-                        change();
-                    else
-                        notChange();
+                        if(newGroup !== oldGroup || newLayer !== oldLayer)
+                            change();
+                        else
+                            notChange();
 
-                }, 2000 );
-            
+                    }, 2000 );
 
-            function change(){
+                    function change(){
 
-                window.TABLE[oldGroup].layers[oldLayer].objects = [];
-                var idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
+                        window.TABLE[oldGroup].layers[oldLayer].objects = [];
+                        var idScreenshot = oldGroup + "_" + oldLayer + "_" + oldTile.name;
 
-                window.screenshotsAndroid.deleteScreenshots(idScreenshot);
-       
-                for(var i = 0; i < arrayObject.length; i++){
-                    
-                    if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
+                        window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+               
+                        for(var i = 0; i < arrayObject.length; i++){
+                            
+                            if(arrayObject[i].data.author === oldTile.author && arrayObject[i].data.name === oldTile.name){
 
-                        arrayObject.splice(i,1);
+                                arrayObject.splice(i,1);
+                            }
+                        }
+
+                        window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+
+                        setTimeout( function() { 
+
+                            positionCameraX = window.TABLE[newGroup].x;
+                            positionCameraY = window.helper.getPositionYLayer(newLayer);
+                            camera.move(positionCameraX, positionCameraY,8000, 2000);
+                            createNewElementTile(table);
+                            window.screenshotsAndroid.hidePositionScreenshots(newGroup, newLayer);
+                            window.tileManager.updateElementsByGroup();
+
+                        }, 2000 );
+
                     }
-                }
 
-                window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+                    function notChange(){
 
-                setTimeout( function() { 
+                        var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
+                        var target = null;
+                        var _ID = null;
+                        var id = 0;
 
-                    positionCameraX = window.TABLE[newGroup].x;
-                    positionCameraY = window.helper.getPositionYLayer(newLayer);
-                    camera.move(positionCameraX, positionCameraY,8000, 2000);
-                    createNewElementTile(table);
-                    window.screenshotsAndroid.hidePositionScreenshots(newGroup, newLayer);
-                    window.tileManager.updateElementsByGroup();
+                        var idScreenshot = oldGroup + "_" + oldLayer + "_" + oldTile.name;
 
-                }, 2000 );
+                        if(oldTile.name !== table.name)
+                            window.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
-            }
+                        for(var i = 0; i < arrayObject.length; i++){
+                            
+                            if(arrayObject[i].data.author === oldTile.author && arrayObject[i].data.name === oldTile.name){
 
-            function notChange(){
+                                id = i;
+                                window.TABLE[oldGroup].layers[oldLayer].objects[i].data = table;
+                                target = window.TABLE[oldGroup].layers[oldLayer].objects[i].target;
+                                _ID = window.TABLE[oldGroup].layers[oldLayer].objects[i].id;
+                            }
+                        }
 
-                var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
-                var target = null;
-                var _ID = null;
-                var id = 0;
+                        var mesh = window.tileManager.createElement(_ID, table);
 
-                var idScreenshot = oldGroup + "_" + oldLayer + "_" + self.actualTile.name;
+                        window.TABLE[oldGroup].layers[oldLayer].objects[id].mesh = mesh;
 
-                if(self.actualTile.name !== table.name)
-                    window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+                        window.scene.add(mesh);
+                        
+                        animate(mesh, target.show, 2000,function(){
+                            window.screenshotsAndroid.hidePositionScreenshots(oldGroup, oldLayer); 
+                        });
 
-                for(var i = 0; i < arrayObject.length; i++){
-                    
-                    if(arrayObject[i].data.author === self.actualTile.author && arrayObject[i].data.name === self.actualTile.name){
-
-                        id = i;
-                        window.TABLE[oldGroup].layers[oldLayer].objects[i].data = table;
-                        target = window.TABLE[oldGroup].layers[oldLayer].objects[i].target;
-                        _ID = window.TABLE[oldGroup].layers[oldLayer].objects[i].id;
                     }
-                }
 
-                var mesh = window.tileManager.createElement(_ID, table);
-
-                window.TABLE[oldGroup].layers[oldLayer].objects[id].mesh = mesh;
-
-                window.scene.add(mesh);
-                
-                animate(mesh, target.show, 2000,function(){
-                    window.screenshotsAndroid.hidePositionScreenshots(oldGroup, oldLayer); 
                 });
-
-            }
 
         });
 
@@ -1457,67 +1359,172 @@ function FermatEdit() {
                 oldLayer = self.actualTile.layer,
                 oldGroup = self.actualTile.platform || window.layers[self.actualTile.layer].super_layer;
 
-            //if(newGroup !== oldGroup){
+            if(typeof window.platforms[newGroup] !== "undefined"){ 
+                param.platfrm_id = window.platforms[newGroup]._id;
+                param.suprlay_id = null;
+            }
+            else{
+                param.suprlay_id = window.superLayers[newGroup]._id;
+                param.platfrm_id = null;
+            }
 
-                if(typeof window.platforms[newGroup] !== "undefined"){ 
-                    param.platfrm_id = window.platforms[newGroup]._id;
-                    //param.suprlay_id = null;
-                }
-                else{
-                    param.suprlay_id = window.superLayers[newGroup]._id;
-                    //param.platfrm_id = null;
-                }
-            //}
-
-            //if(newLayer !== oldLayer)
+            if(newLayer !== oldLayer)
                 param.layer_id = window.layers[newLayer]._id;
             
-            //if(table.name !== self.actualTile.name)
+            if(table.name !== self.actualTile.name)
                 param.name = table.name;
 
-            //if(table.type !== self.actualTile.type)
+            if(table.type !== self.actualTile.type)
                 param.type = table.type.toLowerCase();
 
-            //if(table.difficulty !== self.actualTile.difficulty)
+            if(table.difficulty !== self.actualTile.difficulty)
                 param.difficulty = parseInt(table.difficulty);
 
-            //if(table.code_level !== self.actualTile.code_level)
+            if(table.code_level !== self.actualTile.code_level)
                 param.code_level = table.code_level.toLowerCase();
-
-            param.found = false;
 
             return param;
         }
 
-        function postParamsDev(table){
+        function postParamsDev(table, callback){
+
+            var newDevs = table.devs.slice(0),
+                oldDevs = self.actualTile.devs.slice(0),
+                newTableDevs = [],
+                config = { 
+                        insert :{
+                            devs : [],
+                            route : 'insert dev'
+                        },
+                        update : {
+                            devs : [],
+                            route : 'update dev'
+                        },
+                        delete :{
+                            devs : [],
+                            route : 'delete dev'
+                        }
+                    };
+
+            fillDevs(newDevs, oldDevs, 'insert');
+
+            postDevs('insert',config.insert.devs.slice(0), function(){
+
+                postDevs('update',config.update.devs.slice(0), function(){
+
+                    postDevs('delete',config.delete.devs.slice(0), function(){
+
+                        table.devs = newTableDevs;
+                        
+                        callback(table);
+                    });
+                });
+            });
+
+            function fillDevs(newDevs, oldDevs, task){
+
+                if(newDevs.length > 0){
+
+                    if(task === 'insert'){
+
+                        var array = [];
+
+                        for(var i = 0; i < newDevs.length; i++){
+
+                            if(!newDevs[i]._id)
+                                config.insert.devs.push(newDevs[i]);
+                            else
+                                array.push(newDevs[i]);
+                        }
+
+                        fillDevs(array, oldDevs, 'update');
+                    }
+                    else if(task === 'update'){
+
+                        if(oldDevs.length > 0){
+
+                            for(var i = 0; i < oldDevs.length; i++){
+
+                                var t = newDevs.find(function(_index) {
+                                    
+                                                if(_index._id === oldDevs[i]._id)
+                                                    return _index;            
+                                            });
+                                
+                                if(t){
+
+                                    if(t.role!= oldDevs[i].role ||
+                                       t.scope != oldDevs[i].scope ||
+                                       t.percnt.toString() != oldDevs[i].percnt.toString()){
+                                        
+                                        config.update.devs.push(t);                                      
+                                    }
+                                    else{
+                                        newTableDevs.push(oldDevs[i]);
+                                    }
+                                }
+                                else{
+
+                                    config.delete.devs.push(oldDevs[i]);                                  
+                                }
+                            }
+                        }
+                    }
+                }
+                else{
+
+                    for(var i = 0; i < oldDevs.length; i++){
+                        config.delete.devs.push(oldDevs[i]);
+                    }
+                }
+            }
+
+            function postDevs(task, array, callback){
+
+                if(array.length > 0){
+
+                    var dataPost = {
+                                usr_id : DATA_TEST_USER,
+                                comp_id : table.id
+                            };
+
+                    var param = {};
+
+                    if(task === 'update' || task === 'delete')
+                        dataPost.devs_id = array[0]._id;
+
+                    param.dev_id = array[0].dev._id;
+                    param.percnt = array[0].percnt;
+                    param.role = array[0].role;
+
+                    if(param.role !== 'maintainer')
+                        param.scope = array[0].scope;
+                    else
+                        param.scope = 'default';
+
+                    window.helper.postRoutesComponents(config[task].route, param, dataPost,
+                        function(res){
+
+                            if(task !== 'delete'){ 
+
+                                array[0]._id = res._id;
+
+                                newTableDevs.push(array[0]);
+                            }
+                            
+                            array.splice(0,1);
+
+                            postDevs(task, array, callback);
+
+                        });
+                
+                }
+                else{
+
+                    callback();
+                }
+            }
         
-            if(table.author !== self.actualTile.author && (table.author !== '' || table.author !== undefined)){
-
-                var param = {};
-
-                param.dev_id = dataUser(table.author).id;
-                param.percnt = 100;
-                param.role = 'author';
-                param.scope = 'implementation';
-
-                var dataPost = {
-                        usr_id : DATA_TEST_USER,
-                        comp_id : self.actualTile.id,
-                        devs_id : dataUser(self.actualTile.author).id
-                    };
-
-                window.helper.postRoutesComponents('update dev', param, dataPost);
-            }
-            else if(self.actualTile.author !== '' && self.actualTile.author !== undefined && table.author === '' && table.author === undefined){
-
-                var dataPost = {
-                        usr_id : DATA_TEST_USER,
-                        comp_id : self.actualTile.id,
-                        devs_id : dataUser(self.actualTile.author).id
-                    };
-
-                window.helper.postRoutesComponents('delete dev', false, dataPost);
-            }
         }
     }
 
@@ -1667,9 +1674,12 @@ function FermatEdit() {
         table.platformID = platformID;
         table.layerID = layerID;
         table.superLayer = superLayer;
+
+        var devs = document.getElementById("modal-devs").value;
         
-        table.devs = document.getElementById("modal-devs").value;
-        table.description = document.getElementById("modal-desc-textarea").value;
+        table.devs = devs.slice(0);
+
+        //console.log(table.devs);
 
         //table.devs = DATA_DEVS_TEST;
 
@@ -1682,7 +1692,7 @@ function FermatEdit() {
 
         var _maintainer = getBestDev(table.devs, "maintainer");
 
-        table.maintainer = _maintainer.usrnm ? _author.usrnm : undefined;
+        table.maintainer = _maintainer.usrnm ? _maintainer.usrnm : undefined;
         table.maintainerPicture = _maintainer.avatar_url ? _maintainer.avatar_url : undefined;
         table.maintainerRealName = _maintainer.name ? _maintainer.name : undefined;
         

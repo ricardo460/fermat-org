@@ -3,6 +3,10 @@
  */
 function Helper() {
 
+    var SERVER = 'http://api.fermat.org';
+
+    var PORT = '?env=development';
+
     /**
      * Hides an element vanishing it and then eliminating it from the DOM
      * @param {DOMElement} element         The element to eliminate
@@ -209,8 +213,6 @@ function Helper() {
      */
     this.getAPIUrl = function(route) {
         
-        //var SERVER = "http://52.35.117.6:3000";
-        var SERVER = "http://api.fermat.org";
         var tail = "";
         
         switch(route) {
@@ -238,13 +240,12 @@ function Helper() {
                 break;
         }
         
-        return SERVER + tail;
+        return SERVER + tail + PORT;
     };
 
     this.postRoutesComponents = function(route, params, data, doneCallback, failCallback){
 
-        var SERVER = "http://api.fermat.org:8081",
-            tail = "",
+        var tail = "",
             method = "",
             setup = {};
 
@@ -278,7 +279,7 @@ function Helper() {
         }
 
         setup.method = method;
-        setup.url = SERVER + tail;
+        setup.url = SERVER + tail + PORT;
         setup.headers = { 
             "Content-Type": "application/json"
              };
@@ -286,7 +287,7 @@ function Helper() {
         if(params)
             setup.data = params;
 
-        if(route === "delete" || route === "delete dev"){
+        if(route === "delete" ){
 
             $.ajax(setup)
                 .done(function(res) { 
@@ -335,7 +336,10 @@ function Helper() {
 
         xhr.onload = function() {
 
-            var res = JSON.parse(xhr.responseText);
+            var res = null;
+
+            if(method !== 'DELETE')
+                res = JSON.parse(xhr.responseText);
 
             success(res);
             
@@ -382,7 +386,7 @@ function Helper() {
 
             var user = window.session.getUserLogin()._id;
 
-            url = "http://api.fermat.org:8081/v1/repo/usrs/"+user+"/";
+            url = SERVER + "/v1/repo/usrs/"+user+"/";
 
             callAjax('comps', function(){
 
@@ -413,7 +417,7 @@ function Helper() {
         function callAjax(route, callback){
 
             $.ajax({
-                url: url + route,
+                url: url + route + PORT,
                 method: "GET"
             }).success (
                 function (res) {
