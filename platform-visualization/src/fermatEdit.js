@@ -5,8 +5,6 @@ function FermatEdit() {
 
     var DATA_USER = {};
 
-    var DATA_TEST_USER = '';
-
     var objects = {
             row1 : {
                 div : null,
@@ -38,9 +36,6 @@ function FermatEdit() {
     var self = this;
 
     this.init = function(){
-
-        if(window.session.getIsLogin())
-            DATA_TEST_USER = window.session.getUserLogin()._id;
 
         var url = window.helper.getAPIUrl("user");
 
@@ -1136,6 +1131,8 @@ function FermatEdit() {
         if(validateFields() === ''){ 
 
             var table = fillTable(false);
+
+            window.helper.hide('button-save');
             
             if(actions.type === "insert")
                 createTile(table);
@@ -1166,11 +1163,7 @@ function FermatEdit() {
 
         var params = getParamsData(_table);
 
-        var dataPost = {
-                usr_id : DATA_TEST_USER
-            };
-
-        window.helper.postRoutesComponents('insert', params, dataPost,
+        window.helper.postRoutesComponents('insert', params, null,
             function(res){ 
 
                 _table.id = res._id;
@@ -1241,6 +1234,9 @@ function FermatEdit() {
                     window.TABLE[platform].layers[layer].objects.push(object);
 
                 });
+            },
+            function(){
+                window.helper.show('button-save');
             });
 
         function getParamsData(table){
@@ -1269,13 +1265,19 @@ function FermatEdit() {
 
             param.code_level = table.code_level.toLowerCase();
 
-            param.repo_dir = "root";
+            param.repo_dir = table.repo_dir;
 
             param.scrnshts = false;
 
-            param.found = false;
+            if(table.repo_dir)
+                param.found = true;
+            else
+                param.found = false;
 
-            param.description = "pending";
+            if(table.repo_dir)
+                param.description = table.repo_dir;
+            else
+                param.description = "pending";
 
             return param;
         }
@@ -1293,7 +1295,6 @@ function FermatEdit() {
                 if(devs.length > 0){ 
 
                     var dataPost = {
-                                usr_id : DATA_TEST_USER,
                                 comp_id : table.id
                             };
 
@@ -1316,7 +1317,6 @@ function FermatEdit() {
                             postDevs(devs);
 
                         });
-                
                 }
                 else{
 
@@ -1333,7 +1333,6 @@ function FermatEdit() {
         var params = getParamsData(_table);
 
         var dataPost = {
-                usr_id : DATA_TEST_USER,
                 comp_id : self.actualTile.id
             };
 
@@ -1446,6 +1445,9 @@ function FermatEdit() {
 
                 });
 
+        },
+        function(){
+            window.helper.show('button-save');
         });
 
         function getParamsData(table){
@@ -1481,6 +1483,17 @@ function FermatEdit() {
             if(table.code_level !== self.actualTile.code_level)
                 param.code_level = table.code_level.toLowerCase();
 
+            if(table.description !== self.actualTile.description)
+                param.description = table.description;
+
+            if(table.repo_dir.toLowerCase() !== self.actualTile.repo_dir.toLowerCase())
+                param.repo_dir = table.repo_dir.toLowerCase();
+
+            if(table.repo_dir)
+                param.found = true;
+            else
+                param.found = false;
+
             return param;
         }
 
@@ -1506,11 +1519,11 @@ function FermatEdit() {
 
             fillDevs(newDevs, oldDevs, 'insert');
 
-            postDevs('insert',config.insert.devs.slice(0), function(){
+            postDevs('delete',config.delete.devs.slice(0), function(){
 
                 postDevs('update',config.update.devs.slice(0), function(){
 
-                    postDevs('delete',config.delete.devs.slice(0), function(){
+                    postDevs('insert',config.insert.devs.slice(0), function(){
 
                         table.devs = newTableDevs;
                         
@@ -1584,7 +1597,6 @@ function FermatEdit() {
                 if(array.length > 0){
 
                     var dataPost = {
-                                usr_id : DATA_TEST_USER,
                                 comp_id : table.id
                             };
 
@@ -1616,6 +1628,9 @@ function FermatEdit() {
 
                             postDevs(task, array, callback);
 
+                        },
+                        function(){
+                            window.helper.show('button-save');
                         });
                 
                 }
@@ -1633,7 +1648,6 @@ function FermatEdit() {
         var table = window.helper.getSpecificTile(id).data;
 
         var dataPost = {
-                usr_id : DATA_TEST_USER,
                 comp_id : table.id
             };
 
@@ -1770,6 +1784,8 @@ function FermatEdit() {
         table.difficulty = document.getElementById(objects.idFields.difficulty).value;
         table.name = document.getElementById(objects.idFields.name).value;
         table.code = helper.getCode(document.getElementById(objects.idFields.name).value);
+        table.repo_dir = document.getElementById(objects.idFields.repo).value;
+        table.description = document.getElementById("modal-desc-textarea").value;
         table.found = found;
         table.platformID = platformID;
         table.layerID = layerID;
@@ -1778,12 +1794,6 @@ function FermatEdit() {
         var devs = document.getElementById("modal-devs").value;
         
         table.devs = devs.slice(0);
-        table.repo_dir = document.getElementById("input-repodir").value;
-        table.description = document.getElementById("modal-desc-textarea").value;
-
-        //console.log(table.devs);
-
-        //table.devs = DATA_DEVS_TEST;
 
         _author = getBestDev(table.devs, "author");
 
@@ -1799,24 +1809,6 @@ function FermatEdit() {
         table.maintainerRealName = _maintainer.name ? _maintainer.name : undefined;
         
         return table;
-    }
-
-    function dataUser(user){
-
-        var data = {};
-
-        for(var i = 0; i < DATA_USER.length; i++){
-
-            if(user.toLowerCase() === DATA_USER[i].usrnm.toLowerCase()){
-
-                data.picture = DATA_USER[i].avatar_url;
-                data.authorRealName = DATA_USER[i].name;
-                data.authorEmail = DATA_USER[i].email;
-                data.id = DATA_USER[i]._id;
-            }
-        }
-
-        return data;
     }
 
     function modifyRowTable(arrayObject, oldGroup, oldLayer){
