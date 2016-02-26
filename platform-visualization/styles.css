@@ -317,7 +317,7 @@ END
 
 /**     START
 * @author Daril Rodriguez.
-* CSS FOR FERMAT EDIT MODAL.
+* CSS FOR FERMAT EDIT MODAL AUTHORS.
 */
 
 #hidden-area {
@@ -597,6 +597,100 @@ END
     margin: 2px;
     width: 139px;
     border-radius: 0;
+    
+}
+
+/**
+* END
+*/
+
+/**     START
+* @author Daril Rodriguez.
+* CSS FOR FERMAT EDIT MODAL DESCRIPTION.
+*/
+
+#modal-desc {
+    
+    opacity: 0;
+    z-index: 12;
+    width: 45.5%;
+    padding: 8px;
+    background: #00cdad;
+    padding-bottom: 4px;
+    
+    position: absolute;
+    left: calc(50% - 22.7%);
+    
+}  
+
+#modal-desc[data-state="hidden"] {
+    
+    opacity: 0;
+    display: none;
+    
+}
+
+#modal-desc[data-state="show"] {
+    
+    opacity: 1;
+    display: block;
+    
+}
+
+#modal-desc label {
+    
+    color: #006053;
+    font-size: 14px;
+    font-family: uppercase;
+    
+}
+
+#modal-desc textarea {
+    
+    border: 0px;
+    width: 100%;
+    resize: none;
+    color: #006053;
+    font-size: 14px;
+    margin-top: 5px;
+    background: #daf0e9;
+    font-family: uppercase;
+    
+}
+
+#modal-desc div {
+    
+    width: 100%;
+    
+}
+
+#modal-desc div button{
+    
+    float: left;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    width: 49.5%;
+    cursor: pointer;
+    font-size: 12px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background: #daf0e9;
+    font-family: sans-serif;
+    
+}
+
+#modal-desc div #modal-desc-accept {
+    
+    float: right;
+    
+}
+
+#modal-desc div button:active {
+    
+    color: #000000;
+    border: none;
+    background-color: rgba(127,127,127,0.75);
     
 }
 
