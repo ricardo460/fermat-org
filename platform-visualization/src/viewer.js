@@ -7,6 +7,7 @@ var tilesQtty = [],
     actualView,
     stats = null,
     headersUp = false,
+    currentRender = "start";
 //Class
     tileManager = new TileManager(),
     helper = new Helper(),
@@ -30,9 +31,8 @@ var TILE_DIMENSION = {
 },
     TILE_SPACING = 20;
 
-    currentRender = "start";
-    currentRender = createScene(currentRender, currentRender);
-    getData();
+currentRender = createScene(currentRender, currentRender);
+getData();
 
 $('#login').click(function() {
         window.session.getAuthCode();
@@ -65,7 +65,7 @@ function createScene(current, option){
     if(change) {
 
         var light = new THREE.AmbientLight(0xFFFFFF);
-        scene.add( light );
+        scene.add(light);
 
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.domElement.style.position = 'absolute';
@@ -99,9 +99,10 @@ function webglAvailable() {
         var canvas = document.createElement('canvas');
         
         //Force boolean cast
-        return !!( window.WebGLRenderingContext && 
+        return !!(window.WebGLRenderingContext && 
                   (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
-    } catch (e) {
+    } 
+    catch(e) {
         return false;
     }
 }
@@ -155,6 +156,16 @@ function init() {
 
     setTimeout(function() { initPage(); }, 500);
     
+    setTimeout(function (){
+        if(actualView === 'home'){
+            helper.showHelpText('navigation');
+            helper.showHelpText('zoom');
+            helper.showHelpText('slide');
+            helper.showHelpText('return');
+            toggleHelp = true;
+        }
+    }, 15000);
+    
     /*setTimeout(function() {
         var loader = new Loader();
         loader.findThemAll();
@@ -170,7 +181,7 @@ function init() {
  * Changes the actual state of the viewer
  * @param {String} name The name of the target state
  */
-function goToView ( targetView ) {
+function goToView(targetView) {
     
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
@@ -221,9 +232,8 @@ function initPage() {
                     change = false;
                 }
             }
-            else{
+            else
                 goToView(window.location.hash.slice(1));
-            }
 		}
     });
 
@@ -284,7 +294,7 @@ function onElementClick(id) {
     
     var focus = window.helper.getSpecificTile(id).mesh;
 
-    if (window.camera.getFocus() == null) {
+    if(window.camera.getFocus() == null) {
 
         window.tileManager.letAlone(id, 2000);
 
@@ -334,7 +344,7 @@ function onElementClick(id) {
 
             var mesh =  window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
     
-            if (_tile.author == tile.author) {
+            if(_tile.author == tile.author) {
 
                 relatedTasks.push(id);
         
@@ -393,7 +403,7 @@ function onElementClick(id) {
         email.textContent = tileData.authorEmail;
         sidePanel.appendChild(email);
 
-        if (relatedTasks != null && relatedTasks.length > 0) {
+        if(relatedTasks != null && relatedTasks.length > 0) {
             
             var anyTimeline = false;
             
@@ -434,7 +444,8 @@ function onElementClick(id) {
                 $(realName).fadeTo(1000, 1, function() {
                     $(email).fadeTo(1000, 1, function() {
 
-                        if (tlButton != null) $(tlButton).fadeTo(1000, 1);
+                        if(tlButton != null)
+                            $(tlButton).fadeTo(1000, 1);
 
                     });
                 });
@@ -476,7 +487,7 @@ function onClick(e) {
     var mouse = new THREE.Vector2(0, 0),
         clicked = [];
     
-    if ( !camera.dragging ) {
+    if(!camera.dragging) {
     
         //Obtain normalized click location (-1...1)
         mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
@@ -487,7 +498,7 @@ function onClick(e) {
         clicked = camera.rayCast(mouse, scene.children);
 
         //If at least one element got clicked, process the first which is NOT a line
-        if (clicked && clicked.length > 0) {
+        if(clicked && clicked.length > 0) {
             
             for(var i = 0; i < clicked.length; i++) {
                 
@@ -509,7 +520,8 @@ function animate() {
 
     camera.update();
 
-    if ( stats ) stats.update();
+    if(stats)
+        stats.update();
 }
 
 function create_stats(){ 

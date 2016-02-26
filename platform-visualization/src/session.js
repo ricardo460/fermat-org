@@ -1,4 +1,4 @@
-function Session (){
+function Session(){
 
 	var isLogin;
 	var api_key = "56a10473b27e63185c6970d6";
@@ -87,13 +87,14 @@ function Session (){
 			}
 		}).success(function(data) {
 			console.log("Logout", data);
-			if(data !== undefined)
-				if (data === true) {
+			if(data !== undefined){
+				if(data === true) {
 					isLogin = false;
 					$("#login").fadeIn(2000);
 					$("#logout").fadeOut(2000);
 					usr = undefined;
 				}
+            }
 		});
 	};
 
@@ -113,7 +114,7 @@ function Session (){
 		}).success(function(tkn) {
 			usr = tkn._usr_id;
 			axs_key = tkn.axs_key;
-			if (usr !== undefined) {
+			if(usr !== undefined) {
 				
 				isLogin = true;
 
@@ -125,7 +126,8 @@ function Session (){
      			$("#logout").fadeIn(2000);
 
      			drawUser(usr);
-			} else
+			} 
+            else
 				console.log("Error:", tkn);
 		});
 	};
@@ -193,32 +195,32 @@ function Session (){
 		var image = new Image();
         var actual = data.shift();
 
-        if (actual.src && actual.src != 'undefined') {
+        if(actual.src && actual.src != 'undefined') {
 
-            image.onload = function () {
+            image.onload = function() {
 
 
-                if (actual.alpha)
+                if(actual.alpha)
                     ctx.globalAlpha = actual.alpha;
 
                 ctx.drawImage(image, actual.x, actual.y, actual.w, actual.h);
-                if (texture)
+                if(texture)
                     texture.needsUpdate = true;
 
                 ctx.globalAlpha = 1;
 
-                if (data.length !== 0) {
+                if(data.length !== 0) {
 
-                    if (data[0].text)
+                    if(data[0].text)
                         drawTextUser(data, ctx, texture);
                     else
                         drawPictureUser(data, ctx, texture);
                 }
             };
 
-            image.onerror = function () {
-                if (data.length !== 0) {
-                    if (data[0].text)
+            image.onerror = function() {
+                if(data.length !== 0) {
+                    if(data[0].text)
                         drawTextUser(data, ctx, texture);
                     else
                         drawPictureUser(data, ctx, texture);
@@ -227,9 +229,10 @@ function Session (){
 
             image.crossOrigin = "anonymous";
             image.src = actual.src;
-        } else {
-            if (data.length !== 0) {
-                if (data[0].text)
+        } 
+        else {
+            if(data.length !== 0) {
+                if(data[0].text)
                     drawTextUser(data, ctx, texture);
                 else
                     drawPictureUser(data, ctx, texture);
@@ -241,25 +244,25 @@ function Session (){
 
 		var actual = data.shift();
 
-        if (actual.color)
+        if(actual.color)
             ctx.fillStyle = actual.color;
 
         ctx.font = actual.font;
 
-        if (actual.constraint)
-            if (actual.wrap)
+        if(actual.constraint)
+            if(actual.wrap)
                 helper.drawText(actual.text, actual.x, actual.y, ctx, actual.constraint, actual.lineHeight);
             else
                 ctx.fillText(actual.text, actual.x, actual.y, actual.constraint);
         else
             ctx.fillText(actual.text, actual.x, actual.y);
 
-        if (texture)
+        if(texture)
             texture.needsUpdate = true;
 
         ctx.fillStyle = "#FFFFFF";
 
-        if (data.length !== 0){ 
+        if(data.length !== 0){ 
 
           if(data[0].text)
             drawTextUser(data, ctx, texture); 
@@ -269,7 +272,6 @@ function Session (){
 	}
 
 	var code = window.location.toString().replace(/.+code=/, '');
-	if ((code.indexOf("/") < 0)) {
+	if((code.indexOf("/") < 0))
 		this.login();
-	}
 }

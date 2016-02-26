@@ -33,12 +33,14 @@ BaseNetworkViewer.prototype = {
      */
     unload : function() {
 
-        for(var node in this.nodes)
+        for(var node in this.nodes){
             scene.remove(this.nodes[node].sprite);
+        }
         this.nodes = {};
 
-        for(var i = 0; i < this.edges.length; i++)
+        for(var i = 0; i < this.edges.length; i++){
             scene.remove(this.edges[i].line);
+        }
         this.edges = [];
         
         window.render();
@@ -274,7 +276,6 @@ BaseNetworkViewer.prototype = {
 
         var duration = 250;
         
-        
         excludedIDs = (typeof excludedIDs !== "undefined") ? excludedIDs : [];
         
         var createTween = function(i, self) {
@@ -319,7 +320,8 @@ BaseNetworkViewer.prototype = {
         for(var i = 0; i < this.edges.length; i++) {
             var edge = this.edges[i];
 
-            if((edge.from === from && edge.to === to) || (edge.to === from && edge.from === to)) return i;
+            if((edge.from === from && edge.to === to) || (edge.to === from && edge.from === to))
+                return i;
         }
 
         return -1;
