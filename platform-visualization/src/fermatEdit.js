@@ -208,13 +208,13 @@ function FermatEdit() {
             document.getElementById('select-State').value = tile.code_level; 
 
         if(tile.name !== undefined)
-            document.getElementById('imput-Name').value = tile.name;         
-
-        if(tile.maintainer !== undefined)
-            document.getElementById('imput-Maintainer').value = tile.maintainer;
+            document.getElementById('imput-Name').value = tile.name;       
         
         if(tile.devs !== undefined) 
             document.getElementById('modal-devs').value = tile.devs.slice(0);
+        
+        if(tile.description !== undefined)
+            document.getElementById('modal-desc-textarea').value = tile.description;
     }
 
     function createElement() {
@@ -317,7 +317,7 @@ function FermatEdit() {
         sesionType();
         sesionName();
         sesionDifficulty();
-        sesionRepoDir();
+        sesionDescription();
         sesionState();
         sesionAuthor();
         createbutton();
@@ -546,7 +546,6 @@ function FermatEdit() {
             });
 
         }
-
         
         function sesionAuthor(){
             
@@ -647,13 +646,10 @@ function FermatEdit() {
                     
                     var list_btn = document.getElementsByClassName("add_btn");
                     
-                    for(var i = 0; i < list_btn.length; i++) {
-                        var btn = list_btn[i];
-
-                        btn.onclick = function(e) {
+                    function btnOnclickAccept() {
                             
                             var modal = document.getElementById("modal-devs");
-                            _self = this;
+                            var _self = this;
                             modal.value[modal.value.length] = {
                                 dev: DATA_USER.find(function(x) {
                                     
@@ -668,62 +664,63 @@ function FermatEdit() {
                             
                             modal.updateModal();
 
-                        };
+                    }
 
+                    
+                    for(i = 0; i < list_btn.length; i++) {
+                        var btn = list_btn[i];
+
+                        btn.onclick = btnOnclickAccept;
                     }
                     
-                    var cont_list = document.getElementById("cont-devs-actives");
+                    cont_list = document.getElementById("cont-devs-actives");
                     cont_list.innerHTML = "";
                     
-                    for(var i = 0; i < this.value.length; i++) {
+                    for(i = 0; i < this.value.length; i++) {
                         
-                        var img_src;
+                        var img_src1;
                         
                         if(this.value[i].dev.avatar_url)
-                            img_src = this.value[i].dev.avatar_url;
+                            img_src1 = this.value[i].dev.avatar_url;
                         else
-                            img_src = "images/modal/avatar.png"
+                            img_src1 = "images/modal/avatar.png";
                         
-                        var dev_html = `
-
-                        <div data-expand="false" data-usrid=` + i +` class="dev-fermat-edit dev-active">
-                            <div>
-                                <img crossorigin="anonymous" src="` + img_src + `">
-                                <label>` + this.value[i].dev.usrnm + `</label>
-                                <button data-usrid=` + i + ` class="rem_btn"></button>
-                                <div class="dev-data">
-                                    <table width="100%">
-                                        <tr>
-                                            <td align="right">Scope</td>
-                                            <td>
-                                                <select class="select-scope">
-                                                    <option>implementation</option>
-                                                    <option>architecture</option>
-                                                    <option>design</option>
-                                                    <option>unit-tests</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td align="right">Role</td>
-                                            <td>
-                                                <select class="select-role">
-                                                    <option>maintainer</option>
-                                                    <option>author</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td align="right">%</td>
-                                            <td><input class="input-prcnt" type="text" value="` + this.value[i].percnt + `"></input></td>
-                                        </tr>
-
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        `
-                        ;
+                        var dev_html = ''+
+                        '<div data-expand="false" data-usrid='+ i +' class="dev-fermat-edit dev-active">'+
+                            '<div>'+
+                                '<img crossorigin="anonymous" src="' + img_src1 + '">'+
+                                '<label>' + this.value[i].dev.usrnm + '</label>'+
+                                '<button data-usrid='+ i +' class="rem_btn"></button>'+
+                                '<div class="dev-data">'+
+                                    '<table width="100%">'+
+                                        '<tr>'+
+                                            '<td align="right">Scope</td>'+
+                                            '<td>'+
+                                                '<select class="select-scope">'+
+                                                    '<option>implementation</option>'+
+                                                    '<option>architecture</option>'+
+                                                    '<option>design</option>'+
+                                                    '<option>unit-tests</option>'+
+                                                '</select>'+
+                                            '</td>'+
+                                        '</tr>'+
+                                        '<tr>'+
+                                           '<td align="right">Role</td>'+
+                                            '<td>'+
+                                                '<select class="select-role">'+
+                                                    '<option>maintainer</option>'+
+                                                    '<option>author</option>'+
+                                                '</select>'+
+                                           '</td>'+
+                                        '</tr>'+
+                                        '<tr>'+
+                                            '<td align="right">%</td>'+
+                                            '<td><input class="input-prcnt" type="text" value="` + this.value[i].percnt + `"></input></td>'+
+                                        '</tr>'+
+                                    '</table>'+
+                                '</div>'+
+                            '</div>'+
+                        '</div>';
                         
                         cont_list.innerHTML += dev_html;
                         
@@ -732,7 +729,7 @@ function FermatEdit() {
                     
                     var devDiv = document.getElementsByClassName("dev-active");
 
-                    for(var i=0; i < devDiv.length; i++) {
+                    for(i=0; i < devDiv.length; i++) {
 
                         var div = devDiv[i];
                         var dev     = modal.value[div.dataset.usrid];
@@ -746,50 +743,52 @@ function FermatEdit() {
                         
                     }
                     
-                    var list_btn = document.getElementsByClassName("rem_btn");
+                    list_btn = document.getElementsByClassName("rem_btn");
                     
-                    for(var i = 0; i < list_btn.length; i++) {
-                        var btn = list_btn[i];
+                    function btnOnclickRemove() {
 
-                        btn.onclick = function(e) {
-                            
-                            var modal = document.getElementById("modal-devs");
-                            modal.value.splice(this.dataset.usrid, 1);
-                            modal.updateModal();
+                        var modal = document.getElementById("modal-devs");
+                        modal.value.splice(this.dataset.usrid, 1);
+                        modal.updateModal();
 
-                        };
+                    }
+                    
+                    for(i = 0; i < list_btn.length; i++) {
+                        var btn1 = list_btn[i];
+
+                        btn1.onclick = btnOnclickRemove;
 
                     }
                     
                     var list_dev = document.getElementsByClassName("dev-active");
                     
-                    for(var i = 0; i < list_dev.length; i++) {
-                        var dev = list_dev[i];
+                    
+                    function dev_onmouseout() {
+                        this.dataset.expand = "false";
 
-                        dev.onmouseover = function(e) {
-                            
-                            this.dataset.expand = "true";
-                            
-                        };
+                        var selectRole = this.getElementsByClassName("select-role")[0].value;
+                        var selectScope = this.getElementsByClassName("select-scope")[0].value;
+                        var inputPrcnt = this.getElementsByClassName("input-prcnt")[0].value;
+
+                        modal.value[this.dataset.usrid].role = selectRole;
+                        modal.value[this.dataset.usrid].scope = selectScope;
+                        modal.value[this.dataset.usrid].percnt = inputPrcnt;
+                    }
+                    
+                    function dev_onmouseover() {
+                        this.dataset.expand = "true";
+                    }
+                    
+                    for(i = 0; i < list_dev.length; i++) {
+                        var dev1 = list_dev[i];
+
+                        dev1.onmouseover = dev_onmouseover;
                         
-                        dev.onmouseout = function(e) {
-                            
-                            this.dataset.expand = "false";
-
-                            var selectRole = this.getElementsByClassName("select-role")[0].value;
-                            var selectScope = this.getElementsByClassName("select-scope")[0].value;
-                            var inputPrcnt = this.getElementsByClassName("input-prcnt")[0].value;
-
-                            modal.value[this.dataset.usrid].role = selectRole;
-                            modal.value[this.dataset.usrid].scope = selectScope;
-                            modal.value[this.dataset.usrid].percnt = inputPrcnt;
-                            
-                            
-                        };
+                        dev1.onmouseout = dev_onmouseout;
 
                     }
                     
-                }
+                };
                 
                 document.body.appendChild(modal);
 
@@ -826,6 +825,7 @@ function FermatEdit() {
                 modal.dataset.state = "hidden";
                 var area = document.getElementById("hidden-area");
                 window.helper.hide(area, 500);
+                changeTexture();
                 
             });
             
@@ -856,6 +856,7 @@ function FermatEdit() {
                 
                 var area = document.getElementById("hidden-area");
                 window.helper.hide(area, 500);
+                changeTexture();
                 
             });
 
@@ -899,42 +900,96 @@ function FermatEdit() {
 
         }
 
-        function sesionRepoDir(){
-
-            var id = 'label-Maintainer'; text = 'Enter Maintainer : '; type = 'label';
-
-            createField(id, text, 15, type, 2);
-
+        function sesionDescription(){
+            
             var idSucesor = objects.row2.buttons[objects.row2.buttons.length - 1].id;
 
             var object = {
-                id : "imput-Maintainer",
-                text : "textfield"
+                id : "button-desc",
+                text : "Description"
               };
 
             objects.idFields.maintainer = object.id;
 
-            var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
+            var input = $('<input />', {"id" : object.id, "type" : "button", "text" : object.text });
 
-            $("#"+objects.row2.div).append(imput);
+            $("#"+objects.row2.div).append(input);
 
             var button = document.getElementById(object.id);
-
-            var sucesorButton = document.getElementById(idSucesor);
-                  
-            button.className = 'edit-Fermat';
-            button.placeholder = 'Github User';    
+            
+            button.className = 'actionButton edit-Fermat';
+            button.value = "Description";
+            button.style.marginLeft = "5px";
             button.style.zIndex = 10;
             button.style.opacity = 0;
-
-            window.helper.show(button, 1000);
-
+            
             objects.row2.buttons.push(object);
 
-            button.addEventListener('blur', function() {
+            object = {
+                id : "modal-desc",
+                text : "modal"
+            };
 
-                changeTexture();
-            });        
+            objects.row2.buttons.push(object);
+            
+
+            window.helper.show(button, 1000);
+            
+            if(!document.getElementById("modal-desc")) {
+                
+                var modal = document.createElement("div");
+                modal.id = "modal-desc";
+                modal.style.top = (window.innerHeight / 4) + "px" ;
+                modal.dataset.state = "hidden";
+                
+                modal.innerHTML = ''+
+                        '<label>Description:</label>'+
+                        '<textarea id="modal-desc-textarea" rows="12"></textarea>'+
+                        '<div>'+
+                            '<button id="modal-desc-cancel">Cancel</button>'+
+                            '<button id="modal-desc-accept">Accept</button>'+
+                        '</div>';
+                
+                
+                
+                document.body.appendChild(modal);
+            }
+
+
+            button.addEventListener('click', function() {
+                
+                var modal = document.getElementById("modal-desc");
+                modal.dataset.state = "show";
+                
+                modal.oldValue = document.getElementById("modal-desc-textarea").value;
+                
+                var area = document.createElement("div");
+                area.id = "hidden-area";
+                document.body.appendChild(area);
+                window.helper.show(area, 1000);
+                
+            });
+            
+            document.getElementById("modal-desc-cancel").onclick = function() {
+                
+                var modal = document.getElementById("modal-desc");
+                modal.dataset.state = "hidden";
+                document.getElementById("modal-desc-textarea").value = modal.oldValue;
+                
+                var area = document.getElementById("hidden-area");
+                window.helper.hide(area, 500);
+                
+            };
+            
+            document.getElementById("modal-desc-accept").addEventListener("click", function() {
+                
+                var modal = document.getElementById("modal-desc");
+                modal.dataset.state = "hidden";
+                
+                var area = document.getElementById("hidden-area");
+                window.helper.hide(area, 500);
+                
+            });
 
         }
 
@@ -1422,6 +1477,11 @@ function FermatEdit() {
             });
 
             function fillDevs(newDevs, oldDevs, task){
+                
+                function find_Dev(_index) {
+                    if(_index._id === oldDevs[f]._id)
+                        return _index;            
+                }
 
                 if(newDevs.length > 0){
 
@@ -1442,30 +1502,27 @@ function FermatEdit() {
                     else if(task === 'update'){
 
                         if(oldDevs.length > 0){
+                            
 
-                            for(var i = 0; i < oldDevs.length; i++){
+                            for(var f = 0; f < oldDevs.length; f++){
 
-                                var t = newDevs.find(function(_index) {
-                                    
-                                                if(_index._id === oldDevs[i]._id)
-                                                    return _index;            
-                                            });
+                                var t = newDevs.find(find_Dev);
                                 
                                 if(t){
 
-                                    if(t.role!= oldDevs[i].role ||
-                                       t.scope != oldDevs[i].scope ||
-                                       t.percnt.toString() != oldDevs[i].percnt.toString()){
+                                    if(t.role!= oldDevs[f].role ||
+                                       t.scope != oldDevs[f].scope ||
+                                       t.percnt.toString() != oldDevs[f].percnt.toString()){
                                         
                                         config.update.devs.push(t);                                      
                                     }
                                     else{
-                                        newTableDevs.push(oldDevs[i]);
+                                        newTableDevs.push(oldDevs[f]);
                                     }
                                 }
                                 else{
 
-                                    config.delete.devs.push(oldDevs[i]);                                  
+                                    config.delete.devs.push(oldDevs[f]);                                  
                                 }
                             }
                         }
@@ -1473,8 +1530,8 @@ function FermatEdit() {
                 }
                 else{
 
-                    for(var i = 0; i < oldDevs.length; i++){
-                        config.delete.devs.push(oldDevs[i]);
+                    for(var l = 0; l < oldDevs.length; l++){
+                        config.delete.devs.push(oldDevs[l]);
                     }
                 }
             }
@@ -1678,12 +1735,13 @@ function FermatEdit() {
         var devs = document.getElementById("modal-devs").value;
         
         table.devs = devs.slice(0);
+        table.description = document.getElementById("modal-desc-textarea").value;
 
         //console.log(table.devs);
 
         //table.devs = DATA_DEVS_TEST;
 
-        var _author = getBestDev(table.devs, "author");
+        _author = getBestDev(table.devs, "author");
 
         table.picture = _author.avatar_url ? _author.avatar_url : undefined;
         table.author = _author.usrnm ? _author.usrnm : undefined;
