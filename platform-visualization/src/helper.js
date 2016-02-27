@@ -5,7 +5,9 @@ function Helper() {
 
     var SERVER = 'http://api.fermat.org';
 
-    var PORT = '?env=development';
+    var PORT = '';
+
+    //var PORT = '?env=development';
 
     var USERDATA = '';
 
@@ -386,17 +388,15 @@ function Helper() {
 
     this.getCompsUser = function(callback){
 
-        window.session.useTestData();
-
-        USERDATA = window.session.getUserLogin();
-
-        AXS_KEY = '?axs_key=' + USERDATA.axs_key;
-
         var url = "";
 
         var list = {};
 
         if(window.session.getIsLogin()){ 
+
+            USERDATA = window.session.getUserLogin();
+
+            AXS_KEY = '?axs_key=' + USERDATA.axs_key;
 
             url = SERVER + "/v1/repo/usrs/"+USERDATA._id+"/";
 
