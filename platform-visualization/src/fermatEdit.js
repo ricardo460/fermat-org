@@ -64,16 +64,26 @@ function FermatEdit() {
 
         if(id === null){
 
-            callback = function(){ 
+            if(!window.session.getIsLogin()){
+            
+                callback = function(){ 
+                    window.session.getAuthCode();
+                };
+            }
+            else{
 
-                actions.type = "insert";
+                callback = function(){ 
 
-                window.buttonsManager.removeAllButtons();
+                    actions.type = "insert";
 
-                window.session.displayLoginButton(false);
+                    window.buttonsManager.removeAllButtons();
 
-                drawTile(null, addAllFilds);
-            };
+                    window.session.displayLoginButton(false);
+
+                    drawTile(null, addAllFilds);
+                };
+
+            }
 
             window.session.displayLoginButton(true);
 
