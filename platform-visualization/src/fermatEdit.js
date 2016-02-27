@@ -1098,7 +1098,7 @@ function FermatEdit() {
     function changeTexture(){
 
         var table = null,
-            scale = 5, //5
+            scale = 5,
             mesh = null;
 
         table = fillTable(true);
@@ -1132,7 +1132,7 @@ function FermatEdit() {
 
             var table = fillTable(false);
 
-            window.helper.hide('button-save');
+            disabledButtonSave(true);
             
             if(actions.type === "insert")
                 createTile(table);
@@ -1236,7 +1236,7 @@ function FermatEdit() {
                 });
             },
             function(){
-                window.helper.show('button-save');
+                disabledButtonSave(false);
             });
 
         function getParamsData(table){
@@ -1447,7 +1447,7 @@ function FermatEdit() {
 
         },
         function(){
-            window.helper.show('button-save');
+            disabledButtonSave(false);
         });
 
         function getParamsData(table){
@@ -1630,7 +1630,7 @@ function FermatEdit() {
 
                         },
                         function(){
-                            window.helper.show('button-save');
+                            disabledButtonSave(false);
                         });
                 
                 }
@@ -1865,6 +1865,20 @@ function FermatEdit() {
         }
 
         return newArrayObject;
+    }
+
+    function disabledButtonSave(state){
+
+        var button = document.getElementById('button-save');
+
+        if(state){
+            button.innerHTML  = "Saving...";
+            button.disabled=true;
+        }
+        else{
+            button.innerHTML  = "Save";
+            button.disabled=false;
+        }
     }
 
     function getBestDev(_devs, role) {
