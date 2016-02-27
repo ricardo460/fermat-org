@@ -1,10 +1,7 @@
 function Developer (){
 
 	var objectsDeveloper = [];
-	var developerLink = [];
-	var developerAuthor = [];
-	var developerAuthorRealName = [];
-	var developerAuthorEmail = [];
+	var developers = {};
 	var self = this;
 	var position = {
 		target : [],
@@ -25,7 +22,7 @@ function Developer (){
 
             window.camera.setFocus(camTarget, new THREE.Vector4(0, 0, 1000, 1), duration);
 
-            for (var i = 0; i < objectsDevelopers.length ; i++) {
+            for(var i = 0; i < objectsDevelopers.length ; i++) {
                 if(id !== i)
                     letAloneDeveloper(objectsDevelopers[i]);
             }
@@ -49,7 +46,7 @@ function Developer (){
 
         var target;
 
-        var animate = function (object, target, dur) {
+        var animate = function(object, target, dur) {
 
             new TWEEN.Tween(object.position)
                 .to({
@@ -74,23 +71,23 @@ function Developer (){
         var image = new Image();
         var actual = data.shift();
 
-        if (actual.src && actual.src != 'undefined') {
+        if(actual.src && actual.src != 'undefined') {
 
             image.onload = function () {
 
 
-                if (actual.alpha)
+                if(actual.alpha)
                     ctx.globalAlpha = actual.alpha;
 
                 ctx.drawImage(image, actual.x, actual.y, actual.w, actual.h);
-                if (texture)
+                if(texture)
                     texture.needsUpdate = true;
 
                 ctx.globalAlpha = 1;
 
-                if (data.length !== 0) {
+                if(data.length !== 0) {
 
-                    if (data[0].text)
+                    if(data[0].text)
                         drawTextDeveloper(data, ctx, texture);
                     else
                         drawPictureDeveloper(data, ctx, texture);
@@ -98,8 +95,8 @@ function Developer (){
             };
 
             image.onerror = function () {
-                if (data.length !== 0) {
-                    if (data[0].text)
+                if(data.length !== 0) {
+                    if(data[0].text)
                         drawTextDeveloper(data, ctx, texture);
                     else
                         drawPictureDeveloper(data, ctx, texture);
@@ -108,9 +105,10 @@ function Developer (){
 
             image.crossOrigin = "anonymous";
             image.src = actual.src;
-        } else {
-            if (data.length !== 0) {
-                if (data[0].text)
+        } 
+        else {
+            if(data.length !== 0) {
+                if(data[0].text)
                     drawTextDeveloper(data, ctx, texture);
                 else
                     drawPictureDeveloper(data, ctx, texture);
@@ -128,63 +126,55 @@ function Developer (){
 
         var actual = data.shift();
 
-        if (actual.color)
+        if(actual.color)
             ctx.fillStyle = actual.color;
 
         ctx.font = actual.font;
 
-        if (actual.constraint)
-            if (actual.wrap)
+        if(actual.constraint){
+            if(actual.wrap)
                 helper.drawText(actual.text, actual.x, actual.y, ctx, actual.constraint, actual.lineHeight);
             else
                 ctx.fillText(actual.text, actual.x, actual.y, actual.constraint);
+        }
         else
             ctx.fillText(actual.text, actual.x, actual.y);
 
-        if (texture)
+        if(texture)
             texture.needsUpdate = true;
 
         ctx.fillStyle = "#FFFFFF";
 
-        if (data.length !== 0){ 
-
+        if(data.length !== 0){ 
           if(data[0].text)
             drawTextDeveloper(data, ctx, texture); 
           else 
             drawPictureDeveloper(data, ctx, texture);
         }
     }
+    
 	this.getDeveloper = function(){
 		
-		var find = false;
+		var id = 0;
+        
+        for(var i = 0; i < window.tilesQtty.length; i++){
 
-		for (var i = 0; i < table.length; i++) {
-			if(i === 0){
-				developerLink.push(table[i].picture);
-				developerAuthor.push(table[i].author);
-				developerAuthorRealName.push(table[i].authorRealName);
-				developerAuthorEmail.push(table[i].authorEmail);
-			}	
-			else{
+            var tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
 
-				for(var j = 0; j < developerLink.length; j++)
-					if(developerLink[j] === table[i].picture && find === false){
-						find = true;
-					}
-			}
-			if(find === false && i !== 0){
-				if(table[i].picture !== undefined){
-					developerLink.push(table[i].picture);
-					developerAuthor.push(table[i].author);
-					developerAuthorRealName.push(table[i].authorRealName);
-					developerAuthorEmail.push(table[i].authorEmail);
-				}
-				find = false;
-			}
-			else
-				find = false;
-		}
-		self.createDeveloper(developerLink, developerAuthor, developerAuthorRealName, developerAuthorEmail);
+            if(tile.author && developers[tile.author] === undefined)
+            {
+                developers[tile.author] = {
+                    id : id,
+                    author : tile.author,
+                    picture : tile.picture,
+                    authorRealName : tile.authorRealName,
+                    authorEmail : tile.authorEmail
+                };
+                id++;
+            }              
+        }
+        
+		self.createDevelopers();
 	};
 
 	/**
@@ -197,7 +187,7 @@ function Developer (){
      * @returns {texture} 	 Texture of the developer
      * @author Emmanuel Colina
      */
-	this.createTextureDeveloper = function(id, developerLink, developerAuthor, developerAuthorRealName, developerAuthorEmail){
+	this.createTextureDeveloper = function(developer){
 		
 		var canvas = document.createElement('canvas');
         canvas.width = 183 * 5 ;
@@ -213,7 +203,7 @@ function Developer (){
         texture.magFilter = THREE.LinearFilter;
 
 		var pic = {
-            src: developerLink[id],
+            src: developer.picture,
             alpha: 0.8
         };
         pic.x = 26.5;
@@ -239,7 +229,7 @@ function Developer (){
         ringDeveloper.h = 82.7 * 2.0;
 
         var nameDeveloper = {
-            text: developerAuthorRealName[id],
+            text: developer.authorRealName,
             font: (9 * 2.2) + 'px Roboto Bold'
         };
         nameDeveloper.x = 250;
@@ -247,7 +237,7 @@ function Developer (){
         nameDeveloper.color = "#FFFFFF";
         
         var nickDeveloper = {
-            text: developerAuthor[id],
+            text: developer.author,
             font: (5 * 2.2) + 'px Canaro'
         };
         nickDeveloper.x = 250;
@@ -255,7 +245,7 @@ function Developer (){
         nickDeveloper.color = "#00B498";
 
         var emailDeveloper = {
-            text: developerAuthorEmail[id],
+            text: developer.authorEmail,
             font: (5 * 2.2) + 'px Roboto Medium'
         };
         emailDeveloper.x = 250;
@@ -263,12 +253,12 @@ function Developer (){
         emailDeveloper.color = "#E05A52";
 
 		var data = [
-		pic,
-		background,
-		ringDeveloper,
-		nameDeveloper,
-        nickDeveloper,
-		emailDeveloper
+            pic,
+            background,
+            ringDeveloper,
+            nameDeveloper,
+            nickDeveloper,
+            emailDeveloper
 		];
 
         drawPictureDeveloper(data, ctx, texture);
@@ -284,24 +274,26 @@ function Developer (){
      * @param   {object}     developerAuthorEmail email of the developer
      * @author Emmanuel Colina
      */
-	this.createDeveloper = function (developerLink, developerAuthor, developerAuthorRealName, developerAuthorEmail){
+	this.createDevelopers = function(){
 
 		var mesh, texture, lastTarget;
+        var i = 0;
 
-		position.target = self.setPositionDeveloper(developerLink);
+        //Just need the number of developers
+		position.target = self.setPositionDeveloper(Object.keys(developers));
 
-		for(var i = 0; i < developerLink.length; i++){
+		for(var key in developers){
 
 			lastTarget = window.helper.getOutOfScreenPoint(0);
 			position.lastTarget.push(lastTarget);
 
-			texture = self.createTextureDeveloper(i, developerLink, developerAuthor, developerAuthorRealName, developerAuthorEmail);
+			texture = self.createTextureDeveloper(developers[key]);
 
 			mesh = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(230, 120),
             new THREE.MeshBasicMaterial({ transparent : true, color : 0xFFFFFF}));
             mesh.userData = {
-                id: i,
+                id: developers[key].id,
                 onClick : onClick
             };
             mesh.material.map = texture;
@@ -310,10 +302,12 @@ function Developer (){
         	mesh.position.y = position.lastTarget[i].y;
         	mesh.position.z = position.lastTarget[i].z;
 
-        	mesh.name = developerAuthor[i];
+        	mesh.name = developers[key].author;
         	mesh.scale.set(5, 5, 5);
         	scene.add(mesh);
         	objectsDeveloper.push(mesh);
+            
+            i++;
 		}
 	};
 
@@ -331,16 +325,14 @@ function Developer (){
 	    var center = new THREE.Vector3(0, 0, 0);
 	    center = viewManager.translateToSection('developers', center);
 
-	    if (mesh.length === 1) {
-
+	    if(mesh.length === 1)
 	        positionDeveloper.push(center);
-	    }
 
-	    else if (mesh.length === 2) {
+	    else if(mesh.length === 2) {
 
 	        center.x = center.x - 500;
 
-	        for (var k = 0; k < mesh.length; k++) {
+	        for(var k = 0; k < mesh.length; k++) {
 
 	            position = new THREE.Vector3();
 
@@ -353,7 +345,7 @@ function Developer (){
 	        }
 
 	    }
-	    else if (mesh.length > 2) {
+	    else if(mesh.length > 2) {
 
 	        var sqrt, round, column, row, initialY, count, raizC, raizC2;
 	        count = 0;
@@ -389,19 +381,16 @@ function Developer (){
 	                        }
 	                    }
 	                    for(var t = raizC - 1; t >= raizC - count; t--){
-	                        if(mesh.length === t) {
+	                        if(mesh.length === t)
 	                            row = column = sqrt ;
-	                        }
 	                    }
 	                }
-	                if(row !== 0  && column !== 0){
+	                if(row !== 0  && column !== 0)
 	                    break;
-	                }
 	            }
 	        }
-	        else{
+	        else
 	            row = column = Math.sqrt(mesh.length);
-	        }
 
 	        count = 0;
 	        var positionY = center.y - 1500;  
@@ -441,18 +430,10 @@ function Developer (){
 	                    count = count + 1;
 	                }
 
-	                if((positionX + 500) === center.x + 1500) {
-	                    positionX = positionX + 1000;
-	                }
-	                else
-	                    positionX = positionX + 1000;
+	                positionX = positionX + 1000;
 	            }
 
-	            if((positionY - 250) === center.y - 1500) {
-	                positionY = positionY - 500;
-	            }
-	            else
-	                positionY = positionY - 500;     
+	            positionY = positionY - 500;     
 	        }      
 	    }
 
@@ -467,7 +448,7 @@ function Developer (){
 		
 		var duration = 3000;
 
-		for (var i = 0, l = objectsDeveloper.length; i < l; i++) {
+		for(var i = 0, l = objectsDeveloper.length; i < l; i++) {
             new TWEEN.Tween(objectsDeveloper[i].position)
             .to({
                 x : position.target[i].x,
@@ -484,7 +465,9 @@ function Developer (){
      * @author Emmanuel Colina
      */
 	this.delete = function() {
+
         var _duration = 2000;
+
         var moveAndDelete = function(id) {
             
             var target = position.lastTarget[id];
@@ -501,10 +484,7 @@ function Developer (){
             helper.hideObject(objectsDeveloper[i], false, _duration);
         }
         objectsDeveloper = [];
-        developerLink = [];
-		developerAuthor = [];
-		developerAuthorRealName = [];
-		developerAuthorEmail = [];
+        developers = {};
 		position = {
 			target : [],
 			lastTarget : []
@@ -516,17 +496,21 @@ function Developer (){
         var section = 0;
         var center = objectsDeveloper[id].position;
 
-        for (var i = 0; i < table.length; i++) {
-            
-            if (table[i].author === objectsDeveloper[id].name && !isNaN(objects[i].position.y)){
+        for(var i = 0; i < window.tilesQtty.length; i++){
 
-                new TWEEN.Tween(objects[i].position)
+            var tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
+
+            var mesh = window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
+    
+            if(tile.author === objectsDeveloper[id].name && !isNaN(mesh.position.y)){
+
+                new TWEEN.Tween(mesh.position)
                 .to({x : (center.x + (section % 5) * window.TILE_DIMENSION.width) - 750, y : (center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height) - 250, z : 0}, 2000)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .start();
                 
                 section += 1;
-            }
+            }                            
         }
     };
 }

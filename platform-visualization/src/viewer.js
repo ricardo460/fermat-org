@@ -1,17 +1,21 @@
 //global variables
-var table = [],
+var tilesQtty = [],
+    TABLE = {},
     camera,
     scene = new THREE.Scene(),
     renderer,
-    objects = [],
     actualView,
     stats = null,
+    headersUp = false,
+    currentRender = "start";
 //Class
     tileManager = new TileManager(),
     helper = new Helper(),
     logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),
+    session = new Session(),
+    fermatEdit = null,
     browserManager = null,
     screenshotsAndroid = null,
     headers = null,
@@ -27,43 +31,78 @@ var TILE_DIMENSION = {
 },
     TILE_SPACING = 20;
 
-createScene();
-
+currentRender = createScene(currentRender, currentRender);
 getData();
+
+$('#login').click(function() {
+        window.session.getAuthCode();
+});
+
+$('#logout').click(function() {
+        window.session.logout();
+        document.getElementById("containerLogin").style.display = "none";
+});
 
 /**
  * Creates the rendering environment
  */
-function createScene(){
-
-    var light = new THREE.AmbientLight(0xFFFFFF);
-    scene.add( light );
+function createScene(current, option){
     
-    if(webglAvailable())
+    change = false; 
+    if(option !== "canvas" && webglAvailable() && window.currentRender !== "webgl") {
         renderer = new THREE.WebGLRenderer({antialias : true, alpha : true}); //Logarithmic depth buffer disabled due to sprite - zbuffer issue
-    else
-        renderer = new THREE.CanvasRenderer({antialias : true, alpha : true});
-        
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.domElement.style.position = 'absolute';
-    renderer.setClearColor(0xFFFFFF);
-    document.getElementById('container').appendChild(renderer.domElement);
+        current = "webgl";
+        change = true;
+    }
+    else {
+        if((option === "start" || option === "canvas") && window.currentRender !== "canvas") {
+            renderer = new THREE.CanvasRenderer({antialias : true, alpha : true});
+            current = "canvas";
+            change = true;
+        }
+    }
+    
+    if(change) {
 
-    camera = new Camera(new THREE.Vector3(0, 0, 90000),
-        renderer,
-        render);
+        var light = new THREE.AmbientLight(0xFFFFFF);
+        scene.add(light);
 
-    logo.startFade();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.domElement.style.position = 'absolute';
+        renderer.domElement.id = "canvas";
+        renderer.setClearColor(0xFFFFFF);
+        //renderer.setClearColor(0x313131);//Mode Test.
+        document.getElementById('container').appendChild(renderer.domElement);
+
+        camera = new Camera(new THREE.Vector3(0, 0, 90000),
+            renderer,
+            render);
+    }
+
+    if(window.currentRender === "start")
+        logo.startFade();
+    if(currentRender !== "start") {
+        if(change)
+            console.log("Switching rendering to",current);
+        else if(currentRender !== option)
+            console.log("Rendering switch failed");
+        else
+            console.log("Already rendering with",currentRender);
+    }
+
+    return current;
 }
+
 
 function webglAvailable() {
     try {
         var canvas = document.createElement('canvas');
         
         //Force boolean cast
-        return !!( window.WebGLRenderingContext && 
+        return !!(window.WebGLRenderingContext && 
                   (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
-    } catch (e) {
+    } 
+    catch(e) {
         return false;
     }
 }
@@ -78,6 +117,9 @@ function init() {
     magazine = new Magazine();
     flowManager = new FlowManager();
     buttonsManager = new ButtonsManager();
+    fermatEdit = new FermatEdit();
+
+    fermatEdit.init();
 
     //View Manager
     viewManager = new ViewManager();
@@ -106,27 +148,23 @@ function init() {
             viewManager.views[window.actualView].backButton();
  
     });
-
-    $('#legendButton').click(function() {
-
-        var legend = document.getElementById('legend');
-
-        if (legend.style.opacity == 1) $('#legend').fadeTo(1000, 0, function() {
-            legend.style.display = 'none';
-        });
-        else {
-            legend.style.display = 'block';
-            $(legend).fadeTo(1000, 1);
-        }
-    });
-
-            
+    
     $('#container').click(onClick);
 
     //Disabled Menu
     //initMenu();
 
     setTimeout(function() { initPage(); }, 500);
+    
+    setTimeout(function (){
+        if(actualView === 'home'){
+            helper.showHelpText('navigation');
+            helper.showHelpText('zoom');
+            helper.showHelpText('slide');
+            helper.showHelpText('return');
+            toggleHelp = true;
+        }
+    }, 15000);
     
     /*setTimeout(function() {
         var loader = new Loader();
@@ -143,29 +181,31 @@ function init() {
  * Changes the actual state of the viewer
  * @param {String} name The name of the target state
  */
-function goToView ( targetView ) {
-
+function goToView(targetView) {
+    
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
-    
+
     newCenter = viewManager.translateToSection(targetView, newCenter);
     camera.moving = true;
     camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition, true);
     camera.lockPan();
-    
+        
     setTimeout(function() { camera.moving = false; }, transition);
-    
+
     if(window.map.views[targetView] != null) {
-        viewManager.views[targetView].enter();
-        
-        if(actualView)
-            viewManager.views[actualView].exit();
-        
+        if(actualView != targetView){
+            
+            if(actualView)
+                viewManager.views[actualView].exit();
+
+            viewManager.views[targetView].enter();
+        }
+
         actualView = targetView;
     }
-    else {
+    else
         goToView(window.map.start);
-    }
 }
 
 /**
@@ -182,18 +222,19 @@ function initPage() {
 
             if(window.actualView !== undefined && window.actualView !== ""){ 
 
-    			if(view !== undefined && view !== ""){
+    			if(view !== undefined && view !== ""  && view !== 'canvas' && view !== 'webgl'){
 
     				if(window.map.views[view].enabled !== undefined && window.map.views[view].enabled)
     					goToView(view);
     			}
-
+                else if(path === 'canvas' || path === 'webgl'){
+                    currentRender = createScene(currentRender,path);
+                    change = false;
+                }
             }
-            else{
+            else
                 goToView(window.location.hash.slice(1));
-            }
 		}
-
     });
 
 }
@@ -203,11 +244,12 @@ function initMenu() {
     var button = document.getElementById('table');
     button.addEventListener('click', function(event) {
 
-        changeView(tileManager.targets.table);
+        changeView();
 
     }, false);
 
-    button = document.getElementById('sphere');
+    
+    /*button = document.getElementById('sphere');
     button.addEventListener('click', function(event) {
 
         changeView(tileManager.targets.sphere);
@@ -226,11 +268,11 @@ function initMenu() {
 
         changeView(tileManager.targets.grid);
 
-    }, false);
+    }, false);*/
 }
 
 
-function changeView(targets) {
+function changeView() {
 
     camera.enable();
     camera.loseFocus();
@@ -239,9 +281,9 @@ function changeView(targets) {
     
     flowManager.getActualFlow();
 
-    if (targets != null) {
-        tileManager.transform(targets, 2000);
-    }
+    //if (targets != null) {
+    tileManager.transform(2000);
+    //}
 }
 
 /**
@@ -250,27 +292,29 @@ function changeView(targets) {
  */
 function onElementClick(id) {
     
-    var focus = parseInt(id);
+    var focus = window.helper.getSpecificTile(id).mesh;
 
-    if (window.camera.getFocus() == null) {
+    if(window.camera.getFocus() == null) {
 
-        window.tileManager.letAlone(focus, 2000);
+        window.tileManager.letAlone(id, 2000);
 
-        window.objects[focus].getObjectForDistance(0).visible = true;
+        focus.getObjectForDistance(0).visible = true;
 
         window.headers.hideHeaders(2000);
 
-        window.camera.setFocus(objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 2000);
+        window.camera.setFocus(focus, new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 2000);
+
+        window.buttonsManager.removeAllButtons();
         
         setTimeout(function() {
             
-            window.tileManager.letAlone(focus, 1000);
+            window.tileManager.letAlone(id, 1000);
 
-            window.objects[focus].getObjectForDistance(0).visible = true;
+            focus.getObjectForDistance(0).visible = true;
 
             window.headers.hideHeaders(1000);
 
-            window.camera.setFocus(objects[ focus ], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 1000);
+            window.camera.setFocus(focus, new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 1000);
 
             window.helper.showBackButton();
 
@@ -286,24 +330,31 @@ function onElementClick(id) {
     function showDeveloper(id) {
 
         var relatedTasks = [];
+
+        var tile = window.helper.getSpecificTile(id).data;
         
-        var image = table[id].picture;
+        var image = window.helper.getSpecificTile(id).data.picture;
 
         var section = 0;
-        var center = objects[id].position;
+        var center = window.helper.getSpecificTile(id).mesh.position;
         
-        for (var i = 0; i < table.length; i++) {
-            
-            if (table[i].author == table[id].author) {
-                relatedTasks.push(i);
-                
-                new TWEEN.Tween(objects[i].position)
+        for(var i = 0; i < window.tilesQtty.length; i++){
+
+            var _tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
+
+            var mesh =  window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
+    
+            if(_tile.author == tile.author) {
+
+                relatedTasks.push(id);
+        
+                new TWEEN.Tween(mesh.position)
                 .to({x : center.x + (section % 5) * window.TILE_DIMENSION.width, y : center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height, z : 0}, 2000)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .start();
                 
                 section += 1;
-            }
+            }                     
         }
         
         createSidePanel(id, image, relatedTasks);
@@ -312,6 +363,8 @@ function onElementClick(id) {
     }
 
     function createSidePanel(id, image, relatedTasks) {
+        
+        var tileData = window.helper.getSpecificTile(id).data;
 
         var sidePanel = document.createElement('div');
         sidePanel.id = 'sidePanel';
@@ -335,29 +388,32 @@ function onElementClick(id) {
         userName.style.opacity = 0;
         userName.style.position = 'relative';
         userName.style.fontWeight = 'bold';
-        userName.textContent = table[id].author;
+        userName.textContent = tileData.author;
         sidePanel.appendChild(userName);
 
         var realName = document.createElement('p');
         realName.style.opacity = 0;
         realName.style.position = 'relative';
-        realName.textContent = table[id].authorRealName;
+        realName.textContent = tileData.authorRealName;
         sidePanel.appendChild(realName);
 
         var email = document.createElement('p');
         email.style.opacity = 0;
         email.style.position = 'relative';
-        email.textContent = table[id].authorEmail;
+        email.textContent = tileData.authorEmail;
         sidePanel.appendChild(email);
 
-        if (relatedTasks != null && relatedTasks.length > 0) {
+        if(relatedTasks != null && relatedTasks.length > 0) {
             
             var anyTimeline = false;
             
             var i, l;
             
             for(i = 0, l = relatedTasks.length; i < l; i++) {
-                if(table[relatedTasks[i]].life_cycle !== undefined && table[relatedTasks[i]].life_cycle.length > 0) {
+                
+                var lifeCycle = window.helper.getSpecificTile(relatedTasks[i]).data.life_cycle;
+                
+                if(lifeCycle !== undefined && lifeCycle.length > 0) {
                     anyTimeline = true;
                 }
             }
@@ -388,7 +444,8 @@ function onElementClick(id) {
                 $(realName).fadeTo(1000, 1, function() {
                     $(email).fadeTo(1000, 1, function() {
 
-                        if (tlButton != null) $(tlButton).fadeTo(1000, 1);
+                        if(tlButton != null)
+                            $(tlButton).fadeTo(1000, 1);
 
                     });
                 });
@@ -430,7 +487,7 @@ function onClick(e) {
     var mouse = new THREE.Vector2(0, 0),
         clicked = [];
     
-    if ( !camera.dragging ) {
+    if(!camera.dragging) {
     
         //Obtain normalized click location (-1...1)
         mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
@@ -441,7 +498,7 @@ function onClick(e) {
         clicked = camera.rayCast(mouse, scene.children);
 
         //If at least one element got clicked, process the first which is NOT a line
-        if (clicked && clicked.length > 0) {
+        if(clicked && clicked.length > 0) {
             
             for(var i = 0; i < clicked.length; i++) {
                 
@@ -463,7 +520,8 @@ function animate() {
 
     camera.update();
 
-    if ( stats ) stats.update();
+    if(stats)
+        stats.update();
 }
 
 function create_stats(){ 
@@ -484,3 +542,5 @@ function render() {
     //renderer.render( scene, camera );
     camera.render(renderer, scene);
 }
+
+

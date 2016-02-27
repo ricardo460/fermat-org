@@ -11,4 +11,5 @@ api-server/cache/development/filecache.json
 platform-visualization/common.php
 platform-visualization/src/getData.js
 platform-visualization/main.js
+platform-visualization/wp/
 sh.exe.stackdump
