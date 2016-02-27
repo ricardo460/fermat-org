@@ -32,6 +32,7 @@ var TILE_DIMENSION = {
     TILE_SPACING = 20;
 
 currentRender = createScene(currentRender, currentRender);
+helper.showHelpText('welcome');
 getData();
 
 $('#login').click(function() {

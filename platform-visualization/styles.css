@@ -50,9 +50,6 @@ button:active {
     margin: auto;
     margin-top: -20px;
     margin-bottom: -20px;
-}
-
-#navigation, #zoom, #slide, #return {
     visibility: hidden;
     opacity: 0;
 }
