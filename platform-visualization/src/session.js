@@ -45,24 +45,8 @@ function Session(){
      * @author Ricardo Delgado
      */
     this.useTestData = function(){
-
-        isLogin = true;
-
-        usr = {
-            _id: "56c72bdf7d20701f414de5e4",
-            avatar_url: "https://avatars.githubusercontent.com/u/13169767?v=3",
-            email: "ricardodelgado460@hotmail.com",
-            github_tkn: "31a34414535ee9f59b1dfcc1d08bb9b565bf3eae",
-            name: "Ricardo Delgado",
-            upd_at: "56c72bdf7d20701f414de5e3",
-            usrnm: "ricardo460",
-            axs_key: "31a34414535ee9f59b1dfcc1d08bb9b565bf3eae"
-        };
-
-        $("#login").fadeOut(2000);
-        $("#logout").fadeIn(2000);
-
-        drawUser(usr);
+        
+        
     }
 
 	/**
