@@ -3,6 +3,16 @@
  */
 function Helper() {
 
+    var SERVER = 'http://api.fermat.org';
+
+    var PORT = '';
+
+    //var PORT = '?env=development';
+
+    var USERDATA = '';
+
+    var AXS_KEY = '';
+
     /**
      * Hides an element vanishing it and then eliminating it from the DOM
      * @param {DOMElement} element         The element to eliminate
@@ -27,7 +37,7 @@ function Helper() {
                 else
                     $(el).remove();
 
-                if(callback != null && typeof(callback) === 'function')
+                if(typeof(callback) === 'function')
                     callback(); 
             });
         }
@@ -235,8 +245,6 @@ function Helper() {
      */
     this.getAPIUrl = function(route) {
         
-        //var SERVER = "http://52.35.117.6:3000";
-        var SERVER = "http://api.fermat.org";
         var tail = "";
         
         switch(route) {
@@ -264,13 +272,12 @@ function Helper() {
                 break;
         }
         
-        return SERVER + tail;
+        return SERVER + tail + PORT;
     };
 
     this.postRoutesComponents = function(route, params, data, doneCallback, failCallback){
 
-        var SERVER = "http://api.fermat.org:8081",
-            tail = "",
+        var tail = "",
             method = "",
             setup = {};
 
@@ -278,33 +285,33 @@ function Helper() {
                 
             case "insert":
                 method = "POST";
-                tail = "/v1/repo/usrs/" + data.usr_id + "/comps";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/comps";
                 break;
             case "delete":
                 method = "DELETE";
-                tail = "/v1/repo/usrs/" + data.usr_id + "/comps/" + data.comp_id;
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id;
                 break;
             case "update":
                 method = "PUT";
-                tail = "/v1/repo/usrs/" + data.usr_id + "/comps/" + data.comp_id;
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id;
                 break;
             case "insert dev":
                 method = "POST";
-                tail = "/v1/repo/usrs/" + data.usr_id + "/comps/" + data.comp_id + "/comp-devs";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id + "/comp-devs";
                 break;
             case "delete dev":
                 method = "DELETE";
-                tail = "/v1/repo/usrs/" + data.usr_id + "/comps/" + data.comp_id + "/comp-devs/" + data.devs_id;
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id + "/comp-devs/" + data.devs_id;
                 break;
             case "update dev":
                 method = "PUT";
-                tail = "/v1/repo/usrs/" + data.usr_id + "/comps/" + data.comp_id + "/comp-devs/" + data.devs_id;
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id + "/comp-devs/" + data.devs_id;
                 break;                    
                 
         }
 
         setup.method = method;
-        setup.url = SERVER + tail;
+        setup.url = SERVER + tail + PORT + AXS_KEY;
         setup.headers = { 
             "Content-Type": "application/json"
              };
@@ -312,39 +319,20 @@ function Helper() {
         if(params)
             setup.data = params;
 
-        if(route === "delete" || route === "delete dev"){
+        makeCorsRequest(setup.url, setup.method, setup.data, 
+            function(res){
+        
+                if(typeof(doneCallback) === 'function')
+                    doneCallback(res);
+            }, 
+            function(res){
 
-            $.ajax(setup)
-                .done(function(res) { 
+                window.alert('Action Not Executed');
 
-                    if(typeof(doneCallback) === 'function')
-                        doneCallback(res);
-                })
-                .fail(function(res) {
-
-                    window.alert('Action Not Executed');  
-
-                    if(typeof(failCallback) === 'function')
-                        failCallback(res);
-                });
-        }
-        else{
-
-            makeCorsRequest(setup.url, setup.method, setup.data, 
-                function(res){
-            
-                    if(typeof(doneCallback) === 'function')
-                        doneCallback(res);
-                }, 
-                function(res){
-
-                    window.alert('Action Not Executed');
-
-                    if(typeof(failCallback) === 'function')
-                        failCallback(res);
-                }
-            );
-        }
+                if(typeof(failCallback) === 'function')
+                    failCallback(res);
+            }
+        );
 
     };
 
@@ -361,7 +349,10 @@ function Helper() {
 
         xhr.onload = function() {
 
-            var res = JSON.parse(xhr.responseText);
+            var res = null;
+
+            if(method !== 'DELETE')
+                res = JSON.parse(xhr.responseText);
 
             success(res);
             
@@ -401,13 +392,13 @@ function Helper() {
 
         var list = {};
 
-        //window.session.useTestData();
-
         if(window.session.getIsLogin()){ 
 
-            var user = window.session.getUserLogin()._id;
+            USERDATA = window.session.getUserLogin();
 
-            url = "http://api.fermat.org:8081/v1/repo/usrs/"+user+"/";
+            AXS_KEY = '?axs_key=' + USERDATA.axs_key;
+
+            url = SERVER + "/v1/repo/usrs/"+USERDATA._id+"/";
 
             callAjax('comps', function(){
 
@@ -438,7 +429,7 @@ function Helper() {
         function callAjax(route, callback){
 
             $.ajax({
-                url: url + route,
+                url: url + route + PORT,
                 method: "GET"
             }).success (
                 function (res) {

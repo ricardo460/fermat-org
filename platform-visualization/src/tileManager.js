@@ -33,7 +33,7 @@ function TileManager() {
     /**
      * Pre-computes the space layout for next draw
      */
-    this.preComputeLayout = function() {
+    this.preComputeLayout = function () {
         
         var SUPER_LAYER_SEPARATION = 3;
 
@@ -43,9 +43,8 @@ function TileManager() {
             i, actualSuperLayerName = '';
 
         //Initialize
-        for(var key in layers) {
-            if(key == "size")
-                continue;
+        for (var key in layers) {
+            if (key == "size") continue;
             
             var id = layers[key].index;
             
@@ -54,22 +53,20 @@ function TileManager() {
                 actualSuperLayerName = layers[key].super_layer;
             }
 
-            if(layers[key].super_layer) {
+            if (layers[key].super_layer) {
 
                 section[id] = 0;
                 section_size[id] = 0;
                 superLayerHeight++;
 
-                if(superLayerMaxHeight < superLayerHeight)
-                    superLayerMaxHeight = superLayerHeight;
+                if (superLayerMaxHeight < superLayerHeight) superLayerMaxHeight = superLayerHeight;
             }
             else {
 
                 var newLayer = [];
 
-                for(i = 0; i < groupsQtty; i++){
+                for (i = 0; i < groupsQtty; i++)
                     newLayer.push(0);
-                }
 
                 section_size[id] = newLayer;
                 section[id] = newLayer.slice(0); //Use a copy
@@ -78,7 +75,8 @@ function TileManager() {
             isSuperLayer.push(false);
         }
 
-        for(var j = 0; j <= groupsQtty; j++) {
+        for (var j = 0; j <= groupsQtty; j++) {
+
             self.elementsByGroup.push([]);
         }
 
@@ -86,7 +84,7 @@ function TileManager() {
 
         for(var platfrm in window.TABLE){
 
-            for(var layer in window.TABLE[platfrm].layers){
+            for (var layer in window.TABLE[platfrm].layers){
 
                 for(i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
                 
@@ -100,14 +98,14 @@ function TileManager() {
 
                     self.elementsByGroup[c].push(idT);
 
-                    if(layers[tile.data.layer].super_layer) {
+                    if (layers[tile.data.layer].super_layer) {
+
                         section_size[r]++;
                         isSuperLayer[r] = layers[tile.data.layer].super_layer;
-                    } 
-                    else {
+                    } else {
+                        
                         section_size[r][c]++;
-                        if(section_size[r][c] > columnWidth)
-                            columnWidth = section_size[r][c];
+                        if (section_size[r][c] > columnWidth) columnWidth = section_size[r][c];
                     }
                     
                 }
@@ -123,7 +121,7 @@ function TileManager() {
         
         actualSuperLayerName = false;
 
-        for(i = 0; i < layersQtty; i++) {
+        for (i = 0; i < layersQtty; i++) {
             
             if(isSuperLayer[i] !== actualSuperLayerName) {
                 
@@ -138,22 +136,22 @@ function TileManager() {
                 actualSuperLayerName = isSuperLayer[i];
             }
             
-            if(isSuperLayer[i]) {
+            if (isSuperLayer[i]) {
 
-                if(!inSuperLayer) {
+                if (!inSuperLayer) {
                     actualHeight += SUPER_LAYER_SEPARATION;
 
-                    if(superLayerPosition[actualSuperLayer] === undefined)
+                    if (superLayerPosition[actualSuperLayer] === undefined) {
                         superLayerPosition[actualSuperLayer] = actualHeight;
+                    }
                 }
 
                 inSuperLayer = true;
                 actualHeight++;
                 remainingSpace--;
-            } 
-            else {
+            } else {
 
-                if(inSuperLayer) {
+                if (inSuperLayer) {
 
                     actualHeight += remainingSpace + 1;
                     remainingSpace = superLayerMaxHeight;
@@ -170,14 +168,14 @@ function TileManager() {
         }
     };
 
-    this.fillTable = function(list) {
+    this.fillTable = function (list) {
         var _suprlays = list.suprlays,
             _platfrms = list.platfrms,
             _layers = list.layers,
             _comps = list.comps,
             i, l, code, name;
 
-        for(i = 0, l = _suprlays.length; i < l; i++) {
+        for (i = 0, l = _suprlays.length; i < l; i++) {
             code = _suprlays[i].code;
             window.superLayers[code] = {};
             window.superLayers[code].name = _suprlays[i].name;
@@ -186,7 +184,7 @@ function TileManager() {
             window.superLayers[code].dependsOn = _suprlays[i].deps;
         }
 
-        for(i = 0, l = _platfrms.length; i < l; i++) {
+        for (i = 0, l = _platfrms.length; i < l; i++) {
             code = _platfrms[i].code;
             window.platforms[code] = {};
             window.platforms[code].index = _platfrms[i].order;
@@ -194,7 +192,7 @@ function TileManager() {
             window.platforms[code]._id = _platfrms[i]._id;
         }
 
-        for(i = 0, l = _layers.length; i < l; i++) {
+        for (i = 0, l = _layers.length; i < l; i++) {
             name = helper.capFirstLetter(_layers[i].name);
             layers[name] = {};
             layers[name].super_layer = _layers[i].suprlay;
@@ -202,7 +200,7 @@ function TileManager() {
             layers[name]._id = _layers[i]._id;
         }
 
-        var buildElement = function(e) {
+        var buildElement = function (e) {
 
             var _comp = _comps[e];
 
@@ -234,19 +232,21 @@ function TileManager() {
                 author: _author.usrnm ? _author.usrnm : undefined,
                 authorRealName: _author.name ? _author.name : undefined,
                 authorEmail: _author.email ? _author.email : undefined,
-                maintainer : _maintainer.usrnm ? _author.usrnm : undefined,
+                maintainer : _maintainer.usrnm ? _maintainer.usrnm : undefined,
                 maintainerPicture : _maintainer.avatar_url ? _maintainer.avatar_url : undefined,
                 maintainerRealName : _maintainer.name ? _maintainer.name : undefined,
                 difficulty: _comp.difficulty,
                 code_level: _comp.code_level ? _comp.code_level : undefined,
                 life_cycle: _comp.life_cycle,
                 found: _comp.found,
-                devs: _comp.devs
+                devs: _comp.devs,
+                repo_dir: _comp.repo_dir,
+                description: _comp.description
             };
             return element;
         };
         
-        for(i = 0, l = _comps.length; i < l; i++) {
+        for (i = 0, l = _comps.length; i < l; i++) {
             
             var element = buildElement(i);
 
@@ -302,7 +302,7 @@ function TileManager() {
      * @param   {Number} scale      Scale of the pictures, the bigger, the better but heavier
      * @returns {Object} The drawn texture
      */
-    this.createTexture = function(id, quality, tileWidth, tileHeight, scale, _table) {
+    this.createTexture = function (id, quality, tileWidth, tileHeight, scale, _table) {
         
         var tile = _table || window.helper.getSpecificTile(id).data;
 
@@ -444,10 +444,10 @@ function TileManager() {
                 nameText.wrap = true;
             }
 
-        if(state == "concept" || state == "production")
+        if (state == "concept" || state == "production")
             ring.src = base + 'rings/' + quality + '/linear_diff_' + difficulty + '.png';
 
-        if(difficulty === 0)
+        if (difficulty === 0)
             ring = {};
 
         var data = [
@@ -466,7 +466,7 @@ function TileManager() {
             userMaintainer
         ];
 
-        if(tile.found !== true) {
+        if ( tile.found !== true ) {
 
             var stamp = {
                 src: 'images/alt_not_found.png',
@@ -491,7 +491,7 @@ function TileManager() {
      * @returns {DOMElement} The drawable element that represents the tile
      */
      
-    this.createElement = function(id, _table) {
+    this.createElement = function (id, _table) {
 
         var mesh,
             element = new THREE.LOD(),
@@ -507,12 +507,10 @@ function TileManager() {
             scale = 2,
             table = _table || null;
 
-        for(var j = 0, l = levels.length; j < l; j++) {
+        for (var j = 0, l = levels.length; j < l; j++) {
 
-            if(levels[j][0] === 'high') 
-                scale = 5;
-            else 
-                scale = 1;
+            if (levels[j][0] === 'high') scale = 5;
+            else scale = 1;
 
             texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale, table);
 
@@ -544,7 +542,7 @@ function TileManager() {
      * @param {Array}  goal     Member of ViewManager.targets
      * @param {Number} duration Milliseconds of animation
      */
-    this.transform = function(ordered, duration) {
+    this.transform = function (ordered, duration) {
 
         var i, l, j,
             DELAY = 500;
@@ -630,7 +628,7 @@ function TileManager() {
     /**
      * Goes back to last target set in last transform
      */
-    this.rollBack = function() {
+    this.rollBack = function () {
 
         camera.enable();
         camera.loseFocus();
@@ -647,7 +645,7 @@ function TileManager() {
     /**
      * Inits and draws the table, also creates the Dimensions object
      */
-    this.drawTable = function() {
+    this.drawTable = function () {
 
         this.preComputeLayout();
         
@@ -675,14 +673,13 @@ function TileManager() {
 
             var row = tile.layerID;
 
-            if(layers[tile.layer].super_layer) {
+            if (layers[tile.layer].super_layer) {
 
                 object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
 
                 section[row]++;
 
-            } 
-            else {
+            } else {
 
                 //Column (X)
                 var column = tile.platformID;
@@ -711,8 +708,8 @@ function TileManager() {
             mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
 
             /*End*/
-            if(!signLayer.findSignLayer(group,tile.layer)){
-                if(i === 0){ //entra a la primera
+            if(!signLayer.findSignLayer(group, tile.layer)){
+                if(i === 0 ){ //entra a la primera
                     window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
                     signRow = tile.layerID;
                     signColumn = tile.platformID;
@@ -750,7 +747,7 @@ function TileManager() {
      * @param {Array}  [ids]           The IDs to let alone
      * @param {Number} [duration=2000] Duration of the animation
      */
-    this.letAlone = function(ids, duration) {
+    this.letAlone = function (ids, duration) {
 
         var i, _duration = duration || 2000,
             distance = camera.getMaxDistance() * 2,
@@ -760,7 +757,7 @@ function TileManager() {
 
         var target;
 
-        var animate = function(object, target, dur) {
+        var animate = function (object, target, dur) {
 
             new TWEEN.Tween(object.position)
                 .to({
@@ -769,7 +766,7 @@ function TileManager() {
                     z: target.z
                 }, dur)
                 .easing(TWEEN.Easing.Exponential.InOut)
-                .onComplete(function() {
+                .onComplete(function () {
                     object.userData.flying = false;
                 })
                 .start();
@@ -780,8 +777,9 @@ function TileManager() {
 
             var tile = window.helper.getSpecificTile(window.tilesQtty[i]);  
         
-            if(ids === tile.id)
+            if (ids === tile.id) {
                 target =  tile.target.show.position;
+            } 
             else {
                 target = out;
                 tile.mesh.userData.flying = true;
@@ -807,7 +805,7 @@ function TileManager() {
         
         var i = 0;
 
-        for(var j = 0; j <= groupsQtty; j++) {
+        for (var j = 0; j <= groupsQtty; j++) {
 
             self.elementsByGroup.push([]);
         }
@@ -845,26 +843,26 @@ function TileManager() {
         var image = new Image();
         var actual = data.shift();
 
-        if(actual && actual.src && actual.src != 'undefined') {
+        if (actual && actual.src && actual.src != 'undefined') {
 
-            image.onload = function() {
+            image.onload = function () {
 
                 ctx.drawImage(image, actual.x, actual.y, actual.w, actual.h);
-                if(texture)
+                if (texture)
                     texture.needsUpdate = true;
 
-                if(data.length !== 0) {
+                if (data.length !== 0) {
 
-                    if(data[0].text)
+                    if (data[0].text)
                         drawText(data, ctx, texture);
                     else
                         drawPicture(data, ctx, texture);
                 }
             };
 
-            image.onerror = function() {
-                if(data.length !== 0) {
-                    if(data[0].text)
+            image.onerror = function () {
+                if (data.length !== 0) {
+                    if (data[0].text)
                         drawText(data, ctx, texture);
                     else
                         drawPicture(data, ctx, texture);
@@ -873,10 +871,9 @@ function TileManager() {
 
             image.crossOrigin = "anonymous";
             image.src = actual.src;
-        } 
-        else {
-            if(data.length !== 0) {
-                if(data[0].text)
+        } else {
+            if (data.length !== 0) {
+                if (data[0].text)
                     drawText(data, ctx, texture);
                 else
                     drawPicture(data, ctx, texture);
@@ -896,25 +893,25 @@ function TileManager() {
 
         //TODO: Set Roboto typo
 
-        if(actual.color)
+        if (actual.color)
             ctx.fillStyle = actual.color;
 
         ctx.font = actual.font;
 
-        if(actual.constraint)
-            if(actual.wrap)
+        if (actual.constraint)
+            if (actual.wrap)
                 helper.drawText(actual.text, actual.x, actual.y, ctx, actual.constraint, actual.lineHeight);
             else
                 ctx.fillText(actual.text, actual.x, actual.y, actual.constraint);
         else
             ctx.fillText(actual.text, actual.x, actual.y);
 
-        if(texture)
+        if (texture)
             texture.needsUpdate = true;
 
         ctx.fillStyle = "#FFFFFF";
 
-        if(data.length !== 0){ 
+        if (data.length !== 0){ 
 
           if(data[0].text)
             drawText(data, ctx, texture); 
@@ -924,14 +921,15 @@ function TileManager() {
     }
     
     function getSPL(_id, _SPLArray) {
-        if(_id) {
-            for(var i = 0, l = _SPLArray.length; i < l; i++) {
-                if(_SPLArray[i]._id + '' == _id + '')
+        if (_id) {
+            for (var i = 0, l = _SPLArray.length; i < l; i++) {
+                if (_SPLArray[i]._id + '' == _id + '') {
                     return _SPLArray[i];
+                }
             }
-        } 
-        else
+        } else {
             return null;
+        }
     }
 
     /**
@@ -942,16 +940,16 @@ function TileManager() {
      */
     function getBestDev(_devs, role) {
         var dev = {};
-        if(_devs) {
+        if (_devs) {
             var _dev = {};
             dev.percnt = 0;
-            for(var i = 0, l = _devs.length; i < l; i++) {
+            for (var i = 0, l = _devs.length; i < l; i++) {
                 _dev = _devs[i];
                 
                 if((role === 'author' && _dev.role === 'author' && _dev.scope === 'implementation') ||
                    (role === 'maintainer' && _dev.role === 'maintainer')) {
                 
-                    if(_dev.percnt >= dev.percnt) {
+                    if (_dev.percnt >= dev.percnt) {
                         
                         dev.percnt = _dev.percnt;
                         dev.usrnm = _dev.dev.usrnm;
