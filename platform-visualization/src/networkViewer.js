@@ -27,10 +27,8 @@ NetworkViewer.prototype.load = function() {
  */
 NetworkViewer.prototype.unload = function() {
     
-    if(this.childNetwork) {
-        
+    if(this.childNetwork)
         this.close();
-    }
     
     BaseNetworkViewer.prototype.unload.call(this);
     

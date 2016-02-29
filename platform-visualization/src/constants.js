@@ -234,7 +234,7 @@ var layers = {
     }
 };
 
-var groups = {
+var platforms = {
     
     size : function(){
         var size = 0;
