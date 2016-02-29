@@ -79,9 +79,11 @@ exports.findAndPopulateCompById = function (_id, path, callback) {
 								loopCompDevs(++j);
 							} else {
 								_compDev.dev = res_dev;
+								_compDev._id = _compDevs[j]._id;
 								_compDev.role = _compDevs[j].role;
 								_compDev.scope = _compDevs[j].scope;
 								_compDev.percnt = _compDevs[j].percnt;
+								_compDev.upd_at = _compDevs[j].upd_at;
 								_devs.push(_compDev);
 								loopCompDevs(++j);
 							}
@@ -164,9 +166,11 @@ exports.findAllComps = function (query, order, callback) {
 									loopCompDevs(++j);
 								} else {
 									_compDev.dev = res_dev;
+									_compDev._id = _compDevs[j]._id;
 									_compDev.role = _compDevs[j].role;
 									_compDev.scope = _compDevs[j].scope;
 									_compDev.percnt = _compDevs[j].percnt;
+									_compDev.upd_at = _compDevs[j].upd_at;
 									_devs.push(_compDev);
 									loopCompDevs(++j);
 								}

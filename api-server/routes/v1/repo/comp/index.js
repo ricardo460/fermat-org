@@ -63,7 +63,7 @@ router.use(lock);
 
 
 /**
- * @api {post} /v1/repo/comp/ add components
+ * @api {post} /v1/repo/comps add components
  * @apiVersion 0.0.1
  * @apiName AddComp
  * @apiGroup Repo-Comp
@@ -73,9 +73,9 @@ router.use(lock);
  * @apiParam {Number} difficulty Component complexity developed  rank (0- 10).
  * @apiParam {String} code_level   Developing state api.
  * @apiParam {ObjectId} platfrm_id   Unique identifier of the  platfrtm.
- * @apiParam {ObjectId} suprlay_id    Unique identifier of the  suprlay . 
+ * @apiParam {ObjectId} suprlay_id    Unique identifier of the  suprlay. 
  * @apiParam {String} description  Description of  components.
- * @apiParam {String} repo_dir      Directory of repo.
+ * @apiParam {String} repo_dir Directory of repo.
  * @apiDescription Add a component to the architecture fermat.
  */
 router.post('/', function (req, res, next) {
@@ -108,7 +108,7 @@ router.post('/', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/comp/ list comps
+ * @api {get} /v1/repo/comps list comps
  * @apiVersion 0.0.1
  * @apiName ListComps
  * @apiGroup Repo-Comp
@@ -131,7 +131,7 @@ router.get('/', function (req, res, next) {
 });
 
 /**
- * @api {put} /v1/repo/comp/:comp_id/life-cicles/:life_cicle_id update lifecicles to component
+ * @api {put} /v1/repo/comps/:comp_id/life-cicles/:life_cicle_id update lifecicles to component
  * @apiVersion 0.0.1
  * @apiName UptLifeCiclesToComp
  * @apiParam {ObjectId} comp_id  Unique identifier of the component.
@@ -176,7 +176,7 @@ router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
     }
 });
 /**
- * @api {post} /v1/repo/comp/:comp_id/comp-devs add component developer
+ * @api {post} /v1/repo/comps/:comp_id/comp-devs add component developer
  * @apiVersion 0.0.1
  * @apiName AddCompDev
  * @apiParam {ObjectId} comp_id    Unique identifier of the component.
@@ -221,7 +221,7 @@ router.post('/:comp_id/comp-devs', function (req, res, next) {
     }
 });
 /**
- * @api {put} /v1/repo/comp/:comp_id/comp-devs/:comp_dev_id update component developer
+ * @api {put} /v1/repo/comps/:comp_id/comp-devs/:comp_dev_id update component developer
  * @apiVersion 0.0.1
  * @apiName UptCompDev
  * @apiParam {ObjectId} comp_id    Unique identifier of the component.
@@ -267,7 +267,7 @@ router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
     }
 });
 /**
- * @api {delete} /v1/repo/comp/:comp_id/comp-devs/:comp_dev_id delete component developer
+ * @api {delete} /v1/repo/comps/:comp_id/comp-devs/:comp_dev_id delete component developer
  * @apiVersion 0.0.1
  * @apiName DelCompDev
   * @apiParam {ObjectId} comp_id    Unique identifier of the component.
@@ -305,7 +305,7 @@ router.delete('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
     }
 });
 /**
- * @api {get} /v1/repo/comp/:comp_id get component
+ * @api {get} /v1/repo/comps/:comp_id get component
  * @apiVersion 0.0.1
  * @apiName GetComp
  * @apiParam {ObjectId} comp_id    Unique identifier of the component.
@@ -334,7 +334,7 @@ router.get('/:comp_id', function (req, res, next) {
     }
 });
 /**
- * @api {put} /v1/repo/comp/:comp_id update component
+ * @api {put} /v1/repo/comps/:comp_id update component
  * @apiVersion 0.0.1
  * @apiName UptComp
  * @apiParam {ObjectId} comp_id    Unique identifier of the component.
@@ -382,7 +382,7 @@ router.put('/:comp_id', function (req, res, next) {
     }
 });
 /**
- * @api {delete} /v1/repo/comp/:comp_id delete component
+ * @api {delete} /v1/repo/comps/:comp_id delete component
  * @apiVersion 0.0.1
  * @apiName DelComp
  * @apiParam {ObjectId} comp_id    Unique identifier of the component.
