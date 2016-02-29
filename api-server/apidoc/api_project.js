@@ -1,5 +1,5 @@
 define({
-  "title": "Custom apiDoc browser title",
+  "title": "Doc Api Server",
   "url": "http://api.fermat.org",
   "name": "api-server",
   "version": "1.1.1",
@@ -8,7 +8,7 @@ define({
   "apidoc": "0.2.0",
   "generator": {
     "name": "apidoc",
-    "time": "2016-02-20T04:23:31.442Z",
+    "time": "2016-02-29T18:04:09.659Z",
     "url": "http://apidocjs.com",
     "version": "0.15.1"
   }
