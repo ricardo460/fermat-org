@@ -10,7 +10,7 @@ var DevMdl = require('./models/dev');
  * @param  {[type]}    email      [description]
  * @param  {[type]}    name       [description]
  * @param  {[type]}    bday       [description]
- * @param  {[type]}    country    [description]
+ * @param  {[type]}    location    [description]
  * @param  {[type]}    avatar_url [description]
  * @param  {[type]}    url        [description]
  * @param  {[type]}    bio        [description]
@@ -18,7 +18,7 @@ var DevMdl = require('./models/dev');
  *
  * @return {[type]}    [description]
  */
-exports.insOrUpdDev = function (usrnm, email, name, bday, country, avatar_url, url, bio, callback) {
+exports.insOrUpdDev = function (usrnm, email, name, bday, location, avatar_url, url, bio, callback) {
     'use strict';
     try {
         devSrv.findDevByUsrnm(usrnm, function (err_dev, res_dev) {
@@ -39,9 +39,9 @@ exports.insOrUpdDev = function (usrnm, email, name, bday, country, avatar_url, u
                     set_obj.bday = bday;
                     res_dev.bday = bday;
                 }
-                if (country && country !== res_dev.country) {
-                    set_obj.country = country;
-                    res_dev.country = country;
+                if (location && location !== res_dev.location) {
+                    set_obj.location = location;
+                    res_dev.location = location;
                 }
                 if (avatar_url && avatar_url !== res_dev.avatar_url) {
                     set_obj.avatar_url = avatar_url;
@@ -66,7 +66,7 @@ exports.insOrUpdDev = function (usrnm, email, name, bday, country, avatar_url, u
                     return callback(null, res_dev);
                 }
             } else {
-                var dev = new DevMdl(usrnm, email, name, bday, country, avatar_url, url, bio);
+                var dev = new DevMdl(usrnm, email, name, bday, location, avatar_url, url, bio);
                 devSrv.insertDev(dev, function (err_ins, res_ins) {
                     if (err_ins) {
                         return callback(err_ins, null);
