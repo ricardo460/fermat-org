@@ -84,6 +84,37 @@
     "groupTitle": "Auth"
   },
   {
+    "type": "post",
+    "url": "/v1/net/waves",
+    "title": "create a wave",
+    "name": "CreateWave",
+    "version": "0.0.1",
+    "group": "Net",
+    "description": "<p>Inserts a wave (state of the network) into the database.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object[]",
+            "optional": false,
+            "field": "body",
+            "description": "<p>An array of javascript objects that represents the state of the network at the moment of the arrays creation</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "body[]",
+            "description": "<p>It represents the node.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "routes/v1/net/index.js",
+    "groupTitle": "Net"
+  },
+  {
     "type": "get",
     "url": "/v1/net/nodes/:hash/childrn",
     "title": "get children",
@@ -221,7 +252,7 @@
   },
   {
     "type": "post",
-    "url": "/v1/repo/comp/",
+    "url": "/v1/repo/comps",
     "title": "add components",
     "version": "0.0.1",
     "name": "AddComp",
@@ -276,7 +307,7 @@
             "type": "ObjectId",
             "optional": false,
             "field": "suprlay_id",
-            "description": "<p>Unique identifier of the  suprlay .</p>"
+            "description": "<p>Unique identifier of the  suprlay.</p>"
           },
           {
             "group": "Parameter",
@@ -301,7 +332,7 @@
   },
   {
     "type": "post",
-    "url": "/v1/repo/comp/:comp_id/comp-devs",
+    "url": "/v1/repo/comps/:comp_id/comp-devs",
     "title": "add component developer",
     "version": "0.0.1",
     "name": "AddCompDev",
@@ -353,7 +384,7 @@
   },
   {
     "type": "delete",
-    "url": "/v1/repo/comp/:comp_id",
+    "url": "/v1/repo/comps/:comp_id",
     "title": "delete component",
     "version": "0.0.1",
     "name": "DelComp",
@@ -376,7 +407,7 @@
   },
   {
     "type": "delete",
-    "url": "/v1/repo/comp/:comp_id/comp-devs/:comp_dev_id",
+    "url": "/v1/repo/comps/:comp_id/comp-devs/:comp_dev_id",
     "title": "delete component developer",
     "version": "0.0.1",
     "name": "DelCompDev",
@@ -407,7 +438,7 @@
   },
   {
     "type": "get",
-    "url": "/v1/repo/comp/:comp_id",
+    "url": "/v1/repo/comps/:comp_id",
     "title": "get component",
     "version": "0.0.1",
     "name": "GetComp",
@@ -430,7 +461,7 @@
   },
   {
     "type": "get",
-    "url": "/v1/repo/comp/",
+    "url": "/v1/repo/comps",
     "title": "list comps",
     "version": "0.0.1",
     "name": "ListComps",
@@ -441,7 +472,7 @@
   },
   {
     "type": "put",
-    "url": "/v1/repo/comp/:comp_id",
+    "url": "/v1/repo/comps/:comp_id",
     "title": "update component",
     "version": "0.0.1",
     "name": "UptComp",
@@ -513,7 +544,7 @@
   },
   {
     "type": "put",
-    "url": "/v1/repo/comp/:comp_id/comp-devs/:comp_dev_id",
+    "url": "/v1/repo/comps/:comp_id/comp-devs/:comp_dev_id",
     "title": "update component developer",
     "version": "0.0.1",
     "name": "UptCompDev",
@@ -565,7 +596,7 @@
   },
   {
     "type": "put",
-    "url": "/v1/repo/comp/:comp_id/life-cicles/:life_cicle_id",
+    "url": "/v1/repo/comps/:comp_id/life-cicles/:life_cicle_id",
     "title": "update lifecicles to component",
     "version": "0.0.1",
     "name": "UptLifeCiclesToComp",
@@ -610,7 +641,7 @@
   },
   {
     "type": "post",
-    "url": "/v1/repo/layer/",
+    "url": "/v1/repo/layers",
     "title": "add layer",
     "version": "0.0.1",
     "name": "AddLayer",
@@ -622,7 +653,7 @@
             "type": "String",
             "optional": false,
             "field": "name",
-            "description": "<p>Component name.</p>"
+            "description": "<p>Layer name.</p>"
           },
           {
             "group": "Parameter",
@@ -643,7 +674,7 @@
             "type": "Number",
             "optional": false,
             "field": "order",
-            "description": "<p>Indicates the position where the suprlay this with respect to other.</p>"
+            "description": "<p>Indicates the position where the layer this with respect to other.</p>"
           }
         ]
       }
@@ -655,7 +686,7 @@
   },
   {
     "type": "delete",
-    "url": "/v1/repo/layer/:layer_id",
+    "url": "/v1/repo/layers/:layer_id",
     "title": "delete layer",
     "version": "0.0.1",
     "name": "DelLay",
@@ -679,7 +710,7 @@
   },
   {
     "type": "get",
-    "url": "/v1/repo/layer/:layer_id",
+    "url": "/v1/repo/layers/:layer_id",
     "title": "get layer",
     "version": "0.0.1",
     "name": "GetLay",
@@ -703,7 +734,7 @@
   },
   {
     "type": "get",
-    "url": "/v1/repo/layer/",
+    "url": "/v1/repo/layers",
     "title": "get list layers",
     "version": "0.0.1",
     "name": "ListLayers",
@@ -714,7 +745,7 @@
   },
   {
     "type": "put",
-    "url": "/v1/repo/layer/:layer_id",
+    "url": "/v1/repo/layers/:layer_id",
     "title": "update layer",
     "version": "0.0.1",
     "name": "UptLay",
@@ -734,7 +765,7 @@
             "type": "String",
             "optional": false,
             "field": "name",
-            "description": "<p>Component name.</p>"
+            "description": "<p>Layer name.</p>"
           },
           {
             "group": "Parameter",
@@ -755,7 +786,7 @@
             "type": "Number",
             "optional": false,
             "field": "order",
-            "description": "<p>Indicates the position where the suprlay this with respect to other.</p>"
+            "description": "<p>Indicates the position where the layer this with respect to other.</p>"
           }
         ]
       }
@@ -766,7 +797,7 @@
   },
   {
     "type": "post",
-    "url": "/v1/repo/platfrm/",
+    "url": "/v1/repo/platfrms",
     "title": "add platform",
     "version": "0.0.1",
     "name": "AddPlatform",
@@ -792,7 +823,7 @@
             "type": "String",
             "optional": false,
             "field": "logo",
-            "description": "<p>platform logo.</p>"
+            "description": "<p>Platform logo.</p>"
           },
           {
             "group": "Parameter",
@@ -811,7 +842,7 @@
   },
   {
     "type": "delete",
-    "url": "/v1/repo/platfrm/:platfrm_id",
+    "url": "/v1/repo/platfrms/:platfrm_id",
     "title": "delete platform",
     "version": "0.0.1",
     "name": "DelPltf",
@@ -835,7 +866,7 @@
   },
   {
     "type": "get",
-    "url": "/v1/repo/platfrm/:platfrm_id",
+    "url": "/v1/repo/platfrms/:platfrm_id",
     "title": "get platform",
     "version": "0.0.1",
     "name": "GetPlatform",
@@ -859,7 +890,7 @@
   },
   {
     "type": "get",
-    "url": "/v1/repo/platfrm/",
+    "url": "/v1/repo/platfrms",
     "title": "list platforms",
     "version": "0.0.1",
     "name": "ListPlatforms",
@@ -870,7 +901,7 @@
   },
   {
     "type": "put",
-    "url": "/v1/repo/platfrm/:platfrm_id",
+    "url": "/v1/repo/platfrms/:platfrm_id",
     "title": "update platform",
     "version": "0.0.1",
     "name": "UptPltf",
@@ -894,7 +925,7 @@
   },
   {
     "type": "post",
-    "url": "/v1/repo/proc/",
+    "url": "/v1/repo/procs",
     "title": "add process",
     "version": "0.0.1",
     "name": "AddProc",
@@ -946,7 +977,7 @@
   },
   {
     "type": "post",
-    "url": "/v1/repo/proc/:proc_id/steps",
+    "url": "/v1/repo/procs/:proc_id/steps",
     "title": "add step",
     "version": "0.0.1",
     "name": "AddStep",
@@ -1005,7 +1036,7 @@
   },
   {
     "type": "put",
-    "url": "/v1/repo/proc/:proc_id",
+    "url": "/v1/repo/procs/:proc_id",
     "title": "delete process",
     "version": "0.0.1",
     "name": "DelProc",
@@ -1029,7 +1060,7 @@
   },
   {
     "type": "delete",
-    "url": "/v1/repo/proc/:proc_id/steps/:step_id",
+    "url": "/v1/repo/procs/:proc_id/steps/:step_id",
     "title": "delete step",
     "version": "0.0.1",
     "name": "DelStep",
@@ -1060,7 +1091,7 @@
   },
   {
     "type": "delete",
-    "url": "/v1/repo/proc/:proc_id",
+    "url": "/v1/repo/procs/:proc_id",
     "title": "get process",
     "version": "0.0.1",
     "name": "GetProc",
@@ -1084,7 +1115,7 @@
   },
   {
     "type": "get",
-    "url": "/v1/repo/proc/",
+    "url": "/v1/repo/procs",
     "title": "lists process",
     "version": "0.0.1",
     "name": "ListProcs",
@@ -1095,7 +1126,7 @@
   },
   {
     "type": "put",
-    "url": "/v1/repo/proc/:proc_id",
+    "url": "/v1/repo/procs/:proc_id",
     "title": "update process",
     "version": "0.0.1",
     "name": "UptProc",
@@ -1154,7 +1185,7 @@
   },
   {
     "type": "put",
-    "url": "/v1/repo/proc/:proc_id/steps/:step_id",
+    "url": "/v1/repo/procs/:proc_id/steps/:step_id",
     "title": "update step",
     "version": "0.0.1",
     "name": "UptStep",
@@ -1220,7 +1251,7 @@
   },
   {
     "type": "post",
-    "url": "/v1/repo/suprlay/",
+    "url": "/v1/repo/suprlays",
     "title": "add super layer",
     "version": "0.0.1",
     "name": "AddSuprLay",
@@ -1265,7 +1296,7 @@
   },
   {
     "type": "delete",
-    "url": "/v1/repo/suprlay/:suprlay_id",
+    "url": "/v1/repo/suprlays/:suprlay_id",
     "title": "delete super layer",
     "version": "0.0.1",
     "name": "DelSprlay",
@@ -1289,7 +1320,7 @@
   },
   {
     "type": "get",
-    "url": "/v1/repo/suprlay/:suprlay_id",
+    "url": "/v1/repo/suprlays/:suprlay_id",
     "title": "get super layer",
     "version": "0.0.1",
     "name": "GetSprlay",
@@ -1313,7 +1344,7 @@
   },
   {
     "type": "get",
-    "url": "/v1/repo/suprlay/",
+    "url": "/v1/repo/suprlays",
     "title": "list super layers",
     "version": "0.0.1",
     "name": "ListSuprLays",
@@ -1324,7 +1355,7 @@
   },
   {
     "type": "put",
-    "url": "/v1/repo/suprlay/:suprlay_id",
+    "url": "/v1/repo/suprlays/:suprlay_id",
     "title": "update super layer",
     "version": "0.0.1",
     "name": "UptSprlay",
