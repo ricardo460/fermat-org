@@ -105,8 +105,43 @@
             "group": "Parameter",
             "type": "Object",
             "optional": false,
-            "field": "body[]",
-            "description": "<p>It represents the node.</p>"
+            "field": "object",
+            "description": "<p>It represents a node or body[{Number} index].</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "object.hash",
+            "description": "<p>It represents the id or hash of the node.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "object.type",
+            "description": "<p>It represents the node type (server, client, service, etc)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "object.extra",
+            "description": "<p>Has any extra information that wants to be showed</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ISODate",
+            "optional": false,
+            "field": "object.upd_at",
+            "description": "<p>Last update</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String[]",
+            "optional": false,
+            "field": "object.chldrn",
+            "description": "<p>An array of the nodes hashes that are connected to this node</p>"
           }
         ]
       }
