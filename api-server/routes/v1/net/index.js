@@ -90,12 +90,12 @@ router.get('/nodes/:hash/childrn', function (req, res, next) {
  * @apiGroup Net
  * @apiDescription Inserts a wave (state of the network) into the database.
  * @apiParam {Object[]} body An array of javascript objects that represents the state of the network at the moment of the arrays creation
- * @apiParam {Object} body[] It represents the node.
- * @apiParam {String} body[].hash It represents the id or hash of the node.
- * @apiParam {String} body[].type It represents the node type (server, client, service, etc)
- * @apiParam {Object} body[].extra Has any extra information that wants to be showed
- * @apiParam {ISODate} body[].upd_at Last update
- * @apiParam {String[]} body[].chldrn An array of the nodes hashes that are connected to this node
+ * @apiParam {Object} object It represents a node or body[{Number} index].
+ * @apiParam {String} object.hash It represents the id or hash of the node.
+ * @apiParam {String} object.type It represents the node type (server, client, service, etc)
+ * @apiParam {Object} object.extra Has any extra information that wants to be showed
+ * @apiParam {ISODate} object.upd_at Last update
+ * @apiParam {String[]} object.chldrn An array of the nodes hashes that are connected to this node
  */
 router.post('/waves', function (req, res, next) {});
 module.exports = router;
