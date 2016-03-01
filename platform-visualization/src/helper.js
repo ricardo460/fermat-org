@@ -30,9 +30,9 @@ function Helper() {
         if(el) {
             $(el).fadeTo(duration, 0, function() {
                 if(keep) {
-                    el.style.visibility = 'hidden';
+                    el.style.display = 'none';
                     el.style.opacity = 0;
-                    el.style.transition = 'visibility 0s 2s, opacity 2s linear';
+                    el.style.transition = 'display 0s 2s, opacity 2s linear';
                 }
                 else
                     $(el).remove();
@@ -44,7 +44,7 @@ function Helper() {
 
     };
 
-    this.showHelpText = function(element) {
+    this.showHelpText = function(element, duration) {
 
       var el = element;
 
@@ -52,9 +52,11 @@ function Helper() {
           el = document.getElementById(element);
 
       if(el) {
-          el.style.visibility = 'visible';
-          el.style.opacity = 1;
-          el.style.transition = 'opacity 2s linear';
+        $(el).fadeTo(duration, 0, function() {
+            el.style.display = 'block';
+            el.style.opacity = 1;
+            el.style.transition = 'opacity 2s linear';
+        });
       }
     }
 
