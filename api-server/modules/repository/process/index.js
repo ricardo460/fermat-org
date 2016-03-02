@@ -691,7 +691,7 @@ exports.insertStep = function (_proc_id, _comp_id, type, title, desc, order, cal
 			} else {
 				return callback(null, null);
 			}
-		})
+		});
 	} catch (err) {
 		return callback(err, null);
 	}
@@ -734,27 +734,27 @@ exports.updateStepById = function (_step_id, _comp_id, type, title, desc, order,
 			if (err_step) {
 				return callback(err_step, null);
 			} else if (res_step) {
-				if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
-					swapOrder('update', res_step.order, set_obj.order, function (err_sld, res_sld) {
-						if (err_sld) {
-							return callback(err_sld, null);
-						} else {
-							stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
-								if (err_upt) {
-									return callback(err_upt, null);
-								}
-								return callback(null, set_obj);
-							});
-						}
-					});
-				} else {
-					stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
-						if (err_upt) {
-							return callback(err_upt, null);
-						}
-						return callback(null, set_obj);
-					});
-				}
+				//if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
+				//    swapOrder('update', res_step.order, set_obj.order, function (err_sld, res_sld) {
+				//    	  if (err_sld) {
+				//    		  return callback(err_sld, null);
+				//    	  } else {
+				//    		  stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
+				//    		  	  if (err_upt) {
+				//    		  	  	  return callback(err_upt, null);
+				//    		  	  }
+				//    		  	  return callback(null, set_obj);
+				//    		  });
+				//    	  }
+				//    });
+				//} else {
+				stepSrv.updateStepById(_step_id, set_obj, function (err_upt, step) {
+					if (err_upt) {
+						return callback(err_upt, null);
+					}
+					return callback(null, set_obj);
+				});
+				//}
 			} else {
 				return callback(null, null);
 			}
@@ -781,18 +781,18 @@ exports.delStepById = function (_id, callback) {
 				return callback(err_step, null);
 			}
 			// ordering function
-			swapOrder('delete', res_step.order, null, function (err_sld, res_sld) {
-				if (err_sld) {
-					return callback(err_sld, null);
-				} else {
-					stepSrv.delStepById(res_step._id, function (err_del, res_del) {
-						if (err_del) {
-							return callback(err_del, null);
-						}
-						return callback(null, res_step);
-					});
+			//swapOrder('delete', res_step.order, null, function (err_sld, res_sld) {
+			//	if (err_sld) {
+			//		return callback(err_sld, null);
+			//	} else {
+			stepSrv.delStepById(res_step._id, function (err_del, res_del) {
+				if (err_del) {
+					return callback(err_del, null);
 				}
+				return callback(null, res_step);
 			});
+			//	}
+			//});
 		});
 	} catch (err) {
 		return callback(err, null);

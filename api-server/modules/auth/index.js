@@ -67,7 +67,7 @@ exports.login = function (url, api_key, callback) {
 					if (usr) {
 						console.log("Inserting user");
 						//Registering the user and developer in the database
-						usrMod.insOrUpdUsr(usr.usrnm ? usr.usrnm.toLowerCase(), //
+						usrMod.insOrUpdUsr(usr.usrnm ? usr.usrnm.toLowerCase() : usr.usrnm, //
 							usr.email, usr.name, usr.bday, usr.location, usr.avatar_url, usr.github_tkn, usr.url, usr.bio,
 							function (err_usr, res_usr) {
 								if (err_usr) {
