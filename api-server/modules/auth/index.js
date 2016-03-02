@@ -63,39 +63,42 @@ exports.login = function (url, api_key, callback) {
 				githubLib.getUsrGithub(url, function (error, usr) {
 					if (error) {
 						return callback(error, null);
-					} if (usr) {
+					}
+					if (usr) {
 						console.log("Inserting user");
 						//Registering the user and developer in the database
-						usrMod.insOrUpdUsr(usr.usrnm, usr.email, usr.name, usr.bday, usr.location, usr.avatar_url, usr.github_tkn, usr.url, usr.bio, function (err_usr, res_usr) {
-							if (err_usr) {
-								console.log('error', err_usr);
-								return callback(err_usr, null);
-							}
-							if (res_usr) {
-								console.log('info', 'Usr and Dev inserted');
-								//Generating the token user
-								tknMod.insTkn(res_usr._id, res_app._id, function (err_tkn, res_tkn) {
-									if (err_tkn) {
-										console.log('error', err_tkn);
-										return callback(err_tkn, null);
-									}
-									if (res_tkn) {
-										console.log('info', 'Tkn generated');
-										//return token
-										tknMod.getTkn(res_tkn.axs_key, function (err_tk, res_tk) {
-											if (err_tk) {
-												console.log('Error', err_tkn);
-												return callback(err_tkn, null);
-											}
-											if (res_tk) {
-												return callback(null, res_tk);
-											} else return callback("Unauthorized. Token no found", null);
-										});
-									} else return callback("Unauthorized. Error generating token", null);
-								});
-							} else return callback("Unauthorized. Error logging the user", null);
-						});
-					} else return callback("Unauthorized. User no found", null); 
+						usrMod.insOrUpdUsr(usr.usrnm ? usr.usrnm.toLowerCase(), //
+							usr.email, usr.name, usr.bday, usr.location, usr.avatar_url, usr.github_tkn, usr.url, usr.bio,
+							function (err_usr, res_usr) {
+								if (err_usr) {
+									console.log('error', err_usr);
+									return callback(err_usr, null);
+								}
+								if (res_usr) {
+									console.log('info', 'Usr and Dev inserted');
+									//Generating the token user
+									tknMod.insTkn(res_usr._id, res_app._id, function (err_tkn, res_tkn) {
+										if (err_tkn) {
+											console.log('error', err_tkn);
+											return callback(err_tkn, null);
+										}
+										if (res_tkn) {
+											console.log('info', 'Tkn generated');
+											//return token
+											tknMod.getTkn(res_tkn.axs_key, function (err_tk, res_tk) {
+												if (err_tk) {
+													console.log('Error', err_tkn);
+													return callback(err_tkn, null);
+												}
+												if (res_tk) {
+													return callback(null, res_tk);
+												} else return callback("Unauthorized. Token no found", null);
+											});
+										} else return callback("Unauthorized. Error generating token", null);
+									});
+								} else return callback("Unauthorized. Error logging the user", null);
+							});
+					} else return callback("Unauthorized. User no found", null);
 				});
 			} else return callback("Unauthorized. Api key no found", null);
 		});
