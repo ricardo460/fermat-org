@@ -48,12 +48,9 @@ button:active {
     color: #909090;
     display: block;
     margin: auto;
-    margin-top: -20px;
-    margin-bottom: -20px;
-}
-
-#navigation, #zoom, #slide, #return {
-    visibility: hidden;
+    margin-top: 0px;
+    margin-bottom: -35px;
+    display: none;
     opacity: 0;
 }
 

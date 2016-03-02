@@ -32,6 +32,8 @@ var TILE_DIMENSION = {
     TILE_SPACING = 20;
 
 currentRender = createScene(currentRender, currentRender);
+//Disabled by Luis Molina
+//helper.showHelpText('welcome',1000);
 getData();
 
 $('#login').click(function() {
@@ -156,15 +158,18 @@ function init() {
 
     setTimeout(function() { initPage(); }, 500);
     
+    /*
+    Temporary disabled by Luis Molina
     setTimeout(function (){
         if(actualView === 'home'){
-            helper.showHelpText('navigation');
-            helper.showHelpText('zoom');
-            helper.showHelpText('slide');
-            helper.showHelpText('return');
+            helper.showHelpText('navigation',1000);
+            helper.showHelpText('zoom',1000);
+            helper.showHelpText('slide',1000);
+            helper.showHelpText('return',1000);
             toggleHelp = true;
         }
     }, 15000);
+    */
     
     /*setTimeout(function() {
         var loader = new Loader();

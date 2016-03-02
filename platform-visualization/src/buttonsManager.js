@@ -38,8 +38,6 @@ function ButtonsManager() {
         window.screenshotsAndroid.showButtonScreenshot(id);
 
         window.fermatEdit.addButton(id);
-
-        window.flowManager.getAndShowFlows(id);//Always stop last
     };
 
     /**
