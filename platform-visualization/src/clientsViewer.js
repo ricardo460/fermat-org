@@ -94,7 +94,7 @@ ClientsViewer.prototype.createEdges = function() {
     
     for(var nodeID in this.nodes) {
         
-        var origin = this.nodes[nodeID].sprite.position;
+        var origin = this.nodes[nodeID].sprite.userData.originPosition;
         var dest = this.parentNode.position;
         
         var lineGeo = new THREE.Geometry();

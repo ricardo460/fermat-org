@@ -92,8 +92,8 @@ BaseNetworkViewer.prototype = {
         texture.minFilter = THREE.NearestFilter;
         
         var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0xffffff, map : texture}));
-        sprite.renderOrder = 100;
-        sprite.material.blending = THREE.NoBlending;
+        //sprite.renderOrder = 100;
+        //sprite.material.blending = THREE.NoBlending;
         
         var id = nodeData.id.toString();
 
