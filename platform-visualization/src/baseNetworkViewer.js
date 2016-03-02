@@ -252,7 +252,7 @@ BaseNetworkViewer.prototype = {
             .to({opacity : 1}, duration);
             
             if(former)
-                former.onStart(function() { next.start(); });
+                former.onStart(function() { actual.visible = true; next.start(); });
             else
                 original = next;
             
@@ -285,7 +285,7 @@ BaseNetworkViewer.prototype = {
                 var actual = self.edges[i].line;
 
                 var next = new TWEEN.Tween(actual.material)
-                            .to({opacity : 0}, duration).start();
+                            .to({opacity : 0}, duration).onComplete(function() {actual.visible = false;}).start();
             }
         };
 

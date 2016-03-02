@@ -19,6 +19,7 @@ ClientsViewer.prototype.constructor = ClientsViewer;
  */
 ClientsViewer.prototype.onNodeClick = function(clickedNode) {
     
+    /*Disabled as there is no lower level for now
     if(this.childNetwork === null) {
         
         TWEEN.removeAll();
@@ -31,7 +32,7 @@ ClientsViewer.prototype.onNodeClick = function(clickedNode) {
         this.childNetwork = new ServicesViewer(clickedNode);
         
         this.open();
-    }
+    }*/
 };
 
 ClientsViewer.prototype.open = function() {
