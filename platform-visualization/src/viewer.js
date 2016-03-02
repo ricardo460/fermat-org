@@ -32,7 +32,8 @@ var TILE_DIMENSION = {
     TILE_SPACING = 20;
 
 currentRender = createScene(currentRender, currentRender);
-helper.showHelpText('welcome',1000);
+//Disabled by Luis Molina
+//helper.showHelpText('welcome',1000);
 getData();
 
 $('#login').click(function() {
@@ -157,6 +158,8 @@ function init() {
 
     setTimeout(function() { initPage(); }, 500);
     
+    /*
+    Temporary disabled by Luis Molina
     setTimeout(function (){
         if(actualView === 'home'){
             helper.showHelpText('navigation',1000);
@@ -166,6 +169,7 @@ function init() {
             toggleHelp = true;
         }
     }, 15000);
+    */
     
     /*setTimeout(function() {
         var loader = new Loader();
