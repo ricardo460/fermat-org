@@ -13,6 +13,10 @@ function Helper() {
 
     var AXS_KEY = '';
 
+    this.listDevs = {};
+
+    var self = this;
+
     /**
      * Hides an element vanishing it and then eliminating it from the DOM
      * @param {DOMElement} element         The element to eliminate
@@ -412,7 +416,11 @@ function Helper() {
                     
                         callAjax('suprlays', function(){
 
-                            callback(list);
+                            callAjaxDevs(function(){ 
+
+                                callback(list);
+
+                            });
                 
                         });
                     });
@@ -421,11 +429,15 @@ function Helper() {
         }
         else{
 
-            url = this.getAPIUrl("comps");
+            url = self.getAPIUrl("comps");
 
             callAjax('', function(){
 
-                callback(list);
+                callAjaxDevs(function(){ 
+
+                    callback(list);
+
+                }); 
                 
             });
         }
@@ -442,6 +454,24 @@ function Helper() {
                         list = res;
                     else
                        list[route] = res; 
+
+                    if(typeof(callback) === 'function')
+                        callback();
+
+                });
+        }
+
+        function callAjaxDevs(callback){
+
+            url = self.getAPIUrl("user");
+
+            $.ajax({
+                url: url + PORT,
+                method: "GET"
+            }).success (
+                function (res) {
+
+                    self.listDevs = res;
 
                     if(typeof(callback) === 'function')
                         callback();
