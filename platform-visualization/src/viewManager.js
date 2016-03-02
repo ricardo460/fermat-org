@@ -55,7 +55,7 @@ function ViewManager() {
                 case 'table':
                     enter = function() {
 
-                        window.fermatEdit.addButton();
+                        window.tableEdit.addButton();
 
                         window.tileManager.transform(true, 3000 + transition);
                         
