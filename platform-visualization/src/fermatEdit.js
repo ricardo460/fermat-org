@@ -1171,7 +1171,7 @@ function FermatEdit() {
     //tile action
     function createTile(_table){
 
-        var params = getParamsData(_table);
+        var params = getParamsData(_table);  
 
         window.helper.postRoutesComponents('insert', params, null,
             function(res){ 
@@ -1275,17 +1275,19 @@ function FermatEdit() {
 
             param.code_level = table.code_level.toLowerCase();
 
-            param.repo_dir = table.repo_dir;
-
             param.scrnshts = false;
 
-            if(table.repo_dir)
+            if(table.repo_dir){
                 param.found = true;
-            else
+                param.repo_dir = table.repo_dir;
+            }
+            else{
                 param.found = false;
+                param.repo_dir = "root";
+            }
 
-            if(table.repo_dir)
-                param.description = table.repo_dir;
+            if(table.description)
+                param.description = table.description;
             else
                 param.description = "pending";
 
@@ -1496,8 +1498,13 @@ function FermatEdit() {
             if(table.description !== self.actualTile.description)
                 param.description = table.description;
 
-            if(table.repo_dir.toLowerCase() !== self.actualTile.repo_dir.toLowerCase())
-                param.repo_dir = table.repo_dir.toLowerCase();
+            if(table.repo_dir.toLowerCase() !== self.actualTile.repo_dir.toLowerCase()){
+                
+                if(table.repo_dir)
+                    param.repo_dir = table.repo_dir;
+                else
+                    param.repo_dir = "root";
+            }
 
             if(table.repo_dir)
                 param.found = true;
