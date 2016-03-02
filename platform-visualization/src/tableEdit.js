@@ -1,7 +1,7 @@
 /**
  * @author Ricardo Delgado
  */
-function FermatEdit() {
+function TableEdit() {
 
     var DATA_USER = {};
 

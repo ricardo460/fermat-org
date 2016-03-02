@@ -49,6 +49,6 @@
         "FlowManager" : true,
         "ActionFlow" : true,
         "ButtonsManager" : true,
-        "FermatEdit" : true
+        "tableEdit" : true
     }
 }

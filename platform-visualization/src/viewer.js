@@ -15,7 +15,7 @@ var tilesQtty = [],
     signLayer = new SignLayer(),
     developer = new Developer(),
     session = new Session(),
-    fermatEdit = null,
+    tableEdit = null,
     browserManager = null,
     screenshotsAndroid = null,
     headers = null,
@@ -119,9 +119,9 @@ function init() {
     magazine = new Magazine();
     flowManager = new FlowManager();
     buttonsManager = new ButtonsManager();
-    fermatEdit = new FermatEdit();
+    tableEdit = new TableEdit();
 
-    fermatEdit.init();
+    tableEdit.init();
 
     //View Manager
     viewManager = new ViewManager();
