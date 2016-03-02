@@ -509,7 +509,7 @@ function TileManager() {
 
         for (var j = 0, l = levels.length; j < l; j++) {
 
-            if (levels[j][0] === 'high') scale = 5;
+            if (levels[j][0] === 'high') scale = 2;
             else scale = 1;
 
             texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale, table);
