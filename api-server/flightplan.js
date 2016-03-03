@@ -72,7 +72,7 @@ plan.remote('deploy', function (remote) {
 			//remote.sudo('NODE_ENV=testing PORT=8081 forever start bin/www');
 			//remote.sudo('NODE_ENV=development PORT=8082 forever start bin/www');
 			//remote.sudo('forever start proxy.js');
-			//remote.sudo('forever list');
+			remote.sudo('forever list');
 			remote.log('Successfully deployied in ' + versionFolder);
 			remote.log('To rollback to the previous version run "fly rollback:target"');
 		});
