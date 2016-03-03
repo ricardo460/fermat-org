@@ -1,5 +1,6 @@
 .idea/
 **/.idea/
+secret.json
 api-server/node_modules/
 api-server/deploy.json
 api-server/build/secret.json
