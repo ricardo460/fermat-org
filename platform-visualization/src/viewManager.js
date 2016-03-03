@@ -90,6 +90,8 @@ function ViewManager() {
                     reset = function() {
                         window.tileManager.rollBack();
 
+                        window.headers.transformTable(2000); // nuevo
+
                         setTimeout(function(){
                             window.signLayer.transformSignLayer();
                          }, 3000);
@@ -155,14 +157,24 @@ function ViewManager() {
                         }
                         window.flowManager.getHeaderFLow();
                         window.headers.transformWorkFlow(transition);
+                        window.workFlowEdit.createButtonWorkFlow(); // nuevo
                     };
                     
                     backButton = reset = function() {
+                        window.buttonsManager.removeAllButtons(); // nuevo
+
                         window.flowManager.showWorkFlow();
+
+                        window.workFlowEdit.createButtonWorkFlow(); // nuevo
+
+                        window.helper.hideBackButton(); // nuevo
+
+                        window.workFlowEdit.deleteWorFlowEdit(); // nuevo
                     };
 
                     exit = function() {
                         window.flowManager.deleteAllWorkFlows();
+                        window.buttonsManager.removeAllButtons(); // nuevo
                     };
                     
                     break;

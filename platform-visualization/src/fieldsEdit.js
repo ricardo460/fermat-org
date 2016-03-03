@@ -64,10 +64,12 @@ function FieldsEdit() {
             self.objects.row1.div = null;
             self.objects.row2.div = null;
             self.objects.idFields = {};
-            self.actualTile = null;
-            deleteMesh();
 
             if(window.actualView === 'table'){ 
+
+                self.actualTile = null;
+                
+                window.tableEdit.deleteMesh();
 
                 if(window.camera.getFocus() === null)
                     window.tableEdit.addButton();              
@@ -81,6 +83,76 @@ function FieldsEdit() {
         }
     };
 
+    this.createField = function(id, text, _x, _type, _row){ // nuevo
+
+        var object = {
+            id : id,
+            text : text
+          };
+
+        var x = _x || 5,
+            type = _type || 'button',
+            idSucesor = "backButton",
+            row = _row || '1';
+
+        if( self.objects['row' + row].div === null)
+            self.createDiv(row);
+
+        if(self.objects['row' + row].buttons.length !== 0)
+            idSucesor = self.objects['row' + row].buttons[self.objects['row' + row].buttons.length - 1].id;
+
+        var div = document.getElementById(self.objects['row' + row].div);
+
+        var button = document.createElement(type),
+            sucesorButton = document.getElementById(idSucesor);
+                  
+        button.id = id;
+        button.className = 'edit-Fermat';
+        button.innerHTML = text;
+        button.style.zIndex = 10;
+        button.style.opacity = 0;
+
+        div.appendChild(button);
+
+        self.objects['row' + row].buttons.push(object);
+
+        window.helper.show(button, 1000);
+
+        return button;
+    };
+
+    this.createDiv = function(row){ // nuevo
+
+        var div = document.createElement('div');
+
+        div.id = 'div-Edit' + row;
+
+        document.body.appendChild(div);
+
+        self.objects['row' + row].div = 'div-Edit' + row;
+
+        window.helper.show(div, 1000);
+    };
+
+    this.setTextSize = function() { // nuevo
+        
+        var object = {
+            id : "fermatEditStyle",
+            text : "style"
+          };
+
+        self.objects.row2.buttons.push(object);
+
+        var windowWidth  = window.innerWidth;
+        var size         = windowWidth * 0.009;
+        var style        = document.createElement("style");
+        var styleSheet   = ".edit-Fermat {font-size:"+size+"px;}";
+        var node         = document.createTextNode(styleSheet);
+        
+        style.appendChild(node);
+        document.body.appendChild(style);  
+    };
+
     this.createFieldTableEdit = function(){
 
         sesionGroup();
@@ -92,7 +164,7 @@ function FieldsEdit() {
         sesionState();
         sesionAuthor();
         createbutton();
-        setTextSize();
+        self.setTextSize();
 
     };
         
@@ -100,7 +172,7 @@ function FieldsEdit() {
 
         var id = 'label-Repositorio'; text = 'Dir. Repo. : '; type = 'label';
 
-        createField(id, text, null, type, 2);
+        self.createField(id, text, null, type, 2);
 
         var idSucesor = self.objects.row2.buttons[self.objects.row2.buttons.length - 1].id;
 
@@ -140,88 +212,16 @@ function FieldsEdit() {
         select.style.width = select.offsetWidth + select.offsetHeight + "px";
         
     }
-    
-    function setTextSize() {
-        
-        var object = {
-            id : "fermatEditStyle",
-            text : "style"
-          };
-
-        self.objects.row2.buttons.push(object);
-
-        var windowWidth  = window.innerWidth;
-        var size         = windowWidth * 0.009;
-        var style        = document.createElement("style");
-        var styleSheet   = ".edit-Fermat {font-size:"+size+"px;}";
-        var node         = document.createTextNode(styleSheet);
-        
-        style.appendChild(node);
-        document.body.appendChild(style);
-        
-    }
-
-    function createDiv(row){
-
-        var div = document.createElement('div');
-
-        div.id = 'div-Edit' + row;
-
-        document.body.appendChild(div);
-
-        self.objects['row' + row].div = 'div-Edit' + row;
-
-        window.helper.show(div, 1000);
-
-    }
-
-    function createField(id, text, _x, _type, _row){
-
-        var object = {
-            id : id,
-            text : text
-          };
-
-        var x = _x || 5,
-            type = _type || 'button',
-            idSucesor = "backButton",
-            row = _row || '1';
-
-        if( self.objects['row' + row].div === null)
-            createDiv(row);
-
-        if(self.objects['row' + row].buttons.length !== 0)
-            idSucesor = self.objects['row' + row].buttons[self.objects['row' + row].buttons.length - 1].id;
-
-        var div = document.getElementById(self.objects['row' + row].div);
-
-        var button = document.createElement(type),
-            sucesorButton = document.getElementById(idSucesor);
-                  
-        button.id = id;
-        button.className = 'edit-Fermat';
-        button.innerHTML = text;
-        button.style.zIndex = 10;
-        button.style.opacity = 0;
-
-        div.appendChild(button);
-
-        self.objects['row' + row].buttons.push(object);
-
-        window.helper.show(button, 1000);
-
-        return button;
-    }
 
     function sesionGroup(){
 
         var id = 'label-Group'; text = 'Select the Group : '; type = 'label';
 
-        createField(id, text, null, type);
+        self.createField(id, text, null, type);
 
         id = 'select-Group'; text = ''; type = 'select';
 
-        createField(id, text, null, type);
+        self.createField(id, text, null, type);
 
         var optgroup = "<optgroup label = Platform>",
             option = "";
@@ -273,11 +273,11 @@ function FieldsEdit() {
 
         var id = 'label-layer'; text = 'Select the Layer : '; type = 'label';
 
-        createField(id, text, 15, type);
+        self.createField(id, text, 15, type);
 
         id = 'select-layer'; text = ''; type = 'select';
 
-        createField(id, text, null, type);
+        self.createField(id, text, null, type);
 
         self.objects.idFields.layer = id;
 
@@ -293,11 +293,11 @@ function FieldsEdit() {
 
         var id = 'label-Type'; text = 'Select the Type : '; type = 'label';
 
-        createField(id, text, 15, type);
+        self.createField(id, text, 15, type);
 
         id = 'select-Type'; text = ''; type = 'select';
 
-        createField(id, text, null, type);
+        self.createField(id, text, null, type);
 
         self.objects.idFields.type = id;        
 
@@ -323,7 +323,7 @@ function FieldsEdit() {
 
         var id = 'label-Name'; text = 'Enter Name : '; type = 'label';
 
-        createField(id, text, null, type, 2);
+        self.createField(id, text, null, type, 2);
 
         var idSucesor = self.objects.row2.buttons[self.objects.row2.buttons.length - 1].id;
 
@@ -678,11 +678,11 @@ function FieldsEdit() {
 
         var id = 'label-Difficulty'; text = 'Select Difficulty : '; type = 'label';
 
-        createField(id, text, 15, type);
+        self.createField(id, text, 15, type);
 
         id = 'select-Difficulty'; text = ''; type = 'select';
 
-        createField(id, text, null, type);
+        self.createField(id, text, null, type);
 
         self.objects.idFields.difficulty = id;
 
@@ -808,11 +808,11 @@ function FieldsEdit() {
 
         var id = 'label-State'; text = 'Select the State : '; type = 'label';
 
-        createField(id, text, 15, type);
+        self.createField(id, text, 15, type);
 
         id = 'select-State'; text = ''; type = 'select';
 
-        createField(id, text, 8, type);
+        self.createField(id, text, 8, type);
 
         self.objects.idFields.state = id;
 
@@ -869,19 +869,6 @@ function FieldsEdit() {
     };
 
 
-    function deleteMesh(){
-
-        var mesh = self.objects.tile.mesh;
-
-        if(mesh != null){
-
-            animate(mesh, self.objects.tile.target.hide, 1500, function(){ 
-                    window.scene.remove(mesh);
-                });
-
-            self.objects.tile.mesh = null;
-        }
-    }
     // end
 
 

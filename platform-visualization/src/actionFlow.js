@@ -54,9 +54,9 @@ function ActionFlow(flow) {
      * @param   {Number}  initialX Position where to start
      * @param   {Number}  initialY Position where to start
      */
-    this.draw = function(initialX, initialY, initialZ, indice, id) {
+    this.draw = function(initialX, initialY, initialZ, indice, id) { // nuevo
 
-        var title = createTitleBox(self.flow.name, self.flow.desc),
+        var title = self.createTitleBox(self.flow.name, self.flow.desc),
             origin = window.helper.getOutOfScreenPoint(0),
             target = new THREE.Vector3(initialX, initialY + window.TILE_DIMENSION.height * 2, initialZ);
 
@@ -374,7 +374,9 @@ function ActionFlow(flow) {
      * @param   {Function}   fillBox Function to call after load, receives context and image
      * @returns {THREE.Mesh} The created plane with the drawed texture
      */
-    function createFlowBox(src, fillBox, width, height) {
+    function createFlowBox(src, fillBox, width, height, _true) { // nuevo
+
+        var _switch = _true || false;
 
         var canvas = document.createElement('canvas');
         canvas.height = height;
@@ -396,12 +398,15 @@ function ActionFlow(flow) {
 
         image.src = src;
 
-        var mesh = new THREE.Mesh(
+        if(_switch)
+            return texture;
+        else{
+            var mesh = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(width, height),
             new THREE.MeshBasicMaterial({color : 0xFFFFFF, map : texture, transparent : true})
-        );
-
-        return mesh;
+            );
+            return mesh;
+        }
     }
 
     /**
@@ -445,8 +450,9 @@ function ActionFlow(flow) {
      * @param {String} desc  The description of the whole process
      * @author Miguel Celedon
      */
-    function createTitleBox(title, desc) {
+    this.createTitleBox = function(title, desc, _true) { // nuevo
 
+        var _switch = _true || false;
         var fillBox = function(ctx, image) {
 
             ctx.drawImage(image, 0, 0);
@@ -462,8 +468,8 @@ function ActionFlow(flow) {
             window.helper.drawText(desc, 190, 126, ctx, 550, size);
         };
 
-        return createFlowBox('images/workflow/titleBox.png', fillBox, HEADER_WIDTH, HEADER_HEIGHT);
-    }
+        return createFlowBox('images/workflow/titleBox.png', fillBox, HEADER_WIDTH, HEADER_HEIGHT, _switch); //nuevo
+    };
 
     /**
      * @author Ricardo Delgado.

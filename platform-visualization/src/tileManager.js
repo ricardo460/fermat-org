@@ -628,16 +628,16 @@ function TileManager() {
     /**
      * Goes back to last target set in last transform
      */
-    this.rollBack = function () {
+    this.rollBack = function () { // nuevo
 
-        camera.enable();
-        camera.loseFocus();
+        window.camera.enable();
+        window.camera.loseFocus();
     
-        helper.show('container', 2000);
+        window.helper.show('container', 2000);
     
         window.flowManager.getActualFlow();
 
-        this.transform();
+        self.transform();
 
         //window.changeView(self.lastTargets);
     };

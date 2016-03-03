@@ -248,6 +248,20 @@ function TableEdit() {
         mesh.material.needsUpdate = true; 
 
     };
+
+    this.deleteMesh = function(){
+
+        var mesh = window.fieldsEdit.objects.tile.mesh;
+
+        if(mesh != null){ 
+
+            animate(mesh, window.fieldsEdit.objects.tile.target.hide, 1500, function(){ 
+                    window.scene.remove(mesh);
+                });
+
+            window.fieldsEdit.objects.tile.mesh = null;
+        }
+    };
     // end
 
     //Save Tile
