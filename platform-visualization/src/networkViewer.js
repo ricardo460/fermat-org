@@ -15,7 +15,12 @@ NetworkViewer.prototype.constructor = NetworkViewer;
  */
 NetworkViewer.prototype.load = function() {
     
-    BaseNetworkViewer.prototype.load.call(this);
+    //Ask for nodes
+    var networkNodes = this.test_load();
+
+    this.NET_RADIOUS = this.NET_RADIOUS * networkNodes.length;
+
+    this.drawNodes(networkNodes);
     
     this.configureCamera();
 };

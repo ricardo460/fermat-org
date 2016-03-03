@@ -17,15 +17,7 @@ BaseNetworkViewer.prototype = {
      * Loads the node data
      * @author Miguel Celedon
      */
-    load : function() {
-
-        //Ask for nodes
-        var networkNodes = this.test_load();
-
-        this.NET_RADIOUS = this.NET_RADIOUS * networkNodes.length;
-
-        this.drawNodes(networkNodes);
-    },
+    load : function() {},
 
     /**
      * Deletes all data loaded to free memory
