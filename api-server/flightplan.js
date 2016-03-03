@@ -59,7 +59,7 @@ plan.remote('deploy', function (remote) {
 		remote.exec('cd repo/' + remote.runtime.project + ' && git pull origin ' + remote.runtime.branch);
 		var versionFolder = remote.runtime.root + '/versions/' + timestamp;
 		var currentFolder = remote.runtime.root + '/versions/current';
-		remote.exec('cp -R ' + remote.runtime.root + '/repo/' + remote.runtime.project + '/build ' + versionFolder);
+		remote.exec('cp -R ' + remote.runtime.root + '/repo/' + remote.runtime.project + '/api-server/build ' + versionFolder);
 		remote.exec('ln -fsn ' + versionFolder + ' ' + currentFolder);
 		if (remote.runtime.maxDeploys > 0) {
 			remote.log('Cleaning up old deploys...');
@@ -67,9 +67,9 @@ plan.remote('deploy', function (remote) {
 		}
 		remote.with('cd ' + versionFolder, function () {
 			remote.exec('npm install --production');
-			remote.exec('npm start');
+			//remote.exec('npm start');
 			remote.log('Successfully deployied in ' + versionFolder);
-			remote.exec('forever list');
+			//remote.exec('forever list');
 			remote.log('To rollback to the previous version run "fly rollback:target"');
 		});
 	});

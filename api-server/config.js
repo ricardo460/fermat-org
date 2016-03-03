@@ -1,23 +1,20 @@
 var config = {};
-
+var secret = require('./secret.json');
+//
 config.env = process.env.NODE_ENV || 'development';
-
-if (config.env == 'development') {
-    config.database = {};
-    config.database.server = '127.0.0.1';
-    config.database.port = '27017';
-    config.database.name = 'fermat-org-dev';
-    config.client_id =  'c25e3b3b1eb9aa35c773';
-	config.client_secret = '9a89a6b7ff1f43141a8f748ba27446fbe6430e45';
+//
+config.database = {};
+config.database.server = '127.0.0.1';
+config.database.port = '27017';
+if (config.env == 'production') {
+	config.database.name = 'fermat-org';
+} else if (config.env == 'testing') {
+	config.database.name = 'fermat-org-test';
 } else {
-    config.database = {};
-    config.database.server = '127.0.0.1';
-    config.database.port = '27017';
-    config.database.name = 'fermat-org';
-    config.client_id =  'c25e3b3b1eb9aa35c773';
-	config.client_secret = '9a89a6b7ff1f43141a8f748ba27446fbe6430e45';
+	config.database.name = 'fermat-org-dev';
 }
-
-//ssh -i FermatBitcoin.pem ubuntu@52.11.156.16
-
+config.client_id = secret[config.env].client_id;
+config.client_secret = secret[config.env].client_secret;
+config.oauth_token = secret[config.env].oauth_token;
+config.user_agent = secret[config.env].user_agent;
 module.exports = config;
