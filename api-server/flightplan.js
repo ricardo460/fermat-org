@@ -54,7 +54,7 @@ plan.local('build', function (local) {
  */
 plan.remote('deploy', function (remote) {
 	remote.hostname();
-	remote.sudo('forever stopall');
+	//remote.sudo('forever stopall');
 	remote.with('cd ' + remote.runtime.root, function () {
 		remote.exec('cd repo/' + remote.runtime.project + ' && git pull origin ' + remote.runtime.branch);
 		var versionFolder = remote.runtime.root + '/versions/' + timestamp;
