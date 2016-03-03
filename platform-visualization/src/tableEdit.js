@@ -247,7 +247,7 @@ function TableEdit() {
         mesh.material.map = window.tileManager.createTexture(null, 'high', tileWidth, tileHeight, scale, table); 
         mesh.material.needsUpdate = true; 
 
-    }
+    };
     // end
 
     //Save Tile
@@ -267,7 +267,7 @@ function TableEdit() {
         else{
              window.alert(validateFields());
         }
-    }
+    };
 
     function validateFields(){
         var msj = '';

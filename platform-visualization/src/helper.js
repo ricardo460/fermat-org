@@ -5,9 +5,9 @@ function Helper() {
 
     var SERVER = 'http://api.fermat.org';
 
-    //var PORT = '';
+    var PORT = '';
 
-    var PORT = '?env=development';
+    //var PORT = '?env=development';
 
     var USERDATA = '';
 
@@ -62,7 +62,7 @@ function Helper() {
             el.style.transition = 'opacity 2s linear';
         });
       }
-    }
+    };
 
     this.hideButtons = function(){
 
@@ -389,7 +389,7 @@ function Helper() {
                 xhr = null;
         
             return xhr;
-        };
+        }
     };
 
     this.getCompsUser = function(callback){
@@ -398,7 +398,7 @@ function Helper() {
 
         var list = {};
 
-        window.session.useTestData();
+        //window.session.useTestData();
 
         if(window.session.getIsLogin()){ 
 

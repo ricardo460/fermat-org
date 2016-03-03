@@ -866,7 +866,7 @@ function FieldsEdit() {
 
         $("#select-layer").html(option);  
         
-    }
+    };
 
 
     function deleteMesh(){
@@ -911,7 +911,7 @@ function FieldsEdit() {
             button.innerHTML  = "Save";
             button.disabled=false;
         }
-    }
+    };
 
 
     
