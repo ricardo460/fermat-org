@@ -5,9 +5,9 @@ function Helper() {
 
     var SERVER = 'http://api.fermat.org';
 
-    var PORT = '';
+    //var PORT = '';
 
-    //var PORT = '?env=development';
+    var PORT = '?env=development';
 
     var USERDATA = '';
 
@@ -398,7 +398,7 @@ function Helper() {
 
         var list = {};
 
-        //window.session.useTestData();
+        window.session.useTestData();
 
         if(window.session.getIsLogin()){ 
 
