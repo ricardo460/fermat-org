@@ -1,14 +1,10 @@
 var plan = require('flightplan');
-var fs = require('fs');
 var deploy = require('./deploy.json');
 var date = new Date();
 var timestamp = date.getTime();
 /**
  * Remote configuration for "production"
  */
-var privateKey = fs.readFileSync('FermatBitcoin.pem', {
-	encoding: 'utf8'
-});
 plan.target('testing', {
 	host: deploy.testing.host,
 	username: deploy.testing.username,
