@@ -1,0 +1,15 @@
+{
+	"development": {},
+	"testing": {
+		"host": "api.fermat.org",
+		"username": "ubuntu",
+		"root": "/home/ubuntu",
+		"project": "fermat-org",
+		"repository": "git@github.com:fuelusumar/fermat-org.git",
+		"branch": "master",
+		"maxDeploys": 10
+	},
+	"qa": {},
+	"staging": {},
+	"production": {}
+}
