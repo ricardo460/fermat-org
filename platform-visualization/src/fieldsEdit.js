@@ -64,10 +64,12 @@ function FieldsEdit() {
             self.objects.row1.div = null;
             self.objects.row2.div = null;
             self.objects.idFields = {};
-            self.actualTile = null;
-            deleteMesh();
 
             if(window.actualView === 'table'){ 
+
+                self.actualTile = null;
+                
+                window.tableEdit.deleteMesh();
 
                 if(window.camera.getFocus() === null)
                     window.tableEdit.addButton();              
@@ -869,19 +871,6 @@ function FieldsEdit() {
     };
 
 
-    function deleteMesh(){
-
-        var mesh = self.objects.tile.mesh;
-
-        if(mesh != null){
-
-            animate(mesh, self.objects.tile.target.hide, 1500, function(){ 
-                    window.scene.remove(mesh);
-                });
-
-            self.objects.tile.mesh = null;
-        }
-    }
     // end
 
 
