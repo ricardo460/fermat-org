@@ -16,6 +16,7 @@ var tilesQtty = [],
     developer = new Developer(),
     session = new Session(),
     tableEdit = null,
+    fieldsEdit = null,
     browserManager = null,
     screenshotsAndroid = null,
     headers = null,
@@ -119,9 +120,8 @@ function init() {
     magazine = new Magazine();
     flowManager = new FlowManager();
     buttonsManager = new ButtonsManager();
+    fieldsEdit = new FieldsEdit();
     tableEdit = new TableEdit();
-
-    tableEdit.init();
 
     //View Manager
     viewManager = new ViewManager();
@@ -279,16 +279,17 @@ function initMenu() {
 
 function changeView() {
 
-    camera.enable();
-    camera.loseFocus();
+    window.camera.enable();
+    window.camera.loseFocus();
     
-    helper.show('container', 2000);
+    window.helper.show('container', 2000);
     
-    flowManager.getActualFlow();
+    window.flowManager.getActualFlow();
 
-    //if (targets != null) {
-    tileManager.transform(2000);
-    //}
+    window.headers.transformTable(2000);
+
+    window.tileManager.transform(2000);
+
 }
 
 /**

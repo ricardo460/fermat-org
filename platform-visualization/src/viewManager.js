@@ -82,13 +82,17 @@ function ViewManager() {
                     };                    
                     
                     exit = function() {
+
                         window.tileManager.rollBack();
 
-                        buttonsManager.removeAllButtons();
+                        window.buttonsManager.removeAllButtons();
                     };
 
                     reset = function() {
+
                         window.tileManager.rollBack();
+
+                        window.headers.transformTable(2000);
 
                         setTimeout(function(){
                             window.signLayer.transformSignLayer();
