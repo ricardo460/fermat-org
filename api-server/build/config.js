@@ -1,5 +1,5 @@
-var config = {};
 var secret = require('../secret.json');
+var config = {};
 //
 config.env = process.env.NODE_ENV || 'development';
 //
