@@ -382,7 +382,7 @@ function FieldsEdit() {
         button.className = 'actionButton edit-Fermat';
         button.style.zIndex = 10;
         button.style.opacity = 0;
-        button.value = "Autores";
+        button.value = "Authors";
         button.style.marginLeft = "5px";
 
         object = {
@@ -420,7 +420,7 @@ function FieldsEdit() {
                     '</div>'+
                     '<div id="buttons" >'+
                         '<button id="modal-close-button" >Cancel</button>'+
-                        '<button id="modal-accept-button" style="border-left: 2px solid #00b498;">Aceptar</button>'+
+                        '<button id="modal-accept-button" style="border-left: 2px solid #00b498;">Accept</button>'+
                     '</div>'+
                 '</div>';
             
