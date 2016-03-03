@@ -57,7 +57,7 @@ gulp.task('clean', function () {
 });
 // build task
 gulp.task('build', ['clean', 'apidoc'], function () {
-	gulp.src(['!node_modules/**/*', '!test/**/*', '**', '*.*']).pipe(ignore(['flightplan.js', 'deploy.json', 'FermatBitcoin.pem'])).pipe(gulp.dest('build')).once('end', function () {
+	gulp.src(['!node_modules/**/*', '!test/**/*', '**', '*.*']).pipe(ignore(['flightplan.js', 'deploy.json', 'secret.json', 'FermatBitcoin.pem'])).pipe(gulp.dest('build')).once('end', function () {
 		return gulp.src(['build/node_modules', 'build/test'], {
 				read: false
 			}) // much faster 
