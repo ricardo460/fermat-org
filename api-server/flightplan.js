@@ -54,8 +54,6 @@ plan.local('build', function (local) {
  */
 plan.remote('deploy', function (remote) {
 	remote.hostname();
-	//remote.sudo('forever stopall');
-	//remote.exec('forever stopall');
 	remote.with('cd ' + remote.runtime.root, function () {
 		remote.exec('cd repo/' + remote.runtime.project + ' && git pull origin ' + remote.runtime.branch);
 		var versionFolder = remote.runtime.root + '/versions/' + timestamp;
@@ -67,12 +65,12 @@ plan.remote('deploy', function (remote) {
 			remote.exec('rm -rf `ls -1dt ' + remote.runtime.root + '/versions/* | tail -n +' + (remote.runtime.maxDeploys + 1) + '`');
 		}
 		remote.with('cd ' + versionFolder, function () {
-			remote.exec('npm install --production');
-			//remote.exec('NODE_ENV=production PORT=8080 forever start bin/www');
-			//remote.exec('NODE_ENV=testing PORT=8081 forever start bin/www');
-			//remote.exec('NODE_ENV=development PORT=8082 forever start bin/www');
-			remote.exec('forever list');
-			//remote.sudo('forever start proxy.js');
+			remote.sudo('npm install --production');
+			remote.sudo('forever stopall');
+			remote.sudo('NODE_ENV=production PORT=8080 forever start bin/www');
+			remote.sudo('NODE_ENV=testing PORT=8081 forever start bin/www');
+			remote.sudo('NODE_ENV=development PORT=8082 forever start bin/www');
+			remote.sudo('forever start proxy.js');
 			remote.sudo('forever list');
 			remote.log('Successfully deployied in ' + versionFolder);
 			remote.log('To rollback to the previous version run "fly rollback:target"');
