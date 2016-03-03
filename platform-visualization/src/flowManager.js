@@ -10,6 +10,14 @@ function FlowManager(){
         actualFlow = null;
 
     // Public method
+    this.getObjHeaderFlow = function(){ // nuevo
+        return headerFlow;
+    };
+
+    this.getpositionHeaderFlow = function(){ // nuevo
+        return positionHeaderFlow;
+    };
+
     /**
      * @author Emmanuel Colina
      * Set position for each Header Flow
@@ -239,7 +247,7 @@ function FlowManager(){
     function calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) { 
 
         var position, indice = 1;
-        var find = false;
+        var find = false, count = 0;
 
         for(var i = 0; i < objectHeaderInWFlowGroup.length; i++) {
 
@@ -250,6 +258,8 @@ function FlowManager(){
                     if(find === false){
 
                         position = new THREE.Vector3();
+
+                        position.id = headerFlow[j].flow.platfrm + "_" + count; // nuevo
 
                         position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
 
@@ -265,6 +275,8 @@ function FlowManager(){
                         
                         position = new THREE.Vector3();
 
+                        position.id = headerFlow[j].flow.platfrm + "_" + count;// nuevo
+
                         position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
                         
                         position.y = positionHeaderFlow[positionHeaderFlow.length - 1].y - 500;
@@ -275,7 +287,8 @@ function FlowManager(){
                     }    
                 }
             }
-            find = false;     
+            find = false;  
+            count = 0;      
         }
     }
 

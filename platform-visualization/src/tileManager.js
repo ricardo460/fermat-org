@@ -628,7 +628,7 @@ function TileManager() {
     /**
      * Goes back to last target set in last transform
      */
-    this.rollBack = function () {
+    this.rollBack = function () { // nuevo
 
         window.camera.enable();
         window.camera.loseFocus();

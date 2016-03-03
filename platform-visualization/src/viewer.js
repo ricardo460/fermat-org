@@ -24,6 +24,7 @@ var tilesQtty = [],
     viewManager = null,
     magazine = null,
     networkViewer = null,
+    workFlowEdit = null,
     buttonsManager = null;
 //Global constants
 var TILE_DIMENSION = {
@@ -122,6 +123,7 @@ function init() {
     buttonsManager = new ButtonsManager();
     fieldsEdit = new FieldsEdit();
     tableEdit = new TableEdit();
+    workFlowEdit = new WorkFlowEdit(); // nuevo
 
     //View Manager
     viewManager = new ViewManager();
@@ -277,9 +279,10 @@ function initMenu() {
 }
 
 
-function changeView() {
+function changeView() { // nuevo
 
     window.camera.enable();
+
     window.camera.loseFocus();
     
     window.helper.show('container', 2000);
@@ -288,8 +291,9 @@ function changeView() {
 
     window.headers.transformTable(2000);
 
+    //if (targets != null) {
     window.tileManager.transform(2000);
-
+    //}
 }
 
 /**
