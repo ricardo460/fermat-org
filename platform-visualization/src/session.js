@@ -47,7 +47,7 @@ function Session(){
     this.useTestData = function(){
         
         
-    }
+    };
 
 	/**
 	 * Login with github and gets the authorization code
@@ -111,8 +111,10 @@ function Session(){
 
      			drawUser(usr);
 			} 
-            else
+            else {
 				console.log("Error:", tkn);
+                window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
+            }
 		});
 	};
 
