@@ -279,16 +279,17 @@ function initMenu() {
 
 function changeView() {
 
-    camera.enable();
-    camera.loseFocus();
+    window.camera.enable();
+    window.camera.loseFocus();
     
-    helper.show('container', 2000);
+    window.helper.show('container', 2000);
     
-    flowManager.getActualFlow();
+    window.flowManager.getActualFlow();
 
-    //if (targets != null) {
-    tileManager.transform(2000);
-    //}
+    window.headers.transformTable(2000);
+
+    window.tileManager.transform(2000);
+
 }
 
 /**
