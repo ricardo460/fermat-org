@@ -342,6 +342,67 @@ function Helper() {
 
     };
 
+    this.postRoutesProcess = function(route, params, data, doneCallback, failCallback){
+
+        var tail = "",
+            method = "",
+            setup = {};
+
+        switch(route) {
+                
+            case "insert":
+                method = "POST";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs";
+                break;
+            case "delete":
+                method = "DELETE";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id;
+                break;
+            case "update":
+                method = "PUT";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id;
+                break;
+            case "insert step":
+                method = "POST";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id + "/steps";
+                break;
+            case "delete step":
+                method = "DELETE";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id + "/steps/" + data.steps_id;
+                break;
+            case "update step":
+                method = "PUT";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id + "/steps/" + data.steps_id;
+                break;                    
+                
+        }
+
+        setup.method = method;
+        setup.url = SERVER + tail + PORT + AXS_KEY;
+        setup.headers = { 
+            "Content-Type": "application/json"
+             };
+
+        if(params)
+            setup.data = params;
+
+        makeCorsRequest(setup.url, setup.method, setup.data, 
+            function(res){
+        
+                if(typeof(doneCallback) === 'function')
+                    doneCallback(res);
+            }, 
+            function(res){
+
+                window.alert('Action Not Executed');
+
+                if(typeof(failCallback) === 'function')
+                    failCallback(res);
+            }
+        );
+
+    };
+
     var makeCorsRequest = function(url, method, params, success, error) {
 
         var xhr = createCORSRequest(url, method);
@@ -430,6 +491,8 @@ function Helper() {
         else{
 
             url = self.getAPIUrl("comps");
+
+            PORT = '';
 
             callAjax('', function(){
 

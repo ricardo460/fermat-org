@@ -32,6 +32,8 @@ function TableEdit() {
 
                 callback = function(){ 
 
+                    window.alert('This is an incubating feature, your changes will not be saved!');
+
                     window.fieldsEdit.actions.type = "insert";
 
                     window.buttonsManager.removeAllButtons();
@@ -64,6 +66,7 @@ function TableEdit() {
 
                 callback = function(){
 
+                    window.alert('This is an incubating feature, your changes will not be saved!');
                     window.fieldsEdit.actions.type = "update";
                     window.buttonsManager.removeAllButtons(); 
                     addAllFilds();
@@ -86,6 +89,8 @@ function TableEdit() {
 
                 callback = function(){
 
+                    window.alert('This is an incubating feature, your changes will not be saved!');
+                    
                     if(window.confirm("Really remove this component?"))           
                         deleteTile(id);                
                 };
@@ -814,6 +819,7 @@ function TableEdit() {
             window.camera.enable();
 
             window.tileManager.transform(false, 1000);
+            window.headers.transformTable(1000);
             window.signLayer.transformSignLayer();
 
             window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
