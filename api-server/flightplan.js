@@ -66,10 +66,14 @@ plan.remote('deploy', function (remote) {
 			remote.exec('rm -rf `ls -1dt ' + remote.runtime.root + '/versions/* | tail -n +' + (remote.runtime.maxDeploys + 1) + '`');
 		}
 		remote.with('cd ' + versionFolder, function () {
-			remote.exec('npm install --production');
-			//remote.exec('npm start');
+			//remote.sudo('npm install --production');
+			//remote.sudo('forever stopall');
+			//remote.sudo('NODE_ENV=production PORT=8080 forever start bin/www');
+			//remote.sudo('NODE_ENV=testing PORT=8081 forever start bin/www');
+			//remote.sudo('NODE_ENV=development PORT=8082 forever start bin/www');
+			//remote.sudo('forever start proxy.js');
+			//remote.sudo('forever list');
 			remote.log('Successfully deployied in ' + versionFolder);
-			//remote.exec('forever list');
 			remote.log('To rollback to the previous version run "fly rollback:target"');
 		});
 	});
