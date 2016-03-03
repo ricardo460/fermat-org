@@ -161,10 +161,10 @@ function init() {
     setTimeout(function (){
         guide.active = true;
         if(actualView === 'home'){
-            guide.createHelp(["Use the blue arrows to", "navigate through the site."], 5000, 1000, -7000, 5500);
-            guide.createHelp(["You can zoom in, or zoom out, using the scroll", "wheel or by dragging your Mouse while holding", "down the S key and left click."], 9225, 1450, 5000, 5500);
-            guide.createHelp(["After you zoom in, hold down left", "click and drag your Mouse to pan", "across the page view."], 6500, 1425, -7750, 500);
-            guide.createHelp(["Press the Esc key in any view to", "return to its starting position."], 6325, 1000, 8250, 550);
+            guide.createHelp(["Use the blue arrows to", "navigate through the site."], 450, 95, -12500, 12000);
+            guide.createHelp(["You can zoom in, or zoom out, using the scroll", "wheel or by dragging your Mouse while holding", "down the S key and left click."], 827, 135, 7000, 12000);
+            guide.createHelp(["After you zoom in, hold down left", "click and drag your Mouse to pan", "across the page view."], 590, 135, -15000, 5000);
+            guide.createHelp(["Press the Esc key in any view to", "return to its starting position."], 575, 95, 15000, 5000);
         }
     }, 15000);
 

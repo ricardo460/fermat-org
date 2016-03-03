@@ -44,22 +44,6 @@ function Helper() {
 
     };
 
-    this.showHelpText = function(element, duration) {
-
-      var el = element;
-
-      if(typeof(el) === "string")
-          el = document.getElementById(element);
-
-      if(el) {
-        $(el).fadeTo(duration, 0, function() {
-            el.style.display = 'block';
-            el.style.opacity = 1;
-            el.style.transition = 'opacity 2s linear';
-        });
-      }
-    }
-
     this.hideButtons = function(){
 
         if($('#developerButton') != null) 

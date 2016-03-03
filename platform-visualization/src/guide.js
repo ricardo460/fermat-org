@@ -14,7 +14,8 @@ function Guide() {
     
     var wide = (Math.floor(window.camera.aspectRatio * 10) !== Math.floor(40/3));
     
-    var Z = 63000;
+    var Z = 40000,
+        SCALE = (wide) ? 28 : 16;
 
     /**
      * @author Isaías Taborda
@@ -27,38 +28,46 @@ function Guide() {
      */
    this.createHelp = function (text, width, height, posX, posY) {
 
-        var canvas1 = document.createElement('canvas');
-        canvas1.width = width;
-        canvas1.height = height;
-        var context1 = canvas1.getContext('2d');
-        context1.fillStyle = "#62C2A3";
-        roundRectangle(context1,0,0,canvas1.width,canvas1.height);
-        context1.font = "Bold 400px Arial";
-        context1.fillStyle = "white";
+        var material = new THREE.MeshBasicMaterial( {map: null, side:THREE.FrontSide, transparent: true } ); 
+
+        var mesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(width, height),
+            material
+        );
+
+        mesh.position.set(0,0,-10000);
+        mesh.scale.set(SCALE, SCALE, SCALE);
+        mesh.material.opacity = 1;
+
+        window.scene.add(mesh);
+        self.objects.mesh.push(mesh);
+
+        var canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        var context = canvas.getContext('2d');
+        context.globalAlpha = 0.90;
+        context.fillStyle = "#10C6A9";
+        roundRectangle(context, 0, 0, canvas.width, canvas.height);
+        context.font = "40px Arial";
+        context.fillStyle = "white";
 
         size = text.length+1;
         spacing = 0;
         for(var i=1; i < size; i++){
            line = text.shift();
-           context1.fillText(line, 80, (375 * i) + spacing);
-           spacing += 75;
+           context.fillText(line, 7, (35 * i) + spacing);
+           spacing += 7;
         }
 
-        var texture1 = new THREE.Texture(canvas1) 
-        texture1.needsUpdate = true;
-            
-        var material1 = new THREE.MeshBasicMaterial( {map: texture1, side:THREE.DoubleSide } );
-        material1.transparent = true;
+        var texture = new THREE.Texture(canvas) 
+        texture.needsUpdate = true;
+        texture.minFilter = THREE.NearestFilter;
 
-        var mesh1 = new THREE.Mesh(
-            new THREE.PlaneGeometry(canvas1.width, canvas1.height),
-            material1
-        );
+        mesh.material.map = texture;
+        mesh.material.needsUpdate = true;
 
-        mesh1.position.set(0,0,-10000);
-        window.scene.add(mesh1);
-        self.objects.mesh.push(mesh1);
-        popUp(mesh1, posX, posY, 2000);
+        popUp(mesh, posX, posY,3500);
 
     }
 
@@ -73,7 +82,7 @@ function Guide() {
      */
     function roundRectangle(ctx, x, y, width, height) {
       
-      radius = 100;
+      radius = 10;
       ctx.beginPath();
       ctx.moveTo(x + radius, y);
       ctx.lineTo(x + width - radius, y);
@@ -107,8 +116,8 @@ function Guide() {
               .to({
                 x : x,
                 y : y,
-                z : z}, 
-              _duration)
+                z : z 
+              }, Math.random() * duration + duration)
               .easing(TWEEN.Easing.Exponential.InOut)
               .onUpdate(window.render)
               .start();
@@ -120,7 +129,7 @@ function Guide() {
      * Eliminates the help text.
      */
     this.removeHelp = function(){
-      var duration = 3000;
+      var duration = 1000;
       var i;
       var l = self.objects.mesh.length; 
 
@@ -135,9 +144,11 @@ function Guide() {
             .start();
         }
 
-        for(var i = 0; i < l; i++) {
-            window.scene.remove(self.objects.mesh[i]); // this was separated so the canvas text animates before being deleted
-        }
-        self.objects.mesh = [];
+        setTimeout(function (){
+          for(var i = 0; i < l; i++) {
+              window.scene.remove(self.objects.mesh[i]); // this was separated so the canvas text animates before being deleted
+          }
+          self.objects.mesh = [];
+        }, 3000);
   };
 }
