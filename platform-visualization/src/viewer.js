@@ -25,6 +25,7 @@ var tilesQtty = [],
     magazine = null,
     networkViewer = null,
     buttonsManager = null;
+    guide = null;
 //Global constants
 var TILE_DIMENSION = {
     width : 231,
@@ -33,8 +34,7 @@ var TILE_DIMENSION = {
     TILE_SPACING = 20;
 
 currentRender = createScene(currentRender, currentRender);
-//Disabled by Luis Molina
-//helper.showHelpText('welcome',1000);
+guide = new Guide();
 getData();
 
 $('#login').click(function() {
@@ -158,19 +158,16 @@ function init() {
 
     setTimeout(function() { initPage(); }, 500);
     
-    /*
-    Temporary disabled by Luis Molina
     setTimeout(function (){
+        guide.active = true;
         if(actualView === 'home'){
-            helper.showHelpText('navigation',1000);
-            helper.showHelpText('zoom',1000);
-            helper.showHelpText('slide',1000);
-            helper.showHelpText('return',1000);
-            toggleHelp = true;
+            guide.createHelp(["Use the blue arrows to", "navigate through the site."], 450, 95, -12500, 12000);
+            guide.createHelp(["You can zoom in, or zoom out, using the scroll", "wheel or by dragging your Mouse while holding", "down the S key and left click."], 827, 135, 7000, 12000);
+            guide.createHelp(["After you zoom in, hold down left", "click and drag your Mouse to pan", "across the page view."], 590, 135, -15000, 5000);
+            guide.createHelp(["Press the Esc key in any view to", "return to its starting position."], 575, 95, 15000, 5000);
         }
     }, 15000);
-    */
-    
+
     /*setTimeout(function() {
         var loader = new Loader();
         loader.findThemAll();
@@ -219,19 +216,19 @@ function goToView(targetView) {
  */
 function initPage() {
     
-	window.Hash.on('^[a-zA-Z]*$', {
+    window.Hash.on('^[a-zA-Z]*$', {
 
-		yep: function(path, parts) {
+        yep: function(path, parts) {
 
-			var view = parts[0];
+            var view = parts[0];
 
             if(window.actualView !== undefined && window.actualView !== ""){ 
 
-    			if(view !== undefined && view !== ""  && view !== 'canvas' && view !== 'webgl'){
+                if(view !== undefined && view !== ""  && view !== 'canvas' && view !== 'webgl'){
 
-    				if(window.map.views[view].enabled !== undefined && window.map.views[view].enabled)
-    					goToView(view);
-    			}
+                    if(window.map.views[view].enabled !== undefined && window.map.views[view].enabled)
+                        goToView(view);
+                }
                 else if(path === 'canvas' || path === 'webgl'){
                     currentRender = createScene(currentRender,path);
                     change = false;
@@ -239,7 +236,7 @@ function initPage() {
             }
             else
                 goToView(window.location.hash.slice(1));
-		}
+        }
     });
 
 }
@@ -548,5 +545,4 @@ function render() {
     //renderer.render( scene, camera );
     camera.render(renderer, scene);
 }
-
 
