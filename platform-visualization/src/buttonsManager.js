@@ -139,7 +139,7 @@ function ButtonsManager() {
                 self.removeAllButtons();
         }
         else
-            window.tableEdit.removeAllFields();
+            window.fieldsEdit.removeAllFields();
     };
 
     function calculatePosition(sucesorButton, side, x){
