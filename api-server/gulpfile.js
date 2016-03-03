@@ -64,14 +64,35 @@ gulp.task('watch', function () {
 	gulp.watch(src_files, ['jslint']);
 });
 // nodemon watch runs and refreshes the server when a file is modified
-gulp.task('nodemon', function () {
+gulp.task('nodemon-dev', function () {
 	nodemon({
 		script: 'bin/www',
 		ext: 'js html json',
 		watch: src_files,
 		ignore: ['test/**/*'],
 		env: {
-			'NODE_ENV': 'development'
+			'NODE_ENV': 'development',
+			'PORT': '8081'
 		}
+	});
+});
+gulp.task('nodemon-prod', function () {
+	nodemon({
+		script: 'bin/www',
+		ext: 'js html json',
+		watch: src_files,
+		ignore: ['test/**/*'],
+		env: {
+			'NODE_ENV': 'production',
+			'PORT': '8080'
+		}
+	});
+});
+gulp.task('nodemon-prox', function () {
+	nodemon({
+		script: 'proxy.js',
+		ext: 'js html json',
+		watch: src_files,
+		ignore: ['test/**/*']
 	});
 });
