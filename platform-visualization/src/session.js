@@ -61,7 +61,7 @@ function Session(){
 	 */
 	this.logout = function() {
 
-		var url_logout = window.helper.getAPIUrl("logout") + "?axs_key=" + axs_key + "&api_key=" + api_key;
+		var url_logout = window.helper.getAPIUrl("logout") + "&axs_key=" + axs_key + "&api_key=" + api_key;
 		console.log("url: " + url_logout);
 		$.ajax({
 			url : url_logout,
@@ -71,7 +71,7 @@ function Session(){
 			}
 		}).success(function(data) {
 			console.log("Logout", data);
-			if(data !== undefined){
+			if(data !== undefined) {
 				if(data === true) {
 					isLogin = false;
 					$("#login").fadeIn(2000);
@@ -86,7 +86,7 @@ function Session(){
 	 * Logged to the user and returns the token
 	 */
 	this.login = function() {
-		var url = window.helper.getAPIUrl("login") + "?code=" + code + "&api_key=" + api_key;
+		var url = window.helper.getAPIUrl("login") + "&code=" + code + "&api_key=" + api_key;
 		console.log("url: " + url);
 		
 		$.ajax({

@@ -52,15 +52,15 @@ function Guide() {
         context.font = "40px Arial";
         context.fillStyle = "white";
 
-        size = text.length+1;
-        spacing = 0;
+        var size = text.length+1;
+        var spacing = 0;
         for(var i=1; i < size; i++){
-           line = text.shift();
+           var line = text.shift();
            context.fillText(line, 7, (35 * i) + spacing);
            spacing += 7;
         }
 
-        var texture = new THREE.Texture(canvas) 
+        var texture = new THREE.Texture(canvas); 
         texture.needsUpdate = true;
         texture.minFilter = THREE.NearestFilter;
 
@@ -69,7 +69,7 @@ function Guide() {
 
         popUp(mesh, posX, posY,3500);
 
-    }
+    };
 
     /**
      * @author Isaías Taborda
@@ -82,7 +82,7 @@ function Guide() {
      */
     function roundRectangle(ctx, x, y, width, height) {
       
-      radius = 10;
+      var radius = 10;
       ctx.beginPath();
       ctx.moveTo(x + radius, y);
       ctx.lineTo(x + width - radius, y);
@@ -133,7 +133,7 @@ function Guide() {
       var i;
       var l = self.objects.mesh.length; 
 
-        for(var i = 0; i < l; i++) {
+        for(i = 0; i < l; i++) {
           new TWEEN.Tween(self.objects.mesh[i].position)
             .to({
                 x : 0,
