@@ -283,9 +283,9 @@ function changeView() {
     
     window.flowManager.getActualFlow();
 
-    window.headers.transformTable(2000);
+    window.headers.transformTable(1500);
 
-    window.tileManager.transform(2000);
+    window.tileManager.transform(1500);
 
 }
 

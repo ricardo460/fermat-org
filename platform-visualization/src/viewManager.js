@@ -213,13 +213,13 @@ function ViewManager() {
 
                         setTimeout(function(){
                             window.developer.animateDeveloper();
-                        }, 2000);        
+                        }, 2500);        
                     };
                     
                     backButton = reset = function() {
-                        setTimeout(function(){
+                        //setTimeout(function(){
                             window.developer.animateDeveloper();
-                        }, 4000);
+                        //}, 2000);
                         
                         window.changeView();
                     };

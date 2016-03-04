@@ -28,7 +28,9 @@ function Developer (){
             }
 
             helper.showBackButton();
-            self.showDeveloperTiles(id);
+            setTimeout(function(){
+                self.showDeveloperTiles(id);
+            }, 1000);
         }
     }
 
@@ -50,9 +52,9 @@ function Developer (){
 
             new TWEEN.Tween(object.position)
                 .to({
-                    x: target.x,
-                    y: target.y,
-                    z: target.z
+                    x: 0,
+                    y: 0,
+                    z: 0
                 }, dur)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .onComplete(function () {
@@ -446,7 +448,7 @@ function Developer (){
      */
 	this.animateDeveloper = function(){
 		
-		var duration = 3000;
+		var duration = 750;
 
 		for(var i = 0, l = objectsDeveloper.length; i < l; i++) {
             new TWEEN.Tween(objectsDeveloper[i].position)
