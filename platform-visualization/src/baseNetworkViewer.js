@@ -87,7 +87,7 @@ BaseNetworkViewer.prototype = {
         //sprite.renderOrder = 100;
         //sprite.material.blending = THREE.NoBlending;
         
-        var id = nodeData.id.toString();
+        var id = nodeData.hash.toString();
 
         sprite.userData = {
             id : id,
@@ -139,7 +139,8 @@ BaseNetworkViewer.prototype = {
             
         }
         
-        return original;
+        //Send empty tween if there is nothing to do
+        return original || new TWEEN.Tween(this).to({}, 1);
     },
 
     /**
@@ -185,7 +186,8 @@ BaseNetworkViewer.prototype = {
         
         }
         
-        return original;
+        //Send empty tween if there is nothing to do
+        return original || new TWEEN.Tween(this).to({}, 1);
     },
 
     /**
@@ -201,9 +203,9 @@ BaseNetworkViewer.prototype = {
 
             origin = node.sprite.userData.originPosition;
 
-            for(var i = 0; i < node.edges.length; i++) {
+            for(var i = 0; i < node.children.length; i++) {
 
-                var actualEdge = node.edges[i];
+                var actualEdge = node.children[i];
 
                 if(this.nodes.hasOwnProperty(actualEdge.id) && this.edgeExists(nodeID, actualEdge.id) === -1) {
 
@@ -256,7 +258,8 @@ BaseNetworkViewer.prototype = {
             createTween(i, this);
         }
         
-        return original;
+        //Send empty tween if there is nothing to do
+        return original || new TWEEN.Tween(this).to({}, 1);
     },
 
     /**
