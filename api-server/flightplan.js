@@ -60,6 +60,7 @@ plan.remote('deploy', function (remote) {
 		var currentFolder = remote.runtime.root + '/versions/current';
 		remote.exec('cp -R ' + remote.runtime.root + '/repo/' + remote.runtime.project + '/api-server/build ' + versionFolder);
 		remote.exec('ln -fsn ' + versionFolder + ' ' + currentFolder);
+		remote.exec('ln -fsn  /home/ubuntu/cache ' + versionFolder + '/cache');
 		if (remote.runtime.maxDeploys > 0) {
 			remote.log('Cleaning up old deploys...');
 			remote.exec('rm -rf `ls -1dt ' + remote.runtime.root + '/versions/* | tail -n +' + (remote.runtime.maxDeploys + 1) + '`');
