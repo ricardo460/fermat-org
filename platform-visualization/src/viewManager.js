@@ -79,6 +79,8 @@ function ViewManager() {
                         setTimeout(function(){
                             window.signLayer.transformSignLayer();
                         }, 2500);
+
+                        window.developer.delete();
                     };                    
                     
                     exit = function() {
@@ -213,13 +215,13 @@ function ViewManager() {
 
                         setTimeout(function(){
                             window.developer.animateDeveloper();
-                        }, 2000);        
+                        }, 2500);        
                     };
                     
                     backButton = reset = function() {
-                        setTimeout(function(){
+                        //setTimeout(function(){
                             window.developer.animateDeveloper();
-                        }, 4000);
+                        //}, 2000);
                         
                         window.changeView();
                     };
