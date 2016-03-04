@@ -33,11 +33,11 @@ function Developer (){
     }
 
     /**
-     * Let Alone Developer 
+     * Let Alone Developer
      * @param   {object}     objectsDevelopers all the developers
      * @author Emmanuel Colina
      */
-     
+
     function letAloneDeveloper(objectsDevelopers){
 
         var i, _duration = 2000,
@@ -105,7 +105,7 @@ function Developer (){
 
             image.crossOrigin = "anonymous";
             image.src = actual.src;
-        } 
+        }
         else {
             if(data.length !== 0) {
                 if(data[0].text)
@@ -145,18 +145,18 @@ function Developer (){
 
         ctx.fillStyle = "#FFFFFF";
 
-        if(data.length !== 0){ 
+        if(data.length !== 0){
           if(data[0].text)
-            drawTextDeveloper(data, ctx, texture); 
-          else 
+            drawTextDeveloper(data, ctx, texture);
+          else
             drawPictureDeveloper(data, ctx, texture);
         }
     }
-    
+
 	this.getDeveloper = function(){
-		
+
 		var id = 0;
-        
+
         for(var i = 0; i < window.tilesQtty.length; i++){
 
             var tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
@@ -171,9 +171,9 @@ function Developer (){
                     authorEmail : tile.authorEmail
                 };
                 id++;
-            }              
+            }
         }
-        
+
 		self.createDevelopers();
 	};
 
@@ -188,11 +188,13 @@ function Developer (){
      * @author Emmanuel Colina
      */
 	this.createTextureDeveloper = function(developer){
-		
+
 		var canvas = document.createElement('canvas');
-        canvas.width = 183 * 5 ;
-        canvas.height = 92 * 5;
+        canvas.width = 230;
+        canvas.height = 120;
+
         var ctx = canvas.getContext('2d');
+
         ctx.globalAlpha = 0;
         ctx.fillStyle = "#FFFFFF";
         ctx.globalAlpha = 1;
@@ -206,50 +208,50 @@ function Developer (){
             src: developer.picture,
             alpha: 0.8
         };
-        pic.x = 26.5;
-        pic.y = 40;
-        pic.w = 84 * 1.9;
-        pic.h = 84 * 1.9;
+        pic.x = 16.5;
+        pic.y = 20;
+        pic.w = 84 * 0.9;
+        pic.h = 84 * 0.9;
 
 		var background = {
 		    src: 'images/developer/background_300.png',
 		    x: 0,
 		    y: 0,
-		    w: 230 * 2,
-		    h: 120 * 2
+		    w: 230,
+		    h: 120
 		};
 
 		var ringDeveloper = {
-			
+
 			src: 'images/developer/icon_developer_300.png'
 		};
-		ringDeveloper.x = 25.5;
-        ringDeveloper.y = 33.5;
-        ringDeveloper.w = 82.7 * 2.0;
-        ringDeveloper.h = 82.7 * 2.0;
+		ringDeveloper.x = 13.5;
+        ringDeveloper.y = 17.5;
+        ringDeveloper.w = 82.7;
+        ringDeveloper.h = 82.7;
 
         var nameDeveloper = {
             text: developer.authorRealName,
-            font: (9 * 2.2) + 'px Roboto Bold'
+            font: (9 * 1.2) + 'px Roboto Bold'
         };
-        nameDeveloper.x = 250;
-        nameDeveloper.y = 90;
+        nameDeveloper.x = 125;
+        nameDeveloper.y = 45;
         nameDeveloper.color = "#FFFFFF";
-        
+
         var nickDeveloper = {
             text: developer.author,
-            font: (5 * 2.2) + 'px Canaro'
+            font: (5 * 1.2) + 'px Canaro'
         };
-        nickDeveloper.x = 250;
-        nickDeveloper.y = 176;
+        nickDeveloper.x = 125;
+        nickDeveloper.y = 88;
         nickDeveloper.color = "#00B498";
 
         var emailDeveloper = {
             text: developer.authorEmail,
-            font: (5 * 2.2) + 'px Roboto Medium'
+            font: (5 * 1.2) + 'px Roboto Medium'
         };
-        emailDeveloper.x = 250;
-        emailDeveloper.y = 202;
+        emailDeveloper.x = 125;
+        emailDeveloper.y = 101;
         emailDeveloper.color = "#E05A52";
 
 		var data = [
@@ -267,7 +269,7 @@ function Developer (){
 	};
 
 	/**
-     * Creates a Developer 
+     * Creates a Developer
      * @param   {object}     developerLink link of the picture developer
      * @param   {object}     developerAuthor nick of the developer
      * @param   {object}     developerAuthorRealName name of the developer
@@ -292,10 +294,12 @@ function Developer (){
 			mesh = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(230, 120),
             new THREE.MeshBasicMaterial({ transparent : true, color : 0xFFFFFF}));
+
             mesh.userData = {
                 id: developers[key].id,
                 onClick : onClick
             };
+
             mesh.material.map = texture;
             mesh.material.needsUpdate = true;
         	mesh.position.x = position.lastTarget[i].x;
@@ -303,149 +307,84 @@ function Developer (){
         	mesh.position.z = position.lastTarget[i].z;
 
         	mesh.name = developers[key].author;
-        	mesh.scale.set(5, 5, 5);
+            mesh.scale.set(5, 5, 1);
         	scene.add(mesh);
         	objectsDeveloper.push(mesh);
-            
+
             i++;
 		}
 	};
 
 	/**
-     * Creates a Position 
+     * Creates a Position
      * @param   {object}     mesh of the picture developer
      * @author Emmanuel Colina
      */
-	this.setPositionDeveloper = function(mesh){
-		
+	this.setPositionDeveloper = function(devs){
+
 		var positionDeveloper = [];
 		var position;
 	    var indice = 1;
-	    
+
 	    var center = new THREE.Vector3(0, 0, 0);
 	    center = viewManager.translateToSection('developers', center);
 
-	    if(mesh.length === 1)
+	    if(devs.length === 1)
 	        positionDeveloper.push(center);
 
-	    else if(mesh.length === 2) {
+	    else if(devs.length === 2) {
 
 	        center.x = center.x - 500;
 
-	        for(var k = 0; k < mesh.length; k++) {
+	        for(var k = 0; k < devs.length; k++) {
 
 	            position = new THREE.Vector3();
 
 	            position.x = center.x;
 	            position.y = center.y;
-	        
+
 	            positionDeveloper.push(position);
 
 	            center.x = center.x + 1000;
 	        }
 
 	    }
-	    else if(mesh.length > 2) {
+	    else if(devs.length > 2) {
+			var devsSpacingConst = 100;
+			var xSpacingConst = devsSpacingConst; // |
+			var ySpacingConst = devsSpacingConst; //  \ So far, both are equal. Can't think of a situation where they must be different.
+			var scale = 5;
 
-	        var sqrt, round, column, row, initialY, count, raizC, raizC2;
-	        count = 0;
-	        round = 0;
-	        column = 0;
+			var n = Math.floor(Math.sqrt(devs.length));
+			var ROW_W = 230;
+			var ROW_H = 120;
 
-	        //calculamos columnas y filas
+            var initial = center;
+            initial.x -= ((n * ROW_W + (xSpacingConst * (n - 1))) / 2.0);
+            initial.y -= ((n * ROW_H + (ySpacingConst * (n - 1))) / 2.0);
 
-	        if((Math.sqrt(mesh.length) % 1) !== 0) {
+			for (var i = 0; i < devs.length; i += 1) {
+				position = new THREE.Vector3();
 
-	            for(var r = mesh.length; r < mesh.length * 2; r++){
+				var xSpace = (xSpacingConst * (i % n));
+				var ySpace = (ySpacingConst * (Math.floor(i / n)));
 
-	                if((Math.sqrt(r) % 1) === 0){
+				position.x = initial.x + ((i % n) * ROW_W + xSpace) * scale;
+				position.y = initial.y + (Math.floor(i / n) * ROW_H + ySpace) * -scale;
 
-	                    raizC = r;
-	                    sqrt = Math.sqrt(raizC);
-
-	                    for(var l = raizC - 1; l > 0; l--){ 
-
-	                        if((Math.sqrt(l) % 1) === 0){
-
-	                            raizC2 = l;
-	                            break;
-	                        }
-	                        count = count + 1;
-	                    }
-	                    count = count / 2;
-
-	                    for(var f = raizC2 + 1; f <= raizC2 + count; f++){
-	                        if(mesh.length === f) {
-	                            row = sqrt - 1;
-	                            column = sqrt;
-	                        }
-	                    }
-	                    for(var t = raizC - 1; t >= raizC - count; t--){
-	                        if(mesh.length === t)
-	                            row = column = sqrt ;
-	                    }
-	                }
-	                if(row !== 0  && column !== 0)
-	                    break;
-	            }
-	        }
-	        else
-	            row = column = Math.sqrt(mesh.length);
-
-	        count = 0;
-	        var positionY = center.y - 1500;  
-
-	        //calculando Y
-	        for(var p = 0; p < row; p++) { 
-
-	            if(p === 0)
-	                positionY = positionY + 250;
-	            else
-	                positionY = positionY + 500;
-	        }
-	        
-	        for(var y = 0; y < row; y++){ //filas
-
-	            var positionX = center.x + 1500;
-
-	            for(var m = 0; m < column; m++) { 
-
-	                if(m===0)
-	                    positionX = positionX - 500;
-	                else
-	                    positionX = positionX - 1000;
-	            }
-	            //calculando X
-	            for(var x = 0; x < column; x++){  //columnas              
-
-	                position = new THREE.Vector3();
-
-	                position.y = positionY;
-
-	                position.x = positionX;
-
-	                if(count < mesh.length){
-
-	                    positionDeveloper.push(position);
-	                    count = count + 1;
-	                }
-
-	                positionX = positionX + 1000;
-	            }
-
-	            positionY = positionY - 500;     
-	        }      
+				positionDeveloper.push(position);
+			}
 	    }
 
 	    return positionDeveloper;
 	};
 
 	/**
-     * Animate Developer 
+     * Animate Developer
      * @author Emmanuel Colina
      */
 	this.animateDeveloper = function(){
-		
+
 		var duration = 3000;
 
 		for(var i = 0, l = objectsDeveloper.length; i < l; i++) {
@@ -461,7 +400,7 @@ function Developer (){
 	};
 
 	/**
-     * Delete Developer 
+     * Delete Developer
      * @author Emmanuel Colina
      */
 	this.delete = function() {
@@ -469,16 +408,16 @@ function Developer (){
         var _duration = 2000;
 
         var moveAndDelete = function(id) {
-            
+
             var target = position.lastTarget[id];
-            
+
             new TWEEN.Tween(objectsDeveloper[id].position)
                 .to({x : target.x, y : target.y, z : target.z}, 6000)
                 .easing(TWEEN.Easing.Cubic.InOut)
                 .onComplete(function() { window.scene.remove(objectsDeveloper[id]); })
                 .start();
         };
-        
+
         for(var i = 0, l = objectsDeveloper.length; i < l; i++) {
             moveAndDelete(i);
             helper.hideObject(objectsDeveloper[i], false, _duration);
@@ -501,16 +440,16 @@ function Developer (){
             var tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
 
             var mesh = window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
-    
+
             if(tile.author === objectsDeveloper[id].name && !isNaN(mesh.position.y)){
 
                 new TWEEN.Tween(mesh.position)
                 .to({x : (center.x + (section % 5) * window.TILE_DIMENSION.width) - 750, y : (center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height) - 250, z : 0}, 2000)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .start();
-                
+
                 section += 1;
-            }                            
+            }
         }
     };
 }
