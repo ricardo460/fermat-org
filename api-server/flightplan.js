@@ -68,9 +68,9 @@ plan.remote('deploy', function (remote) {
 		remote.with('cd ' + versionFolder, function () {
 			remote.sudo('npm install --production');
 			remote.sudo('forever stopall');
-			remote.sudo('NODE_ENV=production PORT=8080 forever start bin/www');
-			remote.sudo('NODE_ENV=testing PORT=8081 forever start bin/www');
-			remote.sudo('NODE_ENV=development PORT=8082 forever start bin/www');
+			remote.sudo('NODE_ENV=production PORT=8000 forever start bin/www');
+			remote.sudo('NODE_ENV=testing PORT=8001 forever start bin/www');
+			remote.sudo('NODE_ENV=development PORT=8002 forever start bin/www');
 			remote.sudo('forever start proxy.js');
 			remote.sudo('forever list');
 			remote.log('Successfully deployied in ' + versionFolder);

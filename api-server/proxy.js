@@ -10,15 +10,15 @@ var proxy_api = {
 };
 var prod_api = {
 	host: '127.0.0.1',
-	port: 8080
+	port: 8000
 };
 var test_api = {
 	host: '127.0.0.1',
-	port: 8081
+	port: 8001
 };
 var dev_api = {
 	host: '127.0.0.1',
-	port: 8082
+	port: 8002
 };
 /**
  * creates proxy servers and starts http server to redirect requests according to version
