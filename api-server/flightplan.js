@@ -5,16 +5,16 @@ var timestamp = date.getTime();
 /**
  * Remote configuration for "production"
  */
-plan.target('testing', {
-	host: deploy.testing.host,
-	username: deploy.testing.username,
-	root: deploy.testing.root,
-	project: deploy.testing.project,
+plan.target('all', {
+	host: deploy.all.host,
+	username: deploy.all.username,
+	root: deploy.all.root,
+	project: deploy.all.project,
 	agent: process.env.SSH_AUTH_SOCK,
-	privateKey: deploy.testing.privateKey,
-	repository: deploy.testing.repository,
-	branch: deploy.testing.branch,
-	maxDeploys: deploy.testing.maxDeploys
+	privateKey: deploy.all.privateKey,
+	repository: deploy.all.repository,
+	branch: deploy.all.branch,
+	maxDeploys: deploy.all.maxDeploys
 });
 /**
  * Creates all the necessary folders in the remote and clones the source git repository
