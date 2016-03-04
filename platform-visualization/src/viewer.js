@@ -24,7 +24,7 @@ var tilesQtty = [],
     viewManager = null,
     magazine = null,
     networkViewer = null,
-    buttonsManager = null;
+    buttonsManager = null,
     guide = null;
 //Global constants
 var TILE_DIMENSION = {
@@ -161,10 +161,7 @@ function init() {
     setTimeout(function (){
         guide.active = true;
         if(actualView === 'home'){
-            guide.createHelp(["Use the blue arrows to", "navigate through the site."], 500, 95, -13000, 12000);
-            guide.createHelp(["You can zoom in, or zoom out, using the scroll", "wheel or by dragging your Mouse while holding", "down the S key and left click."], 910, 135, 7500, 12000);
-            guide.createHelp(["After you zoom in, hold down left", "click and drag your Mouse to pan", "across the page view."], 650, 135, -15000, 5000);
-            guide.createHelp(["Press the Esc key in any view to", "return to its starting position."], 625, 95, 15000, 5000);
+            guide.showHelp();
         }
     }, 15000);
 
