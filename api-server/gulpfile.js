@@ -79,7 +79,19 @@ gulp.task('nodemon-dev', function () {
 		ignore: ['test/**/*'],
 		env: {
 			'NODE_ENV': 'development',
-			'PORT': '8081'
+			'PORT': '8002'
+		}
+	});
+});
+gulp.task('nodemon-test', function () {
+	nodemon({
+		script: 'bin/www',
+		ext: 'js html json',
+		watch: src_files,
+		ignore: ['test/**/*'],
+		env: {
+			'NODE_ENV': 'testing',
+			'PORT': '8001'
 		}
 	});
 });
@@ -91,7 +103,7 @@ gulp.task('nodemon-prod', function () {
 		ignore: ['test/**/*'],
 		env: {
 			'NODE_ENV': 'production',
-			'PORT': '8080'
+			'PORT': '8000'
 		}
 	});
 });
