@@ -961,7 +961,7 @@ exports.uptLifeCiclesToComp = function (req, next) {
 exports.addCompDev = function (req, next) {
 	'use strict';
 	try {
-		compMod.insOrUpdCompDev(req.params.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function (err, res) {
+		compMod.insertCompDev(req.params.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {

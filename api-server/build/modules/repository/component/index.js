@@ -152,9 +152,9 @@ exports.insOrUpdComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type
 };
 
 /**
- * [insOrUpdComp description]
+ * [insertComp description]
  *
- * @method insOrUpdComp
+ * @method insertComp
  *
  * @param  {[type]}     _platfrm_id [description]
  * @param  {[type]}     _suprlay_id [description]
@@ -187,8 +187,6 @@ exports.insertComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type, 
 		return callback(err, null);
 	}
 };
-
-
 
 
 /**
@@ -260,6 +258,36 @@ exports.insOrUpdCompDev = function (_comp_id, _dev_id, role, scope, percnt, call
 					return callback(null, res_ins);
 				});
 			}
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
+
+/**
+ * [insertCompDev description]
+ *
+ * @method insertCompDev
+ *
+ * @param  {[type]}        _comp_id [description]
+ * @param  {[type]}        _dev_id  [description]
+ * @param  {[type]}        role     [description]
+ * @param  {[type]}        scope    [description]
+ * @param  {[type]}        percnt   [description]
+ * @param  {Function}      callback [description]
+ *
+ * @return {[type]}        [description]
+ */
+exports.insertCompDev = function (_comp_id, _dev_id, role, scope, percnt, callback) {
+	'use strict';
+	try {
+
+		var compDev = new CompDevMdl(_comp_id, _dev_id, role, scope, percnt);
+		compDevSrv.insertCompDev(compDev, function (err_ins, res_ins) {
+			if (err_ins) {
+				return callback(err_ins, null);
+			}
+			return callback(null, res_ins);
 		});
 	} catch (err) {
 		return callback(err, null);
