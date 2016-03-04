@@ -79,6 +79,8 @@ function ViewManager() {
                         setTimeout(function(){
                             window.signLayer.transformSignLayer();
                         }, 2500);
+
+                        window.developer.delete();
                     };                    
                     
                     exit = function() {

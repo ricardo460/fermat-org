@@ -515,4 +515,20 @@ function Developer (){
             }                            
         }
     };
+
+    /**
+     * @author Isaías Taborda
+     * Finds a developer's tile.
+     * @param {String}  name      Component author nickname.
+     */
+    this.findDeveloper = function(name){
+        var dev;
+        for(var i = 0, l = objectsDeveloper.length; i < l; i++) {
+
+            if(name === objectsDeveloper[i].name)
+                dev = objectsDeveloper[i];
+
+        }
+        return dev;
+    };
 }
