@@ -49,7 +49,7 @@ function Guide() {
         context.globalAlpha = 0.90;
         context.fillStyle = "#10C6A9";
         roundRectangle(context, 0, 0, canvas.width, canvas.height);
-        context.font = "40px Arial";
+        context.font = "Bold 40px Arial";
         context.fillStyle = "white";
 
         size = text.length+1;
