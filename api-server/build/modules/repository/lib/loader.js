@@ -14,9 +14,9 @@ var compMod = require('../component');
 var procMod = require('../process');
 var devMod = require('../developer');
 var Cache = require('../../../lib/route-cache');
-var env = process.env.NODE_ENV || 'development';
-var USER_AGENT = (env === 'development') ? 'Miguelcldn' : 'fuelusumar';
-var TOKEN = (env === 'development') ? 'a1a5808261ee5d2d62767a2c667d8f2deed322bb' : '35ce5c276a6198772c808da19eb45679f1ecae0f'; // fuelusumar
+var config = require('../../../config');
+var USER_AGENT = config.user_agent;
+var TOKEN = config.oauth_token; // fuelusumar
 /**
  * [getRepoDir description]
  *
@@ -146,7 +146,7 @@ var doRequest = function (method, url, params, callback) {
 		var env = process.env.NODE_ENV || 'development';
 		var form, i;
 		url += '?access_token=' + TOKEN;
-		if (env === 'development') {
+		if (env === 'development' || env === 'testing') {
 			url += '&ref=develop';
 		}
 		//winston.log('info', 'Doing request %s', url);
