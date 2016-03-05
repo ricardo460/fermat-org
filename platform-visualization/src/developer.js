@@ -190,8 +190,8 @@ function Developer (){
 	this.createTextureDeveloper = function(developer){
 
 		var canvas = document.createElement('canvas');
-        canvas.width = 230;
-        canvas.height = 120;
+        canvas.width = 230 * 2;
+        canvas.height = 120 * 2;
 
         var ctx = canvas.getContext('2d');
 
@@ -208,50 +208,50 @@ function Developer (){
             src: developer.picture,
             alpha: 0.8
         };
-        pic.x = 16.5;
-        pic.y = 20;
-        pic.w = 84 * 0.9;
-        pic.h = 84 * 0.9;
+        pic.x = 26.5;
+        pic.y = 40;
+        pic.w = 84 * 1.9;
+        pic.h = 84 * 1.9;
 
 		var background = {
 		    src: 'images/developer/background_300.png',
 		    x: 0,
 		    y: 0,
-		    w: 230,
-		    h: 120
+		    w: 230 * 2,
+		    h: 120 * 2
 		};
 
 		var ringDeveloper = {
 
 			src: 'images/developer/icon_developer_300.png'
 		};
-		ringDeveloper.x = 13.5;
-        ringDeveloper.y = 17.5;
-        ringDeveloper.w = 82.7;
-        ringDeveloper.h = 82.7;
+		ringDeveloper.x = 25.5;
+        ringDeveloper.y = 33.5;
+        ringDeveloper.w = 82.7 * 2.0;
+        ringDeveloper.h = 82.7 * 2.0;
 
         var nameDeveloper = {
             text: developer.authorRealName,
-            font: (9 * 1.2) + 'px Roboto Bold'
+            font: (9 * 2.2) + 'px Roboto Bold'
         };
-        nameDeveloper.x = 125;
-        nameDeveloper.y = 45;
+        nameDeveloper.x = 250;
+        nameDeveloper.y = 90;
         nameDeveloper.color = "#FFFFFF";
 
         var nickDeveloper = {
             text: developer.author,
-            font: (5 * 1.2) + 'px Canaro'
+            font: (5 * 2.2) + 'px Canaro'
         };
-        nickDeveloper.x = 125;
-        nickDeveloper.y = 88;
+        nickDeveloper.x = 250;
+        nickDeveloper.y = 176;
         nickDeveloper.color = "#00B498";
 
         var emailDeveloper = {
             text: developer.authorEmail,
             font: (5 * 1.2) + 'px Roboto Medium'
         };
-        emailDeveloper.x = 125;
-        emailDeveloper.y = 101;
+        emailDeveloper.x = 250;
+        emailDeveloper.y = 202;
         emailDeveloper.color = "#E05A52";
 
 		var data = [
@@ -307,7 +307,7 @@ function Developer (){
         	mesh.position.z = position.lastTarget[i].z;
 
         	mesh.name = developers[key].author;
-            mesh.scale.set(5, 5, 1);
+            mesh.scale.set(5, 5, 3);
         	scene.add(mesh);
         	objectsDeveloper.push(mesh);
 
@@ -444,7 +444,11 @@ function Developer (){
             if(tile.author === objectsDeveloper[id].name && !isNaN(mesh.position.y)){
 
                 new TWEEN.Tween(mesh.position)
-                .to({x : (center.x + (section % 5) * window.TILE_DIMENSION.width) - 750, y : (center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height) - 250, z : 0}, 2000)
+                .to({
+                    x : (center.x + (section % 5) * window.TILE_DIMENSION.width) - 450,
+                    y : (center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height) - 440,
+                    z : 0
+                }, 2000)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .start();
 
