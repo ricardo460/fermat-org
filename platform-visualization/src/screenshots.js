@@ -1,4 +1,4 @@
-//**
+/**
  * @author Ricardo Delgado
  * Create screenshots of android with your images and functions.
  */
