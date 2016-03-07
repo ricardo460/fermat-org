@@ -68,6 +68,12 @@ function Developer (){
         animate(objectsDevelopers, target, Math.random() * _duration + _duration);
     }
 
+    /**
+     * Draws the developer's picture taken from GitHub
+     * @param {Array}  data    Options of the texture
+     * @param {Object} ctx     Canvas Context
+     * @param {Object} texture Texture to update
+     */
     function drawPictureDeveloper(data, ctx, texture) {
 
         var image = new Image();
@@ -272,10 +278,6 @@ function Developer (){
 
 	/**
      * Creates a Developer
-     * @param   {object}     developerLink link of the picture developer
-     * @param   {object}     developerAuthor nick of the developer
-     * @param   {object}     developerAuthorRealName name of the developer
-     * @param   {object}     developerAuthorEmail email of the developer
      * @author Emmanuel Colina
      */
 	this.createDevelopers = function(){
@@ -318,9 +320,9 @@ function Developer (){
 	};
 
 	/**
-     * Creates a Position
-     * @param   {object}     mesh of the picture developer
      * @author Emmanuel Colina
+     * Creates a Position
+     * @param   {object}        devs  array containing all developers
      */
 	this.setPositionDeveloper = function(devs){
 
@@ -462,7 +464,8 @@ function Developer (){
     /**
      * @author Isaías Taborda
      * Finds a developer's tile.
-     * @param {String}  name      Component author nickname.
+     * @param   {String}  name   Component author nickname.
+     * @returns {mesh}    dev    Developer's mesh.
      */
     this.findDeveloper = function(name){
         var dev;
