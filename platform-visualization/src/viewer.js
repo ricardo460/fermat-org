@@ -341,8 +341,8 @@ function onElementClick(id) {
 
         new TWEEN.Tween(l.position)
         .to({
-            x : center.x,
-            y : center.y+100,
+            x : center.x-290,
+            y : center.y+400,
             z : center.z
         }, Math.random() * duration + duration)
         .easing(TWEEN.Easing.Exponential.InOut)
