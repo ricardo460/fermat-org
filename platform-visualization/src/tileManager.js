@@ -630,14 +630,14 @@ function TileManager() {
      */
     this.rollBack = function () {
 
-        camera.enable();
-        camera.loseFocus();
+        window.camera.enable();
+        window.camera.loseFocus();
     
-        helper.show('container', 2000);
+        window.helper.show('container', 2000);
     
         window.flowManager.getActualFlow();
 
-        this.transform();
+        self.transform();
 
         //window.changeView(self.lastTargets);
     };
@@ -695,9 +695,17 @@ function TileManager() {
             if(typeof layerCoordinates[row] === 'undefined')
                 layerCoordinates[row] = object.position.y;
 
+
             /*start Positioning tiles*/
 
             object.position.copy(window.viewManager.translateToSection('table', object.position));
+
+            if(layers[tile.layer].super_layer){ 
+
+                if(typeof window.TABLE[layers[tile.layer].super_layer].x === 'undefined')
+                    window.TABLE[layers[tile.layer].super_layer].x = object.position.x;
+
+            }
 
             var target = window.helper.fillTarget(object.position.x, object.position.y, object.position.z, 'table');
 
