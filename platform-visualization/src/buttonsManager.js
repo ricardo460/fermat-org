@@ -37,9 +37,7 @@ function ButtonsManager() {
 
         window.screenshotsAndroid.showButtonScreenshot(id);
 
-        window.fermatEdit.addButton(id);
-
-        window.flowManager.getAndShowFlows(id);//Always stop last
+        window.tableEdit.addButton(id);
     };
 
     /**
@@ -141,7 +139,7 @@ function ButtonsManager() {
                 self.removeAllButtons();
         }
         else
-            window.fermatEdit.removeAllFields();
+            window.fieldsEdit.removeAllFields();
     };
 
     function calculatePosition(sucesorButton, side, x){
