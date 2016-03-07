@@ -44,7 +44,12 @@ NetworkViewer.prototype.unload = function() {
     if(this.childNetwork)
         this.close();
     
-    BaseNetworkViewer.prototype.unload.call(this);
+    var that = this;
+    this.hide();
+
+    setTimeout(function() {
+        BaseNetworkViewer.prototype.unload.call(that);
+    }, 2000);
     
 };
 
@@ -77,7 +82,8 @@ NetworkViewer.prototype.onNodeClick = function(clickedNode) {
  */
 NetworkViewer.prototype.open = function() {
     
-    this.childNetwork.load();
+    if(this.childNetwork)
+        this.childNetwork.load();
     
 };
 
@@ -112,6 +118,9 @@ NetworkViewer.prototype.drawNodes = function(networkNodes) {
             ((Math.random() * 2 - 1) * this.NET_RADIOUS));
         
         position = window.viewManager.translateToSection('network', position);
+        
+        //TODO: Fixme, Hard-code server sprite
+        networkNodes[i].extra.sub = 'server';
 
         var sprite = this.createNode(networkNodes[i], position);
 
