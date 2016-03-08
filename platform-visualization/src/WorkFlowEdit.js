@@ -23,6 +23,11 @@ function WorkFlowEdit() {
 
     var flows = [];
 
+    this.getFlowsEdit = function(){
+
+        return flows;
+    };
+
 	this.createButtonWorkFlow = function (){
     	
     	var text, button, side;
@@ -59,10 +64,13 @@ function WorkFlowEdit() {
                 .start();
         }
         
-        animate();
+        if(flows[0] !== undefined)
+        {
+            animate();
 
-        window.scene.remove(flows[0].objects[0]);    
-        flows = [];
+            window.scene.remove(flows[0].objects[0]);    
+            flows = [];
+        }
     };
 
 	function addAllForm(){
