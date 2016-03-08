@@ -503,8 +503,6 @@ function Helper() {
 
             url = self.getAPIUrl("comps");
 
-            PORT = '';// para pruebas en dev.fermat.org (quitar para despues).
-
             callAjax('', function(route, res){
 
                 list = res;
