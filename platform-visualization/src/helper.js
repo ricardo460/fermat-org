@@ -327,7 +327,7 @@ function Helper() {
     };
 
     this.postRoutesProcess = function(route, params, data, doneCallback, failCallback){
-
+        
         var tail = "",
             method = "",
             setup = {};
@@ -752,5 +752,48 @@ function Helper() {
         var index = window.layers[layer].index;
 
         return window.tileManager.dimensions.layerPositions[index];
+    };
+    
+    /**
+     * Build and URL based on the address, wildcards and GET parameters
+     * @param   {string} base   The URL address
+     * @param   {Object} params The key=value pairs of the GET parameters and wildcards
+     * @returns {string} Parsed and replaced URL
+     */
+    this.buildURL = function(base, params) {
+        
+        var result = base;
+        var areParams = false;
+        
+        //Search for wildcards parameters
+        while(result.indexOf(':') !== -1) {
+            
+            var param = result.match(':[a-z0-9]+');
+            var paramName = param[0].replace(':', '');
+            
+            if(params.hasOwnProperty(paramName) && params[paramName] !== undefined) {
+                
+                result = result.replace(param, params[paramName]);
+                delete(params[paramName]);
+                
+            }
+        }
+        
+        //Process the GET parameters
+        for(var key in params) {
+            if(params.hasOwnProperty(key)) {
+                
+                if(areParams === false)
+                    result += "?";
+                else
+                    result += "&";
+                
+                result += key + ((params[key] !== undefined) ? ("=" + params[key]) : (''));
+                
+                areParams = true;
+            }
+        }
+        
+        return result;
     };
 }
