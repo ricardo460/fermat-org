@@ -23,6 +23,7 @@ function WorkFlowEdit() {
 
     var flows = [];
 
+<<<<<<< HEAD
     this.addButton = function(_id){
 
         var id = _id || null,
@@ -61,6 +62,16 @@ function WorkFlowEdit() {
             side = 'left';
 
             window.buttonsManager.createButtons(button, text, callback, null, null, side);
+=======
+    this.getFlowsEdit = function(){
+
+        return flows;
+    };
+
+	this.createButtonWorkFlow = function (){
+    	
+    	var text, button, side;
+>>>>>>> dc6b08f2a345b7dde1c2527ec7166678fc769e9a
 
         }
         else{
@@ -123,10 +134,13 @@ function WorkFlowEdit() {
                 .start();
         }
         
-        animate();
+        if(flows[0] !== undefined)
+        {
+            animate();
 
-        window.scene.remove(flows[0].objects[0]);    
-        flows = [];
+            window.scene.remove(flows[0].objects[0]);    
+            flows = [];
+        }
     };
 
 	function addAllForm(){

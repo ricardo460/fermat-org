@@ -149,7 +149,7 @@ function ViewManager() {
                     };
 
                     break;
-                case 'workflows':
+                case 'workflows': // nuevo
                     enter = function() {
                         if(!window.headersUp) {
                             headers.showHeaders(transition);
@@ -157,15 +157,26 @@ function ViewManager() {
                         }
                         window.flowManager.getHeaderFLow();
                         window.headers.transformWorkFlow(transition);
-                        window.workFlowEdit.addButton(); // nuevo
+                        window.workFlowEdit.createButtonWorkFlow(); // nuevo
                     };
                     
                     backButton = reset = function() {
-                        window.buttonsManager.removeAllButtons(); // nuevo
+                        
+                        if(window.workFlowEdit.getFlowsEdit()[0] !== undefined){ // nuevo
 
-                        window.flowManager.showWorkFlow();
+                            window.buttonsManager.removeAllButtons(); // nuevo
 
-                        window.workFlowEdit.deleteWorFlowEdit(); // nuevo
+                            window.workFlowEdit.createButtonWorkFlow(); // nuevo
+
+                            window.helper.hideBackButton(); // nuevo
+
+                            window.workFlowEdit.deleteWorFlowEdit(); // nuevo
+                        }
+                        else{
+
+                            window.flowManager.showWorkFlow();
+                            window.workFlowEdit.createButtonWorkFlow();
+                        }
                     };
 
                     exit = function() {

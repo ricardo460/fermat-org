@@ -211,7 +211,7 @@ function FlowManager(){
      * 
      */
      
-    this.onElementClickHeaderFlow = function(id) {
+    this.onElementClickHeaderFlow = function(id) { // nuevo
 
         var duration = 1000;
 
@@ -236,6 +236,7 @@ function FlowManager(){
                headerFlow[id].showSteps();
             }, 1000);
 
+            window.buttonsManager.removeAllButtons();
             window.helper.showBackButton();
         }
     };
@@ -261,6 +262,8 @@ function FlowManager(){
 
                         position.id = headerFlow[j].flow.platfrm + "_" + count; // nuevo
 
+                        count = count + 1;
+
                         position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
 
                         position.y = objectHeaderInWFlowGroup[i].position.y - 2500;
@@ -277,6 +280,8 @@ function FlowManager(){
 
                         position.id = headerFlow[j].flow.platfrm + "_" + count;// nuevo
 
+                        count = count + 1;
+
                         position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
                         
                         position.y = positionHeaderFlow[positionHeaderFlow.length - 1].y - 500;
@@ -286,6 +291,8 @@ function FlowManager(){
                         positionHeaderFlow.push(position);
                     }    
                 }
+
+                //count = count + 1;
             }
             find = false;  
             count = 0;      
