@@ -157,17 +157,13 @@ function ViewManager() {
                         }
                         window.flowManager.getHeaderFLow();
                         window.headers.transformWorkFlow(transition);
-                        window.workFlowEdit.createButtonWorkFlow(); // nuevo
+                        window.workFlowEdit.addButton(); // nuevo
                     };
                     
                     backButton = reset = function() {
                         window.buttonsManager.removeAllButtons(); // nuevo
 
                         window.flowManager.showWorkFlow();
-
-                        window.workFlowEdit.createButtonWorkFlow(); // nuevo
-
-                        window.helper.hideBackButton(); // nuevo
 
                         window.workFlowEdit.deleteWorFlowEdit(); // nuevo
                     };

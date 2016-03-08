@@ -28,6 +28,8 @@ function FieldsEdit() {
 
     this.actualTile = null;
 
+    this.actualFlow = null;
+
     var self = this;
 
     var DATA_USER = window.helper.listDevs;
@@ -70,6 +72,18 @@ function FieldsEdit() {
                 self.actualTile = null;
                 
                 window.tableEdit.deleteMesh();
+
+                if(window.camera.getFocus() === null)
+                    window.tableEdit.addButton();              
+
+                if(typeof(self.actions.exit) === 'function'){
+                    self.actions.exit();
+                    self.actions.exit = null;
+                }
+            }
+            else if(window.actualView === 'workflows'){
+                
+                self.actualFlow = null;
 
                 if(window.camera.getFocus() === null)
                     window.tableEdit.addButton();              

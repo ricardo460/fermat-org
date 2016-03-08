@@ -11,39 +11,103 @@ function WorkFlowEdit() {
     //var idCall = [];
 
     var flow = {
-        _id : null,
-        desc : "",
-        name : "",
-        next: null,
-        platfrm : null,
-        prev: null,
-        steps : [],
-        upd_at: null
-    };
+            _id : null,
+            desc : "",
+            name : "",
+            next: null,
+            platfrm : null,
+            prev: null,
+            steps : [],
+            upd_at: null
+        };
 
     var flows = [];
 
-	this.createButtonWorkFlow = function (){
-    	
-    	var text, button, side;
+    this.addButton = function(_id){
 
-    	callback = function(){
+        var id = _id || null,
+            text = 'Edit WorkFlow',
+            button = 'buttonFermatEdit',
+            side = null,
+            callback = null;
 
-            actions.type = "insert";
+        if(id === null){
 
-            window.buttonsManager.removeAllButtons();
+            if(!window.session.getIsLogin()){
+            
+                callback = function(){ 
+                    window.session.getAuthCode();
+                };
+            }
+            else{
 
-            //addAllForm();
+                callback = function(){ 
 
-            drawHeaderFlow(null, addAllForm());
-    	};
+                    window.fieldsEdit.actions.type = "insert";
 
-    	text = 'Add New WorkFlow';
-    	button = 'buttonWorkFlowNew';
-    	side = 'left';
+                    window.buttonsManager.removeAllButtons();
 
-    	window.buttonsManager.createButtons(button, text, callback, null, null, side);
-	};
+                    window.session.displayLoginButton(false);
+
+                    drawHeaderFlow(null, addAllForm);
+                };
+
+            }
+
+            window.session.displayLoginButton(true);
+
+            text = 'Add New WorkFlow';
+            button = 'buttonFermatNew';
+            side = 'left';
+
+            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+
+        }
+        else{
+
+            if(!window.session.getIsLogin()){
+            
+                callback = function(){ 
+                    window.session.getAuthCode();
+                };
+            }
+            else{
+
+                callback = function(){
+
+                    window.fieldsEdit.actions.type = "update";
+                    window.buttonsManager.removeAllButtons(); 
+                    drawHeaderFlow(null, addAllForm);
+                };
+            }
+
+            window.session.displayLoginButton(false);
+
+            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+
+            if(!window.session.getIsLogin()){
+            
+                callback = function(){ 
+                    window.session.getAuthCode();
+                };
+            }
+            else{ 
+
+                callback = function(){
+
+                    if(window.confirm("Really remove this component?"))           
+                        ;//deleteTile(id);                
+                };
+            }
+
+            text = 'Delete WorkFlow';
+            button = 'buttonFermatDelete';
+            side = 'right';
+
+            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+        }   
+    
+    };
 
     this.deleteWorFlowEdit = function (){
 
@@ -431,13 +495,15 @@ function WorkFlowEdit() {
         }
 	}
 
-    function drawHeaderFlow(id, callback){
+    function drawHeaderFlow(id, callback){ console.log("hola");
 
         var exit = null, mesh;
 
-        if(actions.type === "insert"){ // si es insertar
+        if(window.fieldsEdit.actions.type === "insert"){ // si es insertar
 
             flows.push(new ActionFlow(flow));
+
+            console.log(flow);
 
             mesh = flows[0].createTitleBox("","");
             flows[0].objects.push(mesh);
@@ -473,6 +539,7 @@ function WorkFlowEdit() {
 
                 if(typeof(callback) === 'function')
                     callback();
+
                 window.helper.showBackButton();
 
             });
