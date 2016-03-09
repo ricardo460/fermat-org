@@ -41,7 +41,7 @@ var auth = function (req, res, next) {
 			});
 		}
 	});
-	next();
+	//next();
 };
 /**
  *
