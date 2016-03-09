@@ -17,11 +17,11 @@ var security = require('../../../../lib/utils/security');
 var lock = function (req, res, next) {
 	console.log('doing lock...');
 	try {
+		console.dir(req.params);
 		if (req.params.comp_id) {
 			req.body.item_id = req.params.comp_id;
 			req.body.item_type = 'comp';
 			req.body.priority = 5;
-			console.dir(req.body);
 			repMod.doLock(req, function (error, result) {
 				if (error) {
 					res.status(200).send(error);
