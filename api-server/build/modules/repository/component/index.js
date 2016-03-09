@@ -150,45 +150,6 @@ exports.insOrUpdComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type
 		return callback(err, null);
 	}
 };
-
-/**
- * [insertComp description]
- *
- * @method insertComp
- *
- * @param  {[type]}     _platfrm_id [description]
- * @param  {[type]}     _suprlay_id [description]
- * @param  {[type]}     _layer_id   [description]
- * @param  {[type]}     name        [description]
- * @param  {[type]}     type        [description]
- * @param  {[type]}     description [description]
- * @param  {[type]}     difficulty  [description]
- * @param  {[type]}     code_level  [description]
- * @param  {[type]}     repo_dir    [description]
- * @param  {[type]}     scrnshts     [description]
- * @param  {[type]}     found       [description]
- * @param  {Function}   callback    [description]
- *
- * @return {[type]}     [description]
- */
-exports.insertComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, scrnshts, found, callback) {
-	'use strict';
-	try {
-		var comp = new CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level,repo_dir, scrnshts);
-
-			compSrv.insertComp(comp, function (err_ins, res_ins) {
-				if (err_ins) {
-					return callback(err_ins, null);
-				}
-				return callback(null, res_ins);
-		});
-
-	} catch (err) {
-		return callback(err, null);
-	}
-};
-
-
 /**
  * [insOrUpdCompDev description]
  *
@@ -258,36 +219,6 @@ exports.insOrUpdCompDev = function (_comp_id, _dev_id, role, scope, percnt, call
 					return callback(null, res_ins);
 				});
 			}
-		});
-	} catch (err) {
-		return callback(err, null);
-	}
-};
-
-/**
- * [insertCompDev description]
- *
- * @method insertCompDev
- *
- * @param  {[type]}        _comp_id [description]
- * @param  {[type]}        _dev_id  [description]
- * @param  {[type]}        role     [description]
- * @param  {[type]}        scope    [description]
- * @param  {[type]}        percnt   [description]
- * @param  {Function}      callback [description]
- *
- * @return {[type]}        [description]
- */
-exports.insertCompDev = function (_comp_id, _dev_id, role, scope, percnt, callback) {
-	'use strict';
-	try {
-
-		var compDev = new CompDevMdl(_comp_id, _dev_id, role, scope, percnt);
-		compDevSrv.insertCompDev(compDev, function (err_ins, res_ins) {
-			if (err_ins) {
-				return callback(err_ins, null);
-			}
-			return callback(null, res_ins);
 		});
 	} catch (err) {
 		return callback(err, null);

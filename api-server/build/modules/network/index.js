@@ -1,6 +1,7 @@
 var linkMod = require('./link');
 var nodeMod = require('./node');
 var waveMod = require('./wave');
+var loadNet = require('./lib/loader');
 
 exports.getServerNetwork = function (req, next) {
 	'use strict';
@@ -8,7 +9,7 @@ exports.getServerNetwork = function (req, next) {
 		waveMod.findLastWave(function (err_wav, res_wav) {
 			if (err_wav) {
 				next(err_wav, null);
-			} else if(res_wav){				
+			} else if(res_wav){
 					//TODO: get hashes
 					nodeMod.findNodsByWaveIdAndType(res_wav._id, 'server', function (err_nods, res_nods) {
 						if (err_nods) {
@@ -68,7 +69,7 @@ exports.getServerNetwork = function (req, next) {
 			} else {
 				next(null, null);
 			}
-			
+
 		});
 	} catch (err) {
 		next(err, null);
@@ -132,7 +133,7 @@ exports.getChildren = function (req, next) {
 				});
 
 			} else {
-				
+
 				next(null, null);
 			}
 		});
@@ -140,5 +141,26 @@ exports.getChildren = function (req, next) {
 		next(err, null);
 	}
 };
+
+exports.addWave = function(req, next) {
+	'use strict';
+	try {
+		loadNet.createWave(function (err_wave, res_wave) {
+            if (err_wave) {
+                return next(err_wave, null);
+            }
+            loadNet.createNodes(res_wave, req.body.wave, function (err_nod, res_nod) {
+                if (err_nod) {
+                    return next(err_nod, null);
+                }
+
+                return next(null, res_nod);
+            });
+        });
+
+	} catch (err) {
+		next(err, null);
+	}
+}
 
 /*jshint +W069 */

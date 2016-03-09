@@ -132,7 +132,7 @@ var createChildren = function (_wave, _nodes, callback) {
             loopChildren(0);
         } else {
             winston.log('info', 'done loading children for all nodes');
-            callback(null, 'done loading children for all nodes');
+            callback(null,{ 'message': 'done loading children for all nodes' });
         }
     };
     loopNodes(0);
@@ -201,3 +201,11 @@ exports.getNetwork = function (callback) {
         return callback(err, null);
     }
 };
+
+exports.createWave = function(callback){
+    createWave(callback);
+}
+
+exports.createNodes = function(_wave, _nodes, callback){
+    createNodes(_wave, _nodes, callback);
+}
