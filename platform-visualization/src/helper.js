@@ -312,7 +312,11 @@ function Helper() {
             case "update dev":
                 method = "PUT";
                 tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id + "/comp-devs/" + data.devs_id;
-                break;                    
+                break;
+            case "check":
+                method = "GET";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id;
+                break;                     
                 
         }
 
@@ -325,6 +329,8 @@ function Helper() {
         if(params)
             setup.data = params;
 
+        console.log("Url : " + setup.url +" method : " + setup.method);
+
         makeCorsRequest(setup.url, setup.method, setup.data, 
             function(res){
         
@@ -333,7 +339,7 @@ function Helper() {
             }, 
             function(res){
 
-                window.alert('Action Not Executed');
+                //window.alert('Action Not Executed');
 
                 if(typeof(failCallback) === 'function')
                     failCallback(res);

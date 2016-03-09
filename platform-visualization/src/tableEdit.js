@@ -66,12 +66,15 @@ function TableEdit() {
 
                 callback = function(){
 
-                    window.alert('This is an incubating feature, your changes will not be saved!');
-                    window.fieldsEdit.actions.type = "update";
-                    window.buttonsManager.removeAllButtons(); 
-                    addAllFilds();
-                    fillFields(id);
-                    drawTile(id);
+                    validateLock(id, function(){ 
+
+                        window.alert('This is an incubating feature, your changes will not be saved!');
+                        window.fieldsEdit.actions.type = "update";
+                        window.buttonsManager.removeAllButtons(); 
+                        addAllFilds();
+                        fillFields(id);
+                        drawTile(id);
+                    });
                 };
             }
 
@@ -89,10 +92,13 @@ function TableEdit() {
 
                 callback = function(){
 
-                    window.alert('This is an incubating feature, your changes will not be saved!');
-                    
-                    if(window.confirm("Really remove this component?"))           
-                        deleteTile(id);                
+                    validateLock(id, function(){ 
+
+                        window.alert('This is an incubating feature, your changes will not be saved!');
+                        
+                        if(window.confirm("Really remove this component?"))           
+                            deleteTile(id);
+                    });                
                 };
             }
 
@@ -906,6 +912,29 @@ function TableEdit() {
         animate(mesh, target.show, 2500);
                 
         window.TABLE[platform].layers[layer].objects.push(object);
+    }
+
+    function validateLock(_id, callback){
+
+        var id = window.helper.getSpecificTile(_id).data.id;
+
+        var dataPost = {
+                comp_id : id
+            };
+
+        window.helper.postRoutesComponents('check', false, dataPost,
+            function(res){ 
+
+                console.log("res yes " + res);
+
+                if(typeof(callback) === 'function')
+                    callback();
+            },
+            function(res){
+
+                window.alert("component blocked");
+            }
+        );
     }
 
     function fillTable(found){
