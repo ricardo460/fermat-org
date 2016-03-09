@@ -225,6 +225,7 @@ exports.logout = function (api_key, axs_key, callback) {
 exports.verifyTkn = function (axs_key, digest, callback) {
 	tknMod.getTkn(axs_key, function (err_tkn, res_tkn) {
 		if (res_tkn) {
+			console.dir(res_tkn);
 			var usr = axs_key._usr_id;
 			var app = axs_key._app_id;
 			var str = usr.usrnm + app.api_key;
