@@ -15,6 +15,7 @@ var security = require('../../../../lib/utils/security');
  * @return {[type]} [description]
  */
 var lock = function (req, res, next) {
+	console.log('doing lock...');
 	try {
 		if (req.params.comp_id) {
 			req.body.item_id = req.params.comp_id;
