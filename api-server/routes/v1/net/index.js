@@ -110,10 +110,7 @@ router.post('/waves', function (req, res, next) {
 			} else {
 				res.status(201).send(result);
 			}
-			release(req);
 		});
 	}
 });
-
-
 module.exports = router;
