@@ -61,7 +61,7 @@ var release = function (req) {
 /**
  * using lock for proc routes
  */
-router.use(lock);
+//router.use(lock);
 /**
  * @api {post} /v1/repo/usrs/:usr_id/procs add process
  * @apiVersion 0.0.1

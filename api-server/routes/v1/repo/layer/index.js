@@ -61,7 +61,7 @@ var release = function (req) {
 /**
  * using lock for layer routes
  */
-router.use(lock);
+//router.use(lock);
 /**
  * @api {post} /v1/repo/usrs/:usr_id/layers add layer
  * @apiVersion 0.0.1

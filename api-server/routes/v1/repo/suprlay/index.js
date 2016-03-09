@@ -61,7 +61,7 @@ var release = function (req) {
 /**
  * using lock for suprlay routes
  */
-router.use(lock);
+//router.use(lock);
 /**
  * @api {post} /v1/repo/usrs/:usr_id/suprlays add super layer
  * @apiVersion 0.0.1
