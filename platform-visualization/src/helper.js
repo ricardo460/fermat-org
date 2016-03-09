@@ -467,6 +467,8 @@ function Helper() {
 
         var list = {};
 
+        var param;
+
         //window.session.useTestData();
 
         if(window.session.getIsLogin()){ 
@@ -477,19 +479,26 @@ function Helper() {
 
             url = SERVER + "/v1/repo/usrs/"+USERDATA._id+"/";
 
-            callAjax('comps', PORT,function(route, res){
+            param = { 
+                env : PORT.replace('?env=',''),
+                axs_key : AXS_KEY
+            };
+
+            var port = self.buildURL('', param);
+
+            callAjax('comps', port, function(route, res){
 
                list[route] = res; 
 
-                callAjax('layers', PORT,function(route, res){
+                callAjax('layers', port,function(route, res){
 
                     list[route] = res;
 
-                    callAjax('platfrms', PORT,function(route, res){
+                    callAjax('platfrms', port,function(route, res){
 
                         list[route] = res;
                     
-                        callAjax('suprlays', PORT,function(route, res){
+                        callAjax('suprlays', port,function(route, res){
 
                             list[route] = res;
 
@@ -527,7 +536,7 @@ function Helper() {
             });
         }
 
-        function callAjax(route, port,callback){
+        function callAjax(route, port, callback){
 
             $.ajax({
                 url: url + route + port,
