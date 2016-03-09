@@ -300,9 +300,9 @@ router.delete('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
 router.get('/:comp_id', function (req, res, next) {
 	'use strict';
 	try {
-		lock(req, function (error, result) {
-			if (error) {
-				res.status(200).send(error);
+		lock(req, function (err_lck, res_lck) {
+			if (err_lck) {
+				res.status(200).send(err_lck);
 			} else {
 				repMod.getComp(req, function (error, result) {
 					if (error) {
