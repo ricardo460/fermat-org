@@ -7,7 +7,7 @@ function Helper() {
 
     //var PORT = '';
 
-    var PORT = '?env=development';
+    var PORT = '?env=testing';
 
     var USERDATA = '';
 
@@ -46,22 +46,6 @@ function Helper() {
             });
         }
 
-    };
-
-    this.showHelpText = function(element, duration) {
-
-      var el = element;
-
-      if(typeof(el) === "string")
-          el = document.getElementById(element);
-
-      if(el) {
-        $(el).fadeTo(duration, 0, function() {
-            el.style.display = 'block';
-            el.style.opacity = 1;
-            el.style.transition = 'opacity 2s linear';
-        });
-      }
     };
 
     this.hideButtons = function(){
@@ -262,10 +246,10 @@ function Helper() {
                 tail = "/v1/repo/procs";
                 break;
             case "servers":
-                tail = "/v1/network/servers";
+                tail = "/v1/net/servrs";
                 break;
             case "nodes":
-                tail = "/v1/network/node";
+                tail = "/v1/net/nodes";
                 break;
             case "login":
                 tail = "/v1/auth/login";
@@ -349,7 +333,7 @@ function Helper() {
     };
 
     this.postRoutesProcess = function(route, params, data, doneCallback, failCallback){
-
+        
         var tail = "",
             method = "",
             setup = {};
@@ -765,5 +749,48 @@ function Helper() {
         var index = window.layers[layer].index;
 
         return window.tileManager.dimensions.layerPositions[index];
+    };
+    
+    /**
+     * Build and URL based on the address, wildcards and GET parameters
+     * @param   {string} base   The URL address
+     * @param   {Object} params The key=value pairs of the GET parameters and wildcards
+     * @returns {string} Parsed and replaced URL
+     */
+    this.buildURL = function(base, params) {
+        
+        var result = base;
+        var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
+        
+        //Search for wildcards parameters
+        while(result.indexOf(':') !== -1) {
+            
+            var param = result.match(':[a-z0-9]+');
+            var paramName = param[0].replace(':', '');
+            
+            if(params.hasOwnProperty(paramName) && params[paramName] !== undefined) {
+                
+                result = result.replace(param, params[paramName]);
+                delete(params[paramName]);
+                
+            }
+        }
+        
+        //Process the GET parameters
+        for(var key in params) {
+            if(params.hasOwnProperty(key)) {
+                
+                if(areParams === false)
+                    result += "?";
+                else
+                    result += "&";
+                
+                result += key + ((params[key] !== undefined) ? ("=" + params[key]) : (''));
+                
+                areParams = true;
+            }
+        }
+        
+        return result;
     };
 }

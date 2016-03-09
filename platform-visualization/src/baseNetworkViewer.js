@@ -17,15 +17,7 @@ BaseNetworkViewer.prototype = {
      * Loads the node data
      * @author Miguel Celedon
      */
-    load : function() {
-
-        //Ask for nodes
-        var networkNodes = this.test_load();
-
-        this.NET_RADIOUS = this.NET_RADIOUS * networkNodes.length;
-
-        this.drawNodes(networkNodes);
-    },
+    load : function() {},
 
     /**
      * Deletes all data loaded to free memory
@@ -88,14 +80,14 @@ BaseNetworkViewer.prototype = {
      */
     createNode : function(nodeData, startPosition) {
         
-        var texture = THREE.ImageUtils.loadTexture(this.PICTURES[nodeData.subType] || this.PICTURES.pc);
+        var texture = THREE.ImageUtils.loadTexture(this.PICTURES[nodeData.extra.sub] || this.PICTURES.pc);
         texture.minFilter = THREE.NearestFilter;
         
         var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0xffffff, map : texture}));
-        sprite.renderOrder = 100;
-        sprite.material.blending = THREE.NoBlending;
+        //sprite.renderOrder = 100;
+        //sprite.material.blending = THREE.NoBlending;
         
-        var id = nodeData.id.toString();
+        var id = nodeData.hash.toString();
 
         sprite.userData = {
             id : id,
@@ -130,7 +122,8 @@ BaseNetworkViewer.prototype = {
                         .to({x : actual.userData.originPosition.x,
                              y : actual.userData.originPosition.y,
                              z : actual.userData.originPosition.z},
-                            duration);
+                            duration)
+                        .easing(TWEEN.Easing.Cubic.InOut);
             
             if(former)
                 former.onStart(function() {next.start(); actual.visible = true; });
@@ -147,7 +140,8 @@ BaseNetworkViewer.prototype = {
             
         }
         
-        return original;
+        //Send empty tween if there is nothing to do
+        return original || new TWEEN.Tween(this).to({}, 1);
     },
 
     /**
@@ -176,6 +170,7 @@ BaseNetworkViewer.prototype = {
                                  y : target.y,
                                  z : target.z},
                                 duration)
+                            .easing(TWEEN.Easing.Cubic.InOut)
                             .onComplete(function() { actual.visible = false; });
                 
                 if(former)
@@ -193,7 +188,8 @@ BaseNetworkViewer.prototype = {
         
         }
         
-        return original;
+        //Send empty tween if there is nothing to do
+        return original || new TWEEN.Tween(this).to({}, 1);
     },
 
     /**
@@ -209,9 +205,9 @@ BaseNetworkViewer.prototype = {
 
             origin = node.sprite.userData.originPosition;
 
-            for(var i = 0; i < node.edges.length; i++) {
+            for(var i = 0; i < node.children.length; i++) {
 
-                var actualEdge = node.edges[i];
+                var actualEdge = node.children[i];
 
                 if(this.nodes.hasOwnProperty(actualEdge.id) && this.edgeExists(nodeID, actualEdge.id) === -1) {
 
@@ -252,7 +248,7 @@ BaseNetworkViewer.prototype = {
             .to({opacity : 1}, duration);
             
             if(former)
-                former.onStart(function() { next.start(); });
+                former.onStart(function() { actual.visible = true; next.start(); });
             else
                 original = next;
             
@@ -264,7 +260,8 @@ BaseNetworkViewer.prototype = {
             createTween(i, this);
         }
         
-        return original;
+        //Send empty tween if there is nothing to do
+        return original || new TWEEN.Tween(this).to({}, 1);
     },
 
     /**
@@ -285,7 +282,7 @@ BaseNetworkViewer.prototype = {
                 var actual = self.edges[i].line;
 
                 var next = new TWEEN.Tween(actual.material)
-                            .to({opacity : 0}, duration).start();
+                            .to({opacity : 0}, duration).onComplete(function() {actual.visible = false;}).start();
             }
         };
 

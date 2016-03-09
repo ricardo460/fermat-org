@@ -79,6 +79,8 @@ function ViewManager() {
                         setTimeout(function(){
                             window.signLayer.transformSignLayer();
                         }, 2500);
+
+                        window.developer.delete();
                     };                    
                     
                     exit = function() {
@@ -124,12 +126,9 @@ function ViewManager() {
                     };
                     
                     exit = function() {
-                        if(window.toggleHelp){
-                            window.helper.hide('navigation', 1000, true);
-                            window.helper.hide('zoom', 1000, true);
-                            window.helper.hide('slide', 1000, true);
-                            window.helper.hide('return', 1000, true);
-                            window.toggleHelp = false;
+                        if(window.guide.active){
+                            window.guide.removeHelp();
+                            window.guide.active = false;
                         }
                     };
                     break;
@@ -216,13 +215,13 @@ function ViewManager() {
 
                         setTimeout(function(){
                             window.developer.animateDeveloper();
-                        }, 2000);        
+                        }, 2500);        
                     };
                     
                     backButton = reset = function() {
-                        setTimeout(function(){
+                        //setTimeout(function(){
                             window.developer.animateDeveloper();
-                        }, 4000);
+                        //}, 2000);
                         
                         window.changeView();
                     };
