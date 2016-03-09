@@ -922,10 +922,8 @@ function TableEdit() {
                 comp_id : id
             };
 
-        window.helper.postRoutesComponents('check', false, dataPost,
+        window.helper.postValidateLock('check', dataPost,
             function(res){ 
-
-                console.log("res yes " + res);
 
                 if(typeof(callback) === 'function')
                     callback();
@@ -1049,6 +1047,7 @@ function TableEdit() {
     }
 
     function getBestDev(_devs, role) {
+        
         var dev = {};
         if (_devs) {
             var _dev = {};

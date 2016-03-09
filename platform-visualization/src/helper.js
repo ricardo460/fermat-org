@@ -298,11 +298,7 @@ function Helper() {
             case "update dev":
                 method = "PUT";
                 tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id + "/comp-devs/" + data.devs_id;
-                break;
-            case "check":
-                method = "GET";
-                tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id;
-                break;                     
+                break;                    
                 
         }
 
@@ -322,8 +318,6 @@ function Helper() {
         if(params)
             setup.data = params;
 
-        console.log("Url : " + setup.url +" method : " + setup.method);
-
         makeCorsRequest(setup.url, setup.method, setup.data, 
             function(res){
         
@@ -332,13 +326,61 @@ function Helper() {
             }, 
             function(res){
 
-                //window.alert('Action Not Executed');
+                window.alert('Action Not Executed');
 
                 if(typeof(failCallback) === 'function')
                     failCallback(res);
             }
         );
 
+    };
+
+    this.postValidateLock = function(route, data, doneCallback, failCallback){
+
+        var tail = "",
+            method = "",
+            param,
+            url;
+
+        switch(route) {
+            
+            case "check":
+                method = "GET";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id;
+                break;                     
+                
+        }
+
+        param = { 
+                env : PORT.replace('?env=',''),
+                axs_key : AXS_KEY
+            };
+
+        url = SERVER.replace('http://', '') + tail;
+
+        url = 'http://' + self.buildURL(url, param);
+
+         $.ajax({
+            url:  url,
+            method: 'GET',
+            dataType: 'json',
+            success:  function (res) {
+
+                if(res._id)
+                    doneCallback();
+                else
+                    failCallback();
+            },
+            error: function(res){
+
+                if(res.status === 423){
+                    window.alert("component blocked");
+                }
+                else if(res.status === 404){
+                    window.alert("Component not found");
+                }
+            }
+        });
     };
 
     this.postRoutesProcess = function(route, params, data, doneCallback, failCallback){
