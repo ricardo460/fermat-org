@@ -14,24 +14,28 @@ var security = require('../../../../lib/utils/security');
  *
  * @return {[type]} [description]
  */
-var lock = function (req, res, next) {
+var lock = function (req, next) {
+	console.log('doing lock...');
 	try {
+		console.dir(req.params);
+		console.dir(req.body);
 		if (req.params.proc_id) {
 			req.body.item_id = req.params.proc_id;
 			req.body.item_type = 'proc';
 			req.body.priority = 5;
+			console.dir(req.body);
 			repMod.doLock(req, function (error, result) {
 				if (error) {
-					res.status(200).send(error);
+					next(error, null);
 				} else {
-					next();
+					next(null, result);
 				}
 			});
 		} else {
-			next();
+			next(null, null);
 		}
 	} catch (err) {
-		next(err);
+		next(err, null);
 	}
 };
 /**
@@ -254,17 +258,23 @@ router.delete('/:proc_id/steps/:step_id', function (req, res, next) {
 router.get('/:proc_id', function (req, res, next) {
 	'use strict';
 	try {
-		repMod.getProc(req, function (error, result) {
-			if (error) {
-				res.status(200).send(error);
+		lock(req, function (err_lck, res_lck) {
+			if (err_lck) {
+				res.status(200).send(err_lck);
 			} else {
-				if (result) {
-					res.status(200).send(result);
-				} else {
-					res.status(404).send({
-						message: "NOT FOUND"
-					});
-				}
+				repMod.getProc(req, function (error, result) {
+					if (error) {
+						res.status(200).send(error);
+					} else {
+						if (result) {
+							res.status(200).send(result);
+						} else {
+							res.status(404).send({
+								message: "NOT FOUND"
+							});
+						}
+					}
+				});
 			}
 		});
 	} catch (err) {
