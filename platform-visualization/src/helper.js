@@ -763,7 +763,7 @@ function Helper() {
     this.buildURL = function(base, params) {
         
         var result = base;
-        var areParams = false;
+        var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
         
         //Search for wildcards parameters
         while(result.indexOf(':') !== -1) {
