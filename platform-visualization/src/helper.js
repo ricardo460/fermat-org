@@ -262,7 +262,7 @@ function Helper() {
                 break;
         }
 
-        return SERVER + tail;
+        return SERVER + tail + PORT;
     };
 
     this.postRoutesComponents = function(route, params, data, doneCallback, failCallback){
@@ -477,25 +477,25 @@ function Helper() {
 
             url = SERVER + "/v1/repo/usrs/"+USERDATA._id+"/";
 
-            callAjax('comps', function(route, res){
+            callAjax('comps', PORT,function(route, res){
 
                list[route] = res; 
 
-                callAjax('layers', function(route, res){
+                callAjax('layers', PORT,function(route, res){
 
                     list[route] = res;
 
-                    callAjax('platfrms', function(route, res){
+                    callAjax('platfrms', PORT,function(route, res){
 
                         list[route] = res;
                     
-                        callAjax('suprlays', function(route, res){
+                        callAjax('suprlays', PORT,function(route, res){
 
                             list[route] = res;
 
                             url = self.getAPIUrl("user");
 
-                            callAjax('', function(route, res){ 
+                            callAjax('', '',function(route, res){ 
 
                                 self.listDevs = res;
 
@@ -511,13 +511,13 @@ function Helper() {
 
             url = self.getAPIUrl("comps");
 
-            callAjax('', function(route, res){
+            callAjax('', '',function(route, res){
 
                 list = res;
 
                 url = self.getAPIUrl("user");
 
-                callAjax('', function(route, res){ 
+                callAjax('', '',function(route, res){ 
 
                     self.listDevs = res;
 
@@ -527,10 +527,10 @@ function Helper() {
             });
         }
 
-        function callAjax(route, callback){
+        function callAjax(route, port,callback){
 
             $.ajax({
-                url: url + route + PORT,
+                url: url + route + port,
                 method: "GET"
             }).success (
                 function (res) {
