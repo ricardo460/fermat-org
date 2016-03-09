@@ -49,7 +49,9 @@
         "FlowManager" : true,
         "ActionFlow" : true,
         "ButtonsManager" : true,
-        "tableEdit" : true,
-        "fieldsEdit" : true
+        "TableEdit" : true,
+        "FieldsEdit" : true,
+        "Session" : true,
+        "Guide" : true
     }
 }
