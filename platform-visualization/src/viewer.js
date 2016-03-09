@@ -245,28 +245,6 @@ function initMenu() {
         changeView();
 
     }, false);
-
-    
-    /*button = document.getElementById('sphere');
-    button.addEventListener('click', function(event) {
-
-        changeView(tileManager.targets.sphere);
-
-    }, false);
-
-    button = document.getElementById('helix');
-    button.addEventListener('click', function(event) {
-
-        changeView(tileManager.targets.helix);
-
-    }, false);
-
-    button = document.getElementById('grid');
-    button.addEventListener('click', function(event) {
-
-        changeView(tileManager.targets.grid);
-
-    }, false);*/
 }
 
 
