@@ -4,6 +4,8 @@ function Session(){
 	var api_key = "56a10473b27e63185c6970d6";
 	var axs_key;
 	var usr;
+    var code;
+    var self = this;
 
 	this.getIsLogin = function(){
 		return isLogin;
@@ -82,6 +84,16 @@ function Session(){
 		});
 	};
 
+    this.init = function(){
+
+        code = window.location.toString().replace(/.+code=/, '');
+
+        if((code.indexOf("/") < 0))
+            self.login();
+        else
+            window.getData();
+    };
+
 	/**
 	 * Logged to the user and returns the token
 	 */
@@ -110,11 +122,14 @@ function Session(){
      			$("#logout").fadeIn(2000);
 
      			drawUser(usr);
+                
 			} 
             else {
 				console.log("Error:", tkn);
                 window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
             }
+
+            window.getData();
 		});
 	};
 
@@ -257,7 +272,4 @@ function Session(){
         }
 	}
 
-	var code = window.location.toString().replace(/.+code=/, '');
-	if((code.indexOf("/") < 0))
-		this.login();
 }
