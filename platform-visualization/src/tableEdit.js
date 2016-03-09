@@ -96,7 +96,7 @@ function TableEdit() {
 
                         window.alert('This is an incubating feature, your changes will not be saved!');
                         
-                        if(window.confirm("Really remove this component?"))           
+                        if(window.confirm("Are you sure you want to remove this component?"))           
                             deleteTile(id);
                     });                
                 };

@@ -261,15 +261,17 @@ function Helper() {
                 tail = "/v1/repo/devs";
                 break;
         }
-        
-        return SERVER + tail + PORT;
+
+        return SERVER + tail;
     };
 
     this.postRoutesComponents = function(route, params, data, doneCallback, failCallback){
 
         var tail = "",
             method = "",
-            setup = {};
+            setup = {},
+            param,
+            url;
 
         switch(route) {
                 
@@ -304,8 +306,15 @@ function Helper() {
                 
         }
 
+        param = { 
+                env : PORT.replace('?env=',''),
+                axs_key : AXS_KEY
+            };
+
+        url = SERVER.replace('http://', '') + tail;
+
         setup.method = method;
-        setup.url = SERVER + tail + PORT + AXS_KEY;
+        setup.url = 'http://' + self.buildURL(url, param);
         setup.headers = { 
             "Content-Type": "application/json"
              };
@@ -336,7 +345,9 @@ function Helper() {
         
         var tail = "",
             method = "",
-            setup = {};
+            setup = {},
+            param,
+            url;
 
         switch(route) {
                 
@@ -367,8 +378,15 @@ function Helper() {
                 
         }
 
+        param = { 
+                env : PORT.replace('?env=',''),
+                axs_key : AXS_KEY
+            };
+
+        url = SERVER.replace('http://', '') + tail;
+
         setup.method = method;
-        setup.url = SERVER + tail + PORT + AXS_KEY;
+        setup.url = 'http://' + self.buildURL(url, param);
         setup.headers = { 
             "Content-Type": "application/json"
              };
@@ -455,7 +473,7 @@ function Helper() {
 
             USERDATA = window.session.getUserLogin();
 
-            AXS_KEY = '?axs_key=' + USERDATA.axs_key;
+            AXS_KEY = USERDATA.axs_key;
 
             url = SERVER + "/v1/repo/usrs/"+USERDATA._id+"/";
 
