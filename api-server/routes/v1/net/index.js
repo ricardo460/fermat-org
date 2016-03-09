@@ -4,6 +4,7 @@ var express = require('express');
 var router = express.Router();
 var netMod = require('../../../modules/network');
 var Cache = require('../../../lib/route-cache');
+var security = require('../../../lib/utils/security');
 // creation of object cache
 var cache = new Cache({
 	type: 'file',
@@ -47,7 +48,7 @@ router.get('/servrs', function (req, res, next) {
 });
 /**
  * @api {get} /v1/net/nodes/:hash/childrn get children
- * @apiName GetChildren 
+ * @apiName GetChildren
  * @apiVersion 0.0.1
  * @apiGroup Net
  * @apiDescription Lists all devices connected to a P2P network node given its hash.
@@ -85,7 +86,7 @@ router.get('/nodes/:hash/childrn', function (req, res, next) {
 });
 /**
  * @api {post} /v1/net/waves create a wave
- * @apiName CreateWave 
+ * @apiName CreateWave
  * @apiVersion 0.0.1
  * @apiGroup Net
  * @apiDescription Inserts a wave (state of the network) into the database.
@@ -97,5 +98,22 @@ router.get('/nodes/:hash/childrn', function (req, res, next) {
  * @apiParam {ISODate} object.upd_at Last update
  * @apiParam {String[]} object.chldrn An array of the nodes hashes that are connected to this node
  */
-router.post('/waves', function (req, res, next) {});
+router.post('/waves', function (req, res, next) {
+	if (!security.isValidData(req.body.wave)) {
+		res.status(412).send({
+			"message": "missing or invalid data"
+		});
+	} else {
+		netMod.addWave(req, function (error, result) {
+			if (error) {
+				res.status(200).send(error);
+			} else {
+				res.status(201).send(result);
+			}
+			release(req);
+		});
+	}
+});
+
+
 module.exports = router;
