@@ -5,13 +5,17 @@ function Helper() {
 
     var SERVER = 'http://api.fermat.org';
 
-    var PORT = '';
+    //var PORT = '';
 
-    //var PORT = '?env=development';
+    var PORT = '?env=testing';
 
     var USERDATA = '';
 
     var AXS_KEY = '';
+
+    this.listDevs = {};
+
+    var self = this;
 
     /**
      * Hides an element vanishing it and then eliminating it from the DOM
@@ -30,9 +34,9 @@ function Helper() {
         if(el) {
             $(el).fadeTo(duration, 0, function() {
                 if(keep) {
-                    el.style.visibility = 'hidden';
+                    el.style.display = 'none';
                     el.style.opacity = 0;
-                    el.style.transition = 'visibility 0s 2s, opacity 2s linear';
+                    el.style.transition = 'display 0s 2s, opacity 2s linear';
                 }
                 else
                     $(el).remove();
@@ -43,20 +47,6 @@ function Helper() {
         }
 
     };
-
-    this.showHelpText = function(element) {
-
-      var el = element;
-
-      if(typeof(el) === "string")
-          el = document.getElementById(element);
-
-      if(el) {
-          el.style.visibility = 'visible';
-          el.style.opacity = 1;
-          el.style.transition = 'opacity 2s linear';
-      }
-    }
 
     this.hideButtons = function(){
 
@@ -256,10 +246,10 @@ function Helper() {
                 tail = "/v1/repo/procs";
                 break;
             case "servers":
-                tail = "/v1/network/servers";
+                tail = "/v1/net/servrs";
                 break;
             case "nodes":
-                tail = "/v1/network/node";
+                tail = "/v1/net/nodes";
                 break;
             case "login":
                 tail = "/v1/auth/login";
@@ -306,6 +296,67 @@ function Helper() {
             case "update dev":
                 method = "PUT";
                 tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id + "/comp-devs/" + data.devs_id;
+                break;                    
+                
+        }
+
+        setup.method = method;
+        setup.url = SERVER + tail + PORT + AXS_KEY;
+        setup.headers = { 
+            "Content-Type": "application/json"
+             };
+
+        if(params)
+            setup.data = params;
+
+        makeCorsRequest(setup.url, setup.method, setup.data, 
+            function(res){
+        
+                if(typeof(doneCallback) === 'function')
+                    doneCallback(res);
+            }, 
+            function(res){
+
+                window.alert('Action Not Executed');
+
+                if(typeof(failCallback) === 'function')
+                    failCallback(res);
+            }
+        );
+
+    };
+
+    this.postRoutesProcess = function(route, params, data, doneCallback, failCallback){
+
+        var tail = "",
+            method = "",
+            setup = {};
+
+        switch(route) {
+                
+            case "insert":
+                method = "POST";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs";
+                break;
+            case "delete":
+                method = "DELETE";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id;
+                break;
+            case "update":
+                method = "PUT";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id;
+                break;
+            case "insert step":
+                method = "POST";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id + "/steps";
+                break;
+            case "delete step":
+                method = "DELETE";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id + "/steps/" + data.steps_id;
+                break;
+            case "update step":
+                method = "PUT";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id + "/steps/" + data.steps_id;
                 break;                    
                 
         }
@@ -383,7 +434,7 @@ function Helper() {
                 xhr = null;
         
             return xhr;
-        };
+        }
     };
 
     this.getCompsUser = function(callback){
@@ -391,6 +442,8 @@ function Helper() {
         var url = "";
 
         var list = {};
+
+        //window.session.useTestData();
 
         if(window.session.getIsLogin()){ 
 
@@ -408,7 +461,11 @@ function Helper() {
                     
                         callAjax('suprlays', function(){
 
-                            callback(list);
+                            callAjaxDevs(function(){ 
+
+                                callback(list);
+
+                            });
                 
                         });
                     });
@@ -417,11 +474,17 @@ function Helper() {
         }
         else{
 
-            url = this.getAPIUrl("comps");
+            url = self.getAPIUrl("comps");
+
+            PORT = '';
 
             callAjax('', function(){
 
-                callback(list);
+                callAjaxDevs(function(){ 
+
+                    callback(list);
+
+                }); 
                 
             });
         }
@@ -438,6 +501,24 @@ function Helper() {
                         list = res;
                     else
                        list[route] = res; 
+
+                    if(typeof(callback) === 'function')
+                        callback();
+
+                });
+        }
+
+        function callAjaxDevs(callback){
+
+            url = self.getAPIUrl("user");
+
+            $.ajax({
+                url: url + PORT,
+                method: "GET"
+            }).success (
+                function (res) {
+
+                    self.listDevs = res;
 
                     if(typeof(callback) === 'function')
                         callback();

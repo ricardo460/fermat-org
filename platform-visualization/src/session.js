@@ -47,13 +47,13 @@ function Session(){
     this.useTestData = function(){
         
         
-    }
+    };
 
 	/**
 	 * Login with github and gets the authorization code
 	 */
 	this.getAuthCode = function(){                                                                        //CLientID: c25e3b3b1eb9aa35c773 - Web
-		window.location.href = 'https://github.com/login/oauth/authorize?client_id=c25e3b3b1eb9aa35c773'; //ClientID: f079f2a8fa65313179d5 - localhost
+		window.location.href = 'https://github.com/login/oauth/authorize?client_id=d00a7c7d4489139327e4'; //ClientID: f079f2a8fa65313179d5 - localhost
 	};
 
 	/**
@@ -61,7 +61,7 @@ function Session(){
 	 */
 	this.logout = function() {
 
-		var url_logout = window.helper.getAPIUrl("logout") + "?axs_key=" + axs_key + "&api_key=" + api_key;
+		var url_logout = window.helper.getAPIUrl("logout") + "&axs_key=" + axs_key + "&api_key=" + api_key;
 		console.log("url: " + url_logout);
 		$.ajax({
 			url : url_logout,
@@ -71,7 +71,7 @@ function Session(){
 			}
 		}).success(function(data) {
 			console.log("Logout", data);
-			if(data !== undefined){
+			if(data !== undefined) {
 				if(data === true) {
 					isLogin = false;
 					$("#login").fadeIn(2000);
@@ -86,7 +86,7 @@ function Session(){
 	 * Logged to the user and returns the token
 	 */
 	this.login = function() {
-		var url = window.helper.getAPIUrl("login") + "?code=" + code + "&api_key=" + api_key;
+		var url = window.helper.getAPIUrl("login") + "&code=" + code + "&api_key=" + api_key;
 		console.log("url: " + url);
 		
 		$.ajax({
@@ -111,8 +111,10 @@ function Session(){
 
      			drawUser(usr);
 			} 
-            else
+            else {
 				console.log("Error:", tkn);
+                window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
+            }
 		});
 	};
 
