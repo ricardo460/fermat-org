@@ -8,61 +8,27 @@ function WorkFlowEdit() {
         type : null
     };
 
+    var self = this;
+
     //var idCall = [];
 
     var flow = {
-            _id : null,
-            desc : "",
-            name : "",
-            next: null,
-            platfrm : null,
-            prev: null,
-            steps : [],
-            upd_at: null
-        };
+        _id : null,
+        desc : "",
+        name : "",
+        next: null,
+        platfrm : null,
+        prev: null,
+        steps : [],
+        upd_at: null
+    };
 
     var flows = [];
 
-<<<<<<< HEAD
-    this.addButton = function(_id){
+    this.getActionType = function(){
+        return actions;
+    };
 
-        var id = _id || null,
-            text = 'Edit WorkFlow',
-            button = 'buttonFermatEdit',
-            side = null,
-            callback = null;
-
-        if(id === null){
-
-            if(!window.session.getIsLogin()){
-            
-                callback = function(){ 
-                    window.session.getAuthCode();
-                };
-            }
-            else{
-
-                callback = function(){ 
-
-                    window.fieldsEdit.actions.type = "insert";
-
-                    window.buttonsManager.removeAllButtons();
-
-                    window.session.displayLoginButton(false);
-
-                    drawHeaderFlow(null, addAllForm);
-                };
-
-            }
-
-            window.session.displayLoginButton(true);
-
-            text = 'Add New WorkFlow';
-            button = 'buttonFermatNew';
-            side = 'left';
-
-            window.buttonsManager.createButtons(button, text, callback, null, null, side);
-=======
     this.getFlowsEdit = function(){
 
         return flows;
@@ -71,56 +37,30 @@ function WorkFlowEdit() {
 	this.createButtonWorkFlow = function (){
     	
     	var text, button, side;
->>>>>>> dc6b08f2a345b7dde1c2527ec7166678fc769e9a
 
-        }
-        else{
+    	callback = function(){
 
-            if(!window.session.getIsLogin()){
-            
-                callback = function(){ 
-                    window.session.getAuthCode();
-                };
-            }
-            else{
+            actions.type = "insert";
 
-                callback = function(){
+            window.buttonsManager.removeAllButtons();
 
-                    window.fieldsEdit.actions.type = "update";
-                    window.buttonsManager.removeAllButtons(); 
-                    drawHeaderFlow(null, addAllForm);
-                };
-            }
+            //addAllForm();
+
+            drawHeaderFlow(null, addAllForm());
 
             window.session.displayLoginButton(false);
 
-            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+            createButtonSave();
+    	};
 
-            if(!window.session.getIsLogin()){
-            
-                callback = function(){ 
-                    window.session.getAuthCode();
-                };
-            }
-            else{ 
+    	text = 'Add New WorkFlow';
+    	button = 'buttonWorkFlowNew';
+    	side = 'left';
 
-                callback = function(){
+    	window.buttonsManager.createButtons(button, text, callback, null, null, side);
+	};
 
-                    if(window.confirm("Really remove this component?"))           
-                        ;//deleteTile(id);                
-                };
-            }
-
-            text = 'Delete WorkFlow';
-            button = 'buttonFermatDelete';
-            side = 'right';
-
-            window.buttonsManager.createButtons(button, text, callback, null, null, side);
-        }   
-    
-    };
-
-    this.deleteWorFlowEdit = function (){
+    this.deleteFlow= function (){
 
         function animate(){
 
@@ -142,6 +82,93 @@ function WorkFlowEdit() {
             flows = [];
         }
     };
+
+    function animateEdit(flow){
+
+        new TWEEN.Tween(flow.objects[0].position)
+                .to({
+                    x: flow.positions.target[0].x,
+                    y: flow.positions.target[0].y,
+                    z: flow.positions.target[0].z
+                }, 8000)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .start();
+    }
+
+    function insertWorkFlow(){
+
+        var positions = new THREE.Vector3(), _flow, find = false;
+
+        for(var i = 0; i < flowManager.getObjHeaderFlow().length; i++){
+
+            if(flowManager.getObjHeaderFlow()[i].flow.platfrm == flows[0].flow.platfrm){
+                positions = flowManager.getObjHeaderFlow()[i].positions.target[0];
+                find = true;
+            }
+        }
+
+        if(find === false){ // si no existe ningun elemento en el header (si el que se va a insertar es nuevo)
+
+            for(var j = 0; j < window.headers.getPositionHeaderViewInFlow().length; j++){
+
+                if(window.headers.getPositionHeaderViewInFlow()[j].name === flows[0].flow.platfrm){
+                    positions =  window.headers.getPositionHeaderViewInFlow()[j].position;
+                }
+            }
+        }
+
+        var _positions = new THREE.Vector3();
+
+        flows[0].positions.target.push(_positions);
+        flows[0].positions.target[0].copy(positions);
+
+        flows[0].positions.origin.push(window.helper.getOutOfScreenPoint(0));
+       
+        if(find === true)
+            flows[0].positions.target[0].y = flows[0].positions.target[0].y - 500;
+        else{
+            flows[0].positions.target[0].x = flows[0].positions.target[0].x - 1500;
+            flows[0].positions.target[0].y = flows[0].positions.target[0].y - 2200;
+        }
+
+        window.camera.move(flows[0].positions.target[0].x, flows[0].positions.target[0].y, flows[0].positions.target[0].z + 8000, 4000);
+        
+        window.fieldsEdit.disabledButtonSave(true);
+
+        window.camera.loseFocus();
+
+        window.workFlowEdit.createButtonWorkFlow();
+
+        window.session.displayLoginButton(true);
+
+        actions.type = null;
+
+        _flow = flows[0];
+        
+        animateEdit(_flow); // se anima el workflow insertado
+
+        window.flowManager.getObjHeaderFlow().push(_flow); // agregamos el nuevo workflow insertado
+
+        flows = [];
+    }
+
+    function createButtonSave(){
+
+        var text, button, side;
+
+
+        callback = function(){
+
+            setIdSteps(false);
+            insertWorkFlow();
+        };
+
+        text = 'Save';
+        button = 'button-save';
+        side = 'right';
+
+        window.buttonsManager.createButtons(button, text, callback, null, null, side);
+    }
 
 	function addAllForm(){
 
@@ -385,24 +412,9 @@ function WorkFlowEdit() {
 
             var text, button, side;
 
-            var newidSteps = [];
-
             callback = function(){
+                setIdSteps(true);
 
-                
-                if(document.getElementsByName("nameTypeCall").length > 0){ // si existe al mens un type call
-                    idSteps = [];
-                    
-                    for(var i = 0; i < window.fieldsEdit.objects.row2.buttons.length; i++){
-                        idSteps[i] = newidSteps;
-                        for(var j = 0; j < window.fieldsEdit.objects.row2.buttons[i].elemnt.id.length - 2; j++){
-                            idSteps[i][j] = window.fieldsEdit.objects.row2.buttons[i].elemnt.id[j];
-                        }
-                        newidSteps = [];
-                    }
-
-                    fillWorkFlow(); // aqui vamos a llenar todo
-                }
             };
 
             text = 'Preview';
@@ -509,15 +521,13 @@ function WorkFlowEdit() {
         }
 	}
 
-    function drawHeaderFlow(id, callback){ console.log("hola");
+    function drawHeaderFlow(id, callback){
 
         var exit = null, mesh;
 
-        if(window.fieldsEdit.actions.type === "insert"){ // si es insertar
+        if(actions.type === "insert"){ // si es insertar
 
             flows.push(new ActionFlow(flow));
-
-            console.log(flow);
 
             mesh = flows[0].createTitleBox("","");
             flows[0].objects.push(mesh);
@@ -553,7 +563,6 @@ function WorkFlowEdit() {
 
                 if(typeof(callback) === 'function')
                     callback();
-
                 window.helper.showBackButton();
 
             });
@@ -562,21 +571,55 @@ function WorkFlowEdit() {
         }
     }
 
+    function setIdSteps(isTrue){
+
+        var newidSteps = [];
+
+        flows[0].flow.platfrm = document.getElementById(window.fieldsEdit.objects.idFields.platform).value;// momentaneo
+
+         if(document.getElementsByName("nameTypeCall").length > 0){ // si existe al mens un type call
+                idSteps = [];
+                
+            for(var i = 0; i < window.fieldsEdit.objects.row2.buttons.length; i++){
+                idSteps[i] = newidSteps;
+                for(var j = 0; j < window.fieldsEdit.objects.row2.buttons[i].elemnt.id.length - 2; j++){
+                    idSteps[i][j] = window.fieldsEdit.objects.row2.buttons[i].elemnt.id[j];
+                }
+                newidSteps = [];
+            }
+
+            fillWorkFlow(isTrue); // aqui vamos a llenar todo
+        }
+    }
+
     function changeTexture(){
         
         fillWorkFlowHeader();
 
-        texture = flows[0].createTitleBox(flow.name,flow.desc, true);
+        var texture = flows[0].createTitleBox(flow.name,flow.desc, true);
         flows[0].objects[0].material.map = texture;
+
+        texture = null;
+        flow = {
+            _id : null,
+            desc : "",
+            name : "",
+            next: null,
+            platfrm : null,
+            prev: null,
+            steps : [],
+            upd_at: null
+        };
     }
 
     function fillWorkFlowHeader(){
 
         flow.name = document.getElementById(window.fieldsEdit.objects.idFields.title).value;
         flow.desc = document.getElementById(window.fieldsEdit.objects.idFields.subTitle).value;
+        flow.platfrm = document.getElementById(window.fieldsEdit.objects.idFields.platform).value;
     }
 
-    function fillWorkFlow(){
+    function fillWorkFlow(isTrue){
 
         var value = [], indice = 0;
 
@@ -592,12 +635,14 @@ function WorkFlowEdit() {
             setValue(value, j);
         }
 
-        setTimeout(function() {
-            for (var i = 0; i < flows[0].flow.steps.length; i++) {
-                flows[0].drawTree(flows[0].flow.steps[i], target.show.position.x + 900 * i, target.show.position.y - 211, 0);
-            }
-            flows[0].showSteps();
-        }, 1000);
+        if(isTrue){
+            setTimeout(function() {
+                for (var i = 0; i < flows[0].flow.steps.length; i++) {
+                    flows[0].drawTree(flows[0].flow.steps[i], target.show.position.x + 900 * i, target.show.position.y - 211, 0);
+                }
+                flows[0].showSteps();
+            }, 1000);
+        }
     }
 
     function setValue(value, j){

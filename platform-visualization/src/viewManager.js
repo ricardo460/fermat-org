@@ -160,9 +160,41 @@ function ViewManager() {
                         window.workFlowEdit.createButtonWorkFlow(); // nuevo
                     };
                     
-                    backButton = reset = function() {
+                    backButton = reset = function() { // nuevo TODO
                         
-                        if(window.workFlowEdit.getFlowsEdit()[0] !== undefined){ // nuevo
+
+                        switch(window.workFlowEdit.getActionType().type){
+
+                            case 'insert':
+                                window.camera.loseFocus();
+
+                                window.buttonsManager.removeAllButtons(); // nuevo
+
+                                window.workFlowEdit.createButtonWorkFlow(); // nuevo
+
+                                window.helper.hideBackButton(); // nuevo
+
+                                window.workFlowEdit.deleteFlow(); // nuevo
+
+                                window.session.displayLoginButton(true); // nuevo
+
+                                window.workFlowEdit.getActionType().type = null; // nuevo
+
+                                break;
+
+                            case 'save':
+                                break;
+                            default:
+                                window.flowManager.showWorkFlow();
+
+                                window.workFlowEdit.createButtonWorkFlow();
+
+                                break;
+
+                        }
+                        /*if(window.workFlowEdit.getFlowsEdit()[0] !== undefined){ // nuevo
+
+                            window.camera.loseFocus();
 
                             window.buttonsManager.removeAllButtons(); // nuevo
 
@@ -171,12 +203,14 @@ function ViewManager() {
                             window.helper.hideBackButton(); // nuevo
 
                             window.workFlowEdit.deleteWorFlowEdit(); // nuevo
+
+                            window.session.displayLoginButton(true); // nuevo
                         }
                         else{
 
                             window.flowManager.showWorkFlow();
                             window.workFlowEdit.createButtonWorkFlow();
-                        }
+                        }*/
                     };
 
                     exit = function() {
