@@ -224,26 +224,26 @@ exports.logout = function (api_key, axs_key, callback) {
  */
 exports.verifyTkn = function (axs_key, digest, callback) {
 	tknMod.getTkn(axs_key, function (err_tkn, res_tkn) {
-			try {
-				if (res_tkn) {
-					// var usr = res_tkn._usr_id;
-					// var app = res_tkn._app_id;
-					// var str = usr.usrnm + app.api_key;
-					// var hash = sha256Lib.calc(str);
-					// console.log('usrnm: ' + usr.usrnm);
-					// console.log('api_key: ' + app.api_key);
-					// console.log('hash: ' + hash);
-					// console.log('digest: ' + digest);
-					//if (digest == hash) {
-					callback(null, true);
-					//} else {
-					//tknMod.delTkn(axs_key, function (err_del, res_del) {
-					//	if (err_del) {
-					//		return callback(err_del, false);
-					//	}
-					//  return callback(new Error('unauthorized user'), false);
-					//});
-				}
+		try {
+			if (res_tkn) {
+				// var usr = res_tkn._usr_id;
+				// var app = res_tkn._app_id;
+				// var str = usr.usrnm + app.api_key;
+				// var hash = sha256Lib.calc(str);
+				// console.log('usrnm: ' + usr.usrnm);
+				// console.log('api_key: ' + app.api_key);
+				// console.log('hash: ' + hash);
+				// console.log('digest: ' + digest);
+				//if (digest == hash) {
+				callback(null, true);
+				//} else {
+				//tknMod.delTkn(axs_key, function (err_del, res_del) {
+				//	if (err_del) {
+				//		return callback(err_del, false);
+				//	}
+				//  return callback(new Error('unauthorized user'), false);
+				//});
+				//}
 			} else if (err_tkn) {
 				return callback(err_tkn, false);
 			} else {
