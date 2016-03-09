@@ -287,7 +287,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/v1/repo/comps",
+    "url": "/v1/repo/usrs/:usr_id/comps",
     "title": "add components",
     "version": "0.0.1",
     "name": "AddComp",
@@ -367,7 +367,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/v1/repo/comps/:comp_id/comp-devs",
+    "url": "/v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs",
     "title": "add component developer",
     "version": "0.0.1",
     "name": "AddCompDev",
@@ -419,7 +419,7 @@ define({ "api": [
   },
   {
     "type": "delete",
-    "url": "/v1/repo/comps/:comp_id",
+    "url": "/v1/repo/usrs/:usr_id/comps/:comp_id",
     "title": "delete component",
     "version": "0.0.1",
     "name": "DelComp",
@@ -442,7 +442,7 @@ define({ "api": [
   },
   {
     "type": "delete",
-    "url": "/v1/repo/comps/:comp_id/comp-devs/:comp_dev_id",
+    "url": "/v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs/:comp_dev_id",
     "title": "delete component developer",
     "version": "0.0.1",
     "name": "DelCompDev",
@@ -473,7 +473,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v1/repo/comps/:comp_id",
+    "url": "/v1/repo/usrs/:usr_id/comps/:comp_id",
     "title": "get component",
     "version": "0.0.1",
     "name": "GetComp",
@@ -496,7 +496,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v1/repo/comps",
+    "url": "/v1/repo/usrs/:usr_id/comps",
     "title": "list comps",
     "version": "0.0.1",
     "name": "ListComps",
@@ -507,7 +507,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/v1/repo/comps/:comp_id",
+    "url": "/v1/repo/usrs/:usr_id/comps/:comp_id",
     "title": "update component",
     "version": "0.0.1",
     "name": "UptComp",
@@ -579,7 +579,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/v1/repo/comps/:comp_id/comp-devs/:comp_dev_id",
+    "url": "/v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs/:comp_dev_id",
     "title": "update component developer",
     "version": "0.0.1",
     "name": "UptCompDev",
@@ -631,7 +631,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/v1/repo/comps/:comp_id/life-cicles/:life_cicle_id",
+    "url": "/v1/repo/usrs/:usr_id/comps/:comp_id/life-cicles/:life_cicle_id",
     "title": "update lifecicles to component",
     "version": "0.0.1",
     "name": "UptLifeCiclesToComp",
@@ -676,7 +676,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/v1/repo/layers",
+    "url": "/v1/repo/usrs/:usr_id/layers",
     "title": "add layer",
     "version": "0.0.1",
     "name": "AddLayer",
@@ -721,7 +721,7 @@ define({ "api": [
   },
   {
     "type": "delete",
-    "url": "/v1/repo/layers/:layer_id",
+    "url": "/v1/repo/usrs/:usr_id/layers/:layer_id",
     "title": "delete layer",
     "version": "0.0.1",
     "name": "DelLay",
@@ -745,7 +745,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v1/repo/layers/:layer_id",
+    "url": "/v1/repo/usrs/:usr_id/layers/:layer_id",
     "title": "get layer",
     "version": "0.0.1",
     "name": "GetLay",
@@ -769,7 +769,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v1/repo/layers",
+    "url": "/v1/repo/usrs/:usr_id/layers",
     "title": "get list layers",
     "version": "0.0.1",
     "name": "ListLayers",
@@ -780,7 +780,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/v1/repo/layers/:layer_id",
+    "url": "/v1/repo/usrs/:usr_id/layers/:layer_id",
     "title": "update layer",
     "version": "0.0.1",
     "name": "UptLay",
@@ -832,7 +832,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/v1/repo/platfrms",
+    "url": "/v1/repo/usrs/:usr_id/platfrms",
     "title": "add platform",
     "version": "0.0.1",
     "name": "AddPlatform",
@@ -877,7 +877,7 @@ define({ "api": [
   },
   {
     "type": "delete",
-    "url": "/v1/repo/platfrms/:platfrm_id",
+    "url": "/v1/repo/usrs/:usr_id/platfrms/:platfrm_id",
     "title": "delete platform",
     "version": "0.0.1",
     "name": "DelPltf",
@@ -901,7 +901,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v1/repo/platfrms/:platfrm_id",
+    "url": "/v1/repo/usrs/:usr_id/platfrms/:platfrm_id",
     "title": "get platform",
     "version": "0.0.1",
     "name": "GetPlatform",
@@ -925,7 +925,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v1/repo/platfrms",
+    "url": "/v1/repo/usrs/:usr_id/platfrms",
     "title": "list platforms",
     "version": "0.0.1",
     "name": "ListPlatforms",
@@ -936,7 +936,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/v1/repo/platfrms/:platfrm_id",
+    "url": "/v1/repo/usrs/:usr_id/platfrms/:platfrm_id",
     "title": "update platform",
     "version": "0.0.1",
     "name": "UptPltf",
@@ -960,7 +960,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/v1/repo/procs",
+    "url": "/v1/repo/usrs/:usr_id/procs",
     "title": "add process",
     "version": "0.0.1",
     "name": "AddProc",
@@ -1012,7 +1012,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/v1/repo/procs/:proc_id/steps",
+    "url": "/v1/repo/usrs/:usr_id/procs/:proc_id/steps",
     "title": "add step",
     "version": "0.0.1",
     "name": "AddStep",
@@ -1071,7 +1071,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/v1/repo/procs/:proc_id",
+    "url": "/v1/repo/usrs/:usr_id/procs/:proc_id",
     "title": "delete process",
     "version": "0.0.1",
     "name": "DelProc",
@@ -1095,7 +1095,7 @@ define({ "api": [
   },
   {
     "type": "delete",
-    "url": "/v1/repo/procs/:proc_id/steps/:step_id",
+    "url": "/v1/repo/usrs/:usr_id/procs/:proc_id/steps/:step_id",
     "title": "delete step",
     "version": "0.0.1",
     "name": "DelStep",
@@ -1126,7 +1126,7 @@ define({ "api": [
   },
   {
     "type": "delete",
-    "url": "/v1/repo/procs/:proc_id",
+    "url": "/v1/repo/usrs/:usr_id/procs/:proc_id",
     "title": "get process",
     "version": "0.0.1",
     "name": "GetProc",
@@ -1150,7 +1150,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v1/repo/procs",
+    "url": "/v1/repo/usrs/:usr_id/procs",
     "title": "lists process",
     "version": "0.0.1",
     "name": "ListProcs",
@@ -1161,7 +1161,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/v1/repo/procs/:proc_id",
+    "url": "/v1/repo/usrs/:usr_id/procs/:proc_id",
     "title": "update process",
     "version": "0.0.1",
     "name": "UptProc",
@@ -1220,7 +1220,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/v1/repo/procs/:proc_id/steps/:step_id",
+    "url": "/v1/repo/usrs/:usr_id/procs/:proc_id/steps/:step_id",
     "title": "update step",
     "version": "0.0.1",
     "name": "UptStep",
@@ -1286,7 +1286,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/v1/repo/suprlays",
+    "url": "/v1/repo/usrs/:usr_id/suprlays",
     "title": "add super layer",
     "version": "0.0.1",
     "name": "AddSuprLay",
@@ -1331,7 +1331,7 @@ define({ "api": [
   },
   {
     "type": "delete",
-    "url": "/v1/repo/suprlays/:suprlay_id",
+    "url": "/v1/repo/usrs/:usr_id/suprlays/:suprlay_id",
     "title": "delete super layer",
     "version": "0.0.1",
     "name": "DelSprlay",
@@ -1355,7 +1355,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v1/repo/suprlays/:suprlay_id",
+    "url": "/v1/repo/usrs/:usr_id/suprlays/:suprlay_id",
     "title": "get super layer",
     "version": "0.0.1",
     "name": "GetSprlay",
@@ -1379,7 +1379,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v1/repo/suprlays",
+    "url": "/v1/repo/usrs/:usr_id/suprlays",
     "title": "list super layers",
     "version": "0.0.1",
     "name": "ListSuprLays",
@@ -1390,7 +1390,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/v1/repo/suprlays/:suprlay_id",
+    "url": "/v1/repo/usrs/:usr_id/suprlays/:suprlay_id",
     "title": "update super layer",
     "version": "0.0.1",
     "name": "UptSprlay",
