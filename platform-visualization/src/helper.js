@@ -453,20 +453,31 @@ function Helper() {
 
             url = SERVER + "/v1/repo/usrs/"+USERDATA._id+"/";
 
-            callAjax('comps', function(){
+            callAjax('comps', function(route, res){
 
-                callAjax('layers', function(){
+               list[route] = res; 
 
-                    callAjax('platfrms', function(){
+                callAjax('layers', function(route, res){
+
+                    list[route] = res;
+
+                    callAjax('platfrms', function(route, res){
+
+                        list[route] = res;
                     
-                        callAjax('suprlays', function(){
+                        callAjax('suprlays', function(route, res){
 
-                            callAjaxDevs(function(){ 
+                            list[route] = res;
+
+                            url = self.getAPIUrl("user");
+
+                            callAjax('', function(route, res){ 
+
+                                self.listDevs = res;
 
                                 callback(list);
 
                             });
-                
                         });
                     });
                 });
@@ -476,16 +487,19 @@ function Helper() {
 
             url = self.getAPIUrl("comps");
 
-            PORT = '';
+            callAjax('', function(route, res){
 
-            callAjax('', function(){
+                list = res;
 
-                callAjaxDevs(function(){ 
+                url = self.getAPIUrl("user");
+
+                callAjax('', function(route, res){ 
+
+                    self.listDevs = res;
 
                     callback(list);
 
-                }); 
-                
+                });         
             });
         }
 
@@ -497,31 +511,8 @@ function Helper() {
             }).success (
                 function (res) {
 
-                    if(route === '')
-                        list = res;
-                    else
-                       list[route] = res; 
-
                     if(typeof(callback) === 'function')
-                        callback();
-
-                });
-        }
-
-        function callAjaxDevs(callback){
-
-            url = self.getAPIUrl("user");
-
-            $.ajax({
-                url: url + PORT,
-                method: "GET"
-            }).success (
-                function (res) {
-
-                    self.listDevs = res;
-
-                    if(typeof(callback) === 'function')
-                        callback();
+                        callback(route, res);
 
                 });
         }
