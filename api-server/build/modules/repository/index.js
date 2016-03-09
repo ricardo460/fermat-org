@@ -748,7 +748,7 @@ exports.listProcs = function (req, next) {
 exports.addComp = function (req, next) {
 	'use strict';
 	try {
-		compMod.insOrUpdComp(req.body.platfrm_id, req.body.suprlay_id, req.body.layer_id, req.body.name, req.body.type, req.body.description, req.body.difficulty, req.body.code_level, req.body.repo_dir, req.body.scrnshts, req.body.found, function (err, res) {
+		compMod.insertComp(req.body.platfrm_id, req.body.suprlay_id, req.body.layer_id, req.body.name, req.body.type, req.body.description, req.body.difficulty, req.body.code_level, req.body.repo_dir, req.body.scrnshts, req.body.found, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -961,7 +961,7 @@ exports.uptLifeCiclesToComp = function (req, next) {
 exports.addCompDev = function (req, next) {
 	'use strict';
 	try {
-		compMod.insOrUpdCompDev(req.params.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function (err, res) {
+		compMod.insertCompDev(req.params.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
