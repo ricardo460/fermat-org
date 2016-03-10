@@ -331,7 +331,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             node = getObjectNode(objects[i].name);
 
             var levelDifference = nodesInLevel[0] - nodesInLevel[node.level];
-            console.log(width + ' - ' + separationX);
             var margin = (levelDifference / 2.0) * (separationX);
 
             positions.stack[i].position.x = initialX + (separationX * nodesAlreadyProcessedInLevel[node.level]) + margin;
