@@ -26,6 +26,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         graph = {},
         arrows = [];
 
+    var width = columnWidth * window.TILE_DIMENSION.width;
+    var height = width * 443 / 1379;
+
     this.dep = dependencies;
     this.arrows = arrows;
     this.arrowPositions = arrowsPositions;
@@ -269,123 +272,73 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     };
 
     /**
+     * @author Simón Oroño
+     * Retrieves the node associated with an object
+     */
+    function getObjectNode(id) {
+        for (var i = 0; i < graph.nodes.length; i++) {
+            if (graph.nodes[i].id === id) {
+                return graph.nodes[i];
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @author Emmanuel Colina
      * @lastmodifiedBy Isaias Taborda
+     * @lastmodifiedBy Simón Oroño
      * Calculates the stack target position
      */
     var calculateStackPositions = function() {
+        var i, obj, node;
+        var nodesInLevel = {};
+        var nodesAlreadyProcessedInLevel = {};
 
-        var i, j, k, p, q, m, l, n, obj, actualpositionY, rootpositionY, rootlengthX, midpositionX, actuallengthX, positionstart;
-        var POSITION_Z = 45000;
-        var rootSeparation = -5000;
+        objects.sort(function(a, b) {
+            return (a === b) ? 0 : ((a > b) ? 1 : -1);
+        });
 
-        // Dummy, send all to center
+        var initial = -15000.0;
+        var initialX = initial;
+        var initialY = initial;
+        var separationX = width + 3000;
+        var separationY = 6000.0;
+        var separationXForLevelNot0 = separationX + 1000;
+        var positionZ = 45000;
+
+        for (i = 0; i < graph.nodes.length; i++) {
+            node = graph.nodes[i];
+
+            // We calculate how much nodes there are for each level
+            if (!(node.level in nodesInLevel)) {
+                nodesInLevel[node.level] = 0;
+                nodesAlreadyProcessedInLevel[node.level] = 0;
+            } else {
+                nodesInLevel[node.level] += 1;
+            }
+        }
+
+        // Send all objects to the center
         for(i = 0; i < objects.length; i++) {
             obj = new THREE.Object3D();
             obj.name = positions.table[i].name;
             positions.stack.push(obj);
         }
 
-        for(j = 0; j< objects.length; j++) {
+        for (i = 0; i < objects.length; i++) {
+            node = getObjectNode(objects[i].name);
 
-            //calculando Y
-            if(graph.nodes[j].level === 0){
+            var levelDifference = nodesInLevel[0] - nodesInLevel[node.level];
+            console.log(width + ' - ' + separationX);
+            var margin = (levelDifference / 2.0) * (separationX);
 
-               for(i = 0; i < objects.length; i++){
+            positions.stack[i].position.x = initialX + (separationX * nodesAlreadyProcessedInLevel[node.level]) + margin;
+            positions.stack[i].position.y = initialY + (separationY * node.level);
+            positions.stack[i].position.z = positionZ;
 
-                    if(graph.nodes[j].id == objects[i].name){ //Coordenadas de inicio level = 0
-                        positions.stack[i].position.x = rootSeparation;
-                        positions.stack[i].position.y = -15000;
-                        positions.stack[i].position.z = POSITION_Z;
-                        rootSeparation += 5000;
-                        break;
-                    }
-               }
-               rootpositionY = positions.stack[i].position.y;
-               rootlengthX = dependencies[graph.nodes[j].id].length;
-                //obj.position.set(0, -14000, 45000); //coordenadas de entradas del root(OSA)
-            }
-            else if(graph.nodes[j].level !== 0){ //coordenadas level distinto de 0
-
-                for(i = 0; i < objects.length; i++){
-                    if(graph.nodes[j].id == objects[i].name){
-                        positions.stack[i].position.z = POSITION_Z;
-
-                        //calculando Y
-                        actualpositionY = rootpositionY;
-                        for(k = 0; k < graph.nodes[j].level; k++){
-
-                            positions.stack[i].position.y = actualpositionY + 5000;
-                            actualpositionY = positions.stack[i].position.y;
-                        }
-
-                        //Calculando X
-                        if(positions.stack[i].position.x === 0){// Verifica si hay alguna X con valores     if1
-                            actuallengthX = rootlengthX;
-                            positionstart = 0;
-                            if(actuallengthX % 2 !== 0){ //Cantidad de Hijos impar
-                                midpositionX = (rootlengthX / 2)+0.5;
-                                if(graph.nodes[j].level == 6){
-                                    for(p = 0; p < objects.length; p++){
-                                        if(graph.nodes[j].id == objects[p].name){
-                                            for(q = 0; q < objects.length; q++){
-                                               if(graph.nodes[j-1].id == objects[q].name){
-                                                    positions.stack[p].position.x = positions.stack[q].position.x;//Heredamos la X del padre para construir de ahi una nueva rama y evitar el cruces de ramas
-                                               }
-                                            }
-                                        }
-                                    }
-                                }
-                                if(actuallengthX == 1 && graph.nodes[j].level != 6){// un hijo
-                                    for(m = 0; m < objects.length; m++){
-                                        if(graph.nodes[j].id == objects[m].name){
-                                            positions.stack[m].position.x = 0;
-                                            rootlengthX = dependencies[graph.nodes[j].id].length;
-                                        }
-                                    }
-                                }
-                                else{// Varios hijos
-                                    for(p = midpositionX; p > 1; p--){
-                                        positionstart = positionstart - 5000;
-                                    }
-                                    for(l = 0; l < dependencies[graph.nodes[j-1].id].length; l++){//l es el indice de arreglos de hijos
-                                        for(n = 0; n < objects.length; n++){
-                                            if(dependencies[graph.nodes[j-1].id][l] == objects[n].name){
-                                                positions.stack[n].position.x = positions.stack[n].position.x + positionstart;
-                                                positionstart = positionstart + 5000;
-                                                rootlengthX = dependencies[graph.nodes[j].id].length;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            else if(actuallengthX % 2 === 0){ //Cantidad de hijos par
-                                midpositionX = actuallengthX/2;
-                                for(p = midpositionX; p >= 1; p--){
-                                    positionstart = positionstart - 5000;
-                                }
-                                for(l = 0; l < dependencies[graph.nodes[j-1].id].length; l++){
-                                    for(n = 0; n < objects.length; n++){
-                                        if(dependencies[graph.nodes[j-1].id][l] == objects[n].name){
-                                            if(positionstart === 0)
-                                                positionstart = positionstart + 5000;
-                                            if(positionstart !== 0){
-                                                positions.stack[n].position.x = positions.stack[n].position.x + positionstart;
-                                                for(q = 0; q < objects.length; q++){
-                                                   if(graph.nodes[j-1].id == objects[q].name)
-                                                        positions.stack[n].position.x = positions.stack[n].position.x + positions.stack[q].position.x;//Heredamos la X del padre para construir de ahi una nueva rama y evitar el cruces de ramas
-                                                }
-                                                positionstart = positionstart + 5000;
-                                                rootlengthX = dependencies[graph.nodes[j].id].length;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }//if 1
-                    }
-                }
-            }
+            nodesAlreadyProcessedInLevel[node.level] += 1;
         }
 
         //Transport all headers to the stack section
@@ -400,27 +353,22 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      * Paint the dependences
      */
     var createEdges = function() {
-
         var startX, startY, endX, endY;
-
         var i, j;
 
-
-        for(i = 0; i < graph.edges.length; i++)
-        {
+        for (i = 0; i < graph.edges.length; i++) {
             startX = 0;
             startY = 0;
             endX = 0;
             endY = 0;
 
-            for(j = 0; j < objects.length; j++){
-
-                if(graph.edges[i].from === objects[j].name){
+            for (j = 0; j < objects.length; j++) {
+                if (graph.edges[i].from === objects[j].name) {
                     startX = positions.stack[j].position.x;
                     startY = positions.stack[j].position.y;
                 }
 
-                if(graph.edges[i].to === objects[j].name){
+                if (graph.edges[i].to === objects[j].name) {
                     endX = positions.stack[j].position.x;
                     endY = positions.stack[j].position.y;
                 }
@@ -438,8 +386,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      */
     this.flyOut = function(duration){
 
-        var _duration = duration || 2000,
-            i, l;
+        var _duration = duration || 2000, i, l;
 
         for(i = 0, l = arrows.length; i < l; i++) {
 
@@ -651,19 +598,17 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
     var headersPositionsViewWorkFlow = function() {
 
-        var width, height, group, headerData, objectHeaderInWFlowGroup, slayer, column;
+        var group, headerData, objectHeaderInWFlowGroup, slayer, column;
 
         for(group in window.platforms){
             if(window.platforms.hasOwnProperty(group) && group !== 'size'){
                 headerData = window.platforms[group];
                 column = headerData.index;
 
-                width = columnWidth * window.TILE_DIMENSION.width;
-                height = width * 443 / 1379;
 
                 objectHeaderInWFlowGroup = new THREE.Object3D();
 
-                objectHeaderInWFlowGroup.position.x = ((columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) + 10000;
+                objectHeaderInWFlowGroup.position.x = (width * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) + 10000;
                 objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
                 objectHeaderInWFlowGroup.name = group;
 
@@ -677,12 +622,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 column = headerData.index + 1;
 
-                width = columnWidth * window.TILE_DIMENSION.width;
-                height = width * 443 / 1379;
-
                 objectHeaderInWFlowGroup = new THREE.Object3D();
 
-                objectHeaderInWFlowGroup.position.x = ((columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 15000;
+                objectHeaderInWFlowGroup.position.x = (width * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 15000;
                 objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
                 objectHeaderInWFlowGroup.name = slayer;
 
@@ -756,16 +698,13 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             return header;
         }
 
-        var src, width, height;
+        var src;
 
         for(group in window.platforms) {
             if(window.platforms.hasOwnProperty(group) && group !== 'size') {
 
                 headerData = window.platforms[group];
                 column = headerData.index;
-
-                width = columnWidth * window.TILE_DIMENSION.width;
-                height = width * 443 / 1379;
 
                 object = createHeader(group, width, height, column);
 
@@ -777,7 +716,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = new THREE.Object3D();
 
-                object.position.x = (columnWidth * window.TILE_DIMENSION.width) * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width);
+                object.position.x = width * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width);
                 object.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
                 object.name = group;
 
@@ -796,9 +735,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 row = superLayerPosition[headerData.index];
 
-                width = columnWidth * window.TILE_DIMENSION.width;
-                height = width * 443 / 1379;
-
                 object = createHeader(slayer, width, height, row);
 
                 object.position.copy(window.viewManager.translateToSection('table', window.helper.getOutOfScreenPoint(0)));
@@ -810,7 +746,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 object = new THREE.Object3D();
 
-                object.position.x = -(((groupsQtty + 1) * columnWidth * window.TILE_DIMENSION.width / 2) + window.TILE_DIMENSION.width);
+                object.position.x = -(((groupsQtty + 1) * width / 2) + window.TILE_DIMENSION.width);
                 object.position.y = -(row * window.TILE_DIMENSION.height) - (superLayerMaxHeight * window.TILE_DIMENSION.height / 2) + (layersQtty * window.TILE_DIMENSION.height / 2);
                 object.name = slayer;
 
