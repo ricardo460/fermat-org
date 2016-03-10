@@ -7,7 +7,7 @@ var tilesQtty = [],
     actualView,
     stats = null,
     headersUp = false,
-    currentRender = "start";
+    currentRender = "start",
 //Class
     tileManager = new TileManager(),
     helper = new Helper(),
@@ -51,7 +51,7 @@ $('#logout').click(function() {
  */
 function createScene(current, option){
     
-    change = false; 
+    var change = false; 
     if(option !== "canvas" && webglAvailable() && window.currentRender !== "webgl") {
         renderer = new THREE.WebGLRenderer({antialias : true, alpha : true}); //Logarithmic depth buffer disabled due to sprite - zbuffer issue
         current = "webgl";
@@ -228,7 +228,6 @@ function initPage() {
                 }
                 else if(path === 'canvas' || path === 'webgl'){
                     currentRender = createScene(currentRender,path);
-                    change = false;
                 }
             }
             else
@@ -246,28 +245,6 @@ function initMenu() {
         changeView();
 
     }, false);
-
-    
-    /*button = document.getElementById('sphere');
-    button.addEventListener('click', function(event) {
-
-        changeView(tileManager.targets.sphere);
-
-    }, false);
-
-    button = document.getElementById('helix');
-    button.addEventListener('click', function(event) {
-
-        changeView(tileManager.targets.helix);
-
-    }, false);
-
-    button = document.getElementById('grid');
-    button.addEventListener('click', function(event) {
-
-        changeView(tileManager.targets.grid);
-
-    }, false);*/
 }
 
 

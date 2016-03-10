@@ -756,19 +756,24 @@ function Helper() {
         var result = base;
         var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
         
+        var param = null;
+        
         //Search for wildcards parameters
-        while(result.indexOf(':') !== -1) {
+        do {
             
-            var param = result.match(':[a-z0-9]+');
-            var paramName = param[0].replace(':', '');
+            param = result.match(':[a-z0-9]+');
             
-            if(params.hasOwnProperty(paramName) && params[paramName] !== undefined) {
-                
-                result = result.replace(param, params[paramName]);
-                delete(params[paramName]);
-                
+            if(param !== null) {
+                var paramName = param[0].replace(':', '');
+
+                if(params.hasOwnProperty(paramName) && params[paramName] !== undefined) {
+
+                    result = result.replace(param, params[paramName]);
+                    delete(params[paramName]);
+
+                }
             }
-        }
+        } while(param !== null);
         
         //Process the GET parameters
         for(var key in params) {
