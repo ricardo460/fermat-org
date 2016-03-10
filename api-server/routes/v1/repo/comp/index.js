@@ -302,7 +302,7 @@ router.get('/:comp_id', function (req, res, next) {
 	try {
 		lock(req, function (err_lck, res_lck) {
 			if (err_lck) {
-				res.status(200).send(err_lck);
+				res.status(423).send(err_lck);
 			} else {
 				repMod.getComp(req, function (error, result) {
 					if (error) {
