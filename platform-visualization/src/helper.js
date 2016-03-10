@@ -7,7 +7,7 @@ function Helper() {
 
     //var PORT = '';
 
-    var PORT = '?env=testing';
+    var PORT = '?env=production';
 
     var USERDATA = '';
 

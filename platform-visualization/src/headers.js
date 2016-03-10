@@ -296,9 +296,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         var nodesInLevel = {};
         var nodesAlreadyProcessedInLevel = {};
 
-        objects.sort(function(a, b) {
+        /*objects.sort(function(a, b) {
             return (a === b) ? 0 : ((a > b) ? 1 : -1);
-        });
+        });*/
 
         var initial = -15000.0;
         var initialX = initial;
