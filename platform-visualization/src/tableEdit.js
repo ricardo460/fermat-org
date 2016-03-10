@@ -32,8 +32,6 @@ function TableEdit() {
 
                 callback = function(){ 
 
-                    window.alert('This is an incubating feature, your changes will not be saved!');
-
                     window.fieldsEdit.actions.type = "insert";
 
                     window.buttonsManager.removeAllButtons();
@@ -68,7 +66,6 @@ function TableEdit() {
 
                     validateLock(id, function(){ 
 
-                        window.alert('This is an incubating feature, your changes will not be saved!');
                         window.fieldsEdit.actions.type = "update";
                         window.buttonsManager.removeAllButtons(); 
                         addAllFilds();
@@ -93,8 +90,6 @@ function TableEdit() {
                 callback = function(){
 
                     validateLock(id, function(){ 
-
-                        window.alert('This is an incubating feature, your changes will not be saved!');
                         
                         if(window.confirm("Are you sure you want to remove this component?"))           
                             deleteTile(id);
@@ -930,7 +925,7 @@ function TableEdit() {
             },
             function(res){
 
-                window.alert("component blocked");
+                window.alert("This component is currently being modified by someone else, please try again in about 3 minutes");
             }
         );
     }

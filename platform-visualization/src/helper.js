@@ -320,13 +320,33 @@ function Helper() {
 
         makeCorsRequest(setup.url, setup.method, setup.data, 
             function(res){
-        
-                if(typeof(doneCallback) === 'function')
-                    doneCallback(res);
+
+                if(route === 'insert' || route === 'update'){
+
+                    if(res._id){
+
+                        if(typeof(doneCallback) === 'function')
+                            doneCallback(res);
+                    }
+                    else{
+
+                        window.alert('There is already a component with that name in this group and layer, please use another one');
+
+                        if(typeof(failCallback) === 'function')
+                            failCallback(res);
+                    }
+
+                }
+                else{
+                    
+                    if(typeof(doneCallback) === 'function')
+                            doneCallback(res);
+                }
+                    
             }, 
             function(res){
 
-                window.alert('Action Not Executed');
+                window.alert('There is already a component with that name in this group and layer, please use another one');
 
                 if(typeof(failCallback) === 'function')
                     failCallback(res);
@@ -374,7 +394,7 @@ function Helper() {
             error: function(res){
 
                 if(res.status === 423){
-                    window.alert("component blocked");
+                    window.alert("This component is currently being modified by someone else, please try again in about 3 minutes");
                 }
                 else if(res.status === 404){
                     window.alert("Component not found");
