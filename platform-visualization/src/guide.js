@@ -26,7 +26,7 @@ function Guide() {
      * @param {Number}        posX    Objetive x position.
      * @param {Number}        posY    Objetive y position.
      */
-   this.createHelp = function (text, width, height, posX, posY) {
+    function createHelp(text, width, height, posX, posY) {
 
         var material = new THREE.MeshBasicMaterial( {map: null, side:THREE.FrontSide, transparent: true } ); 
 
@@ -49,18 +49,18 @@ function Guide() {
         context.globalAlpha = 0.90;
         context.fillStyle = "#10C6A9";
         roundRectangle(context, 0, 0, canvas.width, canvas.height);
-        context.font = "40px Arial";
+        context.font = "Bold 40px Arial";
         context.fillStyle = "white";
 
-        size = text.length+1;
-        spacing = 0;
+        var size = text.length+1;
+        var spacing = 0;
         for(var i=1; i < size; i++){
-           line = text.shift();
+           var line = text.shift();
            context.fillText(line, 7, (35 * i) + spacing);
            spacing += 7;
         }
 
-        var texture = new THREE.Texture(canvas) 
+        var texture = new THREE.Texture(canvas);
         texture.needsUpdate = true;
         texture.minFilter = THREE.NearestFilter;
 
@@ -69,7 +69,7 @@ function Guide() {
 
         popUp(mesh, posX, posY,3500);
 
-    }
+    };
 
     /**
      * @author Isaías Taborda
@@ -82,7 +82,7 @@ function Guide() {
      */
     function roundRectangle(ctx, x, y, width, height) {
       
-      radius = 10;
+      var radius = 10;
       ctx.beginPath();
       ctx.moveTo(x + radius, y);
       ctx.lineTo(x + width - radius, y);
@@ -124,16 +124,22 @@ function Guide() {
 
     }
 
+    this.showHelp = function(){
+        createHelp(["Use the blue arrows to", "navigate through the site."], 500, 95, -13000, 12000);
+        createHelp(["You can zoom in, or zoom out, using the scroll", "wheel or by dragging your Mouse while holding", "down the S key and left click."], 910, 135, 7500, 12000);
+        createHelp(["After you zoom in, hold down left", "click and drag your Mouse to pan", "across the page view."], 650, 135, -15000, 5000);
+        createHelp(["Press the Esc key in any view to", "return to its starting position."], 625, 95, 15000, 5000);
+    };
+
     /**
      * @author Isaías Taborda.
      * Eliminates the help text.
      */
     this.removeHelp = function(){
       var duration = 1000;
-      var i;
       var l = self.objects.mesh.length; 
 
-        for(var i = 0; i < l; i++) {
+        for(i = 0; i < l; i++) {
           new TWEEN.Tween(self.objects.mesh[i].position)
             .to({
                 x : 0,

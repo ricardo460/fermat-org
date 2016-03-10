@@ -1,17 +1,17 @@
 function Session(){
 
-    var isLogin;
-    var api_key = "56a10473b27e63185c6970d6";
-    var axs_key;
-    var usr;
+	var isLogin;
+	var api_key = "56a10473b27e63185c6970d6";
+	var axs_key;
+	var usr;
 
-    this.getIsLogin = function(){
-        return isLogin;
-    };
+	this.getIsLogin = function(){
+		return isLogin;
+	};
 
-    this.getUserLogin = function(){
-        return usr;
-    };
+	this.getUserLogin = function(){
+		return usr;
+	};
 
     /**
      * @author Ricardo Delgado
@@ -49,94 +49,94 @@ function Session(){
         
     };
 
-    /**
-     * Login with github and gets the authorization code
-     */
-    this.getAuthCode = function(){                                                                        //CLientID: c25e3b3b1eb9aa35c773 - Web
-        window.location.href = 'https://github.com/login/oauth/authorize?client_id=d00a7c7d4489139327e4'; //ClientID: f079f2a8fa65313179d5 - localhost
-    };
+	/**
+	 * Login with github and gets the authorization code
+	 */
+	this.getAuthCode = function(){                                                                        //CLientID: c25e3b3b1eb9aa35c773 - Web
+		window.location.href = 'https://github.com/login/oauth/authorize?client_id=d00a7c7d4489139327e4'; //ClientID: f079f2a8fa65313179d5 - localhost
+	};
 
-    /**
-     * Ago logout and delete the token
-     */
-    this.logout = function() {
+	/**
+	 * Ago logout and delete the token
+	 */
+	this.logout = function() {
 
-        var url_logout = window.helper.getAPIUrl("logout") + "?axs_key=" + axs_key + "&api_key=" + api_key;
-        console.log("url: " + url_logout);
-        $.ajax({
-            url : url_logout,
-            type : "GET",
-            headers : {
-                'Accept' : 'application/json'
+		var url_logout = window.helper.getAPIUrl("logout") + "&axs_key=" + axs_key + "&api_key=" + api_key;
+		console.log("url: " + url_logout);
+		$.ajax({
+			url : url_logout,
+			type : "GET",
+			headers : {
+				'Accept' : 'application/json'
+			}
+		}).success(function(data) {
+			console.log("Logout", data);
+			if(data !== undefined) {
+				if(data === true) {
+					isLogin = false;
+					$("#login").fadeIn(2000);
+					$("#logout").fadeOut(2000);
+					usr = undefined;
+				}
             }
-        }).success(function(data) {
-            console.log("Logout", data);
-            if(data !== undefined){
-                if(data === true) {
-                    isLogin = false;
-                    $("#login").fadeIn(2000);
-                    $("#logout").fadeOut(2000);
-                    usr = undefined;
-                }
-            }
-        });
-    };
+		});
+	};
 
-    /**
-     * Logged to the user and returns the token
-     */
-    this.login = function() {
-        var url = window.helper.getAPIUrl("login") + "?code=" + code + "&api_key=" + api_key;
-        console.log("url: " + url);
-        
-        $.ajax({
-            url : url,
-            type : "GET",
-            headers : {
-                'Accept' : 'application/json'
-            }
-        }).success(function(tkn) {
-            usr = tkn._usr_id;
-            axs_key = tkn.axs_key;
-            if(usr !== undefined) {
-                
-                isLogin = true;
+	/**
+	 * Logged to the user and returns the token
+	 */
+	this.login = function() {
+		var url = window.helper.getAPIUrl("login") + "&code=" + code + "&api_key=" + api_key;
+		console.log("url: " + url);
+		
+		$.ajax({
+			url : url,
+			type : "GET",
+			headers : {
+				'Accept' : 'application/json'
+			}
+		}).success(function(tkn) {
+			usr = tkn._usr_id;
+			axs_key = tkn.axs_key;
+			if(usr !== undefined) {
+				
+				isLogin = true;
 
                 usr.axs_key = axs_key;
 
-                console.log("Logueado Completamente: " + usr.name);
+				console.log("Logueado Completamente: " + usr.name);
 
-                $("#login").fadeOut(2000);
-                $("#logout").fadeIn(2000);
+     			$("#login").fadeOut(2000);
+     			$("#logout").fadeIn(2000);
 
-                drawUser(usr);
-            } 
+     			drawUser(usr);
+			} 
             else {
-                console.log("Error:", tkn);
+				console.log("Error:", tkn);
                 window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
             }
-        });
-    };
+		});
+	};
 
-    function drawUser(user){
-        var texture;
+	function drawUser(user){
+		var texture;
 
-        texture = createTextureUser(user);
-        var meshUserLogin = new THREE.Mesh(
+		texture = createTextureUser(user);
+		var meshUserLogin = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(230, 120),
             new THREE.MeshBasicMaterial({ transparent : true, color : 0xFFFFFF}));
 
-        meshUserLogin.material.map = texture;
-        meshUserLogin.material.needsUpdate = true;
-        meshUserLogin.scale.set(75, 75, 75);
-        meshUserLogin.position.y = 28500;
-        meshUserLogin.position.x = 50000;
-        //scene.add(meshUserLogin);
-    }
+		meshUserLogin.material.map = texture;
+		meshUserLogin.material.needsUpdate = true;
+		meshUserLogin.scale.set(75, 75, 75);
+		meshUserLogin.position.y = 28500;
+		meshUserLogin.position.x = 50000;
+		//scene.add(meshUserLogin);
+	}
 
-    function createTextureUser(user){
+	function createTextureUser(user){
 
-        var canvas = document.createElement('canvas');
+		var canvas = document.createElement('canvas');
         canvas.width = 183 * 5 ;
         canvas.height = 92 * 5;
         canvas.style.height = '100px';
@@ -174,11 +174,11 @@ function Session(){
         drawPictureUser(data, ctx, texture);
 
         return texture;
-    }
+	}
 
-    function drawPictureUser(data, ctx, texture){
+	function drawPictureUser(data, ctx, texture){
 
-        var image = new Image();
+		var image = new Image();
         var actual = data.shift();
 
         if(actual.src && actual.src != 'undefined') {
@@ -224,11 +224,11 @@ function Session(){
                     drawPictureUser(data, ctx, texture);
             }
         }
-    } 
+	} 
 
-    function drawTextUser(data, ctx, texture){
+	function drawTextUser(data, ctx, texture){
 
-        var actual = data.shift();
+		var actual = data.shift();
 
         if(actual.color)
             ctx.fillStyle = actual.color;
@@ -255,9 +255,9 @@ function Session(){
           else 
             drawPictureUser(data, ctx, texture);
         }
-    }
+	}
 
-    var code = window.location.toString().replace(/.+code=/, '');
-    if((code.indexOf("/") < 0))
-        this.login();
+	var code = window.location.toString().replace(/.+code=/, '');
+	if((code.indexOf("/") < 0))
+		this.login();
 }

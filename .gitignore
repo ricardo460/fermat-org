@@ -1,6 +1,11 @@
 .idea/
 **/.idea/
+secret.json
 api-server/node_modules/
+api-server/deploy.json
+api-server/build/secret.json
+api-server/secret.json
+api-server/FermatBitcoin.pem
 api-server/**/node_modules/
 api-server/cache/production/fermat/
 api-server/cache/production/files/

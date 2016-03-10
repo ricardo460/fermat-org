@@ -7,7 +7,7 @@ function Helper() {
 
     //var PORT = '';
 
-    var PORT = '?env=development';
+    var PORT = '?env=testing';
 
     var USERDATA = '';
 
@@ -246,10 +246,10 @@ function Helper() {
                 tail = "/v1/repo/procs";
                 break;
             case "servers":
-                tail = "/v1/network/servers";
+                tail = "/v1/net/servrs";
                 break;
             case "nodes":
-                tail = "/v1/network/node";
+                tail = "/v1/net/nodes";
                 break;
             case "login":
                 tail = "/v1/auth/login";
@@ -327,7 +327,7 @@ function Helper() {
     };
 
     this.postRoutesProcess = function(route, params, data, doneCallback, failCallback){
-
+        
         var tail = "",
             method = "",
             setup = {};
@@ -453,20 +453,31 @@ function Helper() {
 
             url = SERVER + "/v1/repo/usrs/"+USERDATA._id+"/";
 
-            callAjax('comps', function(){
+            callAjax('comps', function(route, res){
 
-                callAjax('layers', function(){
+               list[route] = res; 
 
-                    callAjax('platfrms', function(){
+                callAjax('layers', function(route, res){
+
+                    list[route] = res;
+
+                    callAjax('platfrms', function(route, res){
+
+                        list[route] = res;
                     
-                        callAjax('suprlays', function(){
+                        callAjax('suprlays', function(route, res){
 
-                            callAjaxDevs(function(){ 
+                            list[route] = res;
+
+                            url = self.getAPIUrl("user");
+
+                            callAjax('', function(route, res){ 
+
+                                self.listDevs = res;
 
                                 callback(list);
 
                             });
-                
                         });
                     });
                 });
@@ -476,16 +487,19 @@ function Helper() {
 
             url = self.getAPIUrl("comps");
 
-            PORT = '';
+            callAjax('', function(route, res){
 
-            callAjax('', function(){
+                list = res;
 
-                callAjaxDevs(function(){ 
+                url = self.getAPIUrl("user");
+
+                callAjax('', function(route, res){ 
+
+                    self.listDevs = res;
 
                     callback(list);
 
-                }); 
-                
+                });         
             });
         }
 
@@ -497,31 +511,8 @@ function Helper() {
             }).success (
                 function (res) {
 
-                    if(route === '')
-                        list = res;
-                    else
-                       list[route] = res; 
-
                     if(typeof(callback) === 'function')
-                        callback();
-
-                });
-        }
-
-        function callAjaxDevs(callback){
-
-            url = self.getAPIUrl("user");
-
-            $.ajax({
-                url: url + PORT,
-                method: "GET"
-            }).success (
-                function (res) {
-
-                    self.listDevs = res;
-
-                    if(typeof(callback) === 'function')
-                        callback();
+                        callback(route, res);
 
                 });
         }
@@ -752,5 +743,53 @@ function Helper() {
         var index = window.layers[layer].index;
 
         return window.tileManager.dimensions.layerPositions[index];
+    };
+    
+    /**
+     * Build and URL based on the address, wildcards and GET parameters
+     * @param   {string} base   The URL address
+     * @param   {Object} params The key=value pairs of the GET parameters and wildcards
+     * @returns {string} Parsed and replaced URL
+     */
+    this.buildURL = function(base, params) {
+        
+        var result = base;
+        var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
+        
+        var param = null;
+        
+        //Search for wildcards parameters
+        do {
+            
+            param = result.match(':[a-z0-9]+');
+            
+            if(param !== null) {
+                var paramName = param[0].replace(':', '');
+
+                if(params.hasOwnProperty(paramName) && params[paramName] !== undefined) {
+
+                    result = result.replace(param, params[paramName]);
+                    delete(params[paramName]);
+
+                }
+            }
+        } while(param !== null);
+        
+        //Process the GET parameters
+        for(var key in params) {
+            if(params.hasOwnProperty(key)) {
+                
+                if(areParams === false)
+                    result += "?";
+                else
+                    result += "&";
+                
+                result += key + ((params[key] !== undefined) ? ("=" + params[key]) : (''));
+                
+                areParams = true;
+            }
+        }
+        
+        return result;
     };
 }
