@@ -872,7 +872,7 @@ function Helper() {
         
         //Process the GET parameters
         for(var key in params) {
-            if(params.hasOwnProperty(key)) {
+            if(params.hasOwnProperty(key) && params[key] !== '') {
                 
                 if(areParams === false)
                     result += "?";
