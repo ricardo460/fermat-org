@@ -14,7 +14,7 @@ var tilesQtty = [],
     logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),
-    session = new Session(),
+    session = null,
     tableEdit = null,
     fieldsEdit = null,
     browserManager = null,
@@ -34,8 +34,10 @@ var TILE_DIMENSION = {
     TILE_SPACING = 20;
 
 currentRender = createScene(currentRender, currentRender);
+session = new Session();
+session.init();
 guide = new Guide();
-getData();
+
 
 $('#login').click(function() {
         window.session.getAuthCode();

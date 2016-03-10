@@ -261,7 +261,7 @@ function Helper() {
                 tail = "/v1/repo/devs";
                 break;
         }
-        
+
         return SERVER + tail + PORT;
     };
 
@@ -269,7 +269,9 @@ function Helper() {
 
         var tail = "",
             method = "",
-            setup = {};
+            setup = {},
+            param,
+            url;
 
         switch(route) {
                 
@@ -300,8 +302,15 @@ function Helper() {
                 
         }
 
+        param = { 
+                env : PORT.replace('?env=',''),
+                axs_key : AXS_KEY
+            };
+
+        url = SERVER.replace('http://', '') + tail;
+
         setup.method = method;
-        setup.url = SERVER + tail + PORT + AXS_KEY;
+        setup.url = 'http://' + self.buildURL(url, param);
         setup.headers = { 
             "Content-Type": "application/json"
              };
@@ -311,13 +320,33 @@ function Helper() {
 
         makeCorsRequest(setup.url, setup.method, setup.data, 
             function(res){
-        
-                if(typeof(doneCallback) === 'function')
-                    doneCallback(res);
+
+                if(route === 'insert' || route === 'update'){
+
+                    if(res._id){
+
+                        if(typeof(doneCallback) === 'function')
+                            doneCallback(res);
+                    }
+                    else{
+
+                        window.alert('There is already a component with that name in this group and layer, please use another one');
+
+                        if(typeof(failCallback) === 'function')
+                            failCallback(res);
+                    }
+
+                }
+                else{
+                    
+                    if(typeof(doneCallback) === 'function')
+                            doneCallback(res);
+                }
+                    
             }, 
             function(res){
 
-                window.alert('Action Not Executed');
+                window.alert('There is already a component with that name in this group and layer, please use another one');
 
                 if(typeof(failCallback) === 'function')
                     failCallback(res);
@@ -326,11 +355,61 @@ function Helper() {
 
     };
 
+    this.postValidateLock = function(route, data, doneCallback, failCallback){
+
+        var tail = "",
+            method = "",
+            param,
+            url;
+
+        switch(route) {
+            
+            case "check":
+                method = "GET";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id;
+                break;                     
+                
+        }
+
+        param = { 
+                env : PORT.replace('?env=',''),
+                axs_key : AXS_KEY
+            };
+
+        url = SERVER.replace('http://', '') + tail;
+
+        url = 'http://' + self.buildURL(url, param);
+
+         $.ajax({
+            url:  url,
+            method: 'GET',
+            dataType: 'json',
+            success:  function (res) {
+
+                if(res._id)
+                    doneCallback();
+                else
+                    failCallback();
+            },
+            error: function(res){
+
+                if(res.status === 423){
+                    window.alert("This component is currently being modified by someone else, please try again in about 3 minutes");
+                }
+                else if(res.status === 404){
+                    window.alert("Component not found");
+                }
+            }
+        });
+    };
+
     this.postRoutesProcess = function(route, params, data, doneCallback, failCallback){
         
         var tail = "",
             method = "",
-            setup = {};
+            setup = {},
+            param,
+            url;
 
         switch(route) {
                 
@@ -361,8 +440,15 @@ function Helper() {
                 
         }
 
+        param = { 
+                env : PORT.replace('?env=',''),
+                axs_key : AXS_KEY
+            };
+
+        url = SERVER.replace('http://', '') + tail;
+
         setup.method = method;
-        setup.url = SERVER + tail + PORT + AXS_KEY;
+        setup.url = 'http://' + self.buildURL(url, param);
         setup.headers = { 
             "Content-Type": "application/json"
              };
@@ -443,35 +529,44 @@ function Helper() {
 
         var list = {};
 
+        var param;
+
         //window.session.useTestData();
 
         if(window.session.getIsLogin()){ 
 
             USERDATA = window.session.getUserLogin();
 
-            AXS_KEY = '?axs_key=' + USERDATA.axs_key;
+            AXS_KEY = USERDATA.axs_key;
 
             url = SERVER + "/v1/repo/usrs/"+USERDATA._id+"/";
 
-            callAjax('comps', function(route, res){
+            param = { 
+                env : PORT.replace('?env=',''),
+                axs_key : AXS_KEY
+            };
+
+            var port = self.buildURL('', param);
+
+            callAjax('comps', port, function(route, res){
 
                list[route] = res; 
 
-                callAjax('layers', function(route, res){
+                callAjax('layers', port,function(route, res){
 
                     list[route] = res;
 
-                    callAjax('platfrms', function(route, res){
+                    callAjax('platfrms', port,function(route, res){
 
                         list[route] = res;
                     
-                        callAjax('suprlays', function(route, res){
+                        callAjax('suprlays', port,function(route, res){
 
                             list[route] = res;
 
                             url = self.getAPIUrl("user");
 
-                            callAjax('', function(route, res){ 
+                            callAjax('', '',function(route, res){ 
 
                                 self.listDevs = res;
 
@@ -487,13 +582,13 @@ function Helper() {
 
             url = self.getAPIUrl("comps");
 
-            callAjax('', function(route, res){
+            callAjax('', '',function(route, res){
 
                 list = res;
 
                 url = self.getAPIUrl("user");
 
-                callAjax('', function(route, res){ 
+                callAjax('', '',function(route, res){ 
 
                     self.listDevs = res;
 
@@ -503,10 +598,10 @@ function Helper() {
             });
         }
 
-        function callAjax(route, callback){
+        function callAjax(route, port, callback){
 
             $.ajax({
-                url: url + route + PORT,
+                url: url + route + port,
                 method: "GET"
             }).success (
                 function (res) {
