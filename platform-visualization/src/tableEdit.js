@@ -64,11 +64,14 @@ function TableEdit() {
 
                 callback = function(){
 
-                    window.fieldsEdit.actions.type = "update";
-                    window.buttonsManager.removeAllButtons(); 
-                    addAllFilds();
-                    fillFields(id);
-                    drawTile(id);
+                    validateLock(id, function(){ 
+
+                        window.fieldsEdit.actions.type = "update";
+                        window.buttonsManager.removeAllButtons(); 
+                        addAllFilds();
+                        fillFields(id);
+                        drawTile(id);
+                    });
                 };
             }
 
@@ -86,8 +89,11 @@ function TableEdit() {
 
                 callback = function(){
 
-                    if(window.confirm("Really remove this component?"))           
-                        deleteTile(id);                
+                    validateLock(id, function(){ 
+                        
+                        if(window.confirm("Are you sure you want to remove this component?"))           
+                            deleteTile(id);
+                    });                
                 };
             }
 
@@ -814,6 +820,7 @@ function TableEdit() {
             window.camera.enable();
 
             window.tileManager.transform(false, 1000);
+            window.headers.transformTable(1000);
             window.signLayer.transformSignLayer();
 
             window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
@@ -900,6 +907,27 @@ function TableEdit() {
         animate(mesh, target.show, 2500);
                 
         window.TABLE[platform].layers[layer].objects.push(object);
+    }
+
+    function validateLock(_id, callback){
+
+        var id = window.helper.getSpecificTile(_id).data.id;
+
+        var dataPost = {
+                comp_id : id
+            };
+
+        window.helper.postValidateLock('check', dataPost,
+            function(res){ 
+
+                if(typeof(callback) === 'function')
+                    callback();
+            },
+            function(res){
+
+                window.alert("This component is currently being modified by someone else, please try again in about 3 minutes");
+            }
+        );
     }
 
     function fillTable(found){
@@ -1014,6 +1042,7 @@ function TableEdit() {
     }
 
     function getBestDev(_devs, role) {
+        
         var dev = {};
         if (_devs) {
             var _dev = {};

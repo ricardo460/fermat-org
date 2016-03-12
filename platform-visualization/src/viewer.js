@@ -14,7 +14,7 @@ var tilesQtty = [],
     logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),
-    session = new Session(),
+    session = null,
     tableEdit = null,
     fieldsEdit = null,
     browserManager = null,
@@ -24,8 +24,8 @@ var tilesQtty = [],
     viewManager = null,
     magazine = null,
     networkViewer = null,
-    workFlowEdit = null,
-    buttonsManager = null;
+    buttonsManager = null,
+    guide = null;
 //Global constants
 var TILE_DIMENSION = {
     width : 231,
@@ -34,9 +34,10 @@ var TILE_DIMENSION = {
     TILE_SPACING = 20;
 
 currentRender = createScene(currentRender, currentRender);
-//Disabled by Luis Molina
-//helper.showHelpText('welcome',1000);
-getData();
+session = new Session();
+session.init();
+guide = new Guide();
+
 
 $('#login').click(function() {
         window.session.getAuthCode();
@@ -74,8 +75,8 @@ function createScene(current, option){
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.domElement.style.position = 'absolute';
         renderer.domElement.id = "canvas";
-        //renderer.setClearColor(0xFFFFFF);
-        renderer.setClearColor(0x313131);//Mode Test.
+        renderer.setClearColor(0xFFFFFF);
+        //renderer.setClearColor(0x313131);//Mode Test.
         document.getElementById('container').appendChild(renderer.domElement);
 
         camera = new Camera(new THREE.Vector3(0, 0, 90000),
@@ -123,7 +124,6 @@ function init() {
     buttonsManager = new ButtonsManager();
     fieldsEdit = new FieldsEdit();
     tableEdit = new TableEdit();
-    workFlowEdit = new WorkFlowEdit(); // nuevo
 
     //View Manager
     viewManager = new ViewManager();
@@ -160,19 +160,13 @@ function init() {
 
     setTimeout(function() { initPage(); }, 500);
     
-    /*
-    Temporary disabled by Luis Molina
     setTimeout(function (){
+        guide.active = true;
         if(actualView === 'home'){
-            helper.showHelpText('navigation',1000);
-            helper.showHelpText('zoom',1000);
-            helper.showHelpText('slide',1000);
-            helper.showHelpText('return',1000);
-            toggleHelp = true;
+            guide.showHelp();
         }
     }, 15000);
-    */
-    
+
     /*setTimeout(function() {
         var loader = new Loader();
         loader.findThemAll();
@@ -221,19 +215,19 @@ function goToView(targetView) {
  */
 function initPage() {
     
-	window.Hash.on('^[a-zA-Z]*$', {
+    window.Hash.on('^[a-zA-Z]*$', {
 
-		yep: function(path, parts) {
+        yep: function(path, parts) {
 
-			var view = parts[0];
+            var view = parts[0];
 
             if(window.actualView !== undefined && window.actualView !== ""){ 
 
-    			if(view !== undefined && view !== ""  && view !== 'canvas' && view !== 'webgl'){
+                if(view !== undefined && view !== ""  && view !== 'canvas' && view !== 'webgl'){
 
-    				if(window.map.views[view].enabled !== undefined && window.map.views[view].enabled)
-    					goToView(view);
-    			}
+                    if(window.map.views[view].enabled !== undefined && window.map.views[view].enabled)
+                        goToView(view);
+                }
                 else if(path === 'canvas' || path === 'webgl'){
                     currentRender = createScene(currentRender,path);
                     change = false;
@@ -241,7 +235,7 @@ function initPage() {
             }
             else
                 goToView(window.location.hash.slice(1));
-		}
+        }
     });
 
 }
@@ -279,21 +273,19 @@ function initMenu() {
 }
 
 
-function changeView() { // nuevo
+function changeView() {
 
     window.camera.enable();
-
     window.camera.loseFocus();
     
     window.helper.show('container', 2000);
     
     window.flowManager.getActualFlow();
 
-    window.headers.transformTable(2000);
+    window.headers.transformTable(1500);
 
-    //if (targets != null) {
-    window.tileManager.transform(2000);
-    //}
+    window.tileManager.transform(1500);
+
 }
 
 /**
@@ -339,14 +331,24 @@ function onElementClick(id) {
 
     function showDeveloper(id) {
 
-        var relatedTasks = [];
-
         var tile = window.helper.getSpecificTile(id).data;
-        
-        var image = window.helper.getSpecificTile(id).data.picture;
 
         var section = 0;
         var center = window.helper.getSpecificTile(id).mesh.position;
+
+        developer.getDeveloper();
+
+        var duration = 750,
+            l = developer.findDeveloper(tile.author);
+
+        new TWEEN.Tween(l.position)
+        .to({
+            x : center.x-290,
+            y : center.y+400,
+            z : center.z
+        }, Math.random() * duration + duration)
+        .easing(TWEEN.Easing.Exponential.InOut)
+        .start();
         
         for(var i = 0; i < window.tilesQtty.length; i++){
 
@@ -355,11 +357,9 @@ function onElementClick(id) {
             var mesh =  window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
     
             if(_tile.author == tile.author) {
-
-                relatedTasks.push(id);
         
                 new TWEEN.Tween(mesh.position)
-                .to({x : center.x + (section % 5) * window.TILE_DIMENSION.width, y : center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height, z : 0}, 2000)
+                .to({x : center.x + (section % 5) * window.TILE_DIMENSION.width - 750, y : center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height, z : 0}, 2000)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .start();
                 
@@ -367,124 +367,10 @@ function onElementClick(id) {
             }                     
         }
         
-        createSidePanel(id, image, relatedTasks);
         camera.enable();
-        camera.move(center.x, center.y, center.z + window.TILE_DIMENSION.width * 5);
+        camera.move(center.x-300, center.y, center.z + window.TILE_DIMENSION.width * 11);
     }
 
-    function createSidePanel(id, image, relatedTasks) {
-        
-        var tileData = window.helper.getSpecificTile(id).data;
-
-        var sidePanel = document.createElement('div');
-        sidePanel.id = 'sidePanel';
-        sidePanel.style.position = 'absolute';
-        sidePanel.style.top = '0px';
-        sidePanel.style.bottom = '25%';
-        sidePanel.style.left = '0px';
-        sidePanel.style.marginTop = '50px';
-        sidePanel.style.width = '35%';
-        sidePanel.style.textAlign = 'center';
-
-        var panelImage = document.createElement('img');
-        panelImage.id = 'focusImg';
-        panelImage.src = image;
-        panelImage.style.position = 'relative';
-        panelImage.style.width = '50%';
-        panelImage.style.opacity = 0;
-        sidePanel.appendChild(panelImage);
-
-        var userName = document.createElement('p');
-        userName.style.opacity = 0;
-        userName.style.position = 'relative';
-        userName.style.fontWeight = 'bold';
-        userName.textContent = tileData.author;
-        sidePanel.appendChild(userName);
-
-        var realName = document.createElement('p');
-        realName.style.opacity = 0;
-        realName.style.position = 'relative';
-        realName.textContent = tileData.authorRealName;
-        sidePanel.appendChild(realName);
-
-        var email = document.createElement('p');
-        email.style.opacity = 0;
-        email.style.position = 'relative';
-        email.textContent = tileData.authorEmail;
-        sidePanel.appendChild(email);
-
-        if(relatedTasks != null && relatedTasks.length > 0) {
-            
-            var anyTimeline = false;
-            
-            var i, l;
-            
-            for(i = 0, l = relatedTasks.length; i < l; i++) {
-                
-                var lifeCycle = window.helper.getSpecificTile(relatedTasks[i]).data.life_cycle;
-                
-                if(lifeCycle !== undefined && lifeCycle.length > 0) {
-                    anyTimeline = true;
-                }
-            }
-            
-            if(anyTimeline) {
-
-                var tlButton = document.createElement('button');
-                tlButton.className = 'actionButton';
-                tlButton.id = 'timelineButton';
-                tlButton.style.opacity = 0;
-                tlButton.style.position = 'relative';
-                tlButton.textContent = 'See Timeline';
-
-                $(tlButton).click(function() {
-                    showTimeline(relatedTasks);
-                });
-
-                sidePanel.appendChild(tlButton);
-            }
-        }
-
-        $('#container').append(sidePanel);
-
-        //$(renderer.domElement).fadeTo(1000, 0);
-
-        $(panelImage).fadeTo(1000, 1, function() {
-            $(userName).fadeTo(1000, 1, function() {
-                $(realName).fadeTo(1000, 1, function() {
-                    $(email).fadeTo(1000, 1, function() {
-
-                        if(tlButton != null)
-                            $(tlButton).fadeTo(1000, 1);
-
-                    });
-                });
-            });
-        });
-    }
-
-    function showTimeline(tasks) {
-
-        helper.hide('sidePanel');
-        helper.hide('elementPanel');
-
-        var tlContainer = document.createElement('div');
-        tlContainer.id = 'tlContainer';
-        tlContainer.style.position = 'absolute';
-        tlContainer.style.top = '50px';
-        tlContainer.style.bottom = '50px';
-        tlContainer.style.left = '50px';
-        tlContainer.style.right = '50px';
-        tlContainer.style.overflowY = 'auto';
-        tlContainer.style.opacity = 0;
-        document.body.appendChild(tlContainer);
-        
-        helper.hide('container', 1000, true);
-
-        $(tlContainer).fadeTo(1000, 1);
-
-        new Timeline(tasks, tlContainer).show();
-    }
 }
 
 /**
@@ -552,5 +438,4 @@ function render() {
     //renderer.render( scene, camera );
     camera.render(renderer, scene);
 }
-
 

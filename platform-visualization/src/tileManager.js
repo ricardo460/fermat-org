@@ -2,6 +2,8 @@
  * Controls how tiles behaves
  */
 function TileManager() {
+    
+    var MAX_TILE_DETAIL_SCALE = 2;
    
     this.dimensions = {};
     this.elementsByGroup = [];
@@ -509,7 +511,7 @@ function TileManager() {
 
         for (var j = 0, l = levels.length; j < l; j++) {
 
-            if (levels[j][0] === 'high') scale = 2;
+            if (levels[j][0] === 'high') scale = MAX_TILE_DETAIL_SCALE;
             else scale = 1;
 
             texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale, table);
@@ -628,7 +630,7 @@ function TileManager() {
     /**
      * Goes back to last target set in last transform
      */
-    this.rollBack = function () { // nuevo
+    this.rollBack = function () {
 
         window.camera.enable();
         window.camera.loseFocus();
@@ -695,9 +697,17 @@ function TileManager() {
             if(typeof layerCoordinates[row] === 'undefined')
                 layerCoordinates[row] = object.position.y;
 
+
             /*start Positioning tiles*/
 
             object.position.copy(window.viewManager.translateToSection('table', object.position));
+
+            if(layers[tile.layer].super_layer){ 
+
+                if(typeof window.TABLE[layers[tile.layer].super_layer].x === 'undefined')
+                    window.TABLE[layers[tile.layer].super_layer].x = object.position.x;
+
+            }
 
             var target = window.helper.fillTarget(object.position.x, object.position.y, object.position.z, 'table');
 

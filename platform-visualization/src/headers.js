@@ -807,7 +807,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 
                 object.name = slayer;
                 
-
                 scene.add(object);
                 objects.push(object);
                 
@@ -818,9 +817,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 object.name = slayer;
 
                 object.position.copy(window.viewManager.translateToSection('table', object.position));
-
-                if(window.TABLE[slayer])
-                    window.TABLE[slayer].x = object.position.x;
                 
                 positions.table.push(object);
 

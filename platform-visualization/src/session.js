@@ -4,6 +4,8 @@ function Session(){
 	var api_key = "56a10473b27e63185c6970d6";
 	var axs_key;
 	var usr;
+    var code;
+    var self = this;
 
 	this.getIsLogin = function(){
 		return isLogin;
@@ -46,30 +48,14 @@ function Session(){
      */
     this.useTestData = function(){
         
-    isLogin = true;
-
-        usr = { 
-            axs_key: "31a34414535ee9f59b1dfcc1d08bb9b565bf3eae",
-            usrnm: "ricardo460",
-            upd_at: "56c72bdf7d20701f414de5e3",
-            name: "Ricardo Delgado",
-            github_tkn: "31a34414535ee9f59b1dfcc1d08bb9b565bf3eae",
-            email: "ricardodelgado460@hotmail.com",
-            avatar_url: "https://avatars.githubusercontent.com/u/13169767?v=3",
-            _id: "56c72bdf7d20701f414de5e4"
-        };
-
-        $("#logout").fadeIn(2000);
-        $("#login").fadeOut(2000);
-
-        drawUser(usr);    
-    }
+        
+    };
 
 	/**
 	 * Login with github and gets the authorization code
 	 */
 	this.getAuthCode = function(){                                                                        //CLientID: c25e3b3b1eb9aa35c773 - Web
-		window.location.href = 'https://github.com/login/oauth/authorize?client_id=c25e3b3b1eb9aa35c773'; //ClientID: f079f2a8fa65313179d5 - localhost
+		window.location.href = 'https://github.com/login/oauth/authorize?client_id=d00a7c7d4489139327e4'; //ClientID: f079f2a8fa65313179d5 - localhost
 	};
 
 	/**
@@ -77,7 +63,7 @@ function Session(){
 	 */
 	this.logout = function() {
 
-		var url_logout = window.helper.getAPIUrl("logout") + "?axs_key=" + axs_key + "&api_key=" + api_key;
+		var url_logout = window.helper.getAPIUrl("logout") + "&axs_key=" + axs_key + "&api_key=" + api_key;
 		console.log("url: " + url_logout);
 		$.ajax({
 			url : url_logout,
@@ -87,7 +73,7 @@ function Session(){
 			}
 		}).success(function(data) {
 			console.log("Logout", data);
-			if(data !== undefined){
+			if(data !== undefined) {
 				if(data === true) {
 					isLogin = false;
 					$("#login").fadeIn(2000);
@@ -98,11 +84,21 @@ function Session(){
 		});
 	};
 
+    this.init = function(){
+
+        code = window.location.toString().replace(/.+code=/, '');
+
+        if((code.indexOf("/") < 0))
+            self.login();
+        else
+            window.getData();
+    };
+
 	/**
 	 * Logged to the user and returns the token
 	 */
 	this.login = function() {
-		var url = window.helper.getAPIUrl("login") + "?code=" + code + "&api_key=" + api_key;
+		var url = window.helper.getAPIUrl("login") + "&code=" + code + "&api_key=" + api_key;
 		console.log("url: " + url);
 		
 		$.ajax({
@@ -126,9 +122,14 @@ function Session(){
      			$("#logout").fadeIn(2000);
 
      			drawUser(usr);
+                
 			} 
-            else
+            else {
 				console.log("Error:", tkn);
+                window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
+            }
+
+            window.getData();
 		});
 	};
 
@@ -271,7 +272,4 @@ function Session(){
         }
 	}
 
-	var code = window.location.toString().replace(/.+code=/, '');
-	if((code.indexOf("/") < 0))
-		this.login();
 }

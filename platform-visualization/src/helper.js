@@ -7,7 +7,7 @@ function Helper() {
 
     //var PORT = '';
 
-    var PORT = '?env=development';
+    var PORT = '?env=testing';
 
     var USERDATA = '';
 
@@ -46,22 +46,6 @@ function Helper() {
             });
         }
 
-    };
-
-    this.showHelpText = function(element, duration) {
-
-      var el = element;
-
-      if(typeof(el) === "string")
-          el = document.getElementById(element);
-
-      if(el) {
-        $(el).fadeTo(duration, 0, function() {
-            el.style.display = 'block';
-            el.style.opacity = 1;
-            el.style.transition = 'opacity 2s linear';
-        });
-      }
     };
 
     this.hideButtons = function(){
@@ -262,10 +246,10 @@ function Helper() {
                 tail = "/v1/repo/procs";
                 break;
             case "servers":
-                tail = "/v1/network/servers";
+                tail = "/v1/net/servrs";
                 break;
             case "nodes":
-                tail = "/v1/network/node";
+                tail = "/v1/net/nodes";
                 break;
             case "login":
                 tail = "/v1/auth/login";
@@ -277,7 +261,7 @@ function Helper() {
                 tail = "/v1/repo/devs";
                 break;
         }
-        
+
         return SERVER + tail + PORT;
     };
 
@@ -285,7 +269,9 @@ function Helper() {
 
         var tail = "",
             method = "",
-            setup = {};
+            setup = {},
+            param,
+            url;
 
         switch(route) {
                 
@@ -316,8 +302,182 @@ function Helper() {
                 
         }
 
+        param = { 
+                env : PORT.replace('?env=',''),
+                axs_key : AXS_KEY
+            };
+
+        url = SERVER.replace('http://', '') + tail;
+
         setup.method = method;
-        setup.url = SERVER + tail + PORT + AXS_KEY;
+        setup.url = 'http://' + self.buildURL(url, param);
+        setup.headers = { 
+            "Content-Type": "application/json"
+             };
+
+        if(params)
+            setup.data = params;
+
+        makeCorsRequest(setup.url, setup.method, setup.data, 
+            function(res){
+
+                switch(route) {
+                
+                    case "insert":
+
+                        if(res._id){
+
+                            if(typeof(doneCallback) === 'function')
+                                doneCallback(res);
+                        }
+                        else{
+
+                            window.alert('There is already a component with that name in this group and layer, please use another one');
+
+                            if(typeof(failCallback) === 'function')
+                                failCallback(res);
+                        }
+
+                        break;
+                    case "update":
+
+                        if(res._id){
+
+                            if(typeof(doneCallback) === 'function')
+                                doneCallback(res);
+                        }
+                        else{
+
+                            var name = document.getElementById('imput-Name').value;
+
+                            if(window.fieldsEdit.actualTile.name.toLowerCase() === name.toLowerCase()){
+
+                                if(typeof(doneCallback) === 'function')
+                                    doneCallback(res);
+                            }
+                            else{
+
+                                window.alert('There is already a component with that name in this group and layer, please use another one');
+
+                                if(typeof(failCallback) === 'function')
+                                    failCallback(res);
+                            }
+                        }
+
+                        break; 
+                    default:
+                            if(typeof(doneCallback) === 'function')
+                                    doneCallback(res);
+                        break;                     
+                }
+
+                    
+            }, 
+            function(res){
+
+                window.alert('There is already a component with that name in this group and layer, please use another one');
+
+                if(typeof(failCallback) === 'function')
+                    failCallback(res);
+            }
+        );
+
+    };
+
+    this.postValidateLock = function(route, data, doneCallback, failCallback){
+
+        var tail = "",
+            method = "",
+            param,
+            url;
+
+        switch(route) {
+            
+            case "check":
+                method = "GET";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id;
+                break;                     
+                
+        }
+
+        param = { 
+                env : PORT.replace('?env=',''),
+                axs_key : AXS_KEY
+            };
+
+        url = SERVER.replace('http://', '') + tail;
+
+        url = 'http://' + self.buildURL(url, param);
+
+         $.ajax({
+            url:  url,
+            method: 'GET',
+            dataType: 'json',
+            success:  function (res) {
+
+                if(res._id)
+                    doneCallback();
+                else
+                    failCallback();
+            },
+            error: function(res){
+
+                if(res.status === 423){
+                    window.alert("This component is currently being modified by someone else, please try again in about 3 minutes");
+                }
+                else if(res.status === 404){
+                    window.alert("Component not found");
+                }
+            }
+        });
+    };
+
+    this.postRoutesProcess = function(route, params, data, doneCallback, failCallback){
+        
+        var tail = "",
+            method = "",
+            setup = {},
+            param,
+            url;
+
+        switch(route) {
+                
+            case "insert":
+                method = "POST";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs";
+                break;
+            case "delete":
+                method = "DELETE";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id;
+                break;
+            case "update":
+                method = "PUT";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id;
+                break;
+            case "insert step":
+                method = "POST";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id + "/steps";
+                break;
+            case "delete step":
+                method = "DELETE";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id + "/steps/" + data.steps_id;
+                break;
+            case "update step":
+                method = "PUT";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id + "/steps/" + data.steps_id;
+                break;                    
+                
+        }
+
+        param = { 
+                env : PORT.replace('?env=',''),
+                axs_key : AXS_KEY
+            };
+
+        url = SERVER.replace('http://', '') + tail;
+
+        setup.method = method;
+        setup.url = 'http://' + self.buildURL(url, param);
         setup.headers = { 
             "Content-Type": "application/json"
              };
@@ -398,30 +558,50 @@ function Helper() {
 
         var list = {};
 
-        window.session.useTestData();
+        var param;
+
+        //window.session.useTestData();
 
         if(window.session.getIsLogin()){ 
 
             USERDATA = window.session.getUserLogin();
 
-            AXS_KEY = '?axs_key=' + USERDATA.axs_key;
+            AXS_KEY = USERDATA.axs_key;
 
             url = SERVER + "/v1/repo/usrs/"+USERDATA._id+"/";
 
-            callAjax('comps', function(){
+            param = { 
+                env : PORT.replace('?env=',''),
+                axs_key : AXS_KEY
+            };
 
-                callAjax('layers', function(){
+            var port = self.buildURL('', param);
 
-                    callAjax('platfrms', function(){
+            callAjax('comps', port, function(route, res){
+
+               list[route] = res; 
+
+                callAjax('layers', port,function(route, res){
+
+                    list[route] = res;
+
+                    callAjax('platfrms', port,function(route, res){
+
+                        list[route] = res;
                     
-                        callAjax('suprlays', function(){
+                        callAjax('suprlays', port,function(route, res){
 
-                            callAjaxDevs(function(){ 
+                            list[route] = res;
+
+                            url = self.getAPIUrl("user");
+
+                            callAjax('', '',function(route, res){ 
+
+                                self.listDevs = res;
 
                                 callback(list);
 
                             });
-                
                         });
                     });
                 });
@@ -431,50 +611,32 @@ function Helper() {
 
             url = self.getAPIUrl("comps");
 
-            callAjax('', function(){
+            callAjax('', '',function(route, res){
 
-                callAjaxDevs(function(){ 
+                list = res;
 
-                    callback(list);
+                url = self.getAPIUrl("user");
 
-                }); 
-                
-            });
-        }
-
-        function callAjax(route, callback){
-
-            $.ajax({
-                url: url + route + PORT,
-                method: "GET"
-            }).success (
-                function (res) {
-
-                    if(route === '')
-                        list = res;
-                    else
-                       list[route] = res; 
-
-                    if(typeof(callback) === 'function')
-                        callback();
-
-                });
-        }
-
-        function callAjaxDevs(callback){
-
-            url = self.getAPIUrl("user");
-
-            $.ajax({
-                url: url + PORT,
-                method: "GET"
-            }).success (
-                function (res) {
+                callAjax('', '',function(route, res){ 
 
                     self.listDevs = res;
 
+                    callback(list);
+
+                });         
+            });
+        }
+
+        function callAjax(route, port, callback){
+
+            $.ajax({
+                url: url + route + port,
+                method: "GET"
+            }).success (
+                function (res) {
+
                     if(typeof(callback) === 'function')
-                        callback();
+                        callback(route, res);
 
                 });
         }
@@ -705,5 +867,48 @@ function Helper() {
         var index = window.layers[layer].index;
 
         return window.tileManager.dimensions.layerPositions[index];
+    };
+    
+    /**
+     * Build and URL based on the address, wildcards and GET parameters
+     * @param   {string} base   The URL address
+     * @param   {Object} params The key=value pairs of the GET parameters and wildcards
+     * @returns {string} Parsed and replaced URL
+     */
+    this.buildURL = function(base, params) {
+        
+        var result = base;
+        var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
+        
+        //Search for wildcards parameters
+        while(result.indexOf(':') !== -1) {
+            
+            var param = result.match(':[a-z0-9]+');
+            var paramName = param[0].replace(':', '');
+            
+            if(params.hasOwnProperty(paramName) && params[paramName] !== undefined) {
+                
+                result = result.replace(param, params[paramName]);
+                delete(params[paramName]);
+                
+            }
+        }
+        
+        //Process the GET parameters
+        for(var key in params) {
+            if(params.hasOwnProperty(key)) {
+                
+                if(areParams === false)
+                    result += "?";
+                else
+                    result += "&";
+                
+                result += key + ((params[key] !== undefined) ? ("=" + params[key]) : (''));
+                
+                areParams = true;
+            }
+        }
+        
+        return result;
     };
 }

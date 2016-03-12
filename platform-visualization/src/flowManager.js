@@ -69,7 +69,7 @@ function FlowManager(){
             
             for(var x = mid; x > 0; x--) {
                 
-                center.x = center.x - 2000;
+                center.x = center.x - 1500;
             }
 
             for(var j = 0; j < countElement; j++){
@@ -81,7 +81,7 @@ function FlowManager(){
 
                 position.push(obj);
 
-                center.x = center.x + 2000;
+                center.x = center.x + 1500;
             }
         }
 
