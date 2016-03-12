@@ -100,6 +100,7 @@ function Session(){
 	this.login = function() {
 		var url = window.helper.getAPIUrl("login") + "&code=" + code + "&api_key=" + api_key;
 		console.log("url: " + url);
+        
 		
 		$.ajax({
 			url : url,

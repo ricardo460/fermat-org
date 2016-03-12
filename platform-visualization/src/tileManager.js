@@ -196,10 +196,11 @@ function TileManager() {
 
         for (i = 0, l = _layers.length; i < l; i++) {
             name = helper.capFirstLetter(_layers[i].name);
-            layers[name] = {};
-            layers[name].super_layer = _layers[i].suprlay;
-            layers[name].index = _layers[i].order;
-            layers[name]._id = _layers[i]._id;
+            window.layers[name] = {};
+            //TODO: Temp fix of the server
+            window.layers[name].super_layer = (_layers[i].suprlay !== "false") ? _layers[i].suprlay : false;
+            window.layers[name].index = _layers[i].order;
+            window.layers[name]._id = _layers[i]._id;
         }
 
         var buildElement = function (e) {
@@ -253,7 +254,8 @@ function TileManager() {
             var element = buildElement(i);
 
             //An element is always inside a platform or a superlayer
-            var group = element.platform || element.superLayer,
+            //TODO: Temp fix of the server
+            var group = element.platform || ((element.superLayer !== "false") ? element.superLayer : false),
                 layer = element.layer;
 
             if(typeof window.TABLE[group] === 'undefined'){
@@ -718,7 +720,7 @@ function TileManager() {
             mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
 
             /*End*/
-            if(!signLayer.findSignLayer(group, tile.layer)){
+            if(!window.signLayer.findSignLayer(group, tile.layer)){
                 if(i === 0 ){ //entra a la primera
                     window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
                     signRow = tile.layerID;
