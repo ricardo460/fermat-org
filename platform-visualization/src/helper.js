@@ -321,27 +321,56 @@ function Helper() {
         makeCorsRequest(setup.url, setup.method, setup.data, 
             function(res){
 
-                if(route === 'insert' || route === 'update'){
+                switch(route) {
+                
+                    case "insert":
 
-                    if(res._id){
+                        if(res._id){
 
-                        if(typeof(doneCallback) === 'function')
-                            doneCallback(res);
-                    }
-                    else{
+                            if(typeof(doneCallback) === 'function')
+                                doneCallback(res);
+                        }
+                        else{
 
-                        window.alert('There is already a component with that name in this group and layer, please use another one');
+                            window.alert('There is already a component with that name in this group and layer, please use another one');
 
-                        if(typeof(failCallback) === 'function')
-                            failCallback(res);
-                    }
+                            if(typeof(failCallback) === 'function')
+                                failCallback(res);
+                        }
 
+                        break;
+                    case "update":
+
+                        if(res._id){
+
+                            if(typeof(doneCallback) === 'function')
+                                doneCallback(res);
+                        }
+                        else{
+
+                            var name = document.getElementById('imput-Name').value;
+
+                            if(window.fieldsEdit.actualTile.name.toLowerCase() === name.toLowerCase()){
+
+                                if(typeof(doneCallback) === 'function')
+                                    doneCallback(res);
+                            }
+                            else{
+
+                                window.alert('There is already a component with that name in this group and layer, please use another one');
+
+                                if(typeof(failCallback) === 'function')
+                                    failCallback(res);
+                            }
+                        }
+
+                        break; 
+                    default:
+                            if(typeof(doneCallback) === 'function')
+                                    doneCallback(res);
+                        break;                     
                 }
-                else{
-                    
-                    if(typeof(doneCallback) === 'function')
-                            doneCallback(res);
-                }
+
                     
             }, 
             function(res){
