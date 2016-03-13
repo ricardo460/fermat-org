@@ -52,8 +52,8 @@ $('#logout').click(function() {
  * Creates the rendering environment
  */
 function createScene(current, option){
-    
-    var change = false; 
+
+    var change = false;
     if(option !== "canvas" && webglAvailable() && window.currentRender !== "webgl") {
         renderer = new THREE.WebGLRenderer({antialias : true, alpha : true}); //Logarithmic depth buffer disabled due to sprite - zbuffer issue
         current = "webgl";
@@ -66,7 +66,7 @@ function createScene(current, option){
             change = true;
         }
     }
-    
+
     if(change) {
 
         var light = new THREE.AmbientLight(0xFFFFFF);
@@ -102,11 +102,11 @@ function createScene(current, option){
 function webglAvailable() {
     try {
         var canvas = document.createElement('canvas');
-        
+
         //Force boolean cast
-        return !!(window.WebGLRenderingContext && 
+        return !!(window.WebGLRenderingContext &&
                   (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
-    } 
+    }
     catch(e) {
         return false;
     }
@@ -147,19 +147,19 @@ function init() {
     //create_stats();
 
     $('#backButton').click(function() {
-        
+
         if(viewManager.views[window.actualView])
             viewManager.views[window.actualView].backButton();
- 
+
     });
-    
+
     $('#container').click(onClick);
 
     //Disabled Menu
     //initMenu();
 
     setTimeout(function() { initPage(); }, 500);
-    
+
     setTimeout(function (){
         guide.active = true;
         if(actualView === 'home'){
@@ -183,7 +183,7 @@ function init() {
  * @param {String} name The name of the target state
  */
 function goToView(targetView) {
-    
+
     var newCenter = new THREE.Vector3(0, 0, 0);
     var transition = 5000;
 
@@ -191,12 +191,12 @@ function goToView(targetView) {
     camera.moving = true;
     camera.move(newCenter.x, newCenter.y, camera.getMaxDistance(), transition, true);
     camera.lockPan();
-        
+
     setTimeout(function() { camera.moving = false; }, transition);
 
     if(window.map.views[targetView] != null) {
         if(actualView != targetView){
-            
+
             if(actualView)
                 viewManager.views[actualView].exit();
 
@@ -214,14 +214,13 @@ function goToView(targetView) {
  * Load the page url.
  */
 function initPage() {
-    
-    window.Hash.on('^[a-zA-Z]*$', {
 
+    window.Hash.on('^[a-zA-Z]*$', {
         yep: function(path, parts) {
 
             var view = parts[0];
 
-            if(window.actualView !== undefined && window.actualView !== ""){ 
+            if(window.actualView !== undefined && window.actualView !== ""){
 
                 if(view !== undefined && view !== ""  && view !== 'canvas' && view !== 'webgl'){
 
@@ -234,6 +233,12 @@ function initPage() {
             }
             else
                 goToView(window.location.hash.slice(1));
+
+            if (path === 'low') {
+                tileManager.MAX_TILE_DETAIL_SCALE = 2;
+            } else {
+                tileManager.MAX_TILE_DETAIL_SCALE = 5;
+            }
         }
     });
 
@@ -254,9 +259,9 @@ function changeView() {
 
     window.camera.enable();
     window.camera.loseFocus();
-    
+
     window.helper.show('container', 2000);
-    
+
     window.flowManager.getActualFlow();
 
     window.headers.transformTable(1500);
@@ -270,7 +275,7 @@ function changeView() {
  * @param {Number} id The ID (position on table) of the element
  */
 function onElementClick(id) {
-    
+
     var focus = window.helper.getSpecificTile(id).mesh;
 
     if(window.camera.getFocus() == null) {
@@ -284,9 +289,9 @@ function onElementClick(id) {
         window.camera.setFocus(focus, new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 2000);
 
         window.buttonsManager.removeAllButtons();
-        
+
         setTimeout(function() {
-            
+
             window.tileManager.letAlone(id, 1000);
 
             focus.getObjectForDistance(0).visible = true;
@@ -300,10 +305,10 @@ function onElementClick(id) {
             window.buttonsManager.actionButtons(id, function(){
                 showDeveloper(id);
             });
-            
+
         }, 3000);
-        
-        window.camera.disable();   
+
+        window.camera.disable();
     }
 
     function showDeveloper(id) {
@@ -326,24 +331,24 @@ function onElementClick(id) {
         }, Math.random() * duration + duration)
         .easing(TWEEN.Easing.Exponential.InOut)
         .start();
-        
+
         for(var i = 0; i < window.tilesQtty.length; i++){
 
             var _tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
 
             var mesh =  window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
-    
+
             if(_tile.author == tile.author) {
-        
+
                 new TWEEN.Tween(mesh.position)
                 .to({x : center.x + (section % 5) * window.TILE_DIMENSION.width - 750, y : center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height, z : 0}, 2000)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .start();
-                
+
                 section += 1;
-            }                     
+            }
         }
-        
+
         camera.enable();
         camera.move(center.x-300, center.y, center.z + window.TILE_DIMENSION.width * 11);
     }
@@ -354,29 +359,29 @@ function onElementClick(id) {
  * Generic event when user clicks in 3D space
  * @param {Object} e Event data
  */
- 
+
 function onClick(e) {
-    
+
     var mouse = new THREE.Vector2(0, 0),
         clicked = [];
-    
+
     if(!camera.dragging) {
-    
+
         //Obtain normalized click location (-1...1)
         mouse.x = ((e.clientX - renderer.domElement.offsetLeft) / renderer.domElement.width) * 2 - 1;
         mouse.y = - ((e.clientY - renderer.domElement.offsetTop) / renderer.domElement.height) * 2 + 1;
-        
+
         //window.alert("Clicked on (" + mouse.x + ", " + mouse.y + ")");
 
         clicked = camera.rayCast(mouse, scene.children);
 
         //If at least one element got clicked, process the first which is NOT a line
         if(clicked && clicked.length > 0) {
-            
+
             for(var i = 0; i < clicked.length; i++) {
-                
+
                 if(clicked[i].object.userData.onClick && !(clicked[i].object instanceof THREE.Line)) {
-                    
+
                     clicked[i].object.userData.onClick(clicked[i].object);
                     break;
                 }
@@ -397,7 +402,7 @@ function animate() {
         stats.update();
 }
 
-function create_stats(){ 
+function create_stats(){
 
     stats = new Stats();
     stats.setMode(0);
