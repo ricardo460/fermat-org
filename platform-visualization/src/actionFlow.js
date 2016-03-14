@@ -37,6 +37,10 @@ function ActionFlow(flow) {
 
     initFlow();
 
+    this.countFlowElement = function(){
+        initFlow();
+    };
+
     var onClick = function(target) {
 
         if(window.actualView === 'workflows'){
@@ -280,6 +284,11 @@ function ActionFlow(flow) {
         animateFlows('steps', 'origin', false, 3000);
     };
 
+    this.deleteStepEdit = function(callback) {
+
+        animateFlows('steps', 'origin', false, 1000);
+    }
+
     //Private methods
 
     /**
@@ -318,7 +327,12 @@ function ActionFlow(flow) {
 
                 new TWEEN.Tween(tile.position)
                 .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 7000)
-                .easing(TWEEN.Easing.Cubic.InOut)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .start();
+
+                new TWEEN.Tween(tile.rotation)
+                .to({x: 0, y: 0, z: 0}, 7000)
+                .easing(TWEEN.Easing.Exponential.InOut)
                 .start();
             }
 
@@ -374,9 +388,7 @@ function ActionFlow(flow) {
      * @param   {Function}   fillBox Function to call after load, receives context and image
      * @returns {THREE.Mesh} The created plane with the drawed texture
      */
-    function createFlowBox(src, fillBox, width, height, _true) { // nuevo
-
-        var _switch = _true || false;
+    function createFlowBox(src, fillBox, width, height, _switch) { // nuevo
 
         var canvas = document.createElement('canvas');
         canvas.height = height;
@@ -387,7 +399,7 @@ function ActionFlow(flow) {
 
         var image = document.createElement('img');
         var texture = new THREE.Texture(canvas);
-        texture.minFilter = THREE.LinearFilter;
+        texture.minFilter = THREE.NearestFilter;
 
         ctx.font = size + 'px Arial';
 
@@ -450,9 +462,8 @@ function ActionFlow(flow) {
      * @param {String} desc  The description of the whole process
      * @author Miguel Celedon
      */
-    this.createTitleBox = function(title, desc, _true) { // nuevo
+    this.createTitleBox = function(title, desc, _switch) { // nuevo
 
-        var _switch = _true || false;
         var fillBox = function(ctx, image) {
 
             ctx.drawImage(image, 0, 0);
@@ -479,7 +490,7 @@ function ActionFlow(flow) {
      * @param   {Boolean}    visible    visible of the object.
      * @param   {Number}    duration    Animation length.
      */
-    function animateFlows(objects, target, visible, duration){
+    function animateFlows(objects, target, visible, duration, callback){
 
         var _duration = duration || 2000,
             _target,
@@ -529,7 +540,7 @@ function ActionFlow(flow) {
                     y: target.y,
                     z: target.z
                 }, duration)
-                .easing(TWEEN.Easing.Cubic.InOut)
+                .easing(TWEEN.Easing.Exponential.InOut)
                 .onComplete(function() {
                     if(!visible)
                         window.scene.remove(object);    
@@ -564,7 +575,7 @@ function ActionFlow(flow) {
 
     //-----------------------------------------------------------------------------
 
-    function initFlow(){ 
+    function initFlow(){
 
         var i, l;
 
@@ -576,5 +587,6 @@ function ActionFlow(flow) {
                 (element.platfrm || element.suprlay) + '/' + element.layer + '/' + element.name
             );
         }
-    }
+    };
+
 }

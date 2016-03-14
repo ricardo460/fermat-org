@@ -10,11 +10,11 @@ function FlowManager(){
         actualFlow = null;
 
     // Public method
-    this.getObjHeaderFlow = function(){ // nuevo
+    this.getObjHeaderFlow = function(){ 
         return headerFlow;
     };
 
-    this.getpositionHeaderFlow = function(){ // nuevo
+    this.getpositionHeaderFlow = function(){ 
         return positionHeaderFlow;
     };
 
@@ -69,7 +69,7 @@ function FlowManager(){
             
             for(var x = mid; x > 0; x--) {
                 
-                center.x = center.x - 1500;
+                center.x = center.x - 2000;
             }
 
             for(var j = 0; j < countElement; j++){
@@ -81,7 +81,7 @@ function FlowManager(){
 
                 position.push(obj);
 
-                center.x = center.x + 1500;
+                center.x = center.x + 2000;
             }
         }
 
@@ -215,7 +215,7 @@ function FlowManager(){
 
         var duration = 1000;
 
-        if(window.camera.getFocus() == null) {
+        if(window.camera.getFocus() == null) { 
             
             var camTarget = headerFlow[id].objects[0].clone();
             camTarget.position.y -= 850;
@@ -238,6 +238,7 @@ function FlowManager(){
 
             window.buttonsManager.removeAllButtons();
             window.helper.showBackButton();
+            window.workFlowEdit.addButton(id);
         }
     };
 

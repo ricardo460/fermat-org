@@ -82,11 +82,13 @@ function FieldsEdit() {
                 }
             }
             else if(window.actualView === 'workflows'){
-                
+
                 self.actualFlow = null;
 
+                window.tableEdit.deleteMesh();
+
                 if(window.camera.getFocus() === null)
-                    window.tableEdit.addButton();              
+                    window.workFlowEdit.addButton();              
 
                 if(typeof(self.actions.exit) === 'function'){
                     self.actions.exit();
@@ -177,10 +179,14 @@ function FieldsEdit() {
         sesionDescription();
         sesionState();
         sesionAuthor();
-        createbutton();
+        createbutton(function(){
+            self.actions.exit = null;
+            window.tableEdit.saveTile();  
+        });
         self.setTextSize();
 
     };
+
         
     function sesionRepoDir() {
 
@@ -848,13 +854,14 @@ function FieldsEdit() {
 
     }
 
-    function createbutton(){
+    function createbutton(callback){
         
         var id = 'button-save', text = 'Save', type = 'button';
         
         window.buttonsManager.createButtons(id, text, function(){
-            self.actions.exit = null;
-            window.tableEdit.saveTile();            
+
+            if(typeof(callback) === 'function')
+                callback();          
 
         }, null, null, "right");
 
@@ -880,6 +887,20 @@ function FieldsEdit() {
 
         $("#select-layer").html(option);  
         
+    };
+
+    function deleteMesh(){
+
+        var mesh = self.objects.tile.mesh;
+
+        if(mesh != null){ 
+
+            animate(mesh, self.objects.tile.target.hide, 1500, function(){ 
+                    window.scene.remove(mesh);
+                    console.log("test");
+                    self.objects.tile.mesh = null;
+                });
+        }
     };
 
 
@@ -913,7 +934,5 @@ function FieldsEdit() {
             button.disabled=false;
         }
     };
-
-
     
 }

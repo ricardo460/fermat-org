@@ -156,33 +156,17 @@ function ViewManager() {
                         }
                         window.flowManager.getHeaderFLow();
                         window.headers.transformWorkFlow(transition);
-                        window.workFlowEdit.createButtonWorkFlow(); // nuevo
+                        window.workFlowEdit.addButton(); 
                     };
                     
                     backButton = reset = function() {
-                        
-                        if(window.workFlowEdit.getFlowsEdit()[0] !== undefined){ // nuevo
 
-                            window.buttonsManager.removeAllButtons(); // nuevo
-
-                            window.workFlowEdit.createButtonWorkFlow(); // nuevo
-
-                            window.helper.hideBackButton(); // nuevo
-
-                            window.workFlowEdit.deleteWorFlowEdit(); // nuevo
-                        }
-                        else{
-
-                            window.flowManager.showWorkFlow();
-                            window.workFlowEdit.createButtonWorkFlow();
-                        }
+                        window.flowManager.showWorkFlow();
                     };
 
                     exit = function() {
-                        window.flowManager.deleteAllWorkFlows();
-                        window.buttonsManager.removeAllButtons(); // nuevo
+                        window.buttonsManager.removeAllButtons();
                     };
-                    
                     break;
                 case 'network':
                     enter = function() {
