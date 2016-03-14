@@ -16,13 +16,22 @@ NetworkViewer.prototype.constructor = NetworkViewer;
 NetworkViewer.prototype.load = function() {
     
     //Ask for nodes
-    var networkNodes = this.test_load();
+    $.ajax({
+        url : window.helper.getAPIUrl("servers"),
+        method: "GET",
+        context: this
+    }).done(function(networkNodes) {
+        
+        this.NET_RADIOUS = this.NET_RADIOUS * (networkNodes.length - 1);
+        this.drawNodes(networkNodes);
+        this.configureCamera();
+        
+    }).fail(function(request, error) {
+        
+        window.console.log("Error: " + error);
+        window.alert("Error, please check the console and inform on github");
+    });
 
-    this.NET_RADIOUS = this.NET_RADIOUS * networkNodes.length;
-
-    this.drawNodes(networkNodes);
-    
-    this.configureCamera();
 };
 
 /**
@@ -35,7 +44,12 @@ NetworkViewer.prototype.unload = function() {
     if(this.childNetwork)
         this.close();
     
-    BaseNetworkViewer.prototype.unload.call(this);
+    var that = this;
+    this.hide();
+
+    setTimeout(function() {
+        BaseNetworkViewer.prototype.unload.call(that);
+    }, 2000);
     
 };
 
@@ -68,7 +82,8 @@ NetworkViewer.prototype.onNodeClick = function(clickedNode) {
  */
 NetworkViewer.prototype.open = function() {
     
-    this.childNetwork.load();
+    if(this.childNetwork)
+        this.childNetwork.load();
     
 };
 
@@ -103,6 +118,9 @@ NetworkViewer.prototype.drawNodes = function(networkNodes) {
             ((Math.random() * 2 - 1) * this.NET_RADIOUS));
         
         position = window.viewManager.translateToSection('network', position);
+        
+        //TODO: Fixme, Hard-code server sprite
+        networkNodes[i].extra.sub = 'server';
 
         var sprite = this.createNode(networkNodes[i], position);
 
@@ -124,7 +142,7 @@ NetworkViewer.prototype.configureCamera = function() {
     var self = this;
     var position = window.viewManager.translateToSection('network', new THREE.Vector3(0,0,0));
     setTimeout(function() {
-        window.camera.move(position.x, position.y, self.NET_RADIOUS, 2000);
+        window.camera.move(position.x, position.y, self.NET_RADIOUS + 10000, 2000);
         
         self.show.call(self);
         

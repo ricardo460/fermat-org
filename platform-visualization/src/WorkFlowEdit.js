@@ -1,197 +1,188 @@
 function WorkFlowEdit() {
 
-    var actualStepsQtty = 0, target;
+    var actualStepsQtty = 0,
+        target;
     var idSteps = [];
-
-    var actions = { 
-        exit : null,
-        type : null
-    };
 
     var self = this;
 
-    //var idCall = [];
+    this.testDataSteps =  [
+            {
+                "id": 0,
+                "title": "select broker and submit request",
+                "desc": "the customer selects a broker from the list and submits the request to connect to him.",
+                "type": "start",
+                "next": [
 
-    var flow = {
-        _id : null,
-        desc : "",
-        name : "",
-        next: null,
-        platfrm : null,
-        prev: null,
-        steps : [],
-        upd_at: null
-    };
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 1,
+                "title": "route request to network service",
+                "desc": "the module routes this request to the network service to reach the selected broker.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "0",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker community",
+                "layer": "sub app module",
+                "platfrm": "CBP"
+            },
+            {
+                "id": 2,
+                "title": "call the broker to deliver the request",
+                "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
+                "type": "activity",
+                "next": [
+                    {
+                        "id": "1",
+                        "type": "direct call"
+                    }
+                ],
+                "name": "crypto broker",
+                "layer": "actor network service",
+                "platfrm": "CBP"
+            }
+        ];
 
-    var flows = [];
+    var classFlow = null;
 
-    this.getActionType = function(){
-        return actions;
-    };
+    this.addButton = function(_id){
 
-    this.getFlowsEdit = function(){
+        var id = _id || null,
+            text = 'Edit WorkFlow',
+            button = 'buttonWorkFlowEdit',
+            side = null,
+            callback = null;
 
-        return flows;
-    };
+        if(id === null){
 
-	this.createButtonWorkFlow = function (){
-    	
-    	var text, button, side;
+            if(!window.session.getIsLogin()){
+            
+                callback = function(){ 
+                    window.session.getAuthCode();
+                };
+            }
+            else{
 
-    	callback = function(){
+                callback = function(){ 
 
-            actions.type = "insert";
+                    window.fieldsEdit.actions.type = "insert";
 
-            window.buttonsManager.removeAllButtons();
+                    window.buttonsManager.removeAllButtons();
 
-            //addAllForm();
+                    window.session.displayLoginButton(false);
 
-            drawHeaderFlow(null, addAllForm());
+                    drawHeaderFlow(null);
+                };
+
+            }
+
+            window.session.displayLoginButton(true);
+
+            text = 'Add New WorkFlow';
+            button = 'buttonWorkFlowNew';
+            side = 'left';
+            
+            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+
+        }
+        else{
+
+            if(!window.session.getIsLogin()){
+            
+                callback = function(){ 
+                    window.session.getAuthCode();
+                };
+            }
+            else{
+
+                callback = function(){
+
+                    window.fieldsEdit.actions.type = "update";
+                    window.buttonsManager.removeAllButtons(); 
+                    drawHeaderFlow(id, addAllForm);
+                };
+            }
 
             window.session.displayLoginButton(false);
 
-            createButtonSave();
-    	};
+            window.buttonsManager.createButtons(button, text, callback, null, null, side);
 
-    	text = 'Add New WorkFlow';
-    	button = 'buttonWorkFlowNew';
-    	side = 'left';
+            if(!window.session.getIsLogin()){
+            
+                callback = function(){ 
+                    window.session.getAuthCode();
+                };
+            }
+            else{ 
 
-    	window.buttonsManager.createButtons(button, text, callback, null, null, side);
-	};
+                callback = function(){
 
-    this.deleteFlow= function (){
+                    if(window.confirm("Really remove this component?"))           
+                        ;//deleteTile(id);                
+                };
+            }
 
-        function animate(){
-
-            new TWEEN.Tween(flows[0].objects[0].position)
-                .to({
-                    x: target.hide.position.x,
-                    y: target.hide.position.y,
-                    z: target.hide.position.z
-                }, 2000)
-                .easing(TWEEN.Easing.Exponential.InOut)
-                .start();
-        }
-        
-        if(flows[0] !== undefined)
-        {
-            animate();
-
-            window.scene.remove(flows[0].objects[0]);    
-            flows = [];
-        }
+            text = 'Delete WorkFlow';
+            button = 'buttonWorkFlowDelete';
+            side = 'right';
+            
+            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+        }   
+    
     };
 
-    function animateEdit(flow){
+    function createElement(){
 
-        new TWEEN.Tween(flow.objects[0].position)
-                .to({
-                    x: flow.positions.target[0].x,
-                    y: flow.positions.target[0].y,
-                    z: flow.positions.target[0].z
-                }, 8000)
-                .easing(TWEEN.Easing.Exponential.InOut)
-                .start();
-    }
+        mesh = classFlow.createTitleBox();
 
-    function insertWorkFlow(){
-
-        var positions = new THREE.Vector3(), _flow, find = false;
-
-        for(var i = 0; i < flowManager.getObjHeaderFlow().length; i++){
-
-            if(flowManager.getObjHeaderFlow()[i].flow.platfrm == flows[0].flow.platfrm){
-                positions = flowManager.getObjHeaderFlow()[i].positions.target[0];
-                find = true;
-            }
-        }
-
-        if(find === false){ // si no existe ningun elemento en el header (si el que se va a insertar es nuevo)
-
-            for(var j = 0; j < window.headers.getPositionHeaderViewInFlow().length; j++){
-
-                if(window.headers.getPositionHeaderViewInFlow()[j].name === flows[0].flow.platfrm){
-                    positions =  window.headers.getPositionHeaderViewInFlow()[j].position;
-                }
-            }
-        }
-
-        var _positions = new THREE.Vector3();
-
-        flows[0].positions.target.push(_positions);
-        flows[0].positions.target[0].copy(positions);
-
-        flows[0].positions.origin.push(window.helper.getOutOfScreenPoint(0));
-       
-        if(find === true)
-            flows[0].positions.target[0].y = flows[0].positions.target[0].y - 500;
-        else{
-            flows[0].positions.target[0].x = flows[0].positions.target[0].x - 1500;
-            flows[0].positions.target[0].y = flows[0].positions.target[0].y - 2200;
-        }
-
-        window.camera.move(flows[0].positions.target[0].x, flows[0].positions.target[0].y, flows[0].positions.target[0].z + 8000, 4000);
+        var newCenter = window.helper.getCenterView('workflows');
         
-        window.fieldsEdit.disabledButtonSave(true);
+        target = window.helper.fillTarget(newCenter.x, -135000, newCenter.z, 'workflows');
 
-        window.camera.loseFocus();
+        mesh.position.copy(target.hide.position);
 
-        window.workFlowEdit.createButtonWorkFlow();
+        mesh.rotation.copy(target.hide.rotation);
 
-        window.session.displayLoginButton(true);
+        mesh.renderOrder = 1;
 
-        actions.type = null;
+        mesh.material.needsUpdate = true;
 
-        _flow = flows[0];
-        
-        animateEdit(_flow); // se anima el workflow insertado
+        window.scene.add(mesh);
 
-        window.flowManager.getObjHeaderFlow().push(_flow); // agregamos el nuevo workflow insertado
+        window.fieldsEdit.objects.tile.mesh = mesh;
 
-        flows = [];
+        window.fieldsEdit.objects.tile.target = target;
     }
 
-    function createButtonSave(){
+    function addAllForm(){
 
-        var text, button, side;
+        formPlatform();
+        formTitleHeaderFlow();
+        formSubTitleHeaderFlow();
+        creatButtonPreview();
+        $("body").append(document.createElement("br"));
 
+        window.fieldsEdit.setTextSize();
 
-        callback = function(){
+        //Main Element
+        function formPlatform(){
 
-            setIdSteps(false);
-            insertWorkFlow();
-        };
-
-        text = 'Save';
-        button = 'button-save';
-        side = 'right';
-
-        window.buttonsManager.createButtons(button, text, callback, null, null, side);
-    }
-
-	function addAllForm(){
-
-		formPlatform();
-		formTitleHeaderFlow();
-		formSubTitleHeaderFlow();
-		formStepsQttyHeaderFlow();
-
-		$("body").append(document.createElement("br"));
-
-		window.fieldsEdit.setTextSize();
-
-		//Main Element
-		function formPlatform(){
-
-            var id = 'label-Platform'; text = 'Select the Platform : '; type = 'label';
+            var id = 'label-Group'; text = 'Select the Platform : '; type = 'label';
 
             window.fieldsEdit.createField(id, text, null, type, 1);
 
-            id = 'select-Platform'; text = ''; type = 'select';
+            id = 'select-Group'; text = ''; type = 'select';
 
             window.fieldsEdit.createField(id, text, null, type, 1);
-            document.getElementById(id).style.width = '56px';
+
             var optgroup = "<optgroup label = Platform>",
                 option = "";
 
@@ -225,56 +216,18 @@ function WorkFlowEdit() {
 
             $("#"+id).html(optgroup);
 
-            formLayer();
-
-            changeLayer(document.getElementById(id).value);
         }
-
-        function formLayer(){
-
-            var id = 'label-layer'; text = 'Select the Layer : '; type = 'label';
-
-            window.fieldsEdit.createField(id, text, null, type, 1);
-
-            id = 'select-layer'; text = ''; type = 'select';
-
-            window.fieldsEdit.createField(id, text, null, type, 1);
-
-            window.fieldsEdit.objects.idFields.layer = id;
-
-            document.getElementById(id).style.width = '56px';
-        }
-
-        function changeLayer(platform){
-
-	        var state = false;
-
-	        if(typeof window.platforms[platform] === 'undefined')
-	            state = platform;
-
-	        var _layers = window.CLI.query(window.layers,function(el){return (el.super_layer === state);});
-
-	        var option = "";
-
-	        for(var i = 0;i < _layers.length; i++){
-
-	            option += "<option value = '"+_layers[i]+"' >"+_layers[i]+"</option>";
-
-	        }
-
-	        $("#select-layer").html(option);         
-	    }
 
         function formTitleHeaderFlow(){
 
-			var id = 'label-Title'; text = 'Enter Title : '; type = 'label';
+            var id = 'label-Name'; text = 'Enter Name: '; type = 'label';
 
-			window.fieldsEdit.createField(id, text, null, type, 1);
+            window.fieldsEdit.createField(id, text, null, type, 1);
 
-			var idSucesor = window.fieldsEdit.objects.row1.buttons[window.fieldsEdit.objects.row1.buttons.length - 1].id;
+            var idSucesor = window.fieldsEdit.objects.row1.buttons[window.fieldsEdit.objects.row1.buttons.length - 1].id;
 
             var object = {
-                id : "imput-Title",
+                id : "input-Name",
                 text : "textfield"
               };
 
@@ -300,18 +253,18 @@ function WorkFlowEdit() {
             button.addEventListener('blur', function() {
                 changeTexture();
             });
-		}
+        }
 
-		function formSubTitleHeaderFlow(){
+        function formSubTitleHeaderFlow(){
 
-			var id = 'label-SubTitle'; text = 'Enter Sub-Title : '; type = 'label';
+            var id = 'label-SubTitle'; text = 'Enter input-desc : '; type = 'label';
 
-			window.fieldsEdit.createField(id, text, null, type, 1);
+            window.fieldsEdit.createField(id, text, null, type, 1);
 
-			var idSucesor = window.fieldsEdit.objects.row1.buttons[window.fieldsEdit.objects.row1.buttons.length - 1].id;
+            var idSucesor = window.fieldsEdit.objects.row1.buttons[window.fieldsEdit.objects.row1.buttons.length - 1].id;
 
             var object = {
-                id : "imput-SubTitle",
+                id : "input-desc",
                 text : "textfield"
               };
 
@@ -337,341 +290,175 @@ function WorkFlowEdit() {
             button.addEventListener('blur', function() {
                 changeTexture();
             });
-		}
-
-		function formStepsQttyHeaderFlow(){
-
-			var id = 'label-StepsQtty'; text = 'No Steps : '; type = 'label';
-
-			window.fieldsEdit.createField(id, text, null, type, 1);
-
-			var idSucesor = window.fieldsEdit.objects.row1.buttons[window.fieldsEdit.objects.row1.buttons.length - 1].id;
-
-            var object = {
-                id : "imput-StepsQtty",
-                text : "textfield"
-              };
-
-            window.fieldsEdit.objects.idFields.stepsQtty = object.id;
-
-            var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
-
-            $("#"+window.fieldsEdit.objects.row1.div).append(imput);
-
-            var button = document.getElementById(object.id);
-
-            var sucesorButton = document.getElementById(idSucesor);
-                  
-            button.className = 'edit-Fermat';
-            button.placeholder = '0';
-            button.style.zIndex = 10;
-            button.style.opacity = 0;
-            button.style.width = '40px';
-
-            window.helper.show(button, 1000);
-
-            window.fieldsEdit.objects.row1.buttons.push(object);
-
-            button.addEventListener('keyup', function(e) {
-        		if ((e.keyCode < 48 || e.keyCode > 57) && (e.keyCode < 96 || e.keyCode > 105) && e.keyCode != 8 && e.keyCode != 9)
-          			e.preventDefault();
-                else{
-              		if(actualStepsQtty !== parseInt($("#imput-StepsQtty").val())) {
-
-                        creatButtonPreview();
-
-                        /*if(idCall.length > 0)  
-                            idCall = [];*/
-
-              			actualStepsQtty = parseInt($("#imput-StepsQtty").val());
-              			
-              			
-              			window.fieldsEdit.objects.row2.buttons = [];
-
-              			if( window.fieldsEdit.objects.row2.div !== null ){
-
-                    		$('#'+window.fieldsEdit.objects.row2.div).remove();
-                    		window.fieldsEdit.objects.row2.div = null;
-              			}
-
-                        flow.steps = [];
-              			for(var i = 1; i <= parseInt($("#imput-StepsQtty").val()); i++){
-    					     
-                             var steps = {desc: "", element: "", id: 0, layer: "", name: "", next: [], platfrm: "", title: "", type: ""}; 
-
-                             createSteps(i);
-                             
-                             flow.steps.push(steps);
-    					}
-              		}
-                }
-            });
-		}
+        }
 
         function creatButtonPreview(){
 
             var text, button, side;
 
             callback = function(){
-                setIdSteps(true);
 
+                fillStep();
+                
             };
 
             text = 'Preview';
             button = 'buttonPreview';
-            side = 'left';
+            side = 'right';
 
             window.buttonsManager.createButtons(button, text, callback, null, null, side);
         }
 
-		//Second Elements
-		function createSteps(i){
+    }
 
-			var _valueSteps = ["Title", "SubTitle", "Type", "Name", "next", "layer", "platafrm"];
-			var _fieldsSteps = ["textfield", "textfield", "textfield", "textfield", "textfield", "select", "select"];
+    function drawHeaderFlow(id, callback){ 
 
-			var id = 'label-Steps_' + i; text = 'Step ' + i + ' : '; type = 'label';
+        if(window.fieldsEdit.actions.type === "insert"){
 
-			window.fieldsEdit.createField(id, text, null, type, 2);
+            addAllForm();
 
-			window.fieldsEdit.objects.row2.buttons[i-1].elemnt = {id:[], text:[], typeCall:[]};
+            var flow = fillFlow();
 
+            classFlow = new ActionFlow(flow);
 
-			var idSucesor = window.fieldsEdit.objects.row2.buttons[window.fieldsEdit.objects.row2.buttons.length - 1].id;
-            
-			for(var j = 0; j < _valueSteps.length; j++){
+            createElement();
 
-				window.fieldsEdit.objects.row2.buttons[i-1].elemnt.id[j] = _valueSteps[j] + "_" + j + "_" + i;
-				window.fieldsEdit.objects.row2.buttons[i-1].elemnt.text[j] = _fieldsSteps[j];
-			}
+            var mesh = window.fieldsEdit.objects.tile.mesh;
 
-			var sucesorButton = document.getElementById(idSucesor);
+            window.fieldsEdit.actions.exit = function(){
 
-			for(var k = 0; k < 5; k++)
-			{
-				createStepsChildrenTextfield(window.fieldsEdit.objects.row2.buttons[i-1].elemnt.id[k], _valueSteps[k]);
-			}
+                classFlow.deleteStep();
 
-			$("#"+window.fieldsEdit.objects.row2.div).append("<br>");     
-
-		}
-
-		function createStepsChildrenTextfield(id, text){
-
-            var _event = 'keyup';
-
-			var imput = $('<input />', {"id" : id, "type" : "text", "text" : "textfield" });
-            $("#"+window.fieldsEdit.objects.row2.div).append(imput);
-
-            var button = document.getElementById(id);
-                  
-            button.className = 'edit-Fermat';
-
-            if(text === 'next'){
-                button.placeholder = 'Number of Calls';
-                button.style.width = '80 px';
-            }
-            else
-                button.placeholder = 'Enter ' + text;
-
-            button.style.zIndex = 10;
-
-            window.helper.show(button, 1000);
-
-            button.addEventListener(_event, function() {
-
-
-
-                if($(this).attr("id").substring(0, 4) === 'next'){
-
-                    for (var j = 1; j <= window.fieldsEdit.objects.row2.buttons[parseInt($(this).attr("id").substring(7, 8)) - 1].elemnt.typeCall.length; j++) {
-                        if(window.fieldsEdit.objects.row2.buttons[parseInt($(this).attr("id").substring(7, 8)) - 1].elemnt.typeCall[j-1] !== undefined){
-                            $("#" + window.fieldsEdit.objects.row2.buttons[parseInt($(this).attr("id").substring(7, 8)) - 1].elemnt.typeCall[j-1]).remove();
-                        }
-                    }
-
-                    window.fieldsEdit.objects.row2.buttons[parseInt($(this).attr("id").substring(7, 8)) - 1].elemnt.typeCall = [];
-
-                    for(var i = 1; i <= parseInt($("#" + $(this).attr("id")).val()); i++){
-                        createTypeCall($(this).attr("id") + "_typeCall_" + i, window.fieldsEdit.objects.row2.buttons[parseInt($(this).attr("id").substring(7, 8)) - 1].text, $(this).attr("id"));
-                        window.fieldsEdit.objects.row2.buttons[parseInt($(this).attr("id").substring(7, 8)) - 1].elemnt.typeCall[i-1] = $(this).attr("id") + "_typeCall_" + i;
-                    }
-                }
-            });   
-		}
-
-        function createTypeCall(id, text, jquery){
-
-            //var newidSteps = [];
-            //idCall.push(id);
-            $('<input />', {"id" : id, "type" : "text", "text" : "textfield" }).insertAfter("#" + jquery);
-
-            var button = document.getElementById(id);
-
-            button.className = 'edit-Fermat';
-            button.placeholder = text.substring(0,7) + "to: ";
-            button.style.width.important = '70 px';
-            button.style.zIndex = 10;
-            button.name = "nameTypeCall";
-
-            window.helper.show(button, 1000);
-
-            button.addEventListener('blur', function() {
-            });   
-        }
-	}
-
-    function drawHeaderFlow(id, callback){
-
-        var exit = null, mesh;
-
-        if(actions.type === "insert"){ // si es insertar
-
-            flows.push(new ActionFlow(flow));
-
-            mesh = flows[0].createTitleBox("","");
-            flows[0].objects.push(mesh);
-
-            mesh.userData = {
-                id: window.flowManager.getObjHeaderFlow().length,
-                onClick : onClick
-            };
-
-            var newCenter = helper.getCenterView('workflows');
-            
-            target = window.helper.fillTarget(newCenter.x, -135000, newCenter.z, 'workflows');
-
-            mesh.position.copy(target.hide.position);
-
-            mesh.rotation.copy(target.hide.rotation);
-
-            mesh.renderOrder = 1;
-
-            window.scene.add(mesh);
-
-            exit = function(){
+                classFlow = null;
 
                 window.camera.resetPosition();
 
             };
 
-            actions.exit = exit;
+            animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
 
-            animate(mesh, target.show, 1000, function(){ 
-
-                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, 950), 500);
+                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, 950, 1), 2000);
 
                 if(typeof(callback) === 'function')
                     callback();
+
                 window.helper.showBackButton();
 
             });
-
-            window.helper.showBackButton();
         }
-    }
+        else if(window.fieldsEdit.actions.type === "update"){
 
-    function setIdSteps(isTrue){
+            var flow = window.flowManager.getObjHeaderFlow()[id].flow;
 
-        var newidSteps = [];
+            flow = JSON.parse(JSON.stringify(flow));
 
-        flows[0].flow.platfrm = document.getElementById(window.fieldsEdit.objects.idFields.platform).value;// momentaneo
+            classFlow = new ActionFlow(flow);
 
-         if(document.getElementsByName("nameTypeCall").length > 0){ // si existe al mens un type call
-                idSteps = [];
-                
-            for(var i = 0; i < window.fieldsEdit.objects.row2.buttons.length; i++){
-                idSteps[i] = newidSteps;
-                for(var j = 0; j < window.fieldsEdit.objects.row2.buttons[i].elemnt.id.length - 2; j++){
-                    idSteps[i][j] = window.fieldsEdit.objects.row2.buttons[i].elemnt.id[j];
-                }
-                newidSteps = [];
-            }
+            createElement();
 
-            fillWorkFlow(isTrue); // aqui vamos a llenar todo
+            var mesh = window.fieldsEdit.objects.tile.mesh;
+
+            window.fieldsEdit.actions.exit = function(){
+
+                classFlow.deleteStep();
+
+                classFlow = null;
+
+                window.camera.resetPosition();
+
+            };
+
+            animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
+
+                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, 950, 1), 2000);
+
+                if(typeof(callback) === 'function')
+                    callback();
+
+                fillFields(id);
+
+                changeTexture();
+
+                fillStep();
+
+                window.helper.showBackButton();
+
+            });
+            
         }
     }
 
     function changeTexture(){
         
-        fillWorkFlowHeader();
+        var flow = fillFlow();
 
-        var texture = flows[0].createTitleBox(flow.name,flow.desc, true);
-        flows[0].objects[0].material.map = texture;
+        texture = classFlow.createTitleBox(flow.name, flow.desc, true);
 
-        texture = null;
-        flow = {
-            _id : null,
-            desc : "",
-            name : "",
-            next: null,
-            platfrm : null,
-            prev: null,
-            steps : [],
-            upd_at: null
-        };
+        var mesh = window.fieldsEdit.objects.tile.mesh;
+
+        mesh.material.map = texture;
+
+        mesh.material.needsUpdate = true; 
     }
 
-    function fillWorkFlowHeader(){
+    function fillStep(){
 
-        flow.name = document.getElementById(window.fieldsEdit.objects.idFields.title).value;
-        flow.desc = document.getElementById(window.fieldsEdit.objects.idFields.subTitle).value;
-        flow.platfrm = document.getElementById(window.fieldsEdit.objects.idFields.platform).value;
+        var flow = fillFlow();
+
+        classFlow.deleteStep();
+
+        var target = window.fieldsEdit.objects.tile.target.show;
+
+        flow.steps = self.testDataSteps;
+
+        classFlow.flow = flow;
+
+        classFlow.countFlowElement();
+
+        for (var i = 0; i < flow.steps.length; i++) {
+            classFlow.drawTree(flow.steps[i], target.position.x + 900 * i, target.position.y - 211, 0);
+        }
+
+        classFlow.showSteps();
+
     }
 
-    function fillWorkFlow(isTrue){
+    function fillFlow(){
 
-        var value = [], indice = 0;
+        var flow = {},
+            step = [];
 
-        flows[0].flow.name = document.getElementById(window.fieldsEdit.objects.idFields.title).value;
-        flows[0].flow.desc = document.getElementById(window.fieldsEdit.objects.idFields.subTitle).value;
-        flows[0].flow.platfrm = document.getElementById(window.fieldsEdit.objects.idFields.platform).value;
+        flow.steps = step;
 
-        for (var j = 0; j < idSteps.length; j++) {
-           for (var k = 0; k < idSteps[j].length; k++) {
-              value[k] = document.getElementById(idSteps[j][k]).value;
-            }
+        flow.name = document.getElementById('input-Name').value;
+        flow.desc = document.getElementById('input-desc').value;
+        flow.platfrm = document.getElementById('select-Group').value;
 
-            setValue(value, j);
-        }
-
-        if(isTrue){
-            setTimeout(function() {
-                for (var i = 0; i < flows[0].flow.steps.length; i++) {
-                    flows[0].drawTree(flows[0].flow.steps[i], target.show.position.x + 900 * i, target.show.position.y - 211, 0);
-                }
-                flows[0].showSteps();
-            }, 1000);
-        }
+        return flow; 
     }
 
-    function setValue(value, j){
+    function fillFields(id){
 
-        var next;
+        var flow = classFlow.flow;
 
-        if(document.getElementsByName("nameTypeCall") !== undefined){
+        flow = JSON.parse(JSON.stringify(flow));
 
-            for(var i = 0; i < document.getElementsByName("nameTypeCall").length; i++){
+        window.fieldsEdit.actualFlow = JSON.parse(JSON.stringify(flow));
 
-                if(parseInt(document.getElementsByName("nameTypeCall")[i].id.substring(7, 8)) - 1 === j){
-                    if(document.getElementsByName("nameTypeCall")[i].value - 1 > 0){
-                        next = {id: document.getElementsByName("nameTypeCall")[i].value - 1, type: "direct call"};
-                        flows[0].flow.steps[j].next.push(next);
-                    }
-                }
-            }
-        }
+        console.log(flow);
 
-        flows[0].flow.steps[j].name = value[3];
-        flows[0].flow.steps[j].desc = value[1];
-        flows[0].flow.steps[j].element = -1;//document.getElementById(objects.idFields.platform).value + "_" + document.getElementById(objects.idFields.layer).value;
-        flows[0].flow.steps[j].id = j;
-        flows[0].flow.steps[j].layer = document.getElementById(window.fieldsEdit.objects.idFields.layer).value;
-        flows[0].flow.steps[j].platfrm = document.getElementById(window.fieldsEdit.objects.idFields.platform).value;
-        flows[0].flow.steps[j].title = value[0];
-        flows[0].flow.steps[j].type = value[2];
+        if(flow.platform !== undefined)
+            document.getElementById('select-Group').value = flow.platform;
 
-    } 
+        if(flow.name !== undefined)
+            document.getElementById('input-Name').value = flow.name;
+        
+        if(flow.desc !== undefined)
+            document.getElementById('input-desc').value = flow.desc;
+
+        self.testDataSteps = flow.steps;
+        
+    }
 
     function animate(mesh, target, duration, callback){
 

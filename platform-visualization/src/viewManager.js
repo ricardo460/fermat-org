@@ -79,6 +79,8 @@ function ViewManager() {
                         setTimeout(function(){
                             window.signLayer.transformSignLayer();
                         }, 2500);
+
+                        window.developer.delete();
                     };                    
                     
                     exit = function() {
@@ -122,12 +124,9 @@ function ViewManager() {
                     };
                     
                     exit = function() {
-                        if(window.toggleHelp){
-                            window.helper.hide('navigation', 1000, true);
-                            window.helper.hide('zoom', 1000, true);
-                            window.helper.hide('slide', 1000, true);
-                            window.helper.hide('return', 1000, true);
-                            window.toggleHelp = false;
+                        if(window.guide.active){
+                            window.guide.removeHelp();
+                            window.guide.active = false;
                         }
                     };
                     break;
@@ -157,67 +156,17 @@ function ViewManager() {
                         }
                         window.flowManager.getHeaderFLow();
                         window.headers.transformWorkFlow(transition);
-                        window.workFlowEdit.createButtonWorkFlow(); // nuevo
+                        window.workFlowEdit.addButton(); 
                     };
                     
-                    backButton = reset = function() { // nuevo TODO
-                        
+                    backButton = reset = function() {
 
-                        switch(window.workFlowEdit.getActionType().type){
-
-                            case 'insert':
-                                window.camera.loseFocus();
-
-                                window.buttonsManager.removeAllButtons(); // nuevo
-
-                                window.workFlowEdit.createButtonWorkFlow(); // nuevo
-
-                                window.helper.hideBackButton(); // nuevo
-
-                                window.workFlowEdit.deleteFlow(); // nuevo
-
-                                window.session.displayLoginButton(true); // nuevo
-
-                                window.workFlowEdit.getActionType().type = null; // nuevo
-
-                                break;
-
-                            case 'save':
-                                break;
-                            default:
-                                window.flowManager.showWorkFlow();
-
-                                window.workFlowEdit.createButtonWorkFlow();
-
-                                break;
-
-                        }
-                        /*if(window.workFlowEdit.getFlowsEdit()[0] !== undefined){ // nuevo
-
-                            window.camera.loseFocus();
-
-                            window.buttonsManager.removeAllButtons(); // nuevo
-
-                            window.workFlowEdit.createButtonWorkFlow(); // nuevo
-
-                            window.helper.hideBackButton(); // nuevo
-
-                            window.workFlowEdit.deleteWorFlowEdit(); // nuevo
-
-                            window.session.displayLoginButton(true); // nuevo
-                        }
-                        else{
-
-                            window.flowManager.showWorkFlow();
-                            window.workFlowEdit.createButtonWorkFlow();
-                        }*/
+                        window.flowManager.showWorkFlow();
                     };
 
                     exit = function() {
-                        window.flowManager.deleteAllWorkFlows();
-                        window.buttonsManager.removeAllButtons(); // nuevo
+                        window.buttonsManager.removeAllButtons();
                     };
-                    
                     break;
                 case 'network':
                     enter = function() {
@@ -265,13 +214,13 @@ function ViewManager() {
 
                         setTimeout(function(){
                             window.developer.animateDeveloper();
-                        }, 2000);        
+                        }, 2500);        
                     };
                     
                     backButton = reset = function() {
-                        setTimeout(function(){
+                        //setTimeout(function(){
                             window.developer.animateDeveloper();
-                        }, 4000);
+                        //}, 2000);
                         
                         window.changeView();
                     };
