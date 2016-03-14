@@ -66,9 +66,9 @@ var release = function (req) {
  * @api {post} /v1/repo/usrs/:usr_id/layers add layer
  * @apiVersion 0.0.1
  * @apiName AddLayer
- * @apiParam {String} name    Layer name.
- * @apiParam {String} lang    xxxxx.
- * @apiParam {String} suprlay    xxxxx.
+ * @apiParam {String} name    	Layer name.
+ * @apiParam {String} lang    	{java, javascript, c++, c#, etc}.
+ * @apiParam {String} suprlay	superlayer code (optional).
  * @apiParam {Number} order Indicates the position where the layer this with respect to other.
  * @apiGroup Repo-Layer
  * @apiDescription Add a layer to the architecture of fermat.
@@ -78,7 +78,7 @@ router.post('/', function (req, res, next) {
 	try {
 		if (!security.isValidData(req.body.name) || //
 			!security.isValidData(req.body.lang) || //
-			!security.isValidData(req.body.suprlay) || //
+			//!security.isValidData(req.body.suprlay) || //
 			!security.isValidData(req.body.order)) {
 			res.status(412).send({
 				"message": "missing or invalid data"

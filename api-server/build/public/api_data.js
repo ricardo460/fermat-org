@@ -695,14 +695,14 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "lang",
-            "description": "<p>xxxxx.</p>"
+            "description": "<p>{java, javascript, c++, c#, etc}.</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "suprlay",
-            "description": "<p>xxxxx.</p>"
+            "description": "<p>superlayer code (optional).</p>"
           },
           {
             "group": "Parameter",
