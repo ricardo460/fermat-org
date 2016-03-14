@@ -78,7 +78,7 @@ router.post('/', function (req, res, next) {
 	try {
 		if (!security.isValidData(req.body.name) || //
 			!security.isValidData(req.body.lang) || //
-			//!security.isValidData(req.body.suprlay) || //
+			!security.ifExistIsValidData(req.body.suprlay) || //
 			!security.isValidData(req.body.order)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
@@ -170,7 +170,9 @@ router.put('/:layer_id', function (req, res, next) {
 	try {
 		if (!security.isValidData(req.params.layer_id) || //
 			!security.ifExistIsValidData(req.body.name) || //
-			!security.ifExistIsValidData(req.body.lang) || !security.ifExistIsValidData(req.body.suprlay) || !security.ifExistIsValidData(req.body.order)) {
+			!security.ifExistIsValidData(req.body.lang) ||
+			!security.ifExistIsValidData(req.body.suprlay) ||
+			!security.ifExistIsValidData(req.body.order)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
 			});
@@ -188,48 +190,7 @@ router.put('/:layer_id', function (req, res, next) {
 		next(err);
 	}
 });
-/**
- * [description]
- *
- * @method
- *
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @param  {[type]} next  [description]
- *
- * @return {[type]} [description]
- router.delete('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
-    'use strict';
-    try {
-        if (!security.isValidData(req.params.comp_id) || //
-            !security.isValidData(req.params.comp_dev_id) //
-        ) {
-            res.status(412).send({
-                "message": "missing or invalid data"
-            });
-        } else {
-            repMod.delCompDev(req, function (error, result) {
-                if (error) {
-                    res.status(200).send(error);
-                } else {
-                    if (result) {
-                        res.status(204).send();
-                    } else {
-                        res.status(404).send({
-                            message: "NOT FOUND"
-                        });
-                    }
-                }
-                release(req);
-            });
-        }
-    } catch (err) {
-        next(err);
-    }
-});
 
-req.params.layer_id,
- */
 /**
  * @api {delete} /v1/repo/usrs/:usr_id/layers/:layer_id delete layer
  * @apiVersion 0.0.1

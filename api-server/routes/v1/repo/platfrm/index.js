@@ -78,7 +78,7 @@ router.post('/', function (req, res, next) {
 	try {
 		if (!security.isValidData(req.body.code) || //
 			!security.isValidData(req.body.name) || //
-			!security.isValidData(req.body.logo) || //
+			!security.ifExistIsValidData(req.body.logo) || //
 			!security.isValidData(req.body.order)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
@@ -162,7 +162,8 @@ router.get('/:platfrm_id', function (req, res, next) {
 router.put('/:platfrm_id', function (req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.params.platfrm_id) || !security.ifExistIsValidData(req.body.name) || //
+		if (!security.isValidData(req.params.platfrm_id) ||
+			!security.ifExistIsValidData(req.body.name) || //
 			!security.ifExistIsValidData(req.body.logo) || //
 			!security.ifExistIsValidData(req.body.order)) {
 			res.status(412).send({
