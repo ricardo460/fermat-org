@@ -141,7 +141,8 @@ router.post('/:proc_id/steps', function (req, res, next) {
 			!security.isValidData(req.body.type) || //
 			!security.isValidData(req.body.title) || //
 			!security.isValidData(req.body.desc) || //
-			!security.isValidData(req.body.order)) {
+			!security.isValidData(req.body.order) ||
+			!security.ifExistIsValidData(req.body.next)) {
 			res.status(412).send({
 				message: 'missing or invalid data'
 			});
