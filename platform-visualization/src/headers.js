@@ -300,12 +300,10 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             return (a === b) ? 0 : ((a > b) ? 1 : -1);
         });*/
 
-        var initial = -15000.0;
-        var initialX = initial;
-        var initialY = initial;
-        var separationX = width + 3000;
+        var initialX = -20000;
+        var initialY = -15000;
+        var separationX = width + 1500;
         var separationY = 6000.0;
-        var separationXForLevelNot0 = separationX + 1000;
         var positionZ = 45000;
 
         for (i = 0; i < graph.nodes.length; i++) {
