@@ -233,12 +233,6 @@ function initPage() {
             }
             else
                 goToView(window.location.hash.slice(1));
-
-            if (path === 'low') {
-                tileManager.MAX_TILE_DETAIL_SCALE = 2;
-            } else {
-                tileManager.MAX_TILE_DETAIL_SCALE = 5;
-            }
         }
     });
 
