@@ -42,7 +42,7 @@ function Helper() {
                     $(el).remove();
 
                 if(typeof(callback) === 'function')
-                    callback(); 
+                    callback();
             });
         }
 
@@ -50,14 +50,14 @@ function Helper() {
 
     this.hideButtons = function(){
 
-        if($('#developerButton') != null) 
+        if($('#developerButton') != null)
           window.helper.hide($('#developerButton'), 1000);
-        if($('#showFlows') != null) 
+        if($('#showFlows') != null)
           window.helper.hide($('#showFlows'), 1000);
-        if($('#showScreenshots') != null) 
-          window.helper.hide($('#showScreenshots'), 1000);        
+        if($('#showScreenshots') != null)
+          window.helper.hide($('#showScreenshots'), 1000);
     };
-    
+
     /**
      * @author Miguel Celedon
      *
@@ -66,7 +66,7 @@ function Helper() {
      * @param {Number} [duration=1000] Duration of animation
      */
     this.show = function(element, duration) {
-        
+
         duration = duration || 1000;
 
         if(typeof(element) === "string")
@@ -76,7 +76,7 @@ function Helper() {
                 $(element).show();
         });
     };
-    
+
     /**
      * Shows a material with transparency on
      * @param {Object} material                                Material to change its opacity
@@ -85,9 +85,9 @@ function Helper() {
      * @param {delay}  [delay=0]
      */
     this.showMaterial = function(material, duration, easing, delay) {
-        
+
         if(material && typeof material.opacity !== 'undefined') {
-            
+
             duration = duration || 2000;
             easing = (typeof easing !== 'undefined') ? easing : TWEEN.Easing.Exponential.InOut;
             delay = (typeof delay !== 'undefined') ? delay : 0;
@@ -100,7 +100,7 @@ function Helper() {
                 .start();
         }
     };
-    
+
     /**
      * Deletes or hides the object
      * @param {Object}  object          The mesh to hide
@@ -108,16 +108,16 @@ function Helper() {
      * @param {Number}  [duration=2000] Duration of animation
      */
     this.hideObject = function(object, keep, duration) {
-        
+
         duration = duration || 2000;
         keep = (typeof keep === 'boolean') ? keep : true;
-        
+
         new TWEEN.Tween(object.material)
             .to({opacity : 0}, duration)
             .onUpdate(function() { this.needsUpdate = true; })
-            .onComplete(function() { 
-              if(!keep) 
-                window.scene.remove(object); 
+            .onComplete(function() {
+              if(!keep)
+                window.scene.remove(object);
             })
             .start();
     };
@@ -187,12 +187,12 @@ function Helper() {
                 code = this.capFirstLetter(words[0]);
             else
                 code = this.capFirstLetter(words[0].slice(0, 3));
-        } 
+        }
         else if(words.length == 2) { //if N = 2 use first cap letter, and second letter
 
             code += words[0].charAt(0).toUpperCase() + words[0].charAt(1);
             code += words[1].charAt(0).toUpperCase() + words[1].charAt(1);
-        } 
+        }
         else { //if N => 3 use the N (up to 4) letters caps
 
             var max = (words.length < 4) ? words.length : 4;
@@ -222,11 +222,11 @@ function Helper() {
         if(_group && _type && _layer && _name) {
             return _group + "/" + _type + "/" + _layer + "/" +
                 _root + "-" + _group.split('_').join('-').toLowerCase() + "-" + _type.split('_').join('-') + "-" + _layer.split('_').join('-') + "-" + _name + "-bitdubai";
-        } 
+        }
         else
             return null;
     };
-    
+
     /**
      * Returns the route of the API server
      * @author Miguel Celedon
@@ -234,11 +234,11 @@ function Helper() {
      * @returns {string} The URL related to the requested route
      */
     this.getAPIUrl = function(route) {
-        
+
         var tail = "";
-        
+
         switch(route) {
-                
+
             case "comps":
                 tail = "/v1/repo/comps";
                 break;
@@ -274,7 +274,7 @@ function Helper() {
             url;
 
         switch(route) {
-                
+
             case "insert":
                 method = "POST";
                 tail = "/v1/repo/usrs/" + USERDATA._id + "/comps";
@@ -298,11 +298,11 @@ function Helper() {
             case "update dev":
                 method = "PUT";
                 tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id + "/comp-devs/" + data.devs_id;
-                break;                    
-                
+                break;
+
         }
 
-        param = { 
+        param = {
                 env : PORT.replace('?env=',''),
                 axs_key : AXS_KEY
             };
@@ -311,18 +311,18 @@ function Helper() {
 
         setup.method = method;
         setup.url = 'http://' + self.buildURL(url, param);
-        setup.headers = { 
+        setup.headers = {
             "Content-Type": "application/json"
              };
 
         if(params)
             setup.data = params;
 
-        makeCorsRequest(setup.url, setup.method, setup.data, 
+        makeCorsRequest(setup.url, setup.method, setup.data,
             function(res){
 
                 switch(route) {
-                
+
                     case "insert":
 
                         if(res._id){
@@ -364,15 +364,15 @@ function Helper() {
                             }
                         }
 
-                        break; 
+                        break;
                     default:
                             if(typeof(doneCallback) === 'function')
                                     doneCallback(res);
-                        break;                     
+                        break;
                 }
 
-                    
-            }, 
+
+            },
             function(res){
 
                 window.alert('There is already a component with that name in this group and layer, please use another one');
@@ -392,15 +392,15 @@ function Helper() {
             url;
 
         switch(route) {
-            
+
             case "check":
                 method = "GET";
                 tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id;
-                break;                     
-                
+                break;
+
         }
 
-        param = { 
+        param = {
                 env : PORT.replace('?env=',''),
                 axs_key : AXS_KEY
             };
@@ -413,14 +413,14 @@ function Helper() {
             url:  url,
             method: 'GET',
             dataType: 'json',
-            success:  function (res) {
+            done:  function (res) {
 
                 if(res._id)
                     doneCallback();
                 else
                     failCallback();
             },
-            error: function(res){
+            fail: function(res){
 
                 if(res.status === 423){
                     window.alert("This component is currently being modified by someone else, please try again in about 3 minutes");
@@ -433,7 +433,7 @@ function Helper() {
     };
 
     this.postRoutesProcess = function(route, params, data, doneCallback, failCallback){
-        
+
         var tail = "",
             method = "",
             setup = {},
@@ -441,7 +441,7 @@ function Helper() {
             url;
 
         switch(route) {
-                
+
             case "insert":
                 method = "POST";
                 tail = "/v1/repo/usrs/" + USERDATA._id + "/procs";
@@ -465,11 +465,11 @@ function Helper() {
             case "update step":
                 method = "PUT";
                 tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id + "/steps/" + data.steps_id;
-                break;                    
-                
+                break;
+
         }
 
-        param = { 
+        param = {
                 env : PORT.replace('?env=',''),
                 axs_key : AXS_KEY
             };
@@ -478,19 +478,19 @@ function Helper() {
 
         setup.method = method;
         setup.url = 'http://' + self.buildURL(url, param);
-        setup.headers = { 
+        setup.headers = {
             "Content-Type": "application/json"
              };
 
         if(params)
             setup.data = params;
 
-        makeCorsRequest(setup.url, setup.method, setup.data, 
+        makeCorsRequest(setup.url, setup.method, setup.data,
             function(res){
-        
+
                 if(typeof(doneCallback) === 'function')
                     doneCallback(res);
-            }, 
+            },
             function(res){
 
                 window.alert('Action Not Executed');
@@ -521,7 +521,7 @@ function Helper() {
                 res = JSON.parse(xhr.responseText);
 
             success(res);
-            
+
         };
 
         xhr.onerror = function() {
@@ -543,11 +543,11 @@ function Helper() {
 
             var xhr = new XMLHttpRequest();
 
-            if("withCredentials" in xhr) 
+            if("withCredentials" in xhr)
                 xhr.open(method, url, true);
-            else 
+            else
                 xhr = null;
-        
+
             return xhr;
         }
     };
@@ -562,7 +562,7 @@ function Helper() {
 
         //window.session.useTestData();
 
-        if(window.session.getIsLogin()){ 
+        if(window.session.getIsLogin()){
 
             USERDATA = window.session.getUserLogin();
 
@@ -570,7 +570,7 @@ function Helper() {
 
             url = SERVER + "/v1/repo/usrs/"+USERDATA._id+"/";
 
-            param = { 
+            param = {
                 env : PORT.replace('?env=',''),
                 axs_key : AXS_KEY
             };
@@ -579,7 +579,7 @@ function Helper() {
 
             callAjax('comps', port, function(route, res){
 
-               list[route] = res; 
+               list[route] = res;
 
                 callAjax('layers', port,function(route, res){
 
@@ -588,14 +588,14 @@ function Helper() {
                     callAjax('platfrms', port,function(route, res){
 
                         list[route] = res;
-                    
+
                         callAjax('suprlays', port,function(route, res){
 
                             list[route] = res;
 
                             url = self.getAPIUrl("user");
 
-                            callAjax('', '',function(route, res){ 
+                            callAjax('', '',function(route, res){
 
                                 self.listDevs = res;
 
@@ -617,13 +617,13 @@ function Helper() {
 
                 url = self.getAPIUrl("user");
 
-                callAjax('', '',function(route, res){ 
+                callAjax('', '',function(route, res){
 
                     self.listDevs = res;
 
                     callback(list);
 
-                });         
+                });
             });
         }
 
@@ -632,7 +632,7 @@ function Helper() {
             $.ajax({
                 url: url + route + port,
                 method: "GET"
-            }).success (
+            }).done(
                 function (res) {
 
                     if(typeof(callback) === 'function')
@@ -641,7 +641,7 @@ function Helper() {
                 });
         }
 
-    };   
+    };
     /**
      * Loads a texture and applies it to the given mesh
      * @param {String}   source     Address of the image to load
@@ -649,9 +649,9 @@ function Helper() {
      * @param {Function} [callback] Function to call when texture gets loaded, with mesh as parameter
      */
     this.applyTexture = function(source, object, callback) {
-        
+
         if(source != null && object != null) {
-        
+
             var loader = new THREE.TextureLoader();
 
             loader.load(
@@ -670,7 +670,7 @@ function Helper() {
             );
         }
     };
-    
+
     /**
      * Draws a text supporting word wrap
      * @param   {String} text       Text to draw
@@ -682,7 +682,7 @@ function Helper() {
      * @returns {Number} The Y coordinate of the next line
      */
     this.drawText = function(text, x, y, context, maxWidth, lineHeight) {
-    
+
         if(text) {
             var words = text.split(' ');
             var line = '';
@@ -703,41 +703,41 @@ function Helper() {
 
             return y + lineHeight;
         }
-        
+
         return 0;
     };
-    
+
     /**
      * Searchs an element given its full name
      * @param   {String} elementFullName Name of element in format [group]/[layer]/[name]
      * @returns {Number} The ID of the element in the table
      */
     this.searchElement = function(elementFullName) {
-        
+
         if(typeof elementFullName !== 'string' || elementFullName === 'undefined/undefined/undefined')
             return -1;
-        
+
         var group,
             components = elementFullName.split('/');
-        
+
         if(components.length === 3) {
-        
+
             for(var i = 0; i < window.tilesQtty.length; i++){
 
                 var tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
-        
+
                 group = tile.platform || window.layers[tile.layer].super_layer;
 
                 if(group && group.toLowerCase() === components[0].toLowerCase() &&
                    tile.layer.toLowerCase() === components[1].toLowerCase() &&
                    tile.name.toLowerCase() === components[2].toLowerCase())
-                    return window.tilesQtty[i];           
-            }  
+                    return window.tilesQtty[i];
+            }
         }
 
         return -1;
     };
-    
+
     /**
      * Gets a point randomly chosen out of the screen
      * @author Miguel Celedon
@@ -746,21 +746,21 @@ function Helper() {
      * @returns {THREE.Vector3} A new vector with the point position
      */
     this.getOutOfScreenPoint = function(z, view) {
-        
+
         z = (typeof z !== "undefined") ? z : 0;
         view = (typeof view !== "undefined") ? view : 'home';
-        
+
         var away = window.camera.getMaxDistance() * 4;
         var point = new THREE.Vector3(0, 0, z);
-        
+
         point.x = Math.random() * away + away * ((Math.floor(Math.random() * 10) % 2) * -1);
         point.y = Math.random() * away + away * ((Math.floor(Math.random() * 10) % 2) * -1);
-        
+
         point = window.viewManager.translateToSection(view, point);
-        
+
         return point;
     };
-    
+
     /**
      * Checks whether the given vector's components are numbers
      * @author Miguel Celedon
@@ -768,34 +768,34 @@ function Helper() {
      * @returns {boolean} True if the vector is valid, false otherwise
      */
     this.isValidVector = function(vector) {
-        
+
         var valid = true;
-        
+
         if(!vector)
             valid = false;
         else if(isNaN(vector.x) || isNaN(vector.y) || isNaN(vector.z))
             valid = false;
-        
+
         return valid;
     };
-    
+
     this.showBackButton = function() {
         window.helper.show('backButton');
     };
-    
+
     this.hideBackButton = function() {
         window.helper.hide('backButton', 1000, true);
     };
-    
+
     /**
      * Creates an empty tween which calls render() every update
      * @author Miguel Celedon
      * @param {number} [duration=2000] Duration of the tween
      */
     this.forceTweenRender = function(duration) {
-        
+
         duration = (typeof duration !== "undefined") ? duration : 2000;
-        
+
         new TWEEN.Tween(window)
         .to({}, duration)
         .onUpdate(window.render)
@@ -857,7 +857,7 @@ function Helper() {
 
         for(var i in object){
             count++;
-        } 
+        }
 
         return count;
     };
@@ -868,7 +868,7 @@ function Helper() {
 
         return window.tileManager.dimensions.layerPositions[index];
     };
-    
+
     /**
      * Build and URL based on the address, wildcards and GET parameters
      * @param   {string} base   The URL address
@@ -876,17 +876,17 @@ function Helper() {
      * @returns {string} Parsed and replaced URL
      */
     this.buildURL = function(base, params) {
-        
+
         var result = base;
         var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
-        
+
         var param = null;
-        
+
         //Search for wildcards parameters
         do {
-            
+
             param = result.match(':[a-z0-9]+');
-            
+
             if(param !== null) {
                 var paramName = param[0].replace(':', '');
 
@@ -898,22 +898,22 @@ function Helper() {
                 }
             }
         } while(param !== null);
-        
+
         //Process the GET parameters
         for(var key in params) {
             if(params.hasOwnProperty(key) && params[key] !== '') {
-                
+
                 if(areParams === false)
                     result += "?";
                 else
                     result += "&";
-                
+
                 result += key + ((params[key] !== undefined) ? ("=" + params[key]) : (''));
-                
+
                 areParams = true;
             }
         }
-        
+
         return result;
     };
 }
