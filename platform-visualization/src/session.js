@@ -30,14 +30,14 @@ function Session(){
             else{
 
                 window.helper.hide('logout', 2000, true);
-                window.helper.hide('containerLogin', 2000, true);               
+                window.helper.hide('containerLogin', 2000, true);
             }
         }
         else{
 
             if(display)
                 window.helper.show('login', 2000);
-            else   
+            else
                 window.helper.hide('login', 2000, true);
         }
 
@@ -47,8 +47,8 @@ function Session(){
      * @author Ricardo Delgado
      */
     this.useTestData = function(){
-        
-        
+
+
     };
 
 	/**
@@ -71,7 +71,7 @@ function Session(){
 			headers : {
 				'Accept' : 'application/json'
 			}
-		}).success(function(data) {
+		}).done(function(data) {
 			console.log("Logout", data);
 			if(data !== undefined) {
 				if(data === true) {
@@ -100,19 +100,19 @@ function Session(){
 	this.login = function() {
 		var url = window.helper.getAPIUrl("login") + "&code=" + code + "&api_key=" + api_key;
 		console.log("url: " + url);
-        
-		
+
+
 		$.ajax({
 			url : url,
 			type : "GET",
 			headers : {
 				'Accept' : 'application/json'
 			}
-		}).success(function(tkn) {
+		}).done(function(tkn) {
 			usr = tkn._usr_id;
 			axs_key = tkn.axs_key;
 			if(usr !== undefined) {
-				
+
 				isLogin = true;
 
                 usr.axs_key = axs_key;
@@ -123,8 +123,8 @@ function Session(){
      			$("#logout").fadeIn(2000);
 
      			drawUser(usr);
-                
-			} 
+
+			}
             else {
 				console.log("Error:", tkn);
                 window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
@@ -231,7 +231,7 @@ function Session(){
 
             image.crossOrigin = "anonymous";
             image.src = actual.src;
-        } 
+        }
         else {
             if(data.length !== 0) {
                 if(data[0].text)
@@ -240,7 +240,7 @@ function Session(){
                     drawPictureUser(data, ctx, texture);
             }
         }
-	} 
+	}
 
 	function drawTextUser(data, ctx, texture){
 
@@ -264,11 +264,11 @@ function Session(){
 
         ctx.fillStyle = "#FFFFFF";
 
-        if(data.length !== 0){ 
+        if(data.length !== 0){
 
           if(data[0].text)
-            drawTextUser(data, ctx, texture); 
-          else 
+            drawTextUser(data, ctx, texture);
+          else
             drawPictureUser(data, ctx, texture);
         }
 	}
