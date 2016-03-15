@@ -468,7 +468,6 @@ function Helper() {
                 break;                    
                 
         }
-
         param = { 
                 env : PORT.replace('?env=',''),
                 axs_key : AXS_KEY
@@ -487,13 +486,60 @@ function Helper() {
 
         makeCorsRequest(setup.url, setup.method, setup.data, 
             function(res){
-        
-                if(typeof(doneCallback) === 'function')
-                    doneCallback(res);
+
+                switch(route) {
+                
+                    case "insert":
+
+                        if(res._id){
+
+                            if(typeof(doneCallback) === 'function')
+                                doneCallback(res);
+                        }
+                        else{
+
+                            if(typeof(failCallback) === 'function')
+                                failCallback(res);
+                        }
+
+                        break;
+                    case "update":
+
+                        if(res._id){
+
+                            if(typeof(doneCallback) === 'function')
+                                doneCallback(res);
+                        }
+                        else{
+
+                            var name = document.getElementById('imput-Name').value;
+
+                            if(window.fieldsEdit.actualTile.name.toLowerCase() === name.toLowerCase()){
+
+                                if(typeof(doneCallback) === 'function')
+                                    doneCallback(res);
+                            }
+                            else{
+
+                                window.alert('There is already a component with that name in this group and layer, please use another one');
+
+                                if(typeof(failCallback) === 'function')
+                                    failCallback(res);
+                            }
+                        }
+
+                        break; 
+                    default:
+                            if(typeof(doneCallback) === 'function')
+                                    doneCallback(res);
+                        break;                     
+                }
+
+                    
             }, 
             function(res){
 
-                window.alert('Action Not Executed');
+                window.alert('There is already a component with that name in this group and layer, please use another one');
 
                 if(typeof(failCallback) === 'function')
                     failCallback(res);
@@ -560,7 +606,7 @@ function Helper() {
 
         var param;
 
-        //window.session.useTestData();
+        window.session.useTestData();
 
         if(window.session.getIsLogin()){ 
 
