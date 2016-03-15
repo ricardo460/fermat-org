@@ -220,7 +220,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         }
 
         new TWEEN.Tween(this)
-        .to({}, duration * 2)
+        .to({}, duration * 3)
         .onUpdate(render)
         .start();
     };
