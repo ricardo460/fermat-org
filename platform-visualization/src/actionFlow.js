@@ -97,6 +97,29 @@ function ActionFlow(flow) {
             self.showAllFlow();
     };
 
+    this.drawEdit = function(initialX, initialY, initialZ, id) {
+
+        var title = self.createTitleBox(self.flow.name, self.flow.desc),
+            origin = window.helper.getOutOfScreenPoint(0),
+            target = new THREE.Vector3(initialX, initialY , initialZ);
+
+        title.userData = {
+                id: id,
+                onClick : onClick
+        };
+
+        objectsFlow.position.origin.push(origin);
+        objectsFlow.position.target.push(target);
+
+        title.position.copy(origin);
+
+        objectsFlow.mesh.push(title);
+
+        window.scene.add(title);
+
+        self.showAllFlow();
+    };
+
     /**
      * @author Miguel Celedon
      * @lastmodifiedBy Ricardo Delgado

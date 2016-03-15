@@ -187,6 +187,15 @@ function FieldsEdit() {
 
     };
 
+    this.createFieldWorkFlowEdit = function(){
+
+        createbutton(function(){
+            self.actions.exit = null;
+            window.workFlowEdit.saveTile();  
+        });
+
+    };
+
         
     function sesionRepoDir() {
 

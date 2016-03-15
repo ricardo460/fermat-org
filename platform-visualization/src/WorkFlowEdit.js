@@ -126,7 +126,7 @@ function WorkFlowEdit() {
                 callback = function(){
 
                     if(window.confirm("Really remove this component?"))           
-                        ;//deleteTile(id);                
+                        deleteWorkFlow(id);                
                 };
             }
 
@@ -167,8 +167,8 @@ function WorkFlowEdit() {
         formPlatform();
         formTitleHeaderFlow();
         formSubTitleHeaderFlow();
+        window.fieldsEdit.createFieldWorkFlowEdit();
         creatButtonPreview();
-        $("body").append(document.createElement("br"));
 
         window.fieldsEdit.setTextSize();
 
@@ -313,11 +313,13 @@ function WorkFlowEdit() {
 
     function drawHeaderFlow(id, callback){ 
 
+        var flow = null;
+
         if(window.fieldsEdit.actions.type === "insert"){
 
             addAllForm();
 
-            var flow = fillFlow();
+            flow = fillFlow();
 
             classFlow = new ActionFlow(flow);
 
@@ -348,7 +350,7 @@ function WorkFlowEdit() {
         }
         else if(window.fieldsEdit.actions.type === "update"){
 
-            var flow = window.flowManager.getObjHeaderFlow()[id].flow;
+            flow = window.flowManager.getObjHeaderFlow()[id].flow;
 
             flow = JSON.parse(JSON.stringify(flow));
 
@@ -386,6 +388,234 @@ function WorkFlowEdit() {
             });
             
         }
+    }
+
+    this.saveTile = function(){
+
+        /*if(validateFields() === ''){ 
+
+            var table = fillTable(false);
+
+            window.fieldsEdit.disabledButtonSave(true);*/
+            
+            if(window.fieldsEdit.actions.type === "insert")
+                createWorkFlow();
+            else if(window.fieldsEdit.actions.type === "update")
+                modifyTile(table);
+        /*}
+        else{
+             window.alert(validateFields());
+        }*/
+    };
+
+    function createWorkFlow(){ 
+
+        var flow = fillFlow();
+
+        var newFlow = new ActionFlow(flow);
+
+        var target = null,
+            find = false,
+            id = window.flowManager.getObjHeaderFlow().length;
+
+        for(var i = 0; i < window.flowManager.getObjHeaderFlow().length; i++){
+
+            if(window.flowManager.getObjHeaderFlow()[i].flow.platfrm === flow.platfrm){
+                target = flowManager.getObjHeaderFlow()[i].positions.target[0];
+                find = true;
+            }
+
+        }
+
+        if(find === false){ // si no existe ningun elemento en el header (si el que se va a insertar es nuevo)
+            for(var j = 0; j < window.headers.getPositionHeaderViewInFlow().length; j++){
+                if(window.headers.getPositionHeaderViewInFlow()[j].name === flow.platfrm){
+                    target =  window.headers.getPositionHeaderViewInFlow()[j].position;
+                }
+            }
+        }
+
+        target = JSON.parse(JSON.stringify(target));
+       
+        if(find === true){
+            target.y = target.y - 500;
+        }
+        else{
+            target.x = target.x - 1500;
+            target.y = target.y - 2200;
+        }
+
+        window.camera.move(target.x, target.y, 8000, 3000);
+
+        setTimeout( function() { 
+
+            newFlow.drawEdit(target.x, target.y, target.z, id);
+            
+            window.camera.loseFocus();
+            
+            window.flowManager.getObjHeaderFlow().push(newFlow);
+
+        }, 3000 ); 
+
+    }
+
+    function deleteWorkFlow(id){
+        
+        window.flowManager.showWorkFlow();
+
+        var flow = window.flowManager.getObjHeaderFlow()[id];
+
+        window.flowManager.getObjHeaderFlow().splice(id, 1);
+
+        window.camera.move(flow.positions.target[0].x, flow.positions.target[0].y, 8000, 4000);
+
+        setTimeout(function(){
+            var target =  window.helper.fillTarget(0, 0, 160000, 'workflows');
+            var mesh = flow.objects[0];
+            animate(mesh, target.hide, 1500, function(){
+                    window.scene.remove(mesh);
+                    updateWorkFlow(flow.flow.platfrm);
+                });
+            
+        }, 5500);
+    }
+
+    function updateWorkFlow(platform){
+
+        var positionInit = null,
+            ArrayPosition = [];
+
+        for(var j = 0; j < window.headers.getPositionHeaderViewInFlow().length; j++){
+
+            if(window.headers.getPositionHeaderViewInFlow()[j].name === platform){
+
+                positionInit =  window.headers.getPositionHeaderViewInFlow()[j].position;
+            }
+        }
+
+        for(var i = 0; i < window.flowManager.getObjHeaderFlow().length; i++){
+
+            var workFlow = window.flowManager.getObjHeaderFlow()[i];
+
+            var mesh = workFlow.objects[0];
+
+            mesh.userData.id = i;
+
+            if(workFlow.flow.platfrm === platform){
+
+                if(ArrayPosition.length > 0){
+
+                    workFlow.positions.target[0].y = window.helper.getLastValueArray(ArrayPosition).y - 500;
+
+                }
+                else{
+                    workFlow.positions.target[0].x = positionInit.x - 1500;
+                    workFlow.positions.target[0].y = positionInit.y - 2200;
+                }
+
+                ArrayPosition.push(workFlow.positions.target[0]);
+
+                var target = window.helper.fillTarget(workFlow.positions.target[0].x, workFlow.positions.target[0].y, 0, 'workflows');;
+
+                animate(workFlow.objects[0], target.show, 2000);
+            }
+        }
+    }
+
+
+    function validateFields(){
+
+        var msj = '';
+
+        var name = document.getElementById('imput-Name');
+
+        if(name.value === ""){
+            msj += 'The component must have a name \n';
+            name.focus();
+        }
+
+        return msj;
+    }
+
+    function createWorkFlow_(){
+
+        var flow = fillFlow();
+
+        var params = getParamsData(flow);  
+
+        window.helper.postRoutesComponents('insert', params, null,
+            function(res){ 
+                flow.id
+            },
+            function(){
+                window.fieldsEdit.disabledButtonSave(false);
+            });
+
+        function getParamsData(flow){
+
+            var param = { };
+
+            param.platfrm = flow.platfrm;
+            
+            param.name = flow.name;
+
+            param.prev = "";
+
+            param.next = "";
+
+            if(flow.desc)
+                param.desc = flow.desc;
+            else
+                param.desc = "pending";
+
+            return param;
+        }
+
+        function postParamsSteps(table, callback){
+
+            var devs = table.devs;
+
+            var newDevs = [];
+
+           /* postDevs(devs);
+
+            function postDevs(devs){
+
+                if(devs.length > 0){ 
+
+                    var dataPost = {
+                                comp_id : table.id
+                            };
+
+                    var param = {};
+
+                    param.dev_id = devs[0].dev._id;
+                    param.percnt = devs[0].percnt;
+                    param.role = devs[0].role;
+                    param.scope = devs[0].scope;
+
+                    window.helper.postRoutesComponents('insert dev', param, dataPost,
+                        function(res){
+
+                            devs[0]._id = res._id;
+
+                            newDevs.push(devs[0]);
+                            
+                            devs.splice(0,1);
+
+                            postDevs(devs);
+
+                        });
+                }
+                else{
+
+                    table.devs = newDevs;
+
+                    callback(table);
+                }
+            }*/
+        }
+
     }
 
     function changeTexture(){
@@ -444,8 +674,6 @@ function WorkFlowEdit() {
         flow = JSON.parse(JSON.stringify(flow));
 
         window.fieldsEdit.actualFlow = JSON.parse(JSON.stringify(flow));
-
-        console.log(flow);
 
         if(flow.platform !== undefined)
             document.getElementById('select-Group').value = flow.platform;
