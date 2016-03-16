@@ -137,7 +137,7 @@ function FieldsEdit() {
         return button;
     };
 
-    this.createDiv = function(row){ // nuevo
+    this.createDiv = function(row){ 
 
         var div = document.createElement('div');
 
@@ -150,7 +150,7 @@ function FieldsEdit() {
         window.helper.show(div, 1000);
     };
 
-    this.setTextSize = function() { // nuevo
+    this.setTextSize = function() { 
         
         var object = {
             id : "fermatEditStyle",
@@ -189,9 +189,13 @@ function FieldsEdit() {
 
     this.createFieldWorkFlowEdit = function(){
 
+        workflowHeader();
+        workflowDescription();
+        workflowModalSteps();
+
         createbutton(function(){
             self.actions.exit = null;
-            window.workFlowEdit.saveTile();  
+            window.workFlowEdit.save();  
         });
 
     };
@@ -906,14 +910,11 @@ function FieldsEdit() {
 
             animate(mesh, self.objects.tile.target.hide, 1500, function(){ 
                     window.scene.remove(mesh);
-                    console.log("test");
+                    
                     self.objects.tile.mesh = null;
                 });
         }
     };
-
-
-    // end
 
 
     function validateFields(){
@@ -928,7 +929,7 @@ function FieldsEdit() {
 
         return msj;
     }
-    // end
+
 
     this.disabledButtonSave = function(state){
 
@@ -945,24 +946,16 @@ function FieldsEdit() {
     };
 
     //workflow edit fields
-
-    this.createFieldWorkFlow = function(){
-        
-        workflowHeader();
-        workflowDescription();
-        workflowModalSteps();
-        
-    };
     
     this.getData = function(json) {
         
         var title = document.getElementById("workflow-header-title");
         var desc = document.getElementById("modal-desc-textarea");
-        var platafrm = document.getElementById("workflow-header-plataform");
+        var platform = document.getElementById("workflow-header-plataform");
         var list = document.getElementById("step-List");
         
         var json = {
-            "platfrm": platafrm.value,
+            "platfrm": platform.value,
             "name": title.value,
             "desc": desc.value,
             "prev": null,
@@ -1164,8 +1157,10 @@ function FieldsEdit() {
             var nComponent   = document.getElementById("step-Component");
             var nPadre       = document.getElementById("step-Padre");
             var nDescription = document.getElementById("step-Description");
+            var list         = document.getElementById("step-List");
             
-            nLayer.update = function() {
+            nLayer.update = function() { 
+
                 var nPlataform = document.getElementById("step-Plataform");
 
                 var _layers = TABLE[nPlataform.value].layers;
@@ -1177,58 +1172,60 @@ function FieldsEdit() {
                 }
                 
                 nLayer.innerHTML = option;
+
             };
             
             nComponent.update = function() {
+
                 var nPlataform = document.getElementById("step-Plataform");
                 var nLayer     = document.getElementById("step-Layer");
                 var obj = TABLE[nPlataform.value].layers[nLayer.value].objects.slice();
+
+                var option = "";
                 
-                for(var i=0; i < obj.length; i++) {
-                    this.innerHTML += "<option value='" + obj[i].data.name + "'>" + obj[i].data.name + "</option>";
+                for(var i = 0; i < obj.length; i++) {
+                    option += "<option value='" + obj[i].data.name + "'>" + obj[i].data.name + "</option>";
                 }
+
+                this.innerHTML = option;
+
+                list.valueJson[nComponent.step].name = nComponent.value;
             };
             
             nDescription.onkeyup = function() {
-                var list = document.getElementById("step-List");
                 list.valueJson[nDescription.step].desc = nDescription.value;
             };
             
             nTitle.onkeyup = function() {
-                var list = document.getElementById("step-List");
                 list.valueJson[nTitle.step].title = nTitle.value;
             };
             
             nLayer.onchange = function() {
-                var list = document.getElementById("step-List");
+
                 list.valueJson[nLayer.step].layer = nLayer.value;
-                var nComponent = document.getElementById("step-Component");
+
                 nComponent.update();
             };
             
             nPlataform.onchange = function() {
-                var list = document.getElementById("step-List");
-                var nComponent = document.getElementById("step-Component");
-                var nLayer = document.getElementById("step-Layer");
+
                 list.valueJson[nPlataform.step].platfrm = nPlataform.value;
+
                 nLayer.update();
                 nComponent.update();
             };
             
             nComponent.onkeyup = function() {
-                var list = document.getElementById("step-List");
                 list.valueJson[nComponent.step].name = nComponent.value;
             };
             
             nPadre.onchange = function() {
-                var list = document.getElementById("step-List");
                 list.valueJson[nPadre.step].next[0] = {
                     "type": "direct call",
                     "id": nPadre.value
                 };
             };
             
-            var list = document.getElementById("step-List");
             list.valueJson = [];
             
             list.onchange = function() {
@@ -1237,7 +1234,6 @@ function FieldsEdit() {
             };
             
             modal.getStepData = function() {
-                var list = document.getElementById("step-List");
                 
                 for(var i=0; i < list.valueJson.length; i++) {
                     list.valueJson[i].type = "activity";
@@ -1254,6 +1250,7 @@ function FieldsEdit() {
             };
             
             modal.changeStep = function(Step) {
+
                 var nTitle       = document.getElementById("step-Title");
                 var list         = document.getElementById("step-List");
                 var nStep        = document.getElementById("step-Number");
@@ -1303,6 +1300,7 @@ function FieldsEdit() {
                 optgroup += option + "</optgroup>";
                 
                 nPlataform.innerHTML = optgroup;
+
                 
                 nLayer.update();
                 
@@ -1311,10 +1309,12 @@ function FieldsEdit() {
                 //------------Padre-------------
                 
                 nPadre.innerHTML = "";
+
                 var opt;
+
                 for(i=0; i < list.valueJson.length; i++){
                     opt = document.createElement("option");
-                    opt.innerHTML = (i+1) + " - " + list.valueJson[i].title;
+                    opt.innerHTML = ( i + 1) + " - " + list.valueJson[i].title;
                     opt.value = i;
                     nPadre.appendChild(opt);
                 }
@@ -1327,6 +1327,7 @@ function FieldsEdit() {
                 nPadre.value = step.next[0].id;
                 nLayer.value = step.layer;
                 nPlataform.value = step.platfrm;
+
             };
             
             modal.newStep = function() {
