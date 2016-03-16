@@ -73,7 +73,7 @@ var release = function (req) {
  * @apiParam {Number} difficulty Component complexity developed  rank (0- 10).
  * @apiParam {String} code_level   Developing state api.
  * @apiParam {ObjectId} platfrm_id   Unique identifier of the  platfrtm.
- * @apiParam {ObjectId} suprlay_id    Unique identifier of the  suprlay. 
+ * @apiParam {ObjectId} suprlay_id    Unique identifier of the  suprlay.
  * @apiParam {String} description  Description of  components.
  * @apiParam {String} repo_dir Directory of repo.
  * @apiDescription Add a component to the architecture fermat.
@@ -109,7 +109,7 @@ router.post('/', function (req, res, next) {
  * @apiVersion 0.0.1
  * @apiName ListComps
  * @apiGroup Repo-Comp
- 
+
  * @apiDescription Get a list of components of the architecture fermat.
  */
 router.get('/', function (req, res, next) {
@@ -136,14 +136,15 @@ router.get('/', function (req, res, next) {
  * @apiParam {Date} reached    True date of completion.
  * @apiGroup Repo-Comp
  * @apiDescription updates the lifecycle of a component of the architecture fermat.
- 
+
  */
 router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
 	'use strict';
 	try {
 		if (!security.isValidData(req.params.comp_id) || // required
 			!security.isValidData(req.params.life_cicle_id) || // required
-			!(typeof req.body.target == "undefined" || (typeof req.body.target != "undefined" && security.isValidData(req.body.target))) || !(typeof req.body.reached == "undefined" || (typeof req.body.reached != "undefined" && security.isValidData(req.body.reached)))) {
+			!security.ifExistIsValidData(req.body.target) ||
+			!security.ifExistIsValidData(req.body.reached)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
 			});
@@ -227,7 +228,10 @@ router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
 	try {
 		if (!security.isValidData(req.params.comp_id) || // required
 			!security.isValidData(req.params.comp_dev_id) || // required
-			!security.ifExistIsValidData(req.body.dev_id) || !security.ifExistIsValidData(req.body.role) || !security.ifExistIsValidData(req.body.scope) || !security.ifExistIsValidData(req.body.percnt)) {
+			!security.ifExistIsValidData(req.body.dev_id) ||
+			!security.ifExistIsValidData(req.body.role) ||
+			!security.ifExistIsValidData(req.body.scope) ||
+			!security.ifExistIsValidData(req.body.percnt)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
 			});
@@ -341,7 +345,14 @@ router.get('/:comp_id', function (req, res, next) {
 router.put('/:comp_id', function (req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.params.comp_id) || !security.ifExistIsValidData(req.body.layer_id) || !security.ifExistIsValidData(req.body.name) || !security.ifExistIsValidData(req.body.type) || !security.ifExistIsValidDifficulty(req.body.difficulty) || !security.ifExistIsValidLifeCicle(req.body.code_level) || !security.ifExistIsValidData(req.body.description) || !security.ifExistIsValidData(req.body.repo_dir)) {
+		if (!security.isValidData(req.params.comp_id) ||
+			!security.ifExistIsValidData(req.body.layer_id) ||
+			!security.ifExistIsValidData(req.body.name) ||
+			!security.ifExistIsValidData(req.body.type) ||
+			!security.ifExistIsValidDifficulty(req.body.difficulty) ||
+			!security.ifExistIsValidLifeCicle(req.body.code_level) ||
+			!security.ifExistIsValidData(req.body.description) ||
+			!security.ifExistIsValidData(req.body.repo_dir)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
 			});

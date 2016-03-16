@@ -1033,7 +1033,7 @@ exports.delCompDev = function (req, next) {
 exports.addStep = function (req, next) {
 	'use strict';
 	try {
-		procMod.insertStep(req.params.proc_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, next, function (err, res) {
+		procMod.insertStep(req.params.proc_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, req.body.next, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {

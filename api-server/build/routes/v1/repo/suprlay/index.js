@@ -78,7 +78,7 @@ router.post('/', function (req, res, next) {
 	try {
 		if (!security.isValidData(req.body.code) || //
 			!security.isValidData(req.body.name) || //
-			!security.isValidData(req.body.logo) || //
+			!security.ifExistIsValidData(req.body.logo) || //
 			!security.isValidData(req.body.order)) {
 			res.status(412).send({
 				message: 'missing or invalid data'
