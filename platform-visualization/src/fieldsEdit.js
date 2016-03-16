@@ -191,7 +191,7 @@ function FieldsEdit() {
 
         createbutton(function(){
             self.actions.exit = null;
-            window.workFlowEdit.save();  
+            window.workFlowEdit.saveTile();  
         });
 
     };
