@@ -80,8 +80,8 @@ router.post('/', function (req, res, next) {
 		if (!security.isValidData(req.body.platfrm) || //
 			!security.isValidData(req.body.name) || //
 			!security.isValidData(req.body.desc) || //
-			!security.isValidData(req.body.prev) || //
-			!security.isValidData(req.body.next)) {
+			!security.ifExistIsValidData(req.body.prev) || //
+			!security.ifExistIsValidData(req.body.next)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
 			});
@@ -137,10 +137,12 @@ router.post('/:proc_id/steps', function (req, res, next) {
 	'use strict';
 	try {
 		if (!security.isValidData(req.params.proc_id) || //
-			!security.isValidData(req.body.comp_id) || !security.isValidData(req.body.type) || //
+			!security.isValidData(req.body.comp_id) ||
+			!security.isValidData(req.body.type) || //
 			!security.isValidData(req.body.title) || //
 			!security.isValidData(req.body.desc) || //
-			!security.isValidData(req.body.order)) {
+			!security.isValidData(req.body.order) ||
+			!security.ifExistIsValidData(req.body.next)) {
 			res.status(412).send({
 				message: 'missing or invalid data'
 			});
@@ -183,10 +185,11 @@ router.put('/:proc_id/steps/:step_id', function (req, res, next) {
 	try {
 		if (!security.isValidData(req.params.proc_id) || //
 			!security.isValidData(req.params.step_id) || //
-			!security.isValidData(req.body.comp_id) || !security.isValidData(req.body.type) || //
-			!security.isValidData(req.body.title) || //
-			!security.isValidData(req.body.desc) || //
-			!security.isValidData(req.body.order)) {
+			!security.ifExistIsValidData(req.body.comp_id) ||
+			!security.ifExistIsValidData(req.body.type) || //
+			!security.ifExistIsValidData(req.body.title) || //
+			!security.ifExistIsValidData(req.body.desc) || //
+			!security.ifExistIsValidData(req.body.order)) {
 			res.status(412).send({
 				message: 'missing or invalid data'
 			});
@@ -298,10 +301,11 @@ router.put('/:proc_id', function (req, res, next) {
 	'use strict';
 	try {
 		if (!security.isValidData(req.params.proc_id) || //
-			!security.isValidData(req.body.platfrm) || //
-			!security.isValidData(req.body.name) || !security.isValidData(req.body.desc) || //
-			!security.isValidData(req.body.prev) || //
-			!security.isValidData(req.body.next)) {
+			!security.ifExistIsValidData(req.body.platfrm) || //
+			!security.ifExistIsValidData(req.body.name) ||
+			!security.ifExistIsValidData(req.body.desc) || //
+			!security.ifExistIsValidData(req.body.prev) || //
+			!security.ifExistIsValidData(req.body.next)) {
 			res.status(412).send({
 				message: 'missing or invalid data'
 			});
