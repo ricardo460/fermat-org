@@ -71,7 +71,7 @@ function Session(){
 			headers : {
 				'Accept' : 'application/json'
 			}
-		}).done(function(data) {
+		}).success(function(data) {
 			console.log("Logout", data);
 			if(data !== undefined) {
 				if(data === true) {
@@ -108,7 +108,7 @@ function Session(){
 			headers : {
 				'Accept' : 'application/json'
 			}
-		}).done(function(tkn) {
+		}).success(function(tkn) {
 			usr = tkn._usr_id;
 			axs_key = tkn.axs_key;
 			if(usr !== undefined) {

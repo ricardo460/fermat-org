@@ -125,7 +125,7 @@ function FlowManager(){
         $.ajax({
             url: url,
             method: "GET"
-        }).done(
+        }).success(
             function(processes) {
                 var p = processes,
                     flows = [];
@@ -183,7 +183,7 @@ function FlowManager(){
         $.ajax({
             url: url,
             method: "GET"
-        }).done(
+        }).success(
             function(processes) {
                 var p = processes, objectHeaderInWFlowGroup;
 

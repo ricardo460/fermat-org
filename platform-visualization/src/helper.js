@@ -413,14 +413,14 @@ function Helper() {
             url:  url,
             method: 'GET',
             dataType: 'json',
-            done:  function (res) {
+            success:  function (res) {
 
                 if(res._id)
                     doneCallback();
                 else
                     failCallback();
             },
-            fail: function(res){
+            error: function(res){
 
                 if(res.status === 423){
                     window.alert("This component is currently being modified by someone else, please try again in about 3 minutes");
@@ -632,7 +632,7 @@ function Helper() {
             $.ajax({
                 url: url + route + port,
                 method: "GET"
-            }).done(
+            }).success (
                 function (res) {
 
                     if(typeof(callback) === 'function')
