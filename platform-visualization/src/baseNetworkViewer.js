@@ -80,7 +80,7 @@ BaseNetworkViewer.prototype = {
      */
     createNode : function(nodeData, startPosition) {
         
-        var texture = THREE.ImageUtils.loadTexture(this.PICTURES[nodeData.subType] || this.PICTURES.pc);
+        var texture = THREE.ImageUtils.loadTexture(this.PICTURES[nodeData.extra.sub] || this.PICTURES.pc);
         texture.minFilter = THREE.NearestFilter;
         
         var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0xffffff, map : texture}));
@@ -122,7 +122,8 @@ BaseNetworkViewer.prototype = {
                         .to({x : actual.userData.originPosition.x,
                              y : actual.userData.originPosition.y,
                              z : actual.userData.originPosition.z},
-                            duration);
+                            duration)
+                        .easing(TWEEN.Easing.Cubic.InOut);
             
             if(former)
                 former.onStart(function() {next.start(); actual.visible = true; });
@@ -169,6 +170,7 @@ BaseNetworkViewer.prototype = {
                                  y : target.y,
                                  z : target.z},
                                 duration)
+                            .easing(TWEEN.Easing.Cubic.InOut)
                             .onComplete(function() { actual.visible = false; });
                 
                 if(former)

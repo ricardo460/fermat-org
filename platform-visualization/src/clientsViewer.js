@@ -11,6 +11,27 @@ function ClientsViewer(parentNode) {
 ClientsViewer.prototype = Object.create(BaseNetworkViewer.prototype);
 ClientsViewer.prototype.constructor = ClientsViewer;
 
+ClientsViewer.prototype.load = function() {
+    
+    var baseUrl = helper.getAPIUrl("nodes") + "/" + this.parentNode.userData.id + "/childrn";
+    
+    $.ajax({
+        url : baseUrl,
+        method : "GET",
+        context: this
+    }).done(function(data) {
+        
+        this.NET_RADIOUS = (data.children.length - 1) * this.NET_RADIOUS;
+        this.drawNodes(data.children);
+        
+    }).fail(function(request, error) {
+        
+        window.console.log("Error: " + error);
+        window.alert("Error, please check the console and inform on github");
+    });
+    
+};
+
 /**
  * @override
  * Executed when a node is clicked, moves the camera and draw its childs
@@ -37,7 +58,8 @@ ClientsViewer.prototype.onNodeClick = function(clickedNode) {
 
 ClientsViewer.prototype.open = function() {
     
-    this.childNetwork.load();
+    //Right now it has no sub-level
+    //this.childNetwork.load();
 };
 
 /**
@@ -49,12 +71,12 @@ ClientsViewer.prototype.drawNodes = function(networkNodes) {
 
     for(var i = 0; i < networkNodes.length; i++) {
         
-        var halfRadious = this.NET_RADIOUS / 2;
+        var halfRadious = (this.NET_RADIOUS / 2) * 7;
 
         var position = new THREE.Vector3(
-            Math.random() * this.NET_RADIOUS,
+            (Math.random() * halfRadious * 2) - halfRadious,
             - (Math.random() * halfRadious + halfRadious),
-            Math.random() * this.NET_RADIOUS);
+            (Math.random() * halfRadious * 2) - halfRadious);
         
         position.add(this.parentNode.position);
 
@@ -68,27 +90,6 @@ ClientsViewer.prototype.drawNodes = function(networkNodes) {
     this.createEdges();
     
     this.show();
-};
-
-ClientsViewer.prototype.test_load = function() {
-    
-    var networkNodes = [];
-    var NUM_NODES = 5;
-    var TYPES = ['pc', 'phone', 'tablet'];
-    
-    for(var i = 0; i < NUM_NODES; i++) {
-        
-        var node = {
-            id : i,
-            edges : [{id : this.parentNode.userData.id}],
-            subType : TYPES[Math.floor(Math.random() * 10) % 2]
-        };
-        
-        networkNodes.push(node);
-    }
-    
-    return networkNodes;
-    
 };
 
 ClientsViewer.prototype.createEdges = function() {
@@ -153,8 +154,14 @@ ClientsViewer.prototype.closeChild = function() {
             this.reset();
     }
     else {
-        this.close();
-        this.unload();
+        
+        var that = this;
+        this.hide();
+        
+        setTimeout(function() {
+            that.close();
+            that.unload();
+        }, 2000);
     }
     
     return self;

@@ -2,10 +2,15 @@
  * Controls how tiles behaves
  */
 function TileManager() {
-   
+
+    var MAX_TILE_DETAIL_SCALE = 5;
+    if (window.location.hash === '#low') {
+        MAX_TILE_DETAIL_SCALE = 2;
+    }
+
     this.dimensions = {};
     this.elementsByGroup = [];
-    
+
     var jsonTile = {};
     var self = this;
     var groupsQtty;
@@ -16,12 +21,12 @@ function TileManager() {
     var layerPosition = [];
     var superLayerMaxHeight = 0;
     var superLayerPosition = [];
-    
+
     var onClick = function(target) {
         if(window.actualView === 'table')
             window.onElementClick(target.userData.id);
     };
-    
+
     this.JsonTile = function(callback){
 
         $.get("json/config_tile.json", {}, function(json) {
@@ -34,7 +39,7 @@ function TileManager() {
      * Pre-computes the space layout for next draw
      */
     this.preComputeLayout = function () {
-        
+
         var SUPER_LAYER_SEPARATION = 3;
 
         var section_size = [],
@@ -45,9 +50,9 @@ function TileManager() {
         //Initialize
         for (var key in layers) {
             if (key == "size") continue;
-            
+
             var id = layers[key].index;
-            
+
             if(layers[key].super_layer !== actualSuperLayerName) {
                 superLayerHeight = 0;
                 actualSuperLayerName = layers[key].super_layer;
@@ -87,10 +92,10 @@ function TileManager() {
             for (var layer in window.TABLE[platfrm].layers){
 
                 for(i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
-                
+
                     var tile = window.TABLE[platfrm].layers[layer].objects[i];
-            
-                    var r = tile.data.layerID; 
+
+                    var r = tile.data.layerID;
 
                     var c = tile.data.platformID;
                     var idT = tile.id;
@@ -103,14 +108,14 @@ function TileManager() {
                         section_size[r]++;
                         isSuperLayer[r] = layers[tile.data.layer].super_layer;
                     } else {
-                        
+
                         section_size[r][c]++;
                         if (section_size[r][c] > columnWidth) columnWidth = section_size[r][c];
                     }
-                    
+
                 }
             }
-        }  
+        }
 
         //Set row height
 
@@ -118,24 +123,24 @@ function TileManager() {
         var remainingSpace = superLayerMaxHeight;
         var inSuperLayer = false;
         var actualSuperLayer = -1;
-        
+
         actualSuperLayerName = false;
 
         for (i = 0; i < layersQtty; i++) {
-            
+
             if(isSuperLayer[i] !== actualSuperLayerName) {
-                
+
                 actualHeight += remainingSpace + 1;
                 remainingSpace = superLayerMaxHeight;
-                
+
                 if(isSuperLayer[i]) {
                     actualSuperLayer++;
                     inSuperLayer = false;
                 }
-                
+
                 actualSuperLayerName = isSuperLayer[i];
             }
-            
+
             if (isSuperLayer[i]) {
 
                 if (!inSuperLayer) {
@@ -160,7 +165,7 @@ function TileManager() {
                 inSuperLayer = false;
                 actualHeight++;
             }
-            
+
             if(actualHeight == 6)   //Separates GUI section
                 actualHeight += 2;
 
@@ -194,10 +199,11 @@ function TileManager() {
 
         for (i = 0, l = _layers.length; i < l; i++) {
             name = helper.capFirstLetter(_layers[i].name);
-            layers[name] = {};
-            layers[name].super_layer = _layers[i].suprlay;
-            layers[name].index = _layers[i].order;
-            layers[name]._id = _layers[i]._id;
+            window.layers[name] = {};
+            //TODO: Temp fix of the server
+            window.layers[name].super_layer = (_layers[i].suprlay !== "false") ? _layers[i].suprlay : false;
+            window.layers[name].index = _layers[i].order;
+            window.layers[name]._id = _layers[i]._id;
         }
 
         var buildElement = function (e) {
@@ -206,7 +212,7 @@ function TileManager() {
 
             var _platfrm = getSPL(_comp._platfrm_id, _platfrms);
             var _layer = getSPL(_comp._layer_id, _layers);
-            
+
             var layerID = _layer.order;
             layerID = (layerID === undefined) ? layers.size() : layerID;
 
@@ -215,7 +221,7 @@ function TileManager() {
 
             var _author = getBestDev(_comp.devs, "author");
             var _maintainer = getBestDev(_comp.devs, "maintainer");
-            
+
             _layer = helper.capFirstLetter(_layer.name);
 
             var element = {
@@ -245,25 +251,26 @@ function TileManager() {
             };
             return element;
         };
-        
+
         for (i = 0, l = _comps.length; i < l; i++) {
-            
+
             var element = buildElement(i);
 
             //An element is always inside a platform or a superlayer
-            var group = element.platform || element.superLayer,
+            //TODO: Temp fix of the server
+            var group = element.platform || ((element.superLayer !== "false") ? element.superLayer : false),
                 layer = element.layer;
 
             if(typeof window.TABLE[group] === 'undefined'){
-                window.TABLE[group] = {   
+                window.TABLE[group] = {
                     layers : {},
                     ID: element.platformID,
                     isSlayer: element.superLayer
                 };
             }
 
-            if(typeof window.TABLE[group].layers[layer] === 'undefined'){ 
-                window.TABLE[group].layers[layer] = {   
+            if(typeof window.TABLE[group].layers[layer] === 'undefined'){
+                window.TABLE[group].layers[layer] = {
                     objects : [],
                     y : 0,
                     ID: element.layerID
@@ -272,9 +279,9 @@ function TileManager() {
 
             var lastObject = window.TABLE[group].layers[layer].objects.length;
             var count = lastObject;
-            
 
-            var objectTile = { 
+
+            var objectTile = {
                 mesh : null,
                 data : element,
                 target : {},
@@ -303,7 +310,7 @@ function TileManager() {
      * @returns {Object} The drawn texture
      */
     this.createTexture = function (id, quality, tileWidth, tileHeight, scale, _table) {
-        
+
         var tile = _table || window.helper.getSpecificTile(id).data;
 
         var state = tile.code_level,
@@ -425,7 +432,7 @@ function TileManager() {
             nameMaintainer.y = jsonTile[state].nameMaintainer.y * scale;
 
             userMaintainer.x = jsonTile[state].userMaintainer.x * scale;
-            userMaintainer.y = jsonTile[state].userMaintainer.y * scale; 
+            userMaintainer.y = jsonTile[state].userMaintainer.y * scale;
 
             if(typeof jsonTile[state].layerText.color  !== 'undefined')
                 layerText.color = jsonTile[state].layerText.color;
@@ -433,12 +440,12 @@ function TileManager() {
             if(typeof jsonTile[state].nameText.color  !== 'undefined')
                 nameText.color = jsonTile[state].nameText.color;
 
-            if(state === "production"){ 
+            if(state === "production"){
                 codeText.x = jsonTile[state].codeText.x * scale;
                 layerText.x = jsonTile[state].layerText.x * scale;
                 authorText.x = jsonTile[state].authorText.x * scale;
 
-                nameText.x = jsonTile[state].nameText.x * scale;                
+                nameText.x = jsonTile[state].nameText.x * scale;
                 nameText.constraint = jsonTile[state].nameText.constraint * scale;
                 nameText.lineHeight = jsonTile[state].nameText.lineHeight * scale;
                 nameText.wrap = true;
@@ -490,7 +497,7 @@ function TileManager() {
      * @param   {Number}     i ID of the tile (index in table)
      * @returns {DOMElement} The drawable element that represents the tile
      */
-     
+
     this.createElement = function (id, _table) {
 
         var mesh,
@@ -509,7 +516,7 @@ function TileManager() {
 
         for (var j = 0, l = levels.length; j < l; j++) {
 
-            if (levels[j][0] === 'high') scale = 5;
+            if (levels[j][0] === 'high') scale = MAX_TILE_DETAIL_SCALE;
             else scale = 1;
 
             texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale, table);
@@ -520,7 +527,7 @@ function TileManager() {
                     side: THREE.DoubleSide,
                     transparent : true,
                     map : texture
-                }) 
+                })
             );
 
             mesh.userData = {
@@ -552,7 +559,7 @@ function TileManager() {
 
         //TWEEN.removeAll();
 
-        var animate = function(object, target, delay) { 
+        var animate = function(object, target, delay) {
 
             delay = delay || 0;
 
@@ -579,7 +586,7 @@ function TileManager() {
 
             return move;
         };
-        
+
         if(ordered === true) {
 
             for(i = 0; i < self.elementsByGroup.length; i++) {
@@ -590,7 +597,7 @@ function TileManager() {
                 for(j = 0; j < self.elementsByGroup[k].length; j++) {
 
                     var index = self.elementsByGroup[k][j];
-                    
+
                     var target = window.helper.getSpecificTile(index);
 
                     var animation = animate(target.mesh, target.target.show, delay);
@@ -603,8 +610,8 @@ function TileManager() {
 
             for(var r = 0; r < window.tilesQtty.length; r++){
 
-                var tile = window.helper.getSpecificTile(window.tilesQtty[r]);                  
-                    
+                var tile = window.helper.getSpecificTile(window.tilesQtty[r]);
+
                 animate(tile.mesh, tile.target.show, 0).start();
             }
         }
@@ -615,13 +622,13 @@ function TileManager() {
                 window.headersUp = true;
             }
         }
-        
+
 
         new TWEEN.Tween(this)
             .to({}, duration * 2 + self.elementsByGroup * DELAY)
             .onUpdate(render)
             .start();
-        
+
         setTimeout(window.screenshotsAndroid.show, duration);
     };
 
@@ -632,9 +639,9 @@ function TileManager() {
 
         window.camera.enable();
         window.camera.loseFocus();
-    
+
         window.helper.show('container', 2000);
-    
+
         window.flowManager.getActualFlow();
 
         self.transform();
@@ -648,9 +655,9 @@ function TileManager() {
     this.drawTable = function () {
 
         this.preComputeLayout();
-        
+
         var layerCoordinates = [];
-        
+
         var signRow = null,
             signColumn = null;
 
@@ -659,7 +666,7 @@ function TileManager() {
             var id = window.tilesQtty[i];
 
             var mesh = this.createElement(id);
-            
+
             scene.add(mesh);
 
             window.helper.getSpecificTile(id).mesh = mesh;
@@ -691,7 +698,7 @@ function TileManager() {
 
 
             object.position.y = -((layerPosition[row]) * window.TILE_DIMENSION.height) + (layersQtty * window.TILE_DIMENSION.height / 2);
-            
+
             if(typeof layerCoordinates[row] === 'undefined')
                 layerCoordinates[row] = object.position.y;
 
@@ -700,7 +707,7 @@ function TileManager() {
 
             object.position.copy(window.viewManager.translateToSection('table', object.position));
 
-            if(layers[tile.layer].super_layer){ 
+            if(layers[tile.layer].super_layer){
 
                 if(typeof window.TABLE[layers[tile.layer].super_layer].x === 'undefined')
                     window.TABLE[layers[tile.layer].super_layer].x = object.position.x;
@@ -716,7 +723,7 @@ function TileManager() {
             mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
 
             /*End*/
-            if(!signLayer.findSignLayer(group, tile.layer)){
+            if(!window.signLayer.findSignLayer(group, tile.layer)){
                 if(i === 0 ){ //entra a la primera
                     window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
                     signRow = tile.layerID;
@@ -737,7 +744,7 @@ function TileManager() {
                     signColumn = tile.platformID;
                     window.TABLE[group].layers[tile.layer].y = object.position.y;
                 }
-            }                               
+            }
         }
 
         this.dimensions = {
@@ -783,24 +790,24 @@ function TileManager() {
 
         for(i = 0; i < window.tilesQtty.length; i++){
 
-            var tile = window.helper.getSpecificTile(window.tilesQtty[i]);  
-        
+            var tile = window.helper.getSpecificTile(window.tilesQtty[i]);
+
             if (ids === tile.id) {
                 target =  tile.target.show.position;
-            } 
+            }
             else {
                 target = out;
                 tile.mesh.userData.flying = true;
             }
 
-            animate(tile.mesh, target, Math.random() * _duration + _duration);      
+            animate(tile.mesh, target, Math.random() * _duration + _duration);
         }
-               
+
         new TWEEN.Tween(this)
             .to({}, _duration * 2)
             .onUpdate(render)
             .start();
-        
+
         window.screenshotsAndroid.hide();
         window.signLayer.letAloneSignLayer();
     };
@@ -810,7 +817,7 @@ function TileManager() {
         self.elementsByGroup = [];
 
         window.tilesQtty = [];
-        
+
         var i = 0;
 
         for (var j = 0; j <= groupsQtty; j++) {
@@ -823,16 +830,16 @@ function TileManager() {
             for(var layer in window.TABLE[platform].layers){
 
                 for(i = 0; i < window.TABLE[platform].layers[layer].objects.length; i++){
-                
+
                     var tile = window.TABLE[platform].layers[layer].objects[i];
-            
+
                     var c = tile.data.platformID;
                     var id = tile.id;
 
                     window.tilesQtty.push(id);
 
                     self.elementsByGroup[c].push(id);
-                    
+
                 }
             }
         }
@@ -919,15 +926,15 @@ function TileManager() {
 
         ctx.fillStyle = "#FFFFFF";
 
-        if (data.length !== 0){ 
+        if (data.length !== 0){
 
           if(data[0].text)
-            drawText(data, ctx, texture); 
-          else 
+            drawText(data, ctx, texture);
+          else
             drawPicture(data, ctx, texture);
         }
     }
-    
+
     function getSPL(_id, _SPLArray) {
         if (_id) {
             for (var i = 0, l = _SPLArray.length; i < l; i++) {
@@ -953,12 +960,12 @@ function TileManager() {
             dev.percnt = 0;
             for (var i = 0, l = _devs.length; i < l; i++) {
                 _dev = _devs[i];
-                
+
                 if((role === 'author' && _dev.role === 'author' && _dev.scope === 'implementation') ||
                    (role === 'maintainer' && _dev.role === 'maintainer')) {
-                
+
                     if (_dev.percnt >= dev.percnt) {
-                        
+
                         dev.percnt = _dev.percnt;
                         dev.usrnm = _dev.dev.usrnm;
                         dev.name = _dev.dev.name;
