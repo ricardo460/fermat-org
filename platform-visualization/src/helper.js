@@ -891,6 +891,8 @@ function Helper() {
 
         var param = null;
         
+        if(params == null) params = {};
+        
         params.env = ENV;
 
         //Search for wildcards parameters
