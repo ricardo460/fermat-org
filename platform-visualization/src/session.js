@@ -6,6 +6,18 @@ function Session(){
 	var usr;
     var code;
     var self = this;
+    var clientID = "d00a7c7d4489139327e4";
+    switch(window.location.href.match("//[a-z]*")[0].replace("//", '')) {
+        case "dev":
+            clientID = 'd00a7c7d4489139327e4';
+            break;
+        case "lab":
+            clientID = 'f98fdd310fe6284f5416';
+            break;
+        case "3d":
+            clientID = '1d65cbed13dbd026bec8';
+            break;
+    }
 
 	this.getIsLogin = function(){
 		return isLogin;
@@ -55,7 +67,7 @@ function Session(){
 	 * Login with github and gets the authorization code
 	 */
 	this.getAuthCode = function(){                                                                        //CLientID: c25e3b3b1eb9aa35c773 - Web
-		window.location.href = 'https://github.com/login/oauth/authorize?client_id=d00a7c7d4489139327e4'; //ClientID: f079f2a8fa65313179d5 - localhost
+		window.location.href = helper.buildURL("https://github.com/login/oauth/authorize", {client_id : clientID}); //ClientID: f079f2a8fa65313179d5 - localhost
 	};
 
 	/**
@@ -63,7 +75,7 @@ function Session(){
 	 */
 	this.logout = function() {
 
-		var url_logout = window.helper.getAPIUrl("logout") + "&axs_key=" + axs_key + "&api_key=" + api_key;
+		var url_logout = window.helper.getAPIUrl("logout", {axs_key : axs_key, api_key : api_key});
 		console.log("url: " + url_logout);
 		$.ajax({
 			url : url_logout,
@@ -98,7 +110,7 @@ function Session(){
 	 * Logged to the user and returns the token
 	 */
 	this.login = function() {
-		var url = window.helper.getAPIUrl("login") + "&code=" + code + "&api_key=" + api_key;
+		var url = window.helper.getAPIUrl("login", { code : code, api_key : api_key});
 		console.log("url: " + url);
 
 
@@ -111,6 +123,8 @@ function Session(){
 		}).success(function(tkn) {
 			usr = tkn._usr_id;
 			axs_key = tkn.axs_key;
+            window.console.dir(tkn);
+            
 			if(usr !== undefined) {
 
 				isLogin = true;

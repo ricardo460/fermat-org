@@ -13,7 +13,7 @@ ClientsViewer.prototype.constructor = ClientsViewer;
 
 ClientsViewer.prototype.load = function() {
     
-    var baseUrl = helper.getAPIUrl("nodes") + "/" + this.parentNode.userData.id + "/childrn";
+    var baseUrl = helper.getAPIUrl("nodes", {server : this.parentNode.userData.id});
     
     $.ajax({
         url : baseUrl,
