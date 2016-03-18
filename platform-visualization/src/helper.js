@@ -5,9 +5,18 @@ function Helper() {
 
     var SERVER = 'http://api.fermat.org';
 
-    //var PORT = '';
-
-    var PORT = '?env=production';
+    var ENV = 'production';
+    switch(window.location.href.match("//[a-z]*")[0].replace("//", '')) {
+        case "dev":
+            ENV = 'production';
+            break;
+        case "lab":
+            ENV = 'development';
+            break;
+        case "3d":
+            ENV = 'testing';
+            break;
+    }
 
     var USERDATA = '';
 
@@ -233,7 +242,7 @@ function Helper() {
      * @param   {string} route The name of the route to get
      * @returns {string} The URL related to the requested route
      */
-    this.getAPIUrl = function(route) {
+    this.getAPIUrl = function(route, params) {
 
         var tail = "";
 
@@ -249,7 +258,7 @@ function Helper() {
                 tail = "/v1/net/servrs";
                 break;
             case "nodes":
-                tail = "/v1/net/nodes";
+                tail = "/v1/net/nodes/:server/childrn";
                 break;
             case "login":
                 tail = "/v1/auth/login";
@@ -262,7 +271,7 @@ function Helper() {
                 break;
         }
 
-        return SERVER + tail + PORT;
+        return this.buildURL(SERVER + tail, params);
     };
 
     this.postRoutesComponents = function(route, params, data, doneCallback, failCallback){
@@ -303,7 +312,7 @@ function Helper() {
         }
 
         param = {
-                env : PORT.replace('?env=',''),
+                env : ENV,
                 axs_key : AXS_KEY
             };
 
@@ -401,7 +410,7 @@ function Helper() {
         }
 
         param = {
-                env : PORT.replace('?env=',''),
+                env : ENV,
                 axs_key : AXS_KEY
             };
 
@@ -413,14 +422,14 @@ function Helper() {
             url:  url,
             method: 'GET',
             dataType: 'json',
-            done:  function (res) {
+            success:  function (res) {
 
                 if(res._id)
                     doneCallback();
                 else
                     failCallback();
             },
-            fail: function(res){
+            error: function(res){
 
                 if(res.status === 423){
                     window.alert("This component is currently being modified by someone else, please try again in about 3 minutes");
@@ -470,7 +479,7 @@ function Helper() {
         }
 
         param = {
-                env : PORT.replace('?env=',''),
+                env : ENV,
                 axs_key : AXS_KEY
             };
 
@@ -571,7 +580,7 @@ function Helper() {
             url = SERVER + "/v1/repo/usrs/"+USERDATA._id+"/";
 
             param = {
-                env : PORT.replace('?env=',''),
+                env : ENV,
                 axs_key : AXS_KEY
             };
 
@@ -632,7 +641,7 @@ function Helper() {
             $.ajax({
                 url: url + route + port,
                 method: "GET"
-            }).done(
+            }).success (
                 function (res) {
 
                     if(typeof(callback) === 'function')
@@ -881,6 +890,8 @@ function Helper() {
         var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
 
         var param = null;
+        
+        params.env = ENV;
 
         //Search for wildcards parameters
         do {
