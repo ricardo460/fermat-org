@@ -112,7 +112,7 @@ function Session(){
 	this.login = function() {
 		var url = window.helper.getAPIUrl("login", { code : code, api_key : api_key});
 		console.log("url: " + url);
-
+        var cookie = getCookie("devtoken");
 
 		$.ajax({
 			url : url,
@@ -137,7 +137,24 @@ function Session(){
      			$("#logout").fadeIn(2000);
 
      			drawUser(usr);
+                console.log(tkn);
+                setCookie("devtoken", tkn, 7);
+                
+            }
+            else if(cookie !== "") {
+                usr = cookie._usr_id;
+                axs_key = cookie.axs_key;
+                    
+                isLogin = true;
 
+                usr.axs_key = axs_key;
+
+                console.log("Logueado Completamente: " + usr.name);
+
+                $("#login").fadeOut(2000);
+                $("#logout").fadeIn(2000);
+
+                drawUser(usr);
 			}
             else {
 				console.log("Error:", tkn);
@@ -286,5 +303,25 @@ function Session(){
             drawPictureUser(data, ctx, texture);
         }
 	}
+
+    function setCookie(name, value, days) {
+        var d = new Date();
+        d.setTime(d.getTime() + (days*24*60*60*1000));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = name + "=" + value + "; " + expires;
+    }
+
+    function getCookie(name) {
+        var cname = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while(c.charAt(0) === ' ') 
+                c = c.substring(1);
+            if(c.indexOf(cname) === 0)
+                return c.substring(cname.length, c.length);
+        }
+        return "";
+    }
 
 }
