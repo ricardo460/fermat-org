@@ -669,14 +669,14 @@ exports.findProcById = function (_id, callback) {
  *
  * @return {[type]}    [description]
  */
-exports.insertStep = function (_proc_id, _comp_id, type, title, desc, order, callback) {
+exports.insertStep = function (_proc_id, _comp_id, type, title, desc, order, next, callback) {
 	'use strict';
 	try {
 		procSrv.findProcById(_proc_id, function (err_proc, res_proc) {
 			if (err_proc) {
 				return callback(err_proc, null);
 			} else if (res_proc) {
-				var step = new StepMdl(_proc_id, _comp_id, type, title, desc, order, []);
+				var step = new StepMdl(_proc_id, _comp_id, type, title, desc, order, next);
 				stepSrv.insertStep(step, function (err_ins, res_ins) {
 					if (err_ins) {
 						return callback(err_ins, null);
