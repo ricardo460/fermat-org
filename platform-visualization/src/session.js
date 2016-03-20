@@ -6,6 +6,18 @@ function Session(){
 	var usr;
     var code;
     var self = this;
+    var clientID = "d00a7c7d4489139327e4";
+    switch(window.location.href.match("//[a-z]*")[0].replace("//", '')) {
+        case "dev":
+            clientID = 'd00a7c7d4489139327e4';
+            break;
+        case "lab":
+            clientID = 'f98fdd310fe6284f5416';
+            break;
+        case "3d":
+            clientID = '1d65cbed13dbd026bec8';
+            break;
+    }
 
 	this.getIsLogin = function(){
 		return isLogin;
@@ -30,14 +42,14 @@ function Session(){
             else{
 
                 window.helper.hide('logout', 2000, true);
-                window.helper.hide('containerLogin', 2000, true);               
+                window.helper.hide('containerLogin', 2000, true);
             }
         }
         else{
 
             if(display)
                 window.helper.show('login', 2000);
-            else   
+            else
                 window.helper.hide('login', 2000, true);
         }
 
@@ -47,15 +59,15 @@ function Session(){
      * @author Ricardo Delgado
      */
     this.useTestData = function(){
-        
-        
+
+
     };
 
 	/**
 	 * Login with github and gets the authorization code
 	 */
 	this.getAuthCode = function(){                                                                        //CLientID: c25e3b3b1eb9aa35c773 - Web
-		window.location.href = 'https://github.com/login/oauth/authorize?client_id=d00a7c7d4489139327e4'; //ClientID: f079f2a8fa65313179d5 - localhost
+		window.location.href = helper.buildURL("https://github.com/login/oauth/authorize", {client_id : clientID}); //ClientID: f079f2a8fa65313179d5 - localhost
 	};
 
 	/**
@@ -63,7 +75,7 @@ function Session(){
 	 */
 	this.logout = function() {
 
-		var url_logout = window.helper.getAPIUrl("logout") + "&axs_key=" + axs_key + "&api_key=" + api_key;
+		var url_logout = window.helper.getAPIUrl("logout", {axs_key : axs_key, api_key : api_key});
 		console.log("url: " + url_logout);
 		$.ajax({
 			url : url_logout,
@@ -98,9 +110,10 @@ function Session(){
 	 * Logged to the user and returns the token
 	 */
 	this.login = function() {
-		var url = window.helper.getAPIUrl("login") + "&code=" + code + "&api_key=" + api_key;
+		var url = window.helper.getAPIUrl("login", { code : code, api_key : api_key});
 		console.log("url: " + url);
-		
+        var cookie = getCookie("devtoken");
+
 		$.ajax({
 			url : url,
 			type : "GET",
@@ -110,8 +123,10 @@ function Session(){
 		}).success(function(tkn) {
 			usr = tkn._usr_id;
 			axs_key = tkn.axs_key;
+            window.console.dir(tkn);
+            
 			if(usr !== undefined) {
-				
+
 				isLogin = true;
 
                 usr.axs_key = axs_key;
@@ -122,8 +137,25 @@ function Session(){
      			$("#logout").fadeIn(2000);
 
      			drawUser(usr);
+                console.log(tkn);
+                setCookie("devtoken", tkn, 7);
                 
-			} 
+            }
+            else if(cookie !== "") {
+                usr = cookie._usr_id;
+                axs_key = cookie.axs_key;
+                    
+                isLogin = true;
+
+                usr.axs_key = axs_key;
+
+                console.log("Logueado Completamente: " + usr.name);
+
+                $("#login").fadeOut(2000);
+                $("#logout").fadeIn(2000);
+
+                drawUser(usr);
+			}
             else {
 				console.log("Error:", tkn);
                 window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
@@ -230,7 +262,7 @@ function Session(){
 
             image.crossOrigin = "anonymous";
             image.src = actual.src;
-        } 
+        }
         else {
             if(data.length !== 0) {
                 if(data[0].text)
@@ -239,7 +271,7 @@ function Session(){
                     drawPictureUser(data, ctx, texture);
             }
         }
-	} 
+	}
 
 	function drawTextUser(data, ctx, texture){
 
@@ -263,13 +295,33 @@ function Session(){
 
         ctx.fillStyle = "#FFFFFF";
 
-        if(data.length !== 0){ 
+        if(data.length !== 0){
 
           if(data[0].text)
-            drawTextUser(data, ctx, texture); 
-          else 
+            drawTextUser(data, ctx, texture);
+          else
             drawPictureUser(data, ctx, texture);
         }
 	}
+
+    function setCookie(name, value, days) {
+        var d = new Date();
+        d.setTime(d.getTime() + (days*24*60*60*1000));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = name + "=" + value + "; " + expires;
+    }
+
+    function getCookie(name) {
+        var cname = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while(c.charAt(0) === ' ') 
+                c = c.substring(1);
+            if(c.indexOf(cname) === 0)
+                return c.substring(cname.length, c.length);
+        }
+        return "";
+    }
 
 }

@@ -273,7 +273,7 @@ function FieldsEdit() {
 
     function sesionLayer(){
 
-        var id = 'label-layer'; text = 'Select the Layer : '; type = 'label';
+        var id = 'label-layer', text = 'Select the Layer : ', type = 'label';
 
         createField(id, text, 15, type);
 
@@ -856,7 +856,7 @@ function FieldsEdit() {
         if(typeof window.platforms[platform] === 'undefined')
             state = platform;
 
-        var _layers = window.CLI.query(window.layers,function(el){return (el.super_layer === state);});
+        var _layers = window.CLI.query(window.layers,function(el){return (typeof(el) !== "function" && el.super_layer.toString() === state.toString());});
 
         var option = "";
 

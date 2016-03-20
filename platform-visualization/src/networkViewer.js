@@ -20,13 +20,13 @@ NetworkViewer.prototype.load = function() {
         url : window.helper.getAPIUrl("servers"),
         method: "GET",
         context: this
-    }).done(function(networkNodes) {
+    }).success(function(networkNodes) {
         
         this.NET_RADIOUS = this.NET_RADIOUS * (networkNodes.length - 1);
         this.drawNodes(networkNodes);
         this.configureCamera();
         
-    }).fail(function(request, error) {
+    }).error(function(request, error) {
         
         window.console.log("Error: " + error);
         window.alert("Error, please check the console and inform on github");
