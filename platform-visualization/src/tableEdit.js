@@ -917,7 +917,7 @@ function TableEdit() {
                 comp_id : id
             };
 
-        window.helper.postValidateLock('check', dataPost,
+        window.helper.postValidateLock('tableEdit', dataPost,
             function(res){ 
 
                 if(typeof(callback) === 'function')

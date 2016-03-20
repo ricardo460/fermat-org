@@ -12,8 +12,11 @@ function WorkFlowEdit() {
                 "title": "select broker and submit request",
                 "desc": "the customer selects a broker from the list and submits the request to connect to him.",
                 "type": "start",
-                "next": [
-
+                "next": [ 
+                    { 
+                        "id": "1",
+                        "type": "direct call"
+                    }
                 ],
                 "name": "crypto broker community",
                 "layer": "sub app",
@@ -26,7 +29,7 @@ function WorkFlowEdit() {
                 "type": "activity",
                 "next": [
                     {
-                        "id": "0",
+                        "id": "2",
                         "type": "direct call"
                     }
                 ],
@@ -41,25 +44,41 @@ function WorkFlowEdit() {
                 "type": "activity",
                 "next": [
                     {
-                        "id": "1",
+                        "id": "3",
                         "type": "direct call"
                     }
                 ],
                 "name": "crypto broker",
                 "layer": "actor network service",
                 "platfrm": "CBP"
+            },
+            {
+                "id": 3,
+                "title": "call the broker to deliver the request",
+                "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
+                "type": "activity",
+                "next": [
+
+                ],
+                "name": "crypto broker",
+                "layer": "actor network service",
+                "platfrm": "CBP"
             }
+
         ];
 
     var classFlow = null;
 
     this.addButton = function(_id){
 
-        var id = _id || null,
+        var id = null,
             text = 'Edit WorkFlow',
             button = 'buttonWorkFlowEdit',
             side = null,
             callback = null;
+
+        if(typeof _id === 'number')
+            id = _id;
 
         if(id === null){
 
@@ -105,9 +124,12 @@ function WorkFlowEdit() {
 
                 callback = function(){
 
-                    window.fieldsEdit.actions.type = "update";
-                    window.buttonsManager.removeAllButtons(); 
-                    drawHeaderFlow(id, addAllForm);
+                    validateLock(id, function(){ 
+
+                        window.fieldsEdit.actions.type = "update";
+                        window.buttonsManager.removeAllButtons(); 
+                        drawHeaderFlow(id, addAllForm);
+                    });
                 };
             }
 
@@ -125,8 +147,11 @@ function WorkFlowEdit() {
 
                 callback = function(){
 
-                    if(window.confirm("Really remove this component?"))           
-                        deleteWorkFlow(id);                
+                    validateLock(id, function(){ 
+
+                        if(window.confirm("Really remove this component?"))           
+                            deleteWorkFlow(id);
+                    });                
                 };
             }
 
@@ -165,6 +190,7 @@ function WorkFlowEdit() {
     function addAllForm(){
 
         window.fieldsEdit.createFieldWorkFlowEdit();
+
         creatButtonPreview();
 
         function creatButtonPreview(){
@@ -225,7 +251,11 @@ function WorkFlowEdit() {
         }
         else if(window.fieldsEdit.actions.type === "update"){
 
-            flow = window.flowManager.getObjHeaderFlow()[id].flow;
+            var workFlow = window.flowManager.getObjHeaderFlow()[id];
+
+            workFlow.deleteStep();
+
+            flow = workFlow.flow;
 
             flow = JSON.parse(JSON.stringify(flow));
 
@@ -258,6 +288,22 @@ function WorkFlowEdit() {
 
                 fillStep();
 
+                window.headers.transformWorkFlow(2000);
+
+                var allWorkFlow = window.flowManager.getObjHeaderFlow();
+
+                for(var i = 0; i < allWorkFlow.length ; i++) {
+
+                    if(allWorkFlow[i].action){
+
+                        allWorkFlow[i].deleteStep();
+                        allWorkFlow[i].action = false;
+                        allWorkFlow[i].showAllFlow();
+                    }
+                    else
+                        allWorkFlow[i].showAllFlow();
+                }
+
                 window.helper.showBackButton();
 
             });
@@ -274,7 +320,7 @@ function WorkFlowEdit() {
             if(window.fieldsEdit.actions.type === "insert")
                 createWorkFlow();
             else if(window.fieldsEdit.actions.type === "update")
-                modifyTile();
+                modifyWorkFlow();
         }
         else{
              window.alert(validateFields());
@@ -297,11 +343,6 @@ function WorkFlowEdit() {
 
     //workFlow action
 
-    function createWorkFlow(){ 
-
-        
-    }
-
     function createWorkFlow(){
 
         var flow = window.fieldsEdit.getData();
@@ -313,55 +354,11 @@ function WorkFlowEdit() {
 
                 flow._id = res._id;
 
-                var newFlow = new ActionFlow(flow);
+                postParamsSteps(flow, function(flow){ 
 
-                var _target = new THREE.Vector3();
+                    addWorkFlow(flow, 3000);
 
-                var target = null,
-                    find = false,
-                    id = window.flowManager.getObjHeaderFlow().length;
-
-                for(var i = 0; i < window.flowManager.getObjHeaderFlow().length; i++){
-
-                    if(window.flowManager.getObjHeaderFlow()[i].flow.platfrm === flow.platfrm){
-
-                        target = flowManager.getObjHeaderFlow()[i].positions.target[0];
-
-                        find = true;
-
-                        if(target.y < _target.y)
-                            _target.copy(target);
-                    }
-                }
-                if(find === false){ 
-                    for(var j = 0; j < window.headers.getPositionHeaderViewInFlow().length; j++){
-                        if(window.headers.getPositionHeaderViewInFlow()[j].name === flow.platfrm){
-                            _target =  window.headers.getPositionHeaderViewInFlow()[j].position;
-                        }
-                    }
-                }
-
-                _target = JSON.parse(JSON.stringify(_target));
-               
-                if(find === true){
-                    _target.y = _target.y - 500;
-                }
-                else{
-                    _target.x = _target.x - 1500;
-                    _target.y = _target.y - 2200;
-                }
-
-                window.camera.move(_target.x, _target.y, 8000, 3000);
-
-                setTimeout( function() {
-
-                    newFlow.drawEdit(_target.x, _target.y, _target.z, id);
-                    
-                    window.camera.loseFocus();
-                    
-                    window.flowManager.getObjHeaderFlow().push(newFlow);
-
-                }, 3000 );  
+                });  
             },
             function(){
 
@@ -388,51 +385,430 @@ function WorkFlowEdit() {
             return param;
         }
 
-        function postParamsSteps(table, callback){
+        function postParamsSteps(flow, callback){
 
-            var devs = table.devs;
+            //var steps = flow.steps.slice();
 
-            var newDevs = [];
+            var steps = self.testDataSteps.slice();
 
-            /*postDevs(devs);
+            var newSteps = [];
 
-            function postDevs(devs){
+            var dataPost = {
+                    proc_id : flow._id
+                };
 
-                if(devs.length > 0){ 
+            postSteps(steps);
 
-                    var dataPost = {
-                                comp_id : table.id
-                            };
+            function postSteps(steps){
+
+                if(steps.length > 0){ 
 
                     var param = {};
 
-                    param.dev_id = devs[0].dev._id;
-                    param.percnt = devs[0].percnt;
-                    param.role = devs[0].role;
-                    param.scope = devs[0].scope;
+                    param.type = steps[0].type;
+                    param.comp_id = getIdSpecificTile(steps[0].name);
+                    param.title = steps[0].title;
+                    param.desc = steps[0].desc;
+                    param.order = steps[0].id;
 
-                    window.helper.postRoutesComponents('insert dev', param, dataPost,
+                    if(steps[0].next.length > 0)
+                        param.next = steps[0].next;
+
+                    window.helper.postRoutesProcess('insert step', param, dataPost,
                         function(res){
 
-                            devs[0]._id = res._id;
+                            steps[0]._id = res._id;
 
-                            newDevs.push(devs[0]);
+                            newSteps.push(steps[0]);
                             
-                            devs.splice(0,1);
+                            steps.splice(0,1);
 
-                            postDevs(devs);
+                            postSteps(steps);
 
                         });
                 }
                 else{
 
-                    table.devs = newDevs;
+                    flow.steps = newSteps;
 
-                    callback(table);
+                    callback(flow);
                 }
-            }*/
+            }
         }
 
+    }
+
+    function addWorkFlow(flow, duration){
+
+        var newFlow = new ActionFlow(flow);
+
+        var _target = new THREE.Vector3();
+
+        var target = null,
+            find = false,
+            id = window.flowManager.getObjHeaderFlow().length;
+
+        for(var i = 0; i < window.flowManager.getObjHeaderFlow().length; i++){
+
+            if(window.flowManager.getObjHeaderFlow()[i].flow.platfrm === flow.platfrm){
+
+                target = flowManager.getObjHeaderFlow()[i].positions.target[0];
+
+                find = true;
+
+                if(target.y < _target.y)
+                    _target.copy(target);
+            }
+        }
+        if(find === false){ 
+            for(var j = 0; j < window.headers.getPositionHeaderViewInFlow().length; j++){
+                if(window.headers.getPositionHeaderViewInFlow()[j].name === flow.platfrm){
+                    _target =  window.headers.getPositionHeaderViewInFlow()[j].position;
+                }
+            }
+        }
+
+        _target = JSON.parse(JSON.stringify(_target));
+       
+        if(find === true){
+            _target.y = _target.y - 500;
+        }
+        else{
+            _target.x = _target.x - 1500;
+            _target.y = _target.y - 2200;
+        }
+
+        window.camera.move(_target.x, _target.y, 8000, duration);
+
+        setTimeout( function() {
+
+            newFlow.drawEdit(_target.x, _target.y, _target.z, id);
+            
+            window.camera.loseFocus();
+            
+            window.flowManager.getObjHeaderFlow().push(newFlow);
+
+        }, duration);
+
+    }
+
+    function modifyWorkFlow(){ 
+
+        var newFlow = window.fieldsEdit.getData();
+
+        /* test */ newFlow.steps = self.testDataSteps;
+
+        var params = getParamsData(newFlow);
+
+        var dataPost = {
+                proc_id : window.fieldsEdit.actualFlow._id
+            };
+
+        window.helper.postRoutesProcess('update', params, dataPost,
+            function(res){ 
+
+                newFlow._id = window.fieldsEdit.actualFlow._id;
+
+                postParamsStep(newFlow, function(newFlow){
+
+                    var oldFlow = JSON.parse(JSON.stringify(window.fieldsEdit.actualFlow)),
+                        oldGroup = oldFlow.platfrm,
+                        newGroup = newFlow.platfrm,
+                        id = window.fieldsEdit.actualFlow.id,
+                        target = window.helper.fillTarget(0, 0, 160000, 'workflows'),
+                        workFlow = window.flowManager.getObjHeaderFlow()[id],
+                        mesh = workFlow.objects[0];
+                        
+                    window.camera.loseFocus();
+
+                    classFlow.deleteStep();
+
+                    classFlow = null;
+
+                    var positionCameraX = workFlow.positions.target[0].x,
+                        positionCameraY = workFlow.positions.target[0].y;
+
+                    window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
+
+                    setTimeout( function() {
+
+                        if(newGroup !== oldGroup)
+                            change();
+                        else
+                            notChange();
+
+                    }, 1500 );
+
+                    function change(){
+
+                        window.flowManager.getObjHeaderFlow().splice(id, 1);
+
+                        animate(mesh, target.hide, 800, function(){
+
+                            window.scene.remove(mesh);
+
+                            updateWorkFlow(workFlow.flow.platfrm);
+
+                            setTimeout( function() {
+
+                                addWorkFlow(newFlow, 2000);
+
+                            }, 2500 );
+
+                        });
+                    }
+
+                    function notChange(){
+
+                        var texture = workFlow.createTitleBox(newFlow.name, newFlow.desc, true);
+
+                        animate(mesh, target.hide, 1000, function(){
+
+                            mesh.material.map = texture;
+
+                            mesh.material.needsUpdate = true;
+
+                            target = window.helper.fillTarget(workFlow.positions.target[0].x, workFlow.positions.target[0].y, 0, 'workflows');
+
+                            animate(mesh, target.show, 1000, function(){
+
+                                workFlow.flow.name = newFlow.name;
+
+                                workFlow.flow.desc = newFlow.desc;
+
+                                workFlow.flow.platfrm = newFlow.platfrm;
+
+                                workFlow.flow.steps = newFlow.steps;
+
+                                workFlow.countFlowElement();
+                            });
+                        });
+                    }
+
+                });
+
+        },
+        function(){
+            window.fieldsEdit.disabledButtonSave(false);
+        });
+
+        function getParamsData(flow){
+
+            var param = {};
+
+            param.platfrm = flow.platfrm;
+            
+            param.name = flow.name;
+
+            param.prev = "null";
+
+            param.next = "null";
+
+            if(flow.desc)
+                param.desc = flow.desc;
+            else
+                param.desc = "pending";
+
+            return param;
+        }
+
+        function postParamsStep(flow, callback){
+
+            var newSteps = flow.steps,
+                oldSteps = window.fieldsEdit.actualFlow.steps.slice(0),
+                newFlowSteps = [],
+                config = { 
+                        insert :{
+                            steps : [],
+                            route : 'insert step'
+                        },
+                        update : {
+                            steps : [],
+                            route : 'update step'
+                        },
+                        delete :{
+                            steps : [],
+                            route : 'delete step'
+                        }
+                    };
+
+            fillSteps(newSteps, oldSteps);
+
+            console.log(config);
+
+            postSteps('delete',config.delete.steps.slice(0), function(){
+
+                postSteps('update',config.update.steps.slice(0), function(){
+
+                    postSteps('insert',config.insert.steps.slice(0), function(){
+
+                        flow.steps = newFlowSteps;
+                        
+                        callback(flow);
+                    });
+                });
+            });
+
+            function fillSteps(newSteps, oldSteps){    
+
+                if(newSteps.length > oldSteps.length){
+
+                    var difference = (newSteps.length - (newSteps.length - oldSteps.length)) - 1;
+
+                    for(var i = 0; i < newSteps.length; i++){
+
+                        if(i > difference){
+                            config.insert.steps.push(newSteps[i]);  
+                        }
+                        else{
+
+                            if(newSteps[i].title !== oldSteps[i].title ||
+                               newSteps[i].desc !== oldSteps[i].desc ||
+                               newSteps[i].name !== oldSteps[i].name ||
+                               newSteps[i].activity !== oldSteps[i].activity){
+
+                                newSteps[i]._id = oldSteps[i]._id;
+                                config.update.steps.push(newSteps[i]);
+                            }
+                            else if(newSteps[i].next.length !== oldSteps[i].next.length){
+
+                                newSteps[i]._id = oldSteps[i]._id;
+                                config.update.steps.push(newSteps[i]);
+                            }
+                            else if(newSteps[i].next.length !== 0){
+
+                                if(newSteps[i].next[0].id !== oldSteps[i].next[0].id ||
+                                    newSteps[i].next[0].type !== oldSteps[i].next[0].type){
+                                    newSteps[i]._id = oldSteps[i]._id;
+                                    config.update.steps.push(newSteps[i]);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if(newSteps.length === oldSteps.length){
+
+                    for(var i = 0; i < newSteps.length; i++){
+
+                        if(newSteps[i].title !== oldSteps[i].title ||
+                           newSteps[i].desc !== oldSteps[i].desc ||
+                           newSteps[i].name !== oldSteps[i].name ||
+                           newSteps[i].activity !== oldSteps[i].activity){
+
+                            newSteps[i]._id = oldSteps[i]._id;
+                            config.update.steps.push(newSteps[i]);
+                        }
+                        else if(newSteps[i].next.length !== oldSteps[i].next.length){
+
+                            newSteps[i]._id = oldSteps[i]._id;
+                            config.update.steps.push(newSteps[i]);
+                        }
+                        else if(newSteps[i].next.length !== 0){
+
+                            if(newSteps[i].next[0].id !== oldSteps[i].next[0].id ||
+                                newSteps[i].next[0].type !== oldSteps[i].next[0].type){
+                                newSteps[i]._id = oldSteps[i]._id;
+                                config.update.steps.push(newSteps[i]);
+                            }
+                        }
+                    }
+                }
+                else if(newSteps.length < oldSteps.length){
+
+                    var difference = (oldSteps.length - (oldSteps.length - newSteps.length)) - 1;
+
+                    for(var i = 0; i < oldSteps.length; i++){
+
+                        if(i > difference){
+                            config.delete.steps.push(oldSteps[i]);  
+                            
+                        }
+                        else{ 
+
+                            if(newSteps[i].title !== oldSteps[i].title ||
+                               newSteps[i].desc !== oldSteps[i].desc ||
+                               newSteps[i].name !== oldSteps[i].name ||
+                               newSteps[i].activity !== oldSteps[i].activity){
+
+                                newSteps[i]._id = oldSteps[i]._id;
+                                config.update.steps.push(newSteps[i]);
+                            }
+                            else if(newSteps[i].next.length !== oldSteps[i].next.length){
+
+                                newSteps[i]._id = oldSteps[i]._id;
+                                config.update.steps.push(newSteps[i]);
+                            }
+                            else if(newSteps[i].next.length !== 0){
+
+                                if(newSteps[i].next[0].id !== oldSteps[i].next[0].id ||
+                                    newSteps[i].next[0].type !== oldSteps[i].next[0].type){
+                                    newSteps[i]._id = oldSteps[i]._id;
+                                    config.update.steps.push(newSteps[i]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            function postSteps(task, array, callback){
+
+                if(array.length > 0){
+
+                    var dataPost = {
+                            proc_id : window.fieldsEdit.actualFlow._id
+                        };
+
+                    var param = {};
+
+                    if(task === 'update' || task === 'delete')
+                        dataPost.steps_id = array[0]._id;
+
+                    if(task !== 'delete'){ 
+
+                        param.type = array[0].type;
+                        param.comp_id = getIdSpecificTile(array[0].name);
+                        param.title = array[0].title;
+                        param.desc = array[0].desc;
+                        param.order = array[0].id;
+
+                        if(task === 'update'){
+
+                            param.next = array[0].next;
+                        }
+                        else{
+
+                            if(array[0].next.length > 0)
+                                param.next = array[0].next;
+                        }
+                    }
+
+                    window.helper.postRoutesProcess(config[task].route, param, dataPost,
+                        function(res){
+
+                            if(task !== 'delete'){ 
+
+                                array[0]._id = res._id;
+
+                                newFlowSteps.push(array[0]);
+                            }
+                            
+                            array.splice(0,1);
+
+                            postSteps(task, array, callback);
+
+                        },
+                        function(){
+                            window.fieldsEdit.disabledButtonSave(false);
+                        });
+                }
+                else{
+
+                    callback();
+                }
+            }
+        
+        }
     }
 
     function deleteWorkFlow(id){
@@ -450,21 +826,21 @@ function WorkFlowEdit() {
 
                 window.flowManager.getObjHeaderFlow().splice(id, 1);
 
-                window.camera.move(workFlow.positions.target[0].x, workFlow.positions.target[0].y, 8000, 3000);
+                window.camera.move(workFlow.positions.target[0].x, workFlow.positions.target[0].y, 8000, 2000);
 
                 setTimeout(function(){
+
                     var target =  window.helper.fillTarget(0, 0, 160000, 'workflows');
                     var mesh = workFlow.objects[0];
+
                     animate(mesh, target.hide, 1500, function(){
                             window.scene.remove(mesh);
                             updateWorkFlow(workFlow.flow.platfrm);
                         });
                     
-                }, 5500);
+                }, 2500);
             });
     }
-
-
 
     function updateWorkFlow(platform){
 
@@ -492,20 +868,41 @@ function WorkFlowEdit() {
                 if(ArrayPosition.length > 0){
 
                     workFlow.positions.target[0].y = window.helper.getLastValueArray(ArrayPosition).y - 500;
-
                 }
                 else{
+
                     workFlow.positions.target[0].x = positionInit.x - 1500;
                     workFlow.positions.target[0].y = positionInit.y - 2200;
                 }
 
                 ArrayPosition.push(workFlow.positions.target[0]);
 
-                var target = window.helper.fillTarget(workFlow.positions.target[0].x, workFlow.positions.target[0].y, 0, 'workflows');;
+                var target = window.helper.fillTarget(workFlow.positions.target[0].x, workFlow.positions.target[0].y, 0, 'workflows');
 
-                animate(workFlow.objects[0], target.show, 2000);
+                animate(workFlow.objects[0], target.show, 1000);
             }
         }
+    }
+
+    function validateLock(_id, callback){
+
+        var id = window.flowManager.getObjHeaderFlow()[_id].flow._id;
+
+        var dataPost = {
+                proc_id : id
+            };
+
+        window.helper.postValidateLock('wolkFlowEdit', dataPost,
+            function(res){ 
+
+                if(typeof(callback) === 'function')
+                    callback();
+            },
+            function(res){
+
+                window.alert("This workFlow is currently being modified by someone else, please try again in about 3 minutes");
+            }
+        );
     }
 
     this.changeTexture = function(){
@@ -523,13 +920,13 @@ function WorkFlowEdit() {
 
     function fillStep(){
 
-        var flow = window.fieldsEdit.getData()
+        var flow = window.fieldsEdit.getData();
 
         classFlow.deleteStep();
 
         var target = window.fieldsEdit.objects.tile.target.show;
 
-        flow.steps = flow.steps;
+        flow.steps = self.testDataSteps;
 
         classFlow.flow = flow;
 
@@ -543,6 +940,23 @@ function WorkFlowEdit() {
 
     }
 
+    function getIdSpecificTile(name){
+
+        for(var platfrm in window.TABLE){
+
+            for (var layer in window.TABLE[platfrm].layers){
+
+                for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
+                    
+                    var tile = window.TABLE[platfrm].layers[layer].objects[i].data; 
+                    
+                    if(tile.name.toLowerCase() === name.toLowerCase())
+                        return tile.id;
+                }   
+            }        
+        } 
+    }
+
     function fillFields(id){
 
         var flow = classFlow.flow;
@@ -550,6 +964,8 @@ function WorkFlowEdit() {
         flow = JSON.parse(JSON.stringify(flow));
 
         window.fieldsEdit.actualFlow = JSON.parse(JSON.stringify(flow));
+
+        window.fieldsEdit.actualFlow.id = id;
 
         if(flow.platfrm !== undefined)
             document.getElementById("workflow-header-plataform").value = flow.platfrm;

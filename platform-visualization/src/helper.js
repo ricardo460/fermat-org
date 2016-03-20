@@ -388,14 +388,21 @@ function Helper() {
 
         var tail = "",
             method = "",
+            msj = "",
             param,
             url;
 
         switch(route) {
             
-            case "check":
+            case "tableEdit":
                 method = "GET";
                 tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id;
+                msj = "component";
+                break;
+            case "wolkFlowEdit":
+                method = "GET";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id;
+                msj = "wolkFlow";
                 break;                     
                 
         }
@@ -423,10 +430,10 @@ function Helper() {
             error: function(res){
 
                 if(res.status === 423){
-                    window.alert("This component is currently being modified by someone else, please try again in about 3 minutes");
+                    window.alert("This " + msj + " is currently being modified by someone else, please try again in about 3 minutes");
                 }
                 else if(res.status === 404){
-                    window.alert("Component not found");
+                    window.alert(msj + " not found");
                 }
             }
         });
@@ -484,6 +491,9 @@ function Helper() {
         if(params)
             setup.data = params;
 
+        console.log(setup.url);
+        console.log(params);
+
         makeCorsRequest(setup.url, setup.method, setup.data, 
             function(res){
 
@@ -505,28 +515,10 @@ function Helper() {
                         break;
                     case "update":
 
-                        if(res._id){
+                            console.log(res);
 
-                            if(typeof(doneCallback) === 'function')
-                                doneCallback(res);
-                        }
-                        else{
-
-                            var name = document.getElementById('imput-Name').value;
-
-                            if(window.fieldsEdit.actualTile.name.toLowerCase() === name.toLowerCase()){
-
-                                if(typeof(doneCallback) === 'function')
-                                    doneCallback(res);
-                            }
-                            else{
-
-                                window.alert('There is already a component with that name in this group and layer, please use another one');
-
-                                if(typeof(failCallback) === 'function')
-                                    failCallback(res);
-                            }
-                        }
+                            doneCallback(res);
+                        
 
                         break; 
                     default:

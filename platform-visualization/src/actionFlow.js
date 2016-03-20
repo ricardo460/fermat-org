@@ -27,6 +27,8 @@ function ActionFlow(flow) {
             }
     };
 
+    this.stepsTest = objectsStep;
+
     this.flow = flow || [];
 
     this.action = false;
@@ -201,6 +203,7 @@ function ActionFlow(flow) {
                 for(i = 0; i < childCount; i++) {
 
                     child = getStep(root.next[i].id);
+
                     isLoop = (typeof child.drawn !== 'undefined');
 
 
@@ -306,11 +309,6 @@ function ActionFlow(flow) {
         window.tileManager.letAlone();
         animateFlows('steps', 'origin', false, 3000);
     };
-
-    this.deleteStepEdit = function(callback) {
-
-        animateFlows('steps', 'origin', false, 1000);
-    }
 
     //Private methods
 
