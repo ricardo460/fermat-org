@@ -1055,7 +1055,7 @@ exports.addStep = function (req, next) {
 exports.uptStep = function (req, next) {
 	'use strict';
 	try {
-		procMod.updateStepById(req.params.step_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, function (err, res) {
+		procMod.updateStepById(req.params.step_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, req.body.next, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
