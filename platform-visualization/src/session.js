@@ -7,7 +7,7 @@ function Session(){
     var code;
     var self = this;
     var clientID = "d00a7c7d4489139327e4";
-    switch(window.location.href.match("//[a-z]*")[0].replace("//", '')) {
+    switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
         case "dev":
             clientID = 'd00a7c7d4489139327e4';
             break;
