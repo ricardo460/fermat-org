@@ -112,7 +112,7 @@ function Session(){
 	this.login = function() {
 		var url = window.helper.getAPIUrl("login", { code : code, api_key : api_key});
 		console.log("url: " + url);
-        var cookie = getCookie("devtoken");
+        var cookie = getToken();
 
 		$.ajax({
 			url : url,
@@ -138,12 +138,13 @@ function Session(){
 
      			drawUser(usr);
                 console.log(tkn);
-                setCookie("devtoken", tkn, 7);
+                setToken(tkn);
+                
                 
             }
-            else if(cookie !== "") {
-                usr = cookie._usr_id;
-                axs_key = cookie.axs_key;
+            else if(cookie._id !== "") {
+                usr = cookie;
+                axs_key = usr.axs_key;
                     
                 isLogin = true;
 
@@ -303,6 +304,34 @@ function Session(){
             drawPictureUser(data, ctx, texture);
         }
 	}
+
+    function setToken(tkn) {
+        setCookie("v", tkn.__v, 7);
+        setCookie("id", tkn._id, 7);
+        setCookie("avatar", tkn.avatar_url, 7);
+        setCookie("key", tkn.axs_key, 7);
+        setCookie("email", tkn.email, 7);
+        setCookie("github", tkn.github_tkn, 7);
+        setCookie("name", tkn.name, 7);
+        setCookie("update", tkn.upd_at, 7);
+        setCookie("usrnm", tkn.usrnm, 7);
+    }
+
+    function getToken() {
+        var tkn = {
+            __v : getCookie("v"),
+            _id : getCookie("id"),
+            avatar_url : getCookie("avatar"),
+            axs_key : getCookie("key"),
+            email : getCookie("email"),
+            github_tkn : getCookie("github"),
+            name : getCookie("name"),
+            upd_at : getCookie("update"),
+            usrnm : getCookie("usrnm")
+        };
+
+        return tkn;
+    }
 
     function setCookie(name, value, days) {
         var d = new Date();
