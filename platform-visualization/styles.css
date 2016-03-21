@@ -39,6 +39,21 @@ button:active {
     z-index: 10;
 }
 
+#welcome, #navigation, #zoom, #slide, #return {
+    position: relative; 
+    z-index: 10;  
+    font: 15px arial; 
+    font-weight: bold; 
+    border-radius: 20px;   
+    color: #909090;
+    display: block;
+    margin: auto;
+    margin-top: 0px;
+    margin-bottom: -35px;
+    display: none;
+    opacity: 0;
+}
+
 #login, #logout {
     color: rgba(127,127,127,1);
     background: transparent;
@@ -693,6 +708,215 @@ END
     background-color: rgba(127,127,127,0.75);
     
 }
+
+/**
+* END
+*/
+
+/**     START
+* @author Daril Rodriguez.
+* CSS FOR WORKFLOW HEADER FIELDS.
+*/
+
+#workflow-header {
+    
+    top: 0.5%;
+    position: relative;
+    width: 100%;
+    height: 5%;
+
+    display:box;
+    box-pack:center;
+    box-align:center;
+    
+    display:-moz-box;
+    -moz-box-pack:center;
+    -moz-box-align:center;
+
+    display:-webkit-box;
+    -webkit-box-pack:center;
+    -webkit-box-align:center;
+}
+
+#workflow-header label {
+    font-size: 1.5vmax;
+    font-family: sans-serif;
+}
+
+/**
+* END
+*/
+
+
+/**     START
+* @author Daril Rodriguez.
+* CSS FOR WORKFLOW MODAL STEPS.
+*/
+
+#modal-steps {
+    top: -50%;
+    left: -50%;
+    z-index: 12;
+    width: 100%;
+    height: 100%;
+    padding: 7px;
+    position: absolute;
+    background: #00cdad;
+    font-family: uppercase;
+    /* #34ac98 */
+}
+
+#modal-steps-div {
+    top: 50%;
+    left: 50%;
+    width: 70%;
+    z-index: 12;
+    height: 60%;
+    position: absolute;
+}
+
+#modal-steps-div[data-state="hidden"] {
+    
+    opacity: 0;
+    display: none;
+    
+}
+
+#modal-steps-div[data-state="show"] {
+    
+    opacity: 1;
+    display: block;
+    
+}
+
+/**
+ * LEFT --------------------------------------------------------------------
+ **/
+
+#modal-steps #left {
+    width: 45%;
+    float: left;
+    height: 100%;
+}
+
+#modal-steps #left div {
+    width: 98%;
+    float: left;
+    height: 95%;
+    margin-left: 2%;
+}
+
+#modal-steps #left #step-Number {
+    width: 100%;
+    height: 7%;
+    float: left;
+    font-size: 1.5vmax;
+    font-family: sans-serif;
+}
+
+#modal-steps #left div label {   
+    height: 7%;
+    width: 26%;
+    float: left;
+    margin-top: 2px;
+    font-size: 1.5vmax;
+    font-family: sans-serif;
+}
+
+#modal-steps #left input[type="text"] {   
+    border: 0;
+    height: 7%;
+    width: 71%;
+    float: left;
+    margin-top: 2px;
+    font-size: 1.5vmax;
+    background: #bbebe3;
+    font-family: sans-serif;
+}
+
+#modal-steps #left select {   
+    border: 0;
+    height: 7%;
+    width: 71%;
+    float: left;
+    margin-top: 2px;
+    font-size: 1.5vmax;
+    background: #bbebe3;
+    font-family: sans-serif;
+}
+
+#modal-steps #left #desc {   
+    height: 7%;
+    width: 100%;
+    float: left;
+    margin-top: 2px;
+    font-size: 1.5vmax;
+    font-family: sans-serif;
+}
+
+#modal-steps #left textarea {   
+    border: 0;
+    width: 98%;
+    float: left;
+    height: 49.5%;
+    max-width: 98%;
+    min-width: 98%;
+    margin-top: 2px;
+    max-height: 39.5%;
+    min-height: 39.5%;
+    font-size: 1.5vmax;
+    background: #bbebe3;
+    font-family: sans-serif;
+}
+
+/**
+ * RIGHT -------------------------------------------------------------------
+ **/
+
+#modal-steps #right {
+    width: 55%;
+    float: right;
+    height: 100%;
+}
+
+#modal-steps #right span {
+    height: 5%;
+    width: 100%;
+    float: right;
+    font-size: 1.5vmax;
+    font-family: sans-serif;
+}
+
+#modal-steps #right canvas {
+    width: 100%;
+    float: right;
+    height: 20%;
+    background: #daf0e9;
+}
+
+#modal-steps #right #step-List {
+    border: 0px;
+    width: 100%;
+    height: 62.5%;
+    float: right;
+    background: #daf0e9;
+    font-family: sans-serif;
+}
+
+#modal-steps #right button{
+    float: left;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    width: 24.7%;
+    cursor: pointer;
+    font-size: 12px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background: #daf0e9;
+    font-family: sans-serif;
+}
+
 
 /**
 * END

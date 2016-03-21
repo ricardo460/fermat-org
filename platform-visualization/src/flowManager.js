@@ -10,6 +10,14 @@ function FlowManager(){
         actualFlow = null;
 
     // Public method
+    this.getObjHeaderFlow = function(){ 
+        return headerFlow;
+    };
+
+    this.getpositionHeaderFlow = function(){ 
+        return positionHeaderFlow;
+    };
+
     /**
      * @author Emmanuel Colina
      * Set position for each Header Flow
@@ -61,7 +69,7 @@ function FlowManager(){
             
             for(var x = mid; x > 0; x--) {
                 
-                center.x = center.x - 1500;
+                center.x = center.x - 2000;
             }
 
             for(var j = 0; j < countElement; j++){
@@ -73,7 +81,7 @@ function FlowManager(){
 
                 position.push(obj);
 
-                center.x = center.x + 1500;
+                center.x = center.x + 2000;
             }
         }
 
@@ -203,11 +211,11 @@ function FlowManager(){
      * 
      */
      
-    this.onElementClickHeaderFlow = function(id) {
+    this.onElementClickHeaderFlow = function(id) { // nuevo
 
         var duration = 1000;
 
-        if(window.camera.getFocus() == null) {
+        if(window.camera.getFocus() == null) { 
             
             var camTarget = headerFlow[id].objects[0].clone();
             camTarget.position.y -= 850;
@@ -228,7 +236,9 @@ function FlowManager(){
                headerFlow[id].showSteps();
             }, 1000);
 
+            window.buttonsManager.removeAllButtons();
             window.helper.showBackButton();
+            window.workFlowEdit.addButton(id);
         }
     };
 
@@ -239,7 +249,7 @@ function FlowManager(){
     function calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) { 
 
         var position, indice = 1;
-        var find = false;
+        var find = false, count = 0;
 
         for(var i = 0; i < objectHeaderInWFlowGroup.length; i++) {
 
@@ -250,6 +260,10 @@ function FlowManager(){
                     if(find === false){
 
                         position = new THREE.Vector3();
+
+                        position.id = headerFlow[j].flow.platfrm + "_" + count; // nuevo
+
+                        count = count + 1;
 
                         position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
 
@@ -265,6 +279,10 @@ function FlowManager(){
                         
                         position = new THREE.Vector3();
 
+                        position.id = headerFlow[j].flow.platfrm + "_" + count;// nuevo
+
+                        count = count + 1;
+
                         position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
                         
                         position.y = positionHeaderFlow[positionHeaderFlow.length - 1].y - 500;
@@ -274,8 +292,11 @@ function FlowManager(){
                         positionHeaderFlow.push(position);
                     }    
                 }
+
+                //count = count + 1;
             }
-            find = false;     
+            find = false;  
+            count = 0;      
         }
     }
 

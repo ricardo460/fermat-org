@@ -388,14 +388,21 @@ function Helper() {
 
         var tail = "",
             method = "",
+            msj = "",
             param,
             url;
 
         switch(route) {
             
-            case "check":
+            case "tableEdit":
                 method = "GET";
                 tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id;
+                msj = "component";
+                break;
+            case "wolkFlowEdit":
+                method = "GET";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id;
+                msj = "wolkFlow";
                 break;                     
                 
         }
@@ -423,10 +430,10 @@ function Helper() {
             error: function(res){
 
                 if(res.status === 423){
-                    window.alert("This component is currently being modified by someone else, please try again in about 3 minutes");
+                    window.alert("This " + msj + " is currently being modified by someone else, please try again in about 3 minutes");
                 }
                 else if(res.status === 404){
-                    window.alert("Component not found");
+                    window.alert(msj + " not found");
                 }
             }
         });
@@ -468,7 +475,6 @@ function Helper() {
                 break;                    
                 
         }
-
         param = { 
                 env : PORT.replace('?env=',''),
                 axs_key : AXS_KEY
@@ -487,13 +493,39 @@ function Helper() {
 
         makeCorsRequest(setup.url, setup.method, setup.data, 
             function(res){
-        
-                if(typeof(doneCallback) === 'function')
-                    doneCallback(res);
+
+                switch(route) {
+                
+                    case "insert":
+
+                        if(res._id){
+
+                            if(typeof(doneCallback) === 'function')
+                                doneCallback(res);
+                        }
+                        else{
+
+                            if(typeof(failCallback) === 'function')
+                                failCallback(res);
+                        }
+
+                        break;
+                    case "update":
+
+                            doneCallback(res);
+                        
+                        break; 
+                    default:
+                            if(typeof(doneCallback) === 'function')
+                                    doneCallback(res);
+                        break;                     
+                }
+
+                    
             }, 
             function(res){
 
-                window.alert('Action Not Executed');
+                window.alert('There is already a component with that name in this group and layer, please use another one');
 
                 if(typeof(failCallback) === 'function')
                     failCallback(res);
@@ -560,7 +592,7 @@ function Helper() {
 
         var param;
 
-        //window.session.useTestData();
+        window.session.useTestData();
 
         if(window.session.getIsLogin()){ 
 

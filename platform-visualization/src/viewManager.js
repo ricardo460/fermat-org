@@ -84,17 +84,15 @@ function ViewManager() {
                     };                    
                     
                     exit = function() {
-
                         window.tileManager.rollBack();
 
-                        window.buttonsManager.removeAllButtons();
+                        buttonsManager.removeAllButtons();
                     };
 
                     reset = function() {
-
                         window.tileManager.rollBack();
 
-                        window.headers.transformTable(2000);
+                        window.headers.transformTable(2000); // nuevo
 
                         setTimeout(function(){
                             window.signLayer.transformSignLayer();
@@ -150,7 +148,7 @@ function ViewManager() {
                     };
 
                     break;
-                case 'workflows':
+                case 'workflows': // nuevo
                     enter = function() {
                         if(!window.headersUp) {
                             headers.showHeaders(transition);
@@ -158,16 +156,17 @@ function ViewManager() {
                         }
                         window.flowManager.getHeaderFLow();
                         window.headers.transformWorkFlow(transition);
+                        window.workFlowEdit.addButton(); 
                     };
                     
                     backButton = reset = function() {
+
                         window.flowManager.showWorkFlow();
                     };
 
                     exit = function() {
-                        window.flowManager.deleteAllWorkFlows();
+                        window.buttonsManager.removeAllButtons();
                     };
-                    
                     break;
                 case 'network':
                     enter = function() {

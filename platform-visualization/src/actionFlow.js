@@ -27,6 +27,8 @@ function ActionFlow(flow) {
             }
     };
 
+    this.stepsTest = objectsStep;
+
     this.flow = flow || [];
 
     this.action = false;
@@ -36,6 +38,10 @@ function ActionFlow(flow) {
     this.positions = objectsFlow.position;
 
     initFlow();
+
+    this.countFlowElement = function(){
+        initFlow();
+    };
 
     var onClick = function(target) {
 
@@ -54,9 +60,9 @@ function ActionFlow(flow) {
      * @param   {Number}  initialX Position where to start
      * @param   {Number}  initialY Position where to start
      */
-    this.draw = function(initialX, initialY, initialZ, indice, id) {
+    this.draw = function(initialX, initialY, initialZ, indice, id) { // nuevo
 
-        var title = createTitleBox(self.flow.name, self.flow.desc),
+        var title = self.createTitleBox(self.flow.name, self.flow.desc),
             origin = window.helper.getOutOfScreenPoint(0),
             target = new THREE.Vector3(initialX, initialY + window.TILE_DIMENSION.height * 2, initialZ);
 
@@ -91,6 +97,29 @@ function ActionFlow(flow) {
 
         else if(indice === 1)
             self.showAllFlow();
+    };
+
+    this.drawEdit = function(initialX, initialY, initialZ, id) {
+
+        var title = self.createTitleBox(self.flow.name, self.flow.desc),
+            origin = window.helper.getOutOfScreenPoint(0),
+            target = new THREE.Vector3(initialX, initialY , initialZ);
+
+        title.userData = {
+                id: id,
+                onClick : onClick
+        };
+
+        objectsFlow.position.origin.push(origin);
+        objectsFlow.position.target.push(target);
+
+        title.position.copy(origin);
+
+        objectsFlow.mesh.push(title);
+
+        window.scene.add(title);
+
+        self.showAllFlow();
     };
 
     /**
@@ -174,6 +203,7 @@ function ActionFlow(flow) {
                 for(i = 0; i < childCount; i++) {
 
                     child = getStep(root.next[i].id);
+
                     isLoop = (typeof child.drawn !== 'undefined');
 
 
@@ -318,7 +348,12 @@ function ActionFlow(flow) {
 
                 new TWEEN.Tween(tile.position)
                 .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 7000)
-                .easing(TWEEN.Easing.Cubic.InOut)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .start();
+
+                new TWEEN.Tween(tile.rotation)
+                .to({x: 0, y: 0, z: 0}, 7000)
+                .easing(TWEEN.Easing.Exponential.InOut)
                 .start();
             }
 
@@ -374,7 +409,7 @@ function ActionFlow(flow) {
      * @param   {Function}   fillBox Function to call after load, receives context and image
      * @returns {THREE.Mesh} The created plane with the drawed texture
      */
-    function createFlowBox(src, fillBox, width, height) {
+    function createFlowBox(src, fillBox, width, height, _switch) { // nuevo
 
         var canvas = document.createElement('canvas');
         canvas.height = height;
@@ -385,7 +420,7 @@ function ActionFlow(flow) {
 
         var image = document.createElement('img');
         var texture = new THREE.Texture(canvas);
-        texture.minFilter = THREE.LinearFilter;
+        texture.minFilter = THREE.NearestFilter;
 
         ctx.font = size + 'px Arial';
 
@@ -396,12 +431,15 @@ function ActionFlow(flow) {
 
         image.src = src;
 
-        var mesh = new THREE.Mesh(
+        if(_switch)
+            return texture;
+        else{
+            var mesh = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(width, height),
             new THREE.MeshBasicMaterial({color : 0xFFFFFF, map : texture, transparent : true})
-        );
-
-        return mesh;
+            );
+            return mesh;
+        }
     }
 
     /**
@@ -445,7 +483,7 @@ function ActionFlow(flow) {
      * @param {String} desc  The description of the whole process
      * @author Miguel Celedon
      */
-    function createTitleBox(title, desc) {
+    this.createTitleBox = function(title, desc, _switch) { // nuevo
 
         var fillBox = function(ctx, image) {
 
@@ -462,8 +500,8 @@ function ActionFlow(flow) {
             window.helper.drawText(desc, 190, 126, ctx, 550, size);
         };
 
-        return createFlowBox('images/workflow/titleBox.png', fillBox, HEADER_WIDTH, HEADER_HEIGHT);
-    }
+        return createFlowBox('images/workflow/titleBox.png', fillBox, HEADER_WIDTH, HEADER_HEIGHT, _switch); //nuevo
+    };
 
     /**
      * @author Ricardo Delgado.
@@ -473,7 +511,7 @@ function ActionFlow(flow) {
      * @param   {Boolean}    visible    visible of the object.
      * @param   {Number}    duration    Animation length.
      */
-    function animateFlows(objects, target, visible, duration){
+    function animateFlows(objects, target, visible, duration, callback){
 
         var _duration = duration || 2000,
             _target,
@@ -523,7 +561,7 @@ function ActionFlow(flow) {
                     y: target.y,
                     z: target.z
                 }, duration)
-                .easing(TWEEN.Easing.Cubic.InOut)
+                .easing(TWEEN.Easing.Exponential.InOut)
                 .onComplete(function() {
                     if(!visible)
                         window.scene.remove(object);    
@@ -558,7 +596,7 @@ function ActionFlow(flow) {
 
     //-----------------------------------------------------------------------------
 
-    function initFlow(){ 
+    function initFlow(){
 
         var i, l;
 
@@ -571,4 +609,5 @@ function ActionFlow(flow) {
             );
         }
     }
+
 }

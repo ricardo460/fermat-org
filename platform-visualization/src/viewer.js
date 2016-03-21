@@ -14,6 +14,7 @@ var tilesQtty = [],
     logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),
+    workFlowEdit = null,
     session = null,
     tableEdit = null,
     fieldsEdit = null,
@@ -124,6 +125,7 @@ function init() {
     buttonsManager = new ButtonsManager();
     fieldsEdit = new FieldsEdit();
     tableEdit = new TableEdit();
+    workFlowEdit = new WorkFlowEdit();
 
     //View Manager
     viewManager = new ViewManager();
