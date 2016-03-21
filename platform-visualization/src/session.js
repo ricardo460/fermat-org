@@ -150,6 +150,8 @@ function Session(){
 
                 usr.axs_key = axs_key;
 
+                console.log(cookie);
+                console.log(usr);
                 console.log("Logueado Completamente: " + usr.name);
 
                 $("#login").fadeOut(2000);
