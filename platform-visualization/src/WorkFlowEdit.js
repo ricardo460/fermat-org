@@ -917,6 +917,8 @@ function WorkFlowEdit() {
 
         mesh.material.needsUpdate = true; 
     }
+    
+    this.fill = fillStep;
 
     function fillStep(){
 
@@ -926,7 +928,7 @@ function WorkFlowEdit() {
 
         var target = window.fieldsEdit.objects.tile.target.show;
 
-        flow.steps = self.testDataSteps;
+        //flow.steps = self.testDataSteps;
 
         classFlow.flow = flow;
 
