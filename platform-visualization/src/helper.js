@@ -491,9 +491,6 @@ function Helper() {
         if(params)
             setup.data = params;
 
-        console.log(setup.url);
-        console.log(params);
-
         makeCorsRequest(setup.url, setup.method, setup.data, 
             function(res){
 
@@ -515,11 +512,8 @@ function Helper() {
                         break;
                     case "update":
 
-                            console.log(res);
-
                             doneCallback(res);
                         
-
                         break; 
                     default:
                             if(typeof(doneCallback) === 'function')

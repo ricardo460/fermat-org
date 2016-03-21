@@ -608,6 +608,6 @@ function ActionFlow(flow) {
                 (element.platfrm || element.suprlay) + '/' + element.layer + '/' + element.name
             );
         }
-    };
+    }
 
 }

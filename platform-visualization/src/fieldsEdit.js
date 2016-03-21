@@ -67,6 +67,9 @@ function FieldsEdit() {
             self.objects.row2.div = null;
             self.objects.idFields = {};
 
+            if(document.getElementById("hidden-area"))
+                window.helper.hide('hidden-area', 1000);
+
             if(window.actualView === 'table'){ 
 
                 self.actualTile = null;
@@ -84,8 +87,6 @@ function FieldsEdit() {
             else if(window.actualView === 'workflows'){
                     
                 self.actualFlow = null;
-                
-                removeFieldsWorkFlow();
                     
                 window.tableEdit.deleteMesh();
 
@@ -101,7 +102,7 @@ function FieldsEdit() {
         }
     };
 
-    this.createField = function(id, text, _x, _type, _row){ // nuevo
+    this.createField = function(id, text, _x, _type, _row){
 
         var object = {
             id : id,
@@ -200,6 +201,60 @@ function FieldsEdit() {
             window.workFlowEdit.save();  
         });
 
+    };
+
+    this.changeLayer = function(platform){
+
+        var state = false;
+
+        if(typeof window.platforms[platform] === 'undefined')
+            state = platform;
+
+        var _layers = window.CLI.query(window.layers,function(el){return (el.super_layer === state);});
+
+        var option = "";
+
+        for(var i = 0;i < _layers.length; i++){
+
+            option += "<option value = '"+_layers[i]+"' >"+_layers[i]+"</option>";
+
+        }
+
+        $("#select-layer").html(option);  
+        
+    };
+
+    this.disabledButtonSave = function(state){
+
+        var button = document.getElementById('button-save');
+
+        if(state){
+            button.innerHTML  = "Saving...";
+            button.disabled=true;
+        }
+        else{
+            button.innerHTML  = "Save";
+            button.disabled=false;
+        }
+    };
+    
+    this.getData = function() {
+        
+        var title = document.getElementById("workflow-header-title");
+        var desc = document.getElementById("modal-desc-textarea");
+        var platform = document.getElementById("workflow-header-plataform");
+        var list = document.getElementById("step-List");
+        
+        var json = {
+            "platfrm": platform.value,
+            "name": title.value,
+            "desc": desc.value,
+            "prev": null,
+            "next": null,
+            "steps": list.valueJson.slice()
+        };
+        
+        return json;
     };
 
         
@@ -881,28 +936,6 @@ function FieldsEdit() {
         }, null, null, "right");
 
     }
-    
-
-    this.changeLayer = function(platform){
-
-        var state = false;
-
-        if(typeof window.platforms[platform] === 'undefined')
-            state = platform;
-
-        var _layers = window.CLI.query(window.layers,function(el){return (el.super_layer === state);});
-
-        var option = "";
-
-        for(var i = 0;i < _layers.length; i++){
-
-            option += "<option value = '"+_layers[i]+"' >"+_layers[i]+"</option>";
-
-        }
-
-        $("#select-layer").html(option);  
-        
-    };
 
     function deleteMesh(){
 
@@ -916,58 +949,8 @@ function FieldsEdit() {
                     self.objects.tile.mesh = null;
                 });
         }
-    };
-
-
-    function validateFields(){
-        var msj = '';
-
-        var name = document.getElementById('imput-Name');
-
-        if(name.value === ""){
-            msj += 'The component must have a name \n';
-            name.focus();
-        }
-
-        return msj;
     }
 
-
-    this.disabledButtonSave = function(state){
-
-        var button = document.getElementById('button-save');
-
-        if(state){
-            button.innerHTML  = "Saving...";
-            button.disabled=true;
-        }
-        else{
-            button.innerHTML  = "Save";
-            button.disabled=false;
-        }
-    };
-
-    //workflow edit fields
-    
-    this.getData = function(json) {
-        
-        var title = document.getElementById("workflow-header-title");
-        var desc = document.getElementById("modal-desc-textarea");
-        var platform = document.getElementById("workflow-header-plataform");
-        var list = document.getElementById("step-List");
-        
-        var json = {
-            "platfrm": platform.value,
-            "name": title.value,
-            "desc": desc.value,
-            "prev": null,
-            "next": null,
-            "steps": list.valueJson.slice()
-        };
-        
-        return json;
-    }
-    
     function workflowHeader() {
         
         if(!document.getElementById("workflow-header")) {
@@ -980,7 +963,14 @@ function FieldsEdit() {
             var select = document.createElement("select");
             select.id = "workflow-header-plataform";
             select.className = "edit-Fermat";
-            
+
+            var object = {
+                id : "workflow-header",
+                text : "workflow-header"
+            };
+
+            self.objects.row1.buttons.push(object);
+  
             var optgroup = "<optgroup label = Platform>",
             option = "";
 
@@ -1030,12 +1020,20 @@ function FieldsEdit() {
     }
     
     function workflowDescription() {
+
         var div = document.createElement("div");
         div.id = "workflow-modal-desc";
         var modal = document.createElement("div");
         modal.id = "modal-desc";
         modal.style.top = (window.innerHeight / 4) + "px" ;
         modal.dataset.state = "hidden";
+
+        var object = {
+            id : "workflow-modal-desc",
+            text : "workflow-header"
+        };
+
+        self.objects.row1.buttons.push(object);
 
         modal.innerHTML = ''+
             '<label>Description:</label>'+
@@ -1133,7 +1131,13 @@ function FieldsEdit() {
                     </div>
                 </div>
             `;
-            
+
+            var object = {
+                id : "modal-steps-div",
+                text : "workflow-header"
+            };
+
+            self.objects.row1.buttons.push(object);     
             
             /*
                 step-Number
@@ -1170,11 +1174,12 @@ function FieldsEdit() {
             var list         = document.getElementById("step-List");
             
             list.update = function() {
+
                 var opt;
                 
                 this.innerHTML = "";
                 
-                for(var i=0; i < this.valueJson.length; i++) {
+                for(var i = 0; i < this.valueJson.length; i++) {
                     opt = document.createElement("option");
                     opt.value = i;
                     opt.innerHTML = (i + 1) + " - " + this.valueJson[i].title;
@@ -1184,6 +1189,7 @@ function FieldsEdit() {
             };
             
             nLayer.update = function() { 
+
                 var nPlataform = document.getElementById("step-Plataform");
 
                 var _layers = TABLE[nPlataform.value].layers;
@@ -1196,9 +1202,12 @@ function FieldsEdit() {
                 
                 nLayer.innerHTML = option;
 
+                list.valueJson[nLayer.step].layer = nLayer.value;
+
             };
             
             nComponent.update = function() {
+
                 var nPlataform = document.getElementById("step-Plataform");
                 var nLayer     = document.getElementById("step-Layer");
                 var obj = TABLE[nPlataform.value].layers[nLayer.value].objects.slice();
@@ -1307,8 +1316,8 @@ function FieldsEdit() {
                 nTypeCall.innerHTML = "";
                 
                 if(nPadre.value != "NULL"){
-                    nTypeCall.innerHTML += '<option value="fermat message" >fermat message</option>';
                     nTypeCall.innerHTML += '<option value="direct call" >direct call</option>';
+                    nTypeCall.innerHTML += '<option value="fermat message" >fermat message</option>';
                     nTypeCall.innerHTML += '<option value="event" >event</option>';
                     nTypeCall.disabled = false;
                 } else {
@@ -1345,13 +1354,30 @@ function FieldsEdit() {
                 optgroup += option + "</optgroup>";
                 
                 nPlataform.innerHTML = optgroup;
-                nPlataform.value = step.platfrm;
+                
+                if(step.platfrm){
+
+                    nPlataform.value = step.platfrm;
+                }
+                else{
+
+                    nPlataform.selectedIndex = 0;
+                    list.valueJson[nPlataform.step].platfrm = nPlataform.value;
+                }
                 
                 nLayer.update();
-                nLayer.value = step.layer;
+
+                if(step.layer)
+                    nLayer.value = step.layer;
+                else
+                    nLayer.selectedIndex = 0;
                 
                 nComponent.update();
-                nComponent.value = step.name;
+
+                if(step.name)
+                    nComponent.value = step.name;
+                else
+                    nComponent.selectedIndex = 0;
                 
                 //------------Padre-------------
                 
@@ -1374,9 +1400,12 @@ function FieldsEdit() {
                 nTitle.value = step.title;
                 nStep.value = "Step " + step.id + ":";
                 nDescription.value = step.desc;
-                if(step.next[0]) nPadre.value = step.next[0].id;
-                else nPadre.value = "Null"
-                nLayer.value = step.layer;
+
+                if(step.next[0]) 
+                    nPadre.value = step.next[0].id;
+                else 
+                    nPadre.value = "Null";
+
                 if(step.next[0]) {
                     nTypeCall.disabled = false;
                     nTypeCall.value = step.next[0].type;
@@ -1390,7 +1419,6 @@ function FieldsEdit() {
                     "id": num,
                     "title": "",
                     "desc": "",
-                    "layer": "",
                     "type": "start",
                     "next": []
                 };
@@ -1433,12 +1461,12 @@ function FieldsEdit() {
             var low  = list.valueJson.splice(1, list.valueJson.length);
             list.valueJson = high.concat(low);
             
-            for(var i=0; i < list.valueJson; i++) {
+            for(var i = 0; i < list.valueJson.length; i++) {
                 list.valueJson[i].id = i;
             }
             
-            if(value > list.valueJson.length-1)
-                list.value = list.valueJson.length-1;
+            if(value > list.valueJson.length - 1)
+                list.value = list.valueJson.length - 1;
             else
                 list.value = value;
             
@@ -1447,32 +1475,44 @@ function FieldsEdit() {
         };
         
         document.getElementById("step-Accept").onclick = function() {
+
+            if(validateNameSteps() === ''){ 
+
             var modal = document.getElementById("modal-steps-div");
             modal.dataset.state = "hidden";
             
             area = document.getElementById("hidden-area");
             window.helper.hide(area, 1000);
             window.workFlowEdit.changeTexture();
+            window.workFlowEdit.fillStep();
+
+            }
+            else{
+                window.alert(validateNameSteps());
+            }
         };
-    }
+
+        function validateNameSteps(){
+
+            var list = document.getElementById("step-List");
+
+            var msj = '';
+
+            if(list.valueJson.length > 0){
+            
+                for(var i = 0; i < list.valueJson.length; i++) {
     
-    function removeFieldsWorkFlow() {
-        
-        if(document.getElementById("workflow-header")){
-            var div = document.getElementById("workflow-header");
-            div.remove();
-        }
-        
-        if(document.getElementById("workflow-modal-desc")){
-            var div = document.getElementById("workflow-modal-desc");
-            div.remove();
-        }
-        
-        if(document.getElementById("modal-steps-div")){
-            var div = document.getElementById("workflow-modal-desc");
-            div.remove();
-        }
-        
-    };
+                    var name = list.valueJson[i].title;
+
+                    console.log(name);
+    
+                    if(name === "")
+                        msj += 'The step '+ (i + 1) +' must have a name. \n';
+                }
+            }
+
+            return msj;
+        } 
+    }
     
 }

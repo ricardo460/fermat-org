@@ -1,71 +1,6 @@
 function WorkFlowEdit() {
 
-    var actualStepsQtty = 0,
-        target;
-    var idSteps = [];
-
     var self = this;
-
-    this.testDataSteps =  [
-            {
-                "id": 0,
-                "title": "select broker and submit request",
-                "desc": "the customer selects a broker from the list and submits the request to connect to him.",
-                "type": "start",
-                "next": [ 
-                    { 
-                        "id": "1",
-                        "type": "direct call"
-                    }
-                ],
-                "name": "crypto broker community",
-                "layer": "sub app",
-                "platfrm": "CBP"
-            },
-            {
-                "id": 1,
-                "title": "route request to network service",
-                "desc": "the module routes this request to the network service to reach the selected broker.",
-                "type": "activity",
-                "next": [
-                    {
-                        "id": "2",
-                        "type": "direct call"
-                    }
-                ],
-                "name": "crypto broker community",
-                "layer": "sub app module",
-                "platfrm": "CBP"
-            },
-            {
-                "id": 2,
-                "title": "call the broker to deliver the request",
-                "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
-                "type": "activity",
-                "next": [
-                    {
-                        "id": "3",
-                        "type": "direct call"
-                    }
-                ],
-                "name": "crypto broker",
-                "layer": "actor network service",
-                "platfrm": "CBP"
-            },
-            {
-                "id": 3,
-                "title": "call the broker to deliver the request",
-                "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
-                "type": "activity",
-                "next": [
-
-                ],
-                "name": "crypto broker",
-                "layer": "actor network service",
-                "platfrm": "CBP"
-            }
-
-        ];
 
     var classFlow = null;
 
@@ -128,7 +63,9 @@ function WorkFlowEdit() {
 
                         window.fieldsEdit.actions.type = "update";
                         window.buttonsManager.removeAllButtons(); 
-                        drawHeaderFlow(id, addAllForm);
+                        drawHeaderFlow(id, function(){
+                            window.fieldsEdit.createFieldWorkFlowEdit();
+                        });
                     });
                 };
             }
@@ -164,13 +101,64 @@ function WorkFlowEdit() {
     
     };
 
+    this.changeTexture = function(){
+        
+        var flow = window.fieldsEdit.getData();
+
+        var texture = classFlow.createTitleBox(flow.name, flow.desc, true);
+
+        var mesh = window.fieldsEdit.objects.tile.mesh;
+
+        mesh.material.map = texture;
+
+        mesh.material.needsUpdate = true; 
+    };
+
+    this.fillStep = function(){
+
+        var flow = window.fieldsEdit.getData();
+
+        classFlow.deleteStep();
+
+        var target = window.fieldsEdit.objects.tile.target.show;
+
+        classFlow.flow = flow;
+
+        classFlow.countFlowElement();
+
+        for (var i = 0; i < flow.steps.length; i++) {
+            classFlow.drawTree(flow.steps[i], target.position.x + 900 * i, target.position.y - 211, 0);
+        }
+
+        classFlow.showSteps();
+
+    };
+
+    this.save = function(){
+
+        if(validateFields() === ''){ 
+
+            window.fieldsEdit.disabledButtonSave(true);
+            
+            if(window.fieldsEdit.actions.type === "insert")
+                createWorkFlow();
+            else if(window.fieldsEdit.actions.type === "update")
+                modifyWorkFlow();
+        }
+        else{
+             window.alert(validateFields());
+        }
+    };
+
     function createElement(){
 
-        mesh = classFlow.createTitleBox();
+        var mesh = classFlow.createTitleBox();
 
         var newCenter = window.helper.getCenterView('workflows');
+
+        var y = getPositionY() - 500;
         
-        target = window.helper.fillTarget(newCenter.x, -135000, newCenter.z, 'workflows');
+        var target = window.helper.fillTarget(newCenter.x, y, newCenter.z, 'workflows');
 
         mesh.position.copy(target.hide.position);
 
@@ -187,38 +175,34 @@ function WorkFlowEdit() {
         window.fieldsEdit.objects.tile.target = target;
     }
 
-    function addAllForm(){
+    function getPositionY(){
 
-        window.fieldsEdit.createFieldWorkFlowEdit();
+        var Ymin = 0;
 
-        creatButtonPreview();
+        for(var i = 0; i < window.flowManager.getObjHeaderFlow().length; i++){
 
-        function creatButtonPreview(){
+            var y = window.flowManager.getObjHeaderFlow()[i].positions.target[0].y;
 
-            var text, button, side;
-
-            callback = function(){
-
-                fillStep();
-                
-            };
-
-            text = 'Preview';
-            button = 'buttonPreview';
-            side = 'right';
-
-            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+            if(Ymin === 0){
+                Ymin = y;
+            }
+            else 
+            if(Ymin > y){ 
+                    Ymin = y;
+            }
         }
 
+        return Ymin;
     }
 
     function drawHeaderFlow(id, callback){ 
 
-        var flow = null;
+        var flow = null,
+            mesh = null;
 
         if(window.fieldsEdit.actions.type === "insert"){
 
-            addAllForm();
+            window.fieldsEdit.createFieldWorkFlowEdit();
 
             flow = window.fieldsEdit.getData();
 
@@ -226,7 +210,7 @@ function WorkFlowEdit() {
 
             createElement();
 
-            var mesh = window.fieldsEdit.objects.tile.mesh;
+            mesh = window.fieldsEdit.objects.tile.mesh;
 
             window.fieldsEdit.actions.exit = function(){
 
@@ -263,7 +247,7 @@ function WorkFlowEdit() {
 
             createElement();
 
-            var mesh = window.fieldsEdit.objects.tile.mesh;
+            mesh = window.fieldsEdit.objects.tile.mesh;
 
             window.fieldsEdit.actions.exit = function(){
 
@@ -286,7 +270,7 @@ function WorkFlowEdit() {
 
                 self.changeTexture();
 
-                fillStep();
+                self.fillStep();
 
                 window.headers.transformWorkFlow(2000);
 
@@ -311,22 +295,6 @@ function WorkFlowEdit() {
         }
     }
 
-    this.save = function(){
-
-        if(validateFields() === ''){ 
-
-            //window.fieldsEdit.disabledButtonSave(true);
-            
-            if(window.fieldsEdit.actions.type === "insert")
-                createWorkFlow();
-            else if(window.fieldsEdit.actions.type === "update")
-                modifyWorkFlow();
-        }
-        else{
-             window.alert(validateFields());
-        }
-    };
-
     function validateFields(){
 
         var msj = '';
@@ -334,7 +302,7 @@ function WorkFlowEdit() {
         var name = document.getElementById('workflow-header-title');
 
         if(name.value === ""){
-            msj += 'The component must have a name \n';
+            msj += 'The workFlow must have a name \n';
             name.focus();
         }
 
@@ -357,6 +325,12 @@ function WorkFlowEdit() {
                 postParamsSteps(flow, function(flow){ 
 
                     addWorkFlow(flow, 3000);
+
+                    classFlow.deleteStep();
+
+                    classFlow = null;
+
+                    window.camera.loseFocus();
 
                 });  
             },
@@ -387,9 +361,7 @@ function WorkFlowEdit() {
 
         function postParamsSteps(flow, callback){
 
-            //var steps = flow.steps.slice();
-
-            var steps = self.testDataSteps.slice();
+            var steps = flow.steps.slice();
 
             var newSteps = [];
 
@@ -408,7 +380,10 @@ function WorkFlowEdit() {
                     param.type = steps[0].type;
                     param.comp_id = getIdSpecificTile(steps[0].name);
                     param.title = steps[0].title;
-                    param.desc = steps[0].desc;
+                    if(steps[0].desc)
+                        param.desc = steps[0].desc;
+                    else
+                        param.desc = "pending";
                     param.order = steps[0].id;
 
                     if(steps[0].next.length > 0)
@@ -452,7 +427,7 @@ function WorkFlowEdit() {
 
             if(window.flowManager.getObjHeaderFlow()[i].flow.platfrm === flow.platfrm){
 
-                target = flowManager.getObjHeaderFlow()[i].positions.target[0];
+                target = window.flowManager.getObjHeaderFlow()[i].positions.target[0];
 
                 find = true;
 
@@ -484,8 +459,6 @@ function WorkFlowEdit() {
 
             newFlow.drawEdit(_target.x, _target.y, _target.z, id);
             
-            window.camera.loseFocus();
-            
             window.flowManager.getObjHeaderFlow().push(newFlow);
 
         }, duration);
@@ -495,8 +468,6 @@ function WorkFlowEdit() {
     function modifyWorkFlow(){ 
 
         var newFlow = window.fieldsEdit.getData();
-
-        /* test */ newFlow.steps = self.testDataSteps;
 
         var params = getParamsData(newFlow);
 
@@ -634,8 +605,6 @@ function WorkFlowEdit() {
 
             fillSteps(newSteps, oldSteps);
 
-            console.log(config);
-
             postSteps('delete',config.delete.steps.slice(0), function(){
 
                 postSteps('update',config.update.steps.slice(0), function(){
@@ -649,13 +618,16 @@ function WorkFlowEdit() {
                 });
             });
 
-            function fillSteps(newSteps, oldSteps){    
+            function fillSteps(newSteps, oldSteps){ 
+
+                var difference,
+                    i;   
 
                 if(newSteps.length > oldSteps.length){
 
-                    var difference = (newSteps.length - (newSteps.length - oldSteps.length)) - 1;
+                    difference = (newSteps.length - (newSteps.length - oldSteps.length)) - 1;
 
-                    for(var i = 0; i < newSteps.length; i++){
+                    for(i = 0; i < newSteps.length; i++){
 
                         if(i > difference){
                             config.insert.steps.push(newSteps[i]);  
@@ -688,7 +660,7 @@ function WorkFlowEdit() {
                 }
                 else if(newSteps.length === oldSteps.length){
 
-                    for(var i = 0; i < newSteps.length; i++){
+                    for(i = 0; i < newSteps.length; i++){
 
                         if(newSteps[i].title !== oldSteps[i].title ||
                            newSteps[i].desc !== oldSteps[i].desc ||
@@ -715,9 +687,9 @@ function WorkFlowEdit() {
                 }
                 else if(newSteps.length < oldSteps.length){
 
-                    var difference = (oldSteps.length - (oldSteps.length - newSteps.length)) - 1;
+                    difference = (oldSteps.length - (oldSteps.length - newSteps.length)) - 1;
 
-                    for(var i = 0; i < oldSteps.length; i++){
+                    for(i = 0; i < oldSteps.length; i++){
 
                         if(i > difference){
                             config.delete.steps.push(oldSteps[i]);  
@@ -769,7 +741,10 @@ function WorkFlowEdit() {
                         param.type = array[0].type;
                         param.comp_id = getIdSpecificTile(array[0].name);
                         param.title = array[0].title;
-                        param.desc = array[0].desc;
+                        if(array[0].desc)
+                            param.desc = array[0].desc;
+                        else
+                            param.desc = "pending";
                         param.order = array[0].id;
 
                         if(task === 'update'){
@@ -905,43 +880,6 @@ function WorkFlowEdit() {
         );
     }
 
-    this.changeTexture = function(){
-        
-        var flow = window.fieldsEdit.getData();
-
-        texture = classFlow.createTitleBox(flow.name, flow.desc, true);
-
-        var mesh = window.fieldsEdit.objects.tile.mesh;
-
-        mesh.material.map = texture;
-
-        mesh.material.needsUpdate = true; 
-    }
-    
-    this.fill = fillStep;
-
-    function fillStep(){
-
-        var flow = window.fieldsEdit.getData();
-
-        classFlow.deleteStep();
-
-        var target = window.fieldsEdit.objects.tile.target.show;
-
-        //flow.steps = self.testDataSteps;
-
-        classFlow.flow = flow;
-
-        classFlow.countFlowElement();
-
-        for (var i = 0; i < flow.steps.length; i++) {
-            classFlow.drawTree(flow.steps[i], target.position.x + 900 * i, target.position.y - 211, 0);
-        }
-
-        classFlow.showSteps();
-
-    }
-
     function getIdSpecificTile(name){
 
         for(var platfrm in window.TABLE){
@@ -963,6 +901,8 @@ function WorkFlowEdit() {
 
         var flow = classFlow.flow;
 
+        var list = document.getElementById("step-List");
+
         flow = JSON.parse(JSON.stringify(flow));
 
         window.fieldsEdit.actualFlow = JSON.parse(JSON.stringify(flow));
@@ -978,7 +918,11 @@ function WorkFlowEdit() {
         if(flow.desc !== undefined)
             document.getElementById("modal-desc-textarea").value = flow.desc;
 
-        document.getElementById("step-List").valueJson = flow.steps;
+        list.valueJson = flow.steps;
+
+        list.update();
+
+        document.getElementById("modal-steps-div").changeStep(0);
         
     }
 
