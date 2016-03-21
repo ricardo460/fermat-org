@@ -118,9 +118,6 @@ NetworkViewer.prototype.drawNodes = function(networkNodes) {
             ((Math.random() * 2 - 1) * this.NET_RADIOUS));
         
         position = window.viewManager.translateToSection('network', position);
-        
-        //TODO: Fixme, Hard-code server sprite
-        networkNodes[i].extra.sub = 'server';
 
         var sprite = this.createNode(networkNodes[i], position);
 
