@@ -10,14 +10,6 @@ function FlowManager(){
         actualFlow = null;
 
     // Public method
-    this.getObjHeaderFlow = function(){ 
-        return headerFlow;
-    };
-
-    this.getpositionHeaderFlow = function(){ 
-        return positionHeaderFlow;
-    };
-
     /**
      * @author Emmanuel Colina
      * Set position for each Header Flow
@@ -26,10 +18,10 @@ function FlowManager(){
 
     this.createColumHeaderFlow = function(header){
 
-        var countElement = 0, 
-            obj, 
-            ids = [], 
-            position = [], 
+        var countElement = 0,
+            obj,
+            ids = [],
+            position = [],
             center;
 
         for(var i = 0; i < headerFlow.length; i++) {
@@ -44,7 +36,7 @@ function FlowManager(){
         center.y = center.y - 2700;
 
         if(countElement === 1)
-            position.push(center); 
+            position.push(center);
         else if(countElement === 2) {
 
             center.x = center.x - 500;
@@ -55,7 +47,7 @@ function FlowManager(){
 
                 obj.x = center.x;
                 obj.y = center.y;
-            
+
                 position.push(obj);
 
                 center.x = center.x + 1000;
@@ -66,10 +58,10 @@ function FlowManager(){
             var mid;
 
             mid = Math.round(countElement / 2);
-            
+
             for(var x = mid; x > 0; x--) {
-                
-                center.x = center.x - 2000;
+
+                center.x = center.x - 1500;
             }
 
             for(var j = 0; j < countElement; j++){
@@ -81,7 +73,7 @@ function FlowManager(){
 
                 position.push(obj);
 
-                center.x = center.x + 2000;
+                center.x = center.x + 1500;
             }
         }
 
@@ -107,7 +99,7 @@ function FlowManager(){
                 window.scene.remove(headerFlow[i]);
             }
         }
-        
+
         headerFlow = [];
     };
 
@@ -122,14 +114,18 @@ function FlowManager(){
     };
 
     this.getAndShowFlows = function(id) {
-        
+
         var element = window.helper.getSpecificTile(id).data;
-        
+
         var button = window.buttonsManager.createButtons('showFlows', 'Loading flows...');
-        
-        var url = window.helper.getAPIUrl("procs");
-        url += '?group=' + (element.platform || element.superLayer) + '&layer=' + element.layer + '&component=' + element.name;
-        
+
+        var params = {
+            group : (element.platform || element.superLayer),
+            layer : element.layer,
+            component : element.name
+        };
+        var url = window.helper.getAPIUrl("procs", params);
+
         $.ajax({
             url: url,
             method: "GET"
@@ -137,12 +133,12 @@ function FlowManager(){
             function(processes) {
                 var p = processes,
                     flows = [];
-                
+
                 for(var i = 0; i < p.length; i++) {
-                    
+
                     flows.push(new ActionFlow(p[i]));
                 }
-                
+
                 if(flows.length > 0) {
                     button.innerHTML = 'Show Workflows';
                     button.addEventListener('click', function() {
@@ -175,7 +171,7 @@ function FlowManager(){
                 else
                     headerFlow[i].showAllFlow();
             }
-            
+
             window.helper.hideBackButton();
         }
     };
@@ -187,19 +183,19 @@ function FlowManager(){
     this.getHeaderFLow = function() {
 
         var url = window.helper.getAPIUrl("procs");
-        
+
         $.ajax({
             url: url,
             method: "GET"
         }).success(
             function(processes) {
-                var p = processes, objectHeaderInWFlowGroup;    
-                
+                var p = processes, objectHeaderInWFlowGroup;
+
                 for(var i = 0; i < p.length; i++){
-                    headerFlow.push(new ActionFlow(p[i])); 
+                    headerFlow.push(new ActionFlow(p[i]));
                 }
-                objectHeaderInWFlowGroup = window.headers.getPositionHeaderViewInFlow();   
-                calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup);   
+                objectHeaderInWFlowGroup = window.headers.getPositionHeaderViewInFlow();
+                calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup);
             }
         );
     };
@@ -208,15 +204,15 @@ function FlowManager(){
 
     /**
      * @author Emmanuel Colina
-     * 
+     *
      */
-     
-    this.onElementClickHeaderFlow = function(id) { // nuevo
+
+    this.onElementClickHeaderFlow = function(id) {
 
         var duration = 1000;
 
-        if(window.camera.getFocus() == null) { 
-            
+        if(window.camera.getFocus() == null) {
+
             var camTarget = headerFlow[id].objects[0].clone();
             camTarget.position.y -= 850;
 
@@ -236,9 +232,7 @@ function FlowManager(){
                headerFlow[id].showSteps();
             }, 1000);
 
-            window.buttonsManager.removeAllButtons();
             window.helper.showBackButton();
-            window.workFlowEdit.addButton(id);
         }
     };
 
@@ -246,24 +240,20 @@ function FlowManager(){
      * @author Emmanuel Colina
      * Calculate the headers flows
      */
-    function calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) { 
+    function calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) {
 
         var position, indice = 1;
-        var find = false, count = 0;
+        var find = false;
 
         for(var i = 0; i < objectHeaderInWFlowGroup.length; i++) {
 
             for(var j = 0; j < headerFlow.length; j++) {
 
                 if(objectHeaderInWFlowGroup[i].name === headerFlow[j].flow.platfrm){
-                    
+
                     if(find === false){
 
                         position = new THREE.Vector3();
-
-                        position.id = headerFlow[j].flow.platfrm + "_" + count; // nuevo
-
-                        count = count + 1;
 
                         position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
 
@@ -276,51 +266,44 @@ function FlowManager(){
                         find = true;
                     }
                     else{
-                        
+
                         position = new THREE.Vector3();
 
-                        position.id = headerFlow[j].flow.platfrm + "_" + count;// nuevo
-
-                        count = count + 1;
-
                         position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
-                        
+
                         position.y = positionHeaderFlow[positionHeaderFlow.length - 1].y - 500;
 
                         headerFlow[j].draw(position.x, position.y, 0, indice, j);
 
                         positionHeaderFlow.push(position);
-                    }    
+                    }
                 }
-
-                //count = count + 1;
             }
-            find = false;  
-            count = 0;      
+            find = false;
         }
     }
 
     //Should draw ONLY one flow at a time
     function showFlow(flows) {
-    
+
         var position = window.camera.getFocus().position;
         var indice = 0;
 
         window.camera.enable();
         window.camera.move(position.x, position.y, position.z + window.TILE_DIMENSION.width * 5);
-        
+
         setTimeout(function() {
-            
+
             actualFlow = [];
-            
+
             for(var i = 0; i < flows.length; i++) {
                 actualFlow.push(flows[i]);
                 flows[i].draw(position.x, position.y, 0, indice, i);
-                
+
                 //Dummy, set distance between flows
                 position.x += window.TILE_DIMENSION.width * 10;
             }
-            
+
         }, 1500);
     }
 
@@ -382,7 +365,7 @@ function FlowManager(){
             }
 
             headerFlow[ids[m]].showSteps();
-            headerFlow[ids[m]].action = true;   
+            headerFlow[ids[m]].action = true;
         }
     }
 }

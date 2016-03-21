@@ -51,6 +51,7 @@
         "ButtonsManager" : true,
         "TableEdit" : true,
         "FieldsEdit" : true,
-        "WorkFlowEdit" : true
+        "Session" : true,
+        "Guide" : true
     }
 }
