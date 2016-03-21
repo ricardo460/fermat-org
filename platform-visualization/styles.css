@@ -806,9 +806,6 @@ END
     margin-left: 2%;
 }
 
-#modal-steps #left hr {
-}
-
 #modal-steps #left #step-Number {
     width: 100%;
     height: 7%;
@@ -865,8 +862,8 @@ END
     max-width: 98%;
     min-width: 98%;
     margin-top: 2px;
-    max-height: 49.5%;
-    min-height: 49.5%;
+    max-height: 39.5%;
+    min-height: 39.5%;
     font-size: 1.5vmax;
     background: #bbebe3;
     font-family: sans-serif;
@@ -911,7 +908,7 @@ END
     border: 0;
     margin: 0;
     padding: 0;
-    width: 33%;
+    width: 24.7%;
     cursor: pointer;
     font-size: 12px;
     padding-top: 2px;
