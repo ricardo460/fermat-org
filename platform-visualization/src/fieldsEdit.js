@@ -210,7 +210,7 @@ function FieldsEdit() {
         if(typeof window.platforms[platform] === 'undefined')
             state = platform;
 
-        var _layers = window.CLI.query(window.layers,function(el){return (el.super_layer === state);});
+        var _layers = window.CLI.query(window.layers,function(el){return (typeof(el) !== "function" && el.super_layer.toString() === state.toString());});
 
         var option = "";
 
@@ -1288,7 +1288,7 @@ function FieldsEdit() {
                 
             };
             
-            modal.changeStep = function(Step) {
+            modal.changeStep = function(Step) { 
 
                 var nTitle       = document.getElementById("step-Title");
                 var list         = document.getElementById("step-List");
@@ -1503,8 +1503,6 @@ function FieldsEdit() {
                 for(var i = 0; i < list.valueJson.length; i++) {
     
                     var name = list.valueJson[i].title;
-
-                    console.log(name);
     
                     if(name === "")
                         msj += 'The step '+ (i + 1) +' must have a name. \n';

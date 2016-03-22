@@ -897,15 +897,31 @@ function WorkFlowEdit() {
         } 
     }
 
-    function fillFields(id){
+    function fillFields(id){ console.log(id);
 
         var flow = classFlow.flow;
-
-        var list = document.getElementById("step-List");
 
         flow = JSON.parse(JSON.stringify(flow));
 
         window.fieldsEdit.actualFlow = JSON.parse(JSON.stringify(flow));
+
+        var steps = flow.steps;
+
+        console.log(steps.slice());
+
+        for(var i = 0; i < steps.length; i++){
+
+            if(steps[i].element !== -1){
+
+                var data = window.helper.getSpecificTile(steps[i].element).data;
+
+                steps[i].layer = data.layer;
+            }
+        }
+
+        var list = document.getElementById("step-List");
+
+        list.valueJson = steps.slice();
 
         window.fieldsEdit.actualFlow.id = id;
 
@@ -918,11 +934,11 @@ function WorkFlowEdit() {
         if(flow.desc !== undefined)
             document.getElementById("modal-desc-textarea").value = flow.desc;
 
-        list.valueJson = flow.steps;
-
         list.update();
 
         document.getElementById("modal-steps-div").changeStep(0);
+
+        console.log(list.valueJson);
         
     }
 

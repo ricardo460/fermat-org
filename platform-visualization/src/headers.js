@@ -34,8 +34,10 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     this.arrowPositions = arrowsPositions;
 
     var onClick = function(target) {
-        if(window.actualView === 'workflows')
+        if(window.actualView === 'workflows'){
+            window.buttonsManager.removeAllButtons();
             onElementClickHeader(target.userData.id, objects);
+        }
     };
 
     function onElementClickHeader(id, objects)

@@ -3,7 +3,7 @@
  */
 function TileManager() {
 
-    var MAX_TILE_DETAIL_SCALE = 5;
+    var MAX_TILE_DETAIL_SCALE = 2;
     if (window.location.hash === '#low') {
         MAX_TILE_DETAIL_SCALE = 2;
     }

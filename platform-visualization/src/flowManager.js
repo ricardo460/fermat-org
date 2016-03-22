@@ -10,6 +10,13 @@ function FlowManager(){
         actualFlow = null;
 
     // Public method
+    this.getObjHeaderFlow = function(){ 
+        return headerFlow;
+    };
+
+    this.getpositionHeaderFlow = function(){ 
+        return positionHeaderFlow;
+    };
     /**
      * @author Emmanuel Colina
      * Set position for each Header Flow
@@ -232,7 +239,9 @@ function FlowManager(){
                headerFlow[id].showSteps();
             }, 1000);
 
+            window.buttonsManager.removeAllButtons();
             window.helper.showBackButton();
+            window.workFlowEdit.addButton(id);
         }
     };
 
