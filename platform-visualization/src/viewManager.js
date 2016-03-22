@@ -148,7 +148,7 @@ function ViewManager() {
                     };
 
                     break;
-                case 'workflows': // nuevo
+                case 'workflows': 
                     enter = function() {
                         if(!window.headersUp) {
                             headers.showHeaders(transition);
@@ -166,6 +166,7 @@ function ViewManager() {
 
                     exit = function() {
                         window.buttonsManager.removeAllButtons();
+                        window.flowManager.deleteAllWorkFlows();
                     };
                     break;
                 case 'network':

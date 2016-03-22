@@ -1336,6 +1336,7 @@ function FieldsEdit() {
                 option = "";
 
                 for(var i in window.platforms){ 
+
                     if(i != "size"){
                         option += "<option value = "+i+" >"+i+"</option>";
                     }
@@ -1346,6 +1347,7 @@ function FieldsEdit() {
                 optgroup += "<optgroup label = superLayer>";
 
                 for(var _i in window.superLayers){
+
                     if(_i != "size"){
                         option += "<option value = "+_i+" >"+_i+"</option>";
                     }
@@ -1369,10 +1371,12 @@ function FieldsEdit() {
                 nLayer.update();
 
                 if(step.layer){
+
                     nLayer.value = step.layer;
                     list.valueJson[nLayer.step].layer = step.layer;
                 }
                 else{
+
                     nLayer.selectedIndex = 0;
                     list.valueJson[nLayer.step].layer =  nLayer.value;
                 }
@@ -1380,10 +1384,12 @@ function FieldsEdit() {
                 nComponent.update();
 
                 if(step.name){
+
                     nComponent.value = step.name;
                     list.valueJson[nComponent.step].name = step.name;
                 }
                 else{
+
                     nComponent.selectedIndex = 0;
                     list.valueJson[nComponent.step].name = nComponent.value;
                 }
@@ -1397,9 +1403,9 @@ function FieldsEdit() {
                 opt.value = "Null";
                 nPadre.appendChild(opt);
                 
-                for(i=0; i < list.valueJson.length; i++){
+                for( i = 0; i < list.valueJson.length; i++){
                     opt = document.createElement("option");
-                    opt.innerHTML = ( i + 1) + " - " + list.valueJson[i].title;
+                    opt.innerHTML = (i + 1) + " - " + list.valueJson[i].title;
                     opt.value = i;
                     nPadre.appendChild(opt);
                 }
@@ -1462,12 +1468,14 @@ function FieldsEdit() {
         };
         
         document.getElementById("step-RemoveStep").onmouseup = function() {
+
             var modal = document.getElementById("modal-steps-div");
             var list = document.getElementById("step-List");
             
             var value = list.value;
             var high = list.valueJson.splice(0, list.value);
             var low  = list.valueJson.splice(1, list.valueJson.length);
+            
             list.valueJson = high.concat(low);
             
             for(var i = 0; i < list.valueJson.length; i++) {
