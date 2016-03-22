@@ -897,7 +897,7 @@ function WorkFlowEdit() {
         } 
     }
 
-    function fillFields(id){ console.log(id);
+    function fillFields(id){
 
         var flow = classFlow.flow;
 
@@ -907,8 +907,6 @@ function WorkFlowEdit() {
 
         var steps = flow.steps;
 
-        console.log(steps.slice());
-
         for(var i = 0; i < steps.length; i++){
 
             if(steps[i].element !== -1){
@@ -916,6 +914,7 @@ function WorkFlowEdit() {
                 var data = window.helper.getSpecificTile(steps[i].element).data;
 
                 steps[i].layer = data.layer;
+                steps[i].name = data.name;
             }
         }
 
@@ -937,8 +936,6 @@ function WorkFlowEdit() {
         list.update();
 
         document.getElementById("modal-steps-div").changeStep(0);
-
-        console.log(list.valueJson);
         
     }
 

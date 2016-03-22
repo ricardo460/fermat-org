@@ -5,7 +5,7 @@ function Helper() {
 
     var SERVER = 'http://api.fermat.org';
 
-    var ENV = 'testing';
+    var ENV = 'production';
     switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
         case "dev":
             ENV = 'production';
@@ -599,7 +599,7 @@ function Helper() {
 
         var param;
 
-        window.session.useTestData();
+        //window.session.useTestData();
 
         if(window.session.getIsLogin()){
 

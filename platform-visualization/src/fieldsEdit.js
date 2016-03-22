@@ -1249,7 +1249,7 @@ function FieldsEdit() {
                 list.valueJson[nTypeCall.step].next[0].type = nTypeCall.value;
             };
             
-            nComponent.onkeyup = function() {
+            nComponent.onchange = function() {
                 list.valueJson[nComponent.step].name = nComponent.value;
             };
             
@@ -1299,7 +1299,7 @@ function FieldsEdit() {
                 var nPadre       = document.getElementById("step-Padre");
                 var nDescription = document.getElementById("step-Description");
                 var nTypeCall    = document.getElementById("step-TypeCall");
-                var step         = list.valueJson[Step];
+                var step         =  JSON.parse(JSON.stringify(list.valueJson[Step]));
                 
                 nLayer.step = Step;
                 nPlataform.step = Step;
@@ -1358,6 +1358,7 @@ function FieldsEdit() {
                 if(step.platfrm){
 
                     nPlataform.value = step.platfrm;
+                    list.valueJson[nPlataform.step].platfrm = step.platfrm;
                 }
                 else{
 
@@ -1367,17 +1368,25 @@ function FieldsEdit() {
                 
                 nLayer.update();
 
-                if(step.layer)
+                if(step.layer){
                     nLayer.value = step.layer;
-                else
+                    list.valueJson[nLayer.step].layer = step.layer;
+                }
+                else{
                     nLayer.selectedIndex = 0;
+                    list.valueJson[nLayer.step].layer =  nLayer.value;
+                }
                 
                 nComponent.update();
 
-                if(step.name)
+                if(step.name){
                     nComponent.value = step.name;
-                else
+                    list.valueJson[nComponent.step].name = step.name;
+                }
+                else{
                     nComponent.selectedIndex = 0;
+                    list.valueJson[nComponent.step].name = nComponent.value;
+                }
                 
                 //------------Padre-------------
                 
