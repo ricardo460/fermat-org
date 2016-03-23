@@ -4,18 +4,22 @@
 			"x": 0,
 			"y": 0,
 			"w": 1,
-			"h": 1
+			"h": 1,
+            "minQuality": "small"
 		},
 		"groupIcon": {
 			"w": 28,
-			"h": 28
+			"h": 28,
+            "minQuality": "high"
 		},
 		"typeIcon": {
 			"w": 28,
-			"h": 28
+			"h": 28,
+            "minQuality": "mini"
 		},
 		"codeText": {
-			"font": 18
+			"font": 18,
+            "minQuality": "high"
 		},
 		"nameText": {
 			"font": 10
