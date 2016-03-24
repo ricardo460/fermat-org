@@ -137,13 +137,12 @@ function Session(){
      			$("#logout").fadeIn(2000);
 
      			drawUser(usr);
-                console.log(tkn);
                 setToken(tkn);
                 
                 
             }
             else if(cookie._id !== "") {
-                usr = cookie;
+                usr = cookie._usr_id;
                 axs_key = usr.axs_key;
                     
                 isLogin = true;
@@ -306,28 +305,33 @@ function Session(){
 	}
 
     function setToken(tkn) {
-        setCookie("v", tkn.__v, 7);
         setCookie("id", tkn._id, 7);
-        setCookie("avatar", tkn.avatar_url, 7);
         setCookie("key", tkn.axs_key, 7);
-        setCookie("email", tkn.email, 7);
-        setCookie("github", tkn.github_tkn, 7);
-        setCookie("name", tkn.name, 7);
         setCookie("update", tkn.upd_at, 7);
-        setCookie("usrnm", tkn.usrnm, 7);
+        setCookie("v", tkn._usr_id.__v, 7);
+        setCookie("avatar", tkn._usr_id.avatar_url, 7);
+        setCookie("email", tkn._usr_id.email, 7);
+        setCookie("github", tkn._usr_id.github_tkn, 7);
+        setCookie("name", tkn._usr_id.name, 7);
+        setCookie("usrnm", tkn._usr_id.usrnm, 7);
     }
 
     function getToken() {
         var tkn = {
-            __v : getCookie("v"),
             _id : getCookie("id"),
-            avatar_url : getCookie("avatar"),
+            _usr_id : {
+                __v : getCookie("v"),
+                _id : getCookie("id"),
+                avatar_url : getCookie("avatar"),
+                axs_key : getCookie("key"),
+                email : getCookie("email"),
+                github_tkn : getCookie("github"),
+                name : getCookie("name"),
+                upd_at : getCookie("update"),
+                usrnm : getCookie("usrnm")
+            },
             axs_key : getCookie("key"),
-            email : getCookie("email"),
-            github_tkn : getCookie("github"),
-            name : getCookie("name"),
-            upd_at : getCookie("update"),
-            usrnm : getCookie("usrnm")
+            upd_at : getCookie("update")
         };
 
         return tkn;
