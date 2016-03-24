@@ -94,75 +94,84 @@ function Session(){
 				}
             }
 		});
+        deleteToken();
 	};
 
     this.init = function(){
 
-        code = window.location.toString().replace(/.+code=/, '');
+        var cookie = getToken();
 
-        if((code.indexOf("/") < 0))
-            self.login();
-        else
-            window.getData();
+        if(cookie._id !== "") {
+            self.login(true,cookie);
+        }
+        else {
+            code = window.location.toString().replace(/.+code=/, '');
+
+            if((code.indexOf("/") < 0))
+                self.login(false);
+            else
+                window.getData();
+        }
+        
     };
 
 	/**
 	 * Logged to the user and returns the token
 	 */
-	this.login = function() {
-		var url = window.helper.getAPIUrl("login", { code : code, api_key : api_key});
-		console.log("url: " + url);
-        var cookie = getToken();
+	this.login = function(option, cookie) {
 
-		$.ajax({
-			url : url,
-			type : "GET",
-			headers : {
-				'Accept' : 'application/json'
-			}
-		}).success(function(tkn) {
-			usr = tkn._usr_id;
-			axs_key = tkn.axs_key;
-            window.console.dir(tkn);
-            
-			if(usr !== undefined) {
+        if(!option) {
+    		var url = window.helper.getAPIUrl("login", { code : code, api_key : api_key});
+    		console.log("url: " + url);
 
-				isLogin = true;
-
-                usr.axs_key = axs_key;
-
-				console.log("Logueado Completamente: " + usr.name);
-
-     			$("#login").fadeOut(2000);
-     			$("#logout").fadeIn(2000);
-
-     			drawUser(usr);
-                setToken(tkn);
+    		$.ajax({
+    			url : url,
+    			type : "GET",
+    			headers : {
+    				'Accept' : 'application/json'
+    			}
+    		}).success(function(tkn) {
+    			usr = tkn._usr_id;
+    			axs_key = tkn.axs_key;
+                window.console.dir(tkn);
                 
-                
-            }
-            else if(cookie._id !== "") {
-                usr = cookie._usr_id;
-                axs_key = usr.axs_key;
+    			if(usr !== undefined) {
+    				isLogin = true;
+
+                    usr.axs_key = axs_key;
+
+    				console.log("Logueado Completamente: " + usr.name);
+
+         			$("#login").fadeOut(2000);
+         			$("#logout").fadeIn(2000);
+
+         			drawUser(usr);
+                    setToken(tkn);   
+                }
+                else {
+    				console.log("Error:", tkn);
+                    window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
+                }
+            });
+        }
+        else {
+            usr = cookie._usr_id;
+            axs_key = usr.axs_key;
                     
-                isLogin = true;
+            isLogin = true;
 
-                usr.axs_key = axs_key;
+            usr.axs_key = axs_key;
 
-                console.log("Logueado Completamente: " + usr.name);
+            console.log("Logueado Completamente: " + usr.name);
 
-                $("#login").fadeOut(2000);
-                $("#logout").fadeIn(2000);
+            $("#login").fadeOut(2000);
+            $("#logout").fadeIn(2000);
 
-                drawUser(usr);
-			}
-            else {
-				console.log("Error:", tkn);
-                window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
-            }
+            drawUser(usr);
+        }
 
-            window.getData();
-		});
+        window.getData();
+
 	};
 
 	function drawUser(user){
@@ -316,6 +325,18 @@ function Session(){
         setCookie("usrnm", tkn._usr_id.usrnm, 7);
     }
 
+    function deleteToken() {
+        deleteCookie("id");
+        deleteCookie("key");
+        deleteCookie("update");
+        deleteCookie("v");
+        deleteCookie("avatar");
+        deleteCookie("email");
+        deleteCookie("github");
+        deleteCookie("name");
+        deleteCookie("usrnm");
+    }
+
     function getToken() {
         var tkn = {
             _id : getCookie("id"),
@@ -357,4 +378,8 @@ function Session(){
         return "";
     }
 
+    function deleteCookie(name) {
+        var expires = "expires=Thu, 20 Dec 2012 00:00:00 UTC";
+        document.cookie = name + "=; " + expires;
+    }
 }
