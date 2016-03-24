@@ -80,11 +80,11 @@ BaseNetworkViewer.prototype = {
      */
     createNode : function(nodeData, startPosition) {
         
-        var texture = THREE.ImageUtils.loadTexture(this.PICTURES[nodeData.extra.sub] || this.PICTURES.pc);
+        var texture = THREE.ImageUtils.loadTexture(this.PICTURES[nodeData.extra.hardware] || this.PICTURES.desktop);
         texture.minFilter = THREE.NearestFilter;
         
         var sprite = new THREE.Sprite(new THREE.SpriteMaterial({color : 0xffffff, map : texture}));
-        //sprite.renderOrder = 100;
+        sprite.renderOrder = 100;
         //sprite.material.blending = THREE.NoBlending;
         
         var id = nodeData.hash.toString();
@@ -330,7 +330,7 @@ BaseNetworkViewer.prototype = {
         var NUM_NODES = 25,
             MAX_CONNECTIONS = 10;
         
-        var TYPES = ['pc', 'server', 'phone', 'tablet'];
+        var TYPES = ['desktop', 'server', 'phone', 'tablet'];
 
         for(var i = 0; i < NUM_NODES; i++) {
 
@@ -385,7 +385,7 @@ BaseNetworkViewer.prototype = {
     
     PICTURES : {
         server : "/images/network/server.png",
-        pc : "/images/network/pc.png",
+        desktop : "/images/network/desktop.png",
         phone : "/images/network/phone.png",
         actor : "/images/network/actor.png",
         tablet : "/images/network/tablet.png"
