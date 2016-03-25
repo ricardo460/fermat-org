@@ -21,6 +21,7 @@ function TileManager() {
     var layerPosition = [];
     var superLayerMaxHeight = 0;
     var superLayerPosition = [];
+    var qualities = {};
 
     var onClick = function(target) {
         if(window.actualView === 'table')
@@ -28,9 +29,9 @@ function TileManager() {
     };
 
     this.JsonTile = function(callback){
-
         $.get("json/config_tile.json", {}, function(json) {
             jsonTile = json;
+            qualities = jsonTile.qualities;
             callback();
         });
     };
@@ -301,39 +302,6 @@ function TileManager() {
     };
 
     /**
-     * Compare two strings representing qualities
-     * @param   {String} a The first string representing a quality
-     * @param   {String} b The second string representing a quality
-     * @returns {Number} A number higher than 0 if a > b, a number lower than 0 if a < b, 0 is both are equal
-     */
-    function compareQuality(a, b) {
-        var table = {
-            'mini' : 0,
-            'small': 1,
-            'medium': 2,
-            'high': 3
-        };
-
-        if (table[a || 'medium'] > table[b || 'medium']) {
-            return 1;
-        } else if(table[a || 'medium'] < table[b || 'medium']) {
-            return -1;
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * Calculates if a texture must be skipped or not.
-     * @param   {String}  a The first string representing a quality
-     * @param   {String}  b The second string representing a quality
-     * @returns {Boolean} true if the element must be skipped, false otherwise
-     */
-    function calculateSkip(a, b) {
-        return (compareQuality(a, b) < 0);
-    }
-
-    /**
      * Creates the tile texture
      * @param   {Number} id         ID in the table
      * @param   {String} quality    The quality of the picture as folder in the images dir
@@ -375,19 +343,19 @@ function TileManager() {
                 y: jsonTile.global.portrait.y,
                 w: jsonTile.global.portrait.w * tileWidth * scale,
                 h: jsonTile.global.portrait.h * tileHeight * scale,
-                skip: calculateSkip(jsonTile.global.portrait.minQuality || 'mini', quality)
+                skip: qualities[(jsonTile.global.portrait.minQuality || 'mini')] > qualities[quality]
             },
             groupIcon = {
                 src: base + 'icons/group/' + quality + '/icon_' + group + '.png',
                 w: jsonTile.global.groupIcon.w * scale,
                 h: jsonTile.global.groupIcon.h * scale,
-                skip: calculateSkip(jsonTile.global.groupIcon.minQuality || 'mini', quality)
+                skip: qualities[(jsonTile.global.groupIcon.minQuality || 'mini')] > qualities[quality]
             },
             typeIcon = {
                 src: base + 'icons/type/' + quality + '/' + type.toLowerCase() + '_logo.png',
                 w: jsonTile.global.typeIcon.w * scale,
                 h: jsonTile.global.typeIcon.h * scale,
-                skip: calculateSkip(jsonTile.global.groupIcon.minQuality || 'mini', quality)
+                skip: qualities[(jsonTile.global.typeIcon.minQuality || 'mini')] > qualities[quality]
             },
             ring = {
                 src: base + 'rings/' + quality + '/' + state + '_diff_' + difficulty + '.png'
@@ -395,44 +363,44 @@ function TileManager() {
             codeText = {
                 text: tile.code,
                 font: (jsonTile.global.codeText.font * scale) + "px Arial",
-                skip: calculateSkip(jsonTile.global.portrait.minQuality || 'mini', quality)
+                skip: qualities[(jsonTile.global.portrait.minQuality || 'mini')] > qualities[quality]
             },
             nameText = {
                 text: tile.name,
                 font: (jsonTile.global.nameText.font * scale) + 'px Arial',
-                skip: calculateSkip(jsonTile.global.portrait.minQuality || 'mini', quality)
+                skip: qualities[(jsonTile.global.nameText.minQuality || 'mini')] > qualities[quality]
             },
             layerText = {
                 text: tile.layer,
                 font: (jsonTile.global.layerText.font * scale) + 'px Arial',
-                skip: calculateSkip(jsonTile.global.portrait.minQuality || 'mini', quality)
+                skip: qualities[(jsonTile.global.layerText.minQuality || 'mini')] > qualities[quality]
             },
             authorText = {
                 text: tile.authorRealName || tile.author || '',
                 font: (jsonTile.global.authorText.font * scale) + 'px Arial',
-                skip: calculateSkip(jsonTile.global.portrait.minQuality || 'mini', quality)
+                skip: qualities[(jsonTile.global.authorText.minQuality || 'mini')] > qualities[quality]
             },
             picMaintainer = {
                 src: tile.maintainerPicture || base + 'buster.png',
-                skip: calculateSkip(jsonTile.global.portrait.minQuality || 'mini', quality)
+                skip: qualities[(jsonTile.concept.picMaintainer.minQuality || 'mini')] > qualities[quality]
             },
             maintainer = {
                 text: 'Maintainer',
                 font: (jsonTile.global.maintainer.font * scale) + 'px Arial',
                 color: "#FFFFFF",
-                skip: calculateSkip(jsonTile.global.portrait.minQuality || 'mini', quality)
+                skip: qualities[(jsonTile.global.maintainer.minQuality || 'mini')] > qualities[quality]
             },
             nameMaintainer = {
                 text: tile.maintainerRealName || tile.maintainer || '',
                 font: (jsonTile.global.nameMaintainer.font * scale) + 'px Arial',
                 color: "#FFFFFF",
-                skip: calculateSkip(jsonTile.global.portrait.minQuality || 'mini', quality)
+                skip: qualities[(jsonTile.global.nameMaintainer.minQuality || 'mini')] > qualities[quality]
             },
             userMaintainer = {
                 text: tile.maintainer || 'No Maintainer yet',
                 font: (jsonTile.global.userMaintainer.font * scale) + 'px Arial',
                 color: "#E2E2E2",
-                skip: calculateSkip(jsonTile.global.portrait.minQuality || 'mini', quality)
+                skip: qualities[(jsonTile.concept.userMaintainer.minQuality || 'mini')] > qualities[quality]
             };
 
             pic.x = jsonTile[state].pic.x * scale;
@@ -547,10 +515,10 @@ function TileManager() {
         var mesh,
             element = new THREE.LOD(),
             levels = [
-                ['high', 90000],
+                ['high', 10000],
                 ['medium', 30000],
-                ['small', 10000],
-                ['mini', 0]
+                ['small', 60000],
+                ['mini', 70000]
             ],
             texture,
             tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
