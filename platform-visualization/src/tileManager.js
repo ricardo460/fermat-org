@@ -10,6 +10,12 @@ function TileManager() {
 
     this.dimensions = {};
     this.elementsByGroup = [];
+    this.levels = {
+        'high': 1000,
+        'medium': 2500,
+        'small': 5000,
+        'mini': 10000
+    };
 
     var jsonTile = {};
     var self = this;
@@ -358,12 +364,13 @@ function TileManager() {
                 skip: qualities[(jsonTile.global.typeIcon.minQuality || 'mini')] > qualities[quality]
             },
             ring = {
-                src: base + 'rings/' + quality + '/' + state + '_diff_' + difficulty + '.png'
+                src: base + 'rings/' + quality + '/' + state + '_diff_' + difficulty + '.png',
+                skip: qualities[(jsonTile.global.ring.minQuality || 'mini')] > qualities[quality]
             },
             codeText = {
                 text: tile.code,
                 font: (jsonTile.global.codeText.font * scale) + "px Arial",
-                skip: qualities[(jsonTile.global.portrait.minQuality || 'mini')] > qualities[quality]
+                skip: qualities[(jsonTile.global.codeText.minQuality || 'mini')] > qualities[quality]
             },
             nameText = {
                 text: tile.name,
@@ -514,24 +521,19 @@ function TileManager() {
 
         var mesh,
             element = new THREE.LOD(),
-            levels = [
-                ['high', 10000],
-                ['medium', 30000],
-                ['small', 60000],
-                ['mini', 70000]
-            ],
             texture,
             tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
             tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING,
             scale = 2,
             table = _table || null;
 
-        for (var j = 0, l = levels.length; j < l; j++) {
+        
+        for(var level in this.levels) {
 
-            if (levels[j][0] === 'high') scale = MAX_TILE_DETAIL_SCALE;
+            if (level === 'high') scale = MAX_TILE_DETAIL_SCALE;
             else scale = 1;
 
-            texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale, table);
+            texture = self.createTexture(id, level, tileWidth, tileHeight, scale, table);
 
             mesh = new THREE.Mesh(
                 new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
@@ -547,7 +549,7 @@ function TileManager() {
                 onClick : onClick
             };
             mesh.renderOrder = 1;
-            element.addLevel(mesh, levels[j][1]);
+            element.addLevel(mesh, this.levels[level]);
             element.userData = {
                 flying: false
             };
