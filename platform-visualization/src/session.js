@@ -7,7 +7,7 @@ function Session(){
     var code;
     var self = this;
     var clientID = "d00a7c7d4489139327e4";
-    switch(window.location.href.match("//[a-z]*")[0].replace("//", '')) {
+    switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
         case "dev":
             clientID = 'd00a7c7d4489139327e4';
             break;
@@ -94,58 +94,84 @@ function Session(){
 				}
             }
 		});
+        deleteToken();
 	};
 
     this.init = function(){
 
-        code = window.location.toString().replace(/.+code=/, '');
+        var cookie = getToken();
 
-        if((code.indexOf("/") < 0))
-            self.login();
-        else
-            window.getData();
+        if(cookie._id !== "") {
+            self.login(true,cookie);
+        }
+        else {
+            code = window.location.toString().replace(/.+code=/, '');
+
+            if((code.indexOf("/") < 0))
+                self.login(false);
+            else
+                window.getData();
+        }
+        
     };
 
 	/**
 	 * Logged to the user and returns the token
 	 */
-	this.login = function() {
-		var url = window.helper.getAPIUrl("login", { code : code, api_key : api_key});
-		console.log("url: " + url);
+	this.login = function(option, cookie) {
 
+        if(!option) {
+    		var url = window.helper.getAPIUrl("login", { code : code, api_key : api_key});
+    		console.log("url: " + url);
 
-		$.ajax({
-			url : url,
-			type : "GET",
-			headers : {
-				'Accept' : 'application/json'
-			}
-		}).success(function(tkn) {
-			usr = tkn._usr_id;
-			axs_key = tkn.axs_key;
-            window.console.dir(tkn);
-            
-			if(usr !== undefined) {
+    		$.ajax({
+    			url : url,
+    			type : "GET",
+    			headers : {
+    				'Accept' : 'application/json'
+    			}
+    		}).success(function(tkn) {
+    			usr = tkn._usr_id;
+    			axs_key = tkn.axs_key;
+                window.console.dir(tkn);
+                
+    			if(usr !== undefined) {
+    				isLogin = true;
 
-				isLogin = true;
+                    usr.axs_key = axs_key;
 
-                usr.axs_key = axs_key;
+    				console.log("Logueado Completamente: " + usr.name);
 
-				console.log("Logueado Completamente: " + usr.name);
+         			$("#login").fadeOut(2000);
+         			$("#logout").fadeIn(2000);
 
-     			$("#login").fadeOut(2000);
-     			$("#logout").fadeIn(2000);
+         			drawUser(usr);
+                    setToken(tkn);   
+                }
+                else {
+    				console.log("Error:", tkn);
+                    window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
+                }
+            });
+        }
+        else {
+            usr = cookie._usr_id;
+            axs_key = usr.axs_key;
+                    
+            isLogin = true;
 
-     			drawUser(usr);
+            usr.axs_key = axs_key;
 
-			}
-            else {
-				console.log("Error:", tkn);
-                window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
-            }
+            console.log("Logueado Completamente: " + usr.name);
 
-            window.getData();
-		});
+            $("#login").fadeOut(2000);
+            $("#logout").fadeIn(2000);
+
+            drawUser(usr);
+        }
+
+        window.getData();
+
 	};
 
 	function drawUser(user){
@@ -287,4 +313,73 @@ function Session(){
         }
 	}
 
+    function setToken(tkn) {
+        setCookie("id", tkn._id, 7);
+        setCookie("key", tkn.axs_key, 7);
+        setCookie("update", tkn.upd_at, 7);
+        setCookie("v", tkn._usr_id.__v, 7);
+        setCookie("avatar", tkn._usr_id.avatar_url, 7);
+        setCookie("email", tkn._usr_id.email, 7);
+        setCookie("github", tkn._usr_id.github_tkn, 7);
+        setCookie("name", tkn._usr_id.name, 7);
+        setCookie("usrnm", tkn._usr_id.usrnm, 7);
+    }
+
+    function deleteToken() {
+        deleteCookie("id");
+        deleteCookie("key");
+        deleteCookie("update");
+        deleteCookie("v");
+        deleteCookie("avatar");
+        deleteCookie("email");
+        deleteCookie("github");
+        deleteCookie("name");
+        deleteCookie("usrnm");
+    }
+
+    function getToken() {
+        var tkn = {
+            _id : getCookie("id"),
+            _usr_id : {
+                __v : getCookie("v"),
+                _id : getCookie("id"),
+                avatar_url : getCookie("avatar"),
+                axs_key : getCookie("key"),
+                email : getCookie("email"),
+                github_tkn : getCookie("github"),
+                name : getCookie("name"),
+                upd_at : getCookie("update"),
+                usrnm : getCookie("usrnm")
+            },
+            axs_key : getCookie("key"),
+            upd_at : getCookie("update")
+        };
+
+        return tkn;
+    }
+
+    function setCookie(name, value, days) {
+        var d = new Date();
+        d.setTime(d.getTime() + (days*24*60*60*1000));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = name + "=" + value + "; " + expires;
+    }
+
+    function getCookie(name) {
+        var cname = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while(c.charAt(0) === ' ') 
+                c = c.substring(1);
+            if(c.indexOf(cname) === 0)
+                return c.substring(cname.length, c.length);
+        }
+        return "";
+    }
+
+    function deleteCookie(name) {
+        var expires = "expires=Thu, 20 Dec 2012 00:00:00 UTC";
+        document.cookie = name + "=; " + expires;
+    }
 }

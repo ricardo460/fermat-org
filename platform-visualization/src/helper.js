@@ -6,7 +6,7 @@ function Helper() {
     var SERVER = 'http://api.fermat.org';
 
     var ENV = 'production';
-    switch(window.location.href.match("//[a-z]*")[0].replace("//", '')) {
+    switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
         case "dev":
             ENV = 'production';
             break;
@@ -890,6 +890,8 @@ function Helper() {
         var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
 
         var param = null;
+        
+        if(params == null) params = {};
         
         params.env = ENV;
 
