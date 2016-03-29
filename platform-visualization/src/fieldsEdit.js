@@ -1087,49 +1087,90 @@ function FieldsEdit() {
         
         //create modal
         
-        if(!document.getElementById("modal-steps")) {
+        if(!document.getElementById("modal-steps-div")) {
 
             var modal = document.createElement("div");
             modal.id = "modal-steps-div";
             modal.dataset.state = "hidden";
             modal.innerHTML = `
                 <div id="modal-steps">
-                    <div id="left">
-                        <span id="step-Number">Step 1:</span>
-                        <div>
-                            <label>Title:</label>
-                            <input id="step-Title" type="text" placeholder="Title of Step"/>
-                            <label>Plataform:</label>
-                            <select id="step-Plataform">
-                            </select>
-                            <label>Layer:</label>
-                            <select id="step-Layer">
-                            </select>
-                            <label>Component:</label>
-                            <select id="step-Component">
-                            </select>
-                            <label>Next:</label>
-                            <select id="step-Padre">
-                            </select>
-                            <label>Type Call:</label>
-                            <select id="step-TypeCall">
-                            </select>
-                            <label id="desc" >Description:</label>
-                            <textarea id="step-Description"></textarea>
-                        </div>
-                    </div>
-                    <div id="right">
-                        <span>Preview:</span>
-                        <canvas id="step-Preview"></canvas>
-                        <span>Select step:</span>
-                        <select id="step-List" size="5">
+                  <div id="left">
+                    <div id="inputs">
+                      <span id="step-Number">Step 1:</span>
+                      <div>
+                        <label>Title:</label>
+                        <input id="step-Title" type="text" placeholder="Title of Step"/>
+                        <label>Group:</label>
+                        <select id="step-Plataform">
                         </select>
-                        <button id="step-NewStep">New Step</button>
-                        <button id="step-RemoveStep">Remove Step</button>
-                        <button id="step-Cancel" style="margin-left: 0.5%;">Cancel</button>
-                        <button id="step-Accept" style="margin-left: 0.5%;">Update</button>
+                        <label>Layer:</label>
+                        <select id="step-Layer">
+                        </select>
+                        <label>Component:</label>
+                        <select id="step-Component">
+                        </select>
+                        <label>Description:</label>
+                        <textarea id="step-Description"></textarea>
+                      </div>
                     </div>
+
+                    <div id="next">
+                      <div id="blank">
+                        <legend>Calls</legend>
+                      </div>
+                      <div id="inputs">
+                        <fieldset>
+                          <label>Step:</label>
+                          <select id="next-step-Select">
+                          </select>
+                          <label>Type Call:</label>
+                          <select id="step-TypeCall">
+                          </select>
+                        </fieldset>
+                      </div>
+
+                      <div id="selector-steps">
+                        <div id="graphic-selector">
+                          <div style="width:25%;"></div>
+                          <div style="width:25%;" class="on"></div>
+                          <div style="width:25%;"></div>
+                          <div style="width:25%;"></div>
+                        </div>
+
+                        <div id="input-selector">
+                          <button id="input-selector-old">&lt;</button>
+                          <center id="input-selector-num"> 1 </center>
+                          <button id="input-selector-nex">&gt;</button>
+                          <button id="input-selector-new">+</button>
+                          <button id="input-selector-rem">-</button>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div id="right">
+
+                    <div id="preview">
+                      <label>Preview</label>
+                      <canvas id="step-Preview"></canvas>
+                    </div>
+
+                    <div id="list">
+                      <select id="step-List" size="2">
+                        <option>1</option>
+                      </select>
+                    </div>
+
+                    <div id="buttons">
+                      <button id="step-NewStep"    >New Step</button>
+                      <button id="step-RemoveStep" >Remove Step</button>
+                      <button id="step-Cancel"     >Cancel</button>
+                      <button id="step-Accept"     >Update</button>
+                    </div>
+
+                  </div>
                 </div>
+
             `;
 
             var object = {
@@ -1149,6 +1190,7 @@ function FieldsEdit() {
                 step-Description
                 step-List
                 step-TypeCall
+                next-step-Select
                 
                 buttons:
                     step-NewStep
@@ -1168,10 +1210,48 @@ function FieldsEdit() {
             var nLayer       = document.getElementById("step-Layer");
             var nPlataform   = document.getElementById("step-Plataform");
             var nComponent   = document.getElementById("step-Component");
-            var nPadre       = document.getElementById("step-Padre");
             var nDescription = document.getElementById("step-Description");
             var nTypeCall    = document.getElementById("step-TypeCall");
             var list         = document.getElementById("step-List");
+            var nextSelect   = document.getElementById("next-step-Select");
+            var inputNum     = document.getElementById("input-selector-num");
+            var gSelect      = document.getElementById("graphic-selector");
+                        
+            nextSelect.update = function() {
+                var inputNum = document.getElementById("input-selector-num");
+                
+                if(!list.valueJson[nextSelect.step].next.length) {
+                    nextSelect.disabled = true;
+                    nTypeCall.disabled  = true;
+                    inputNum.innerHTML  = "None";
+                } else {
+                    nextSelect.disabled = false;
+                    nTypeCall.disabled  = false;
+                    inputNum.innerHTML  = nextSelect.call;
+                    
+                    nextSelect.innerHTML = "";
+                    var opt;
+
+                    for(var i = 0; i < list.valueJson.length; i++) {
+                        opt = document.createElement("option");
+                        opt.value = i;
+                        opt.innerHTML = (i + 1) + " - " + list.valueJson[i].title;
+                        nextSelect.appendChild(opt);                    
+                    }
+                    
+                    nTypeCall.innerHTML = `
+                        <option>direct call</option>
+                        <option>fermat message</option>
+                        <option>loop</option>
+                    `;
+                    
+                    nTypeCall.value = list.valueJson[nextSelect.step].next[nextSelect.call-1].type;
+                    nextSelect.value = list.valueJson[nextSelect.step].next[nextSelect.call-1].id;
+                    
+                }
+                                
+                gSelect.update();
+            };
             
             list.update = function() {
 
@@ -1191,27 +1271,21 @@ function FieldsEdit() {
             nLayer.update = function() { 
 
                 var nPlataform = document.getElementById("step-Plataform");
-
                 var _layers = TABLE[nPlataform.value].layers;
-
                 var option = "";
 
                 for(var layer in _layers){
                     option += "<option value = '" + layer + "' >" + layer + "</option>";
                 }
-                
                 nLayer.innerHTML = option;
 
                 list.valueJson[nLayer.step].layer = nLayer.value;
-
-            };
+            };         
             
             nComponent.update = function() {
-
                 var nPlataform = document.getElementById("step-Plataform");
                 var nLayer     = document.getElementById("step-Layer");
                 var obj = TABLE[nPlataform.value].layers[nLayer.value].objects.slice();
-
                 var option = "";
                 
                 for(var i = 0; i < obj.length; i++) {
@@ -1219,7 +1293,6 @@ function FieldsEdit() {
                 }
 
                 this.innerHTML = option;
-
                 list.valueJson[nComponent.step].name = nComponent.value;
             };
             
@@ -1245,25 +1318,16 @@ function FieldsEdit() {
                 nComponent.update();
             };
             
-            nTypeCall.onchange = function() {
-                list.valueJson[nTypeCall.step].next[0].type = nTypeCall.value;
-            };
-            
             nComponent.onchange = function() {
                 list.valueJson[nComponent.step].name = nComponent.value;
             };
             
-            nPadre.onchange = function() {
-                if(nPadre.value != "Null") {
-                    list.valueJson[nPadre.step].next[0] = {
-                        "type": "direct call",
-                        "id": nPadre.value
-                    };
-                    nTypeCall.disabled = false;
-                } else {
-                    list.valueJson[nPadre.step].next = [];
-                    nTypeCall.disabled = true;
-                }
+            nTypeCall.onchange = function() {
+                list.valueJson[nTypeCall.step].next[nextSelect.call-1].type = nTypeCall.value;
+            };
+            
+            nextSelect.onchange = function() {
+                list.valueJson[nextSelect.step].next[nextSelect.call-1].id = nextSelect.value;
             };
             
             list.valueJson = [];
@@ -1289,41 +1353,34 @@ function FieldsEdit() {
             };
             
             modal.changeStep = function(Step) { 
-
                 var nTitle       = document.getElementById("step-Title");
                 var list         = document.getElementById("step-List");
                 var nStep        = document.getElementById("step-Number");
                 var nLayer       = document.getElementById("step-Layer");
                 var nPlataform   = document.getElementById("step-Plataform");
                 var nComponent   = document.getElementById("step-Component");
-                var nPadre       = document.getElementById("step-Padre");
                 var nDescription = document.getElementById("step-Description");
                 var nTypeCall    = document.getElementById("step-TypeCall");
-                var step         =  JSON.parse(JSON.stringify(list.valueJson[Step]));
+                var step         = JSON.parse(JSON.stringify(list.valueJson[Step]));
+                var nextSelect   = document.getElementById("next-step-Select");
+                var gSelect      = document.getElementById("graphic-selector");
                 
-                nLayer.step = Step;
-                nPlataform.step = Step;
-                nComponent.step = Step;
-                nPadre.step = Step;
+                nLayer.step       = Step;
+                nPlataform.step   = Step;
+                nComponent.step   = Step;
                 nDescription.step = Step;
-                nTitle.step = Step;
-                nTypeCall.step = Step;
+                nTitle.step       = Step;
+                nTypeCall.step    = Step;
+                nTypeCall.step    = Step;
+                nextSelect.step   = Step;
+                gSelect.step      = Step;
+                
 
                 nTitle.innerHTML = "Step " + (step.id + 1) + ":";
                 
                 //----------Type Call-----------
                 
                 nTypeCall.innerHTML = "";
-                
-                if(nPadre.value != "NULL"){
-                    nTypeCall.innerHTML += '<option value="direct call" >direct call</option>';
-                    nTypeCall.innerHTML += '<option value="fermat message" >fermat message</option>';
-                    nTypeCall.innerHTML += '<option value="event" >event</option>';
-                    nTypeCall.disabled = false;
-                } else {
-                    nTypeCall.disabled = true;
-                }
-                
                 
                 //------------List--------------
                 
@@ -1336,7 +1393,6 @@ function FieldsEdit() {
                 option = "";
 
                 for(var i in window.platforms){ 
-
                     if(i != "size"){
                         option += "<option value = "+i+" >"+i+"</option>";
                     }
@@ -1347,7 +1403,6 @@ function FieldsEdit() {
                 optgroup += "<optgroup label = superLayer>";
 
                 for(var _i in window.superLayers){
-
                     if(_i != "size"){
                         option += "<option value = "+_i+" >"+_i+"</option>";
                     }
@@ -1361,8 +1416,7 @@ function FieldsEdit() {
 
                     nPlataform.value = step.platfrm;
                     list.valueJson[nPlataform.step].platfrm = step.platfrm;
-                }
-                else{
+                } else {
 
                     nPlataform.selectedIndex = 0;
                     list.valueJson[nPlataform.step].platfrm = nPlataform.value;
@@ -1371,12 +1425,10 @@ function FieldsEdit() {
                 nLayer.update();
 
                 if(step.layer){
-
                     nLayer.value = step.layer;
                     list.valueJson[nLayer.step].layer = step.layer;
                 }
                 else{
-
                     nLayer.selectedIndex = 0;
                     list.valueJson[nLayer.step].layer =  nLayer.value;
                 }
@@ -1384,47 +1436,24 @@ function FieldsEdit() {
                 nComponent.update();
 
                 if(step.name){
-
                     nComponent.value = step.name;
                     list.valueJson[nComponent.step].name = step.name;
                 }
                 else{
-
                     nComponent.selectedIndex = 0;
                     list.valueJson[nComponent.step].name = nComponent.value;
                 }
                 
-                //------------Padre-------------
+                //------------Next--------------
                 
-                nPadre.innerHTML = "";
-
-                var opt = document.createElement("option");
-                opt.innerHTML = "None";
-                opt.value = "Null";
-                nPadre.appendChild(opt);
-                
-                for( i = 0; i < list.valueJson.length; i++){
-                    opt = document.createElement("option");
-                    opt.innerHTML = (i + 1) + " - " + list.valueJson[i].title;
-                    opt.value = i;
-                    nPadre.appendChild(opt);
-                }
+                nextSelect.call = list.valueJson[nextSelect.step].next.length;
+                nextSelect.update();
                 
                 //------------------------------
                 
                 nTitle.value = step.title;
                 nStep.value = "Step " + step.id + ":";
                 nDescription.value = step.desc;
-
-                if(step.next[0]) 
-                    nPadre.value = step.next[0].id;
-                else 
-                    nPadre.value = "Null";
-
-                if(step.next[0]) {
-                    nTypeCall.disabled = false;
-                    nTypeCall.value = step.next[0].type;
-                } else nTypeCall.disabled = true;
             };
             
             modal.newStep = function() {
@@ -1442,7 +1471,91 @@ function FieldsEdit() {
                 
                 return num;
             };
-        
+                        
+            window.onresize = function() {
+                var m = document.getElementById("modal-steps");
+                var w = (m.offsetHeight*1.6) + "px";
+                m.style.width = w;
+            };
+            
+            var inputOld = document.getElementById("input-selector-old");
+            var inputNex = document.getElementById("input-selector-nex");
+            var inputNew = document.getElementById("input-selector-new");
+            var inputRem = document.getElementById("input-selector-rem");
+            
+            inputNew.onmouseup = function() {
+                list.valueJson[nextSelect.step].next[list.valueJson[nextSelect.step].next.length] = {
+                    "id": 0,
+                    "type": "direct call"
+                };
+                
+                nextSelect.call = list.valueJson[nextSelect.step].next.length;
+                nextSelect.update();
+            };
+            
+            inputRem.onmouseup = function() {
+                var next = list.valueJson[nextSelect.step].next;
+                var low  = next.splice(0, nextSelect.call-1);
+                var high = next.splice(1, next.length);
+                
+                list.valueJson[nextSelect.step].next = low.concat(high);
+                
+                if(list.valueJson[nextSelect.step].next.length) {
+                    if(nextSelect.call > list.valueJson[nextSelect.step].next.length)
+                        nextSelect.call = list.valueJson[nextSelect.step].next.length;
+                } else {
+                    nextSelect.call = 0;
+                }
+                nextSelect.update();
+            };
+            
+            inputOld.onmouseup = function() {
+                if(nextSelect.call != 0) 
+                    if(nextSelect.call > 1)
+                        nextSelect.call -= 1;
+                nextSelect.update();
+            };
+            
+            inputNex.onmouseup = function() {
+                if(nextSelect.call < list.valueJson[nextSelect.step].next.length)
+                    nextSelect.call += 1;
+                nextSelect.update();
+            };
+            
+            nextSelect.chg  = function(id) {
+                nextSelect.call = id + 1;
+                nextSelect.update();
+            };
+            
+            gSelect.update = function() {
+                gSelect.innerHTML = "";
+                
+                var size = 100 / list.valueJson[gSelect.step].next.length;
+                var div;
+                
+                
+                if(nextSelect.call > 0) 
+                    for(var i = 0; i < list.valueJson[gSelect.step].next.length; i++) {
+                        div = document.createElement("div");
+                        div.style.width = size + "%";
+                        div.dataset.id = i+1;
+                        
+                        if(i == nextSelect.call - 1)
+                            div.className = 'on';
+                        
+                        div.onclick = function() {
+                            var n = document.getElementById("next-step-Select");
+                            n.call = parseInt(this.dataset.id);
+                            n.update();
+                        };
+                        
+                        gSelect.appendChild(div);
+                    }
+                else
+                    gSelect.innerHTML = '<div style="width:100%;" class="off"></div>';
+                
+            };
+            
         }
         
         var button = document.getElementById("workflow-header-steps");
@@ -1456,6 +1569,7 @@ function FieldsEdit() {
             area.id = "hidden-area";
             document.body.appendChild(area);
             window.helper.show(area, 1000);
+            window.onresize();
             
         });
         
@@ -1468,24 +1582,27 @@ function FieldsEdit() {
         };
         
         document.getElementById("step-RemoveStep").onmouseup = function() {
-
             var modal = document.getElementById("modal-steps-div");
             var list = document.getElementById("step-List");
             
-            var value = list.value;
-            var high = list.valueJson.splice(0, list.value);
-            var low  = list.valueJson.splice(1, list.valueJson.length);
-            
-            list.valueJson = high.concat(low);
-            
-            for(var i = 0; i < list.valueJson.length; i++) {
-                list.valueJson[i].id = i;
+            if(list.valueJson.length > 1) {
+                var value = list.value;
+                var high = list.valueJson.splice(0, list.value);
+                var low  = list.valueJson.splice(1, list.valueJson.length);
+                list.valueJson = high.concat(low);
+
+                for(var i = 0; i < list.valueJson.length; i++) {
+                    list.valueJson[i].id = i;
+                }
+
+                if(value > list.valueJson.length - 1)
+                    list.value = list.valueJson.length - 1;
+                else
+                    list.value = value;
+            } else {
+                list.valueJson = [];
+                list.value = modal.newStep();
             }
-            
-            if(value > list.valueJson.length - 1)
-                list.value = list.valueJson.length - 1;
-            else
-                list.value = value;
             
             modal.changeStep(list.value);
             
@@ -1494,40 +1611,36 @@ function FieldsEdit() {
         document.getElementById("step-Accept").onclick = function() {
 
             if(validateNameSteps() === ''){ 
+                var modal = document.getElementById("modal-steps-div");
+                modal.dataset.state = "hidden";
 
-            var modal = document.getElementById("modal-steps-div");
-            modal.dataset.state = "hidden";
-            
-            area = document.getElementById("hidden-area");
-            window.helper.hide(area, 1000);
-            window.workFlowEdit.changeTexture();
-            window.workFlowEdit.fillStep();
-
-            }
-            else{
+                var area = document.getElementById("hidden-area");
+                window.helper.hide(area, 1000);
+                window.workFlowEdit.changeTexture();
+                window.workFlowEdit.fillStep();
+            } else {
                 window.alert(validateNameSteps());
             }
         };
 
         function validateNameSteps(){
-
             var list = document.getElementById("step-List");
-
             var msj = '';
 
             if(list.valueJson.length > 0){
-            
                 for(var i = 0; i < list.valueJson.length; i++) {
-    
                     var name = list.valueJson[i].title;
-    
                     if(name === "")
                         msj += 'The step '+ (i + 1) +' must have a name. \n';
                 }
             }
 
             return msj;
-        } 
+        }
+        
+        window.onresize();
+        var modal = document.getElementById("modal-steps-div");
+        modal.changeStep(modal.newStep());
     }
     
 }
