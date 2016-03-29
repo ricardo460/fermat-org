@@ -113,4 +113,108 @@ router.post('/waves', function (req, res, next) {
 		});
 	}
 });
+//
+var fs = require('fs');
+/**
+ * [getLines description]
+ *
+ * @method getLines
+ *
+ * @param  {[type]}   path     [description]
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
+var getLines = function (path, callback) {
+	fs.exists(path, (exists) => {
+		if (exists) {
+			fs.readFile(path, 'utf8', (err, data) => {
+				if (err) {
+					return callback(err, null);
+				}
+				return callback(null, data.split('\n'));
+			});
+		} else {
+			return callback(new Error('file does not exist'), null);
+		}
+	});
+};
+/**
+ * [setLine description]
+ *
+ * @method setLine
+ *
+ * @param  {[type]}   path     [description]
+ * @param  {[type]}   line     [description]
+ * @param  {Function} callback [description]
+ */
+var setLines = function (path, lines, callback) {
+	var text = lines; //.join('\n');
+	fs.exists(path, (exists) => {
+		if (exists) {
+			fs.unlink(path, (err) => {
+				if (err) {
+					return callback(err);
+				}
+				fs.writeFile(path, text, (err) => {
+					if (err) {
+						return callback(err);
+					}
+					return callback(null);
+				});
+			});
+		} else {
+			fs.writeFile(path, text, (err) => {
+				if (err) {
+					return callback(err);
+				}
+				return callback(null);
+			});
+		}
+	});
+};
+/**
+ * @api {post} /v1/net/servers create a wave
+ * @apiName CreateWave
+ * @apiVersion 0.0.1
+ * @apiGroup Net
+ * @apiDescription Inserts a wave (state of the network) into the database.
+ * @apiParam {Object[]} body An array of javascript objects that represents the servers of the network
+ */
+router.post('/servers', function (req, res, next) {
+	var d = new Date();
+	var n = d.getTime();
+	var path_out = path.join(__dirname, 'servers_' + n + '.json');
+	setLines(path_out, req.body, (err) => {
+		if (error) {
+			res.status(200).send(err);
+		} else {
+			res.status(201).send({
+				result: 'check your json file ' + path_out
+			});
+		}
+	});
+});
+/**
+ * @api {post} /v1/net/nodes create a wave
+ * @apiName CreateWave
+ * @apiVersion 0.0.1
+ * @apiGroup Net
+ * @apiDescription Inserts a wave (state of the network) into the database.
+ * @apiParam {Object[]} body An array of javascript objects that represents the nodes connected to a server of the network
+ */
+router.post('/nodes', function (req, res, next) {
+	var d = new Date();
+	var n = d.getTime();
+	var path_out = path.join(__dirname, 'nodes_' + n + '.json');
+	setLines(path_out, req.body, (err) => {
+		if (error) {
+			res.status(200).send(err);
+		} else {
+			res.status(201).send({
+				result: 'check your json file ' + path_out
+			});
+		}
+	});
+});
 module.exports = router;

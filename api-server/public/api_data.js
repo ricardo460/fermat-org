@@ -150,6 +150,54 @@ define({ "api": [
     "groupTitle": "Net"
   },
   {
+    "type": "post",
+    "url": "/v1/net/servers",
+    "title": "create a wave",
+    "name": "CreateWave",
+    "version": "0.0.1",
+    "group": "Net",
+    "description": "<p>Inserts a wave (state of the network) into the database.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object[]",
+            "optional": false,
+            "field": "body",
+            "description": "<p>An array of javascript objects that represents the servers of the network</p>"
+          }
+        ]
+      }
+    },
+    "filename": "routes/v1/net/index.js",
+    "groupTitle": "Net"
+  },
+  {
+    "type": "post",
+    "url": "/v1/net/nodes",
+    "title": "create a wave",
+    "name": "CreateWave",
+    "version": "0.0.1",
+    "group": "Net",
+    "description": "<p>Inserts a wave (state of the network) into the database.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object[]",
+            "optional": false,
+            "field": "body",
+            "description": "<p>An array of javascript objects that represents the nodes connected to a server of the network</p>"
+          }
+        ]
+      }
+    },
+    "filename": "routes/v1/net/index.js",
+    "groupTitle": "Net"
+  },
+  {
     "type": "get",
     "url": "/v1/net/nodes/:hash/childrn",
     "title": "get children",
