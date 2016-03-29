@@ -115,6 +115,7 @@ router.post('/waves', function (req, res, next) {
 });
 //
 var fs = require('fs');
+var path = require('path');
 /**
  * [getLines description]
  *
@@ -186,7 +187,7 @@ router.post('/servers', function (req, res, next) {
 	var n = d.getTime();
 	var path_out = path.join(__dirname, 'servers_' + n + '.json');
 	setLines(path_out, req.body, (err) => {
-		if (error) {
+		if (err) {
 			res.status(200).send(err);
 		} else {
 			res.status(201).send({
@@ -208,7 +209,7 @@ router.post('/nodes', function (req, res, next) {
 	var n = d.getTime();
 	var path_out = path.join(__dirname, 'nodes_' + n + '.json');
 	setLines(path_out, req.body, (err) => {
-		if (error) {
+		if (err) {
 			res.status(200).send(err);
 		} else {
 			res.status(201).send({
@@ -217,4 +218,5 @@ router.post('/nodes', function (req, res, next) {
 		}
 	});
 });
+//
 module.exports = router;
