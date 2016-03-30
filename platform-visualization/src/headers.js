@@ -44,7 +44,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     {
         var duration = 1000;
 
-        if(window.camera.getFocus() == null){
+        if(camera.getFocus() == null){
             var camTarget = objects[id].clone();
             camTarget.position.y -= 2500;
 
