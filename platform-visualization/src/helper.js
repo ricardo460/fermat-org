@@ -546,7 +546,7 @@ function Helper() {
         //TODO: DELETE THIS IF
         if(method === "PUT" && !url.match("/comps-devs/") && exists("[Component]")) {
             error();
-        }
+        } 
         else {
             var xhr = createCORSRequest(url, method);
 
@@ -971,22 +971,28 @@ function Helper() {
      * @author Miguelcldn
      * @param {Object} data Post Data
      */
-    function exists() {
+    function exists() { 
+
+        if(window.actualView === 'table'){ 
         
-        var group = $("#select-Group").val();
-        var layer = $("#select-layer").val();
-        var name = $("#imput-Name").val().toLowerCase();
-        var type = $("#select-Type").val();
-        var location = window.TABLE[group].layers[layer].objects;
-        
-        if(window.tableEdit.formerName.toLowerCase() === name) return false;
-        
-        for(var i = 0; i < location.length; i++) {
-            if(location[i].data.name.toLowerCase() === name && location[i].data.type === type) {
-                return true;
+            var group = $("#select-Group").val();
+            var layer = $("#select-layer").val();
+            var name = $("#imput-Name").val().toLowerCase();
+            var type = $("#select-Type").val();
+            var location = window.TABLE[group].layers[layer].objects;
+            
+            if(window.tableEdit.formerName.toLowerCase() === name) return false;
+            
+            for(var i = 0; i < location.length; i++) {
+                if(location[i].data.name.toLowerCase() === name && location[i].data.type === type) {
+                    return true;
+                }
             }
+            
+            return false;
+        } 
+        else{
+            return false;
         }
-        
-        return false;
     }
 }

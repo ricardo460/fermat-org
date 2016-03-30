@@ -177,7 +177,9 @@ function WorkFlowEdit() {
 
     function getPositionY(){
 
-        var Ymin = 0;
+        var newCenter = window.helper.getCenterView('workflows');
+
+        var Ymin = newCenter.y;
 
         for(var i = 0; i < window.flowManager.getObjHeaderFlow().length; i++){
 
@@ -587,7 +589,7 @@ function WorkFlowEdit() {
 
             var newSteps = flow.steps,
                 oldSteps = window.fieldsEdit.actualFlow.steps.slice(0),
-                newFlowSteps = [],
+                newFlowSteps = newSteps.slice(0),
                 config = { 
                         insert :{
                             steps : [],
@@ -765,7 +767,7 @@ function WorkFlowEdit() {
 
                                 array[0]._id = res._id;
 
-                                newFlowSteps.push(array[0]);
+                                newFlowSteps[array[0].id]._id = array[0]._id;
                             }
                             
                             array.splice(0,1);

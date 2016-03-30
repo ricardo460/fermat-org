@@ -1410,10 +1410,12 @@ function FieldsEdit() {
                 
                 nPlataform.innerHTML = optgroup;
                 
-                if(step.platfrm){
+                if(step.platfrm || step.suprlay){
 
-                    nPlataform.value = step.platfrm;
-                    list.valueJson[nPlataform.step].platfrm = step.platfrm;
+                    var group = step.platfrm || step.suprlay;
+
+                    nPlataform.value = group;
+                    list.valueJson[nPlataform.step].platfrm = group;
                 } else {
 
                     nPlataform.selectedIndex = 0;

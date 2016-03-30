@@ -200,7 +200,7 @@ function FlowManager(){
 
                 for(var i = 0; i < p.length; i++){
                     
-                    if(window.platforms[p[i].platfrm])
+                    if(window.platforms[p[i].platfrm] || window.superLayers[p[i].platfrm])
                         headerFlow.push(new ActionFlow(p[i]));
                 }
                 objectHeaderInWFlowGroup = window.headers.getPositionHeaderViewInFlow();
