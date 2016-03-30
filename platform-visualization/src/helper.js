@@ -609,7 +609,7 @@ function Helper() {
 
         if(window.session.getIsLogin()){
 
-            USERDATA = window.session.getUserLogin();
+            USERDATA = JSON.parse(JSON.stringify(window.session.getUserLogin()));
 
             AXS_KEY = USERDATA.axs_key;
 
