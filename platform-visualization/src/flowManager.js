@@ -199,7 +199,9 @@ function FlowManager(){
                 var p = processes, objectHeaderInWFlowGroup;
 
                 for(var i = 0; i < p.length; i++){
-                    headerFlow.push(new ActionFlow(p[i]));
+                    
+                    if(window.platforms[p[i].platfrm])
+                        headerFlow.push(new ActionFlow(p[i]));
                 }
                 objectHeaderInWFlowGroup = window.headers.getPositionHeaderViewInFlow();
                 calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup);
