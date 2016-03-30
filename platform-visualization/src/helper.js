@@ -350,7 +350,7 @@ function Helper() {
                         break;
                     case "update":
 
-                        if(res._id){
+                        if(!exists("[component]")){
 
                             if(typeof(doneCallback) === 'function')
                                 doneCallback(res);
@@ -513,40 +513,46 @@ function Helper() {
 
     var makeCorsRequest = function(url, method, params, success, error) {
 
-        var xhr = createCORSRequest(url, method);
-
-        xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
-
-          if(!xhr) {
-            window.alert('CORS not supported');
-            return;
-          }
-
-        xhr.onload = function() {
-
-            var res = null;
-
-            if(method !== 'DELETE')
-                res = JSON.parse(xhr.responseText);
-
-            success(res);
-
-        };
-
-        xhr.onerror = function() {
-
-            error(arguments);
-
-        };
-
-        if(typeof params !== 'undefined'){
-
-            var data = JSON.stringify(params);
-
-            xhr.send(data);
+        //TODO: DELETE THIS IF
+        if(method === "PUT" && !url.match("/comps-devs/") && exists("[Component]")) {
+            error();
         }
-        else
-            xhr.send();
+        else {
+            var xhr = createCORSRequest(url, method);
+
+            xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+
+              if(!xhr) {
+                window.alert('CORS not supported');
+                return;
+              }
+
+            xhr.onload = function() {
+
+                var res = null;
+
+                if(method !== 'DELETE')
+                    res = JSON.parse(xhr.responseText);
+
+                success(res);
+
+            };
+
+            xhr.onerror = function() {
+
+                error(arguments);
+
+            };
+
+            if(typeof params !== 'undefined'){
+
+                var data = JSON.stringify(params);
+
+                xhr.send(data);
+            }
+            else
+                xhr.send();
+        }
 
         function createCORSRequest(url, method) {
 
@@ -929,4 +935,28 @@ function Helper() {
 
         return result;
     };
+    
+    /**
+     * TODO: MUST BE DELETED
+     * @author Miguelcldn
+     * @param {Object} data Post Data
+     */
+    function exists() {
+        
+        var group = $("#select-Group").val();
+        var layer = $("#select-layer").val();
+        var name = $("#imput-Name").val().toLowerCase();
+        var type = $("#select-Type").val();
+        var location = window.TABLE[group].layers[layer].objects;
+        
+        if(window.tableEdit.formerName.toLowerCase() === name) return false;
+        
+        for(var i = 0; i < location.length; i++) {
+            if(location[i].data.name.toLowerCase() === name && location[i].data.type === type) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }
