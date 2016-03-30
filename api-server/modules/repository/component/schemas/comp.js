@@ -79,6 +79,7 @@ var compSchema = mongoose.Schema({
  * @type {number}
  */
 compSchema.index({
+	_suprlay_id: 1,
 	_platfrm_id: 1,
 	_layer_id: 1,
 	name: 1
@@ -86,20 +87,6 @@ compSchema.index({
 	unique: true
 }, {
 	name: "comps_uq_plat_indx"
-});
-/**
- * [_suprlay_id description]
- *
- * @type {number}
- */
-compSchema.index({
-	_suprlay_id: 1,
-	_layer_id: 1,
-	name: 1
-}, {
-	unique: true
-}, {
-	name: "comps_uq_supr_indx"
 });
 //
 module.exports = compSchema;
