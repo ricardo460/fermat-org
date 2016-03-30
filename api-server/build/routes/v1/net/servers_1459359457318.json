@@ -1,1 +1,0 @@
-{"all":{"host":"api.fermat.org","username":"ubuntu","root":"/home/ubuntu","project":"fermat-org","repository":"https://github.com/fuelusumar/fermat-org.git","branch":"master","privateKey":"FermatBitcoin.pem","maxDeploys":10},"development":{},"testing":{},"qa":{},"staging":{},"production":{}}
