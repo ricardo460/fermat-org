@@ -1,17 +1,80 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-        "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-            <link type="text/css" rel="stylesheet" href="styles.css"/>
-            <link type="image/png" rel="icon" href="../images/favicon.png"/>
-            <script src="../common/jquery-2.1.4.min.js"></script>
-            <title>Fermat Table Structure Edit</title>
-        </head>
-        <body>
-                
-        
-        <script src="tse.js"></script>
-        </body>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="styles.css" />
+    <link type="image/png" rel="icon" href="../images/favicon.png" />
+    <script src="../common/jquery-2.1.4.min.js"></script>
+    <title>Fermat Table Structure Edit</title>
+</head>
+
+<body>
+    <div class="nav">
+        <h2>Fermat TSE</h2>
+        <div class="nav-actions">
+            <select id="type">
+                <option value="superlayer">Superlayer</option>
+                <option value="layer">Layer</option>
+                <option value="platform">Platform</option>
+            </select>
+            <button id="add">Add</button>
+        </div>
+    </div>
+
+    <table id="superlayerList">
+    </table>
+
+    <table id="platformList">
+    </table>
+
+    <table id="layerList">
+    </table>
+
+    <div class="container">
+        <form id="spForm" class="tse-form hidden">
+            <label for="spCode">Code</label>
+            <input id="spCode" />
+
+            <label for="spName">Name</label>
+            <input id="spName" />
+
+            <label for="spLogo">Logo</label>
+            <input id="spLogo" />
+
+            <label for="spOrder">Order</label>
+            <input id="spOrder" />
+
+            <div class="buttons">
+                <button>Submit</button>
+                <button id="cancel">Cancel</button>
+            </div>
+        </form>
+
+        <form id="layerForm" class="tse-form hidden">
+            <label>Name</label>
+            <input id="layerName" />
+
+            <label>Lang</label>
+            <select id="layerLang">
+                <option value="java">Java</option>
+                <option value="java-android">Java (Android)</option>
+            </select>
+
+            <label>Superlayer</label>
+            <input id="layerSuperLayer" />
+
+            <label>Order</label>
+            <input id="layerOrder" />
+
+            <div class="buttons">
+                <button>Submit</button>
+                <button id="cancel">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <script src="tse.js"></script>
+</body>
+
 </html>
