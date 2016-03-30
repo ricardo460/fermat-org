@@ -299,8 +299,7 @@ function FieldsEdit() {
     function setSelectImages(select) {
         
         select.style.backgroundSize = select.offsetHeight + "px";
-        select.style.width = select.offsetWidth + select.offsetHeight + "px";
-        
+        select.style.width = select.offsetWidth + select.offsetHeight + "px";  
     }
 
     function sesionGroup(){
@@ -406,7 +405,6 @@ function FieldsEdit() {
         });
         
         setSelectImages(document.getElementById(id));
-
     }
 
     function sesionName(){
@@ -445,7 +443,6 @@ function FieldsEdit() {
 
             window.tableEdit.changeTexture();
         });
-
     }
     
     function sesionAuthor(){
@@ -798,7 +795,6 @@ function FieldsEdit() {
         });
         
         setSelectImages(document.getElementById(id));
-
     }
 
     function sesionDescription(){
@@ -891,7 +887,6 @@ function FieldsEdit() {
             window.helper.hide(area, 500);
             
         });
-
     }
 
     function sesionState(){
@@ -921,7 +916,6 @@ function FieldsEdit() {
         });
         
         setSelectImages(document.getElementById(id));
-
     }
 
     function createbutton(callback){
@@ -934,7 +928,6 @@ function FieldsEdit() {
                 callback();          
 
         }, null, null, "right");
-
     }
 
     function deleteMesh(){
@@ -959,7 +952,7 @@ function FieldsEdit() {
             div.id = "workflow-header";
             div.innerHTML += '<label> Title: </label>';
             div.innerHTML += '<input id="workflow-header-title" class="edit-Fermat" placeholder="Title" type="text"></input>';
-            div.innerHTML += '<label> Plataform: </label>';
+            div.innerHTML += '<label> Select the Group : </label>';
             var select = document.createElement("select");
             select.id = "workflow-header-plataform";
             select.className = "edit-Fermat";
@@ -1015,8 +1008,7 @@ function FieldsEdit() {
             });
             
             setSelectImages(document.getElementById("workflow-header-plataform"));
-        }
-        
+        }   
     }
     
     function workflowDescription() {
@@ -1086,6 +1078,8 @@ function FieldsEdit() {
     function workflowModalSteps() {
         
         //create modal
+
+        var backJson = [];
         
         if(!document.getElementById("modal-steps-div")) {
 
@@ -1096,7 +1090,7 @@ function FieldsEdit() {
                 <div id="modal-steps">
                   <div id="left">
                     <div id="inputs">
-                      <span id="step-Number">Step 1:</span>
+                      <span id="step-Number">Steps</span>
                       <div>
                         <label>Title:</label>
                         <input id="step-Title" type="text" placeholder="Title of Step"/>
@@ -1106,7 +1100,7 @@ function FieldsEdit() {
                         <label>Layer:</label>
                         <select id="step-Layer">
                         </select>
-                        <label>Component:</label>
+                        <label id = "label-compo">Component:</label>
                         <select id="step-Component">
                         </select>
                         <label>Description:</label>
@@ -1227,7 +1221,7 @@ function FieldsEdit() {
                 } else {
                     nextSelect.disabled = false;
                     nTypeCall.disabled  = false;
-                    inputNum.innerHTML  = nextSelect.call;
+                    inputNum.innerHTML  = "Child " + nextSelect.call;
                     
                     nextSelect.innerHTML = "";
                     var opt;
@@ -1242,7 +1236,7 @@ function FieldsEdit() {
                     nTypeCall.innerHTML = `
                         <option>direct call</option>
                         <option>fermat message</option>
-                        <option>loop</option>
+                        <option>event</option>
                     `;
                     
                     nTypeCall.value = list.valueJson[nextSelect.step].next[nextSelect.call-1].type;
@@ -1294,6 +1288,8 @@ function FieldsEdit() {
 
                 this.innerHTML = option;
                 list.valueJson[nComponent.step].name = nComponent.value;
+
+                workflowPreview(list.valueJson[nComponent.step]);
             };
             
             nDescription.onkeyup = function() {
@@ -1320,6 +1316,7 @@ function FieldsEdit() {
             
             nComponent.onchange = function() {
                 list.valueJson[nComponent.step].name = nComponent.value;
+                workflowPreview(list.valueJson[nComponent.step]);
             };
             
             nTypeCall.onchange = function() {
@@ -1352,7 +1349,8 @@ function FieldsEdit() {
                 
             };
             
-            modal.changeStep = function(Step) { 
+            modal.changeStep = function(Step) {
+
                 var nTitle       = document.getElementById("step-Title");
                 var list         = document.getElementById("step-List");
                 var nStep        = document.getElementById("step-Number");
@@ -1454,6 +1452,7 @@ function FieldsEdit() {
                 nTitle.value = step.title;
                 nStep.value = "Step " + step.id + ":";
                 nDescription.value = step.desc;
+
             };
             
             modal.newStep = function() {
@@ -1555,16 +1554,32 @@ function FieldsEdit() {
                     gSelect.innerHTML = '<div style="width:100%;" class="off"></div>';
                 
             };
-            
+
         }
         
         var button = document.getElementById("workflow-header-steps");
         
         button.addEventListener('click', function() {
+
+            if(document.getElementById("step-List")){
+                var valueJson = document.getElementById("step-List").valueJson.slice();
+
+                backJson = [];
+
+                for(var i = 0; i < valueJson.length; i++){
+
+                    var next = valueJson[i].next.slice();
+                    var object = JSON.parse(JSON.stringify(valueJson[i]));
+
+                    object.next = next;
+
+                    backJson.push(object);
+                }s
+            }
             
             var modal = document.getElementById("modal-steps-div");
             modal.dataset.state = "show";
-            
+
             var area = document.createElement("div");
             area.id = "hidden-area";
             document.body.appendChild(area);
@@ -1623,6 +1638,22 @@ function FieldsEdit() {
             }
         };
 
+        document.getElementById("step-Cancel").onclick = function() {
+
+            var modal = document.getElementById("modal-steps-div");
+            modal.dataset.state = "hidden";
+
+            if(backJson){
+                var list = document.getElementById("step-List");
+                list.valueJson = backJson.slice();
+                list.update();
+                document.getElementById("modal-steps-div").changeStep(0);
+            }
+
+            var area = document.getElementById("hidden-area");
+            window.helper.hide(area, 1000);
+        };
+
         function validateNameSteps(){
             var list = document.getElementById("step-List");
             var msj = '';
@@ -1642,5 +1673,73 @@ function FieldsEdit() {
         var modal = document.getElementById("modal-steps-div");
         modal.changeStep(modal.newStep());
     }
+
+    function workflowPreview(_step) {
+
+        var step = JSON.parse(JSON.stringify(_step));
+
+            step.element = window.helper.searchElement(
+                (step.platfrm || step.suprlay) + '/' + step.layer + '/' + step.name
+            );
+
+        var fillBox = function(ctx, image) {
+
+            ctx.drawImage(image, 0, 0, 300, 150);
+
+            if(step.element !== -1){ 
+
+                var mesh = window.helper.getSpecificTile(step.element).mesh;
+
+                var texture = mesh.levels[0].object.material.map.image;
+
+                var img = document.createElement('img');
+
+                img.src = texture.toDataURL("image/png");
+
+                img.onload = function() {
+                    ctx.drawImage(img, 65, 27, 85, 98);
+                };
+            }
+
+            //ID
+            var Nodeid = parseInt(step.id) + 1;
+            Nodeid = (Nodeid < 10) ? '0' + Nodeid.toString() : Nodeid.toString();
+
+            var size = 37;
+            ctx.font = size + 'px Arial';
+            ctx.fillStyle = '#000000';
+            window.helper.drawText(Nodeid, 16, 90, ctx, 76, size);
+            ctx.fillStyle = '#FFFFFF';
+
+            //Title
+            size = 8;
+            ctx.font = 'bold ' + size + 'px Arial';
+            window.helper.drawText(step.title, 151, 40, ctx, 100, size);
+
+            //Description
+            size = 6;
+            ctx.font = size + 'px Arial';
+            window.helper.drawText(step.desc, 151, 80, ctx, 100, size);
+        };
+
+        var canvas = document.getElementById('step-Preview');
+        var ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var size = 12;
+        ctx.fillStyle = '#FFFFFF';
+
+        var image = document.createElement('img');
+
+        ctx.font = size + 'px Arial';
+
+        image.onload = function() {
+            fillBox(ctx, image);
+        };
+
+        image.src = "images/workflow/stepBox.png";
+
+    }
+
+
     
 }
