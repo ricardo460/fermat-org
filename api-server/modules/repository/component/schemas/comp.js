@@ -73,9 +73,12 @@ var compSchema = mongoose.Schema({
 }, {
 	collection: 'comps'
 });
+/**
+ * [_layer_id description]
+ *
+ * @type {number}
+ */
 compSchema.index({
-	_platfrm_id: 1,
-	_suprlay_id: 1,
 	_layer_id: 1,
 	name: 1
 }, {
