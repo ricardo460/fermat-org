@@ -75,8 +75,8 @@ function createScene(current, option){
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.domElement.style.position = 'absolute';
         renderer.domElement.id = "canvas";
-        //renderer.setClearColor(0xFFFFFF);
-        renderer.setClearColor(0x313131);//Mode Test.
+        renderer.setClearColor(0xFFFFFF);
+        //renderer.setClearColor(0x313131);//Mode Test.
         document.getElementById('container').appendChild(renderer.domElement);
 
         camera = new Camera(new THREE.Vector3(0, 0, 90000),
