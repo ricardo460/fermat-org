@@ -841,7 +841,7 @@ function FieldsEdit() {
             
             modal.innerHTML = ''+
                     '<label>Description:</label>'+
-                    '<textarea id="modal-desc-textarea" rows="12"></textarea>'+
+                    '<textarea id="modal-desc-textarea" rows="12" maxlength="300"></textarea>'+
                     '<div>'+
                         '<button id="modal-desc-cancel">Cancel</button>'+
                         '<button id="modal-desc-accept">Accept</button>'+
@@ -951,7 +951,7 @@ function FieldsEdit() {
             var div = document.createElement("div");
             div.id = "workflow-header";
             div.innerHTML += '<label> Title: </label>';
-            div.innerHTML += '<input id="workflow-header-title" class="edit-Fermat" placeholder="Title" type="text"></input>';
+            div.innerHTML += '<input id="workflow-header-title" class="edit-Fermat" placeholder="Title" type="text" maxlength="70"></input>';
             div.innerHTML += '<label> Select the Group : </label>';
             var select = document.createElement("select");
             select.id = "workflow-header-plataform";
@@ -1029,7 +1029,7 @@ function FieldsEdit() {
 
         modal.innerHTML = ''+
             '<label>Description:</label>'+
-            '<textarea id="modal-desc-textarea" rows="12"></textarea>'+
+            '<textarea id="modal-desc-textarea" rows="12" maxlength="300"></textarea>'+
             '<div>'+
                 '<button id="modal-desc-cancel">Cancel</button>'+
                 '<button id="modal-desc-accept">Accept</button>'+
@@ -1093,7 +1093,7 @@ function FieldsEdit() {
                       <span id="step-Number">Steps</span>
                       <div>
                         <label>Title:</label>
-                        <input id="step-Title" type="text" placeholder="Title of Step"/>
+                        <input id="step-Title" type="text" placeholder="Title of Step" maxlength="50"/>
                         <label>Group:</label>
                         <select id="step-Plataform">
                         </select>
@@ -1104,7 +1104,7 @@ function FieldsEdit() {
                         <select id="step-Component">
                         </select>
                         <label>Description:</label>
-                        <textarea id="step-Description"></textarea>
+                        <textarea id="step-Description" maxlength="130"></textarea>
                       </div>
                     </div>
 
@@ -1574,7 +1574,7 @@ function FieldsEdit() {
                     object.next = next;
 
                     backJson.push(object);
-                }s
+                }
             }
             
             var modal = document.getElementById("modal-steps-div");
