@@ -13,18 +13,18 @@ ClientsViewer.prototype.constructor = ClientsViewer;
 
 ClientsViewer.prototype.load = function() {
     
-    var baseUrl = helper.getAPIUrl("nodes") + "/" + this.parentNode.userData.id + "/childrn";
+    var baseUrl = helper.getAPIUrl("nodes", {server : this.parentNode.userData.id});
     
     $.ajax({
         url : baseUrl,
         method : "GET",
         context: this
-    }).done(function(data) {
+    }).success(function(data) {
         
         this.NET_RADIOUS = (data.children.length - 1) * this.NET_RADIOUS;
         this.drawNodes(data.children);
         
-    }).fail(function(request, error) {
+    }).error(function(request, error) {
         
         window.console.log("Error: " + error);
         window.alert("Error, please check the console and inform on github");

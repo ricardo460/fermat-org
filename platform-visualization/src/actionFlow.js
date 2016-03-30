@@ -27,6 +27,8 @@ function ActionFlow(flow) {
             }
     };
 
+    this.stepsTest = objectsStep;
+
     this.flow = flow || [];
 
     this.action = false;
@@ -95,6 +97,29 @@ function ActionFlow(flow) {
 
         else if(indice === 1)
             self.showAllFlow();
+    };
+
+    this.drawEdit = function(initialX, initialY, initialZ, id) {
+
+        var title = self.createTitleBox(self.flow.name, self.flow.desc),
+            origin = window.helper.getOutOfScreenPoint(0),
+            target = new THREE.Vector3(initialX, initialY , initialZ);
+
+        title.userData = {
+                id: id,
+                onClick : onClick
+        };
+
+        objectsFlow.position.origin.push(origin);
+        objectsFlow.position.target.push(target);
+
+        title.position.copy(origin);
+
+        objectsFlow.mesh.push(title);
+
+        window.scene.add(title);
+
+        self.showAllFlow();
     };
 
     /**
@@ -178,6 +203,7 @@ function ActionFlow(flow) {
                 for(i = 0; i < childCount; i++) {
 
                     child = getStep(root.next[i].id);
+
                     isLoop = (typeof child.drawn !== 'undefined');
 
 
@@ -283,11 +309,6 @@ function ActionFlow(flow) {
         window.tileManager.letAlone();
         animateFlows('steps', 'origin', false, 3000);
     };
-
-    this.deleteStepEdit = function(callback) {
-
-        animateFlows('steps', 'origin', false, 1000);
-    }
 
     //Private methods
 
@@ -587,6 +608,6 @@ function ActionFlow(flow) {
                 (element.platfrm || element.suprlay) + '/' + element.layer + '/' + element.name
             );
         }
-    };
+    }
 
 }

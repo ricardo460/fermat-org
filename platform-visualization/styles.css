@@ -39,6 +39,21 @@ button:active {
     z-index: 10;
 }
 
+#welcome, #navigation, #zoom, #slide, #return {
+    position: relative; 
+    z-index: 10;  
+    font: 15px arial; 
+    font-weight: bold; 
+    border-radius: 20px;   
+    color: #909090;
+    display: block;
+    margin: auto;
+    margin-top: 0px;
+    margin-bottom: -35px;
+    display: none;
+    opacity: 0;
+}
+
 #login, #logout {
     color: rgba(127,127,127,1);
     background: transparent;
@@ -67,6 +82,7 @@ button:active {
     right : 10px;
     z-index: 10;
 }
+
 #containerLogin{
     position: fixed;
     z-index: 1;
@@ -694,6 +710,355 @@ END
     
 }
 
+/**
+* END
+*/
+
+/**     START
+* @author Daril Rodriguez.
+* CSS FOR WORKFLOW HEADER FIELDS.
+*/
+
+#workflow-header {
+    
+    top: 0.5%;
+    position: relative;
+    width: 100%;
+    height: 5%;
+
+    display:box;
+    box-pack:center;
+    box-align:center;
+    
+    display:-moz-box;
+    -moz-box-pack:center;
+    -moz-box-align:center;
+
+    display:-webkit-box;
+    -webkit-box-pack:center;
+    -webkit-box-align:center;
+}
+
+#workflow-header label {
+    font-size: 1.5vmax;
+    font-family: sans-serif;
+}
+
+/**
+* END
+*/
+
+
+/**     START
+* @author Daril Rodriguez.
+* CSS FOR WORKFLOW MODAL STEPS.
+*/
+
+#modal-steps {
+    z-index: 12;
+    margin: auto;
+    width: 65%;
+    height: 60%;
+    padding: 2px;
+    background: #00cdad;
+    font-family: uppercase;
+}
+
+#modal-steps-div[data-state="show"] {
+    display: block;
+}
+
+#modal-steps-div[data-state="hidden"] {
+    display: none;
+}
+
+#modal-steps-div {
+    z-index: 12;
+    width: 100%;
+    height: 100%;
+    border: 0px;
+    position: absolute;
+}
+
+/*  LEFT  */
+
+#modal-steps #left {
+  float:left;
+  border: 0;
+  width: 50%; 
+  height: 100%;
+  display: inline-block;
+}
+
+#modal-steps #left #inputs{
+  border: 0;
+  float: left;
+  width: 100%;
+  height: 70%;
+  overflow: hidden;
+  display: inline-block;
+}
+
+#modal-steps #left #inputs div{
+  border: 0;
+  float:left;
+  width: 100%; 
+  height: 100%;
+  margin-left: 5px;
+  display: inline-block;
+}
+
+#modal-steps #left #step-Number {
+  width: 100%;
+  float: left;
+  font-size: 1.5vmax;
+  font-family: sans-serif;
+}
+
+#modal-steps #left label {
+  height: 8%;
+  width: 26%;
+  float: left;
+  margin-top: 2px;
+  font-size: 1.4vmax;
+  font-family: sans-serif;
+}
+
+#modal-steps #left #label-compo {
+
+  font-size: 1.3vmax;
+
+}
+
+
+#modal-steps #left input {
+  border: 0;
+  padding: 0;
+  height: 8%;
+  width: 71%;
+  float: left;
+  margin-top: 2px;
+  font-size: 1.5vmax;
+  font-family: sans-serif;
+}
+
+#modal-steps #left select {
+  height: 8%;
+  width: 71%;
+  float: left;
+  margin-top: 2px;
+  font-size: 1.5vmax;
+  font-family: sans-serif;
+}
+
+#modal-steps #left textarea {   
+    border: 0;
+    width: 98%;
+    float: left;
+    height: 100%;
+    resize: none;
+    max-width: 95%;
+    min-width: 95%;
+    max-height: 48%;
+    min-height: 48%;
+    background: #fff;
+    margin-left: 2px;
+    font-size: 1.5vmax;
+    font-family: sans-serif;
+}
+
+#modal-steps #left #next {
+  border: 0;
+  float:left;
+  width: 100%; 
+  height: 30%;
+  overflow: hidden;
+  display: inline-block;
+}
+
+#modal-steps #left #next #blank {
+  border: 0;
+  width: 100%; 
+  height: 20%;
+  float: left;
+  display: inline-block;
+}
+
+#modal-steps #left #next #blank legend {
+
+  font-family: sans-serif;
+  font-size: 1.5vmax;
+}
+
+#modal-steps #left #next #inputs {
+  border: 0;
+  width: 100%; 
+  height: 55%;
+  padding: 0;
+  float: left;
+  display: inline-block;
+}
+
+#modal-steps #left #next #inputs select {
+  height: 8%;
+  width: 71%;
+  float: left;
+  margin-top: 2px;
+  font-size: 1.5vmax;
+  font-family: sans-serif;
+}
+
+#modal-steps #left #next #inputs fieldset {
+  border: 0;
+  padding: 0;
+}
+
+#modal-steps #left #next #selector-steps {
+  border: 0;
+  width: 100%; 
+  height: 20%;
+  float: left;
+  display: inline-block;
+}
+
+#modal-steps #left #next #selector-steps #graphic-selector {
+  width: 97%;
+  height: 30%;
+  float: left;
+  display: blocK;
+  background: #777;
+}
+
+#modal-steps #left #next #selector-steps #graphic-selector div {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  float:left;
+  position: relative;
+  display: inline-block;
+  background: #777;
+}
+
+#modal-steps #left #next #selector-steps #graphic-selector div:hover {
+  cursor: pointer;
+  background: #666;
+}
+
+#modal-steps #left #next #selector-steps #graphic-selector .on {
+  background: #222;
+}
+
+#modal-steps #left #next #selector-steps #graphic-selector .off {
+  background: #666;
+}
+
+#modal-steps #left #next #selector-steps #input-selector {
+  width: 97%;
+  height: 100%;
+  display: blocK;
+}
+
+#modal-steps #left #next #selector-steps #input-selector button {
+  border: 0;
+  margin: 0;
+  float: left;
+  padding: 0;
+  width: 12.5%;
+  height: 100%;
+  display: inline-blocK;
+  background: rgba(0, 0, 0, 0);
+}
+
+#modal-steps #left #next #selector-steps #input-selector button:hover {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+#modal-steps #left #next #selector-steps #input-selector center {
+  border: 0;
+  width: 50%;
+  height: 100%;
+  float: left;
+}
+
+/*  RIGHT  */
+
+#modal-steps #right {
+  border: 0;
+  width: 50%;
+  height: 100%;
+  display: inline-block;
+}
+
+#modal-steps #right #preview {
+  border: 0;
+  width: 100%;
+  height: 23%;
+  overflow: hidden;
+  display: inline-block;
+  float: left;
+}
+
+#modal-steps #right #preview label {
+  font-family: sans-serif;
+  font-size: 1.5vmax;
+}
+
+#step-Preview {
+  width: 100%;
+  height: 82%;
+  background: #fff;
+}
+
+#modal-steps #right #list {
+  border: 0;
+  width: 100%;
+  height: 69%;
+  display: inline-block;
+  float: left;
+}
+
+#step-List {
+  border: 0px;
+  width: 100%;
+  margin-top: 1%;
+  height: 98.3%;
+  float: right;
+  background: #daf0e9;
+  font-family: sans-serif;
+}
+
+#modal-steps #right #buttons {
+  border: 0;
+  width: 100%;
+  height: 8%;
+  overflow: hidden;
+  display: inline-block;
+  float: left;
+}
+    
+#modal-steps #right #buttons button {
+    border: 0;
+    margin: 0;
+    width: 24%;
+    padding: 0;
+    float: left;
+    height: 100%;
+    margin-left: 1%;
+    margin-top: .8%;
+    cursor: pointer;
+    font-size: 12px;
+    padding-top: 2px;
+    font-size: 1.05vmax;
+    padding-bottom: 2px;
+    background: #daf0e9;
+    font-family: sans-serif;
+}
+
+#modal-steps #right #buttons button:hover {
+    background-color: rgba(127,127,127,0.75)
+}
+    
 /**
 * END
 */

@@ -6,6 +6,18 @@ function Session(){
 	var usr;
     var code;
     var self = this;
+    var clientID = "d00a7c7d4489139327e4";
+    switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
+        case "dev":
+            clientID = 'd00a7c7d4489139327e4';
+            break;
+        case "lab":
+            clientID = 'f98fdd310fe6284f5416';
+            break;
+        case "3d":
+            clientID = '1d65cbed13dbd026bec8';
+            break;
+    }
 
 	this.getIsLogin = function(){
 		return isLogin;
@@ -30,14 +42,14 @@ function Session(){
             else{
 
                 window.helper.hide('logout', 2000, true);
-                window.helper.hide('containerLogin', 2000, true);               
+                window.helper.hide('containerLogin', 2000, true);
             }
         }
         else{
 
             if(display)
                 window.helper.show('login', 2000);
-            else   
+            else
                 window.helper.hide('login', 2000, true);
         }
 
@@ -47,32 +59,14 @@ function Session(){
      * @author Ricardo Delgado
      */
     this.useTestData = function(){
-
-        isLogin = true;
-
-        usr = { 
-            axs_key: "56d9946df87ede9a5046211a",
-            usrnm: "ricardo460",
-            upd_at: "56c72bdf7d20701f414de5e3",
-            name: "Ricardo Delgado",
-            github_tkn: "31a34414535ee9f59b1dfcc1d08bb9b565bf3eae",
-            email: "ricardodelgado460@hotmail.com",
-            avatar_url: "https://avatars.githubusercontent.com/u/13169767?v=3",
-            _id: "56c72bdf7d20701f414de5e4"
-        };
-
-        $("#logout").fadeIn(2000);
-        $("#login").fadeOut(2000);
-
-        drawUser(usr); 
-        
+ 
     };
 
 	/**
 	 * Login with github and gets the authorization code
 	 */
 	this.getAuthCode = function(){                                                                        //CLientID: c25e3b3b1eb9aa35c773 - Web
-		window.location.href = 'https://github.com/login/oauth/authorize?client_id=d00a7c7d4489139327e4'; //ClientID: f079f2a8fa65313179d5 - localhost
+		window.location.href = helper.buildURL("https://github.com/login/oauth/authorize", {client_id : clientID}); //ClientID: f079f2a8fa65313179d5 - localhost
 	};
 
 	/**
@@ -80,7 +74,7 @@ function Session(){
 	 */
 	this.logout = function() {
 
-		var url_logout = window.helper.getAPIUrl("logout") + "&axs_key=" + axs_key + "&api_key=" + api_key;
+		var url_logout = window.helper.getAPIUrl("logout", {axs_key : axs_key, api_key : api_key});
 		console.log("url: " + url_logout);
 		$.ajax({
 			url : url_logout,
@@ -115,9 +109,10 @@ function Session(){
 	 * Logged to the user and returns the token
 	 */
 	this.login = function() {
-		var url = window.helper.getAPIUrl("login") + "&code=" + code + "&api_key=" + api_key;
+		var url = window.helper.getAPIUrl("login", { code : code, api_key : api_key});
 		console.log("url: " + url);
-		
+        var cookie = getToken();
+
 		$.ajax({
 			url : url,
 			type : "GET",
@@ -127,8 +122,10 @@ function Session(){
 		}).success(function(tkn) {
 			usr = tkn._usr_id;
 			axs_key = tkn.axs_key;
+            window.console.dir(tkn);
+            
 			if(usr !== undefined) {
-				
+
 				isLogin = true;
 
                 usr.axs_key = axs_key;
@@ -139,8 +136,26 @@ function Session(){
      			$("#logout").fadeIn(2000);
 
      			drawUser(usr);
+                console.log(tkn);
+                setToken(tkn);
                 
-			} 
+                
+            }
+            else if(cookie._id !== "") {
+                usr = cookie;
+                axs_key = usr.axs_key;
+                    
+                isLogin = true;
+
+                usr.axs_key = axs_key;
+
+                console.log("Logueado Completamente: " + usr.name);
+
+                $("#login").fadeOut(2000);
+                $("#logout").fadeIn(2000);
+
+                drawUser(usr);
+			}
             else {
 				console.log("Error:", tkn);
                 window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
@@ -247,7 +262,7 @@ function Session(){
 
             image.crossOrigin = "anonymous";
             image.src = actual.src;
-        } 
+        }
         else {
             if(data.length !== 0) {
                 if(data[0].text)
@@ -256,7 +271,7 @@ function Session(){
                     drawPictureUser(data, ctx, texture);
             }
         }
-	} 
+	}
 
 	function drawTextUser(data, ctx, texture){
 
@@ -280,13 +295,61 @@ function Session(){
 
         ctx.fillStyle = "#FFFFFF";
 
-        if(data.length !== 0){ 
+        if(data.length !== 0){
 
           if(data[0].text)
-            drawTextUser(data, ctx, texture); 
-          else 
+            drawTextUser(data, ctx, texture);
+          else
             drawPictureUser(data, ctx, texture);
         }
 	}
+
+    function setToken(tkn) {
+        setCookie("v", tkn.__v, 7);
+        setCookie("id", tkn._id, 7);
+        setCookie("avatar", tkn.avatar_url, 7);
+        setCookie("key", tkn.axs_key, 7);
+        setCookie("email", tkn.email, 7);
+        setCookie("github", tkn.github_tkn, 7);
+        setCookie("name", tkn.name, 7);
+        setCookie("update", tkn.upd_at, 7);
+        setCookie("usrnm", tkn.usrnm, 7);
+    }
+
+    function getToken() {
+        var tkn = {
+            __v : getCookie("v"),
+            _id : getCookie("id"),
+            avatar_url : getCookie("avatar"),
+            axs_key : getCookie("key"),
+            email : getCookie("email"),
+            github_tkn : getCookie("github"),
+            name : getCookie("name"),
+            upd_at : getCookie("update"),
+            usrnm : getCookie("usrnm")
+        };
+
+        return tkn;
+    }
+
+    function setCookie(name, value, days) {
+        var d = new Date();
+        d.setTime(d.getTime() + (days*24*60*60*1000));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = name + "=" + value + "; " + expires;
+    }
+
+    function getCookie(name) {
+        var cname = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while(c.charAt(0) === ' ') 
+                c = c.substring(1);
+            if(c.indexOf(cname) === 0)
+                return c.substring(cname.length, c.length);
+        }
+        return "";
+    }
 
 }
