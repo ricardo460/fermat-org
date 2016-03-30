@@ -953,12 +953,12 @@ function WorkFlowEdit() {
 
         new TWEEN.Tween(mesh.position)
             .to({x : x, y : y, z : z}, _duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
+            .easing(TWEEN.Easing.Cubic.Out)
             .start();
 
         new TWEEN.Tween(mesh.rotation)
             .to({x: rx, y: ry, z: rz}, _duration + 500)
-            .easing(TWEEN.Easing.Exponential.InOut)
+            .easing(TWEEN.Easing.Cubic.Out)
             .onComplete(function () {
                     if(typeof(callback) === 'function')
                         callback();   

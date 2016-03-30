@@ -88,6 +88,7 @@ function ActionFlow(flow) {
 
             new TWEEN.Tween(this)
                 .to({}, 8000)
+                .easing(TWEEN.Easing.Cubic.Out)
                 .onUpdate(window.render)
                 .start();
 
@@ -348,12 +349,12 @@ function ActionFlow(flow) {
 
                 new TWEEN.Tween(tile.position)
                 .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 7000)
-                .easing(TWEEN.Easing.Exponential.InOut)
+                .easing(TWEEN.Easing.Cubic.Out)
                 .start();
 
                 new TWEEN.Tween(tile.rotation)
                 .to({x: 0, y: 0, z: 0}, 7000)
-                .easing(TWEEN.Easing.Exponential.InOut)
+                .easing(TWEEN.Easing.Cubic.Out)
                 .start();
             }
 
@@ -561,7 +562,7 @@ function ActionFlow(flow) {
                     y: target.y,
                     z: target.z
                 }, duration)
-                .easing(TWEEN.Easing.Exponential.InOut)
+                .easing(TWEEN.Easing.Cubic.Out)
                 .onComplete(function() {
                     if(!visible)
                         window.scene.remove(object);    
