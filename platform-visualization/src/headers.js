@@ -729,30 +729,19 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
         for(slayer in superLayers) {
             if(window.superLayers.hasOwnProperty(slayer) && slayer !== 'size') {
-
                 headerData = window.superLayers[slayer];
-
-                row = superLayerPosition[headerData.index];
-
+                row = window.platforms.size() + headerData.index;
                 object = createHeader(slayer, width, height, row);
-
                 object.position.copy(window.viewManager.translateToSection('table', window.helper.getOutOfScreenPoint(0)));
-
                 object.name = slayer;
-
                 scene.add(object);
                 objects.push(object);
-
                 object = new THREE.Object3D();
-
                 object.position.x = -(((groupsQtty + 1) * width / 2) + window.TILE_DIMENSION.width);
-                object.position.y = -(row * window.TILE_DIMENSION.height) - (superLayerMaxHeight * window.TILE_DIMENSION.height / 2) + (layersQtty * window.TILE_DIMENSION.height / 2);
+                object.position.y = (-(superLayerPosition[headerData.index]) - (superLayerMaxHeight / 2) + (layersQtty / 2)) * window.TILE_DIMENSION.height;
                 object.name = slayer;
-
                 object.position.copy(window.viewManager.translateToSection('table', object.position));
-
                 positions.table.push(object);
-
                 createChildren(slayer, headerData.dependsOn);
             }
         }
