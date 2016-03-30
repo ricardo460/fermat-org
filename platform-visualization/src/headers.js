@@ -730,7 +730,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 headerData = window.superLayers[slayer];
 
-                row = window.platforms.size() + headerData.index;
+                row = superLayerPosition[headerData.index];
 
                 object = createHeader(slayer, width, height, row);
 
