@@ -59,14 +59,15 @@ function Session(){
      * @author Ricardo Delgado
      */
     this.useTestData = function(){
- 
     };
 
 	/**
 	 * Login with github and gets the authorization code
 	 */
 	this.getAuthCode = function(){                                                                        //CLientID: c25e3b3b1eb9aa35c773 - Web
-		window.location.href = helper.buildURL("https://github.com/login/oauth/authorize", {client_id : clientID}); //ClientID: f079f2a8fa65313179d5 - localhost
+		var url = helper.buildURL("https://github.com/login/oauth/authorize", {client_id : clientID }); //ClientID: f079f2a8fa65313179d5 - localhost
+        url += "&redirect_uri=" + window.location.href;
+        window.location.href = url;
 	};
 
 	/**
@@ -93,76 +94,85 @@ function Session(){
 				}
             }
 		});
+        deleteToken();
 	};
 
     this.init = function(){
 
-        code = window.location.toString().replace(/.+code=/, '');
+        var cookie = getToken();
 
-        if((code.indexOf("/") < 0))
-            self.login();
-        else
-            window.getData();
+        if(cookie._id !== "") {
+            self.login(true,cookie);
+        }
+        else {
+            code = window.location.search.replace(/.+code=/, '');
+
+            if((code !== "" && code.indexOf("/") < 0))
+                self.login(false);
+            else
+                window.getData();
+        }
+        
     };
 
 	/**
 	 * Logged to the user and returns the token
 	 */
-	this.login = function() {
-		var url = window.helper.getAPIUrl("login", { code : code, api_key : api_key});
-		console.log("url: " + url);
-        var cookie = getToken();
+	this.login = function(option, cookie) {
 
-		$.ajax({
-			url : url,
-			type : "GET",
-			headers : {
-				'Accept' : 'application/json'
-			}
-		}).success(function(tkn) {
-			usr = tkn._usr_id;
-			axs_key = tkn.axs_key;
-            window.console.dir(tkn);
+        if(!option) {
             
-			if(usr !== undefined) {
+    		var url = window.helper.getAPIUrl("login", { code : code, api_key : api_key });
+    		console.log("url: " + url);
 
-				isLogin = true;
-
-                usr.axs_key = axs_key;
-
-				console.log("Logueado Completamente: " + usr.name);
-
-     			$("#login").fadeOut(2000);
-     			$("#logout").fadeIn(2000);
-
-     			drawUser(usr);
-                console.log(tkn);
-                setToken(tkn);
+    		$.ajax({
+    			url : url,
+    			type : "GET",
+    			headers : {
+    				'Accept' : 'application/json'
+    			}
+    		}).success(function(tkn) {
+    			usr = tkn._usr_id;
+    			axs_key = tkn.axs_key;
+                window.console.dir(tkn);
                 
-                
-            }
-            else if(cookie._id !== "") {
-                usr = cookie;
-                axs_key = usr.axs_key;
+    			if(usr !== undefined) {
+    				isLogin = true;
+
+                    usr.axs_key = axs_key;
+
+    				console.log("Logueado Completamente: " + usr.name);
+
+         			$("#login").fadeOut(2000);
+         			$("#logout").fadeIn(2000);
+
+         			drawUser(usr);
+                    setToken(tkn);   
+                }
+                else {
+    				console.log("Error:", tkn);
+                    window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
+                }
+            });
+        }
+        else {
+            usr = cookie._usr_id;
+            axs_key = usr.axs_key;
                     
-                isLogin = true;
+            isLogin = true;
 
-                usr.axs_key = axs_key;
+            usr.axs_key = axs_key;
 
-                console.log("Logueado Completamente: " + usr.name);
+            console.log("Logueado Completamente: " + usr.name);
 
-                $("#login").fadeOut(2000);
-                $("#logout").fadeIn(2000);
+            $("#login").fadeOut(2000);
+            $("#logout").fadeIn(2000);
 
-                drawUser(usr);
-			}
-            else {
-				console.log("Error:", tkn);
-                window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
-            }
+            drawUser(usr);
+        }
 
-            window.getData();
-		});
+        window.getData();
+
 	};
 
 	function drawUser(user){
@@ -305,28 +315,45 @@ function Session(){
 	}
 
     function setToken(tkn) {
-        setCookie("v", tkn.__v, 7);
         setCookie("id", tkn._id, 7);
-        setCookie("avatar", tkn.avatar_url, 7);
         setCookie("key", tkn.axs_key, 7);
-        setCookie("email", tkn.email, 7);
-        setCookie("github", tkn.github_tkn, 7);
-        setCookie("name", tkn.name, 7);
         setCookie("update", tkn.upd_at, 7);
-        setCookie("usrnm", tkn.usrnm, 7);
+        setCookie("v", tkn._usr_id.__v, 7);
+        setCookie("avatar", tkn._usr_id.avatar_url, 7);
+        setCookie("email", tkn._usr_id.email, 7);
+        setCookie("github", tkn._usr_id.github_tkn, 7);
+        setCookie("name", tkn._usr_id.name, 7);
+        setCookie("usrnm", tkn._usr_id.usrnm, 7);
+    }
+
+    function deleteToken() {
+        deleteCookie("id");
+        deleteCookie("key");
+        deleteCookie("update");
+        deleteCookie("v");
+        deleteCookie("avatar");
+        deleteCookie("email");
+        deleteCookie("github");
+        deleteCookie("name");
+        deleteCookie("usrnm");
     }
 
     function getToken() {
         var tkn = {
-            __v : getCookie("v"),
             _id : getCookie("id"),
-            avatar_url : getCookie("avatar"),
+            _usr_id : {
+                __v : getCookie("v"),
+                _id : getCookie("id"),
+                avatar_url : getCookie("avatar"),
+                axs_key : getCookie("key"),
+                email : getCookie("email"),
+                github_tkn : getCookie("github"),
+                name : getCookie("name"),
+                upd_at : getCookie("update"),
+                usrnm : getCookie("usrnm")
+            },
             axs_key : getCookie("key"),
-            email : getCookie("email"),
-            github_tkn : getCookie("github"),
-            name : getCookie("name"),
-            upd_at : getCookie("update"),
-            usrnm : getCookie("usrnm")
+            upd_at : getCookie("update")
         };
 
         return tkn;
@@ -352,4 +379,8 @@ function Session(){
         return "";
     }
 
+    function deleteCookie(name) {
+        var expires = "expires=Thu, 20 Dec 2012 00:00:00 UTC";
+        document.cookie = name + "=; " + expires;
+    }
 }
