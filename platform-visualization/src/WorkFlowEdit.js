@@ -86,7 +86,7 @@ function WorkFlowEdit() {
 
                     validateLock(id, function(){ 
 
-                        if(window.confirm("Really remove this component?"))           
+                        if(window.confirm("Are you sure you want to remove this process?"))           
                             deleteWorkFlow(id);
                     });                
                 };
