@@ -137,7 +137,7 @@ exports.insOrUpdComp = function (_platfrm_id, _suprlay_id, _layer_id, name, type
 					return callback(null, res_comp);
 				}
 			} else {
-				var comp = new CompMdl(_platfrm_id, _suprlay_id, _layer_id, name, type, description, difficulty, code_level, repo_dir, scrnshts);
+				var comp = new CompMdl(_platfrm_id, _suprlay_id, _layer_id, name.toLowerCase(), type, description, difficulty, code_level, repo_dir, scrnshts);
 				compSrv.insertComp(comp, function (err_ins, res_ins) {
 					if (err_ins) {
 						return callback(err_ins, null);

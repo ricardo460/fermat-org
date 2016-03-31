@@ -183,18 +183,28 @@ var setLines = function (path, lines, callback) {
  * @apiParam {Object[]} body An array of javascript objects that represents the servers of the network
  */
 router.post('/servers', function (req, res, next) {
-	var d = new Date();
-	var n = d.getTime();
-	var path_out = path.join(__dirname, 'servers_' + n + '.json');
-	setLines(path_out, req.body, (err) => {
-		if (err) {
-			res.status(200).send(err);
+	try {
+		if (req.headers['content-type'] != 'application/json') {
+			throw new Error('Invalid content-type');
 		} else {
-			res.status(201).send({
-				result: 'check your json file ' + path_out
+			var d = new Date();
+			var n = d.getTime();
+			var path_out = path.join(__dirname, 'servers_' + n + '.json');
+			var str = JSON.stringify(req.body);
+			var json = JSON.parse(str);
+			setLines(path_out, str, (err) => {
+				if (err) {
+					res.status(200).send(err);
+				} else {
+					res.status(201).send({
+						result: 'check your json file ' + path_out
+					});
+				}
 			});
 		}
-	});
+	} catch (err) {
+		next(err);
+	}
 });
 /**
  * @api {post} /v1/net/nodes create a wave
@@ -205,18 +215,28 @@ router.post('/servers', function (req, res, next) {
  * @apiParam {Object[]} body An array of javascript objects that represents the nodes connected to a server of the network
  */
 router.post('/nodes', function (req, res, next) {
-	var d = new Date();
-	var n = d.getTime();
-	var path_out = path.join(__dirname, 'nodes_' + n + '.json');
-	setLines(path_out, req.body, (err) => {
-		if (err) {
-			res.status(200).send(err);
+	try {
+		if (req.headers['content-type'] != 'application/json') {
+			throw new Error('Invalid content-type');
 		} else {
-			res.status(201).send({
-				result: 'check your json file ' + path_out
+			var d = new Date();
+			var n = d.getTime();
+			var path_out = path.join(__dirname, 'nodes_' + n + '.json');
+			var str = JSON.stringify(req.body);
+			var json = JSON.parse(str);
+			setLines(path_out, str, (err) => {
+				if (err) {
+					res.status(200).send(err);
+				} else {
+					res.status(201).send({
+						result: 'check your json file ' + path_out
+					});
+				}
 			});
 		}
-	});
+	} catch (err) {
+		next(err);
+	}
 });
 //
 module.exports = router;
