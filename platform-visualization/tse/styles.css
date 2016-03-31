@@ -1,38 +1,9 @@
-body {
-    font-family: sans-serif;
-}
-.nav {
-    max-width: 800px;
-    margin: auto;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-}
-.nav-actions {
-    align-self: center;
-}
-.nav-actions button {
-    padding: 5px;
-}
-#type {
-    padding: 5px;
-}
-.container {
-    max-width: 650px;
-    margin: auto;
-}
 .hidden {
     display: none;
 }
-.tse-form > label {
-    float: left;
-    width: 100px;
-    text-align: right;
-    margin-right: 15px;
-    padding-top: 5px;
+.actions {
+    padding-top: 10px;
 }
-.tse-form > input, .tse-form > select {
-    padding: 5px;
-    width: 470px;
-    margin-bottom: 10px;
+.actions * {
+    padding-right: 5px;
 }
