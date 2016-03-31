@@ -1350,7 +1350,7 @@ function FieldsEdit() {
             };
             
             modal.changeStep = function(Step) {
-
+                
                 var nTitle       = document.getElementById("step-Title");
                 var list         = document.getElementById("step-List");
                 var nStep        = document.getElementById("step-Number");
@@ -1359,102 +1359,136 @@ function FieldsEdit() {
                 var nComponent   = document.getElementById("step-Component");
                 var nDescription = document.getElementById("step-Description");
                 var nTypeCall    = document.getElementById("step-TypeCall");
-                var step         = JSON.parse(JSON.stringify(list.valueJson[Step]));
                 var nextSelect   = document.getElementById("next-step-Select");
                 var gSelect      = document.getElementById("graphic-selector");
                 
-                nLayer.step       = Step;
-                nPlataform.step   = Step;
-                nComponent.step   = Step;
-                nDescription.step = Step;
-                nTitle.step       = Step;
-                nTypeCall.step    = Step;
-                nTypeCall.step    = Step;
-                nextSelect.step   = Step;
-                gSelect.step      = Step;
-                
+                if(Step != -1) {
+                    
+                    var step = JSON.parse(JSON.stringify(list.valueJson[Step]));
+                    
+                    nTitle.disabled = false;
+                    nStep.disabled = false;
+                    nLayer.disabled = false;
+                    nPlataform.disabled = false;
+                    nDescription.disabled = false;
+                    nTypeCall.disabled = false;
+                    nComponent.disabled = false;
+                    nextSelect.disabled = false;
+                    gSelect.disabled = false;
 
-                nTitle.innerHTML = "Step " + (step.id + 1) + ":";
-                
-                //----------Type Call-----------
-                
-                nTypeCall.innerHTML = "";
-                
-                //------------List--------------
-                
-                list.update();
-                list.value = Step;
-                
-                //----------Plataform-----------
-                
-                var optgroup = "<optgroup label = Platform>",
-                option = "";
+                    nLayer.step       = Step;
+                    nPlataform.step   = Step;
+                    nComponent.step   = Step;
+                    nDescription.step = Step;
+                    nTitle.step       = Step;
+                    nTypeCall.step    = Step;
+                    nTypeCall.step    = Step;
+                    nextSelect.step   = Step;
+                    gSelect.step      = Step;
 
-                for(var i in window.platforms){ 
-                    if(i != "size"){
-                        option += "<option value = "+i+" >"+i+"</option>";
+
+                    nTitle.innerHTML = "Step " + (step.id + 1) + ":";
+
+                    //----------Type Call-----------
+
+                    nTypeCall.innerHTML = "";
+
+                    //------------List--------------
+
+                    list.update();
+                    list.value = Step;
+
+                    //----------Plataform-----------
+
+                    var optgroup = "<optgroup label = Platform>",
+                    option = "";
+
+                    for(var i in window.platforms){ 
+                        if(i != "size"){
+                            option += "<option value = "+i+" >"+i+"</option>";
+                        }
                     }
-                }
 
-                optgroup += option + "</optgroup>";
-                option = "";
-                optgroup += "<optgroup label = superLayer>";
+                    optgroup += option + "</optgroup>";
+                    option = "";
+                    optgroup += "<optgroup label = superLayer>";
 
-                for(var _i in window.superLayers){
-                    if(_i != "size"){
-                        option += "<option value = "+_i+" >"+_i+"</option>";
+                    for(var _i in window.superLayers){
+                        if(_i != "size"){
+                            option += "<option value = "+_i+" >"+_i+"</option>";
+                        }
                     }
-                }
 
-                optgroup += option + "</optgroup>";
-                
-                nPlataform.innerHTML = optgroup;
-                
-                if(step.platfrm || step.suprlay){
+                    optgroup += option + "</optgroup>";
 
-                    var group = step.platfrm || step.suprlay;
+                    nPlataform.innerHTML = optgroup;
 
-                    nPlataform.value = group;
-                    list.valueJson[nPlataform.step].platfrm = group;
+                    if(step.platfrm || step.suprlay){
+
+                        var group = step.platfrm || step.suprlay;
+
+                        nPlataform.value = group;
+                        list.valueJson[nPlataform.step].platfrm = group;
+                    } else {
+
+                        nPlataform.selectedIndex = 0;
+                        list.valueJson[nPlataform.step].platfrm = nPlataform.value;
+                    }
+                    
+                    //------------Layer-------------
+
+                    nLayer.update();
+
+                    if(step.layer){
+                        nLayer.value = step.layer;
+                        list.valueJson[nLayer.step].layer = step.layer;
+                    }
+                    else{
+                        nLayer.selectedIndex = 0;
+                        list.valueJson[nLayer.step].layer =  nLayer.value;
+                    }
+                    
+                    //-----------Component------------
+
+                    nComponent.update();
+
+                    if(step.name){
+                        nComponent.value = step.name;
+                        list.valueJson[nComponent.step].name = step.name;
+                    }
+                    else{
+                        nComponent.selectedIndex = 0;
+                        list.valueJson[nComponent.step].name = nComponent.value;
+                    }
+
+                    //------------Next--------------
+
+                    nextSelect.call = list.valueJson[nextSelect.step].next.length;
+                    nextSelect.update();
+
+                    //------------------------------
+
+                    nTitle.value = step.title;
+                    nStep.value = "Step " + step.id + ":";
+                    nDescription.value = step.desc;
+                    
                 } else {
-
-                    nPlataform.selectedIndex = 0;
-                    list.valueJson[nPlataform.step].platfrm = nPlataform.value;
+                    nTitle.disabled = true;
+                    nStep.disabled = true;
+                    nLayer.disabled = true;
+                    nPlataform.disabled = true;
+                    nDescription.disabled = true;
+                    nTypeCall.disabled = true;
+                    nComponent.disabled = true;
+                    nextSelect.disabled = true;
+                    gSelect.disabled = true;
+                    
+                    list.innerHTML = "";
+                    
+                    var canvas = document.getElementById('step-Preview');
+                    var ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
                 }
-                
-                nLayer.update();
-
-                if(step.layer){
-                    nLayer.value = step.layer;
-                    list.valueJson[nLayer.step].layer = step.layer;
-                }
-                else{
-                    nLayer.selectedIndex = 0;
-                    list.valueJson[nLayer.step].layer =  nLayer.value;
-                }
-                
-                nComponent.update();
-
-                if(step.name){
-                    nComponent.value = step.name;
-                    list.valueJson[nComponent.step].name = step.name;
-                }
-                else{
-                    nComponent.selectedIndex = 0;
-                    list.valueJson[nComponent.step].name = nComponent.value;
-                }
-                
-                //------------Next--------------
-                
-                nextSelect.call = list.valueJson[nextSelect.step].next.length;
-                nextSelect.update();
-                
-                //------------------------------
-                
-                nTitle.value = step.title;
-                nStep.value = "Step " + step.id + ":";
-                nDescription.value = step.desc;
-
             };
             
             modal.newStep = function() {
@@ -1475,8 +1509,14 @@ function FieldsEdit() {
                         
             window.onresize = function() {
                 var m = document.getElementById("modal-steps");
+                var div = document.getElementById("modal-steps-div");
                 var w = (m.offsetHeight*1.6) + "px";
                 m.style.width = w;
+                
+                var m_y = (window.innerHeight/2) - (m.offsetHeight/2);
+                
+                div.style.top = m_y + "px";
+                
             };
             
             var inputOld = document.getElementById("input-selector-old");
@@ -1616,12 +1656,13 @@ function FieldsEdit() {
                     list.value = list.valueJson.length - 1;
                 else
                     list.value = value;
+                
+                modal.changeStep(list.value);
             } else {
                 list.valueJson = [];
-                list.value = modal.newStep();
+                modal.changeStep(-1);
             }
             
-            modal.changeStep(list.value);
             
         };
         
@@ -1642,10 +1683,12 @@ function FieldsEdit() {
 
         document.getElementById("step-Cancel").onclick = function() {
 
+            var list = document.getElementById("step-List");
             var modal = document.getElementById("modal-steps-div");
+            
             modal.dataset.state = "hidden";
 
-            if(backJson){
+            if( list.valueJson.length > 0 && backJson){
                 var list = document.getElementById("step-List");
                 list.valueJson = backJson.slice();
                 list.update();
@@ -1674,6 +1717,7 @@ function FieldsEdit() {
         window.onresize();
         var modal = document.getElementById("modal-steps-div");
         modal.changeStep(modal.newStep());
+        document.getElementById("step-RemoveStep").onmouseup();
     }
 
     function workflowPreview(_step) {
