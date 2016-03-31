@@ -3,23 +3,42 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="styles.css" />
+    <link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="bootstrap-theme.min.css" />
     <link type="image/png" rel="icon" href="../images/favicon.png" />
     <script src="../common/jquery-2.1.4.min.js"></script>
     <title>Fermat Table Structure Edit</title>
 </head>
 
 <body>
-    <div class="nav">
-        <h2>Fermat TSE</h2>
-        <div class="nav-actions">
-            <select id="type">
-                <option value="superlayer">Superlayer</option>
-                <option value="layer">Layer</option>
-                <option value="platform">Platform</option>
-            </select>
-            <button id="add">Add</button>
+    <div class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">Fermat TSE</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="main">
+                <div class="container-fluid">
+                    <ul class="nav navbar-nav navbar-right actions">
+                        <li>
+                            <select id="type">
+                                <option value="superlayer">Superlayer</option>
+                                <option value="layer">Layer</option>
+                                <option value="platform">Platform</option>
+                            </select>
+                        </li>
+                        <li>
+                            <button id="add">Add</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -34,47 +53,60 @@
 
     <div class="container">
         <form id="spForm" class="tse-form hidden">
-            <label for="spCode">Code</label>
-            <input id="spCode" />
-
-            <label for="spName">Name</label>
-            <input id="spName" />
-
-            <label for="spLogo">Logo</label>
-            <input id="spLogo" />
-
-            <label for="spOrder">Order</label>
-            <input id="spOrder" />
-
+            <div class="form-group">
+                <label for="spCode">Code</label>
+                <input class="form-control" id="spCode" />
+            </div>
+            <div class="form-group">
+                <label for="spName">Name</label>
+                <input class="form-control" id="spName" />
+            </div>
+            <div class="form-group">
+                <label for="spOrder">Left/Above of:</label>
+                <select class="form-control" id="spOrder">
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="spDeps">Dependencies:</label>
+                <select multiple class="form-control" id="spDeps">
+                </select>
+            </div>
             <div class="buttons">
                 <button>Submit</button>
-                <button id="cancel">Cancel</button>
+                <button type="button" id="cancel">Cancel</button>
             </div>
         </form>
 
         <form id="layerForm" class="tse-form hidden">
-            <label>Name</label>
-            <input id="layerName" />
-
-            <label>Lang</label>
-            <select id="layerLang">
-                <option value="java">Java</option>
-                <option value="java-android">Java (Android)</option>
-            </select>
-
-            <label>Superlayer</label>
-            <input id="layerSuperLayer" />
-
-            <label>Order</label>
-            <input id="layerOrder" />
-
+            <div class="form-group">
+                <label>Name:</label>
+                <input class="form-control" id="layerName" />
+            </div>
+            <div class="form-group">
+                <label>Lang:</label>
+                <select class="form-control" id="layerLang">
+                    <option value="java">Java</option>
+                    <option value="java-android">Java (Android)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Superlayer:</label>
+                <select class="form-control" id="layerSuperLayer">
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Left/Above of:</label>
+                <select class="form-control" id="layerOrder">
+                </select>
+            </div>
             <div class="buttons">
                 <button>Submit</button>
-                <button id="cancel">Cancel</button>
+                <button type="button" id="cancel">Cancel</button>
             </div>
         </form>
     </div>
     <script src="tse.js"></script>
+    <script src="bootstrap.min.js"></script>
 </body>
 
 </html>
