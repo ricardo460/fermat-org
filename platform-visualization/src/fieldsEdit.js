@@ -1633,6 +1633,8 @@ function FieldsEdit() {
                     backJson.push(object);
                 }
             }
+
+            cleanPreview();
             
             var modal = document.getElementById("modal-steps-div");
             modal.dataset.state = "show";
@@ -1807,7 +1809,7 @@ function FieldsEdit() {
 
     }
 
-    function cleanPreview (){
+    function cleanPreview(){
 
         var canvas = document.getElementById('step-Preview');
         var ctx = canvas.getContext('2d');
