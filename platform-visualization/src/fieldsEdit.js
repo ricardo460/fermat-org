@@ -1289,7 +1289,6 @@ function FieldsEdit() {
                 this.innerHTML = option;
                 list.valueJson[nComponent.step].name = nComponent.value;
 
-                workflowPreview(list.valueJson[nComponent.step]);
             };
             
             nDescription.onkeyup = function() {
@@ -1352,6 +1351,7 @@ function FieldsEdit() {
             modal.changeStep = function(Step) {
                 
                 var nTitle       = document.getElementById("step-Title");
+                var stepNumber   = document.getElementById("step-Number");
                 var list         = document.getElementById("step-List");
                 var nStep        = document.getElementById("step-Number");
                 var nLayer       = document.getElementById("step-Layer");
@@ -1361,6 +1361,10 @@ function FieldsEdit() {
                 var nTypeCall    = document.getElementById("step-TypeCall");
                 var nextSelect   = document.getElementById("next-step-Select");
                 var gSelect      = document.getElementById("graphic-selector");
+                var inputOld     = document.getElementById("input-selector-old");
+                var inputNex     = document.getElementById("input-selector-nex");
+                var inputNew     = document.getElementById("input-selector-new");
+                var inputRem     = document.getElementById("input-selector-rem");
                 
                 if(Step != -1) {
                     
@@ -1375,6 +1379,10 @@ function FieldsEdit() {
                     nComponent.disabled = false;
                     nextSelect.disabled = false;
                     gSelect.disabled = false;
+                    inputOld.disabled = false;
+                    inputNex.disabled = false;
+                    inputNew.disabled = false;
+                    inputRem.disabled = false;
 
                     nLayer.step       = Step;
                     nPlataform.step   = Step;
@@ -1387,7 +1395,7 @@ function FieldsEdit() {
                     gSelect.step      = Step;
 
 
-                    nTitle.innerHTML = "Step " + (step.id + 1) + ":";
+                    stepNumber.innerHTML = "Step " + (step.id + 1) + ":";
 
                     //----------Type Call-----------
 
@@ -1461,6 +1469,8 @@ function FieldsEdit() {
                         list.valueJson[nComponent.step].name = nComponent.value;
                     }
 
+                    workflowPreview(list.valueJson[nComponent.step]);
+
                     //------------Next--------------
 
                     nextSelect.call = list.valueJson[nextSelect.step].next.length;
@@ -1473,6 +1483,7 @@ function FieldsEdit() {
                     nDescription.value = step.desc;
                     
                 } else {
+
                     nTitle.disabled = true;
                     nStep.disabled = true;
                     nLayer.disabled = true;
@@ -1482,12 +1493,16 @@ function FieldsEdit() {
                     nComponent.disabled = true;
                     nextSelect.disabled = true;
                     gSelect.disabled = true;
+                    inputOld.disabled = true;
+                    inputNex.disabled = true;
+                    inputNew.disabled = true;
+                    inputRem.disabled = true;
+
+                    stepNumber.innerHTML = "Step :";
                     
                     list.innerHTML = "";
                     
-                    var canvas = document.getElementById('step-Preview');
-                    var ctx = canvas.getContext('2d');
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    cleanPreview();
                 }
             };
             
@@ -1676,6 +1691,7 @@ function FieldsEdit() {
                 window.helper.hide(area, 1000);
                 window.workFlowEdit.changeTexture();
                 window.workFlowEdit.fillStep();
+                cleanPreview();
             } else {
                 window.alert(validateNameSteps());
             }
@@ -1687,12 +1703,16 @@ function FieldsEdit() {
             var modal = document.getElementById("modal-steps-div");
             
             modal.dataset.state = "hidden";
+            cleanPreview();
 
-            if( list.valueJson.length > 0 && backJson){
+            if(backJson){
+
                 var list = document.getElementById("step-List");
                 list.valueJson = backJson.slice();
                 list.update();
-                document.getElementById("modal-steps-div").changeStep(0);
+
+                if(list.valueJson.length > 0)
+                    document.getElementById("modal-steps-div").changeStep(0);
             }
 
             var area = document.getElementById("hidden-area");
@@ -1724,6 +1744,7 @@ function FieldsEdit() {
 
         var step = JSON.parse(JSON.stringify(_step));
 
+        //if(!step.element)
             step.element = window.helper.searchElement(
                 (step.platfrm || step.suprlay) + '/' + step.layer + '/' + step.name
             );
@@ -1770,7 +1791,7 @@ function FieldsEdit() {
 
         var canvas = document.getElementById('step-Preview');
         var ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        cleanPreview();
         var size = 12;
         ctx.fillStyle = '#FFFFFF';
 
@@ -1784,6 +1805,13 @@ function FieldsEdit() {
 
         image.src = "images/workflow/stepBox.png";
 
+    }
+
+    function cleanPreview (){
+
+        var canvas = document.getElementById('step-Preview');
+        var ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
 
