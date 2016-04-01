@@ -130,7 +130,7 @@ apiDoc creates a documentation from API annotations in your source code.
 ```
 * To generate the html pages of documentation run the following command:
 ```bash
- sh generate_apidoc.sh
+ gulp apidoc
 ```
 The documentation is generated in the folder api-server/apidoc. For more information visit apidoc tool http://apidocjs.com/
 
