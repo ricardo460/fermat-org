@@ -42,33 +42,53 @@
         </div>
     </div>
 
-    <table id="superlayerList">
+    <table id="superlayerList" class="table table-hover hidden">
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Left/Below of</th>
+            <th>Actions</th>
+        </tr>
     </table>
 
-    <table id="platformList">
+    <table id="platformList" class="table table-hover hidden">
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Left/Below of</th>
+            <th>Dependencies</th>
+            <th>Actions</th>
+        </tr>
     </table>
 
-    <table id="layerList">
+    <table id="layerList" class="table table-hover hidden">
+        <tr>
+            <th>Name</th>
+            <th>Lang</th>
+            <th>Superlayer</th>
+            <th>Left/Below of</th>
+            <th>Actions</th>
+        </tr>
     </table>
 
     <div class="container">
-        <form id="spForm" class="tse-form hidden">
+        <form id="groupForm" class="tse-form hidden">
             <div class="form-group">
-                <label for="spCode">Code</label>
-                <input class="form-control" id="spCode" />
+                <label for="groupCode">Code</label>
+                <input class="form-control" id="groupCode" />
             </div>
             <div class="form-group">
-                <label for="spName">Name</label>
-                <input class="form-control" id="spName" />
+                <label for="groupName">Name</label>
+                <input class="form-control" id="groupName" />
             </div>
             <div class="form-group">
-                <label for="spOrder">Left/Above of:</label>
-                <select class="form-control" id="spOrder">
+                <label for="groupOrder">Left/Above of:</label>
+                <select class="form-control" id="groupOrder">
                 </select>
             </div>
             <div class="form-group">
-                <label for="spDeps">Dependencies:</label>
-                <select multiple class="form-control" id="spDeps">
+                <label for="groupDeps">Dependencies:</label>
+                <select multiple class="form-control" id="groupDeps">
                 </select>
             </div>
             <div class="buttons">
