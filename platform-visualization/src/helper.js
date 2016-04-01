@@ -281,6 +281,8 @@ function Helper() {
             setup = {},
             param,
             url;
+        
+        USERDATA = JSON.parse(JSON.stringify(window.session.getUserLogin()));
 
         switch(route) {
 
@@ -400,6 +402,8 @@ function Helper() {
             msj = "",
             param,
             url;
+        
+        USERDATA = JSON.parse(JSON.stringify(window.session.getUserLogin()));
 
         switch(route) {
             
@@ -455,6 +459,8 @@ function Helper() {
             setup = {},
             param,
             url;
+        
+        USERDATA = JSON.parse(JSON.stringify(window.session.getUserLogin()));
 
         switch(route) {
                 
