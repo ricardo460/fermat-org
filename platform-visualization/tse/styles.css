@@ -1,0 +1,9 @@
+.hidden {
+    display: none;
+}
+.actions {
+    padding-top: 10px;
+}
+.actions * {
+    padding-right: 5px;
+}
