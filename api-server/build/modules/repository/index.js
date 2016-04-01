@@ -528,7 +528,7 @@ exports.getLay = function (req, next) {
 exports.uptLay = function (req, next) {
 	'use strict';
 	try {
-		layerMod.updateLayerById(req.params.layer_id, req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
+		layerMod.updateLayerById(req.params.layer_id, req.body.name, req.body.lang, req.body.suprlay || null, req.body.order, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -829,7 +829,7 @@ exports.listComps = function (req, next) {
 exports.addLayer = function (req, next) {
 	'use strict';
 	try {
-		layerMod.insOrUpdLayer(req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
+		layerMod.insOrUpdLayer(req.body.name, req.body.lang, req.body.suprlay || null, req.body.order, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {

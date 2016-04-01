@@ -218,6 +218,9 @@ exports.updateLayerById = function (_lay_id, name, lang, suprlay, order, callbac
 		}
 		if (suprlay) {
 			set_obj.suprlay = suprlay;
+			if (suprlay.toLowerCase() == 'false' || suprlay.toLowerCase() == 'null' || suprlay.length > 3) {
+				set_obj.suprlay = null;
+			}
 		}
 		if (typeof order != "undefined") {
 			set_obj.order = order;
