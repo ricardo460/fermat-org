@@ -21,8 +21,6 @@
 		c0,4.28,1.785,6.236,5.556,6.236c1.417,0,2.325-0.142,3.657-0.454L254.5,79.429z"/>
 	<text transform="matrix(0.9698 0 0 1 259.6597 91.8296)" fill="#58595B" font-family="'Canaro-LightDEMO'" font-size="9.2221">Tokenly Platform </text>
 	<text transform="matrix(0.9698 0 0 1 257.1177 81.3862)"><tspan x="0" y="0" fill="#58595B" font-family="'AquaGrotesque'" font-size="44.6043">TKY</tspan><tspan x="88.806" y="0" fill="#58595B" font-family="'MyriadPro-Regular'" font-size="13.3813"> </tspan></text>
-	
-		<line fill="none" stroke="#FFFFFF" stroke-width="6" stroke-miterlimit="10" x1="479.757" y1="-406.983" x2="479.757" y2="-406.983"/>
 	<g>
 		<path fill="#F26662" d="M69.548,16.352c-29.349,0-53.14,23.791-53.14,53.14c0,29.347,23.791,53.139,53.14,53.139
 			c29.346,0,53.138-23.792,53.138-53.139C122.686,40.143,98.894,16.352,69.548,16.352z M69.548,119.556
