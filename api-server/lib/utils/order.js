@@ -27,7 +27,7 @@ var swapOrder = function (action, oldSpot, newSpot, callback) {
     } else if (action == 'update') {
         if (newSpot < oldSpot) {
             rangeMin = newSpot - 1;
-            rangeMax = oldSpot + 1;
+            rangeMax = oldSpot;
             query = {
                 '$and': [{
                     'order': {
@@ -46,7 +46,7 @@ var swapOrder = function (action, oldSpot, newSpot, callback) {
             };
         } else if (newSpot > oldSpot) {
             rangeMin = oldSpot;
-            rangeMax = newSpot + 1;
+            rangeMax = parseInt(newSpot) + 1;
             query = {
                 '$and': [{
                     'order': {
