@@ -159,9 +159,9 @@ router.get('/:layer_id', function (req, res, next) {
  * @apiName UptLay
  * @apiGroup Repo-Layer
  * @apiParam {ObjectId} layer_id Represents the identifier of the layer
- * @apiParam {String} name    Layer name.
- * @apiParam {String} lang    xxxxx.
- * @apiParam {String} suprlay    xxxxx.
+ * @apiParam {String} name Layer name.
+ * @apiParam {String} lang Layer language.
+ * @apiParam {String} suprlay  It indicates whether it belongs to a super layer.
  * @apiParam {Number} order Indicates the position where the layer this with respect to other.
  * @apiDescription Update layer to the architecture of fermat.
  */

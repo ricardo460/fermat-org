@@ -855,14 +855,14 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "lang",
-            "description": "<p>xxxxx.</p>"
+            "description": "<p>Layer language.</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "suprlay",
-            "description": "<p>xxxxx.</p>"
+            "description": "<p>It indicates whether it belongs to a super layer.</p>"
           },
           {
             "group": "Parameter",
