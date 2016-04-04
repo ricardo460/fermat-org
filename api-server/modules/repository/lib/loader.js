@@ -274,7 +274,7 @@ exports.getManifestWithExt = function (ext, callback) {
 var getManifest = function (callback) {
 	'use strict';
 	try {
-		var cwd = process.cwd(),
+		/*var cwd = process.cwd(),
 			env = process.env.NODE_ENV || 'development',
 			file = path.join(cwd, 'cache', env, 'fermat/FermatManifest.xml');
 		fs.lstat(file, function (err, stats) {
@@ -295,30 +295,30 @@ var getManifest = function (callback) {
 			} else {
 				if (err) {
 					winston.log('error', err.message, err);
-				}
-				doRequest('GET', 'https://api.github.com/repos/Fermat-ORG/fermat/contents/FermatManifest.xml', null, function (err_req, res_req) {
-					if (err_req) {
-						return callback(err_req, null);
-					}
-					processRequestBody(res_req, function (err_pro, res_pro) {
-						if (err_pro) {
-							return callback(err_pro, null);
-						}
-						if (res_pro.message && res_pro.message == 'Bad credentials') {
-							return callback(new Error(res_pro.message), null);
-						} else {
-							var strCont = res_pro.split('\n').join(' ').split('\t').join(' ');
-							parseString(strCont, function (err_par, res_par) {
-								if (err_par) {
-									return callback(err_par, null);
-								}
-								return callback(null, res_par);
-							});
-						}
-					});
-				});
+				}*/
+		doRequest('GET', 'https://api.github.com/repos/Fermat-ORG/fermat/contents/FermatManifest.xml', null, function (err_req, res_req) {
+			if (err_req) {
+				return callback(err_req, null);
 			}
+			processRequestBody(res_req, function (err_pro, res_pro) {
+				if (err_pro) {
+					return callback(err_pro, null);
+				}
+				if (res_pro.message && res_pro.message == 'Bad credentials') {
+					return callback(new Error(res_pro.message), null);
+				} else {
+					var strCont = res_pro.split('\n').join(' ').split('\t').join(' ');
+					parseString(strCont, function (err_par, res_par) {
+						if (err_par) {
+							return callback(err_par, null);
+						}
+						return callback(null, res_par);
+					});
+				}
+			});
 		});
+		/*}
+		});*/
 	} catch (err) {
 		return callback(err, null);
 	}
@@ -471,27 +471,28 @@ var parseManifest = function (callback) {
 var getContent = function (repo_dir, callback) {
 	'use strict';
 	try {
-		var cwd = process.cwd(),
+		/*var cwd = process.cwd(),
 			env = process.env.NODE_ENV || 'development',
 			dir = path.join(cwd, 'cache', env, 'fermat', repo_dir); // exist = fs.lstatSync(dir);
 		fs.lstat(dir, function (err, stats) {
 			if (!err && stats.isDirectory()) {
 				//winston.log('info', 'Read Cache Directory %s', dir);
 				return callback(null, []);
-			} else {
-				doRequest('GET', 'https://api.github.com/repos/Fermat-ORG/fermat/contents/' + repo_dir, null, function (err_req, res_req) {
-					if (err_req) {
-						return callback(err_req, null);
-					}
-					processRequestBody(res_req, function (err_pro, res_pro) {
-						if (err_pro) {
-							return callback(err_pro, null);
-						}
-						return callback(null, res_pro);
-					});
-				});
+			} else {*/
+		doRequest('GET', 'https://api.github.com/repos/Fermat-ORG/fermat/contents/' + repo_dir, null, function (err_req, res_req) {
+			if (err_req) {
+				return callback(err_req, null);
 			}
+			processRequestBody(res_req, function (err_pro, res_pro) {
+				if (err_pro) {
+					return callback(err_pro, null);
+				}
+				return callback(null, res_pro);
+			});
 		});
+		/*
+					}
+				});*/
 	} catch (err) {
 		return callback(err, null);
 	}
@@ -1014,6 +1015,84 @@ var updateDevs = function (callback) {
 	});
 };
 /**
+ * [updateProcs description]
+ *
+ * @method updateProcs
+ *
+ * @param  {Function}  callback [description]
+ *
+ * @return {[type]}    [description]
+ */
+var updateProcs = function (callback) {
+	try {
+		parseManifest(function (err_load, res_load) {
+			if (err_load) {
+				winston.log('error', err_load.message, err_load);
+			} else {
+				if (res_load.platfrms && Array.isArray(res_load.platfrms) && res_load.suprlays && Array.isArray(res_load.suprlays)) {
+					var _procs = res_load.procs;
+					var loopProcs = function (s) {
+						//console.log("execute loopProcs");
+						if (s < _procs.length) {
+							var _proc = _procs[s];
+							//platfrm, name, desc, prev, next, callback
+							procMod.insOrUpdProc(_proc.platform ? _proc.platform.trim().toUpperCase() : null, //
+								_proc.name ? _proc.name.trim() : null, //
+								_proc.description ? _proc.description.trim() : null, //
+								_proc.previous ? _proc.previous.trim() : null, //
+								_proc.next ? _proc.next.trim() : null, //
+								function (err_proc, res_proc) {
+									if (err_proc) {
+										winston.log('error', err_proc.message, err_proc);
+										loopProcs(++s);
+									} else {
+										var _steps = _proc.steps;
+										var loopSteps = function (t) {
+											if (t < _steps.length) {
+												var _step = _steps[t];
+												procMod.insOrUpdStep(res_proc._id, //_proc_id
+													_step.platform ? _step.platform.toUpperCase() : null, //platfrm_code
+													_step.superlayer ? _step.superlayer.toUpperCase() : null, //suprlay_code
+													_step.layer ? _step.layer.toLowerCase() : null, //layer_name
+													_step.name ? _step.name.toLowerCase() : null, //comp_name
+													_step.type ? _step.type.toLowerCase() : null, //type
+													_step.title ? _step.title : null, //title
+													_step.description ? _step.description : null, //description
+													_step.id || null, //order
+													_step.next || [], //next
+													function (err_stp, res_stp) {
+														if (err_stp) {
+															winston.log('error', err_stp.message, err_stp);
+															loopSteps(++t);
+														} else {
+															loopSteps(++t);
+														}
+													});
+											} else {
+												loopProcs(++s);
+											}
+										};
+										loopSteps(0);
+									}
+								});
+						} else {
+							winston.log('info', 'loop proccess ended');
+						}
+					};
+					loopProcs(0);
+				} else {
+					//console.log("not saveManifest");
+					return callback(null, {
+						'save': false
+					});
+				}
+			}
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
+/**
  * [updComps description]
  *
  * @method updComps
@@ -1051,6 +1130,31 @@ exports.updDevs = function (callback) {
 	'use strict';
 	try {
 		updateDevs(function (err, res) {
+			if (err) {
+				return callback(err, null);
+			}
+			if (res) {
+				return callback(null, res);
+			}
+			return callback(null, null);
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
+/**
+ * [updProcs description]
+ *
+ * @method updProcs
+ *
+ * @param  {Function} callback [description]
+ *
+ * @return {[type]}   [description]
+ */
+exports.updProcs = function (callback) {
+	'use strict';
+	try {
+		updateProcs(function (err, res) {
 			if (err) {
 				return callback(err, null);
 			}

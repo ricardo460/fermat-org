@@ -53,6 +53,7 @@ exports.findAndPopulateProc = function (query, callback) {
 						var getStep = function (i) {
 							var _step = steps[i];
 							var step = {};
+							step._id = _step._id;
 							step.id = _step.order;
 							step.title = _step.title || null;
 							step.desc = _step.desc || null;

@@ -14,24 +14,28 @@ var security = require('../../../../lib/utils/security');
  *
  * @return {[type]} [description]
  */
-var lock = function (req, res, next) {
+var lock = function (req, next) {
+	console.log('doing lock...');
 	try {
+		console.dir(req.params);
+		console.dir(req.body);
 		if (req.params.comp_id) {
 			req.body.item_id = req.params.comp_id;
 			req.body.item_type = 'comp';
 			req.body.priority = 5;
+			console.dir(req.body);
 			repMod.doLock(req, function (error, result) {
 				if (error) {
-					res.status(200).send(error);
+					next(error, null);
 				} else {
-					next();
+					next(null, result);
 				}
 			});
 		} else {
-			next();
+			next(null, null);
 		}
 	} catch (err) {
-		next(err);
+		next(err, null);
 	}
 };
 /**
@@ -57,9 +61,9 @@ var release = function (req) {
 /**
  * using lock for comp routes
  */
-router.use(lock);
+//router.use(lock);
 /**
- * @api {post} /v1/repo/comps add components
+ * @api {post} /v1/repo/usrs/:usr_id/comps add components
  * @apiVersion 0.0.1
  * @apiName AddComp
  * @apiGroup Repo-Comp
@@ -69,7 +73,7 @@ router.use(lock);
  * @apiParam {Number} difficulty Component complexity developed  rank (0- 10).
  * @apiParam {String} code_level   Developing state api.
  * @apiParam {ObjectId} platfrm_id   Unique identifier of the  platfrtm.
- * @apiParam {ObjectId} suprlay_id    Unique identifier of the  suprlay. 
+ * @apiParam {ObjectId} suprlay_id    Unique identifier of the  suprlay.
  * @apiParam {String} description  Description of  components.
  * @apiParam {String} repo_dir Directory of repo.
  * @apiDescription Add a component to the architecture fermat.
@@ -101,11 +105,11 @@ router.post('/', function (req, res, next) {
 	}
 });
 /**
- * @api {get} /v1/repo/comps list comps
+ * @api {get} /v1/repo/usrs/:usr_id/comps list comps
  * @apiVersion 0.0.1
  * @apiName ListComps
  * @apiGroup Repo-Comp
- 
+
  * @apiDescription Get a list of components of the architecture fermat.
  */
 router.get('/', function (req, res, next) {
@@ -123,7 +127,7 @@ router.get('/', function (req, res, next) {
 	}
 });
 /**
- * @api {put} /v1/repo/comps/:comp_id/life-cicles/:life_cicle_id update lifecicles to component
+ * @api {put} /v1/repo/usrs/:usr_id/comps/:comp_id/life-cicles/:life_cicle_id update lifecicles to component
  * @apiVersion 0.0.1
  * @apiName UptLifeCiclesToComp
  * @apiParam {ObjectId} comp_id  Unique identifier of the component.
@@ -132,14 +136,15 @@ router.get('/', function (req, res, next) {
  * @apiParam {Date} reached    True date of completion.
  * @apiGroup Repo-Comp
  * @apiDescription updates the lifecycle of a component of the architecture fermat.
- 
+
  */
 router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
 	'use strict';
 	try {
 		if (!security.isValidData(req.params.comp_id) || // required
 			!security.isValidData(req.params.life_cicle_id) || // required
-			!(typeof req.body.target == "undefined" || (typeof req.body.target != "undefined" && security.isValidData(req.body.target))) || !(typeof req.body.reached == "undefined" || (typeof req.body.reached != "undefined" && security.isValidData(req.body.reached)))) {
+			!security.ifExistIsValidData(req.body.target) ||
+			!security.ifExistIsValidData(req.body.reached)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
 			});
@@ -164,7 +169,7 @@ router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
 	}
 });
 /**
- * @api {post} /v1/repo/comps/:comp_id/comp-devs add component developer
+ * @api {post} /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs add component developer
  * @apiVersion 0.0.1
  * @apiName AddCompDev
  * @apiParam {ObjectId} comp_id    Unique identifier of the component.
@@ -207,7 +212,7 @@ router.post('/:comp_id/comp-devs', function (req, res, next) {
 	}
 });
 /**
- * @api {put} /v1/repo/comps/:comp_id/comp-devs/:comp_dev_id update component developer
+ * @api {put} /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs/:comp_dev_id update component developer
  * @apiVersion 0.0.1
  * @apiName UptCompDev
  * @apiParam {ObjectId} comp_id    Unique identifier of the component.
@@ -223,7 +228,10 @@ router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
 	try {
 		if (!security.isValidData(req.params.comp_id) || // required
 			!security.isValidData(req.params.comp_dev_id) || // required
-			!security.ifExistIsValidData(req.body.dev_id) || !security.ifExistIsValidData(req.body.role) || !security.ifExistIsValidData(req.body.scope) || !security.ifExistIsValidData(req.body.percnt)) {
+			!security.ifExistIsValidData(req.body.dev_id) ||
+			!security.ifExistIsValidData(req.body.role) ||
+			!security.ifExistIsValidData(req.body.scope) ||
+			!security.ifExistIsValidData(req.body.percnt)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
 			});
@@ -248,7 +256,7 @@ router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
 	}
 });
 /**
- * @api {delete} /v1/repo/comps/:comp_id/comp-devs/:comp_dev_id delete component developer
+ * @api {delete} /v1/repo/usrs/:usr_id/comps/:comp_id/comp-devs/:comp_dev_id delete component developer
  * @apiVersion 0.0.1
  * @apiName DelCompDev
  * @apiParam {ObjectId} comp_id    Unique identifier of the component.
@@ -286,7 +294,7 @@ router.delete('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
 	}
 });
 /**
- * @api {get} /v1/repo/comps/:comp_id get component
+ * @api {get} /v1/repo/usrs/:usr_id/comps/:comp_id get component
  * @apiVersion 0.0.1
  * @apiName GetComp
  * @apiParam {ObjectId} comp_id    Unique identifier of the component.
@@ -296,18 +304,23 @@ router.delete('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
 router.get('/:comp_id', function (req, res, next) {
 	'use strict';
 	try {
-		repMod.getComp(req, function (error, result) {
-			if (error) {
-				res.status(200).send(error);
+		lock(req, function (err_lck, res_lck) {
+			if (err_lck) {
+				res.status(423).send(err_lck);
 			} else {
-				if (result) {
-					res.status(200).send(result);
-				} else {
-					res.status(404).send({
-						message: "NOT FOUND"
-					});
-				}
-				release(req);
+				repMod.getComp(req, function (error, result) {
+					if (error) {
+						res.status(200).send(error);
+					} else {
+						if (result) {
+							res.status(200).send(result);
+						} else {
+							res.status(404).send({
+								message: "NOT FOUND"
+							});
+						}
+					}
+				});
 			}
 		});
 	} catch (err) {
@@ -315,7 +328,7 @@ router.get('/:comp_id', function (req, res, next) {
 	}
 });
 /**
- * @api {put} /v1/repo/comps/:comp_id update component
+ * @api {put} /v1/repo/usrs/:usr_id/comps/:comp_id update component
  * @apiVersion 0.0.1
  * @apiName UptComp
  * @apiParam {ObjectId} comp_id    Unique identifier of the component.
@@ -332,7 +345,14 @@ router.get('/:comp_id', function (req, res, next) {
 router.put('/:comp_id', function (req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.params.comp_id) || !security.ifExistIsValidData(req.body.layer_id) || !security.ifExistIsValidData(req.body.name) || !security.ifExistIsValidData(req.body.type) || !security.ifExistIsValidDifficulty(req.body.difficulty) || !security.ifExistIsValidLifeCicle(req.body.code_level) || !security.ifExistIsValidData(req.body.description) || !security.ifExistIsValidData(req.body.repo_dir)) {
+		if (!security.isValidData(req.params.comp_id) ||
+			!security.ifExistIsValidData(req.body.layer_id) ||
+			!security.ifExistIsValidData(req.body.name) ||
+			!security.ifExistIsValidData(req.body.type) ||
+			!security.ifExistIsValidDifficulty(req.body.difficulty) ||
+			!security.ifExistIsValidLifeCicle(req.body.code_level) ||
+			!security.ifExistIsValidData(req.body.description) ||
+			!security.ifExistIsValidData(req.body.repo_dir)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
 			});
@@ -357,7 +377,7 @@ router.put('/:comp_id', function (req, res, next) {
 	}
 });
 /**
- * @api {delete} /v1/repo/comps/:comp_id delete component
+ * @api {delete} /v1/repo/usrs/:usr_id/comps/:comp_id delete component
  * @apiVersion 0.0.1
  * @apiName DelComp
  * @apiParam {ObjectId} comp_id    Unique identifier of the component.

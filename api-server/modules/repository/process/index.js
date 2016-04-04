@@ -669,14 +669,14 @@ exports.findProcById = function (_id, callback) {
  *
  * @return {[type]}    [description]
  */
-exports.insertStep = function (_proc_id, _comp_id, type, title, desc, order, callback) {
+exports.insertStep = function (_proc_id, _comp_id, type, title, desc, order, next, callback) {
 	'use strict';
 	try {
 		procSrv.findProcById(_proc_id, function (err_proc, res_proc) {
 			if (err_proc) {
 				return callback(err_proc, null);
 			} else if (res_proc) {
-				var step = new StepMdl(_proc_id, _comp_id, type, title, desc, order, []);
+				var step = new StepMdl(_proc_id, _comp_id, type, title, desc, order, next);
 				stepSrv.insertStep(step, function (err_ins, res_ins) {
 					if (err_ins) {
 						return callback(err_ins, null);
@@ -707,11 +707,12 @@ exports.insertStep = function (_proc_id, _comp_id, type, title, desc, order, cal
  * @param  {[type]}     title           [description]
  * @param  {[type]}     desc            [description]
  * @param  {[type]}     order           [description]
+ * @param  {[type]}     next           [description]
  * @param  {Function}   callback        [description]
  *
  * @return {[type]}    [description]
  */
-exports.updateStepById = function (_step_id, _comp_id, type, title, desc, order, callback) {
+exports.updateStepById = function (_step_id, _comp_id, type, title, desc, order, next, callback) {
 	'use strict';
 	try {
 		var set_obj = {};
@@ -727,9 +728,15 @@ exports.updateStepById = function (_step_id, _comp_id, type, title, desc, order,
 		if (desc) {
 			set_obj.desc = desc;
 		}
+
 		if (typeof order != "undefined") {
 			set_obj.order = order;
 		}
+
+		if(typeof next != "undefined") {
+			set_obj.next = next;
+		}
+
 		stepSrv.findStepById(_step_id, function (err_step, res_step) {
 			if (err_step) {
 				return callback(err_step, null);

@@ -528,7 +528,7 @@ exports.getLay = function (req, next) {
 exports.uptLay = function (req, next) {
 	'use strict';
 	try {
-		layerMod.updateLayerById(req.params.layer_id, req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
+		layerMod.updateLayerById(req.params.layer_id, req.body.name, req.body.lang, req.body.suprlay || null, req.body.order, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -829,7 +829,7 @@ exports.listComps = function (req, next) {
 exports.addLayer = function (req, next) {
 	'use strict';
 	try {
-		layerMod.insOrUpdLayer(req.body.name, req.body.lang, req.body.suprlay, req.body.order, function (err, res) {
+		layerMod.insOrUpdLayer(req.body.name, req.body.lang, req.body.suprlay || null, req.body.order, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -1033,7 +1033,7 @@ exports.delCompDev = function (req, next) {
 exports.addStep = function (req, next) {
 	'use strict';
 	try {
-		procMod.insertStep(req.params.proc_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, next, function (err, res) {
+		procMod.insertStep(req.params.proc_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, req.body.next, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -1055,7 +1055,7 @@ exports.addStep = function (req, next) {
 exports.uptStep = function (req, next) {
 	'use strict';
 	try {
-		procMod.updateStepById(req.params.step_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, function (err, res) {
+		procMod.updateStepById(req.params.step_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, req.body.next, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
