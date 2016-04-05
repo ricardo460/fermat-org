@@ -153,18 +153,22 @@ To run the project, follow these steps:
 	```bash
  	 gulp nodemon-prox
 	```
+
 	- Development server
 	```bash
  	 gulp nodemon-dev
 	```
+
 	- Test server
 	```bash
  	 gulp nodemon-test
 	```
+
 	- Production Server
 	```bash
  	 gulp nodemon-prod
 	```
+	
 The project should be running. The development server on port 8002, the test server on port 8001 and the production server on port 8000. The proxy server is used to redirect requests to the servers as directed by the variable env (develoment, testing, prod) that is passed in the URL of each request.
 
 For example if you pass env=develoment in the url of the request; then the request is sent to the development server.
