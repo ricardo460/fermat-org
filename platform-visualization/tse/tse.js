@@ -5,7 +5,8 @@ var USERDATA = '',
     current = 'layer',
     request = 'add',
     referenceName = '',
-    referenceId = '';
+    referenceId = '',
+    referenceCode = '';
 //global constants
 var SERVER = 'http://api.fermat.org';
 
@@ -51,7 +52,7 @@ function init() {
         });
 
         $('#submitGroup').click(function() {
-            verify(current,request);
+            //verify(current,request);
         });
 
         clearGroupForm();
@@ -141,6 +142,23 @@ function modifyStructure(element, type){
             }
             else{
 
+                document.getElementById("groupCode").value = res.code;
+                document.getElementById("groupName").value = res.name.capitalize();
+ 
+                var list = document.getElementById("groupDeps"),
+                    l = list.options.length;
+
+                for(var e in res.deps){
+                    for(var i = 0; i < l; i++){
+                        if(res.deps[e] === list.options[i].value)
+                            list.options[i].selected = 'true';
+                    }
+                }               
+                referenceName = res.name.capitalize();
+                referenceId = element.id;
+                referenceCode = res.code;
+
+                findPosition(type,res.order);
             }
         }
     );
@@ -169,7 +187,7 @@ function findPosition(type, order){
     }).success (
         function (res) {
              var l = res.length;
-             console.log(res);
+
              for(var i = 0; i < l; i++){
                 if(res[i].order === order && order === 0){
                     if(type === "layer"){
@@ -179,6 +197,10 @@ function findPosition(type, order){
                                 document.getElementById("layerNextSuperlayer").value = "Superlayer: " + res[1].suprlay;
                             else
                                 document.getElementById("layerNextSuperlayer").value = "No superlayer";
+                    }
+                    else{
+                        document.getElementById("groupOrder").value = res[1].order;
+                        document.getElementById("groupPos").value = "before";
                     }
                 }
                 else{
@@ -190,6 +212,10 @@ function findPosition(type, order){
                                 document.getElementById("layerNextSuperlayer").value = "Superlayer: " + res[i-1].suprlay;
                             else
                                 document.getElementById("layerNextSuperlayer").value = "No superlayer";
+                        }
+                        else{
+                            document.getElementById("groupOrder").value = res[i-1].order;
+                            document.getElementById("groupPos").value = "after";
                         }
                     }
                 }
@@ -433,10 +459,10 @@ function fillTable(repo, data){
             else
                 $('#layerList').append("<tr><th>" + data[i].name.capitalize() + "</th><th>" + data[i].lang.capitalize() + "</th><th>" + "</th><th>" + data[i].order + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"layer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"layer"' + ")'>Delete</button>" + "</th></tr>");
         }
-        else if(repo === "platforms")
-            $('#platformList').append("<tr><th>" + data[i].code + "</th><th>" + data[i].name.capitalize() + "</th><th>" + data[i].order + "</th><th>" + data[i].deps + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"layer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='platform: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"platform"' + ")'>Delete</button>" + "</th></tr>");
-        else
-            $('#superlayerList').append("<tr><th>" + data[i].code + "</th><th>" + data[i].name.capitalize() + "</th><th>" + data[i].order + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"layer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='superlayer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"superlayer"' + ")'>Delete</button>" + "</th></tr>");
+        //else if(repo === "platforms")
+            //$('#platformList').append("<tr><th>" + data[i].code + "</th><th>" + data[i].name.capitalize() + "</th><th>" + data[i].order + "</th><th>" + data[i].deps + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"platform"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='platform: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"platform"' + ")'>Delete</button>" + "</th></tr>");
+        //else
+            //$('#superlayerList').append("<tr><th>" + data[i].code + "</th><th>" + data[i].name.capitalize() + "</th><th>" + data[i].order + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"superlayer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='superlayer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"superlayer"' + ")'>Delete</button>" + "</th></tr>");
     }
 }
 
@@ -544,6 +570,7 @@ function verify(form, request){
     var url,
         data = getData(form,request),
         i,
+        j,
         l,
         list,
         elements,
@@ -583,28 +610,19 @@ function verify(form, request){
             }
             elements = list.getElementsByTagName('th');
 
-            if(form === 'platform'){
-                for(i = 0, l = elements.length; i < l; i+=5){
-                    if(data.code.toUpperCase() === elements[i].innerHTML){
-                        window.alert('Code in use');
-                        return false;
-                    }
-                    if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML){
-                        window.alert('Name in use');
-                        return false;
-                    }
+            if(form === 'platform')
+                j = 5;
+            else
+                j = 4;
+
+            for(i = 0, l = elements.length; i < l; i+=j){
+                if(data.code.toUpperCase() === elements[i].innerHTML){
+                    window.alert('Code in use');
+                    return false;
                 }
-            }
-            else{
-                for(i = 0, l = elements.length; i < l; i+=4){
-                    if(data.code.toUpperCase() === elements[i].innerHTML){
-                        window.alert('Code in use');
-                        return false;
-                    }
-                    if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML){
-                        window.alert('Name in use');
-                        return false;
-                    }
+                if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML){
+                    window.alert('Name in use');
+                    return false;
                 }
             }
 
@@ -636,6 +654,42 @@ function verify(form, request){
                 sendRequest(url,'PUT',data);
             }
                 
+            updateList(form);
+        }
+        else{
+
+            if(form === 'platform'){
+                list = document.getElementById('platformList');
+                url = platformRoutes("insert");
+            }
+            else{
+                list = document.getElementById('superlayerList');
+                url = superLayerRoutes("insert");
+            }
+            elements = list.getElementsByTagName('th');
+
+            if(form === 'platform')
+                j = 5;
+            else
+                j = 4;
+
+            for(i = 0, l = elements.length; i < l; i+=j){
+                if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){ 
+                    window.alert('Code in use');
+                    return false;
+                }
+                if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML && (data.name.toLowerCase()).capitalize() !== referenceName){
+                    window.alert('Name in use');
+                    return false;
+                }
+            }
+
+            if(proceed){
+                url = layerRoutes("insert");
+                updateData(form,data.order,'insert');
+                sendRequest(url,'PUT',data);
+            }
+            
             updateList(form);
         }
     }
