@@ -281,6 +281,8 @@ function Helper() {
             setup = {},
             param,
             url;
+        
+        USERDATA = JSON.parse(JSON.stringify(window.session.getUserLogin()));
 
         switch(route) {
 
@@ -397,19 +399,28 @@ function Helper() {
 
         var tail = "",
             method = "",
+            msj = "",
             param,
             url;
+        
+        USERDATA = JSON.parse(JSON.stringify(window.session.getUserLogin()));
 
         switch(route) {
-
-            case "check":
+            
+            case "tableEdit":
                 method = "GET";
                 tail = "/v1/repo/usrs/" + USERDATA._id + "/comps/" + data.comp_id;
+                msj = "component";
                 break;
-
+            case "wolkFlowEdit":
+                method = "GET";
+                tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id;
+                msj = "wolkFlow";
+                break;                     
+                
         }
 
-        param = {
+        param = { 
                 env : ENV,
                 axs_key : AXS_KEY
             };
@@ -432,25 +443,27 @@ function Helper() {
             error: function(res){
 
                 if(res.status === 423){
-                    window.alert("This component is currently being modified by someone else, please try again in about 3 minutes");
+                    window.alert("This " + msj + " is currently being modified by someone else, please try again in about 3 minutes");
                 }
                 else if(res.status === 404){
-                    window.alert("Component not found");
+                    window.alert(msj + " not found");
                 }
             }
         });
     };
 
     this.postRoutesProcess = function(route, params, data, doneCallback, failCallback){
-
+        
         var tail = "",
             method = "",
             setup = {},
             param,
             url;
+        
+        USERDATA = JSON.parse(JSON.stringify(window.session.getUserLogin()));
 
         switch(route) {
-
+                
             case "insert":
                 method = "POST";
                 tail = "/v1/repo/usrs/" + USERDATA._id + "/procs";
@@ -474,11 +487,10 @@ function Helper() {
             case "update step":
                 method = "PUT";
                 tail = "/v1/repo/usrs/" + USERDATA._id + "/procs/" + data.proc_id + "/steps/" + data.steps_id;
-                break;
-
+                break;                    
+                
         }
-
-        param = {
+        param = { 
                 env : ENV,
                 axs_key : AXS_KEY
             };
@@ -487,22 +499,46 @@ function Helper() {
 
         setup.method = method;
         setup.url = 'http://' + self.buildURL(url, param);
-        setup.headers = {
+        setup.headers = { 
             "Content-Type": "application/json"
              };
 
         if(params)
             setup.data = params;
 
-        makeCorsRequest(setup.url, setup.method, setup.data,
+        makeCorsRequest(setup.url, setup.method, setup.data, 
             function(res){
 
-                if(typeof(doneCallback) === 'function')
-                    doneCallback(res);
-            },
-            function(res){
+                switch(route) {
+                
+                    case "insert":
 
-                window.alert('Action Not Executed');
+                        if(res._id){
+
+                            if(typeof(doneCallback) === 'function')
+                                doneCallback(res);
+                        }
+                        else{
+
+                            if(typeof(failCallback) === 'function')
+                                failCallback(res);
+                        }
+
+                        break;
+                    case "update":
+
+                            doneCallback(res);
+                        
+                        break; 
+                    default:
+                            if(typeof(doneCallback) === 'function')
+                                    doneCallback(res);
+                        break;                     
+                }
+
+                    
+            }, 
+            function(res){
 
                 if(typeof(failCallback) === 'function')
                     failCallback(res);
@@ -516,7 +552,7 @@ function Helper() {
         //TODO: DELETE THIS IF
         if(method === "PUT" && !url.match("/comps-devs/") && exists("[Component]")) {
             error();
-        }
+        } 
         else {
             var xhr = createCORSRequest(url, method);
 
@@ -579,7 +615,7 @@ function Helper() {
 
         if(window.session.getIsLogin()){
 
-            USERDATA = window.session.getUserLogin();
+            USERDATA = JSON.parse(JSON.stringify(window.session.getUserLogin()));
 
             AXS_KEY = USERDATA.axs_key;
 
@@ -941,22 +977,28 @@ function Helper() {
      * @author Miguelcldn
      * @param {Object} data Post Data
      */
-    function exists() {
+    function exists() { 
+
+        if(window.actualView === 'table'){ 
         
-        var group = $("#select-Group").val();
-        var layer = $("#select-layer").val();
-        var name = $("#imput-Name").val().toLowerCase();
-        var type = $("#select-Type").val();
-        var location = window.TABLE[group].layers[layer].objects;
-        
-        if(window.tableEdit.formerName.toLowerCase() === name) return false;
-        
-        for(var i = 0; i < location.length; i++) {
-            if(location[i].data.name.toLowerCase() === name && location[i].data.type === type) {
-                return true;
+            var group = $("#select-Group").val();
+            var layer = $("#select-layer").val();
+            var name = $("#imput-Name").val().toLowerCase();
+            var type = $("#select-Type").val();
+            var location = window.TABLE[group].layers[layer].objects;
+            
+            if(window.tableEdit.formerName.toLowerCase() === name) return false;
+            
+            for(var i = 0; i < location.length; i++) {
+                if(location[i].data.name.toLowerCase() === name && location[i].data.type === type) {
+                    return true;
+                }
             }
+            
+            return false;
+        } 
+        else{
+            return false;
         }
-        
-        return false;
     }
 }
