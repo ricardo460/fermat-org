@@ -194,6 +194,11 @@ function TileManager() {
             window.superLayers[code].index = _suprlays[i].order;
             window.superLayers[code]._id = _suprlays[i]._id;
             window.superLayers[code].dependsOn = _suprlays[i].deps;
+            window.TABLE[code] = {
+                layers : {},
+                ID: _suprlays[i]._id,
+                isSlayer: code
+            };
         }
 
         for (i = 0, l = _platfrms.length; i < l; i++) {
@@ -202,6 +207,11 @@ function TileManager() {
             window.platforms[code].index = _platfrms[i].order;
             window.platforms[code].dependsOn = _platfrms[i].deps;
             window.platforms[code]._id = _platfrms[i]._id;
+            window.TABLE[code] = {
+                layers : {},
+                ID: _platfrms[i]._id,
+                isSlayer: false
+            };
         }
 
         for (i = 0, l = _layers.length; i < l; i++) {
