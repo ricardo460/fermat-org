@@ -1,7 +1,7 @@
 //global variables
-var USERDATA = '',
-    AXS_KEY = '',
-    ENV = 'production',
+var user_data = '',
+    axs_key = '',
+    environment = 'production',
     current = 'layer',
     request = 'add',
     referenceName = '',
@@ -14,20 +14,20 @@ function init() {
 
     switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
         case "dev":
-            ENV = 'production';
+            environment = 'production';
             break;
         case "lab":
-            ENV = 'development';
+            environment = 'development';
             break;
         case "3d":
-            ENV = 'testing';
+            environment = 'testing';
             break;
     }
 
-    ENV = 'testing';
+    environment = 'testing';
 
-    USERDATA = testData();
-    AXS_KEY = USERDATA.axs_key;
+    user_data = testData();
+    axs_key = user_data.axs_key;
 
     updateList('layer');
     updateList('platform');
@@ -71,13 +71,13 @@ function deleteStructure(element, type){
 
         switch(type) {
             case "layer":
-                url = layerRoutes("delete",element.id);
+                url = getRoute("layers","delete",element.id);
                 break;
             case "platform":
-                url = platformRoutes("delete",element.id);
+                url = getRoute("platfrm","delete",element.id);
                 break;
             case "superlayer":
-                url = superLayerRoutes("delete",element.id);
+                url = getRoute("suprlay","delete",element.id);
                 break;
         }
 
@@ -107,13 +107,13 @@ function modifyStructure(element, type){
 
     switch(type) {
         case "layer":
-            url = layerRoutes("update",element.id);
+            url = getRoute("layers","update",element.id);
             break;
         case "platform":
-            url = platformRoutes("update",element.id);
+            url = getRoute("platfrm","update",element.id);
             break;
         case "superlayer":
-            url = superLayerRoutes("update",element.id);
+            url = getRoute("suprlay","update",element.id);
             break;
     }
 
@@ -171,13 +171,13 @@ function findPosition(type, order){
 
     switch(type) {
         case "layer":
-            url = layerRoutes("retrieve");
+            url = getRoute("layers","retrieve");
             break;
         case "platform":
-            url = platformRoutes("retrieve");
+            url = getRoute("platfrm","retrieve");
             break;
         case "superlayer":
-            url = superLayerRoutes("retrieve");
+            url = getRoute("suprlay","retrieve");
             break;
     }
 
@@ -333,14 +333,14 @@ function updateData(list, position, mode){
     var url;
 
     switch(list) {
-        case "layers":
-            url = layerRoutes("retrieve");
+        case "layer":
+            url = getRoute("layers","retrieve");
             break;
-        case "platforms":
-            url = platformRoutes("retrieve");
+        case "platform":
+            url = getRoute("platfrm","retrieve");
             break;
-        case "superlayers":
-            url = superLayerRoutes("retrieve");
+        case "superlayer":
+            url = getRoute("suprlay","retrieve");
             break;
     }
 
@@ -358,13 +358,13 @@ function updateData(list, position, mode){
                 for(i = l; i > position; i--){
                     switch(list) {
                         case "layers":
-                            url = layerRoutes("update",res[i]._id);
+                            url = getRoute("layers","update",res[i]._id);
                             break;
                         case "platforms":
-                            url = platformRoutes("update",res[i]._id);
+                            url = getRoute("platfrm","update",res[i]._id);
                             break;
                         case "superlayers":
-                            url = superLayerRoutes("update",res[i]._id);
+                            url = getRoute("suprlay","update",res[i]._id);
                             break;
                     }
                     res[i].order = parseInt(res[i].order) + 1;
@@ -376,13 +376,13 @@ function updateData(list, position, mode){
                 for(i = position + 1; i < l; i++){
                     switch(list) {
                         case "layers":
-                            url = layerRoutes("update",res[i]._id);
+                            url = getRoute("layers","update",res[i]._id);
                             break;
                         case "platforms":
-                            url = platformRoutes("update",res[i]._id);
+                            url = getRoute("platfrm","update",res[i]._id);
                             break;
                         case "superlayers":
-                            url = superLayerRoutes("update",res[i]._id);
+                            url = getRoute("suprlay","update",res[i]._id);
                             break;
                     }
                     res[i].order = res[i].order - 1;
@@ -399,14 +399,14 @@ function retrieveData(repo, form, code){
     var url;
 
     switch(repo) {
-        case "layers":
-            url = layerRoutes("retrieve");
+        case "layer":
+            url = getRoute("layers","retrieve");
             break;
-        case "platforms":
-            url = platformRoutes("retrieve");
+        case "platform":
+            url = getRoute("platfrm","retrieve");
             break;
-        case "superlayers":
-            url = superLayerRoutes("retrieve");
+        case "superlayer":
+            url = getRoute("suprlay","retrieve");
             break;
     }
 
@@ -466,97 +466,20 @@ function fillTable(repo, data){
     }
 }
 
-function layerRoutes(route, id){
+function getRoute(form, route, id){
 
     var tail = "",
         param,
         url;
 
-        switch(route) {
-
-            case "insert":
-                tail = "/v1/repo/usrs/" + USERDATA._id + "/layers";
-                break;
-            case "delete":
-                tail = "/v1/repo/usrs/" + USERDATA._id + "/layers/" + id;
-                break;
-            case "update":
-                tail = "/v1/repo/usrs/" + USERDATA._id + "/layers/" + id;
-                break;
-            case "retrieve":
-                tail = "/v1/repo/usrs/" + USERDATA._id + "/layers";
-                break;
-        }
+    if(route === 'insert' || route === 'retrieve')
+        tail = "/v1/repo/usrs/" + user_data._id + "/" + form;
+    else
+        tail = "/v1/repo/usrs/" + user_data._id + "/"+ form +"/" + id;
 
     param = {
-        env : ENV,
-        axs_key : AXS_KEY
-    };
-
-    url = SERVER.replace('http://', '') + tail;
-    url = 'http://' + self.buildURL(url, param);
-
-    return url;
-}
-
-function platformRoutes(route, id){
-
-    var tail = "",
-        param,
-        url;
-
-        switch(route) {
-
-            case "insert":
-                tail = "/v1/repo/usrs/" + USERDATA._id + "/platfrms";
-                break;
-            case "delete":
-                tail = "/v1/repo/usrs/" + USERDATA._id + "/platfrms/" + id;
-                break;
-            case "update":
-                tail = "/v1/repo/usrs/" + USERDATA._id + "/platfrms/" + id;
-                break;
-            case "retrieve":
-                tail = "/v1/repo/usrs/" + USERDATA._id + "/platfrms";
-                break;
-        }
-
-    param = {
-        env : ENV,
-        axs_key : AXS_KEY
-    };
-
-    url = SERVER.replace('http://', '') + tail;
-    url = 'http://' + self.buildURL(url, param);
-
-    return url;
-}
-
-function superLayerRoutes(route, id){
-
-    var tail = "",
-        param,
-        url;
-
-        switch(route) {
-
-            case "insert":
-                tail = "/v1/repo/usrs/" + USERDATA._id + "/suprlays";
-                break;
-            case "delete":
-                tail = "/v1/repo/usrs/" + USERDATA._id + "/suprlays/" + id;
-                break;
-            case "update":
-                tail = "/v1/repo/usrs/" + USERDATA._id + "/suprlays/" + id;
-                break;
-            case "retrieve":
-                tail = "/v1/repo/usrs/" + USERDATA._id + "/suprlays";
-                break;
-        }
-
-    param = {
-        env : ENV,
-        axs_key : AXS_KEY
+        env : environment,
+        axs_key : axs_key
     };
 
     url = SERVER.replace('http://', '') + tail;
@@ -591,7 +514,7 @@ function verify(form, request){
             }
 
             if(proceed){
-                url = layerRoutes("insert");
+                url = getRoute("layers","insert");
                 updateData(form,data.order,'insert');
                 sendRequest(url,'POST',data);
             }
@@ -602,18 +525,24 @@ function verify(form, request){
 
             if(form === 'platform'){
                 list = document.getElementById('platformList');
-                url = platformRoutes("insert");
+                url = getRoute("platfrm","insert");
             }
             else{
                 list = document.getElementById('superlayerList');
-                url = superLayerRoutes("insert");
+                url = getRoute("suprlay","insert");
             }
             elements = list.getElementsByTagName('th');
 
-            if(form === 'platform')
+            var repo;
+
+            if(form === 'platform'){
                 j = 5;
-            else
+                repo = "platfrm";
+            }
+            else{
                 j = 4;
+                repo = "suprlay";
+            }
 
             for(i = 0, l = elements.length; i < l; i+=j){
                 if(data.code.toUpperCase() === elements[i].innerHTML){
@@ -627,7 +556,7 @@ function verify(form, request){
             }
 
             if(proceed){
-                url = layerRoutes("insert");
+                url = getRoute(repo,"insert");
                 updateData(form,data.order,'insert');
                 sendRequest(url,'PUT',data);
             }
@@ -649,7 +578,7 @@ function verify(form, request){
             }
 
             if(proceed){
-                url = layerRoutes("update",referenceId);
+                url = getRoute("layers","update",referenceId);
                 updateData(form,data.order,'insert');
                 sendRequest(url,'PUT',data);
             }
@@ -660,18 +589,22 @@ function verify(form, request){
 
             if(form === 'platform'){
                 list = document.getElementById('platformList');
-                url = platformRoutes("insert");
+                url = getRoute("platfrm","insert");
             }
             else{
                 list = document.getElementById('superlayerList');
-                url = superLayerRoutes("insert");
+                url = getRoute("suprlay","insert");
             }
             elements = list.getElementsByTagName('th');
 
-            if(form === 'platform')
+            if(form === 'platform'){
                 j = 5;
-            else
+                repo = "platfrm";
+            }
+            else{
                 j = 4;
+                repo = "suprlay";
+            }
 
             for(i = 0, l = elements.length; i < l; i+=j){
                 if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){ 
@@ -685,7 +618,7 @@ function verify(form, request){
             }
 
             if(proceed){
-                url = layerRoutes("insert");
+                url = getRoute(repo,"insert");
                 updateData(form,data.order,'insert');
                 sendRequest(url,'PUT',data);
             }
@@ -735,7 +668,7 @@ function buildURL(base, params) {
         
         if(params == null) params = {};
         
-        params.env = ENV;
+        params.env = environment;
 
         //Search for wildcards parameters
         do {
@@ -817,9 +750,9 @@ function getData(form, request) {
             order = 0;
 
         if(form === 'platform') 
-            url = platformRoutes("retrieve");
+            url = getRoute("platfrm","retrieve");
         else
-            url = superLayerRoutes("retrieve");
+            url = getRoute("suprlay","retrieve");
 
         if(request === 'add'){
             data = {
