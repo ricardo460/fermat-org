@@ -251,7 +251,7 @@ router.delete('/:proc_id/steps/:step_id', function (req, res, next) {
 	}
 });
 /**
- * @api {delete} /v1/repo/usrs/:usr_id/procs/:proc_id get process
+ * @api {get} /v1/repo/usrs/:usr_id/procs/:proc_id get process
  * @apiVersion 0.0.1
  * @apiName GetProc
  * @apiGroup Repo-Proc
@@ -330,7 +330,7 @@ router.put('/:proc_id', function (req, res, next) {
 	}
 });
 /**
- * @api {put} /v1/repo/usrs/:usr_id/procs/:proc_id delete process
+ * @api {delete} /v1/repo/usrs/:usr_id/procs/:proc_id delete process
  * @apiVersion 0.0.1
  * @apiName DelProc
  * @apiGroup Repo-Proc
