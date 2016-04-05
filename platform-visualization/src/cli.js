@@ -47,6 +47,18 @@ function CLI() {
         obj.userData.onClick(obj);
         
     };
+    
+    /**
+     * Moves the camera to a distances so the tiles and elements gets the respective quality
+     * @author Miguelcldn
+     * @param {string} qa Can be {"mini" | "small" | "medium" | "high"}
+     */
+    this.goToQuality = function(qa) {
+        var qs = window.tileManager.levels;
+        var pos = window.camera.getPosition();
+        
+        window.camera.move(pos.x, pos.y, qs[qa] + 1);
+    };
 }
 
 var CLI = new CLI();

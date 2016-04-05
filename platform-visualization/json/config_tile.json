@@ -4,36 +4,49 @@
 			"x": 0,
 			"y": 0,
 			"w": 1,
-			"h": 1
+			"h": 1,
+            "minQuality": "mini"
 		},
 		"groupIcon": {
 			"w": 28,
-			"h": 28
+			"h": 28,
+            "minQuality": "high"
 		},
 		"typeIcon": {
 			"w": 28,
-			"h": 28
+			"h": 28,
+            "minQuality": "medium"
 		},
+        "ring": {
+            "minQuality": "medium"
+        },
 		"codeText": {
-			"font": 18
+			"font": 18,
+            "minQuality": "small"
 		},
 		"nameText": {
-			"font": 10
+			"font": 10,
+            "minQuality": "high"
 		},
 		"layerText": {
-			"font": 6
+			"font": 6,
+            "minQuality": "high"
 		},
 		"authorText": {
-			"font": 3.5
+			"font": 3.5,
+            "minQuality": "high"
 		},
 		"maintainer": {
-			"font": 5.5
+			"font": 5.5,
+            "minQuality": "high"
 		},
 		"nameMaintainer": {
-			"font": 4.8
+			"font": 4.8,
+            "minQuality": "high"
 		},
 		"userMaintainer": {
-			"font": 4.3
+			"font": 4.3,
+            "minQuality": "high"
 		}
 	},
 	"concept": {

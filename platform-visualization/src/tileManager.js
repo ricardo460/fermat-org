@@ -10,6 +10,12 @@ function TileManager() {
 
     this.dimensions = {};
     this.elementsByGroup = [];
+    this.levels = {
+        'high': 1000,
+        'medium': 2500,
+        'small': 5000,
+        'mini': 10000
+    };
 
     var jsonTile = {};
     var self = this;
@@ -21,6 +27,7 @@ function TileManager() {
     var layerPosition = [];
     var superLayerMaxHeight = 0;
     var superLayerPosition = [];
+    var qualities = {};
 
     var onClick = function(target) {
         if(window.actualView === 'table')
@@ -28,9 +35,9 @@ function TileManager() {
     };
 
     this.JsonTile = function(callback){
-
         $.get("json/config_tile.json", {}, function(json) {
             jsonTile = json;
+            qualities = jsonTile.qualities;
             callback();
         });
     };
@@ -187,6 +194,11 @@ function TileManager() {
             window.superLayers[code].index = _suprlays[i].order;
             window.superLayers[code]._id = _suprlays[i]._id;
             window.superLayers[code].dependsOn = _suprlays[i].deps;
+            window.TABLE[code] = {
+                layers : {},
+                ID: _suprlays[i]._id,
+                isSlayer: code
+            };
         }
 
         for (i = 0, l = _platfrms.length; i < l; i++) {
@@ -195,6 +207,11 @@ function TileManager() {
             window.platforms[code].index = _platfrms[i].order;
             window.platforms[code].dependsOn = _platfrms[i].deps;
             window.platforms[code]._id = _platfrms[i]._id;
+            window.TABLE[code] = {
+                layers : {},
+                ID: _platfrms[i]._id,
+                isSlayer: false
+            };
         }
 
         for (i = 0, l = _layers.length; i < l; i++) {
@@ -341,54 +358,66 @@ function TileManager() {
                 x: jsonTile.global.portrait.x,
                 y: jsonTile.global.portrait.y,
                 w: jsonTile.global.portrait.w * tileWidth * scale,
-                h: jsonTile.global.portrait.h * tileHeight * scale
+                h: jsonTile.global.portrait.h * tileHeight * scale,
+                skip: qualities[(jsonTile.global.portrait.minQuality || 'mini')] > qualities[quality]
             },
             groupIcon = {
                 src: base + 'icons/group/' + quality + '/icon_' + group + '.png',
                 w: jsonTile.global.groupIcon.w * scale,
-                h: jsonTile.global.groupIcon.h * scale
+                h: jsonTile.global.groupIcon.h * scale,
+                skip: qualities[(jsonTile.global.groupIcon.minQuality || 'mini')] > qualities[quality]
             },
             typeIcon = {
                 src: base + 'icons/type/' + quality + '/' + type.toLowerCase() + '_logo.png',
                 w: jsonTile.global.typeIcon.w * scale,
-                h: jsonTile.global.typeIcon.h * scale
+                h: jsonTile.global.typeIcon.h * scale,
+                skip: qualities[(jsonTile.global.typeIcon.minQuality || 'mini')] > qualities[quality]
             },
             ring = {
-                src: base + 'rings/' + quality + '/' + state + '_diff_' + difficulty + '.png'
+                src: base + 'rings/' + quality + '/' + state + '_diff_' + difficulty + '.png',
+                skip: qualities[(jsonTile.global.ring.minQuality || 'mini')] > qualities[quality]
             },
             codeText = {
                 text: tile.code,
-                font: (jsonTile.global.codeText.font * scale) + "px Arial"
+                font: (jsonTile.global.codeText.font * scale) + "px Arial",
+                skip: qualities[(jsonTile.global.codeText.minQuality || 'mini')] > qualities[quality]
             },
             nameText = {
                 text: tile.name,
-                font: (jsonTile.global.nameText.font * scale) + 'px Arial'
+                font: (jsonTile.global.nameText.font * scale) + 'px Arial',
+                skip: qualities[(jsonTile.global.nameText.minQuality || 'mini')] > qualities[quality]
             },
             layerText = {
                 text: tile.layer,
-                font: (jsonTile.global.layerText.font * scale) + 'px Arial'
+                font: (jsonTile.global.layerText.font * scale) + 'px Arial',
+                skip: qualities[(jsonTile.global.layerText.minQuality || 'mini')] > qualities[quality]
             },
             authorText = {
                 text: tile.authorRealName || tile.author || '',
-                font: (jsonTile.global.authorText.font * scale) + 'px Arial'
+                font: (jsonTile.global.authorText.font * scale) + 'px Arial',
+                skip: qualities[(jsonTile.global.authorText.minQuality || 'mini')] > qualities[quality]
             },
             picMaintainer = {
-                src: tile.maintainerPicture || base + 'buster.png'
+                src: tile.maintainerPicture || base + 'buster.png',
+                skip: qualities[(jsonTile.concept.picMaintainer.minQuality || 'mini')] > qualities[quality]
             },
             maintainer = {
                 text: 'Maintainer',
                 font: (jsonTile.global.maintainer.font * scale) + 'px Arial',
-                color: "#FFFFFF"
+                color: "#FFFFFF",
+                skip: qualities[(jsonTile.global.maintainer.minQuality || 'mini')] > qualities[quality]
             },
             nameMaintainer = {
                 text: tile.maintainerRealName || tile.maintainer || '',
                 font: (jsonTile.global.nameMaintainer.font * scale) + 'px Arial',
-                color: "#FFFFFF"
+                color: "#FFFFFF",
+                skip: qualities[(jsonTile.global.nameMaintainer.minQuality || 'mini')] > qualities[quality]
             },
             userMaintainer = {
                 text: tile.maintainer || 'No Maintainer yet',
                 font: (jsonTile.global.userMaintainer.font * scale) + 'px Arial',
-                color: "#E2E2E2"
+                color: "#E2E2E2",
+                skip: qualities[(jsonTile.concept.userMaintainer.minQuality || 'mini')] > qualities[quality]
             };
 
             pic.x = jsonTile[state].pic.x * scale;
@@ -502,24 +531,19 @@ function TileManager() {
 
         var mesh,
             element = new THREE.LOD(),
-            levels = [
-                ['high', 0],
-                ['medium', 1000],
-                ['small', 1800],
-                ['mini', 2300]
-            ],
             texture,
             tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
             tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING,
             scale = 2,
             table = _table || null;
 
-        for (var j = 0, l = levels.length; j < l; j++) {
+        
+        for(var level in this.levels) {
 
-            if (levels[j][0] === 'high') scale = MAX_TILE_DETAIL_SCALE;
+            if (level === 'high') scale = MAX_TILE_DETAIL_SCALE;
             else scale = 1;
 
-            texture = self.createTexture(id, levels[j][0], tileWidth, tileHeight, scale, table);
+            texture = self.createTexture(id, level, tileWidth, tileHeight, scale, table);
 
             mesh = new THREE.Mesh(
                 new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
@@ -535,7 +559,7 @@ function TileManager() {
                 onClick : onClick
             };
             mesh.renderOrder = 1;
-            element.addLevel(mesh, levels[j][1]);
+            element.addLevel(mesh, this.levels[level]);
             element.userData = {
                 flying: false
             };
@@ -862,7 +886,9 @@ function TileManager() {
 
             image.onload = function () {
 
-                ctx.drawImage(image, actual.x, actual.y, actual.w, actual.h);
+                if (!actual.skip) {
+                    ctx.drawImage(image, actual.x, actual.y, actual.w, actual.h);
+                }
                 if (texture)
                     texture.needsUpdate = true;
 
@@ -908,18 +934,20 @@ function TileManager() {
 
         //TODO: Set Roboto typo
 
-        if (actual.color)
-            ctx.fillStyle = actual.color;
+        if (!actual.skip) {
+            if (actual.color)
+                ctx.fillStyle = actual.color;
 
-        ctx.font = actual.font;
+            ctx.font = actual.font;
 
-        if (actual.constraint)
-            if (actual.wrap)
-                helper.drawText(actual.text, actual.x, actual.y, ctx, actual.constraint, actual.lineHeight);
+            if (actual.constraint)
+                if (actual.wrap)
+                    helper.drawText(actual.text, actual.x, actual.y, ctx, actual.constraint, actual.lineHeight);
+                else
+                    ctx.fillText(actual.text, actual.x, actual.y, actual.constraint);
             else
-                ctx.fillText(actual.text, actual.x, actual.y, actual.constraint);
-        else
-            ctx.fillText(actual.text, actual.x, actual.y);
+                ctx.fillText(actual.text, actual.x, actual.y);
+        }
 
         if (texture)
             texture.needsUpdate = true;

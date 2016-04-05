@@ -7,6 +7,7 @@ function TableEdit() {
         tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
 
     var self = this;
+    this.formerName = null;
 
     /**
      * @author Ricardo Delgado
@@ -137,8 +138,10 @@ function TableEdit() {
         if(tile.code_level !== undefined)
             document.getElementById('select-State').value = tile.code_level; 
 
-        if(tile.name !== undefined)
+        if(tile.name !== undefined) {
             document.getElementById('imput-Name').value = tile.name;       
+            self.formerName = tile.name;
+        }
         
         if(tile.devs !== undefined) 
             document.getElementById('modal-devs').value = tile.devs.slice(0);
@@ -806,48 +809,48 @@ function TableEdit() {
         window.helper.postRoutesComponents('delete', false, dataPost,
             function(res){ 
 
-            var oldLayer = table.layer,
-                oldGroup = table.platform || window.layers[table.layer].super_layer,
-                arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects,
-                idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
+                var oldLayer = table.layer,
+                    oldGroup = table.platform || window.layers[table.layer].super_layer,
+                    arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects,
+                    idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
 
-            window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+                window.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
-            var positionCameraX = window.TABLE[oldGroup].x,
-                positionCameraY = helper.getPositionYLayer(oldLayer);
+                var positionCameraX = window.TABLE[oldGroup].x,
+                    positionCameraY = helper.getPositionYLayer(oldLayer);
 
-            window.camera.loseFocus();
-            window.camera.enable();
+                window.camera.loseFocus();
+                window.camera.enable();
 
-            window.tileManager.transform(false, 1000);
-            window.headers.transformTable(1000);
-            window.signLayer.transformSignLayer();
+                window.tileManager.transform(false, 1000);
+                window.headers.transformTable(1000);
+                window.signLayer.transformSignLayer();
 
-            window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
+                window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
 
-            setTimeout( function() {
+                setTimeout( function() {
 
-                window.TABLE[oldGroup].layers[oldLayer].objects = [];
-           
-                id = id.split("_");
+                    window.TABLE[oldGroup].layers[oldLayer].objects = [];
+               
+                    id = id.split("_");
 
-                id = parseInt(id[2]);
+                    id = parseInt(id[2]);
 
-                var mesh = arrayObject[id].mesh;
+                    var mesh = arrayObject[id].mesh;
 
-                var target =  window.helper.fillTarget(0, 0, 160000, 'table');
+                    var target =  window.helper.fillTarget(0, 0, 160000, 'table');
 
-                animate(mesh, target.hide, 1500, function(){
-                    window.scene.remove(mesh);
-                });
+                    animate(mesh, target.hide, 1500, function(){
+                        window.scene.remove(mesh);
+                    });
 
-                arrayObject.splice(id, 1);
+                    arrayObject.splice(id, 1);
 
-                window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+                    window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
 
-                window.tileManager.updateElementsByGroup();
+                    window.tileManager.updateElementsByGroup();
 
-            }, 3500 );
+                }, 3500 );
 
         });
     }
@@ -917,7 +920,7 @@ function TableEdit() {
                 comp_id : id
             };
 
-        window.helper.postValidateLock('check', dataPost,
+        window.helper.postValidateLock('tableEdit', dataPost,
             function(res){ 
 
                 if(typeof(callback) === 'function')
