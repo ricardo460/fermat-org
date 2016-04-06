@@ -181,9 +181,9 @@ function WorkFlowEdit() {
 
         var Ymin = newCenter.y;
 
-        for(var i = 0; i < window.flowManager.getObjHeaderFlow().length; i++){
+        for(var i = 0; i < window.workFlowManager.getObjHeaderFlow().length; i++){
 
-            var y = window.flowManager.getObjHeaderFlow()[i].positions.target[0].y;
+            var y = window.workFlowManager.getObjHeaderFlow()[i].positions.target[0].y;
 
             if(Ymin === 0){
                 Ymin = y;
@@ -208,7 +208,7 @@ function WorkFlowEdit() {
 
             flow = window.fieldsEdit.getData();
 
-            classFlow = new ActionFlow(flow);
+            classFlow = new Workflow(flow);
 
             createElement();
 
@@ -237,7 +237,7 @@ function WorkFlowEdit() {
         }
         else if(window.fieldsEdit.actions.type === "update"){
 
-            var workFlow = window.flowManager.getObjHeaderFlow()[id];
+            var workFlow = window.workFlowManager.getObjHeaderFlow()[id];
 
             workFlow.deleteStep();
 
@@ -245,7 +245,7 @@ function WorkFlowEdit() {
 
             flow = window.helper.clone(flow);
 
-            classFlow = new ActionFlow(flow);
+            classFlow = new Workflow(flow);
 
             createElement();
 
@@ -276,7 +276,7 @@ function WorkFlowEdit() {
 
                 window.headers.transformWorkFlow(2000);
 
-                var allWorkFlow = window.flowManager.getObjHeaderFlow();
+                var allWorkFlow = window.workFlowManager.getObjHeaderFlow();
 
                 for(var i = 0; i < allWorkFlow.length ; i++) {
 
@@ -417,19 +417,19 @@ function WorkFlowEdit() {
 
     function addWorkFlow(flow, duration){
 
-        var newFlow = new ActionFlow(flow);
+        var newFlow = new Workflow(flow);
 
         var _target = new THREE.Vector3();
 
         var target = null,
             find = false,
-            id = window.flowManager.getObjHeaderFlow().length;
+            id = window.workFlowManager.getObjHeaderFlow().length;
 
-        for(var i = 0; i < window.flowManager.getObjHeaderFlow().length; i++){
+        for(var i = 0; i < window.workFlowManager.getObjHeaderFlow().length; i++){
 
-            if(window.flowManager.getObjHeaderFlow()[i].flow.platfrm === flow.platfrm){
+            if(window.workFlowManager.getObjHeaderFlow()[i].flow.platfrm === flow.platfrm){
 
-                target = window.flowManager.getObjHeaderFlow()[i].positions.target[0];
+                target = window.workFlowManager.getObjHeaderFlow()[i].positions.target[0];
 
                 find = true;
 
@@ -461,7 +461,7 @@ function WorkFlowEdit() {
 
             newFlow.drawEdit(_target.x, _target.y, _target.z, id);
             
-            window.flowManager.getObjHeaderFlow().push(newFlow);
+            window.workFlowManager.getObjHeaderFlow().push(newFlow);
 
         }, duration);
 
@@ -489,7 +489,7 @@ function WorkFlowEdit() {
                         newGroup = newFlow.platfrm,
                         id = window.fieldsEdit.actualFlow.id,
                         target = window.helper.fillTarget(0, 0, 160000, 'workflows'),
-                        workFlow = window.flowManager.getObjHeaderFlow()[id],
+                        workFlow = window.workFlowManager.getObjHeaderFlow()[id],
                         mesh = workFlow.objects[0];
                         
                     window.camera.loseFocus();
@@ -514,7 +514,7 @@ function WorkFlowEdit() {
 
                     function change(){
 
-                        window.flowManager.getObjHeaderFlow().splice(id, 1);
+                        window.workFlowManager.getObjHeaderFlow().splice(id, 1);
 
                         animate(mesh, target.hide, 800, function(){
 
@@ -790,7 +790,7 @@ function WorkFlowEdit() {
 
     function deleteWorkFlow(id){
 
-        var workFlow = window.flowManager.getObjHeaderFlow()[id];
+        var workFlow = window.workFlowManager.getObjHeaderFlow()[id];
 
         var dataPost = {
                 proc_id : workFlow.flow._id
@@ -799,9 +799,9 @@ function WorkFlowEdit() {
         window.helper.postRoutesProcess('delete', false, dataPost,
             function(res){
         
-                window.flowManager.showWorkFlow();
+                window.workFlowManager.showWorkFlow();
 
-                window.flowManager.getObjHeaderFlow().splice(id, 1);
+                window.workFlowManager.getObjHeaderFlow().splice(id, 1);
 
                 window.camera.move(workFlow.positions.target[0].x, workFlow.positions.target[0].y, 8000, 2000);
 
@@ -832,9 +832,9 @@ function WorkFlowEdit() {
             }
         }
 
-        for(var i = 0; i < window.flowManager.getObjHeaderFlow().length; i++){
+        for(var i = 0; i < window.workFlowManager.getObjHeaderFlow().length; i++){
 
-            var workFlow = window.flowManager.getObjHeaderFlow()[i];
+            var workFlow = window.workFlowManager.getObjHeaderFlow()[i];
 
             var mesh = workFlow.objects[0];
 
@@ -863,7 +863,7 @@ function WorkFlowEdit() {
 
     function validateLock(_id, callback){
 
-        var id = window.flowManager.getObjHeaderFlow()[_id].flow._id;
+        var id = window.workFlowManager.getObjHeaderFlow()[_id].flow._id;
 
         var dataPost = {
                 proc_id : id

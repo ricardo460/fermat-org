@@ -666,7 +666,7 @@ function TileManager() {
 
         window.helper.show('container', 2000);
 
-        window.flowManager.getActualFlow();
+        window.workFlowManager.getActualFlow();
 
         self.transform();
 
