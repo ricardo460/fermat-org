@@ -973,6 +973,22 @@ function Helper() {
     };
     
     /**
+     * Makes a deep copy of an object
+     * @author Miguelcldn
+     * @param   {Object} obj The source
+     * @returns {Object} A deep copy of obj
+     */
+    this.clone = function(obj) {
+        var target = {};
+        for (var i in obj) {
+            if (obj.hasOwnProperty(i)) {
+                target[i] = obj[i];
+            }
+        }
+        return target;
+    };
+    
+    /**
      * TODO: MUST BE DELETED
      * @author Miguelcldn
      * @param {Object} data Post Data

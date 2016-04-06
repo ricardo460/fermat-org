@@ -1368,7 +1368,7 @@ function FieldsEdit() {
                 
                 if(Step != -1) {
                     
-                    var step = JSON.parse(JSON.stringify(list.valueJson[Step]));
+                    var step = window.helper.clone(list.valueJson[Step]);
                     
                     nTitle.disabled = false;
                     nStep.disabled = false;
@@ -1626,7 +1626,7 @@ function FieldsEdit() {
                 for(var i = 0; i < valueJson.length; i++){
 
                     var next = valueJson[i].next.slice();
-                    var object = JSON.parse(JSON.stringify(valueJson[i]));
+                    var object = window.helper.clone(valueJson[i]);
 
                     object.next = next;
 
@@ -1744,7 +1744,7 @@ function FieldsEdit() {
 
     function workflowPreview(_step) {
 
-        var step = JSON.parse(JSON.stringify(_step));
+        var step = window.helper.clone(_step);
 
         //if(!step.element)
             step.element = window.helper.searchElement(

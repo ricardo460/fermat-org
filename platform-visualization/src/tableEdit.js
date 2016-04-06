@@ -115,9 +115,9 @@ function TableEdit() {
     // Start editing
     function fillFields(id){
 
-        var tile = JSON.parse(JSON.stringify(window.helper.getSpecificTile(id).data));
+        var tile = window.helper.clone(window.helper.getSpecificTile(id).data);
 
-        window.fieldsEdit.actualTile = JSON.parse(JSON.stringify(tile));
+        window.fieldsEdit.actualTile = window.helper.clone(tile);
 
         if(tile.platform !== undefined)
             document.getElementById('select-Group').value = tile.platform;
@@ -493,7 +493,7 @@ function TableEdit() {
 
                 postParamsDev(_table, function(table){
 
-                    var oldTile = JSON.parse(JSON.stringify(window.fieldsEdit.actualTile)),
+                    var oldTile = window.helper.clone(window.fieldsEdit.actualTile),
                         newLayer = table.layer,
                         newGroup = table.platform || window.layers[table.layer].super_layer,
                         oldLayer = oldTile.layer,
