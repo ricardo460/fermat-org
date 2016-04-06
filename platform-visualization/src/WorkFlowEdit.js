@@ -243,7 +243,7 @@ function WorkFlowEdit() {
 
             flow = workFlow.flow;
 
-            flow = JSON.parse(JSON.stringify(flow));
+            flow = window.helper.clone(flow);
 
             classFlow = new ActionFlow(flow);
 
@@ -445,7 +445,7 @@ function WorkFlowEdit() {
             }
         }
 
-        _target = JSON.parse(JSON.stringify(_target));
+        _target = window.helper.clone(_target);
        
         if(find === true){
             _target.y = _target.y - 500;
@@ -484,7 +484,7 @@ function WorkFlowEdit() {
 
                 postParamsStep(newFlow, function(newFlow){
 
-                    var oldFlow = JSON.parse(JSON.stringify(window.fieldsEdit.actualFlow)),
+                    var oldFlow = window.helper.clone(window.fieldsEdit.actualFlow),
                         oldGroup = oldFlow.platfrm,
                         newGroup = newFlow.platfrm,
                         id = window.fieldsEdit.actualFlow.id,
@@ -903,9 +903,9 @@ function WorkFlowEdit() {
 
         var flow = classFlow.flow;
 
-        flow = JSON.parse(JSON.stringify(flow));
+        flow = window.helper.clone(flow);
 
-        window.fieldsEdit.actualFlow = JSON.parse(JSON.stringify(flow));
+        window.fieldsEdit.actualFlow = window.helper.clone(flow);
 
         var steps = flow.steps;
 
