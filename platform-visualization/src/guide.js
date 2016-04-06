@@ -69,7 +69,7 @@ function Guide() {
 
         popUp(mesh, posX, posY,3500);
 
-    };
+    }
 
     /**
      * @author Isaías Taborda
@@ -139,7 +139,7 @@ function Guide() {
       var duration = 1000;
       var l = self.objects.mesh.length; 
 
-        for(i = 0; i < l; i++) {
+        for(var i = 0; i < l; i++) {
           new TWEEN.Tween(self.objects.mesh[i].position)
             .to({
                 x : 0,

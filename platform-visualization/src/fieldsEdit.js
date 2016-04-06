@@ -28,6 +28,8 @@ function FieldsEdit() {
 
     this.actualTile = null;
 
+    this.actualFlow = null;
+
     var self = this;
 
     var DATA_USER = window.helper.listDevs;
@@ -65,6 +67,9 @@ function FieldsEdit() {
             self.objects.row2.div = null;
             self.objects.idFields = {};
 
+            if(document.getElementById("hidden-area"))
+                window.helper.hide('hidden-area', 1000);
+
             if(window.actualView === 'table'){ 
 
                 self.actualTile = null;
@@ -79,8 +84,92 @@ function FieldsEdit() {
                     self.actions.exit = null;
                 }
             }
+            else if(window.actualView === 'workflows'){
+                    
+                self.actualFlow = null;
+                    
+                window.tableEdit.deleteMesh();
+
+                if(window.camera.getFocus() === null)
+                    window.workFlowEdit.addButton();              
+
+                if(typeof(self.actions.exit) === 'function'){
+                    self.actions.exit();
+                    self.actions.exit = null;
+                }
+            }
 
         }
+    };
+
+    this.createField = function(id, text, _x, _type, _row){
+
+        var object = {
+            id : id,
+            text : text
+          };
+
+        var x = _x || 5,
+            type = _type || 'button',
+            idSucesor = "backButton",
+            row = _row || '1';
+
+        if( self.objects['row' + row].div === null)
+            self.createDiv(row);
+
+        if(self.objects['row' + row].buttons.length !== 0)
+            idSucesor = self.objects['row' + row].buttons[self.objects['row' + row].buttons.length - 1].id;
+
+        var div = document.getElementById(self.objects['row' + row].div);
+
+        var button = document.createElement(type),
+            sucesorButton = document.getElementById(idSucesor);
+                  
+        button.id = id;
+        button.className = 'edit-Fermat';
+        button.innerHTML = text;
+        button.style.zIndex = 10;
+        button.style.opacity = 0;
+
+        div.appendChild(button);
+
+        self.objects['row' + row].buttons.push(object);
+
+        window.helper.show(button, 1000);
+
+        return button;
+    };
+
+    this.createDiv = function(row){ 
+
+        var div = document.createElement('div');
+
+        div.id = 'div-Edit' + row;
+
+        document.body.appendChild(div);
+
+        self.objects['row' + row].div = 'div-Edit' + row;
+
+        window.helper.show(div, 1000);
+    };
+
+    this.setTextSize = function() { 
+        
+        var object = {
+            id : "fermatEditStyle",
+            text : "style"
+          };
+
+        self.objects.row2.buttons.push(object);
+
+        var windowWidth  = window.innerWidth;
+        var size         = windowWidth * 0.009;
+        var style        = document.createElement("style");
+        var styleSheet   = ".edit-Fermat {font-size:"+size+"px;}";
+        var node         = document.createTextNode(styleSheet);
+        
+        style.appendChild(node);
+        document.body.appendChild(style);  
     };
 
     this.createFieldTableEdit = function(){
@@ -93,16 +182,87 @@ function FieldsEdit() {
         sesionDescription();
         sesionState();
         sesionAuthor();
-        createbutton();
-        setTextSize();
+        createbutton(function(){
+            self.actions.exit = null;
+            window.tableEdit.saveTile();  
+        });
+        self.setTextSize();
 
     };
+
+    this.createFieldWorkFlowEdit = function(){
+
+        workflowHeader();
+        workflowDescription();
+        workflowModalSteps();
+
+        createbutton(function(){
+            self.actions.exit = null;
+            window.workFlowEdit.save();  
+        });
+
+    };
+
+    this.changeLayer = function(platform){
+
+        var state = false;
+
+        if(typeof window.platforms[platform] === 'undefined')
+            state = platform;
+
+        var _layers = window.CLI.query(window.layers,function(el){return (typeof(el) !== "function" && el.super_layer.toString() === state.toString());});
+
+        var option = "";
+
+        for(var i = 0;i < _layers.length; i++){
+
+            option += "<option value = '"+_layers[i]+"' >"+_layers[i]+"</option>";
+
+        }
+
+        $("#select-layer").html(option);  
+        
+    };
+
+    this.disabledButtonSave = function(state){
+
+        var button = document.getElementById('button-save');
+
+        if(state){
+            button.innerHTML  = "Saving...";
+            button.disabled=true;
+        }
+        else{
+            button.innerHTML  = "Save";
+            button.disabled=false;
+        }
+    };
+    
+    this.getData = function() {
+        
+        var title = document.getElementById("workflow-header-title");
+        var desc = document.getElementById("modal-desc-textarea");
+        var platform = document.getElementById("workflow-header-plataform");
+        var list = document.getElementById("step-List");
+        
+        var json = {
+            "platfrm": platform.value,
+            "name": title.value,
+            "desc": desc.value,
+            "prev": null,
+            "next": null,
+            "steps": list.valueJson.slice()
+        };
+        
+        return json;
+    };
+
         
     function sesionRepoDir() {
 
         var id = 'label-Repositorio'; text = 'Dir. Repo. : '; type = 'label';
 
-        createField(id, text, null, type, 2);
+        self.createField(id, text, null, type, 2);
 
         var idSucesor = self.objects.row2.buttons[self.objects.row2.buttons.length - 1].id;
 
@@ -139,91 +299,18 @@ function FieldsEdit() {
     function setSelectImages(select) {
         
         select.style.backgroundSize = select.offsetHeight + "px";
-        select.style.width = select.offsetWidth + select.offsetHeight + "px";
-        
-    }
-    
-    function setTextSize() {
-        
-        var object = {
-            id : "fermatEditStyle",
-            text : "style"
-          };
-
-        self.objects.row2.buttons.push(object);
-
-        var windowWidth  = window.innerWidth;
-        var size         = windowWidth * 0.009;
-        var style        = document.createElement("style");
-        var styleSheet   = ".edit-Fermat {font-size:"+size+"px;}";
-        var node         = document.createTextNode(styleSheet);
-        
-        style.appendChild(node);
-        document.body.appendChild(style);
-        
-    }
-
-    function createDiv(row){
-
-        var div = document.createElement('div');
-
-        div.id = 'div-Edit' + row;
-
-        document.body.appendChild(div);
-
-        self.objects['row' + row].div = 'div-Edit' + row;
-
-        window.helper.show(div, 1000);
-
-    }
-
-    function createField(id, text, _x, _type, _row){
-
-        var object = {
-            id : id,
-            text : text
-          };
-
-        var x = _x || 5,
-            type = _type || 'button',
-            idSucesor = "backButton",
-            row = _row || '1';
-
-        if( self.objects['row' + row].div === null)
-            createDiv(row);
-
-        if(self.objects['row' + row].buttons.length !== 0)
-            idSucesor = self.objects['row' + row].buttons[self.objects['row' + row].buttons.length - 1].id;
-
-        var div = document.getElementById(self.objects['row' + row].div);
-
-        var button = document.createElement(type),
-            sucesorButton = document.getElementById(idSucesor);
-                  
-        button.id = id;
-        button.className = 'edit-Fermat';
-        button.innerHTML = text;
-        button.style.zIndex = 10;
-        button.style.opacity = 0;
-
-        div.appendChild(button);
-
-        self.objects['row' + row].buttons.push(object);
-
-        window.helper.show(button, 1000);
-
-        return button;
+        select.style.width = select.offsetWidth + select.offsetHeight + "px";  
     }
 
     function sesionGroup(){
 
         var id = 'label-Group'; text = 'Select the Group : '; type = 'label';
 
-        createField(id, text, null, type);
+        self.createField(id, text, null, type);
 
         id = 'select-Group'; text = ''; type = 'select';
 
-        createField(id, text, null, type);
+        self.createField(id, text, null, type);
 
         var optgroup = "<optgroup label = Platform>",
             option = "";
@@ -273,13 +360,13 @@ function FieldsEdit() {
 
     function sesionLayer(){
 
-        var id = 'label-layer', text = 'Select the Layer : ', type = 'label';
+        var id = 'label-layer'; text = 'Select the Layer : '; type = 'label';
 
-        createField(id, text, 15, type);
+        self.createField(id, text, 15, type);
 
         id = 'select-layer'; text = ''; type = 'select';
 
-        createField(id, text, null, type);
+        self.createField(id, text, null, type);
 
         self.objects.idFields.layer = id;
 
@@ -295,11 +382,11 @@ function FieldsEdit() {
 
         var id = 'label-Type'; text = 'Select the Type : '; type = 'label';
 
-        createField(id, text, 15, type);
+        self.createField(id, text, 15, type);
 
         id = 'select-Type'; text = ''; type = 'select';
 
-        createField(id, text, null, type);
+        self.createField(id, text, null, type);
 
         self.objects.idFields.type = id;        
 
@@ -318,14 +405,13 @@ function FieldsEdit() {
         });
         
         setSelectImages(document.getElementById(id));
-
     }
 
     function sesionName(){
 
         var id = 'label-Name'; text = 'Enter Name : '; type = 'label';
 
-        createField(id, text, null, type, 2);
+        self.createField(id, text, null, type, 2);
 
         var idSucesor = self.objects.row2.buttons[self.objects.row2.buttons.length - 1].id;
 
@@ -357,7 +443,6 @@ function FieldsEdit() {
 
             window.tableEdit.changeTexture();
         });
-
     }
     
     function sesionAuthor(){
@@ -382,7 +467,7 @@ function FieldsEdit() {
         button.className = 'actionButton edit-Fermat';
         button.style.zIndex = 10;
         button.style.opacity = 0;
-        button.value = "Authors";
+        button.value = "Autores";
         button.style.marginLeft = "5px";
 
         object = {
@@ -420,7 +505,7 @@ function FieldsEdit() {
                     '</div>'+
                     '<div id="buttons" >'+
                         '<button id="modal-close-button" >Cancel</button>'+
-                        '<button id="modal-accept-button" style="border-left: 2px solid #00b498;">Accept</button>'+
+                        '<button id="modal-accept-button" style="border-left: 2px solid #00b498;">Aceptar</button>'+
                     '</div>'+
                 '</div>';
             
@@ -680,11 +765,11 @@ function FieldsEdit() {
 
         var id = 'label-Difficulty'; text = 'Select Difficulty : '; type = 'label';
 
-        createField(id, text, 15, type);
+        self.createField(id, text, 15, type);
 
         id = 'select-Difficulty'; text = ''; type = 'select';
 
-        createField(id, text, null, type);
+        self.createField(id, text, null, type);
 
         self.objects.idFields.difficulty = id;
 
@@ -710,7 +795,6 @@ function FieldsEdit() {
         });
         
         setSelectImages(document.getElementById(id));
-
     }
 
     function sesionDescription(){
@@ -757,7 +841,7 @@ function FieldsEdit() {
             
             modal.innerHTML = ''+
                     '<label>Description:</label>'+
-                    '<textarea id="modal-desc-textarea" rows="12"></textarea>'+
+                    '<textarea id="modal-desc-textarea" rows="12" maxlength="300"></textarea>'+
                     '<div>'+
                         '<button id="modal-desc-cancel">Cancel</button>'+
                         '<button id="modal-desc-accept">Accept</button>'+
@@ -803,18 +887,17 @@ function FieldsEdit() {
             window.helper.hide(area, 500);
             
         });
-
     }
 
     function sesionState(){
 
         var id = 'label-State'; text = 'Select the State : '; type = 'label';
 
-        createField(id, text, 15, type);
+        self.createField(id, text, 15, type);
 
         id = 'select-State'; text = ''; type = 'select';
 
-        createField(id, text, 8, type);
+        self.createField(id, text, 8, type);
 
         self.objects.idFields.state = id;
 
@@ -833,74 +916,905 @@ function FieldsEdit() {
         });
         
         setSelectImages(document.getElementById(id));
-
     }
 
-    function createbutton(){
+    function createbutton(callback){
         
         var id = 'button-save', text = 'Save', type = 'button';
         
         window.buttonsManager.createButtons(id, text, function(){
-            self.actions.exit = null;
-            window.tableEdit.saveTile();            
+
+            if(typeof(callback) === 'function')
+                callback();          
 
         }, null, null, "right");
+    }
 
+    function deleteMesh(){
+
+        var mesh = self.objects.tile.mesh;
+
+        if(mesh != null){ 
+
+            animate(mesh, self.objects.tile.target.hide, 1500, function(){ 
+                    window.scene.remove(mesh);
+                    
+                    self.objects.tile.mesh = null;
+                });
+        }
+    }
+
+    function workflowHeader() {
+        
+        if(!document.getElementById("workflow-header")) {
+            
+            var div = document.createElement("div");
+            div.id = "workflow-header";
+            div.innerHTML += '<label> Title: </label>';
+            div.innerHTML += '<input id="workflow-header-title" class="edit-Fermat" placeholder="Title" type="text" maxlength="85"></input>';
+            div.innerHTML += '<label> Select the Group : </label>';
+            var select = document.createElement("select");
+            select.id = "workflow-header-plataform";
+            select.className = "edit-Fermat";
+
+            var object = {
+                id : "workflow-header",
+                text : "workflow-header"
+            };
+
+            self.objects.row1.buttons.push(object);
+  
+            var optgroup = "<optgroup label = Platform>",
+            option = "";
+
+            for(var i in window.platforms){ 
+
+                if(i != "size"){
+
+                    option += "<option value = "+i+" >"+i+"</option>";
+                }
+
+            }
+
+            optgroup += option + "</optgroup>";
+
+            option = "";
+
+            optgroup += "<optgroup label = superLayer>";
+
+            for(var _i in window.superLayers){
+
+                if(_i != "size"){
+
+                    option += "<option value = "+_i+" >"+_i+"</option>";
+                }
+
+            }
+
+            optgroup += option + "</optgroup>";
+
+            select.innerHTML = optgroup;
+            
+            
+            div.appendChild(select);
+            
+            div.innerHTML += '<input id="workflow-header-description" style="margin-left: 5px" type="button" class="actionButton edit-Fermat" value="Description"></input>';
+            div.innerHTML += '<input id="workflow-header-steps" style="margin-left: 5px" type="button" class="actionButton edit-Fermat" value="Steps"></input>';
+            
+            document.body.appendChild(div);
+            
+            document.getElementById("workflow-header-title").addEventListener('blur', function() {
+               window.workFlowEdit.changeTexture();
+            });
+            
+            setSelectImages(document.getElementById("workflow-header-plataform"));
+        }   
     }
     
+    function workflowDescription() {
 
-    this.changeLayer = function(platform){
+        var div = document.createElement("div");
+        div.id = "workflow-modal-desc";
+        var modal = document.createElement("div");
+        modal.id = "modal-desc";
+        modal.style.top = (window.innerHeight / 4) + "px" ;
+        modal.dataset.state = "hidden";
 
-        var state = false;
+        var object = {
+            id : "workflow-modal-desc",
+            text : "workflow-header"
+        };
 
-        if(typeof window.platforms[platform] === 'undefined')
-            state = platform;
+        self.objects.row1.buttons.push(object);
 
-        var _layers = window.CLI.query(window.layers,function(el){return (typeof(el) !== "function" && el.super_layer.toString() === state.toString());});
-
-        var option = "";
-
-        for(var i = 0;i < _layers.length; i++){
-
-            option += "<option value = '"+_layers[i]+"' >"+_layers[i]+"</option>";
-
-        }
-
-        $("#select-layer").html(option);  
+        modal.innerHTML = ''+
+            '<label>Description:</label>'+
+            '<textarea id="modal-desc-textarea" rows="12" maxlength="340"></textarea>'+
+            '<div>'+
+                '<button id="modal-desc-cancel">Cancel</button>'+
+                '<button id="modal-desc-accept">Accept</button>'+
+            '</div>';
         
-    };
-
-
-    // end
-
-
-    function validateFields(){
-        var msj = '';
-
-        var name = document.getElementById('imput-Name');
-
-        if(name.value === ""){
-            msj += 'The component must have a name \n';
-            name.focus();
-        }
-
-        return msj;
+        div.appendChild(modal);
+        document.body.appendChild(div);
+        
+        var button = document.getElementById("workflow-header-description");
+        
+        button.addEventListener('click', function() {
+            
+            var modal = document.getElementById("modal-desc");
+            modal.dataset.state = "show";
+            
+            modal.oldValue = document.getElementById("modal-desc-textarea").value;
+            
+            var area = document.createElement("div");
+            area.id = "hidden-area";
+            document.body.appendChild(area);
+            window.helper.show(area, 1000);
+            
+        });
+        
+        document.getElementById("modal-desc-cancel").onclick = function() {
+            var modal = document.getElementById("modal-desc");
+            modal.dataset.state = "hidden";
+            document.getElementById("modal-desc-textarea").value = modal.oldValue;
+            
+            var area = document.getElementById("hidden-area");
+            window.helper.hide(area, 500);
+            
+        };
+        
+        document.getElementById("modal-desc-accept").addEventListener("click", function() {
+            var modal = document.getElementById("modal-desc");
+            modal.dataset.state = "hidden";
+            
+            var area = document.getElementById("hidden-area");
+            window.helper.hide(area, 500);
+            
+            window.workFlowEdit.changeTexture();
+        });
     }
-    // end
+    
+    function workflowModalSteps() {
+        
+        //create modal
 
-    this.disabledButtonSave = function(state){
+        var backJson = [];
+        
+        if(!document.getElementById("modal-steps-div")) {
 
-        var button = document.getElementById('button-save');
+            var modal = document.createElement("div");
+            modal.id = "modal-steps-div";
+            modal.dataset.state = "hidden";
+            modal.innerHTML = `
+                <div id="modal-steps">
+                  <div id="left">
+                    <div id="inputs">
+                      <span id="step-Number">Steps</span>
+                      <div>
+                        <label>Title:</label>
+                        <input id="step-Title" type="text" placeholder="Title of Step" maxlength="80"/>
+                        <label>Group:</label>
+                        <select id="step-Plataform">
+                        </select>
+                        <label>Layer:</label>
+                        <select id="step-Layer">
+                        </select>
+                        <label id = "label-compo">Component:</label>
+                        <select id="step-Component">
+                        </select>
+                        <label>Description:</label>
+                        <textarea id="step-Description" maxlength="170"></textarea>
+                      </div>
+                    </div>
 
-        if(state){
-            button.innerHTML  = "Saving...";
-            button.disabled=true;
+                    <div id="next">
+                      <div id="blank">
+                        <legend>Calls</legend>
+                      </div>
+                      <div id="inputs">
+                        <fieldset>
+                          <label>Step:</label>
+                          <select id="next-step-Select">
+                          </select>
+                          <label>Type Call:</label>
+                          <select id="step-TypeCall">
+                          </select>
+                        </fieldset>
+                      </div>
+
+                      <div id="selector-steps">
+                        <div id="graphic-selector">
+                          <div style="width:25%;"></div>
+                          <div style="width:25%;" class="on"></div>
+                          <div style="width:25%;"></div>
+                          <div style="width:25%;"></div>
+                        </div>
+
+                        <div id="input-selector">
+                          <button id="input-selector-old">&lt;</button>
+                          <center id="input-selector-num"> 1 </center>
+                          <button id="input-selector-nex">&gt;</button>
+                          <button id="input-selector-new">+</button>
+                          <button id="input-selector-rem">-</button>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div id="right">
+
+                    <div id="preview">
+                      <label>Preview</label>
+                      <canvas id="step-Preview"></canvas>
+                    </div>
+
+                    <div id="list">
+                      <select id="step-List" size="2">
+                        <option>1</option>
+                      </select>
+                    </div>
+
+                    <div id="buttons">
+                      <button id="step-NewStep"    >New Step</button>
+                      <button id="step-RemoveStep" >Remove Step</button>
+                      <button id="step-Cancel"     >Cancel</button>
+                      <button id="step-Accept"     >Update</button>
+                    </div>
+
+                  </div>
+                </div>
+
+            `;
+
+            var object = {
+                id : "modal-steps-div",
+                text : "workflow-header"
+            };
+
+            self.objects.row1.buttons.push(object);     
+            
+            /*
+                step-Number
+                step-Title
+                step-Layer
+                step-Plataform
+                step-Component
+                step-Padre
+                step-Description
+                step-List
+                step-TypeCall
+                next-step-Select
+                
+                buttons:
+                    step-NewStep
+                    step-RemoveStep
+                    step-Accept
+                    step-Cancel
+                
+                canvas:
+                    step-Preview
+                
+                (id:step-List) .valueJson = [];
+            */
+
+            document.body.appendChild(modal);
+            
+            var nTitle       = document.getElementById("step-Title");
+            var nLayer       = document.getElementById("step-Layer");
+            var nPlataform   = document.getElementById("step-Plataform");
+            var nComponent   = document.getElementById("step-Component");
+            var nDescription = document.getElementById("step-Description");
+            var nTypeCall    = document.getElementById("step-TypeCall");
+            var list         = document.getElementById("step-List");
+            var nextSelect   = document.getElementById("next-step-Select");
+            var inputNum     = document.getElementById("input-selector-num");
+            var gSelect      = document.getElementById("graphic-selector");
+                        
+            nextSelect.update = function() {
+                var inputNum = document.getElementById("input-selector-num");
+                
+                if(!list.valueJson[nextSelect.step].next.length) {
+                    nextSelect.disabled = true;
+                    nTypeCall.disabled  = true;
+                    inputNum.innerHTML  = "None";
+                } else {
+                    nextSelect.disabled = false;
+                    nTypeCall.disabled  = false;
+                    inputNum.innerHTML  = "Child " + nextSelect.call;
+                    
+                    nextSelect.innerHTML = "";
+                    var opt;
+
+                    for(var i = 0; i < list.valueJson.length; i++) {
+                        opt = document.createElement("option");
+                        opt.value = i;
+                        opt.innerHTML = (i + 1) + " - " + list.valueJson[i].title;
+                        nextSelect.appendChild(opt);                    
+                    }
+                    
+                    nTypeCall.innerHTML = `
+                        <option>direct call</option>
+                        <option>fermat message</option>
+                        <option>event</option>
+                    `;
+                    
+                    nTypeCall.value = list.valueJson[nextSelect.step].next[nextSelect.call-1].type;
+                    nextSelect.value = list.valueJson[nextSelect.step].next[nextSelect.call-1].id;
+                    
+                }
+                                
+                gSelect.update();
+            };
+            
+            list.update = function() {
+
+                var opt;
+                
+                this.innerHTML = "";
+                
+                for(var i = 0; i < this.valueJson.length; i++) {
+                    opt = document.createElement("option");
+                    opt.value = i;
+                    opt.innerHTML = (i + 1) + " - " + this.valueJson[i].title;
+                    this.appendChild(opt);
+                }
+                
+            };
+            
+            nLayer.update = function() { 
+
+                var nPlataform = document.getElementById("step-Plataform");
+                var _layers = TABLE[nPlataform.value].layers;
+                var option = "";
+
+                for(var layer in _layers){
+                    option += "<option value = '" + layer + "' >" + layer + "</option>";
+                }
+                nLayer.innerHTML = option;
+
+                list.valueJson[nLayer.step].layer = nLayer.value;
+            };         
+            
+            nComponent.update = function() {
+                var nPlataform = document.getElementById("step-Plataform");
+                var nLayer     = document.getElementById("step-Layer");
+                var obj = TABLE[nPlataform.value].layers[nLayer.value].objects.slice();
+                var option = "";
+                
+                for(var i = 0; i < obj.length; i++) {
+                    option += "<option value='" + obj[i].data.name + "'>" + obj[i].data.name + "</option>";
+                }
+
+                this.innerHTML = option;
+                list.valueJson[nComponent.step].name = nComponent.value;
+
+            };
+            
+            nDescription.onkeyup = function() {
+                list.valueJson[nDescription.step].desc = nDescription.value;
+            };
+            
+            nTitle.onkeyup = function() {
+                list.valueJson[nTitle.step].title = nTitle.value;
+                list.update();
+            };
+            
+            nLayer.onchange = function() {
+                list.valueJson[nLayer.step].layer = nLayer.value;
+
+                nComponent.update();
+            };
+            
+            nPlataform.onchange = function() {
+                list.valueJson[nPlataform.step].platfrm = nPlataform.value;
+
+                nLayer.update();
+                nComponent.update();
+            };
+            
+            nComponent.onchange = function() {
+                list.valueJson[nComponent.step].name = nComponent.value;
+                workflowPreview(list.valueJson[nComponent.step]);
+            };
+            
+            nTypeCall.onchange = function() {
+                list.valueJson[nTypeCall.step].next[nextSelect.call-1].type = nTypeCall.value;
+            };
+            
+            nextSelect.onchange = function() {
+                list.valueJson[nextSelect.step].next[nextSelect.call-1].id = nextSelect.value;
+            };
+            
+            list.valueJson = [];
+            
+            list.onchange = function() {
+                var modal = document.getElementById("modal-steps-div");
+                modal.changeStep(parseInt(list.value));
+            };
+            
+            modal.getStepData = function() {
+                for(var i=0; i < list.valueJson.length; i++) {
+                    list.valueJson[i].type = "activity";
+                }
+                                
+                list.valueJson[0].type = "start";
+                list.valueJson[list.valueJson-1].type = "end";
+                
+                return list.valueJson.slice();
+            };
+            
+            modal.previewUpdate = function(Step) {
+                
+            };
+            
+            modal.changeStep = function(Step) {
+                
+                var nTitle       = document.getElementById("step-Title");
+                var stepNumber   = document.getElementById("step-Number");
+                var list         = document.getElementById("step-List");
+                var nStep        = document.getElementById("step-Number");
+                var nLayer       = document.getElementById("step-Layer");
+                var nPlataform   = document.getElementById("step-Plataform");
+                var nComponent   = document.getElementById("step-Component");
+                var nDescription = document.getElementById("step-Description");
+                var nTypeCall    = document.getElementById("step-TypeCall");
+                var nextSelect   = document.getElementById("next-step-Select");
+                var gSelect      = document.getElementById("graphic-selector");
+                var inputOld     = document.getElementById("input-selector-old");
+                var inputNex     = document.getElementById("input-selector-nex");
+                var inputNew     = document.getElementById("input-selector-new");
+                var inputRem     = document.getElementById("input-selector-rem");
+                
+                if(Step != -1) {
+                    
+                    var step = window.helper.clone(list.valueJson[Step]);
+                    
+                    nTitle.disabled = false;
+                    nStep.disabled = false;
+                    nLayer.disabled = false;
+                    nPlataform.disabled = false;
+                    nDescription.disabled = false;
+                    nTypeCall.disabled = false;
+                    nComponent.disabled = false;
+                    nextSelect.disabled = false;
+                    gSelect.disabled = false;
+                    inputOld.disabled = false;
+                    inputNex.disabled = false;
+                    inputNew.disabled = false;
+                    inputRem.disabled = false;
+
+                    nLayer.step       = Step;
+                    nPlataform.step   = Step;
+                    nComponent.step   = Step;
+                    nDescription.step = Step;
+                    nTitle.step       = Step;
+                    nTypeCall.step    = Step;
+                    nTypeCall.step    = Step;
+                    nextSelect.step   = Step;
+                    gSelect.step      = Step;
+
+
+                    stepNumber.innerHTML = "Step " + (step.id + 1) + ":";
+
+                    //----------Type Call-----------
+
+                    nTypeCall.innerHTML = "";
+
+                    //------------List--------------
+
+                    list.update();
+                    list.value = Step;
+
+                    //----------Plataform-----------
+
+                    var optgroup = "<optgroup label = Platform>",
+                    option = "";
+
+                    for(var i in window.platforms){ 
+                        if(i != "size"){
+                            option += "<option value = "+i+" >"+i+"</option>";
+                        }
+                    }
+
+                    optgroup += option + "</optgroup>";
+                    option = "";
+                    optgroup += "<optgroup label = superLayer>";
+
+                    for(var _i in window.superLayers){
+                        if(_i != "size"){
+                            option += "<option value = "+_i+" >"+_i+"</option>";
+                        }
+                    }
+
+                    optgroup += option + "</optgroup>";
+
+                    nPlataform.innerHTML = optgroup;
+
+                    if(step.platfrm || step.suprlay){
+
+                        var group = step.platfrm || step.suprlay;
+
+                        nPlataform.value = group;
+                        list.valueJson[nPlataform.step].platfrm = group;
+                    } else {
+
+                        nPlataform.selectedIndex = 0;
+                        list.valueJson[nPlataform.step].platfrm = nPlataform.value;
+                    }
+                    
+                    //------------Layer-------------
+
+                    nLayer.update();
+
+                    if(step.layer){
+                        nLayer.value = step.layer;
+                        list.valueJson[nLayer.step].layer = step.layer;
+                    }
+                    else{
+                        nLayer.selectedIndex = 0;
+                        list.valueJson[nLayer.step].layer =  nLayer.value;
+                    }
+                    
+                    //-----------Component------------
+
+                    nComponent.update();
+
+                    if(step.name){
+                        nComponent.value = step.name;
+                        list.valueJson[nComponent.step].name = step.name;
+                    }
+                    else{
+                        nComponent.selectedIndex = 0;
+                        list.valueJson[nComponent.step].name = nComponent.value;
+                    }
+
+                    workflowPreview(list.valueJson[nComponent.step]);
+
+                    //------------Next--------------
+
+                    nextSelect.call = list.valueJson[nextSelect.step].next.length;
+                    nextSelect.update();
+
+                    //------------------------------
+
+                    nTitle.value = step.title;
+                    nStep.value = "Step " + step.id + ":";
+                    nDescription.value = step.desc;
+                    
+                } else {
+
+                    nTitle.disabled = true;
+                    nStep.disabled = true;
+                    nLayer.disabled = true;
+                    nPlataform.disabled = true;
+                    nDescription.disabled = true;
+                    nTypeCall.disabled = true;
+                    nComponent.disabled = true;
+                    nextSelect.disabled = true;
+                    gSelect.disabled = true;
+                    inputOld.disabled = true;
+                    inputNex.disabled = true;
+                    inputNew.disabled = true;
+                    inputRem.disabled = true;
+
+                    stepNumber.innerHTML = "Step :";
+                    
+                    list.innerHTML = "";
+                    
+                    cleanPreview();
+                }
+            };
+            
+            modal.newStep = function() {
+                var list = document.getElementById("step-List");
+                var num  = list.valueJson.length;
+                list.valueJson[list.valueJson.length] = {
+                    "id": num,
+                    "title": "",
+                    "desc": "",
+                    "type": "start",
+                    "next": []
+                };
+                
+                list.update();
+                
+                return num;
+            };
+                        
+            window.onresize = function() {
+                var m = document.getElementById("modal-steps");
+                var div = document.getElementById("modal-steps-div");
+                var w = (m.offsetHeight*1.6) + "px";
+                m.style.width = w;
+                
+                var m_y = (window.innerHeight/2) - (m.offsetHeight/2);
+                
+                div.style.top = m_y + "px";
+                
+            };
+            
+            var inputOld = document.getElementById("input-selector-old");
+            var inputNex = document.getElementById("input-selector-nex");
+            var inputNew = document.getElementById("input-selector-new");
+            var inputRem = document.getElementById("input-selector-rem");
+            
+            inputNew.onmouseup = function() {
+                list.valueJson[nextSelect.step].next[list.valueJson[nextSelect.step].next.length] = {
+                    "id": 0,
+                    "type": "direct call"
+                };
+                
+                nextSelect.call = list.valueJson[nextSelect.step].next.length;
+                nextSelect.update();
+            };
+            
+            inputRem.onmouseup = function() {
+                var next = list.valueJson[nextSelect.step].next;
+                var low  = next.splice(0, nextSelect.call-1);
+                var high = next.splice(1, next.length);
+                
+                list.valueJson[nextSelect.step].next = low.concat(high);
+                
+                if(list.valueJson[nextSelect.step].next.length) {
+                    if(nextSelect.call > list.valueJson[nextSelect.step].next.length)
+                        nextSelect.call = list.valueJson[nextSelect.step].next.length;
+                } else {
+                    nextSelect.call = 0;
+                }
+                nextSelect.update();
+            };
+            
+            inputOld.onmouseup = function() {
+                if(nextSelect.call != 0) 
+                    if(nextSelect.call > 1)
+                        nextSelect.call -= 1;
+                nextSelect.update();
+            };
+            
+            inputNex.onmouseup = function() {
+                if(nextSelect.call < list.valueJson[nextSelect.step].next.length)
+                    nextSelect.call += 1;
+                nextSelect.update();
+            };
+            
+            nextSelect.chg  = function(id) {
+                nextSelect.call = id + 1;
+                nextSelect.update();
+            };
+            
+            gSelect.update = function() {
+                gSelect.innerHTML = "";
+                
+                var size = 100 / list.valueJson[gSelect.step].next.length;
+                var div;
+                
+                
+                if(nextSelect.call > 0) 
+                    for(var i = 0; i < list.valueJson[gSelect.step].next.length; i++) {
+                        div = document.createElement("div");
+                        div.style.width = size + "%";
+                        div.dataset.id = i+1;
+                        
+                        if(i == nextSelect.call - 1)
+                            div.className = 'on';
+                        
+                        div.onclick = function() {
+                            var n = document.getElementById("next-step-Select");
+                            n.call = parseInt(this.dataset.id);
+                            n.update();
+                        };
+                        
+                        gSelect.appendChild(div);
+                    }
+                else
+                    gSelect.innerHTML = '<div style="width:100%;" class="off"></div>';
+                
+            };
+
         }
-        else{
-            button.innerHTML  = "Save";
-            button.disabled=false;
+        
+        var button = document.getElementById("workflow-header-steps");
+        
+        button.addEventListener('click', function() {
+
+            if(document.getElementById("step-List")){
+                var valueJson = document.getElementById("step-List").valueJson.slice();
+
+                backJson = [];
+
+                for(var i = 0; i < valueJson.length; i++){
+
+                    var next = valueJson[i].next.slice();
+                    var object = window.helper.clone(valueJson[i]);
+
+                    object.next = next;
+
+                    backJson.push(object);
+                }
+            }
+
+            cleanPreview();
+            
+            var modal = document.getElementById("modal-steps-div");
+            modal.dataset.state = "show";
+
+            var area = document.createElement("div");
+            area.id = "hidden-area";
+            document.body.appendChild(area);
+            window.helper.show(area, 1000);
+            window.onresize();
+            
+        });
+        
+        document.getElementById("step-NewStep").onclick = function() {
+            var modal = document.getElementById("modal-steps-div");
+            var list = document.getElementById("step-List");
+            var num  = modal.newStep();
+            list.value = num;
+            modal.changeStep(num);
+        };
+        
+        document.getElementById("step-RemoveStep").onmouseup = function() {
+            var modal = document.getElementById("modal-steps-div");
+            var list = document.getElementById("step-List");
+            
+            if(list.valueJson.length > 1) {
+                var value = list.value;
+                var high = list.valueJson.splice(0, list.value);
+                var low  = list.valueJson.splice(1, list.valueJson.length);
+                list.valueJson = high.concat(low);
+
+                for(var i = 0; i < list.valueJson.length; i++) {
+                    list.valueJson[i].id = i;
+                }
+
+                if(value > list.valueJson.length - 1)
+                    list.value = list.valueJson.length - 1;
+                else
+                    list.value = value;
+                
+                modal.changeStep(list.value);
+            } else {
+                list.valueJson = [];
+                modal.changeStep(-1);
+            }
+            
+            
+        };
+        
+        document.getElementById("step-Accept").onclick = function() {
+
+            if(validateNameSteps() === ''){ 
+                var modal = document.getElementById("modal-steps-div");
+                modal.dataset.state = "hidden";
+
+                var area = document.getElementById("hidden-area");
+                window.helper.hide(area, 1000);
+                window.workFlowEdit.changeTexture();
+                window.workFlowEdit.fillStep();
+                cleanPreview();
+            } else {
+                window.alert(validateNameSteps());
+            }
+        };
+
+        document.getElementById("step-Cancel").onclick = function() {
+
+            var list = document.getElementById("step-List");
+            var modal = document.getElementById("modal-steps-div");
+            
+            modal.dataset.state = "hidden";
+            cleanPreview();
+
+            if(backJson){
+
+                var list = document.getElementById("step-List");
+                list.valueJson = backJson.slice();
+                list.update();
+
+                if(list.valueJson.length > 0)
+                    document.getElementById("modal-steps-div").changeStep(0);
+            }
+
+            var area = document.getElementById("hidden-area");
+            window.helper.hide(area, 1000);
+        };
+
+        function validateNameSteps(){
+            var list = document.getElementById("step-List");
+            var msj = '';
+
+            if(list.valueJson.length > 0){
+                for(var i = 0; i < list.valueJson.length; i++) {
+                    var name = list.valueJson[i].title;
+                    if(name === "")
+                        msj += 'The step '+ (i + 1) +' must have a name. \n';
+                }
+            }
+
+            return msj;
         }
-    };
+        
+        window.onresize();
+        var modal = document.getElementById("modal-steps-div");
+        modal.changeStep(modal.newStep());
+        document.getElementById("step-RemoveStep").onmouseup();
+    }
+
+    function workflowPreview(_step) {
+
+        var step = window.helper.clone(_step);
+
+        //if(!step.element)
+            step.element = window.helper.searchElement(
+                (step.platfrm || step.suprlay) + '/' + step.layer + '/' + step.name
+            );
+
+        var fillBox = function(ctx, image) {
+
+            ctx.drawImage(image, 0, 0, 300, 150);
+
+            if(step.element !== -1){ 
+
+                var mesh = window.helper.getSpecificTile(step.element).mesh;
+
+                var texture = mesh.levels[0].object.material.map.image;
+
+                var img = document.createElement('img');
+
+                img.src = texture.toDataURL("image/png");
+
+                img.onload = function() {
+                    ctx.drawImage(img, 65, 27, 85, 98);
+                };
+            }
+
+            //ID
+            var Nodeid = parseInt(step.id) + 1;
+            Nodeid = (Nodeid < 10) ? '0' + Nodeid.toString() : Nodeid.toString();
+
+            var size = 37;
+            ctx.font = size + 'px Arial';
+            ctx.fillStyle = '#000000';
+            window.helper.drawText(Nodeid, 16, 90, ctx, 76, size);
+            ctx.fillStyle = '#FFFFFF';
+
+            //Title
+            size = 8;
+            ctx.font = 'bold ' + size + 'px Arial';
+            window.helper.drawText(step.title, 151, 40, ctx, 100, size);
+
+            //Description
+            size = 6;
+            ctx.font = size + 'px Arial';
+            window.helper.drawText(step.desc, 151, 80, ctx, 100, size);
+        };
+
+        var canvas = document.getElementById('step-Preview');
+        var ctx = canvas.getContext('2d');
+        cleanPreview();
+        var size = 12;
+        ctx.fillStyle = '#FFFFFF';
+
+        var image = document.createElement('img');
+
+        ctx.font = size + 'px Arial';
+
+        image.onload = function() {
+            fillBox(ctx, image);
+        };
+
+        image.src = "images/workflow/stepBox.png";
+
+    }
+
+    function cleanPreview(){
+
+        var canvas = document.getElementById('step-Preview');
+        var ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
 
     

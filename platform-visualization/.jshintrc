@@ -52,6 +52,7 @@
         "TableEdit" : true,
         "FieldsEdit" : true,
         "Session" : true,
-        "Guide" : true
+        "Guide" : true,
+        "WorkFlowEdit": true
     }
 }
