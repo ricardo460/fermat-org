@@ -7,7 +7,7 @@ function TableEdit() {
         tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
 
     var self = this;
-    
+
     this.formerName = null;
 
     /**
@@ -312,7 +312,7 @@ function TableEdit() {
 
         var params = getParamsData(_table);  
 
-        window.routesAPI.postRoutesComponents('insert', params, null,
+        window.routesAPI.postRoutesEdit('tableEdit', 'insert', params, null,
             function(res){ 
 
                 _table.id = res._id;
@@ -385,6 +385,7 @@ function TableEdit() {
                 });
             },
             function(){
+                window.alert('There is already a component with that name in this group and layer, please use another one');
                 window.fieldsEdit.disabledButtonSave(false);
             });
 
@@ -456,7 +457,7 @@ function TableEdit() {
                     param.role = devs[0].role;
                     param.scope = devs[0].scope;
 
-                    window.routesAPI.postRoutesComponents('insert dev', param, dataPost,
+                    window.routesAPI.postRoutesEdit('tableEdit', 'insert dev', param, dataPost,
                         function(res){
 
                             devs[0]._id = res._id;
@@ -487,7 +488,7 @@ function TableEdit() {
                 comp_id : window.fieldsEdit.actualTile.id
             };
 
-        window.routesAPI.postRoutesComponents('update', params, dataPost,
+        window.routesAPI.postRoutesEdit('tableEdit', 'update', params, dataPost,
             function(res){ 
 
                 _table.id = window.fieldsEdit.actualTile.id;
@@ -598,6 +599,8 @@ function TableEdit() {
 
         },
         function(){
+            window.alert('There is already a component with that name in this group and layer, please use another one');
+            
             window.fieldsEdit.disabledButtonSave(false);
         });
 
@@ -770,7 +773,7 @@ function TableEdit() {
                     else
                         param.scope = 'default';
 
-                    window.routesAPI.postRoutesComponents(config[task].route, param, dataPost,
+                    window.routesAPI.postRoutesEdit('tableEdit', config[task].route, param, dataPost,
                         function(res){
 
                             if(task !== 'delete'){ 
@@ -807,7 +810,7 @@ function TableEdit() {
                 comp_id : table.id
             };
 
-        window.routesAPI.postRoutesComponents('delete', false, dataPost,
+        window.routesAPI.postRoutesEdit('tableEdit', 'delete', false, dataPost,
             function(res){ 
 
                 var oldLayer = table.layer,
