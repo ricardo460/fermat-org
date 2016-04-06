@@ -147,7 +147,9 @@ function Session(){
          			$("#logout").fadeIn(2000);
 
          			drawUser(usr);
-                    setToken(tkn);   
+                    setToken(tkn); 
+
+                    window.getData();  
                 }
                 else {
     				console.log("Error:", tkn);
@@ -169,9 +171,9 @@ function Session(){
             $("#logout").fadeIn(2000);
 
             drawUser(usr);
-        }
 
-        window.getData();
+            window.getData();
+        }
 
 	};
 
