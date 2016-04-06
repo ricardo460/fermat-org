@@ -1118,7 +1118,7 @@ define({ "api": [
     "groupTitle": "Repo_Proc"
   },
   {
-    "type": "put",
+    "type": "delete",
     "url": "/v1/repo/usrs/:usr_id/procs/:proc_id",
     "title": "delete process",
     "version": "0.0.1",
@@ -1173,7 +1173,7 @@ define({ "api": [
     "groupTitle": "Repo_Proc"
   },
   {
-    "type": "delete",
+    "type": "get",
     "url": "/v1/repo/usrs/:usr_id/procs/:proc_id",
     "title": "get process",
     "version": "0.0.1",
