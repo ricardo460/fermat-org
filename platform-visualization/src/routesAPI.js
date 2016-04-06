@@ -3,7 +3,7 @@
  */
 function RoutesAPI() {
 
-    this.ENV = 'testing';
+    this.ENV = 'production';
 
     this.SERVER = 'http://api.fermat.org';
 
@@ -31,7 +31,7 @@ function RoutesAPI() {
 
         var param;
 
-        window.session.useTestData();
+        //window.session.useTestData();
 
         if(window.session.getIsLogin()){
 
@@ -193,13 +193,11 @@ function RoutesAPI() {
             setup.data = params;
 
         makeCorsRequest(setup.url, setup.method, setup.data,
-            function(res, arguments){
+            function(res){
 
                 switch(route) {
 
                     case "tableEdit insert":
-
-                        console.log(arguments);
 
                         if(res._id){
 
@@ -336,10 +334,7 @@ function RoutesAPI() {
     var makeCorsRequest = function(url, method, params, success, error) {
 
         //TODO: DELETE THIS IF
-        if(method === "PUT" && !url.match("/comps-devs/") && exists("[Component]")) {
-            error();
-        }
-        else if(method === "POST" && !url.match("/comps-devs/") && exists("[Component]")){
+        if((method === "PUT" || method === "POST") && !url.match("/comps-devs/") && exists("[Component]")) {
             error();
         }
         else {
@@ -359,7 +354,7 @@ function RoutesAPI() {
                 if(method !== 'DELETE')
                     res = JSON.parse(xhr.responseText);
 
-                success(res, arguments);
+                success(res);
 
             };
 
