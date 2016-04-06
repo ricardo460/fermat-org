@@ -7,6 +7,7 @@ function TableEdit() {
         tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
 
     var self = this;
+    
     this.formerName = null;
 
     /**
@@ -311,7 +312,7 @@ function TableEdit() {
 
         var params = getParamsData(_table);  
 
-        window.helper.postRoutesComponents('insert', params, null,
+        window.routesAPI.postRoutesComponents('insert', params, null,
             function(res){ 
 
                 _table.id = res._id;
@@ -455,7 +456,7 @@ function TableEdit() {
                     param.role = devs[0].role;
                     param.scope = devs[0].scope;
 
-                    window.helper.postRoutesComponents('insert dev', param, dataPost,
+                    window.routesAPI.postRoutesComponents('insert dev', param, dataPost,
                         function(res){
 
                             devs[0]._id = res._id;
@@ -486,7 +487,7 @@ function TableEdit() {
                 comp_id : window.fieldsEdit.actualTile.id
             };
 
-        window.helper.postRoutesComponents('update', params, dataPost,
+        window.routesAPI.postRoutesComponents('update', params, dataPost,
             function(res){ 
 
                 _table.id = window.fieldsEdit.actualTile.id;
@@ -769,7 +770,7 @@ function TableEdit() {
                     else
                         param.scope = 'default';
 
-                    window.helper.postRoutesComponents(config[task].route, param, dataPost,
+                    window.routesAPI.postRoutesComponents(config[task].route, param, dataPost,
                         function(res){
 
                             if(task !== 'delete'){ 
@@ -806,7 +807,7 @@ function TableEdit() {
                 comp_id : table.id
             };
 
-        window.helper.postRoutesComponents('delete', false, dataPost,
+        window.routesAPI.postRoutesComponents('delete', false, dataPost,
             function(res){ 
 
                 var oldLayer = table.layer,
@@ -920,7 +921,7 @@ function TableEdit() {
                 comp_id : id
             };
 
-        window.helper.postValidateLock('tableEdit', dataPost,
+        window.routesAPI.postValidateLock('tableEdit', dataPost,
             function(res){ 
 
                 if(typeof(callback) === 'function')
