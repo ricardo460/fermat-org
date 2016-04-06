@@ -59,15 +59,15 @@ function Session(){
      * @author Ricardo Delgado
      */
     this.useTestData = function(){
-
-
     };
 
 	/**
 	 * Login with github and gets the authorization code
 	 */
 	this.getAuthCode = function(){                                                                        //CLientID: c25e3b3b1eb9aa35c773 - Web
-		window.location.href = helper.buildURL("https://github.com/login/oauth/authorize", {client_id : clientID}); //ClientID: f079f2a8fa65313179d5 - localhost
+		var url = helper.buildURL("https://github.com/login/oauth/authorize", {client_id : clientID }); //ClientID: f079f2a8fa65313179d5 - localhost
+        url += "&redirect_uri=" + window.location.href;
+        window.location.href = url;
 	};
 
 	/**
@@ -105,9 +105,9 @@ function Session(){
             self.login(true,cookie);
         }
         else {
-            code = window.location.toString().replace(/.+code=/, '');
+            code = window.location.search.replace(/.+code=/, '');
 
-            if((code.indexOf("/") < 0))
+            if((code !== "" && code.indexOf("/") < 0))
                 self.login(false);
             else
                 window.getData();
@@ -121,7 +121,8 @@ function Session(){
 	this.login = function(option, cookie) {
 
         if(!option) {
-    		var url = window.helper.getAPIUrl("login", { code : code, api_key : api_key});
+            
+    		var url = window.helper.getAPIUrl("login", { code : code, api_key : api_key });
     		console.log("url: " + url);
 
     		$.ajax({
