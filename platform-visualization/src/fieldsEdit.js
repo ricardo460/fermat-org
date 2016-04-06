@@ -32,7 +32,7 @@ function FieldsEdit() {
 
     var self = this;
 
-    var DATA_USER = window.helper.listDevs;
+    var DATA_USER = window.routesAPI.listDevs;
 
     var button,
         text,
