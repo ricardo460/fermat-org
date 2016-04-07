@@ -1,4 +1,4 @@
-function ActionFlow(flow) {
+function Workflow(flow) {
 
     var BOX_WIDTH = 825,
         BOX_HEIGHT = 188,
@@ -46,7 +46,7 @@ function ActionFlow(flow) {
     var onClick = function(target) {
 
         if(window.actualView === 'workflows'){
-            window.flowManager.onElementClickHeaderFlow(target.userData.id);
+            window.workFlowManager.onElementClickHeaderFlow(target.userData.id);
             self.action = true;
         }
     };
@@ -60,7 +60,7 @@ function ActionFlow(flow) {
      * @param   {Number}  initialX Position where to start
      * @param   {Number}  initialY Position where to start
      */
-    this.draw = function(initialX, initialY, initialZ, indice, id) { // nuevo
+    this.draw = function(initialX, initialY, initialZ, indice, id) {
 
         var title = self.createTitleBox(self.flow.name, self.flow.desc),
             origin = window.helper.getOutOfScreenPoint(0),
@@ -410,7 +410,7 @@ function ActionFlow(flow) {
      * @param   {Function}   fillBox Function to call after load, receives context and image
      * @returns {THREE.Mesh} The created plane with the drawed texture
      */
-    function createFlowBox(src, fillBox, width, height, _switch) { // nuevo
+    function createFlowBox(src, fillBox, width, height, _switch) {
 
         var canvas = document.createElement('canvas');
         canvas.height = height;
@@ -484,7 +484,7 @@ function ActionFlow(flow) {
      * @param {String} desc  The description of the whole process
      * @author Miguel Celedon
      */
-    this.createTitleBox = function(title, desc, _switch) { // nuevo
+    this.createTitleBox = function(title, desc, _switch) {
 
         var fillBox = function(ctx, image) {
 
@@ -501,7 +501,7 @@ function ActionFlow(flow) {
             window.helper.drawText(desc, 190, 126, ctx, 550, size);
         };
 
-        return createFlowBox('images/workflow/titleBox.png', fillBox, HEADER_WIDTH, HEADER_HEIGHT, _switch); //nuevo
+        return createFlowBox('images/workflow/titleBox.png', fillBox, HEADER_WIDTH, HEADER_HEIGHT, _switch);
     };
 
     /**

@@ -14,6 +14,7 @@ var tilesQtty = [],
     logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),
+    routesAPI = new RoutesAPI(),
     workFlowEdit = null,
     session = null,
     tableEdit = null,
@@ -21,7 +22,7 @@ var tilesQtty = [],
     browserManager = null,
     screenshotsAndroid = null,
     headers = null,
-    flowManager = null,
+    workFlowManager = null,
     viewManager = null,
     magazine = null,
     networkViewer = null,
@@ -121,7 +122,7 @@ function init() {
     browserManager = new BrowserManager();
     screenshotsAndroid = new ScreenshotsAndroid();
     magazine = new Magazine();
-    flowManager = new FlowManager();
+    workFlowManager = new WorkFlowManager();
     buttonsManager = new ButtonsManager();
     fieldsEdit = new FieldsEdit();
     tableEdit = new TableEdit();
@@ -258,7 +259,7 @@ function changeView() {
 
     window.helper.show('container', 2000);
 
-    window.flowManager.getActualFlow();
+    window.workFlowManager.getActualFlow();
 
     window.headers.transformTable(1500);
 

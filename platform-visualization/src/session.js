@@ -152,7 +152,8 @@ function Session() {
 
                     drawUser(this.usr);
                     setToken(tkn);
-                } else {
+
+                    window.getData();  
                     console.log("Error:", tkn);
                     window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
                 }
@@ -171,9 +172,9 @@ function Session() {
             $("#logout").fadeIn(2000);
 
             drawUser(this.usr);
-        }
 
-        window.getData();
+            window.getData();
+        }
     };
 
     function drawUser(user) {

@@ -58,7 +58,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             helper.showBackButton();
         }
 
-        window.flowManager.createColumHeaderFlow(objects[id]);
+        window.workFlowManager.createColumHeaderFlow(objects[id]);
     }
 
     /**
