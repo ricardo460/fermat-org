@@ -319,7 +319,7 @@ function WorkFlowEdit() {
 
         var params = getParamsData(flow);  
 
-        window.helper.postRoutesProcess('insert', params, null,
+        window.routesAPI.postRoutesEdit('wolkFlowEdit', 'insert', params, null,
             function(res){ 
 
                 flow._id = res._id;
@@ -391,7 +391,7 @@ function WorkFlowEdit() {
                     if(steps[0].next.length > 0)
                         param.next = steps[0].next;
 
-                    window.helper.postRoutesProcess('insert step', param, dataPost,
+                    window.routesAPI.postRoutesEdit('wolkFlowEdit', 'insert step', param, dataPost,
                         function(res){
 
                             steps[0]._id = res._id;
@@ -477,7 +477,7 @@ function WorkFlowEdit() {
                 proc_id : window.fieldsEdit.actualFlow._id
             };
 
-        window.helper.postRoutesProcess('update', params, dataPost,
+        window.routesAPI.postRoutesEdit('wolkFlowEdit', 'update', params, dataPost,
             function(res){ 
 
                 newFlow._id = window.fieldsEdit.actualFlow._id;
@@ -760,7 +760,7 @@ function WorkFlowEdit() {
                         }
                     }
 
-                    window.helper.postRoutesProcess(config[task].route, param, dataPost,
+                    window.routesAPI.postRoutesEdit('wolkFlowEdit', config[task].route, param, dataPost,
                         function(res){
 
                             if(task !== 'delete'){ 
@@ -796,7 +796,7 @@ function WorkFlowEdit() {
                 proc_id : workFlow.flow._id
             };
 
-        window.helper.postRoutesProcess('delete', false, dataPost,
+        window.routesAPI.postRoutesEdit('wolkFlowEdit', 'delete', false, dataPost,
             function(res){
         
                 window.flowManager.showWorkFlow();
@@ -869,7 +869,7 @@ function WorkFlowEdit() {
                 proc_id : id
             };
 
-        window.helper.postValidateLock('wolkFlowEdit', dataPost,
+        window.routesAPI.postValidateLock('wolkFlowEdit', dataPost,
             function(res){ 
 
                 if(typeof(callback) === 'function')

@@ -53,6 +53,7 @@
         "FieldsEdit" : true,
         "Session" : true,
         "Guide" : true,
-        "WorkFlowEdit": true
+        "WorkFlowEdit": true,
+        "RoutesAPI": true
     }
 }
