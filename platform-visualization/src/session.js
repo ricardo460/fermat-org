@@ -1,11 +1,11 @@
 function Session() {
 
+    var self = this;
     var isLogin;
     var api_key = "56a10473b27e63185c6970d6";
     var axs_key;
-    var usr = {};
+    this.usr = {};
     var code;
-    var self = this;
     var clientID = "d00a7c7d4489139327e4";
     switch (window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
         case "dev":
@@ -24,7 +24,7 @@ function Session() {
     };
 
     this.getUserLogin = function() {
-        return usr;
+        return self.usr;
     };
 
     /**
@@ -93,7 +93,7 @@ function Session() {
                     isLogin = false;
                     $("#login").fadeIn(2000);
                     $("#logout").fadeOut(2000);
-                    usr = undefined;
+                    self.usr = undefined;
                 }
             }
         });
@@ -137,21 +137,21 @@ function Session() {
                     'Accept': 'application/json'
                 }
             }).success(function(tkn) {
-                usr = tkn._usr_id;
+                self.usr = tkn._usr_id;
                 axs_key = tkn.axs_key;
                 window.console.dir(tkn);
 
-                if (usr !== undefined) {
+                if (self.usr !== undefined) {
                     isLogin = true;
 
-                    usr.axs_key = axs_key;
+                    self.usr.axs_key = axs_key;
 
-                    console.log("Logueado Completamente: " + usr.name);
+                    console.log("Logueado Completamente: " + self.usr.name);
 
                     $("#login").fadeOut(2000);
                     $("#logout").fadeIn(2000);
 
-                    drawUser(usr);
+                    drawUser(self.usr);
                     setToken(tkn);
 
                     window.getData();  
@@ -160,19 +160,19 @@ function Session() {
                 }
             });
         } else {
-            usr = cookie._usr_id;
-            axs_key = usr.axs_key;
+            self.usr = cookie._usr_id;
+            axs_key = self.usr.axs_key;
 
             isLogin = true;
 
-            usr.axs_key = axs_key;
+            self.usr.axs_key = axs_key;
 
-            console.log("Logueado Completamente: " + usr.name);
+            console.log("Logueado Completamente: " + self.usr.name);
 
             $("#login").fadeOut(2000);
             $("#logout").fadeIn(2000);
 
-            drawUser(usr);
+            drawUser(self.usr);
 
             window.getData();
         }
