@@ -32,7 +32,7 @@ function FieldsEdit() {
 
     var self = this;
 
-    var DATA_USER = window.helper.listDevs;
+    var DATA_USER = window.routesAPI.listDevs;
 
     var button,
         text,
@@ -73,6 +73,8 @@ function FieldsEdit() {
             if(window.actualView === 'table'){ 
 
                 self.actualTile = null;
+
+                window.tableEdit.formerName = null;
                 
                 window.tableEdit.deleteMesh();
 

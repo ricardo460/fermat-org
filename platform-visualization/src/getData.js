@@ -8,7 +8,7 @@ function getData() {
     
     //url += "?env=development"; //When needed the development branch, for lab.fermat.org
 
-    window.helper.getCompsUser(function (list){ 
+    window.routesAPI.getCompsUser(function (list){ 
 
         window.loadMap(function() {
 
