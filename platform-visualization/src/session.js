@@ -75,7 +75,7 @@ function Session() {
      */
     this.logout = function() {
 
-        var url_logout = window.helper.getAPIUrl("logout", {
+        var url_logout = window.API.getAPIUrl("logout", {
             axs_key: axs_key,
             api_key: api_key
         });
@@ -124,7 +124,7 @@ function Session() {
 
         if (!option) {
 
-            var url = window.helper.getAPIUrl("login", {
+            var url = window.API.getAPIUrl("login", {
                 code: code,
                 api_key: api_key
             });

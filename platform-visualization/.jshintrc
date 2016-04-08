@@ -54,6 +54,6 @@
         "Session" : true,
         "Guide" : true,
         "WorkFlowEdit": true,
-        "RoutesAPI": true
+        "API": true
     }
 }

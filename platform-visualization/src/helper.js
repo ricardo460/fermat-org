@@ -232,44 +232,6 @@ function Helper() {
     };
 
     /**
-     * Returns the route of the API server
-     * @author Miguel Celedon
-     * @param   {string} route The name of the route to get
-     * @returns {string} The URL related to the requested route
-     */
-    this.getAPIUrl = function(route, params) {
-
-        var tail = "";
-
-        switch(route) {
-
-            case "comps":
-                tail = "/v1/repo/comps";
-                break;
-            case "procs":
-                tail = "/v1/repo/procs";
-                break;
-            case "servers":
-                tail = "/v1/net/servrs";
-                break;
-            case "nodes":
-                tail = "/v1/net/nodes/:server/childrn";
-                break;
-            case "login":
-                tail = "/v1/auth/login";
-                break;
-            case "logout":
-                tail = "/v1/auth/logout";
-                break;
-            case "user":
-                tail = "/v1/repo/devs";
-                break;
-        }
-
-        return this.buildURL(self.SERVER + tail, params);
-    };
-
-    /**
      * Loads a texture and applies it to the given mesh
      * @param {String}   source     Address of the image to load
      * @param {Mesh}     object     Mesh to apply the texture
@@ -516,7 +478,7 @@ function Helper() {
         //Search for wildcards parameters
         do {
 
-            param = result.match(':[a-z0-9]+');
+            param = result.match(':[a-z0-9-zA-Z-_]+');
 
             if(param !== null) {
                 var paramName = param[0].replace(':', '');

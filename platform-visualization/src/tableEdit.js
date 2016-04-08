@@ -312,7 +312,7 @@ function TableEdit() {
 
         var params = getParamsData(_table);  
 
-        window.routesAPI.postRoutesEdit('tableEdit', 'insert', params, null,
+        window.API.postRoutesEdit('tableEdit', 'insert', params, null,
             function(res){ 
 
                 _table.id = res._id;
@@ -457,7 +457,7 @@ function TableEdit() {
                     param.role = devs[0].role;
                     param.scope = devs[0].scope;
 
-                    window.routesAPI.postRoutesEdit('tableEdit', 'insert dev', param, dataPost,
+                    window.API.postRoutesEdit('tableEdit', 'insert dev', param, dataPost,
                         function(res){
 
                             devs[0]._id = res._id;
@@ -488,7 +488,7 @@ function TableEdit() {
                 comp_id : window.fieldsEdit.actualTile.id
             };
 
-        window.routesAPI.postRoutesEdit('tableEdit', 'update', params, dataPost,
+        window.API.postRoutesEdit('tableEdit', 'update', params, dataPost,
             function(res){ 
 
                 _table.id = window.fieldsEdit.actualTile.id;
@@ -773,7 +773,7 @@ function TableEdit() {
                     else
                         param.scope = 'default';
 
-                    window.routesAPI.postRoutesEdit('tableEdit', config[task].route, param, dataPost,
+                    window.API.postRoutesEdit('tableEdit', config[task].route, param, dataPost,
                         function(res){
 
                             if(task !== 'delete'){ 
@@ -810,7 +810,7 @@ function TableEdit() {
                 comp_id : table.id
             };
 
-        window.routesAPI.postRoutesEdit('tableEdit', 'delete', false, dataPost,
+        window.API.postRoutesEdit('tableEdit', 'delete', false, dataPost,
             function(res){ 
 
                 var oldLayer = table.layer,
@@ -924,7 +924,7 @@ function TableEdit() {
                 comp_id : id
             };
 
-        window.routesAPI.postValidateLock('tableEdit', dataPost,
+        window.API.postValidateLock('tableEdit', dataPost,
             function(res){ 
 
                 if(typeof(callback) === 'function')

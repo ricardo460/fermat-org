@@ -17,7 +17,7 @@ NetworkViewer.prototype.load = function() {
     
     //Ask for nodes
     $.ajax({
-        url : window.helper.getAPIUrl("servers"),
+        url : window.API.getAPIUrl("servers"),
         method: "GET",
         context: this
     }).success(function(networkNodes) {
