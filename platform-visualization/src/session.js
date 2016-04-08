@@ -3,7 +3,7 @@ function Session() {
     var isLogin;
     var api_key = "56a10473b27e63185c6970d6";
     var axs_key;
-    this.usr = {};
+    var usr = {};
     var code;
     var self = this;
     var clientID = "d00a7c7d4489139327e4";
@@ -24,7 +24,7 @@ function Session() {
     };
 
     this.getUserLogin = function() {
-        return this.usr;
+        return usr;
     };
 
     /**
@@ -56,7 +56,8 @@ function Session() {
     /**
      * @author Ricardo Delgado
      */
-    this.useTestData = function() {};
+    this.useTestData = function() {
+    };
 
     /**
      * Login with github and gets the authorization code
@@ -92,7 +93,7 @@ function Session() {
                     isLogin = false;
                     $("#login").fadeIn(2000);
                     $("#logout").fadeOut(2000);
-                    this.usr = undefined;
+                    usr = undefined;
                 }
             }
         });
@@ -136,21 +137,21 @@ function Session() {
                     'Accept': 'application/json'
                 }
             }).success(function(tkn) {
-                this.usr = tkn._usr_id;
+                usr = tkn._usr_id;
                 axs_key = tkn.axs_key;
                 window.console.dir(tkn);
 
-                if (this.usr !== undefined) {
+                if (usr !== undefined) {
                     isLogin = true;
 
-                    this.usr.axs_key = axs_key;
+                    usr.axs_key = axs_key;
 
-                    console.log("Logueado Completamente: " + this.usr.name);
+                    console.log("Logueado Completamente: " + usr.name);
 
                     $("#login").fadeOut(2000);
                     $("#logout").fadeIn(2000);
 
-                    drawUser(this.usr);
+                    drawUser(usr);
                     setToken(tkn);
 
                     window.getData();  
@@ -159,19 +160,19 @@ function Session() {
                 }
             });
         } else {
-            this.usr = cookie._usr_id;
-            axs_key = this.usr.axs_key;
+            usr = cookie._usr_id;
+            axs_key = usr.axs_key;
 
             isLogin = true;
 
-            this.usr.axs_key = axs_key;
+            usr.axs_key = axs_key;
 
-            console.log("Logueado Completamente: " + this.usr.name);
+            console.log("Logueado Completamente: " + usr.name);
 
             $("#login").fadeOut(2000);
             $("#logout").fadeIn(2000);
 
-            drawUser(this.usr);
+            drawUser(usr);
 
             window.getData();
         }
