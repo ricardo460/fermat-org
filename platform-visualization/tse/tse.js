@@ -228,22 +228,22 @@ function updateList(list){
     if(list === 'layer'){
         $("#layerList").empty();
         $("#layerOrder").empty();
-        retrieveData("layers", null);
-        retrieveData("layers", "layers", false);
+        retrieveData("layer", null);
+        retrieveData("layer", "layers", false);
     }
     else if(list === 'platform'){
         $("#platformList").empty();
         $("groupOrder").empty();
-        retrieveData("platforms", null);
-        retrieveData("platforms", "groups", null);
+        retrieveData("platform", null);
+        retrieveData("platform", "groups", null);
     }
     else{
         $("#superlayerList").empty();
         $("#layerSuperLayer").empty();
         $("#groupOrder").empty();
-        retrieveData("superlayers", null);
-        retrieveData("superlayers", "groups", null);
-        retrieveData("superlayers", "layers", null);
+        retrieveData("superlayer", null);
+        retrieveData("superlayer", "groups", null);
+        retrieveData("superlayer", "layers", null);
     }
 }
 
@@ -432,9 +432,9 @@ function setFields(data, form, type){
 
     for(var i = 0; i < l; i++){
         if(form === "layers"){
-            if(type === "superlayers")
+            if(type === "superlayer")
                 $("#layerSuperLayer").append($("<option></option>").val(data[i].code).html(data[i].code + " - " + data[i].name.capitalize()));
-            if(type === "layers")
+            if(type === "layer")
                 if(data[i].suprlay !== false)
                     $("#layerOrder").append($("<option></option>").val(data[i].order).html(data[i].suprlay + " - " + data[i].name.capitalize()));
                 else
@@ -453,13 +453,13 @@ function fillTable(repo, data){
         l = data.length;
 
     for(i = 0; i < l; i++){
-        if(repo === "layers"){
+        if(repo === "layer"){
             if(data[i].suprlay !== false)
                 $('#layerList').append("<tr><th>" + data[i].name.capitalize() + "</th><th>" + data[i].lang.capitalize() + "</th><th>" + data[i].suprlay + "</th><th>" + data[i].order + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"layer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"layer"' + ")'>Delete</button>" + "</th></tr>");
             else
                 $('#layerList').append("<tr><th>" + data[i].name.capitalize() + "</th><th>" + data[i].lang.capitalize() + "</th><th>" + "</th><th>" + data[i].order + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"layer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"layer"' + ")'>Delete</button>" + "</th></tr>");
         }
-        //else if(repo === "platforms")
+        //else if(repo === "platform")
             //$('#platformList').append("<tr><th>" + data[i].code + "</th><th>" + data[i].name.capitalize() + "</th><th>" + data[i].order + "</th><th>" + data[i].deps + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"platform"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='platform: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"platform"' + ")'>Delete</button>" + "</th></tr>");
         //else
             //$('#superlayerList').append("<tr><th>" + data[i].code + "</th><th>" + data[i].name.capitalize() + "</th><th>" + data[i].order + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"superlayer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='superlayer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"superlayer"' + ")'>Delete</button>" + "</th></tr>");
@@ -475,7 +475,7 @@ function getRoute(form, route, id){
     if(route === 'insert' || route === 'retrieve')
         tail = "/v1/repo/usrs/" + user_data._id + "/" + form;
     else
-        tail = "/v1/repo/usrs/" + user_data._id + "/"+ form +"/" + id;
+        tail = "/v1/repo/usrs/" + user_data._id + "/" + form + "/" + id;
 
     param = {
         env : environment,
@@ -795,7 +795,7 @@ function testData() {
         __v:0,
         _id:"56eb1b6442fbd3173fc1ecbd",
         avatar_url:"https://avatars.githubusercontent.com/u/17053960?v=3",
-        axs_key:"56f40028d4a836556cb6c50a",
+        axs_key:"56fd9d7c7d89775463f2c580",
         email:"isaiasve30@hotmail.com",
         github_tkn:"2cf121cb74335cbd049f8626698b6e4f459e4925",
         name:"Isaías Taborda",
