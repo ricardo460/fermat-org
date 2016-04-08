@@ -1,7 +1,7 @@
 /**
  * Static object with help functions commonly used
  */
-function RoutesAPI() {
+function API() {
 
     var self = this;
 
@@ -46,7 +46,7 @@ function RoutesAPI() {
 
                             list[route] = res;
 
-                            url = window.helper.getAPIUrl("user");
+                            url = self.getAPIUrl("user");
 
                             callAjax('', '',function(route, res){
 
@@ -62,13 +62,13 @@ function RoutesAPI() {
         }
         else{
 
-            url = window.helper.getAPIUrl("comps");
+            url = self.getAPIUrl("comps");
 
             callAjax('', '',function(route, res){
 
                 list = res;
 
-                url = window.helper.getAPIUrl("user");
+                url = self.getAPIUrl("user");
 
                 callAjax('', '',function(route, res){
 
@@ -98,77 +98,32 @@ function RoutesAPI() {
 
     this.postRoutesEdit = function(type, route, params, data, doneCallback, failCallback){
 
-        var tail = "",
-            method = "",
+        var method = "",
             setup = {},
             usr = window.helper.clone(window.session.getUserLogin()),
             param,
             url;
 
-        route = type + " " + route;
-
-        switch(route) {
-
-            case "tableEdit insert":
-                method = "POST";
-                tail = "/v1/repo/usrs/" + usr._id + "/comps";
-                break;
-            case "tableEdit delete":
-                method = "DELETE";
-                tail = "/v1/repo/usrs/" + usr._id + "/comps/" + data.comp_id;
-                break;
-            case "tableEdit update":
-                method = "PUT";
-                tail = "/v1/repo/usrs/" + usr._id + "/comps/" + data.comp_id;
-                break;
-            case "tableEdit insert dev":
-                method = "POST";
-                tail = "/v1/repo/usrs/" + usr._id + "/comps/" + data.comp_id + "/comp-devs";
-                break;
-            case "tableEdit delete dev":
-                method = "DELETE";
-                tail = "/v1/repo/usrs/" + usr._id + "/comps/" + data.comp_id + "/comp-devs/" + data.devs_id;
-                break;
-            case "tableEdit update dev":
-                method = "PUT";
-                tail = "/v1/repo/usrs/" + usr._id + "/comps/" + data.comp_id + "/comp-devs/" + data.devs_id;
-                break;
-
-            case "wolkFlowEdit insert":
-                method = "POST";
-                tail = "/v1/repo/usrs/" + usr._id + "/procs";
-                break;
-            case "wolkFlowEdit delete":
-                method = "DELETE";
-                tail = "/v1/repo/usrs/" + usr._id + "/procs/" + data.proc_id;
-                break;
-            case "wolkFlowEdit update":
-                method = "PUT";
-                tail = "/v1/repo/usrs/" + usr._id + "/procs/" + data.proc_id;
-                break;
-            case "wolkFlowEdit insert step":
-                method = "POST";
-                tail = "/v1/repo/usrs/" + usr._id + "/procs/" + data.proc_id + "/steps";
-                break;
-            case "wolkFlowEdit delete step":
-                method = "DELETE";
-                tail = "/v1/repo/usrs/" + usr._id + "/procs/" + data.proc_id + "/steps/" + data.steps_id;
-                break;
-            case "wolkFlowEdit update step":
-                method = "PUT";
-                tail = "/v1/repo/usrs/" + usr._id + "/procs/" + data.proc_id + "/steps/" + data.steps_id;
-                break;
-        }
-
         param = {
+                usrs : usr._id,
                 env : window.helper.ENV,
                 axs_key : usr.axs_key
             };
 
-        url = window.helper.SERVER.replace('http://', '') + tail;
+        for(var i in data)
+            param[i] = data[i];
+
+        route = type + " " + route;
+
+        if(route.match('insert'))
+            method = "POST";
+        else if(route.match('update'))
+            method = "PUT";
+        else
+            method = "DELETE";
 
         setup.method = method;
-        setup.url = 'http://' + window.helper.buildURL(url, param);
+        setup.url = self.getAPIUrl(route, param);
         setup.headers = {
             "Content-Type": "application/json"
              };
@@ -261,39 +216,26 @@ function RoutesAPI() {
 
     this.postValidateLock = function(route, data, doneCallback, failCallback){
 
-        var tail = "",
-            method = "",
-            msj = "",
+        var msj = "Component",
             usr = window.helper.clone(window.session.getUserLogin()),
-            param,
-            url;
+            param = {};
 
-        switch(route) {
-            
-            case "tableEdit":
-                method = "GET";
-                tail = "/v1/repo/usrs/" + usr._id + "/comps/" + data.comp_id;
-                msj = "component";
-                break;
-            case "wolkFlowEdit":
-                method = "GET";
-                tail = "/v1/repo/usrs/" + usr._id + "/procs/" + data.proc_id;
-                msj = "wolkFlow";
-                break;                     
-                
-        }
+        if(route === "wolkFlowEdit")
+            msj = "WolkFlow";
 
-        param = { 
+        param = {
+                usrs : usr._id,
                 env : window.helper.ENV,
                 axs_key : usr.axs_key
             };
 
-        url = window.helper.SERVER.replace('http://', '') + tail;
+        for(var i in data)
+            param[i] = data[i];
 
-        url = 'http://' + window.helper.buildURL(url, param);
+        route = route + " get";
 
         $.ajax({
-            url:  url,
+            url:  self.getAPIUrl(route, param),
             method: 'GET',
             dataType: 'json',
             success:  function (res) {
@@ -372,6 +314,76 @@ function RoutesAPI() {
     };
 
     /**
+     * Returns the route of the API server
+     * @author Miguel Celedon
+     * @param   {string} route The name of the route to get
+     * @returns {string} The URL related to the requested route
+     */
+    this.getAPIUrl = function(route, params) {
+
+        var tail = "";
+
+        switch(route) {
+
+            case "comps":
+                tail = "/v1/repo/comps";
+                break;
+            case "procs":
+                tail = "/v1/repo/procs";
+                break;
+            case "servers":
+                tail = "/v1/net/servrs";
+                break;
+            case "nodes":
+                tail = "/v1/net/nodes/:server/childrn";
+                break;
+            case "login":
+                tail = "/v1/auth/login";
+                break;
+            case "logout":
+                tail = "/v1/auth/logout";
+                break;
+            case "user":
+                tail = "/v1/repo/devs";
+                break;
+
+            case "tableEdit insert":
+                tail = "/v1/repo/usrs/:usrs/comps";
+                break;
+            case "tableEdit get":
+            case 'tableEdit update':
+            case 'tableEdit delete':
+                tail = "/v1/repo/usrs/:usrs/comps/:comp_id";
+                break;
+            case "tableEdit insert dev":
+                tail = "/v1/repo/usrs/:usrs/comps/:comp_id/comp-devs";
+                break;
+            case "tableEdit delete dev":
+            case "tableEdit update dev":
+                tail = "/v1/repo/usrs/:usrs/comps/:comp_id/comp-devs/:devs_id";
+                break;
+
+            case "wolkFlowEdit insert":
+                tail = "/v1/repo/usrs/:usrs/procs";
+                break;
+            case "wolkFlowEdit get":    
+            case "wolkFlowEdit update":
+            case "wolkFlowEdit delete":
+                tail = "/v1/repo/usrs/:usrs/procs/:proc_id";
+                break;
+            case "wolkFlowEdit insert step":
+                tail = "/v1/repo/usrs/:usrs/procs/:proc_id/steps";
+                break;
+            case "wolkFlowEdit delete step":
+            case "wolkFlowEdit update step":
+                tail = "/v1/repo/usrs/:usrs/procs/:proc_id/steps/:steps_id";
+                break;
+        }
+
+        return window.helper.buildURL(window.helper.SERVER + tail, params);
+    };
+
+    /**
      * TODO: MUST BE DELETED
      * @author Miguelcldn
      * @param {Object} data Post Data
@@ -384,7 +396,13 @@ function RoutesAPI() {
             var layer = $("#select-layer").val();
             var name = $("#imput-Name").val().toLowerCase();
             var type = $("#select-Type").val();
-            var location = window.TABLE[group].layers[layer].objects;
+            var location;
+
+            if(!window.TABLE[group].layers[layer])
+                return false;
+            else
+                location = window.TABLE[group].layers[layer].objects;
+            
 
             if(window.tableEdit.formerName){ 
 

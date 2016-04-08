@@ -32,7 +32,7 @@ function FieldsEdit() {
 
     var self = this;
 
-    var DATA_USER = window.routesAPI.listDevs;
+    var DATA_USER = window.API.listDevs;
 
     var button,
         text,
@@ -469,7 +469,7 @@ function FieldsEdit() {
         button.className = 'actionButton edit-Fermat';
         button.style.zIndex = 10;
         button.style.opacity = 0;
-        button.value = "Autores";
+        button.value = "Authors";
         button.style.marginLeft = "5px";
 
         object = {
@@ -492,7 +492,7 @@ function FieldsEdit() {
             
             modal.innerHTML = '<div id="a">'+
                     '<div id="finder">'+
-                        '<input id="finder-input" type="text" placeholder="Buscar"></input>'+
+                        '<input id="finder-input" type="text" placeholder="Search"></input>'+
                         '<input id="finder-button" type="button" value=""></input>'+
                     '</div>'+
                     '<div id="list">'+
@@ -507,7 +507,7 @@ function FieldsEdit() {
                     '</div>'+
                     '<div id="buttons" >'+
                         '<button id="modal-close-button" >Cancel</button>'+
-                        '<button id="modal-accept-button" style="border-left: 2px solid #00b498;">Aceptar</button>'+
+                        '<button id="modal-accept-button" style="border-left: 2px solid #00b498;">Accept</button>'+
                     '</div>'+
                 '</div>';
             

@@ -131,7 +131,7 @@ function WorkFlowManager(){
             layer : element.layer,
             component : element.name
         };
-        var url = window.helper.getAPIUrl("procs", params);
+        var url = window.API.getAPIUrl("procs", params);
 
         $.ajax({
             url: url,
@@ -189,7 +189,7 @@ function WorkFlowManager(){
      */
     this.getHeaderFLow = function() {
 
-        var url = window.helper.getAPIUrl("procs");
+        var url = window.API.getAPIUrl("procs");
 
         $.ajax({
             url: url,
