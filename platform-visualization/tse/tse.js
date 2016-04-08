@@ -74,10 +74,10 @@ function deleteStructure(element, type){
                 url = getRoute("layers", "delete", element.id);
                 break;
             case "platform":
-                url = getRoute("platfrm", "delete", element.id);
+                url = getRoute("platfrms", "delete", element.id);
                 break;
             case "superlayer":
-                url = getRoute("suprlay", "delete", element.id);
+                url = getRoute("suprlays", "delete", element.id);
                 break;
         }
 
@@ -110,10 +110,10 @@ function modifyStructure(element, type){
             url = getRoute("layers", "update", element.id);
             break;
         case "platform":
-            url = getRoute("platfrm", "update", element.id);
+            url = getRoute("platfrms", "update", element.id);
             break;
         case "superlayer":
-            url = getRoute("suprlay", "update", element.id);
+            url = getRoute("suprlays", "update", element.id);
             break;
     }
 
@@ -174,10 +174,10 @@ function findPosition(type, order){
             url = getRoute("layers", "retrieve");
             break;
         case "platform":
-            url = getRoute("platfrm", "retrieve");
+            url = getRoute("platfrms", "retrieve");
             break;
         case "superlayer":
-            url = getRoute("suprlay", "retrieve");
+            url = getRoute("suprlays", "retrieve");
             break;
     }
 
@@ -337,10 +337,10 @@ function updateData(list, position, mode){
             url = getRoute("layers", "retrieve");
             break;
         case "platform":
-            url = getRoute("platfrm", "retrieve");
+            url = getRoute("platfrms", "retrieve");
             break;
         case "superlayer":
-            url = getRoute("suprlay", "retrieve");
+            url = getRoute("suprlays", "retrieve");
             break;
     }
 
@@ -361,10 +361,10 @@ function updateData(list, position, mode){
                             url = getRoute("layers", "update", res[i]._id);
                             break;
                         case "platforms":
-                            url = getRoute("platfrm", "update", res[i]._id);
+                            url = getRoute("platfrms", "update", res[i]._id);
                             break;
                         case "superlayers":
-                            url = getRoute("suprlay", "update", res[i]._id);
+                            url = getRoute("suprlays", "update", res[i]._id);
                             break;
                     }
                     res[i].order = parseInt(res[i].order) + 1;
@@ -379,10 +379,10 @@ function updateData(list, position, mode){
                             url = getRoute("layers", "update", res[i]._id);
                             break;
                         case "platforms":
-                            url = getRoute("platfrm", "update", res[i]._id);
+                            url = getRoute("platfrms", "update", res[i]._id);
                             break;
                         case "superlayers":
-                            url = getRoute("suprlay", "update", res[i]._id);
+                            url = getRoute("suprlays", "update", res[i]._id);
                             break;
                     }
                     res[i].order = res[i].order - 1;
@@ -403,10 +403,10 @@ function retrieveData(repo, form, code){
             url = getRoute("layers", "retrieve");
             break;
         case "platform":
-            url = getRoute("platfrm", "retrieve");
+            url = getRoute("platfrms", "retrieve");
             break;
         case "superlayer":
-            url = getRoute("suprlay", "retrieve");
+            url = getRoute("suprlays", "retrieve");
             break;
     }
 
@@ -525,11 +525,11 @@ function verify(form, request){
 
             if(form === 'platform'){
                 list = document.getElementById('platformList');
-                url = getRoute("platfrm", "insert");
+                url = getRoute("platfrms", "insert");
             }
             else{
                 list = document.getElementById('superlayerList');
-                url = getRoute("suprlay", "insert");
+                url = getRoute("suprlays", "insert");
             }
             elements = list.getElementsByTagName('th');
 
@@ -537,11 +537,11 @@ function verify(form, request){
 
             if(form === 'platform'){
                 j = 5;
-                repo = "platfrm";
+                repo = "platfrms";
             }
             else{
                 j = 4;
-                repo = "suprlay";
+                repo = "suprlays";
             }
 
             for(i = 0, l = elements.length; i < l; i+=j){
@@ -589,21 +589,21 @@ function verify(form, request){
 
             if(form === 'platform'){
                 list = document.getElementById('platformList');
-                url = getRoute("platfrm","insert");
+                url = getRoute("platfrms","insert");
             }
             else{
                 list = document.getElementById('superlayerList');
-                url = getRoute("suprlay","insert");
+                url = getRoute("suprlays","insert");
             }
             elements = list.getElementsByTagName('th');
 
             if(form === 'platform'){
                 j = 5;
-                repo = "platfrm";
+                repo = "platfrms";
             }
             else{
                 j = 4;
-                repo = "suprlay";
+                repo = "suprlays";
             }
 
             for(i = 0, l = elements.length; i < l; i+=j){
@@ -750,9 +750,9 @@ function getData(form, request) {
             order = 0;
 
         if(form === 'platform') 
-            url = getRoute("platfrm", "retrieve");
+            url = getRoute("platfrms", "retrieve");
         else
-            url = getRoute("suprlay", "retrieve");
+            url = getRoute("suprlays", "retrieve");
 
         if(request === 'add'){
             data = {
