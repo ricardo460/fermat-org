@@ -7,3 +7,27 @@
 .actions * {
     padding-right: 5px;
 }
+.table-fermat {
+    max-width: 90%;
+    margin: auto;
+}
+.navbar-fermat {
+    max-width: 100%;
+    background-image: linear-gradient(to bottom, #59D1BD 0, #009A80 100%);
+}
+th {
+    color: #DA332A;
+}
+.navbar-brand {
+    color: #fff;
+}
+.brand-img {
+    margin-top: -5px;
+}
+.brand {
+    height: 30px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin: 0px;
+    padding: 0px;
+}

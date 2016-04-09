@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link type="text/css" rel="stylesheet" href="styles.css" />
     <link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="bootstrap-theme.min.css" />
+    <link type="text/css" rel="stylesheet" href="styles.css" />
     <link type="image/png" rel="icon" href="../images/favicon.png" />
     <script src="../common/jquery-2.1.4.min.js"></script>
     <script src="tse.js"></script>
@@ -13,9 +14,12 @@
 </head>
 
 <body>
-    <div class="navbar navbar-default">
+    <div class="navbar navbar-fermat">
         <div class="container-fluid">
             <div class="navbar-header">
+                <div class="navbar-brand brand-img">
+                    <img class="brand" alt="img" src="img/Fermat.png">
+                </div>
                 <a class="navbar-brand">Fermat TSE</a>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main">
                     <span class="icon-bar"></span>
@@ -42,33 +46,39 @@
         </div>
     </div>
 
-    <table id="superlayerList" class="table table-hover hidden">
-        <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Order</th>
-            <th>Actions</th>
-        </tr>
+    <table id="superlayerList" class="table table-fermat table-hover hidden">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Order</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
     </table>
 
-    <table id="platformList" class="table table-hover hidden">
-        <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Order</th>
-            <th>Dependencies</th>
-            <th>Actions</th>
-        </tr>
+    <table id="platformList" class="table table-fermat table-hover hidden">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Order</th>
+                <th>Dependencies</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
     </table>
 
-    <table id="layerList" class="table table-hover hidden">
-        <tr>
-            <th>Name</th>
-            <th>Lang</th>
-            <th>Superlayer</th>
-            <th>Order</th>
-            <th>Actions</th>
-        </tr>
+    <table id="layerList" class="table table-fermat table-hover hidden">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Lang</th>
+                <th>Superlayer</th>
+                <th>Order</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
     </table>
 
     <div class="container">
@@ -118,13 +128,13 @@
             </div>
             <div class="form-group" id="nextName" style="display:none" disabled>
                 <label>Currently next to:</label>
-                <input class="form-control" id="layerNextName"/>
+                <input class="form-control" id="layerNextName" />
             </div>
             <div class="form-group" id="nextPos" style="display:none" disabled>
-                <input class="form-control" id="layerNextPos"/>
+                <input class="form-control" id="layerNextPos" />
             </div>
             <div class="form-group" id="nextSuperlayer" style="display:none" disabled>
-                <input class="form-control" id="layerNextSuperlayer"/>
+                <input class="form-control" id="layerNextSuperlayer" />
             </div>
             <div class="form-group">
                 <label>Superlayer:</label>
