@@ -78,7 +78,7 @@ router.post('/', function (req, res, next) {
 	try {
 		if (!security.isValidData(req.body.name) || //
 			!security.isValidData(req.body.lang) || //
-			!security.ifExistIsValidData(req.body.suprlay) || //
+			//!security.ifExistIsValidData(req.body.suprlay) || //
 			!security.isValidData(req.body.order)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
@@ -159,9 +159,9 @@ router.get('/:layer_id', function (req, res, next) {
  * @apiName UptLay
  * @apiGroup Repo-Layer
  * @apiParam {ObjectId} layer_id Represents the identifier of the layer
- * @apiParam {String} name    Layer name.
- * @apiParam {String} lang    xxxxx.
- * @apiParam {String} suprlay    xxxxx.
+ * @apiParam {String} name Layer name.
+ * @apiParam {String} lang Layer language.
+ * @apiParam {String} suprlay  It indicates whether it belongs to a super layer.
  * @apiParam {Number} order Indicates the position where the layer this with respect to other.
  * @apiDescription Update layer to the architecture of fermat.
  */
@@ -171,7 +171,7 @@ router.put('/:layer_id', function (req, res, next) {
 		if (!security.isValidData(req.params.layer_id) || //
 			!security.ifExistIsValidData(req.body.name) || //
 			!security.ifExistIsValidData(req.body.lang) ||
-			!security.ifExistIsValidData(req.body.suprlay) ||
+			//!security.ifExistIsValidData(req.body.suprlay) ||
 			!security.ifExistIsValidData(req.body.order)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
@@ -190,7 +190,6 @@ router.put('/:layer_id', function (req, res, next) {
 		next(err);
 	}
 });
-
 /**
  * @api {delete} /v1/repo/usrs/:usr_id/layers/:layer_id delete layer
  * @apiVersion 0.0.1

@@ -73,29 +73,20 @@ var compSchema = mongoose.Schema({
 }, {
 	collection: 'comps'
 });
+/**
+ * [_layer_id description]
+ *
+ * @type {number}
+ */
 compSchema.index({
-	_platfrm_id: 1,
 	_suprlay_id: 1,
+	_platfrm_id: 1,
 	_layer_id: 1,
 	name: 1
 }, {
 	unique: true
 }, {
-	name: "comps_uq_indx"
+	name: "comps_uq_plat_indx"
 });
-/**
- * [code description]
- *
- * @type {number}
- */
-compSchema.index({
-	_platfrm_id: 1,
-	_suprlay_id: 1,
-	_layer_id: 1,
-	code: 1,
-	name: 1,
-	logo: 1
-}, {
-	name: "comps_cp_indx"
-}); // schema level
+//
 module.exports = compSchema;

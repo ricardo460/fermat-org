@@ -150,6 +150,54 @@ define({ "api": [
     "groupTitle": "Net"
   },
   {
+    "type": "post",
+    "url": "/v1/net/servers",
+    "title": "create a wave",
+    "name": "CreateWave",
+    "version": "0.0.1",
+    "group": "Net",
+    "description": "<p>Inserts a wave (state of the network) into the database.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object[]",
+            "optional": false,
+            "field": "body",
+            "description": "<p>An array of javascript objects that represents the servers of the network</p>"
+          }
+        ]
+      }
+    },
+    "filename": "routes/v1/net/index.js",
+    "groupTitle": "Net"
+  },
+  {
+    "type": "post",
+    "url": "/v1/net/nodes",
+    "title": "create a wave",
+    "name": "CreateWave",
+    "version": "0.0.1",
+    "group": "Net",
+    "description": "<p>Inserts a wave (state of the network) into the database.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object[]",
+            "optional": false,
+            "field": "body",
+            "description": "<p>An array of javascript objects that represents the nodes connected to a server of the network</p>"
+          }
+        ]
+      }
+    },
+    "filename": "routes/v1/net/index.js",
+    "groupTitle": "Net"
+  },
+  {
     "type": "get",
     "url": "/v1/net/nodes/:hash/childrn",
     "title": "get children",
@@ -807,14 +855,14 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "lang",
-            "description": "<p>xxxxx.</p>"
+            "description": "<p>Layer language.</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "suprlay",
-            "description": "<p>xxxxx.</p>"
+            "description": "<p>It indicates whether it belongs to a super layer.</p>"
           },
           {
             "group": "Parameter",
@@ -1070,7 +1118,7 @@ define({ "api": [
     "groupTitle": "Repo_Proc"
   },
   {
-    "type": "put",
+    "type": "delete",
     "url": "/v1/repo/usrs/:usr_id/procs/:proc_id",
     "title": "delete process",
     "version": "0.0.1",
@@ -1125,7 +1173,7 @@ define({ "api": [
     "groupTitle": "Repo_Proc"
   },
   {
-    "type": "delete",
+    "type": "get",
     "url": "/v1/repo/usrs/:usr_id/procs/:proc_id",
     "title": "get process",
     "version": "0.0.1",
