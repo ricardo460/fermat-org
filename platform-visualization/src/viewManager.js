@@ -121,9 +121,13 @@ function ViewManager() {
                 case 'home':
                     enter = function() {
                         window.logo.stopFade(2000);
+                        window.guide.addButton();
                     };
                     
                     exit = function() {
+                        
+                        window.buttonsManager.removeAllButtons();
+
                         if(window.guide.active){
                             window.guide.removeHelp();
                             window.guide.active = false;
