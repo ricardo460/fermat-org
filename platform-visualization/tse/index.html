@@ -9,7 +9,6 @@
     <link type="text/css" rel="stylesheet" href="styles.css" />
     <link type="image/png" rel="icon" href="../images/favicon.png" />
     <script src="../common/jquery-2.1.4.min.js"></script>
-    <script src="tse.js"></script>
     <title>Fermat Table Structure Edit</title>
 </head>
 
@@ -46,6 +45,8 @@
         </div>
     </div>
 
+    <img id="spinner" src="img/loading_spinner.gif" class="img">
+
     <table id="superlayerList" class="table table-fermat table-hover hidden">
         <thead>
             <tr>
@@ -56,8 +57,6 @@
             </tr>
         </thead>
     </table>
-
-    <img id="spinner" src="img/loading_spinner.gif" class="img">
 
     <table id="platformList" class="table table-fermat table-hover hidden">
         <thead>
@@ -129,15 +128,8 @@
                     <option value="java-android">Java (Android)</option>
                 </select>
             </div>
-            <div class="form-group" id="nextName" style="display:none" disabled>
-                <label>Currently next to:</label>
-                <input class="form-control" id="layerNextName" />
-            </div>
-            <div class="form-group" id="nextPos" style="display:none" disabled>
-                <input class="form-control" id="layerNextPos" />
-            </div>
-            <div class="form-group" id="nextSuperlayer" style="display:none" disabled>
-                <input class="form-control" id="layerNextSuperlayer" />
+            <div class="form-group" id="nextName" style="display:none">
+                <label id="layerNext">Currently next to:</label>
             </div>
             <div class="form-group">
                 <label>Superlayer:</label>
@@ -149,8 +141,8 @@
                 <div class="form-group">
                     <label>Position:</label>
                     <select class="form-control" id="layerPos">
-                        <option value="before">Before</option>
-                        <option value="after">After</option>
+                        <option value="before">Above</option>
+                        <option value="after">Below</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -165,6 +157,7 @@
         </form>
     </div>
     <script src="bootstrap.min.js"></script>
+    <script src="tse.js"></script>
 </body>
 
 </html>
