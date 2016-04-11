@@ -57,6 +57,8 @@
         </thead>
     </table>
 
+    <img id="spinner" src="img/loading_spinner.gif" class="img">
+
     <table id="platformList" class="table table-fermat table-hover hidden">
         <thead>
             <tr>
@@ -91,17 +93,18 @@
                 <label for="groupName">Name</label>
                 <input class="form-control" id="groupName" required/>
             </div>
-            <div class="form-group">
-                <label for="groupOrder">Next to:</label>
-                <select class="form-control" id="groupOrder">
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="groupOrder">Position:</label>
-                <select class="form-control" id="groupPos">
-                    <option value="before">Before</option>
-                    <option value="after">After</option>
-                </select>
+            <div class="shared">
+                <div class="form-group">
+                    <label for="groupOrder">Position:</label>
+                    <select class="form-control" id="groupPos">
+                        <option value="before">Before</option>
+                        <option value="after">After</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-control" id="groupOrder">
+                    </select>
+                </div>
             </div>
             <div class="form-group">
                 <label for="groupDeps">Dependencies:</label>
@@ -142,17 +145,18 @@
                     <option value="false">No</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label>Next to:</label>
-                <select class="form-control" id="layerOrder">
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Position:</label>
-                <select class="form-control" id="layerPos">
-                    <option value="before">Before</option>
-                    <option value="after">After</option>
-                </select>
+            <div class="shared">
+                <div class="form-group">
+                    <label>Position:</label>
+                    <select class="form-control" id="layerPos">
+                        <option value="before">Before</option>
+                        <option value="after">After</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-control" id="layerOrder">
+                    </select>
+                </div>
             </div>
             <div class="buttons">
                 <button type="button" id="submitLayer">Submit</button>
