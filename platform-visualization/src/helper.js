@@ -513,17 +513,13 @@ function Helper() {
     /**
      * Makes a deep copy of an object
      * @author Miguelcldn
+     * @lastmodifiedBy Ricardo Delgado
      * @param   {Object} obj The source
      * @returns {Object} A deep copy of obj
      */
     this.clone = function(obj) {
-        var target = {};
-        for (var i in obj) {
-            if (obj.hasOwnProperty(i)) {
-                target[i] = obj[i];
-            }
-        }
-        return target;
+        return JSON.parse(JSON.stringify(obj));
     };
 
 }
+
