@@ -703,9 +703,9 @@ function WorkFlowEdit() {
                         }
                         else{ 
 
-                            if(newSteps[i].title.toLowerCase() !== oldSteps[i].title ||
-                               newSteps[i].desc.toLowerCase()!== oldSteps[i].desc ||
-                               newSteps[i].name.toLowerCase()!== oldSteps[i].name ){
+                            if(newSteps[i].title.toLowerCase() !== oldSteps[i].title.toLowerCase() ||
+                               newSteps[i].desc.toLowerCase()!== oldSteps[i].desc.toLowerCase() ||
+                               newSteps[i].name.toLowerCase()!== oldSteps[i].name.toLowerCase() ){
 
                                 newSteps[i]._id = oldSteps[i]._id;
                                 config.update.steps.push(newSteps[i]);
