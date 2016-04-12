@@ -12,6 +12,9 @@ var SERVER = 'http://api.fermat.org';
 
 function init() {
 
+    $('#type').prop('disabled', true);
+    $('#add').prop('disabled', true);
+
     switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
         case "dev":
             environment = 'production';
@@ -66,6 +69,7 @@ function init() {
         });
 
         $('#submitLayer').click(function() {
+            console.log(request);
             verify(current,request);
         });
 
@@ -109,12 +113,17 @@ function deleteStructure(element, type){
 
         sendRequest(url, 'DELETE');
 
+        $('#type').prop('disabled', true);
+        $('#add').prop('disabled', true);
         hideLists();
         document.getElementById('spinner').style.display = 'block';
 
         setTimeout(function (){
             updateList(type, true);
         }, 3000);
+
+        clearGroupForm();
+        clearLayerForm();
     }
 }
 
@@ -252,7 +261,11 @@ function updateList(list, refresh){
         }
         $("#layerOrder").empty();
         retrieveData("layer", null);
-        retrieveData("layer", "layers", false);
+
+        if(document.getElementById("layerSuperLayer").value === "false")
+            retrieveData("layer", "layers", false);
+        else
+            retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
     }
     else if(list === 'platform'){
         table = document.getElementById("platformList");
@@ -279,6 +292,8 @@ function updateList(list, refresh){
         setTimeout(function (){
                 document.getElementById('spinner').style.display = 'none';
                 sel();
+                $('#type').prop('disabled', false);
+                $('#add').prop('disabled', false);
         }, 2000);
     }
 }
@@ -539,10 +554,10 @@ function verify(form, request){
         if(form === "layer"){
 
             list = document.getElementById('layerList');
-            elements = list.getElementsByTagName('th');
+            elements = list.getElementsByTagName('td');
 
             for(i = 0, l = elements.length; i < l; i+=5){
-                if((data.name.toLowerCase()).capitalize() === elements[i].innerHTML){
+                if(data.name === elements[i].innerHTML.toLowerCase()){
                     window.alert('Layer name in use');
                     return false;
                 }
@@ -552,7 +567,7 @@ function verify(form, request){
                 url = getRoute("layers", "insert");
                 updateData(form, data.order, 'insert');
                 sendRequest(url, 'POST', data);
-                updateList(form, false);
+                updateList('layer', false);
             }
         }
         else{
@@ -565,7 +580,7 @@ function verify(form, request){
                 list = document.getElementById('superlayerList');
                 url = getRoute("suprlays", "insert");
             }
-            elements = list.getElementsByTagName('th');
+            elements = list.getElementsByTagName('td');
 
             var repo;
 
@@ -601,10 +616,10 @@ function verify(form, request){
         if(form === "layer"){
 
             list = document.getElementById('layerList');
-            elements = list.getElementsByTagName('th');
+            elements = list.getElementsByTagName('td');
 
             for(i = 0, l = elements.length; i < l; i+=5){
-                if((data.name.toLowerCase()).capitalize() === elements[i].innerHTML && (data.name.toLowerCase()).capitalize() !== referenceName){
+                if(data.name === elements[i].innerHTML.toLowerCase() && data.name !== referenceName){
                     window.alert('Layer name in use');
                     return false;
                 }
@@ -615,6 +630,9 @@ function verify(form, request){
                 updateData(form, data.order, 'insert');
                 sendRequest(url, 'PUT', data);
 
+                $('#type').prop('disabled', true);
+                $('#add').prop('disabled', true);
+
                 cancel();
                 hideLists();
                 document.getElementById('spinner').style.display = 'block';
@@ -622,6 +640,9 @@ function verify(form, request){
                 setTimeout(function (){
                     updateList(form, true);
                 }, 3000);
+
+                clearGroupForm();
+                clearLayerForm();
             }
         }
         else{
@@ -634,7 +655,7 @@ function verify(form, request){
                 list = document.getElementById('superlayerList');
                 url = getRoute("suprlays","insert");
             }
-            elements = list.getElementsByTagName('th');
+            elements = list.getElementsByTagName('td');
 
             if(form === 'platform'){
                 j = 5;
@@ -661,6 +682,9 @@ function verify(form, request){
                 updateData(form, data.order, 'insert');
                 sendRequest(url, 'PUT', data);
 
+                $('#type').prop('disabled', true);
+                $('#add').prop('disabled', true);
+
                 cancel();
                 hideLists();
                 document.getElementById('spinner').style.display = 'block';
@@ -668,6 +692,9 @@ function verify(form, request){
                 setTimeout(function (){
                     updateList(form, true);
                 }, 3000);
+                
+                clearGroupForm();
+                clearLayerForm();
             }
         }
     }
@@ -682,7 +709,10 @@ function sendRequest(url, method, data){
             data: data
         }).success (
             function (res) {
-                window.alert('Success');
+                if(method === 'POST')
+                    window.alert('New layer created successfully.');
+                else
+                    window.alert('Layer information has been modified.');
             }
         );
     }
@@ -693,7 +723,7 @@ function sendRequest(url, method, data){
             method: "DELETE"
         }).success (
             function (res) {
-                window.alert('Success');
+                window.alert('The layer has been completely removed.');
             }
         );
     }
@@ -753,7 +783,10 @@ function buildURL(base, params) {
 function getData(form, request) {
 
     if(form === 'layer'){
-        order = document.getElementById('layerOrder').value;
+        if(document.getElementById('layerPos').value === "before")
+            order = document.getElementById('layerOrder').value;
+        else
+            order = parseInt(document.getElementById('layerOrder').value) + 1;
 
         if(order === -1)
             order = 0;
@@ -766,7 +799,7 @@ function getData(form, request) {
 
         if(request === 'add'){
             data = {
-                name:document.getElementById('layerName').value,
+                name:document.getElementById('layerName').value.toLowerCase(),
                 lang:document.getElementById('layerLang').value,
                 suprlay:superlayer,
                 order:order
@@ -775,7 +808,7 @@ function getData(form, request) {
         else{
             data = {
                 layer_id:referenceId,
-                name:document.getElementById('layerName').value,
+                name:document.getElementById('layerName').value.toLowerCase(),
                 lang:document.getElementById('layerLang').value,
                 suprlay:superlayer,
                 order:order
@@ -799,7 +832,7 @@ function getData(form, request) {
         if(request === 'add'){
             data = {
                 code:document.getElementById('groupCode').value,
-                name:document.getElementById('groupName').value,
+                name:document.getElementById('groupName').value.toLowerCase(),
                 logo:document.getElementById('groupCode').value + "_logo.png",
                 deps:$('#groupDeps').val(),
                 order:order
@@ -810,7 +843,7 @@ function getData(form, request) {
                 data = {
                     platfrm_id:referenceId,
                     code:document.getElementById('groupCode').value,
-                    name:document.getElementById('groupName').value,
+                    name:document.getElementById('groupName').value.toLowerCase(),
                     logo:document.getElementById('groupCode').value + "_logo.png",
                     deps:$('#groupDeps').val(),
                     order:order
@@ -820,7 +853,7 @@ function getData(form, request) {
                 data = {
                     suprlay_id:referenceId,
                     code:document.getElementById('groupCode').value,
-                    name:document.getElementById('groupName').value,
+                    name:document.getElementById('groupName').value.toLowerCase(),
                     logo:document.getElementById('groupCode').value + "_logo.png",
                     deps:$('#groupDeps').val(),
                     order:order
