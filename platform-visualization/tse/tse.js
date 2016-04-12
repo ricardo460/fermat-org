@@ -76,11 +76,6 @@ function init() {
         $('#submitGroup').click(function() {
             //verify(current,request);
         });
-
-        clearGroupForm();
-        clearLayerForm();
-        $('#type').prop('disabled', false);
-        $('#add').prop('disabled', false);
     });
 }
 
@@ -157,7 +152,7 @@ function modifyStructure(element, type){
                 document.getElementById("layerName").value = res.name.capitalize();
                 document.getElementById("layerLang").value = res.lang;
                 
-                referenceName = res.name.capitalize();
+                referenceName = res.name;
                 referenceId = element.id;
                 $("#layerOrder").empty();
 
@@ -186,7 +181,7 @@ function modifyStructure(element, type){
                             list.options[i].selected = 'true';
                     }
                 }               
-                referenceName = res.name.capitalize();
+                referenceName = res.name;
                 referenceId = element.id;
                 referenceCode = res.code;
 
@@ -314,6 +309,7 @@ function add(){
         showForm('#groupForm');
         clearGroupForm();
     }
+    request = 'add';
 }
 
 function cancel() {
@@ -350,16 +346,13 @@ function sel() {
 }
 
 function clearGroupForm() {
-    $('#groupCode').html('');
-    $('#groupName').html('');
-    $('#groupOrder').html('');
+    document.getElementById('groupCode').value = '';
+    document.getElementById('groupName').value = '';
 }
 
 function clearLayerForm() {
-    $('#layerName').html('');
-    $('#layerNextName').html('');
-    $('#layerNextPos').html('');
-    $('#layerNextSuperlayer').html('');
+    document.getElementById('layerName').value = '';
+    document.getElementById('layerNext').value = '';
     document.getElementById('nextName').style.display = 'none';
 }
 
@@ -547,6 +540,7 @@ function verify(form, request){
         l,
         list,
         elements,
+        nameChange = false;
         proceed = true;
 
 
@@ -615,6 +609,9 @@ function verify(form, request){
     else{
         if(form === "layer"){
 
+            if(document.getElementById('layerPos').value === 'after')
+                data.order += -1;
+
             list = document.getElementById('layerList');
             elements = list.getElementsByTagName('td');
 
@@ -626,14 +623,20 @@ function verify(form, request){
             }
 
             if(proceed){
+                if(data.name !== referenceName){
+                    if(document.getElementById('layerPos').value === 'after')
+                        data.order += 1;
+                    else
+                        data.order -= 1;
+                }
                 url = getRoute("layers", "update", referenceId);
                 updateData(form, data.order, 'insert');
                 sendRequest(url, 'PUT', data);
 
+                cancel();
+
                 $('#type').prop('disabled', true);
                 $('#add').prop('disabled', true);
-
-                cancel();
                 hideLists();
                 document.getElementById('spinner').style.display = 'block';
             
@@ -682,10 +685,9 @@ function verify(form, request){
                 updateData(form, data.order, 'insert');
                 sendRequest(url, 'PUT', data);
 
+                cancel();
                 $('#type').prop('disabled', true);
                 $('#add').prop('disabled', true);
-
-                cancel();
                 hideLists();
                 document.getElementById('spinner').style.display = 'block';
             
