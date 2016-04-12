@@ -943,7 +943,8 @@ function WorkFlowEdit() {
 
         list.update();
 
-        document.getElementById("modal-steps-div").changeStep(0);
+        if(steps.length > 0)
+            document.getElementById("modal-steps-div").changeStep(0);
         
     }
 
