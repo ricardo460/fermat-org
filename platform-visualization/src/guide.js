@@ -17,6 +17,15 @@ function Guide() {
     var Z = 40000,
         SCALE = (wide) ? 28 : 16;
 
+    this.addButton = function(){
+
+        var text = 'Help',
+            button = 'helpButton',
+            side = 'left';
+
+        window.buttonsManager.createButtons(button, text, null, null, null, side);
+    }
+
     /**
      * @author Isaías Taborda
      * Create help text.

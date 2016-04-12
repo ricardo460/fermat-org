@@ -587,9 +587,9 @@ function WorkFlowEdit() {
 
         function postParamsStep(flow, callback){
 
-            var newSteps = flow.steps,
-                oldSteps = window.fieldsEdit.actualFlow.steps.slice(0),
-                newFlowSteps = newSteps.slice(0),
+            var newSteps = flow.steps.slice(),
+                oldSteps = window.fieldsEdit.actualFlow.steps.slice(),
+                newFlowSteps = newSteps.slice(),
                 config = { 
                         insert :{
                             steps : [],
@@ -651,10 +651,13 @@ function WorkFlowEdit() {
                             }
                             else if(newSteps[i].next.length !== 0){
 
-                                if(newSteps[i].next[0].id !== oldSteps[i].next[0].id ||
-                                    newSteps[i].next[0].type !== oldSteps[i].next[0].type){
-                                    newSteps[i]._id = oldSteps[i]._id;
-                                    config.update.steps.push(newSteps[i]);
+                                for(var t = 0; t < newSteps[i].next.length; t++){
+
+                                    if(newSteps[i].next[t].id !== oldSteps[i].next[t].id ||
+                                       newSteps[i].next[t].type !== oldSteps[i].next[t].type){
+                                        newSteps[i]._id = oldSteps[i]._id;
+                                        config.update.steps.push(newSteps[i]);
+                                    }
                                 }
                             }
                         }
@@ -679,10 +682,13 @@ function WorkFlowEdit() {
                         }
                         else if(newSteps[i].next.length !== 0){
 
-                            if(newSteps[i].next[0].id !== oldSteps[i].next[0].id ||
-                                newSteps[i].next[0].type !== oldSteps[i].next[0].type){
-                                newSteps[i]._id = oldSteps[i]._id;
-                                config.update.steps.push(newSteps[i]);
+                            for(var t = 0; t < newSteps[i].next.length; t++){
+
+                                if(newSteps[i].next[t].id !== oldSteps[i].next[t].id ||
+                                   newSteps[i].next[t].type !== oldSteps[i].next[t].type){
+                                    newSteps[i]._id = oldSteps[i]._id;
+                                    config.update.steps.push(newSteps[i]);
+                                }
                             }
                         }
                     }
@@ -714,10 +720,13 @@ function WorkFlowEdit() {
                             }
                             else if(newSteps[i].next.length !== 0){
 
-                                if(newSteps[i].next[0].id !== oldSteps[i].next[0].id ||
-                                    newSteps[i].next[0].type !== oldSteps[i].next[0].type){
-                                    newSteps[i]._id = oldSteps[i]._id;
-                                    config.update.steps.push(newSteps[i]);
+                                for(var t = 0; t < newSteps[i].next.length; t++){
+
+                                    if(newSteps[i].next[t].id !== oldSteps[i].next[t].id ||
+                                       newSteps[i].next[t].type !== oldSteps[i].next[t].type){
+                                        newSteps[i]._id = oldSteps[i]._id;
+                                        config.update.steps.push(newSteps[i]);
+                                    }
                                 }
                             }
                         }
