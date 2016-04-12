@@ -29,9 +29,9 @@ function init() {
     user_data = testData();
     axs_key = user_data.axs_key;
 
-    updateList('layer');
-    updateList('platform');
-    updateList('superlayer');
+    updateList('layer',true);
+    updateList('platform',true);
+    updateList('superlayer',true);
 
     $(document).ready(function() {
 
@@ -47,6 +47,24 @@ function init() {
             }
         });
 
+        $('#layerSuperLayer').change(function() {
+            $("#layerOrder").empty();
+            if(document.getElementById("layerSuperLayer").value === "false")
+                retrieveData("layer", "layers", false); 
+            else   
+                retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
+        });
+
+        $('#layerSuperLayer').bind('keydown', function(event) {
+            if(event.key === 'ArrowUp' || event.key === 'ArrowDown'){
+                $("#layerOrder").empty();
+                if(document.getElementById("layerSuperLayer").value === "false")
+                    retrieveData("layer", "layers", false); 
+                else   
+                    retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
+            }
+        });
+
         $('#submitLayer').click(function() {
             verify(current,request);
         });
@@ -57,7 +75,6 @@ function init() {
 
         clearGroupForm();
         clearLayerForm();
-        sel();
         $('#type').prop('disabled', false);
         $('#add').prop('disabled', false);
     });
@@ -65,7 +82,7 @@ function init() {
 
 function deleteStructure(element, type){
     
-    if(confirm("Are you sure you want to remove the " + element.name + "?") === true){
+    if(confirm("Are you sure you want to remove the " + element.name + "? (Removing this layer will delete all of it's associated components)") === true){
         
         var url;
 
@@ -92,9 +109,12 @@ function deleteStructure(element, type){
 
         sendRequest(url, 'DELETE');
 
+        hideLists();
+        document.getElementById('spinner').style.display = 'block';
+
         setTimeout(function (){
-            updateList(type);
-        }, 2000);
+            updateList(type, true);
+        }, 3000);
     }
 }
 
@@ -125,19 +145,22 @@ function modifyStructure(element, type){
             if(type === 'layer'){
                 
                 document.getElementById('nextName').style.display = 'block';
-                document.getElementById('nextPos').style.display = 'block';
-                document.getElementById('nextSuperlayer').style.display = 'block';
                 document.getElementById("layerName").value = res.name.capitalize();
                 document.getElementById("layerLang").value = res.lang;
                 
                 referenceName = res.name.capitalize();
                 referenceId = element.id;
+                $("#layerOrder").empty();
 
-                if(res.suprlay === false)
+                if(res.suprlay === false){
                     document.getElementById("layerSuperLayer").value = "false";
-                else
+                    retrieveData("layer", "layers", false);
+                }
+                else{
                     document.getElementById("layerSuperLayer").value = res.suprlay;
-
+                    retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
+                }
+                
                 findPosition(type, res.order);
             }
             else{
@@ -191,12 +214,10 @@ function findPosition(type, order){
              for(var i = 0; i < l; i++){
                 if(res[i].order === order && order === 0){
                     if(type === "layer"){
-                        document.getElementById("layerNextName").value = res[1].name.capitalize();
-                        document.getElementById("layerNextPos").value = "Before";
                             if(res[1].suprlay !== false)
-                                document.getElementById("layerNextSuperlayer").value = "Superlayer: " + res[1].suprlay;
+                                document.getElementById("layerNext").innerHTML = "Currently: Above - " + res[1].name.capitalize() + " (In Superlayer: " + res[1].suprlay + ")";
                             else
-                                document.getElementById("layerNextSuperlayer").value = "No superlayer";
+                                document.getElementById("layerNext").innerHTML = "Currently: Above - " + res[1].name.capitalize() + " (In no Superlayer)";
                     }
                     else{
                         document.getElementById("groupOrder").value = res[1].order;
@@ -206,12 +227,10 @@ function findPosition(type, order){
                 else{
                     if(res[i].order === order){
                         if(type === "layer"){
-                            document.getElementById("layerNextName").value = res[i-1].name.capitalize();
-                            document.getElementById("layerNextPos").value = "After";
                             if(res[i-1].suprlay !== false)
-                                document.getElementById("layerNextSuperlayer").value = "Superlayer: " + res[i-1].suprlay;
+                                document.getElementById("layerNext").innerHTML = "Currently: Below - " + res[i-1].name.capitalize() + " (In Superlayer: " + res[i-1].suprlay + ")";
                             else
-                                document.getElementById("layerNextSuperlayer").value = "No superlayer";
+                                document.getElementById("layerNext").innerHTML = "Currently: Below - " + res[i-1].name.capitalize() + " (In no Superlayer)";
                         }
                         else{
                             document.getElementById("groupOrder").value = res[i-1].order;
@@ -224,26 +243,43 @@ function findPosition(type, order){
     );
 }
 
-function updateList(list){
+function updateList(list, refresh){
+    var table;
     if(list === 'layer'){
-        $("#layerList").empty();
+        table = document.getElementById("layerList");
+        while(table.rows.length > 1) {
+            table.deleteRow(1);
+        }
         $("#layerOrder").empty();
         retrieveData("layer", null);
         retrieveData("layer", "layers", false);
     }
     else if(list === 'platform'){
-        $("#platformList").empty();
+        table = document.getElementById("platformList");
+        while(table.rows.length > 1) {
+            table.deleteRow(1);
+        }
         $("groupOrder").empty();
         retrieveData("platform", null);
         retrieveData("platform", "groups", null);
     }
     else{
-        $("#superlayerList").empty();
+        table = document.getElementById("superlayerList");
+        while(table.rows.length > 1) {
+            table.deleteRow(1);
+        }
         $("#layerSuperLayer").empty();
         $("#groupOrder").empty();
         retrieveData("superlayer", null);
         retrieveData("superlayer", "groups", null);
         retrieveData("superlayer", "layers", null);
+    }
+    
+    if(refresh){
+        setTimeout(function (){
+                document.getElementById('spinner').style.display = 'none';
+                sel();
+        }, 2000);
     }
 }
 
@@ -310,8 +346,6 @@ function clearLayerForm() {
     $('#layerNextPos').html('');
     $('#layerNextSuperlayer').html('');
     document.getElementById('nextName').style.display = 'none';
-    document.getElementById('nextPos').style.display = 'none';
-    document.getElementById('nextSuperlayer').style.display = 'none';
 }
 
 function hideLists() {
@@ -355,39 +389,37 @@ function updateData(list, position, mode){
             var l = res.length - 1;
 
             if(mode === 'insert'){
-                for(i = l; i > position; i--){
+                for(i = l; i > position + 1; i--){
                     switch(list) {
-                        case "layers":
-                            url = getRoute("layers", "update", res[i]._id);
+                        case "layer":
+                            url = getRoute("layer", "update", res[i]._id);
                             break;
-                        case "platforms":
-                            url = getRoute("platfrms", "update", res[i]._id);
+                        case "platform":
+                            url = getRoute("platfrm", "update", res[i]._id);
                             break;
-                        case "superlayers":
-                            url = getRoute("suprlays", "update", res[i]._id);
+                        case "superlayer":
+                            url = getRoute("suprlay", "update", res[i]._id);
                             break;
                     }
                     res[i].order = parseInt(res[i].order) + 1;
-                    console.log("update");
-                    sendRequest(url, 'UPDATE', res[i]);
+                    sendRequest(url, 'PUT', res[i]);
                 }
             }
             else{
                 for(i = position + 1; i < l; i++){
                     switch(list) {
-                        case "layers":
-                            url = getRoute("layers", "update", res[i]._id);
+                        case "layer":
+                            url = getRoute("layer", "update", res[i]._id);
                             break;
-                        case "platforms":
-                            url = getRoute("platfrms", "update", res[i]._id);
+                        case "platform":
+                            url = getRoute("platfrm", "update", res[i]._id);
                             break;
-                        case "superlayers":
-                            url = getRoute("suprlays", "update", res[i]._id);
+                        case "superlayer":
+                            url = getRoute("suprlay", "update", res[i]._id);
                             break;
                     }
                     res[i].order = res[i].order - 1;
-                    console.log("update");
-                    sendRequest(url, 'UPDATE', res[i]);
+                    sendRequest(url, 'PUT', res[i]);
                 }
             }
         }
@@ -421,24 +453,26 @@ function retrieveData(repo, form, code){
                 if(code === null)
                     setFields(res, form, repo);
                 else
-                    setFields(res, form, repo);
+                    setFields(res, form, repo, code);
         }
     );
 }
 
-function setFields(data, form, type){
+function setFields(data, form, type, superlayer){
 
     var l = data.length;
 
     for(var i = 0; i < l; i++){
         if(form === "layers"){
-            if(type === "superlayer")
+            if(type === "superlayer"){
+                if(i === 0){
+                    $("#layerSuperLayer").append($("<option></option>").val("false").html("No"));
+                }
                 $("#layerSuperLayer").append($("<option></option>").val(data[i].code).html(data[i].code + " - " + data[i].name.capitalize()));
+            }
             if(type === "layer")
-                if(data[i].suprlay !== false)
-                    $("#layerOrder").append($("<option></option>").val(data[i].order).html(data[i].suprlay + " - " + data[i].name.capitalize()));
-                else
-                    $("#layerOrder").append($("<option></option>").val(data[i].order).html("No superlayer - " + data[i].name.capitalize()));
+                if(data[i].suprlay === superlayer)
+                    $("#layerOrder").append($("<option></option>").val(data[i].order).html(data[i].name.capitalize()));
         }
         if(form === "group")
             $("#groupOrder").append($("<option></option>").val(data[i].order).html(data[i].code + " - " + data[i].name.capitalize()));
@@ -460,9 +494,9 @@ function fillTable(repo, data){
                 $('#layerList').append("<tr><td>" + data[i].name.capitalize() + "</td><td>" + data[i].lang.capitalize() + "</td><td>" + "</td><td>" + data[i].order + "</td><td>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"layer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"layer"' + ")'>Delete</button>" + "</td></tr>");
         }
         //else if(repo === "platform")
-            //$('#platformList').append("<tr><td>" + data[i].code + "</td><td>" + data[i].name.capitalize() + "</td><td>" + data[i].order + "</td><td>" + data[i].deps + "</td><td>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"platform"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='platform: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"platform"' + ")'>Delete</button>" + "</td></tr>");
+            //$('#platformList').append("<tr><th>" + data[i].code + "</th><th>" + data[i].name.capitalize() + "</th><th>" + data[i].order + "</th><th>" + data[i].deps + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"platform"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='platform: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"platform"' + ")'>Delete</button>" + "</th></tr>");
         //else
-            //$('#superlayerList').append("<tr><td>" + data[i].code + "</td><td>" + data[i].name.capitalize() + "</td><td>" + data[i].order + "</td><td>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"superlayer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='superlayer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"superlayer"' + ")'>Delete</button>" + "</td></tr>");
+            //$('#superlayerList').append("<tr><th>" + data[i].code + "</th><th>" + data[i].name.capitalize() + "</th><th>" + data[i].order + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"superlayer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='superlayer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"superlayer"' + ")'>Delete</button>" + "</th></tr>");
     }
 }
 
@@ -474,7 +508,7 @@ function getRoute(form, route, id){
 
     if(route === 'insert' || route === 'retrieve')
         tail = "/v1/repo/usrs/" + user_data._id + "/" + form;
-    else
+    else if(route === 'update' || route === 'delete')
         tail = "/v1/repo/usrs/" + user_data._id + "/" + form + "/" + id;
 
     param = {
@@ -485,6 +519,7 @@ function getRoute(form, route, id){
     url = SERVER.replace('http://', '') + tail;
     url = 'http://' + self.buildURL(url, param);
 
+    console.log(route + " - " + url);
     return url;
 }
 
@@ -517,9 +552,8 @@ function verify(form, request){
                 url = getRoute("layers", "insert");
                 updateData(form, data.order, 'insert');
                 sendRequest(url, 'POST', data);
+                updateList(form, false);
             }
-                
-            updateList(form);
         }
         else{
 
@@ -558,10 +592,9 @@ function verify(form, request){
             if(proceed){
                 url = getRoute(repo, "insert");
                 updateData(form, data.order, 'insert');
-                sendRequest(url, 'PUT', data);
+                sendRequest(url, 'POST', data);
+                updateList(form, false);
             }
-            
-            updateList(form);
         }
     }
     else{
@@ -581,9 +614,15 @@ function verify(form, request){
                 url = getRoute("layers", "update", referenceId);
                 updateData(form, data.order, 'insert');
                 sendRequest(url, 'PUT', data);
+
+                cancel();
+                hideLists();
+                document.getElementById('spinner').style.display = 'block';
+            
+                setTimeout(function (){
+                    updateList(form, true);
+                }, 3000);
             }
-                
-            updateList(form);
         }
         else{
 
@@ -621,9 +660,15 @@ function verify(form, request){
                 url = getRoute(repo, "insert");
                 updateData(form, data.order, 'insert');
                 sendRequest(url, 'PUT', data);
-            }
+
+                cancel();
+                hideLists();
+                document.getElementById('spinner').style.display = 'block';
             
-            updateList(form);
+                setTimeout(function (){
+                    updateList(form, true);
+                }, 3000);
+            }
         }
     }
 }
@@ -708,10 +753,7 @@ function buildURL(base, params) {
 function getData(form, request) {
 
     if(form === 'layer'){
-        if(document.getElementById('layerPos').value === "before")
-            order = document.getElementById('layerOrder').value;
-        else
-            order = parseInt(document.getElementById('layerOrder').value) + 1;
+        order = document.getElementById('layerOrder').value;
 
         if(order === -1)
             order = 0;
