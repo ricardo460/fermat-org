@@ -1,20 +1,12 @@
-//
-/*client.connect('ws://52.35.64.221:9090/fermat/ws', '', '', {
-	"temp-i": {
-		"i": "040E0E430ED675DD2E86BE2E172DA09FCE1415353DA20CF43AFC48B0BAA8F0D7656EE244C0097EE1A73C196DCF5DF1DE6E313407E82ADE6A9EC2F7697103BA1FCF"
-	}
-});*/
-//client.connect('ws://52.35.64.221:9090/fermat/ws');
-//GET / HTTP/1.1
-// Upgrade: WebSocket
-// Connection: Upgrade
 var opts = {
 	extraHeaders: {
-		"temp-i": '{"i": "040E0E430ED675DD2E86BE2E172DA09FCE1415353DA20CF43AFC48B0BAA8F0D7656EE244C0097EE1A73C196DCF5DF1DE6E313407E82ADE6A9EC2F7697103BA1FCF"}'
+		'temp-i': '{"i": "040E0E430ED675DD2E86BE2E172DA09FCE1415353DA20CF43AFC48B0BAA8F0D7656EE244C0097EE1A73C196DCF5DF1DE6E313407E82ADE6A9EC2F7697103BA1FCF"}',
+		'sec-websocket-version': '13',
+		'sec-websocket-protocol': 'echo-protocol'
 	}
 };
-var socket = require('engine.io-client')('http://localhost:8081', opts);
-//var socket = require('engine.io-client')('http://52.35.64.221:9090/fermat/ws', opts);
+//var socket = require('engine.io-client')('http://localhost:8080', opts);
+var socket = require('engine.io-client')('http://52.35.64.221:9090/fermat/ws', opts);
 try {
 	socket.on('message', function () {
 		console.log('message');

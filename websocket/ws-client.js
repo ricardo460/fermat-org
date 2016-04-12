@@ -1,12 +1,14 @@
 var WebSocket = require('ws');
 var opts = {
-	protocolVersion: 8,
+	protocolVersion: 13,
 	headers: {
-		"temp-i": '{"i": "040E0E430ED675DD2E86BE2E172DA09FCE1415353DA20CF43AFC48B0BAA8F0D7656EE244C0097EE1A73C196DCF5DF1DE6E313407E82ADE6A9EC2F7697103BA1FCF"}'
-	}
+		'temp-i': '{"i": "040E0E430ED675DD2E86BE2E172DA09FCE1415353DA20CF43AFC48B0BAA8F0D7656EE244C0097EE1A73C196DCF5DF1DE6E313407E82ADE6A9EC2F7697103BA1FCF"}',
+		'sec-websocket-version': '13',
+		'sec-websocket-protocol': 'echo-protocol'
+	},
 };
-//var ws = new WebSocket('ws://52.35.64.221:9090/fermat/ws', opts);
-var ws = new WebSocket('ws://localhost:8081', opts);
+var ws = new WebSocket('ws://52.35.64.221:9090/fermat/ws', opts);
+//var ws = new WebSocket('ws://localhost:8080', opts);
 ws.on('open', function open() {
 	ws.send('something');
 });
