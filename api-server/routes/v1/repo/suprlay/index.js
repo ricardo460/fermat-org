@@ -86,7 +86,7 @@ router.post('/', function (req, res, next) {
 			});
 		} 
 		if (req.body.order === undefined || req.body.order === null)
-			req.body.order = 0;
+			req.body.order = '0';
 		else {
 			if (!security.isValidData(req.body.order)) {
 				band = false;
