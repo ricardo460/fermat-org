@@ -636,10 +636,9 @@ function WorkFlowEdit() {
                         }
                         else{
 
-                            if(newSteps[i].title !== oldSteps[i].title ||
-                               newSteps[i].desc !== oldSteps[i].desc ||
-                               newSteps[i].name !== oldSteps[i].name ||
-                               newSteps[i].activity !== oldSteps[i].activity){
+                            if(newSteps[i].title.toLowerCase() !== oldSteps[i].title.toLowerCase() ||
+                               newSteps[i].desc.toLowerCase() !== oldSteps[i].desc.toLowerCase() ||
+                               newSteps[i].name.toLowerCase() !== oldSteps[i].name.toLowerCase()){
 
                                 newSteps[i]._id = oldSteps[i]._id;
                                 config.update.steps.push(newSteps[i]);
@@ -667,10 +666,9 @@ function WorkFlowEdit() {
 
                     for(i = 0; i < newSteps.length; i++){
 
-                        if(newSteps[i].title !== oldSteps[i].title ||
-                           newSteps[i].desc !== oldSteps[i].desc ||
-                           newSteps[i].name !== oldSteps[i].name ||
-                           newSteps[i].activity !== oldSteps[i].activity){
+                        if(newSteps[i].title.toLowerCase() !== oldSteps[i].title.toLowerCase() ||
+                           newSteps[i].desc.toLowerCase() !== oldSteps[i].desc.toLowerCase() ||
+                           newSteps[i].name.toLowerCase() !== oldSteps[i].name.toLowerCase() ){
 
                             newSteps[i]._id = oldSteps[i]._id;
                             config.update.steps.push(newSteps[i]);
@@ -705,10 +703,9 @@ function WorkFlowEdit() {
                         }
                         else{ 
 
-                            if(newSteps[i].title !== oldSteps[i].title ||
-                               newSteps[i].desc !== oldSteps[i].desc ||
-                               newSteps[i].name !== oldSteps[i].name ||
-                               newSteps[i].activity !== oldSteps[i].activity){
+                            if(newSteps[i].title.toLowerCase() !== oldSteps[i].title.toLowerCase() ||
+                               newSteps[i].desc.toLowerCase()!== oldSteps[i].desc.toLowerCase() ||
+                               newSteps[i].name.toLowerCase()!== oldSteps[i].name.toLowerCase() ){
 
                                 newSteps[i]._id = oldSteps[i]._id;
                                 config.update.steps.push(newSteps[i]);
