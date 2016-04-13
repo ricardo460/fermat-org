@@ -1,7 +1,7 @@
 //global variables
-var user_data = '',
+var user_data = getUserID(),
     axs_key = '',
-    environment = 'production',
+    environment = '',
     current = 'layer',
     request = 'add',
     referenceName = '',
@@ -11,72 +11,74 @@ var user_data = '',
 var SERVER = 'http://api.fermat.org';
 
 function init() {
-
-    $('#type').prop('disabled', true);
-    $('#add').prop('disabled', true);
-
-    switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
-        case "dev":
-            environment = 'production';
-            break;
-        case "lab":
-            environment = 'development';
-            break;
-        case "3d":
-            environment = 'testing';
-            break;
+    if(user_data._id === ''){
+        window.alert("Error. Please login first or request authorization to use this module");
+        window.location.replace(window.location.href.replace(window.location.pathname, ''));
     }
+    else{
+        $('#type').prop('disabled', true);
+        $('#add').prop('disabled', true);
 
-    environment = 'testing';
+        switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
+            case "dev":
+                environment = 'production';
+                break;
+            case "lab":
+                environment = 'development';
+                break;
+            case "3d":
+                environment = 'testing';
+                break;
+        }
 
-    user_data = testData();
-    axs_key = user_data.axs_key;
+        axs_key = user_data.axs_key;
 
-    updateList('layer',true);
-    updateList('platform',true);
-    updateList('superlayer',true);
+        updateList('layer',true);
+        updateList('platform',true);
+        updateList('superlayer',true);
 
-    $(document).ready(function() {
+        $(document).ready(function() {
 
-        $('#type').change(function() {
-            current = this.value;
-            sel();
-        });
-
-        $('#type').bind('keydown', function(event) {
-            if(event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+            $('#type').change(function() {
                 current = this.value;
                 sel();
-            }
-        });
+            });
 
-        $('#layerSuperLayer').change(function() {
-            $("#layerOrder").empty();
-            if(document.getElementById("layerSuperLayer").value === "false")
-                retrieveData("layer", "layers", false); 
-            else   
-                retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
-        });
+            $('#type').bind('keydown', function(event) {
+                if(event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+                    current = this.value;
+                    sel();
+                }
+            });
 
-        $('#layerSuperLayer').bind('keydown', function(event) {
-            if(event.key === 'ArrowUp' || event.key === 'ArrowDown'){
+            $('#layerSuperLayer').change(function() {
                 $("#layerOrder").empty();
                 if(document.getElementById("layerSuperLayer").value === "false")
                     retrieveData("layer", "layers", false); 
                 else   
                     retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
-            }
-        });
+            });
 
-        $('#submitLayer').click(function() {
-            console.log(request);
-            verify(current,request);
-        });
+            $('#layerSuperLayer').bind('keydown', function(event) {
+                if(event.key === 'ArrowUp' || event.key === 'ArrowDown'){
+                    $("#layerOrder").empty();
+                    if(document.getElementById("layerSuperLayer").value === "false")
+                        retrieveData("layer", "layers", false); 
+                    else   
+                        retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
+                }
+            });
 
-        $('#submitGroup').click(function() {
-            //verify(current,request);
+            $('#submitLayer').click(function() {
+                console.log(request);
+                verify(current,request);
+            });
+
+            $('#submitGroup').click(function() {
+                //verify(current,request);
+            });
         });
-    });
+    }
 }
 
 function deleteStructure(element, type){
@@ -539,6 +541,7 @@ function verify(form, request){
         j,
         l,
         list,
+        repo,
         elements,
         nameChange = false;
         proceed = true;
@@ -575,8 +578,6 @@ function verify(form, request){
                 url = getRoute("suprlays", "insert");
             }
             elements = list.getElementsByTagName('td');
-
-            var repo;
 
             if(form === 'platform'){
                 j = 5;
@@ -865,21 +866,6 @@ function getData(form, request) {
     }
 
     return data;
-}
-
-function testData() {
-    var _usr_id = {
-        __v:0,
-        _id:"56eb1b6442fbd3173fc1ecbd",
-        avatar_url:"https://avatars.githubusercontent.com/u/17053960?v=3",
-        axs_key:"56fd9d7c7d89775463f2c580",
-        email:"isaiasve30@hotmail.com",
-        github_tkn:"2cf121cb74335cbd049f8626698b6e4f459e4925",
-        name:"Isaías Taborda",
-        upd_at:"56eb1b6442fbd3173fc1ecbc",
-        usrnm:"isatab",
-    };
-    return _usr_id;
 }
 
 function getUserID() {
