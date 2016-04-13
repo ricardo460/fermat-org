@@ -1,7 +1,7 @@
 //global variables
-var user_data = '',
+var user_data = getUserID(),
     axs_key = '',
-    environment = 'production',
+    environment = '',
     current = 'layer',
     request = 'add',
     referenceName = '',
@@ -11,73 +11,74 @@ var user_data = '',
 var SERVER = 'http://api.fermat.org';
 
 function init() {
-
-    switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
-        case "dev":
-            environment = 'production';
-            break;
-        case "lab":
-            environment = 'development';
-            break;
-        case "3d":
-            environment = 'testing';
-            break;
+    if(user_data._id === ''){
+        window.alert("Error. Please login first or request authorization to use this module");
+        window.location.replace(window.location.href.replace(window.location.pathname, ''));
     }
+    else{
+        $('#type').prop('disabled', true);
+        $('#add').prop('disabled', true);
 
-    environment = 'testing';
+        switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
+            case "dev":
+                environment = 'production';
+                break;
+            case "lab":
+                environment = 'development';
+                break;
+            case "3d":
+                environment = 'testing';
+                break;
+        }
 
-    user_data = testData();
-    axs_key = user_data.axs_key;
+        axs_key = user_data.axs_key;
 
-    updateList('layer',true);
-    updateList('platform',true);
-    updateList('superlayer',true);
+        updateList('layer',true);
+        updateList('platform',true);
+        updateList('superlayer',true);
 
-    $(document).ready(function() {
+        $(document).ready(function() {
 
-        $('#type').change(function() {
-            current = this.value;
-            sel();
-        });
-
-        $('#type').bind('keydown', function(event) {
-            if(event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+            $('#type').change(function() {
                 current = this.value;
                 sel();
-            }
-        });
+            });
 
-        $('#layerSuperLayer').change(function() {
-            $("#layerOrder").empty();
-            if(document.getElementById("layerSuperLayer").value === "false")
-                retrieveData("layer", "layers", false); 
-            else   
-                retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
-        });
+            $('#type').bind('keydown', function(event) {
+                if(event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+                    current = this.value;
+                    sel();
+                }
+            });
 
-        $('#layerSuperLayer').bind('keydown', function(event) {
-            if(event.key === 'ArrowUp' || event.key === 'ArrowDown'){
+            $('#layerSuperLayer').change(function() {
                 $("#layerOrder").empty();
                 if(document.getElementById("layerSuperLayer").value === "false")
                     retrieveData("layer", "layers", false); 
                 else   
                     retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
-            }
-        });
+            });
 
-        $('#submitLayer').click(function() {
-            verify(current,request);
-        });
+            $('#layerSuperLayer').bind('keydown', function(event) {
+                if(event.key === 'ArrowUp' || event.key === 'ArrowDown'){
+                    $("#layerOrder").empty();
+                    if(document.getElementById("layerSuperLayer").value === "false")
+                        retrieveData("layer", "layers", false); 
+                    else   
+                        retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
+                }
+            });
 
-        $('#submitGroup').click(function() {
-            //verify(current,request);
-        });
+            $('#submitLayer').click(function() {
+                console.log(request);
+                verify(current,request);
+            });
 
-        clearGroupForm();
-        clearLayerForm();
-        $('#type').prop('disabled', false);
-        $('#add').prop('disabled', false);
-    });
+            $('#submitGroup').click(function() {
+                //verify(current,request);
+            });
+        });
+    }
 }
 
 function deleteStructure(element, type){
@@ -109,12 +110,17 @@ function deleteStructure(element, type){
 
         sendRequest(url, 'DELETE');
 
+        $('#type').prop('disabled', true);
+        $('#add').prop('disabled', true);
         hideLists();
         document.getElementById('spinner').style.display = 'block';
 
         setTimeout(function (){
             updateList(type, true);
         }, 3000);
+
+        clearGroupForm();
+        clearLayerForm();
     }
 }
 
@@ -148,7 +154,7 @@ function modifyStructure(element, type){
                 document.getElementById("layerName").value = res.name.capitalize();
                 document.getElementById("layerLang").value = res.lang;
                 
-                referenceName = res.name.capitalize();
+                referenceName = res.name;
                 referenceId = element.id;
                 $("#layerOrder").empty();
 
@@ -177,7 +183,7 @@ function modifyStructure(element, type){
                             list.options[i].selected = 'true';
                     }
                 }               
-                referenceName = res.name.capitalize();
+                referenceName = res.name;
                 referenceId = element.id;
                 referenceCode = res.code;
 
@@ -252,7 +258,11 @@ function updateList(list, refresh){
         }
         $("#layerOrder").empty();
         retrieveData("layer", null);
-        retrieveData("layer", "layers", false);
+
+        if(document.getElementById("layerSuperLayer").value === "false")
+            retrieveData("layer", "layers", false);
+        else
+            retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
     }
     else if(list === 'platform'){
         table = document.getElementById("platformList");
@@ -279,6 +289,8 @@ function updateList(list, refresh){
         setTimeout(function (){
                 document.getElementById('spinner').style.display = 'none';
                 sel();
+                $('#type').prop('disabled', false);
+                $('#add').prop('disabled', false);
         }, 2000);
     }
 }
@@ -299,6 +311,7 @@ function add(){
         showForm('#groupForm');
         clearGroupForm();
     }
+    request = 'add';
 }
 
 function cancel() {
@@ -335,16 +348,13 @@ function sel() {
 }
 
 function clearGroupForm() {
-    $('#groupCode').html('');
-    $('#groupName').html('');
-    $('#groupOrder').html('');
+    document.getElementById('groupCode').value = '';
+    document.getElementById('groupName').value = '';
 }
 
 function clearLayerForm() {
-    $('#layerName').html('');
-    $('#layerNextName').html('');
-    $('#layerNextPos').html('');
-    $('#layerNextSuperlayer').html('');
+    document.getElementById('layerName').value = '';
+    document.getElementById('layerNext').value = '';
     document.getElementById('nextName').style.display = 'none';
 }
 
@@ -531,7 +541,9 @@ function verify(form, request){
         j,
         l,
         list,
+        repo,
         elements,
+        nameChange = false;
         proceed = true;
 
 
@@ -539,10 +551,10 @@ function verify(form, request){
         if(form === "layer"){
 
             list = document.getElementById('layerList');
-            elements = list.getElementsByTagName('th');
+            elements = list.getElementsByTagName('td');
 
             for(i = 0, l = elements.length; i < l; i+=5){
-                if((data.name.toLowerCase()).capitalize() === elements[i].innerHTML){
+                if(data.name === elements[i].innerHTML.toLowerCase()){
                     window.alert('Layer name in use');
                     return false;
                 }
@@ -552,7 +564,7 @@ function verify(form, request){
                 url = getRoute("layers", "insert");
                 updateData(form, data.order, 'insert');
                 sendRequest(url, 'POST', data);
-                updateList(form, false);
+                updateList('layer', false);
             }
         }
         else{
@@ -565,9 +577,7 @@ function verify(form, request){
                 list = document.getElementById('superlayerList');
                 url = getRoute("suprlays", "insert");
             }
-            elements = list.getElementsByTagName('th');
-
-            var repo;
+            elements = list.getElementsByTagName('td');
 
             if(form === 'platform'){
                 j = 5;
@@ -600,28 +610,43 @@ function verify(form, request){
     else{
         if(form === "layer"){
 
+            if(document.getElementById('layerPos').value === 'after')
+                data.order += -1;
+
             list = document.getElementById('layerList');
-            elements = list.getElementsByTagName('th');
+            elements = list.getElementsByTagName('td');
 
             for(i = 0, l = elements.length; i < l; i+=5){
-                if((data.name.toLowerCase()).capitalize() === elements[i].innerHTML && (data.name.toLowerCase()).capitalize() !== referenceName){
+                if(data.name === elements[i].innerHTML.toLowerCase() && data.name !== referenceName){
                     window.alert('Layer name in use');
                     return false;
                 }
             }
 
             if(proceed){
+                if(data.name !== referenceName){
+                    if(document.getElementById('layerPos').value === 'after')
+                        data.order += 1;
+                    else
+                        data.order -= 1;
+                }
                 url = getRoute("layers", "update", referenceId);
                 updateData(form, data.order, 'insert');
                 sendRequest(url, 'PUT', data);
 
                 cancel();
+
+                $('#type').prop('disabled', true);
+                $('#add').prop('disabled', true);
                 hideLists();
                 document.getElementById('spinner').style.display = 'block';
             
                 setTimeout(function (){
                     updateList(form, true);
                 }, 3000);
+
+                clearGroupForm();
+                clearLayerForm();
             }
         }
         else{
@@ -634,7 +659,7 @@ function verify(form, request){
                 list = document.getElementById('superlayerList');
                 url = getRoute("suprlays","insert");
             }
-            elements = list.getElementsByTagName('th');
+            elements = list.getElementsByTagName('td');
 
             if(form === 'platform'){
                 j = 5;
@@ -662,12 +687,17 @@ function verify(form, request){
                 sendRequest(url, 'PUT', data);
 
                 cancel();
+                $('#type').prop('disabled', true);
+                $('#add').prop('disabled', true);
                 hideLists();
                 document.getElementById('spinner').style.display = 'block';
             
                 setTimeout(function (){
                     updateList(form, true);
                 }, 3000);
+                
+                clearGroupForm();
+                clearLayerForm();
             }
         }
     }
@@ -682,7 +712,10 @@ function sendRequest(url, method, data){
             data: data
         }).success (
             function (res) {
-                window.alert('Success');
+                if(method === 'POST')
+                    window.alert('New layer created successfully.');
+                else
+                    window.alert('Layer information has been modified.');
             }
         );
     }
@@ -693,7 +726,7 @@ function sendRequest(url, method, data){
             method: "DELETE"
         }).success (
             function (res) {
-                window.alert('Success');
+                window.alert('The layer has been completely removed.');
             }
         );
     }
@@ -753,7 +786,10 @@ function buildURL(base, params) {
 function getData(form, request) {
 
     if(form === 'layer'){
-        order = document.getElementById('layerOrder').value;
+        if(document.getElementById('layerPos').value === "before")
+            order = document.getElementById('layerOrder').value;
+        else
+            order = parseInt(document.getElementById('layerOrder').value) + 1;
 
         if(order === -1)
             order = 0;
@@ -766,7 +802,7 @@ function getData(form, request) {
 
         if(request === 'add'){
             data = {
-                name:document.getElementById('layerName').value,
+                name:document.getElementById('layerName').value.toLowerCase(),
                 lang:document.getElementById('layerLang').value,
                 suprlay:superlayer,
                 order:order
@@ -775,7 +811,7 @@ function getData(form, request) {
         else{
             data = {
                 layer_id:referenceId,
-                name:document.getElementById('layerName').value,
+                name:document.getElementById('layerName').value.toLowerCase(),
                 lang:document.getElementById('layerLang').value,
                 suprlay:superlayer,
                 order:order
@@ -799,7 +835,7 @@ function getData(form, request) {
         if(request === 'add'){
             data = {
                 code:document.getElementById('groupCode').value,
-                name:document.getElementById('groupName').value,
+                name:document.getElementById('groupName').value.toLowerCase(),
                 logo:document.getElementById('groupCode').value + "_logo.png",
                 deps:$('#groupDeps').val(),
                 order:order
@@ -810,7 +846,7 @@ function getData(form, request) {
                 data = {
                     platfrm_id:referenceId,
                     code:document.getElementById('groupCode').value,
-                    name:document.getElementById('groupName').value,
+                    name:document.getElementById('groupName').value.toLowerCase(),
                     logo:document.getElementById('groupCode').value + "_logo.png",
                     deps:$('#groupDeps').val(),
                     order:order
@@ -820,7 +856,7 @@ function getData(form, request) {
                 data = {
                     suprlay_id:referenceId,
                     code:document.getElementById('groupCode').value,
-                    name:document.getElementById('groupName').value,
+                    name:document.getElementById('groupName').value.toLowerCase(),
                     logo:document.getElementById('groupCode').value + "_logo.png",
                     deps:$('#groupDeps').val(),
                     order:order
@@ -830,21 +866,6 @@ function getData(form, request) {
     }
 
     return data;
-}
-
-function testData() {
-    var _usr_id = {
-        __v:0,
-        _id:"56eb1b6442fbd3173fc1ecbd",
-        avatar_url:"https://avatars.githubusercontent.com/u/17053960?v=3",
-        axs_key:"56fd9d7c7d89775463f2c580",
-        email:"isaiasve30@hotmail.com",
-        github_tkn:"2cf121cb74335cbd049f8626698b6e4f459e4925",
-        name:"Isaías Taborda",
-        upd_at:"56eb1b6442fbd3173fc1ecbc",
-        usrnm:"isatab",
-    };
-    return _usr_id;
 }
 
 function getUserID() {
