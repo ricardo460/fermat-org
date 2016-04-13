@@ -32,7 +32,7 @@ function FieldsEdit() {
 
     var self = this;
 
-    var DATA_USER = window.helper.listDevs;
+    var DATA_USER = window.API.listDevs;
 
     var button,
         text,
@@ -73,6 +73,8 @@ function FieldsEdit() {
             if(window.actualView === 'table'){ 
 
                 self.actualTile = null;
+
+                window.tableEdit.formerName = null;
                 
                 window.tableEdit.deleteMesh();
 
@@ -177,7 +179,7 @@ function FieldsEdit() {
         sesionGroup();
         sesionType();
         sesionName();
-        sesionRepoDir();
+        //sesionRepoDir();
         sesionDifficulty();
         sesionDescription();
         sesionState();
@@ -230,11 +232,11 @@ function FieldsEdit() {
 
         if(state){
             button.innerHTML  = "Saving...";
-            button.disabled=true;
+            button.disabled = true;
         }
         else{
             button.innerHTML  = "Save";
-            button.disabled=false;
+            button.disabled = false;
         }
     };
     
@@ -243,7 +245,18 @@ function FieldsEdit() {
         var title = document.getElementById("workflow-header-title");
         var desc = document.getElementById("modal-desc-textarea");
         var platform = document.getElementById("workflow-header-plataform");
-        var list = document.getElementById("step-List");
+        var steps = document.getElementById("step-List").valueJson.slice();
+
+        if(steps.length > 1){
+
+            for(var i = 1; i < steps.length; i++){
+
+                if(i === (steps.length - 1))
+                    steps[i].type = 'end';
+                else 
+                    steps[i].type = 'activity';
+            }
+        }
         
         var json = {
             "platfrm": platform.value,
@@ -251,9 +264,9 @@ function FieldsEdit() {
             "desc": desc.value,
             "prev": null,
             "next": null,
-            "steps": list.valueJson.slice()
+            "steps": steps
         };
-        
+
         return json;
     };
 
@@ -467,7 +480,7 @@ function FieldsEdit() {
         button.className = 'actionButton edit-Fermat';
         button.style.zIndex = 10;
         button.style.opacity = 0;
-        button.value = "Autores";
+        button.value = "Authors";
         button.style.marginLeft = "5px";
 
         object = {
@@ -490,7 +503,7 @@ function FieldsEdit() {
             
             modal.innerHTML = '<div id="a">'+
                     '<div id="finder">'+
-                        '<input id="finder-input" type="text" placeholder="Buscar"></input>'+
+                        '<input id="finder-input" type="text" placeholder="Search"></input>'+
                         '<input id="finder-button" type="button" value=""></input>'+
                     '</div>'+
                     '<div id="list">'+
@@ -505,7 +518,7 @@ function FieldsEdit() {
                     '</div>'+
                     '<div id="buttons" >'+
                         '<button id="modal-close-button" >Cancel</button>'+
-                        '<button id="modal-accept-button" style="border-left: 2px solid #00b498;">Aceptar</button>'+
+                        '<button id="modal-accept-button" style="border-left: 2px solid #00b498;">Accept</button>'+
                     '</div>'+
                 '</div>';
             
@@ -1722,6 +1735,7 @@ function FieldsEdit() {
         };
 
         function validateNameSteps(){
+
             var list = document.getElementById("step-List");
             var msj = '';
 

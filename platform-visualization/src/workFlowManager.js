@@ -2,7 +2,7 @@
  * Represents a flow of actions related to some tiles
  * @param   {Object}  flow The objects that describes the flow including a set of steps
  */
-function FlowManager(){
+function WorkFlowManager(){
 
     // Private Variables
     var headerFlow = [],
@@ -131,7 +131,7 @@ function FlowManager(){
             layer : element.layer,
             component : element.name
         };
-        var url = window.helper.getAPIUrl("procs", params);
+        var url = window.API.getAPIUrl("procs", params);
 
         $.ajax({
             url: url,
@@ -143,7 +143,7 @@ function FlowManager(){
 
                 for(var i = 0; i < p.length; i++) {
 
-                    flows.push(new ActionFlow(p[i]));
+                    flows.push(new Workflow(p[i]));
                 }
 
                 if(flows.length > 0) {
@@ -189,7 +189,7 @@ function FlowManager(){
      */
     this.getHeaderFLow = function() {
 
-        var url = window.helper.getAPIUrl("procs");
+        var url = window.API.getAPIUrl("procs");
 
         $.ajax({
             url: url,
@@ -201,7 +201,7 @@ function FlowManager(){
                 for(var i = 0; i < p.length; i++){
                     
                     if(window.platforms[p[i].platfrm] || window.superLayers[p[i].platfrm])
-                        headerFlow.push(new ActionFlow(p[i]));
+                        headerFlow.push(new Workflow(p[i]));
                 }
                 objectHeaderInWFlowGroup = window.headers.getPositionHeaderViewInFlow();
                 calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup);

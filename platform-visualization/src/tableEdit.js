@@ -7,6 +7,7 @@ function TableEdit() {
         tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
 
     var self = this;
+
     this.formerName = null;
 
     /**
@@ -148,10 +149,6 @@ function TableEdit() {
         
         if(tile.description !== undefined)
             document.getElementById('modal-desc-textarea').value = tile.description;
-        
-        if(tile.repo_dir !== undefined)
-            document.getElementById('input-repodir').value = tile.repo_dir;
-        
     }
 
     function createElement() {
@@ -249,7 +246,7 @@ function TableEdit() {
             scale = 5,
             mesh = null;
 
-        table = fillTable(true);
+        table = fillTable();
 
         mesh = window.fieldsEdit.objects.tile.mesh;
 
@@ -278,7 +275,7 @@ function TableEdit() {
 
         if(validateFields() === ''){ 
 
-            var table = fillTable(false);
+            var table = fillTable();
 
             window.fieldsEdit.disabledButtonSave(true);
             
@@ -311,7 +308,7 @@ function TableEdit() {
 
         var params = getParamsData(_table);  
 
-        window.helper.postRoutesComponents('insert', params, null,
+        window.API.postRoutesEdit('tableEdit', 'insert', params, null,
             function(res){ 
 
                 _table.id = res._id;
@@ -384,6 +381,7 @@ function TableEdit() {
                 });
             },
             function(){
+                window.alert('There is already a component with that name in this group and layer, please use another one');
                 window.fieldsEdit.disabledButtonSave(false);
             });
 
@@ -455,7 +453,7 @@ function TableEdit() {
                     param.role = devs[0].role;
                     param.scope = devs[0].scope;
 
-                    window.helper.postRoutesComponents('insert dev', param, dataPost,
+                    window.API.postRoutesEdit('tableEdit', 'insert dev', param, dataPost,
                         function(res){
 
                             devs[0]._id = res._id;
@@ -486,7 +484,7 @@ function TableEdit() {
                 comp_id : window.fieldsEdit.actualTile.id
             };
 
-        window.helper.postRoutesComponents('update', params, dataPost,
+        window.API.postRoutesEdit('tableEdit', 'update', params, dataPost,
             function(res){ 
 
                 _table.id = window.fieldsEdit.actualTile.id;
@@ -597,6 +595,8 @@ function TableEdit() {
 
         },
         function(){
+            window.alert('There is already a component with that name in this group and layer, please use another one');
+            
             window.fieldsEdit.disabledButtonSave(false);
         });
 
@@ -636,18 +636,10 @@ function TableEdit() {
             if(table.description !== window.fieldsEdit.actualTile.description)
                 param.description = table.description;
 
-            if(table.repo_dir.toLowerCase() !== window.fieldsEdit.actualTile.repo_dir.toLowerCase()){
-                
-                if(table.repo_dir)
-                    param.repo_dir = table.repo_dir;
-                else
-                    param.repo_dir = "root";
-            }
-
-            if(table.repo_dir)
-                param.found = true;
-            else
-                param.found = false;
+            if(table.repo_dir.toLowerCase() !== window.fieldsEdit.actualTile.repo_dir.toLowerCase()) 
+                param.repo_dir = table.repo_dir;
+            
+            param.found = true;
 
             return param;
         }
@@ -769,7 +761,7 @@ function TableEdit() {
                     else
                         param.scope = 'default';
 
-                    window.helper.postRoutesComponents(config[task].route, param, dataPost,
+                    window.API.postRoutesEdit('tableEdit', config[task].route, param, dataPost,
                         function(res){
 
                             if(task !== 'delete'){ 
@@ -806,7 +798,7 @@ function TableEdit() {
                 comp_id : table.id
             };
 
-        window.helper.postRoutesComponents('delete', false, dataPost,
+        window.API.postRoutesEdit('tableEdit', 'delete', false, dataPost,
             function(res){ 
 
                 var oldLayer = table.layer,
@@ -920,7 +912,7 @@ function TableEdit() {
                 comp_id : id
             };
 
-        window.helper.postValidateLock('tableEdit', dataPost,
+        window.API.postValidateLock('tableEdit', dataPost,
             function(res){ 
 
                 if(typeof(callback) === 'function')
@@ -933,7 +925,7 @@ function TableEdit() {
         );
     }
 
-    function fillTable(found){
+    function fillTable(){
 
         var table = {platform : undefined},
             data = {},
@@ -961,12 +953,23 @@ function TableEdit() {
         table.difficulty = document.getElementById(window.fieldsEdit.objects.idFields.difficulty).value;
         table.name = document.getElementById(window.fieldsEdit.objects.idFields.name).value;
         table.code = helper.getCode(document.getElementById(window.fieldsEdit.objects.idFields.name).value);
-        table.repo_dir = document.getElementById(window.fieldsEdit.objects.idFields.repo).value;
         table.description = document.getElementById("modal-desc-textarea").value;
-        table.found = found;
+        table.found = true;
         table.platformID = platformID;
         table.layerID = layerID;
         table.superLayer = superLayer;
+
+        var dir = group+"/"+table.type.toLowerCase()+"/"+layer.toLowerCase()+"/";
+
+        while(dir.match(' ') !== null) 
+           dir = dir.replace(' ', '_');
+
+        dir = dir + "fermat-"+group.toLowerCase()+"-"+table.type.toLowerCase()+"-"+layer.toLowerCase()+"-"+table.name.toLowerCase()+"-bitdubai";
+        
+        while(dir.match(' ') !== null) 
+           dir = dir.replace(' ', '-');
+
+        table.repo_dir = dir;
 
         var devs = document.getElementById("modal-devs").value;
         

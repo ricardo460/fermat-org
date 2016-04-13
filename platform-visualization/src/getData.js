@@ -4,11 +4,11 @@
 function getData() {
     animate();
     
-    var url = window.helper.getAPIUrl("comps");
+    var url = window.API.getAPIUrl("comps");
     
     //url += "?env=development"; //When needed the development branch, for lab.fermat.org
 
-    window.helper.getCompsUser(function (list){ 
+    window.API.getCompsUser(function (list){ 
 
         window.loadMap(function() {
 

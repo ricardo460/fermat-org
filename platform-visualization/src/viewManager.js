@@ -92,7 +92,7 @@ function ViewManager() {
                     reset = function() {
                         window.tileManager.rollBack();
 
-                        window.headers.transformTable(2000); // nuevo
+                        window.headers.transformTable(2000);
 
                         setTimeout(function(){
                             window.signLayer.transformSignLayer();
@@ -121,9 +121,13 @@ function ViewManager() {
                 case 'home':
                     enter = function() {
                         window.logo.stopFade(2000);
+                        //window.guide.addButton();
                     };
                     
                     exit = function() {
+                        
+                        //window.buttonsManager.removeAllButtons();
+
                         if(window.guide.active){
                             window.guide.removeHelp();
                             window.guide.active = false;
@@ -154,19 +158,19 @@ function ViewManager() {
                             headers.showHeaders(transition);
                             window.headersUp = true;
                         }
-                        window.flowManager.getHeaderFLow();
+                        window.workFlowManager.getHeaderFLow();
                         window.headers.transformWorkFlow(transition);
                         window.workFlowEdit.addButton(); 
                     };
                     
                     backButton = reset = function() {
 
-                        window.flowManager.showWorkFlow();
+                        window.workFlowManager.showWorkFlow();
                     };
 
                     exit = function() {
                         window.buttonsManager.removeAllButtons();
-                        window.flowManager.deleteAllWorkFlows();
+                        window.workFlowManager.deleteAllWorkFlows();
                     };
                     break;
                 case 'network':
