@@ -149,10 +149,6 @@ function TableEdit() {
         
         if(tile.description !== undefined)
             document.getElementById('modal-desc-textarea').value = tile.description;
-        
-        if(tile.repo_dir !== undefined)
-            document.getElementById('input-repodir').value = tile.repo_dir;
-        
     }
 
     function createElement() {
@@ -250,7 +246,7 @@ function TableEdit() {
             scale = 5,
             mesh = null;
 
-        table = fillTable(true);
+        table = fillTable();
 
         mesh = window.fieldsEdit.objects.tile.mesh;
 
@@ -279,7 +275,7 @@ function TableEdit() {
 
         if(validateFields() === ''){ 
 
-            var table = fillTable(false);
+            var table = fillTable();
 
             window.fieldsEdit.disabledButtonSave(true);
             
@@ -640,18 +636,10 @@ function TableEdit() {
             if(table.description !== window.fieldsEdit.actualTile.description)
                 param.description = table.description;
 
-            if(table.repo_dir.toLowerCase() !== window.fieldsEdit.actualTile.repo_dir.toLowerCase()){
-                
-                if(table.repo_dir)
-                    param.repo_dir = table.repo_dir;
-                else
-                    param.repo_dir = "root";
-            }
-
-            if(table.repo_dir)
-                param.found = true;
-            else
-                param.found = false;
+            if(table.repo_dir.toLowerCase() !== window.fieldsEdit.actualTile.repo_dir.toLowerCase()) 
+                param.repo_dir = table.repo_dir;
+            
+            param.found = true;
 
             return param;
         }
@@ -937,7 +925,7 @@ function TableEdit() {
         );
     }
 
-    function fillTable(found){
+    function fillTable(){
 
         var table = {platform : undefined},
             data = {},
@@ -965,12 +953,23 @@ function TableEdit() {
         table.difficulty = document.getElementById(window.fieldsEdit.objects.idFields.difficulty).value;
         table.name = document.getElementById(window.fieldsEdit.objects.idFields.name).value;
         table.code = helper.getCode(document.getElementById(window.fieldsEdit.objects.idFields.name).value);
-        table.repo_dir = document.getElementById(window.fieldsEdit.objects.idFields.repo).value;
         table.description = document.getElementById("modal-desc-textarea").value;
-        table.found = found;
+        table.found = true;
         table.platformID = platformID;
         table.layerID = layerID;
         table.superLayer = superLayer;
+
+        var dir = group+"/"+table.type.toLowerCase()+"/"+layer.toLowerCase()+"/";
+
+        while(dir.match(' ') !== null) 
+           dir = dir.replace(' ', '_');
+
+        dir = dir + "fermat-"+group.toLowerCase()+"-"+table.type.toLowerCase()+"-"+layer.toLowerCase()+"-"+table.name.toLowerCase()+"-bitdubai";
+        
+        while(dir.match(' ') !== null) 
+           dir = dir.replace(' ', '-');
+
+        table.repo_dir = dir;
 
         var devs = document.getElementById("modal-devs").value;
         
