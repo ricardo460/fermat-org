@@ -2,6 +2,7 @@
 	"hash": "server0",
 	"type": "server",
 	"extra": {
+		"hardware": "desktop",
 		"os": "linux",
 		"sub": "ubuntu"
 	},
@@ -11,8 +12,9 @@
 	"hash": "client1",
 	"type": "client",
 	"extra": {
-		"os": "android kitkat",
-		"sub": "tablet"
+		"os": "android",
+		"sub": "kitkat",
+		"hardware": "tablet"
 	},
 	"upd_at": "2015-12-23T17:01:01.366Z",
 	"chldrn": ["service0", "service1"]
@@ -20,8 +22,9 @@
 	"hash": "client2",
 	"type": "client",
 	"extra": {
-		"os": "ios 7",
-		"sub": "phone"
+		"hardware": "phone",
+		"os": "ios",
+		"sub": "7"
 	},
 	"upd_at": "2015-12-23T17:01:01.366Z",
 	"chldrn": ["service2", "service3"]

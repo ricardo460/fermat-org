@@ -29,19 +29,19 @@ var cache = new Cache({
  * @return {[type]}   [description]
  */
 var auth = function (req, res, next) {
-	/*var axs_key = req.query.axs_key;
+	var axs_key = req.query.axs_key;
 	var digest = req.query.digest;
 	authMod.verifyTkn(axs_key, digest, function (err_auth, res_auth) {
-	    if (res_auth) {
-	        req.body.usr_id = req.params.usr_id;
-	        next();
-	    } else {
-	        res.status(401).send({
-	            'message': err_auth.message
-	        });
-	    }
-	});*/
-	next();
+		if (res_auth) {
+			req.body.usr_id = req.params.usr_id;
+			next();
+		} else {
+			res.status(401).send({
+				'message': err_auth.message
+			});
+		}
+	});
+	//next();
 };
 /**
  *

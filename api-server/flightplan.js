@@ -63,8 +63,9 @@ plan.remote('deploy', function (remote) {
 		remote.exec('ln -fsn  /home/ubuntu/cache ' + versionFolder + '/cache');
 		if (remote.runtime.maxDeploys > 0) {
 			remote.log('Cleaning up old deploys...');
-			remote.exec('rm -rf `ls -1dt ' + remote.runtime.root + '/versions/* | tail -n +' + (remote.runtime.maxDeploys + 1) + '`');
+			remote.sudo('rm -rf `ls -1dt ' + remote.runtime.root + '/versions/* | tail -n +' + (remote.runtime.maxDeploys + 1) + '`');
 		}
+		remote.exec('ln -fsn  /home/ubuntu/secret.json ' + remote.runtime.root + '/versions/secret.json');
 		remote.with('cd ' + versionFolder, function () {
 			remote.sudo('npm install --production');
 			remote.sudo('forever stopall');

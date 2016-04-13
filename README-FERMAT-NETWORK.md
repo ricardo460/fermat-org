@@ -139,12 +139,12 @@ The most common structure of data that must be sent for every node should be as 
 ```javascript
 {
     id : ID_STRING,
-    type : ("node" | "client" | "nservice" | "actor" | "wallet")
+    type : ("server" | "client" | "service" | "actor" | "wallet")
     ady : [
         //array of the adjacencies
         {
             id : ID_STRING,
-            linkType : ("living" | "connected" | "running" | "installed" | "interconnected")
+            sub : ("living" | "connected" | "running" | "installed" | "interconnected")
         }
         //...
     ]
@@ -153,10 +153,10 @@ The most common structure of data that must be sent for every node should be as 
 
 For each type the structure will change adding other properties:
 
-- For `type = "node"`:
+- For `type = "server"`:
 
     ```javascript
-        subType : ("pc" | "server" | "phone" | ...),
+        hardware : ("desktop" | "laptop" | "server" | "phone" | ...),
         os : ("windows" | "linux" | "osx" | "android" | ...)
     ```
     
@@ -172,19 +172,20 @@ For each type the structure will change adding other properties:
 - For `type = "client"`:
 
     ```javascript
-        subType : ("pc" | "phone" | "server" | ...)
+        hardware : ("desktop" | "laptop" | "server" | "phone" | ...),
+        os : ("windows" | "linux" | "osx" | "android" | ...)
     ```
     
-- For `type = "nservice"`:
+- For `type = "service"`:
 
     ```javascript
-        subType : NSERVICE_TYPE_STRING
+        sub : NETWORK_SERVICE_TYPE_STRING
     ```
 
 - For `type = "actor"`:
 
     ```javascript
-        subType : TYPE_STRING
+        sub : ACTOR_TYPE_STRING
     ```
     
 - For `type = "wallet"`:

@@ -25,7 +25,8 @@ gulp.task('jslint', function () {
 		'node': true,
 		'nomen': true,
 		'plusplus': false,
-		'latedef': true
+		'latedef': true,
+		'esversion': 6
 	})).pipe(jshint.reporter('jshint-stylish'));
 });
 // mocha tests task for files that don't require database connection
