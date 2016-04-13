@@ -315,6 +315,7 @@ function Workflow(flow) {
 
     /**
      * @lastmodifiedBy Ricardo Delgado
+     * @lastmodifiedBy Emmanuel Colina
      * Draws a single step
      * @param {Object} node The information of the step
      * @param {Number} x    X position
@@ -333,7 +334,7 @@ function Workflow(flow) {
 
             if(typeof used[node.element] !== 'undefined') {
 
-                tile = window.helper.getSpecificTile(node.element).mesh.clone();
+                tile = window.tileManager.createElement(node.element);
                 tile.isClone = true;
 
                 objectsStep.position.origin.push(window.helper.getOutOfScreenPoint(1));
