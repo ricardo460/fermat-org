@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" rel="stylesheet" href="bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="bootstrap-theme.min.css" />
+    <link type="text/css" rel="stylesheet" href="styles.css" />
+    <link type="image/png" rel="icon" href="../images/favicon.png" />
+    <script src="../common/jquery-2.1.4.min.js"></script>
+    <title>Fermat Table Structure Edit</title>
+</head>
+
+<body>
+    <div class="navbar navbar-fermat">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand brand-img">
+                    <img class="brand" alt="img" src="img/Fermat.png">
+                </div>
+                <a class="navbar-brand">Fermat TSE</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="main">
+                <div class="container-fluid">
+                    <ul class="nav navbar-nav navbar-right actions">
+                        <li>
+                            <select id="type">
+                                <option value="layer">Layer</option>
+                            </select>
+                        </li>
+                        <li>
+                            <button id="add" onclick='add()'>Add</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <img id="spinner" src="img/loading_spinner.gif" class="img">
+
+    <table id="superlayerList" class="table table-fermat table-hover hidden">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Order</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+    </table>
+
+    <table id="platformList" class="table table-fermat table-hover hidden">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Order</th>
+                <th>Dependencies</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+    </table>
+
+    <table id="layerList" class="table table-fermat table-hover hidden">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Lang</th>
+                <th>Superlayer</th>
+                <th>Order</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+    </table>
+
+    <div class="container">
+        <form id="groupForm" class="tse-form hidden">
+            <div class="form-group">
+                <label for="groupCode">Code</label>
+                <input class="form-control" id="groupCode" required/>
+            </div>
+            <div class="form-group">
+                <label for="groupName">Name</label>
+                <input class="form-control" id="groupName" required/>
+            </div>
+            <div class="shared">
+                <div class="form-group">
+                    <label for="groupOrder">Position:</label>
+                    <select class="form-control" id="groupPos">
+                        <option value="before">Before</option>
+                        <option value="after">After</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-control" id="groupOrder">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="groupDeps">Dependencies:</label>
+                <select multiple="multiple" class="form-control" id="groupDeps">
+                </select>
+            </div>
+            <div class="buttons">
+                <button type="button" id="submitGroup">Submit</button>
+                <button type="button" onclick="cancel()">Cancel</button>
+            </div>
+        </form>
+
+        <form id="layerForm" class="tse-form hidden">
+            <div class="form-group">
+                <label>Name:</label>
+                <input class="form-control" id="layerName" required/>
+            </div>
+            <div class="form-group">
+                <label>Lang:</label>
+                <select class="form-control" id="layerLang">
+                    <option value="java">Java</option>
+                    <option value="java-android">Java (Android)</option>
+                </select>
+            </div>
+            <div class="form-group" id="nextName" style="display:none">
+                <label id="layerNext">Currently next to:</label>
+            </div>
+            <div class="form-group">
+                <label>In Superlayer:</label>
+                <select class="form-control" id="layerSuperLayer">
+                    <option value="false">No</option>
+                </select>
+            </div>
+            <div class="shared">
+                <div class="form-group">
+                    <label>Position:</label>
+                    <select class="form-control" id="layerPos">
+                        <option value="before">Above</option>
+                        <option value="after">Below</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-control" id="layerOrder">
+                    </select>
+                </div>
+            </div>
+            <div class="buttons">
+                <button type="button" id="submitLayer">Submit</button>
+                <button type="button" onclick="cancel()">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <script src="bootstrap.min.js"></script>
+    <script src="tse.js"></script>
+</body>
+
+</html>
