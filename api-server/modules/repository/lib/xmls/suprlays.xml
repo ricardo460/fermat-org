@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suprlays>
 	<suprlay>
-		<message>invalid access key</message>
+		<code>CER</code>
+		<name>currency exchange rates</name>
+		<order>0</order>
+		<upd_at>56e1e26fcf213b8767810413</upd_at>
+		<_id>56e1e26fcf213b8767810415</_id>
+	</suprlay>
+	<suprlay>
+		<code>P2P</code>
+		<name>peer to peer network</name>
+		<order>1</order>
+		<upd_at>56e1e26fcf213b87678104ab</upd_at>
+		<_id>56e1e26fcf213b87678104ad</_id>
+	</suprlay>
+	<suprlay>
+		<code>BCH</code>
+		<name>crypto</name>
+		<order>2</order>
+		<upd_at>56e1e26fcf213b876781052f</upd_at>
+		<_id>56e1e26fcf213b8767810531</_id>
+	</suprlay>
+	<suprlay>
+		<code>OSA</code>
+		<name>operating system api</name>
+		<order>3</order>
+		<upd_at>56e1e26fcf213b8767810628</upd_at>
+		<_id>56e1e26fcf213b876781062a</_id>
 	</suprlay>
 </suprlays>
