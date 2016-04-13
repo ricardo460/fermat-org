@@ -156,6 +156,7 @@ function Session() {
 
                     window.getData();
                 }
+                
                 else{ 
                     console.log("Error:", tkn);
                     window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
