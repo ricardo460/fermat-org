@@ -179,7 +179,7 @@ function FieldsEdit() {
         sesionGroup();
         sesionType();
         sesionName();
-        sesionRepoDir();
+        //sesionRepoDir();
         sesionDifficulty();
         sesionDescription();
         sesionState();
@@ -232,11 +232,11 @@ function FieldsEdit() {
 
         if(state){
             button.innerHTML  = "Saving...";
-            button.disabled=true;
+            button.disabled = true;
         }
         else{
             button.innerHTML  = "Save";
-            button.disabled=false;
+            button.disabled = false;
         }
     };
     
@@ -245,7 +245,18 @@ function FieldsEdit() {
         var title = document.getElementById("workflow-header-title");
         var desc = document.getElementById("modal-desc-textarea");
         var platform = document.getElementById("workflow-header-plataform");
-        var list = document.getElementById("step-List");
+        var steps = document.getElementById("step-List").valueJson.slice();
+
+        if(steps.length > 1){
+
+            for(var i = 1; i < steps.length; i++){
+
+                if(i === (steps.length - 1))
+                    steps[i].type = 'end';
+                else 
+                    steps[i].type = 'activity';
+            }
+        }
         
         var json = {
             "platfrm": platform.value,
@@ -253,9 +264,9 @@ function FieldsEdit() {
             "desc": desc.value,
             "prev": null,
             "next": null,
-            "steps": list.valueJson.slice()
+            "steps": steps
         };
-        
+
         return json;
     };
 
@@ -1724,6 +1735,7 @@ function FieldsEdit() {
         };
 
         function validateNameSteps(){
+
             var list = document.getElementById("step-List");
             var msj = '';
 
