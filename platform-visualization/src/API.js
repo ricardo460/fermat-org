@@ -404,9 +404,9 @@ function API() {
                 location = window.TABLE[group].layers[layer].objects;
             
 
-            if(window.tableEdit.actualTile){ 
+            if(window.fieldEdit.actualTile){ 
 
-                if(window.tableEdit.actualTile.name.toLowerCase() === name.toLowerCase()) 
+                if(window.fieldEdit.actualTile.name.toLowerCase() === name.toLowerCase()) 
                     return false;
             }
             
