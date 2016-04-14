@@ -66,8 +66,8 @@ var release = function(req) {
  * @api {post} /v1/repo/usrs/:usr_id/platfrms add platform
  * @apiVersion 0.0.1
  * @apiName AddPlatform
- * @apiParam {String} code    xxxxx.
- * @apiParam {String} name    Platform name.
+ * @apiParam {String} code Platform code.
+ * @apiParam {String} name Platform name.
  * @apiParam {String} logo Platform logo.
  * @apiParam {Number} order Indicates the position where the platform this with respect to other.
  * @apiGroup Repo-Platform
@@ -79,23 +79,14 @@ router.post('/', function(req, res, next) {
 	try {
 		if (!security.isValidData(req.body.code) || //
 			!security.isValidData(req.body.name) ||
-			!security.ifExistIsValidData(req.body.logo)) {
-			band = false
+			!security.ifExistIsValidData(req.body.logo) ||
+			!security.ifExistIsValidData(req.body.order)) {
+			//band = false
 			res.status(412).send({
 				"message": "missing or invalid data"
 			});
 		}
-		if (req.body.order === undefined || req.body.order === null)
-			req.body.order = '0';
 		else {
-			if (!security.isValidData(req.body.order)) {
-				band = false;
-				res.status(412).send({
-					"message": "invalid data"
-				});
-			}
-		}
-		if (band) {
 			repMod.addPlatform(req, function(error, result) {
 				if (error) {
 					res.status(200).send(error);
@@ -169,6 +160,10 @@ router.get('/:platfrm_id', function(req, res, next) {
  * @apiName UptPltf
  * @apiGroup Repo-Platform
  * @apiParam {ObjectId} platfrm_id Represents the identifier of the platform.
+ * @apiParam {String} code Platform code.
+ * @apiParam {String} name Platform name.
+ * @apiParam {String} logo Platform logo.
+ * @apiParam {Number} order Indicates the position where the platform this with respect to other.
  * @apiDescription Update platform from the architecture of fermat.
  */
 router.put('/:platfrm_id', function(req, res, next) {

@@ -14,7 +14,7 @@ var security = require('../../../../lib/utils/security');
  *
  * @return {[type]} [description]
  */
-var lock = function (req, next) {
+var lock = function(req, next) {
 	console.log('doing lock...');
 	try {
 		console.dir(req.params);
@@ -24,7 +24,7 @@ var lock = function (req, next) {
 			req.body.item_type = 'suprlay';
 			req.body.priority = 5;
 			console.dir(req.body);
-			repMod.doLock(req, function (error, result) {
+			repMod.doLock(req, function(error, result) {
 				if (error) {
 					next(error, null);
 				} else {
@@ -47,9 +47,9 @@ var lock = function (req, next) {
  *
  * @return {[type]} [description]
  */
-var release = function (req) {
+var release = function(req) {
 	try {
-		repMod.doRelease(req, function (error, result) {
+		repMod.doRelease(req, function(error, result) {
 			if (error) {
 				winston.log('error', 'Error releasing suprlay lock', error);
 			}
@@ -73,31 +73,18 @@ var release = function (req) {
  * @apiParam {Number} order Indicates the position where the suprlay this with respect to other.
  * @apiDescription Add a super layer to the architecture of fermat.
  */
-router.post('/', function (req, res, next) {
+router.post('/', function(req, res, next) {
 	'use strict';
-	var band = true;
 	try {
 		if (!security.isValidData(req.body.code) || //
 			!security.isValidData(req.body.name) || //
-			!security.ifExistIsValidData(req.body.logo)) {
-			band = false;
+			!security.ifExistIsValidData(req.body.logo) ||
+			!security.ifExistIsValidData(req.body.order)) {
 			res.status(412).send({
 				message: 'missing or invalid data'
 			});
-		} 
-		if (req.body.order === undefined || req.body.order === null)
-			req.body.order = '0';
-		else {
-			if (!security.isValidData(req.body.order)) {
-				band = false;
-				res.status(412).send({
-					"message": "invalid data"
-				});
-			}
-		}
-
-		if (band) {
-			repMod.addSuprLay(req, function (error, result) {
+		} else {
+			repMod.addSuprLay(req, function(error, result) {
 				if (error) {
 					res.status(200).send(error);
 				} else {
@@ -116,10 +103,10 @@ router.post('/', function (req, res, next) {
  * @apiGroup Repo-SuprLay
  * @apiDescription Get list super layer from architecture of fermat.
  */
-router.get('/', function (req, res, next) {
+router.get('/', function(req, res, next) {
 	'use strict';
 	try {
-		repMod.listSuprLays(req, function (error, result) {
+		repMod.listSuprLays(req, function(error, result) {
 			if (error) {
 				res.status(200).send(error);
 			} else {
@@ -138,14 +125,14 @@ router.get('/', function (req, res, next) {
  * @apiParam {ObjectId} suprlay_id Unique identifier of the suprlay.
  * @apiDescription Get superlayer from architecture of fermat.
  */
-router.get('/:suprlay_id', function (req, res, next) {
+router.get('/:suprlay_id', function(req, res, next) {
 	'use strict';
 	try {
-		lock(req, function (err_lck, res_lck) {
+		lock(req, function(err_lck, res_lck) {
 			if (err_lck) {
 				res.status(423).send(err_lck);
 			} else {
-				repMod.getSprlay(req, function (error, result) {
+				repMod.getSprlay(req, function(error, result) {
 					if (error) {
 						res.status(200).send(error);
 					} else {
@@ -176,7 +163,7 @@ router.get('/:suprlay_id', function (req, res, next) {
  * @apiParam {Number} order Indicates the position where the suprlay this with respect to other.
  * @apiDescription Update super layer from architecture of fermat.
  */
-router.put('/:suprlay_id', function (req, res, next) {
+router.put('/:suprlay_id', function(req, res, next) {
 	'use strict';
 	try {
 		if (!security.isValidData(req.params.suprlay_id) || //
@@ -188,7 +175,7 @@ router.put('/:suprlay_id', function (req, res, next) {
 				message: 'missing or invalid data'
 			});
 		} else {
-			repMod.uptSprlay(req, function (error, result) {
+			repMod.uptSprlay(req, function(error, result) {
 				if (error) {
 					res.status(200).send(error);
 				} else {
@@ -217,10 +204,10 @@ router.put('/:suprlay_id', function (req, res, next) {
  * @apiParam {ObjectId} suprlay_id Unique identifier of the suprlay.
  * @apiDescription Delete super layer from architecture of fermat.
  */
-router.delete('/:suprlay_id', function (req, res, next) {
+router.delete('/:suprlay_id', function(req, res, next) {
 	'use strict';
 	try {
-		repMod.delSprlay(req, function (error, result) {
+		repMod.delSprlay(req, function(error, result) {
 			if (error) {
 				res.status(200).send(error);
 			} else {

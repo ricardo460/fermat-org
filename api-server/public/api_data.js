@@ -892,7 +892,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "code",
-            "description": "<p>xxxxx.</p>"
+            "description": "<p>Platform code.</p>"
           },
           {
             "group": "Parameter",
@@ -998,6 +998,34 @@ define({ "api": [
             "optional": false,
             "field": "platfrm_id",
             "description": "<p>Represents the identifier of the platform.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Platform code.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Platform name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "logo",
+            "description": "<p>Platform logo.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "order",
+            "description": "<p>Indicates the position where the platform this with respect to other.</p>"
           }
         ]
       }
