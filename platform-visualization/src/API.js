@@ -384,8 +384,8 @@ function API() {
     };
 
     /**
-     * TODO: MUST BE DELETED
      * @author Miguelcldn
+     * @lastmodifiedBy Ricardo Delgado
      * @param {Object} data Post Data
      */
     function exists() { 
@@ -404,15 +404,15 @@ function API() {
                 location = window.TABLE[group].layers[layer].objects;
             
 
-            if(window.tableEdit.formerName){ 
+            if(window.tableEdit.actualTile){ 
 
-                if(window.tableEdit.formerName.toLowerCase() === name) 
+                if(window.tableEdit.actualTile.name.toLowerCase() === name.toLowerCase()) 
                     return false;
             }
             
             for(var i = 0; i < location.length; i++) {
 
-                if(location[i].data.name.toLowerCase() === name && location[i].data.type === type) {
+                if(location[i].data.name.toLowerCase() === name.toLowerCase() && location[i].data.type === type) {
                     return true;
                 }
             }
