@@ -365,13 +365,25 @@ function TableEdit() {
                     object.data = table;
                     object.target = target;
 
-                    window.camera.move(target.show.position.x, target.show.position.y, target.show.position.z + 8000, 4000);
+                    window.camera.move(target.show.position.x, target.show.position.y, target.show.position.z + 8000, 3000);
 
-                    animate(mesh, target.show, 4500, function(){
+                    animate(mesh, target.show, 3500, function(){
 
-                       window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
-                       window.tileManager.updateElementsByGroup();
+                        window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
+                        window.tileManager.updateElementsByGroup();
                     });
+
+                    setTimeout( function() {
+                        
+                        if(count < 1){
+
+                            if(!window.signLayer.findSignLayer(platform, layer)){
+
+                                window.signLayer.createSignLayer(x, y, layer, platform);
+                                window.signLayer.transformSignLayer();
+                            }
+                        }
+                    }, 2000 );
                             
                     window.TABLE[platform].layers[layer].objects.push(object);
 
@@ -510,7 +522,7 @@ function TableEdit() {
                     }
 
                     var positionCameraX = window.TABLE[oldGroup].x,
-                        positionCameraY = helper.getPositionYLayer(oldLayer);
+                        positionCameraY = window.helper.getPositionYLayer(oldLayer);
 
                     window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
 
@@ -800,7 +812,7 @@ function TableEdit() {
 
                 var oldLayer = table.layer,
                     oldGroup = table.platform || window.layers[table.layer].super_layer,
-                    arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects,
+                    arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects.slice(),
                     idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
 
                 window.screenshotsAndroid.deleteScreenshots(idScreenshot);
@@ -866,7 +878,7 @@ function TableEdit() {
             };
         }
 
-        var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
+        var lastObject = window.helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
 
         var count = window.TABLE[platform].layers[layer].objects.length;
 
@@ -896,7 +908,17 @@ function TableEdit() {
         object.data = table;
         object.target = target;
 
-        animate(mesh, target.show, 2500);
+        animate(mesh, target.show, 2500, function(){
+
+            if(count < 1){
+
+                if(!window.signLayer.findSignLayer(platform, layer)){
+
+                    window.signLayer.createSignLayer(x, y, layer, platform);
+                    window.signLayer.transformSignLayer();
+                }
+            }
+        });
                 
         window.TABLE[platform].layers[layer].objects.push(object);
     }
@@ -991,6 +1013,15 @@ function TableEdit() {
     function modifyRowTable(arrayObject, oldGroup, oldLayer){
 
         var newArrayObject = [];
+
+        if(arrayObject.length < 1){
+
+            if(window.signLayer.findSignLayer(oldGroup,oldLayer)){
+                setTimeout( function() {
+                    window.signLayer.deleteSignLayer(oldGroup,oldLayer);
+                }, 2000 );
+            }
+        }
 
         for(var t = 0; t < arrayObject.length; t++){
 
