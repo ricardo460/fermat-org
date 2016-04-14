@@ -65,7 +65,7 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
 						res_lay.suprlay = null;
 					}
 				}
-				if (order !== -1 && order !== res_lay.order) {
+				if (order && (order !== -1 && order !== res_lay.order)) {
 					set_obj.order = order;
 					res_lay.order = order;
 				}

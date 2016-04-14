@@ -830,7 +830,7 @@ exports.listComps = function (req, next) {
 exports.addLayer = function (req, next) {
 	'use strict';
 	try {
-		layerMod.insOrUpdLayer(req.body.name, req.body.lang, req.body.suprlay || null, req.body.order, function (err, res) {
+		layerMod.insOrUpdLayer(req.body.name, req.body.lang, req.body.suprlay || null, req.body.order || null, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
