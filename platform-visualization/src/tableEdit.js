@@ -8,8 +8,6 @@ function TableEdit() {
 
     var self = this;
 
-    this.formerName = null;
-
     /**
      * @author Ricardo Delgado
      */
@@ -139,10 +137,9 @@ function TableEdit() {
         if(tile.code_level !== undefined)
             document.getElementById('select-State').value = tile.code_level; 
 
-        if(tile.name !== undefined) {
+        if(tile.name !== undefined) 
             document.getElementById('imput-Name').value = tile.name;       
-            self.formerName = tile.name;
-        }
+        
         
         if(tile.devs !== undefined) 
             document.getElementById('modal-devs').value = tile.devs.slice(0);
