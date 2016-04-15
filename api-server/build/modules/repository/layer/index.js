@@ -65,9 +65,9 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
 						res_lay.suprlay = null;
 					}
 				}
-				if (order !== -1 && order !== res_lay.order) {
-					set_obj.order = order;
-					res_lay.order = order;
+				if (order && order !== '' && order + '' !== '-1' && order + '' !== res_lay.order + '') {
+					set_obj.order = parseInt(order);
+					res_lay.order = parseInt(order);
 				}
 				if (Object.keys(set_obj).length > 0) {
 					if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
@@ -99,6 +99,7 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
 					suprlay = null;
 				}
 				if (name && lang) {
+					if (order === undefined || order === null) order = '0';
 					var layer = new LayerMdl(name, lang, suprlay || null, order);
 					swapOrder('insert', null, layer.order, function (err_sld, res_sld) {
 						if (err_sld) {

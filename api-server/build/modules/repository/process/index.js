@@ -297,59 +297,59 @@ exports.findProcById = function (_id, callback) {
 				return callback(err_proc, null);
 			} else if (res_proc) {
 				stepSrv.findSteps({
-						_proc_id: _id
-					}, {}, function (err, steps) {
-						if (err) {
-							return callback(err, null);
+					_proc_id: _id
+				}, {}, function (err, steps) {
+					if (err) {
+						return callback(err, null);
+					}
+					var _procs = [];
+					var _steps = [];
+					/**
+					 * [contains description]
+					 *
+					 * @method contains
+					 *
+					 * @param  {[type]} _id [description]
+					 *
+					 * @return {[type]} [description]
+					 */
+					_procs.contains = function (_id) {
+						var i;
+						for (i = this.length - 1; i >= 0; i--) {
+							if (this[i]._id + ' ' === _id + ' ') {
+								return true;
+							}
 						}
-						var _procs = [];
-						var _steps = [];
-						/**
-						 * [contains description]
-						 *
-						 * @method contains
-						 *
-						 * @param  {[type]} _id [description]
-						 *
-						 * @return {[type]} [description]
-						 */
-						_procs.contains = function (_id) {
-							var i;
-							for (i = this.length - 1; i >= 0; i--) {
-								if (this[i]._id + ' ' === _id + ' ') {
-									return true;
-								}
-							}
-							return false;
-						};
-						var loopSteps = function (i) {
-							console.log("steps length "+ steps.length)
-							if (i < steps.length) {
-								var _step = steps[i];
-								if (_procs.contains(_step._proc_id)) {
-									loopSteps(++i);
-								} else {
-									procSrv.findAndPopulateProc({
-										_id: _step._proc_id
-									}, function (err_proc, res_proc) {
-										if (err_proc) {
-											loopSteps(++i);
-										} else {
-											_procs.push(res_proc);
-											_steps = res_proc.steps;
-											loopSteps(++i);
-										}
-									});
-								}
+						return false;
+					};
+					var loopSteps = function (i) {
+						console.log("steps length " + steps.length);
+						if (i < steps.length) {
+							var _step = steps[i];
+							if (_procs.contains(_step._proc_id)) {
+								loopSteps(++i);
 							} else {
-								res_proc.steps = _steps;
-								console.log("en el res proc")
-								console.log(res_proc)
-								return callback(null, res_proc);
+								procSrv.findAndPopulateProc({
+									_id: _step._proc_id
+								}, function (err_proc, res_proc) {
+									if (err_proc) {
+										loopSteps(++i);
+									} else {
+										_procs.push(res_proc);
+										_steps = res_proc.steps;
+										loopSteps(++i);
+									}
+								});
 							}
-						};
-						loopSteps(0)
-					});
+						} else {
+							res_proc.steps = _steps;
+							console.log("en el res proc");
+							console.log(res_proc);
+							return callback(null, res_proc);
+						}
+					};
+					loopSteps(0);
+				});
 			} else {
 				return callback(null, null);
 			}
@@ -757,15 +757,12 @@ exports.updateStepById = function (_step_id, _comp_id, type, title, desc, order,
 		if (desc) {
 			set_obj.desc = desc;
 		}
-
 		if (typeof order != "undefined") {
 			set_obj.order = order;
 		}
-
-		if(typeof next != "undefined") {
+		if (typeof next != "undefined") {
 			set_obj.next = next;
 		}
-
 		stepSrv.findStepById(_step_id, function (err_step, res_step) {
 			if (err_step) {
 				return callback(err_step, null);
