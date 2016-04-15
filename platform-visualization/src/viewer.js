@@ -163,12 +163,6 @@ function init() {
 
     setTimeout(function() { initPage(); }, 500);
 
-    setTimeout(function (){
-        guide.active = true;
-        if(actualView === 'home'){
-            guide.showHelp();
-        }
-    }, 15000);
 
     /*setTimeout(function() {
         var loader = new Loader();
