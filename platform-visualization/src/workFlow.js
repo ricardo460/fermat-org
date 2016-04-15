@@ -8,6 +8,8 @@ function Workflow(flow) {
         HEADER_WIDTH = 825,
         HEADER_HEIGHT = 238;
 
+    var account = 0;
+
     var self = this;
 
     var used = [];
@@ -260,6 +262,7 @@ function Workflow(flow) {
                 }
             }
         }
+        account = 0;
     };
     
     /**
@@ -315,6 +318,7 @@ function Workflow(flow) {
 
     /**
      * @lastmodifiedBy Ricardo Delgado
+     * @lastmodifiedBy Emmanuel Colina
      * Draws a single step
      * @param {Object} node The information of the step
      * @param {Number} x    X position
@@ -333,7 +337,9 @@ function Workflow(flow) {
 
             if(typeof used[node.element] !== 'undefined') {
 
-                tile = window.helper.getSpecificTile(node.element).mesh.clone();
+                var data = window.helper.clone(window.helper.getSpecificTile(node.element).data);
+
+                tile = window.tileManager.createElement(node.element + "_clone_" + account, data);
                 tile.isClone = true;
 
                 objectsStep.position.origin.push(window.helper.getOutOfScreenPoint(1));
@@ -341,6 +347,8 @@ function Workflow(flow) {
 
                 objectsStep.mesh.push(tile);
                 window.scene.add(tile);
+
+                account = account + 1;
             }
             else {
 

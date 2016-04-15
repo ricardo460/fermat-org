@@ -200,10 +200,14 @@ function Camera(position, renderer, renderFunc) {
             //TWEEN.removeAll();
             var duration = 2000;
 
-            if(viewManager.views && viewManager.views[window.actualView])
-                viewManager.views[window.actualView].reset();
+            if(window.viewManager !== null){
+                
+                if(window.viewManager.views && window.viewManager.views[window.actualView]){
+                    window.viewManager.views[window.actualView].reset();
+                }
 
-            self.resetPosition(duration);
+                self.resetPosition(duration);
+            }
         }
     };
     
