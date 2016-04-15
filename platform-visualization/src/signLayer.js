@@ -104,27 +104,31 @@ function SignLayer(){
         var objectsSize = objects.length;
         for(var i=0; i<objectsSize; i++) {
             if(objects[i].name === _group.concat(titleSign)) {
-                this.removeSignLayer(i);
-                setTimeout(function(){
+                self.removeSignLayer(i, function(){
                     window.scene.remove(objects[i]);
                     objects.splice(i,1);
                     positions.target.splice(i,1);
                     positions.lastTarget.splice(i,1);
-                }, 5000);
+                });
+
                 break;
             }
         }
     };
 
-    this.removeSignLayer = function(pos){
-        var duration = 5000;
+    this.removeSignLayer = function(pos, callback){
+        var duration = 3000;
         new TWEEN.Tween(objects[pos].position)
             .to({
                 x : positions.lastTarget[pos].x,
                 y : positions.lastTarget[pos].y,
                 z : positions.lastTarget[pos].z
             },duration)
-            .easing(TWEEN.Easing.Bounce.In)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .onComplete(function () {
+                    if(typeof(callback) === 'function')
+                        callback();   
+                })
             .start();
     };
 
