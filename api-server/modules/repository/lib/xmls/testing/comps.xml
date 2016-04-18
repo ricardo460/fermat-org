@@ -3145,120 +3145,6 @@
 	<comp>
 		<_platfrm_id>56e1e26acf213b876780f7e0</_platfrm_id>
 		<_suprlay_id></_suprlay_id>
-		<_layer_id>56e1e266cf213b876780eed2</_layer_id>
-		<name>sub app manager</name>
-		<type>plugin</type>
-		<description></description>
-		<difficulty>4</difficulty>
-		<code_level>development</code_level>
-		<repo_dir>DAP/plugin/desktop_module/fermat-dap-plugin-desktop-module-sub-app-manager-bitdubai</repo_dir>
-		<scrnshts>false</scrnshts>
-		<found>false</found>
-		<devs>
-			<comp_dev>
-				<dev>
-					<usrnm>luis-fernando-molina</usrnm>
-					<email>luis.github@bitdubai.com</email>
-					<name>Luis Fernando Molina</name>
-					<bday></bday>
-					<location>Planet Earth</location>
-					<avatar_url>https://avatars.githubusercontent.com/u/9479367?v=3</avatar_url>
-					<url>https://github.com/Luis-Fernando-Molina</url>
-					<bio></bio>
-					<upd_at>56d8da677ac5d4ed456ebb2e</upd_at>
-					<_id>56d8d8343abfd08e40f51efe</_id>
-				</dev>
-				<_id>56e1e26acf213b876780f928</_id>
-				<role>author</role>
-				<scope>architecture</scope>
-				<percnt>100</percnt>
-				<upd_at>56e1e26acf213b876780f927</upd_at>
-			</comp_dev>
-			<comp_dev>
-				<dev>
-					<usrnm>luis-fernando-molina</usrnm>
-					<email>luis.github@bitdubai.com</email>
-					<name>Luis Fernando Molina</name>
-					<bday></bday>
-					<location>Planet Earth</location>
-					<avatar_url>https://avatars.githubusercontent.com/u/9479367?v=3</avatar_url>
-					<url>https://github.com/Luis-Fernando-Molina</url>
-					<bio></bio>
-					<upd_at>56d8da677ac5d4ed456ebb2e</upd_at>
-					<_id>56d8d8343abfd08e40f51efe</_id>
-				</dev>
-				<_id>56e1e26acf213b876780f92c</_id>
-				<role>author</role>
-				<scope>design</scope>
-				<percnt>100</percnt>
-				<upd_at>56e1e26acf213b876780f92b</upd_at>
-			</comp_dev>
-		</devs>
-		<life_cycle>
-		</life_cycle>
-		<upd_at>56e1e26acf213b876780f92f</upd_at>
-		<_id>56e1e26acf213b876780f924</_id>
-	</comp>
-	<comp>
-		<_platfrm_id>56e1e26acf213b876780f7e0</_platfrm_id>
-		<_suprlay_id></_suprlay_id>
-		<_layer_id>56e1e266cf213b876780eed2</_layer_id>
-		<name>wallet manager</name>
-		<type>plugin</type>
-		<description></description>
-		<difficulty>4</difficulty>
-		<code_level>development</code_level>
-		<repo_dir>DAP/plugin/desktop_module/fermat-dap-plugin-desktop-module-wallet-manager-bitdubai</repo_dir>
-		<scrnshts>false</scrnshts>
-		<found>false</found>
-		<devs>
-			<comp_dev>
-				<dev>
-					<usrnm>luis-fernando-molina</usrnm>
-					<email>luis.github@bitdubai.com</email>
-					<name>Luis Fernando Molina</name>
-					<bday></bday>
-					<location>Planet Earth</location>
-					<avatar_url>https://avatars.githubusercontent.com/u/9479367?v=3</avatar_url>
-					<url>https://github.com/Luis-Fernando-Molina</url>
-					<bio></bio>
-					<upd_at>56d8da677ac5d4ed456ebb2e</upd_at>
-					<_id>56d8d8343abfd08e40f51efe</_id>
-				</dev>
-				<_id>56e1e26acf213b876780f935</_id>
-				<role>author</role>
-				<scope>architecture</scope>
-				<percnt>100</percnt>
-				<upd_at>56e1e26acf213b876780f934</upd_at>
-			</comp_dev>
-			<comp_dev>
-				<dev>
-					<usrnm>luis-fernando-molina</usrnm>
-					<email>luis.github@bitdubai.com</email>
-					<name>Luis Fernando Molina</name>
-					<bday></bday>
-					<location>Planet Earth</location>
-					<avatar_url>https://avatars.githubusercontent.com/u/9479367?v=3</avatar_url>
-					<url>https://github.com/Luis-Fernando-Molina</url>
-					<bio></bio>
-					<upd_at>56d8da677ac5d4ed456ebb2e</upd_at>
-					<_id>56d8d8343abfd08e40f51efe</_id>
-				</dev>
-				<_id>56e1e26acf213b876780f939</_id>
-				<role>author</role>
-				<scope>design</scope>
-				<percnt>100</percnt>
-				<upd_at>56e1e26acf213b876780f938</upd_at>
-			</comp_dev>
-		</devs>
-		<life_cycle>
-		</life_cycle>
-		<upd_at>56e1e26acf213b876780f93c</upd_at>
-		<_id>56e1e26acf213b876780f931</_id>
-	</comp>
-	<comp>
-		<_platfrm_id>56e1e26acf213b876780f7e0</_platfrm_id>
-		<_suprlay_id></_suprlay_id>
 		<_layer_id>56e1e266cf213b876780eeeb</_layer_id>
 		<name>asset issuer</name>
 		<type>plugin</type>
@@ -3483,100 +3369,6 @@
 		</life_cycle>
 		<upd_at>56e1e276cf213b8767811450</upd_at>
 		<_id>56e1e26acf213b876780f961</_id>
-	</comp>
-	<comp>
-		<_platfrm_id>56e1e26acf213b876780f7e0</_platfrm_id>
-		<_suprlay_id></_suprlay_id>
-		<_layer_id>56e1e266cf213b876780ef11</_layer_id>
-		<name>asset factory</name>
-		<type>plugin</type>
-		<description></description>
-		<difficulty>8</difficulty>
-		<code_level>qa</code_level>
-		<repo_dir>DAP/plugin/middleware/fermat-dap-plugin-middleware-asset-factory-bitdubai</repo_dir>
-		<scrnshts>false</scrnshts>
-		<found>true</found>
-		<devs>
-			<comp_dev>
-				<dev>
-					<usrnm>luis-fernando-molina</usrnm>
-					<email>luis.github@bitdubai.com</email>
-					<name>Luis Fernando Molina</name>
-					<bday></bday>
-					<location>Planet Earth</location>
-					<avatar_url>https://avatars.githubusercontent.com/u/9479367?v=3</avatar_url>
-					<url>https://github.com/Luis-Fernando-Molina</url>
-					<bio></bio>
-					<upd_at>56d8da677ac5d4ed456ebb2e</upd_at>
-					<_id>56d8d8343abfd08e40f51efe</_id>
-				</dev>
-				<_id>56e1e26acf213b876780f977</_id>
-				<role>author</role>
-				<scope>architecture</scope>
-				<percnt>100</percnt>
-				<upd_at>56e1e26acf213b876780f976</upd_at>
-			</comp_dev>
-			<comp_dev>
-				<dev>
-					<usrnm>luis-fernando-molina</usrnm>
-					<email>luis.github@bitdubai.com</email>
-					<name>Luis Fernando Molina</name>
-					<bday></bday>
-					<location>Planet Earth</location>
-					<avatar_url>https://avatars.githubusercontent.com/u/9479367?v=3</avatar_url>
-					<url>https://github.com/Luis-Fernando-Molina</url>
-					<bio></bio>
-					<upd_at>56d8da677ac5d4ed456ebb2e</upd_at>
-					<_id>56d8d8343abfd08e40f51efe</_id>
-				</dev>
-				<_id>56e1e26acf213b876780f97b</_id>
-				<role>author</role>
-				<scope>design</scope>
-				<percnt>100</percnt>
-				<upd_at>56e1e26acf213b876780f97a</upd_at>
-			</comp_dev>
-			<comp_dev>
-				<dev>
-					<usrnm>franklinmarcano1970</usrnm>
-					<email>franklinmarcano1970@gmail.com</email>
-					<name>Franklin Marcano</name>
-					<bday></bday>
-					<location>Venezuela</location>
-					<avatar_url>https://avatars.githubusercontent.com/u/8689068?v=3</avatar_url>
-					<url>https://github.com/franklinmarcano1970</url>
-					<bio></bio>
-					<upd_at>56d8da677ac5d4ed456ebb67</upd_at>
-					<_id>56d8d8353abfd08e40f52528</_id>
-				</dev>
-				<_id>56e1e26acf213b876780f97f</_id>
-				<role>author</role>
-				<scope>implementation</scope>
-				<percnt>100</percnt>
-				<upd_at>56e1e26acf213b876780f97e</upd_at>
-			</comp_dev>
-			<comp_dev>
-				<dev>
-					<usrnm>acostarodrigo</usrnm>
-					<email>acosta_rodrigo@hotmail.com</email>
-					<name>Rodrigo</name>
-					<bday></bday>
-					<location></location>
-					<avatar_url>https://avatars.githubusercontent.com/u/9518556?v=3</avatar_url>
-					<url>https://github.com/acostarodrigo</url>
-					<bio></bio>
-					<upd_at>56d8da677ac5d4ed456ebb62</upd_at>
-					<_id>56d8d8343abfd08e40f5219d</_id>
-				</dev>
-				<_id>56e1e26acf213b876780f983</_id>
-				<role>maintainer</role>
-				<percnt>0</percnt>
-				<upd_at>56e1e26acf213b876780f982</upd_at>
-			</comp_dev>
-		</devs>
-		<life_cycle>
-		</life_cycle>
-		<upd_at>56e1e276cf213b876781144c</upd_at>
-		<_id>56e1e26acf213b876780f973</_id>
 	</comp>
 	<comp>
 		<_platfrm_id>56e1e26acf213b876780f7e0</_platfrm_id>
@@ -21628,15 +21420,15 @@
 	<comp>
 		<_platfrm_id>56e1e269cf213b876780f558</_platfrm_id>
 		<_suprlay_id></_suprlay_id>
-		<_layer_id>56e1e268cf213b876780f378</_layer_id>
+		<_layer_id>56e1e266cf213b876780eeeb</_layer_id>
 		<name>money request</name>
 		<type>plugin</type>
 		<description></description>
 		<difficulty>8</difficulty>
 		<code_level>development</code_level>
-		<repo_dir>CCM/plugin/request/fermat-ccm-plugin-request-money-request-bitdubai</repo_dir>
+		<repo_dir>CCM/plugin/actor/fermat-ccm-plugin-actor-money-request-bitdubai</repo_dir>
 		<scrnshts>false</scrnshts>
-		<found>false</found>
+		<found>true</found>
 		<devs>
 			<comp_dev>
 				<dev>
@@ -21716,7 +21508,7 @@
 		</devs>
 		<life_cycle>
 		</life_cycle>
-		<upd_at>56e1e269cf213b876780f56f</upd_at>
+		<upd_at>570ffb14b4fdacc94d9aaf7f</upd_at>
 		<_id>56e1e269cf213b876780f55c</_id>
 	</comp>
 	<comp>
@@ -22502,7 +22294,7 @@
 		<code_level>concept</code_level>
 		<repo_dir>BNP/plugin/wallet_module/fermat-bnp-plugin-wallet-module-bank-notes-wallet-bitdubai</repo_dir>
 		<scrnshts>false</scrnshts>
-		<found>false</found>
+		<found>true</found>
 		<devs>
 			<comp_dev>
 				<dev>
@@ -22545,65 +22337,8 @@
 		</devs>
 		<life_cycle>
 		</life_cycle>
-		<upd_at>56e1e269cf213b876780f66e</upd_at>
+		<upd_at>57100240b4fdacc94d9aec33</upd_at>
 		<_id>56e1e269cf213b876780f663</_id>
-	</comp>
-	<comp>
-		<_platfrm_id>56e1e269cf213b876780f65f</_platfrm_id>
-		<_suprlay_id></_suprlay_id>
-		<_layer_id>56e1e266cf213b876780ef11</_layer_id>
-		<name>bank notes</name>
-		<type>plugin</type>
-		<description></description>
-		<difficulty>0</difficulty>
-		<code_level>concept</code_level>
-		<repo_dir>BNP/plugin/middleware/fermat-bnp-plugin-middleware-bank-notes-bitdubai</repo_dir>
-		<scrnshts>false</scrnshts>
-		<found>false</found>
-		<devs>
-			<comp_dev>
-				<dev>
-					<usrnm>luis-fernando-molina</usrnm>
-					<email>luis.github@bitdubai.com</email>
-					<name>Luis Fernando Molina</name>
-					<bday></bday>
-					<location>Planet Earth</location>
-					<avatar_url>https://avatars.githubusercontent.com/u/9479367?v=3</avatar_url>
-					<url>https://github.com/Luis-Fernando-Molina</url>
-					<bio></bio>
-					<upd_at>56d8da677ac5d4ed456ebb2e</upd_at>
-					<_id>56d8d8343abfd08e40f51efe</_id>
-				</dev>
-				<_id>56e1e269cf213b876780f675</_id>
-				<role>author</role>
-				<scope>architecture</scope>
-				<percnt>100</percnt>
-				<upd_at>56e1e269cf213b876780f674</upd_at>
-			</comp_dev>
-			<comp_dev>
-				<dev>
-					<usrnm>luis-fernando-molina</usrnm>
-					<email>luis.github@bitdubai.com</email>
-					<name>Luis Fernando Molina</name>
-					<bday></bday>
-					<location>Planet Earth</location>
-					<avatar_url>https://avatars.githubusercontent.com/u/9479367?v=3</avatar_url>
-					<url>https://github.com/Luis-Fernando-Molina</url>
-					<bio></bio>
-					<upd_at>56d8da677ac5d4ed456ebb2e</upd_at>
-					<_id>56d8d8343abfd08e40f51efe</_id>
-				</dev>
-				<_id>56e1e269cf213b876780f679</_id>
-				<role>author</role>
-				<scope>design</scope>
-				<percnt>100</percnt>
-				<upd_at>56e1e269cf213b876780f678</upd_at>
-			</comp_dev>
-		</devs>
-		<life_cycle>
-		</life_cycle>
-		<upd_at>56e1e269cf213b876780f67c</upd_at>
-		<_id>56e1e269cf213b876780f671</_id>
 	</comp>
 	<comp>
 		<_platfrm_id>56e1e269cf213b876780f65f</_platfrm_id>
@@ -22616,7 +22351,7 @@
 		<code_level>concept</code_level>
 		<repo_dir>BNP/plugin/wallet/fermat-bnp-plugin-wallet-bank-notes-bitdubai</repo_dir>
 		<scrnshts>false</scrnshts>
-		<found>false</found>
+		<found>true</found>
 		<devs>
 			<comp_dev>
 				<dev>
@@ -22659,7 +22394,7 @@
 		</devs>
 		<life_cycle>
 		</life_cycle>
-		<upd_at>56e1e269cf213b876780f68a</upd_at>
+		<upd_at>57100068b4fdacc94d9acad0</upd_at>
 		<_id>56e1e269cf213b876780f67f</_id>
 	</comp>
 	<comp>

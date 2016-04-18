@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suprlays>
+	<suprlay>
+		<code>CER</code>
+		<name>currency exchange rates</name>
+		<order>0</order>
+		<upd_at>56e1e26f4268958967c53752</upd_at>
+		<_id>56e1e26f4268958967c53754</_id>
+	</suprlay>
+	<suprlay>
+		<code>P2P</code>
+		<name>peer to peer network</name>
+		<order>1</order>
+		<upd_at>56e1e26f4268958967c537ea</upd_at>
+		<_id>56e1e26f4268958967c537ec</_id>
+	</suprlay>
+	<suprlay>
+		<code>BCH</code>
+		<name>crypto</name>
+		<order>2</order>
+		<upd_at>56e1e26f4268958967c5386e</upd_at>
+		<_id>56e1e26f4268958967c53870</_id>
+	</suprlay>
+	<suprlay>
+		<code>OSA</code>
+		<name>operating system api</name>
+		<order>3</order>
+		<upd_at>56e1e2704268958967c53967</upd_at>
+		<_id>56e1e2704268958967c53969</_id>
+	</suprlay>
+</suprlays>
