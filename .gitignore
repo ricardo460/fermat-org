@@ -13,8 +13,5 @@ api-server/cache/development/fermat/
 api-server/cache/development/files/
 api-server/cache/production/filecache.json
 api-server/cache/development/filecache.json
-platform-visualization/common.php
-platform-visualization/src/getData.js
-platform-visualization/main.js
-platform-visualization/wp/
+clair/main.js
 sh.exe.stackdump

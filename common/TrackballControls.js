@@ -16,6 +16,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 	// API
 
 	this.enabled = true;
+    this.dragging = false;
 
 	this.screen = { left: 0, top: 0, width: 0, height: 0 };
 
@@ -409,7 +410,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
-			_moveCurr.copy( getMouseOnCircle( event.pageX, 0)); // event.pageY ) );
+			_moveCurr.copy( getMouseOnCircle( event.pageX, event.pageY ) ); //In order to disable X rotation, set pageY to 0 here and on mousemove
 			_movePrev.copy(_moveCurr);
 
 		} else if ( _state === STATE.ZOOM && !_this.noZoom ) {
@@ -437,11 +438,12 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		event.preventDefault();
 		event.stopPropagation();
+        _this.dragging = true;
 
 		if ( _state === STATE.ROTATE && !_this.noRotate ) {
 
 			_movePrev.copy(_moveCurr);
-			_moveCurr.copy( getMouseOnCircle( event.pageX, 0 ) ); //event.pageY ) );
+			_moveCurr.copy( getMouseOnCircle( event.pageX, event.pageY ) ); //In order to disable X rotation, set pageY to 0
 
 		} else if ( _state === STATE.ZOOM && !_this.noZoom ) {
 
@@ -461,6 +463,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		event.preventDefault();
 		event.stopPropagation();
+        _this.dragging = false;
 
         _state = _prevState;
 
