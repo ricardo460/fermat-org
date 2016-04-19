@@ -6,18 +6,6 @@ function Session() {
     var axs_key;
     this.usr = {};
     var code;
-    var clientID = "d00a7c7d4489139327e4";
-    switch (window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
-        case "dev":
-            clientID = 'd00a7c7d4489139327e4';
-            break;
-        case "lab":
-            clientID = 'f98fdd310fe6284f5416';
-            break;
-        case "3d":
-            clientID = '1d65cbed13dbd026bec8';
-            break;
-    }
 
     this.getIsLogin = function() {
         return isLogin;
@@ -64,7 +52,7 @@ function Session() {
      */
     this.getAuthCode = function() { //CLientID: c25e3b3b1eb9aa35c773 - Web
         var url = helper.buildURL("https://github.com/login/oauth/authorize", {
-            client_id: clientID
+            client_id: window.CLIENT_ID
         }); //ClientID: f079f2a8fa65313179d5 - localhost
         url += "&redirect_uri=" + window.location.href;
         window.location.href = url;
