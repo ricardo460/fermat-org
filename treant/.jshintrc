@@ -1,0 +1,10 @@
+{
+	"browser": true,
+	"jquery": true,
+    "eqnull" : true,
+    "globals": {
+        "$" : false,
+        "google" : false,
+        "MarkerClusterer" : false
+    }
+}

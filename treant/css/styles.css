@@ -1,0 +1,44 @@
+/* 
+    Created on : 05-mar-2016, 12:58:15
+    Author     : Miguel Celedon
+*/
+
+.container {
+    margin-top: 1em;
+}
+
+.row {
+    margin-bottom: 20px;
+}
+
+[class*="col-"] {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+#planRoute {
+    
+}
+
+.routeForm {
+    border-color: #ddd;
+    border-width: 1px;
+    border-radius: 4px;
+    border-style: solid;
+    padding: 45px 15px 15px 15px;
+}
+
+.loading-gif {
+    padding-top: 15em;
+    display: block;
+}
+
+.resultMap {
+    display: block;
+    max-width: 80%;
+    max-height: 50em;
+}
+
+img {
+    transition: opacity 1s;
+}
