@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+require('mongoose-long')(mongoose);
 /**
  * represents a system user
  *
@@ -35,6 +36,10 @@ var usrSchema = mongoose.Schema({
         trim: true,
         required: true,
         'default': null
+    },
+    perm: {
+        type: mongoose.Schema.Types.Long,
+        required: true
     },
     upd_at: {
         type: mongoose.Schema.Types.ObjectId,
