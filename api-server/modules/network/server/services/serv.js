@@ -68,8 +68,8 @@ exports.findServ = function (query, callback) {
  */
 exports.findServs = function (query, sort, callback) {
 	'use strict';
-	servDao.findAllSchemaLst(query, sort, function (err, serv) {
-		callback(err, serv);
+	servDao.findAllSchemaLst(query, sort, function (err, servs) {
+		callback(err, servs);
 	});
 };
 /**

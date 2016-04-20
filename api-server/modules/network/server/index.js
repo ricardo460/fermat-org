@@ -38,13 +38,15 @@ exports.insertServer = function (hash, extra, callback) {
  *
  * @return {[type]}            [description]
  */
-exports.getLastServerStatus = function (hash, callback) {
+exports.getLastNetworkStatus = function (callback) {
 	wavMod.findLastWave(function (err, wav) {
 		if (err) return callback(err, null);
 		else {
-			servSrv.findServ({
-				hash: hash,
-				_wave_id: wav._id
+			servSrv.findServs({
+				_wave_id: wav._id,
+				type: 'server'
+			}, {
+				_id: -1
 			}, function (err, serv) {
 				if (err) return callback(err, null);
 				serv._wav = wav;

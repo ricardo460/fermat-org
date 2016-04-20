@@ -156,11 +156,11 @@ exports.addWave = function (req, next) {
 exports.getServer = function (req, next) {
 	'use strict';
 	try {
-		servMod.getLastServerStatus(req.query.hash, function (err_serv, res_serv) {
-			if (err_serv) {
-				return next(err_serv, null);
+		servMod.getLastNetworkStatus(function (err_servs, res_servs) {
+			if (err_servs) {
+				return next(err_servs, null);
 			}
-			return next(null, res_serv);
+			return next(null, res_servs);
 		});
 	} catch (err) {
 		next(err, null);

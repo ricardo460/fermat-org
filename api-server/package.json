@@ -1,61 +1,56 @@
 {
-  "name": "api-server",
-  "description": "fermat-org api server",
-  "author": {
-    "name": "Luis Fuenmayor",
-    "email": "fuelusumar@gmail.com"
-  },
-  "version": "1.1.1",
-  "private": true,
-  "scripts": {
-    "start": "sh starter.sh"
-  },
-  "apidoc": {
-    "title": "Doc Api Server",
-    "url": "http://api.fermat.org"
-  },
-  "dependencies": {
-    "async": "^1.4.2",
-    "body-parser": "~1.13.2",
-    "cookie-parser": "~1.3.5",
-    "crypto-js": "^3.1.6",
-    "cv2pdf": "1.0.1",
-    "debug": "~2.2.0",
-    "express": "~4.13.1",
-    "faker": "3.0.1",
-    "fs": "0.0.2",
-    "http-proxy": "^1.12.0",
-    "js2xmlparser": "1.0.0",
-    "markdown-pdf": "6.0.0",
-    "mongodb": "^2.0.47",
-    "mongoose": "^4.2.4",
-    "morgan": "~1.6.1",
-    "ncp": "^2.0.0",
-    "request": "^2.63.0",
-    "response-time": "^2.3.1",
-    "sanitizer": "0.1.3",
-    "satelize": "^0.2.0",
-    "serve-favicon": "~2.3.0",
-    "shelljs": "^0.5.3",
-    "validator": "4.5.1",
-    "winston": "^1.0.1",
-    "xml2js": "^0.4.12"
-  },
-  "devDependencies": {
-    "apidoc": "^0.15.1",
-    "flightplan": "^0.6.9",
-    "gulp": "^3.9.1",
-    "gulp-apidoc": "^0.2.3",
-    "gulp-ignore": "^2.0.1",
-    "gulp-jshint": "^2.0.0",
-    "gulp-mocha": "^2.2.0",
-    "gulp-nodemon": "^2.0.6",
-    "gulp-rimraf": "^0.2.0",
-    "jshint": "^2.9.1",
-    "jshint-stylish": "^2.1.0",
-    "mocha": "^2.4.5",
-    "nodemon": "^1.9.1",
-    "should": "^8.2.2",
-    "supertest": "^1.2.0"
-  }
+	"name": "api-server",
+	"description": "fermat-org api server",
+	"author": {
+		"name": "Luis Fuenmayor",
+		"email": "fuelusumar@gmail.com"
+	},
+	"version": "1.1.1",
+	"private": true,
+	"scripts": {
+		"start": "sh starter.sh"
+	},
+	"apidoc": {
+		"title": "Doc Api Server",
+		"url": "http://api.fermat.org"
+	},
+	"dependencies": {
+		"body-parser": "~1.13.2",
+		"cookie-parser": "~1.3.5",
+		"crypto-js": "^3.1.6",
+		"debug": "~2.2.0",
+		"express": "~4.13.1",
+		"faker": "3.0.1",
+		"http-proxy": "^1.12.0",
+		"js2xmlparser": "1.0.0",
+		"markdown-pdf": "6.0.0",
+		"mongodb": "^2.0.47",
+		"mongoose": "^4.2.4",
+		"morgan": "~1.6.1",
+		"ncp": "^2.0.0",
+		"request": "^2.63.0",
+		"sanitizer": "0.1.3",
+		"satelize": "^0.2.0",
+		"shelljs": "^0.5.3",
+		"validator": "4.5.1",
+		"winston": "^1.0.1",
+		"xml2js": "^0.4.12"
+	},
+	"devDependencies": {
+		"apidoc": "^0.15.1",
+		"flightplan": "^0.6.9",
+		"gulp": "^3.9.1",
+		"gulp-apidoc": "^0.2.3",
+		"gulp-ignore": "^2.0.1",
+		"gulp-jshint": "^2.0.0",
+		"gulp-mocha": "^2.2.0",
+		"gulp-nodemon": "^2.0.6",
+		"gulp-rimraf": "^0.2.0",
+		"jshint": "^2.9.1",
+		"jshint-stylish": "^2.1.0",
+		"mocha": "^2.4.5",
+		"nodemon": "^1.9.1",
+		"should": "^8.2.2",
+		"supertest": "^1.2.0"
+	}
 }
