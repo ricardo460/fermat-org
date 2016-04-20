@@ -47,10 +47,12 @@ exports.getLastNetworkStatus = function (callback) {
 				type: 'server'
 			}, {
 				_id: -1
-			}, function (err, serv) {
+			}, function (err, servs) {
 				if (err) return callback(err, null);
-				serv._wav = wav;
-				return callback(null, serv);
+				for (var i = servs.length - 1; i >= 0; i--) {
+					servs[i]._wave = wav;
+				}
+				return callback(null, servs);
 			});
 		}
 	});
