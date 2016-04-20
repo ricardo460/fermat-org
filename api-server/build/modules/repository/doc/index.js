@@ -2,7 +2,7 @@ var fs = require('fs');
 var exec = require('child_process').exec;
 var path = require('path');
 var winston = require('winston');
-var markdownpdf = require("markdown-pdf");
+//var markdownpdf = require("markdown-pdf");
 var env = process.env.NODE_ENV || 'development';
 /**
  * [getBook description]
