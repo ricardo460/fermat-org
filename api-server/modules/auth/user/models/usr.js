@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+require('mongoose-long')(mongoose);
 /**
  * [UsrMdl description]
  *
@@ -17,6 +18,7 @@ function UsrMdl(usrnm, email, name, avatar_url, github_tkn) {
 	this.avatar_url = avatar_url;
 	this.github_tkn = github_tkn;
 	this.upd_at = new mongoose.Types.ObjectId();
+	this.perm = new mongoose.Types.Long();
 }
 /**
  * [init description]
@@ -35,6 +37,7 @@ UsrMdl.prototype.init = function (usrSchema) {
 	this.avatar_url = usrSchema.avatar_url;
 	this.github_tkn = usrSchema.github_tkn;
 	this.upd_at = usrSchema.upd_at;
+	this.perm = usrSchema.perm;
 };
 /**
  * [setUpdate description]
