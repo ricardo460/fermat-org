@@ -249,7 +249,7 @@ router.get('/book', function (req, res, next) {
 	}
 });
 /**
- * @api {deprecated} /v1/repo/docs/:type get docs
+ * @api {get} /v1/repo/docs/:type get docs
  * @apiName GetDocs
  * @apiVersion 0.0.1
  * @apiGroup REPO
@@ -259,8 +259,7 @@ router.get('/book', function (req, res, next) {
 router.get('/docs/:type', function (req, res, next) {
 	'use strict';
 	try {
-		res.status(200).send({"message":"This route was deprecated"});
-		/*var type = req.param('type');
+		var type = req.param('type');
 		var style = req.query.style;
 		if (type !== 'book' && type !== 'readme' && type !== 'paper') {
 			return res.status(422).send({
@@ -278,7 +277,7 @@ router.get('/docs/:type', function (req, res, next) {
 			} else {
 				res.sendfile(result.pdfFile);
 			}
-		});*/
+		});
 	} catch (err) {
 		next(err);
 	}
