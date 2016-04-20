@@ -1,6 +1,7 @@
 .idea/
 **/.idea/
 secret.json
+secret.json~
 websocket/node_modules/
 api-server/node_modules/
 api-server/deploy.json

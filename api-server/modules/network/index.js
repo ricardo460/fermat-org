@@ -1,6 +1,7 @@
 var linkMod = require('./link');
 var nodeMod = require('./node');
 var waveMod = require('./wave');
+var servMod = require('./server');
 var loadNet = require('./lib/loader');
 exports.getServerNetwork = function (req, next) {
 	'use strict';
@@ -147,6 +148,19 @@ exports.addWave = function (req, next) {
 				}
 				return next(null, res_nod);
 			});
+		});
+	} catch (err) {
+		next(err, null);
+	}
+};
+exports.getServer = function (req, next) {
+	'use strict';
+	try {
+		servMod.getLastNetworkStatus(function (err_servs, res_servs) {
+			if (err_servs) {
+				return next(err_servs, null);
+			}
+			return next(null, res_servs);
 		});
 	} catch (err) {
 		next(err, null);

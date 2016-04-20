@@ -2,16 +2,12 @@ var mongoose = require('mongoose');
 var Dao = require('../../../database/dao');
 var waveMdl = require('../models/wave');
 var waveSch = require('../schemas/wave');
-
-
-
 /**
  * [waveDao description]
  *
  * @type {Dao}
  */
 var waveDao = new Dao('Wave', waveSch, waveMdl);
-
 /**
  * [insertWave description]
  *
@@ -23,12 +19,11 @@ var waveDao = new Dao('Wave', waveSch, waveMdl);
  * @return {[type]}   [description]
  */
 exports.insertWave = function (wave_mdl, callback) {
-    'use strict';
-    waveDao.insertSchema(wave_mdl, function (err, wave) {
-        callback(err, wave);
-    });
+	'use strict';
+	waveDao.insertSchema(wave_mdl, function (err, wave) {
+		callback(err, wave);
+	});
 };
-
 /**
  * [findWaveById description]
  *
@@ -40,13 +35,11 @@ exports.insertWave = function (wave_mdl, callback) {
  * @return {[type]}     [description]
  */
 exports.findWaveById = function (_id, callback) {
-    'use strict';
-    waveDao.findSchemaById(_id, function (err, wave) {
-        callback(err, wave);
-    });
+	'use strict';
+	waveDao.findSchemaById(_id, function (err, wave) {
+		callback(err, wave);
+	});
 };
-
-
 /**
  * [findWave description]
  *
@@ -58,12 +51,11 @@ exports.findWaveById = function (_id, callback) {
  * @return {[type]}   [description]
  */
 exports.findWave = function (query, callback) {
-    'use strict';
-    waveDao.findSchema(query, function (err, wave) {
-        callback(err, wave);
-    });
+	'use strict';
+	waveDao.findSchema(query, function (err, wave) {
+		callback(err, wave);
+	});
 };
-
 /**
  * [findWaves description]
  *
@@ -74,13 +66,12 @@ exports.findWave = function (query, callback) {
  *
  * @return {[type]}   [description]
  */
-exports.findWaves = function (query, sort, callback) {
-    'use strict';
-    waveDao.findAllSchemaLst(query, sort, function (err, wave) {
-        callback(err, wave);
-    });
+exports.findWaves = function (query, limit, sort, callback) {
+	'use strict';
+	waveDao.findSchemaLst(query, limit, sort, function (err, wave) {
+		callback(err, wave);
+	});
 };
-
 /**
  * [updateWaveById description]
  *
@@ -93,15 +84,14 @@ exports.findWaves = function (query, sort, callback) {
  * @return {[type]}      [description]
  */
 exports.updateWaveById = function (_id, set, callback) {
-    'use strict';
-    set.upd_at = new mongoose.Types.ObjectId();
-    waveDao.updateSchema({
-        _id: _id
-    }, set, {}, function (err, wave) {
-        callback(err, wave);
-    });
+	'use strict';
+	set.upd_at = new mongoose.Types.ObjectId();
+	waveDao.updateSchema({
+		_id: _id
+	}, set, {}, function (err, wave) {
+		callback(err, wave);
+	});
 };
-
 /**
  * [delAllWaves description]
  *
@@ -112,8 +102,8 @@ exports.updateWaveById = function (_id, set, callback) {
  * @return {[type]}    [description]
  */
 exports.delAllWaves = function (callback) {
-    'use strict';
-    waveDao.delAllSchemas(function (err, wave) {
-        callback(err, wave);
-    });
+	'use strict';
+	waveDao.delAllSchemas(function (err, wave) {
+		callback(err, wave);
+	});
 };

@@ -21,7 +21,7 @@ router.get('/servrs', function (req, res, next) {
 	'use strict';
 	try {
 		// we search for body in cache
-		var body = cache.getBody(req);
+		/*var body = cache.getBody(req);
 		if (body) {
 			// we send it
 			res.status(200).send(body);
@@ -41,7 +41,18 @@ router.get('/servrs', function (req, res, next) {
 					}
 				}
 			});
-		}
+		}*/
+		netMod.getServer(req, function (error, result) {
+			if (error) {
+				res.status(200).send(error);
+			} else {
+				if (result) {
+					res.status(200).send(result);
+				} else {
+					res.status(200).send(new Error('Invalid server data'));
+				}
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
