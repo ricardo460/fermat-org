@@ -14,7 +14,7 @@ var wavMod = require('../wave');
  */
 exports.insertServer = function (hash, extra, callback) {
 	var date = new Date();
-	var desc = "wave " + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+	var desc = "wave " + date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 	wavMod.insertWave(desc, function (err, wave) {
 		if (err) {
 			return callback(err, null);
