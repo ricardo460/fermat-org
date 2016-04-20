@@ -12,12 +12,12 @@ var orderLib = require('../../../lib/utils/order');
  *
  * @return {[type]} [description]
  */
-var swapOrder = function (action, oldSpot, newSpot, callback) {
-	orderLib.swapOrder(action, oldSpot, newSpot, function (err, query, set) {
+var swapOrder = function(action, oldSpot, newSpot, callback) {
+	orderLib.swapOrder(action, oldSpot, newSpot, function(err, query, set) {
 		if (err) {
 			return callback(err, null);
 		} else {
-			layerSrv.updateLayers(query, set, function (err_srt, res_srt) {
+			layerSrv.updateLayers(query, set, function(err_srt, res_srt) {
 				if (err_srt) {
 					return callback(err_srt, null);
 				} else {
@@ -40,10 +40,10 @@ var swapOrder = function (action, oldSpot, newSpot, callback) {
  *
  * @return {[type]}      [description]
  */
-exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
+exports.insOrUpdLayer = function(name, lang, suprlay, order, callback) {
 	'use strict';
 	try {
-		layerSrv.findLayerByName(name, function (err_lay, res_lay) {
+		layerSrv.findLayerByName(name, function(err_lay, res_lay) {
 			if (err_lay) {
 				return callback(err_lay, null);
 			}
@@ -71,11 +71,11 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
 				}
 				if (Object.keys(set_obj).length > 0) {
 					if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
-						swapOrder('update', res_lay.order, set_obj.order, function (err_sld, res_sld) {
+						swapOrder('update', res_lay.order, set_obj.order, function(err_sld, res_sld) {
 							if (err_sld) {
 								return callback(err_sld, null);
 							} else {
-								layerSrv.updateLayerById(res_lay._id, set_obj, function (err_upd, res_upd) {
+								layerSrv.updateLayerById(res_lay._id, set_obj, function(err_upd, res_upd) {
 									if (err_upd) {
 										return callback(err_upd, null);
 									}
@@ -84,7 +84,7 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
 							}
 						});
 					} else {
-						layerSrv.updateLayerById(res_lay._id, set_obj, function (err_upd, res_upd) {
+						layerSrv.updateLayerById(res_lay._id, set_obj, function(err_upd, res_upd) {
 							if (err_upd) {
 								return callback(err_upd, null);
 							}
@@ -99,20 +99,41 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
 					suprlay = null;
 				}
 				if (name && lang) {
-					if (order === undefined || order === null) order = '0';
-					var layer = new LayerMdl(name, lang, suprlay || null, order);
-					swapOrder('insert', null, layer.order, function (err_sld, res_sld) {
-						if (err_sld) {
-							return callback(err_sld, null);
-						} else {
-							layerSrv.insertLayer(layer, function (err_ins, res_ins) {
-								if (err_ins) {
-									return callback(err_ins, null);
+					if (order === undefined || order === null) getOrdrLstLayrs(function(err, nu_order) {
+						if (err) return callback(err, null);;
+						if (nu_order) {
+							//Putting layer at the end since not provide an order
+							order = parseInt(nu_order) + 1;
+							var layer = new LayerMdl(name, lang, suprlay || null, order);
+							swapOrder('insert', null, layer.order, function(err_sld, res_sld) {
+								if (err_sld) {
+									return callback(err_sld, null);
+								} else {
+									layerSrv.insertLayer(layer, function(err_ins, res_ins) {
+										if (err_ins) {
+											return callback(err_ins, null);
+										}
+										return callback(null, res_ins);
+									});
 								}
-								return callback(null, res_ins);
 							});
 						}
 					});
+					else {
+						var layer = new LayerMdl(name, lang, suprlay || null, order);
+						swapOrder('insert', null, layer.order, function(err_sld, res_sld) {
+							if (err_sld) {
+								return callback(err_sld, null);
+							} else {
+								layerSrv.insertLayer(layer, function(err_ins, res_ins) {
+									if (err_ins) {
+										return callback(err_ins, null);
+									}
+									return callback(null, res_ins);
+								});
+							}
+						});
+					}
 				} else {
 					return callback(null, null);
 				}
@@ -131,12 +152,12 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
  *
  * @return {[type]}   [description]
  */
-exports.getLayers = function (callback) {
+exports.getLayers = function(callback) {
 	'use strict';
 	try {
 		layerSrv.findAllLayers({}, {
 			order: 1
-		}, function (err, layers) {
+		}, function(err, layers) {
 			if (err) {
 				return callback(err, null);
 			}
@@ -144,6 +165,27 @@ exports.getLayers = function (callback) {
 		});
 	} catch (err) {
 		return callback(err, null);
+	}
+};
+/**
+ * [getOrdrLstLayrs description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+var getOrdrLstLayrs = function(callback) {
+	'use strict';
+	try {
+		layerSrv.findLayers({}, 1, {
+			order: -1
+		}, function(err, layers) {
+			if (err) {
+				callback(err, null);
+			} else {
+				callback(null, layers[0].order);
+			}
+		});
+	} catch (err) {
+		callback(err, null);
 	}
 };
 /**
@@ -155,10 +197,10 @@ exports.getLayers = function (callback) {
  *
  * @return {[type]}     [description]
  */
-exports.delAllLayers = function (callback) {
+exports.delAllLayers = function(callback) {
 	'use strict';
 	try {
-		layerSrv.delAllLayers(function (err, layers) {
+		layerSrv.delAllLayers(function(err, layers) {
 			if (err) {
 				return callback(err, null);
 			}
@@ -178,10 +220,10 @@ exports.delAllLayers = function (callback) {
  *
  * @return {[type]}     [description]
  */
-exports.findLayerById = function (_id, callback) {
+exports.findLayerById = function(_id, callback) {
 	'use strict';
 	try {
-		layerSrv.findLayerById(_id, function (err_lay, res_lay) {
+		layerSrv.findLayerById(_id, function(err_lay, res_lay) {
 			console.log(arguments);
 			if (err_lay) {
 				return callback(err_lay, null);
@@ -207,7 +249,7 @@ exports.findLayerById = function (_id, callback) {
  *
  * @return {[type]}    [description]
  */
-exports.updateLayerById = function (_lay_id, name, lang, suprlay, order, callback) {
+exports.updateLayerById = function(_lay_id, name, lang, suprlay, order, callback) {
 	'use strict';
 	try {
 		var set_obj = {};
@@ -226,16 +268,16 @@ exports.updateLayerById = function (_lay_id, name, lang, suprlay, order, callbac
 		if (typeof order != "undefined") {
 			set_obj.order = order;
 		}
-		layerSrv.findLayerById(_lay_id, function (err_lay, res_lay) {
+		layerSrv.findLayerById(_lay_id, function(err_lay, res_lay) {
 			if (err_lay) {
 				return callback(err_lay, null);
 			}
 			if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
-				swapOrder('update', res_lay.order, set_obj.order, function (err_sld, res_sld) {
+				swapOrder('update', res_lay.order, set_obj.order, function(err_sld, res_sld) {
 					if (err_sld) {
 						return callback(err_sld, null);
 					} else {
-						layerSrv.updateLayerById(res_lay._id, set_obj, function (err_upd, res_upd) {
+						layerSrv.updateLayerById(res_lay._id, set_obj, function(err_upd, res_upd) {
 							if (err_upd) {
 								return callback(err_upd, null);
 							}
@@ -244,7 +286,7 @@ exports.updateLayerById = function (_lay_id, name, lang, suprlay, order, callbac
 					}
 				});
 			} else {
-				layerSrv.updateLayerById(res_lay._id, set_obj, function (err_upd, res_upd) {
+				layerSrv.updateLayerById(res_lay._id, set_obj, function(err_upd, res_upd) {
 					if (err_upd) {
 						return callback(err_upd, null);
 					}
@@ -266,20 +308,20 @@ exports.updateLayerById = function (_lay_id, name, lang, suprlay, order, callbac
  *
  * @return {[type]}        [description]
  */
-exports.delLayerById = function (_id, callback) {
+exports.delLayerById = function(_id, callback) {
 	'use strict';
 	try {
-		var delLayer = function () {
-			layerSrv.findLayerById(_id, function (err_lay, res_lay) {
+		var delLayer = function() {
+			layerSrv.findLayerById(_id, function(err_lay, res_lay) {
 				if (err_lay) {
 					return callback(err_lay, null);
 				} else if (res_lay) {
 					// ordering function
-					swapOrder('delete', res_lay.order, null, function (err_sld, res_sld) {
+					swapOrder('delete', res_lay.order, null, function(err_sld, res_sld) {
 						if (err_sld) {
 							return callback(err_sld, null);
 						} else {
-							layerSrv.delLayerById(res_lay._id, function (err_del, res_del) {
+							layerSrv.delLayerById(res_lay._id, function(err_del, res_del) {
 								if (err_del) {
 									return callback(err_del, null);
 								}
@@ -292,18 +334,18 @@ exports.delLayerById = function (_id, callback) {
 				}
 			});
 		};
-		compMod.findCompsByLayerId(_id, function (err_comp, res_comps) {
+		compMod.findCompsByLayerId(_id, function(err_comp, res_comps) {
 			if (err_comp) {
 				return callback(err_comp, null);
 			}
 			if (res_comps.length > 0) {
 				var _comps = res_comps;
-				var loopDelComps = function () {
+				var loopDelComps = function() {
 					if (_comps.length <= 0) {
 						delLayer();
 					} else {
 						var comp = _comps.pop();
-						compMod.delCompById(comp._id, function (err_del_comp, res_del_comp) {
+						compMod.delCompById(comp._id, function(err_del_comp, res_del_comp) {
 							if (err_del_comp) {
 								return callback(err_del_comp, null);
 							} else {
