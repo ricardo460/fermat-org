@@ -26,24 +26,24 @@ setInterval(function () {
 		break;
 	case 1:
 		//verifica que cada componente esta dentro en la carpeta que le corresponde
-		loadLib.updComps(function (err, res) {
+		/*loadLib.updComps(function (err, res) {
 			if (err) {
 				winston.log('error', err.message, err.stack);
 			} else {
 				winston.log('debug', 'Components updated', res);
 			}
-		});
+		});*/
 		break;
 	case 2:
 		//se descarga la informacion de los developers
-		loadLib.updDevs(function (err, res) {
+		/*loadLib.updDevs(function (err, res) {
 			if (err) {
 				winston.log('error', err.message, err.stack);
 			} else {
 				winston.log('debug', 'Developers updated', res);
 				cache.clear();
 			}
-		});
+		});*/
 		break;
 	case 3:
 		winston.log('info', 'Doing nothing');
