@@ -1,10 +1,10 @@
 var mongoose = require('mongoose');
 /**
- * this schema represents each node in the network
+ * this schema represents each serve in the network
  *
  * @type {[type]}
  */
-var nodSchema = mongoose.Schema({
+var servSchema = mongoose.Schema({
 	_wave_id: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Wave'
@@ -28,18 +28,18 @@ var nodSchema = mongoose.Schema({
 		'default': new mongoose.Types.ObjectId()
 	}
 }, {
-	collection: 'nods'
+	collection: 'servs'
 });
 /**
  * [hash description]
  *
  * @type {number}
  */
-nodSchema.index({
+servSchema.index({
 	hash: 1,
 	type: 1,
 	_wave_id: 1
 }, {
-	name: "nods_cp_indx"
+	name: "servs_cp_indx"
 });
-module.exports = nodSchema;
+module.exports = servSchema;

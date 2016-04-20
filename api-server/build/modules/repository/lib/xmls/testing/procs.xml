@@ -67,7 +67,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto customer</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -389,7 +389,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -508,7 +508,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -641,7 +641,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -785,7 +785,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -1877,7 +1877,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -3124,7 +3124,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -3180,7 +3180,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -3229,7 +3229,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto customer</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -3285,7 +3285,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto customer</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -3467,7 +3467,7 @@
 					<type>fermat message</type>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -3686,7 +3686,7 @@
 					<name>Crypto Broker</name>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -3782,7 +3782,7 @@
 					<name>Crypto Broker</name>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -3797,7 +3797,7 @@
 					<name>Crypto Broker</name>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -3893,7 +3893,7 @@
 					<name>Crypto Broker</name>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -3908,7 +3908,7 @@
 					<name>Crypto Broker</name>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -4003,7 +4003,7 @@
 					<name>Crypto Broker</name>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -4017,7 +4017,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -4110,7 +4110,7 @@
 					<name>Crypto Broker</name>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -4125,7 +4125,7 @@
 					<name>Crypto Broker</name>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -4218,7 +4218,7 @@
 					<name>Crypto Broker</name>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -4233,7 +4233,7 @@
 					<name>Crypto Broker</name>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -4328,7 +4328,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto customer</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -4542,7 +4542,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -4756,7 +4756,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto customer</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -4942,7 +4942,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -5264,7 +5264,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto customer</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -5397,7 +5397,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto customer</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -5635,7 +5635,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -6214,7 +6214,7 @@
 					<id>3</id>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -6224,7 +6224,7 @@
 				<desc>the network service places a call to the broker and then it delivers the request via the fermat network.</desc>
 				<type>activity</type>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 		</steps>
@@ -6277,7 +6277,7 @@
 					<type>direct call</type>
 				</next>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 			<step>
@@ -6287,7 +6287,7 @@
 				<desc>the network service places a call to the broker and then it delivers the request via the fermat network.</desc>
 				<type>activity</type>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 		</steps>
@@ -8688,7 +8688,7 @@
 				<desc>the network service places a call to the broker and then it delivers the request via the fermat network.</desc>
 				<type>start</type>
 				<name>crypto broker</name>
-				<layer>Reference Wallet</layer>
+				<layer>reference wallet</layer>
 				<platfrm>CBP</platfrm>
 			</step>
 		</steps>

@@ -1,7 +1,7 @@
 var winston = require('winston');
 var loadLib = require('./modules/repository/lib/loader');
 var syncLib = require('./modules/repository/lib/syncer');
-var loadNet = require('./modules/network/lib/loader');
+var loadNet = require('./modules/network/lib/crawler');
 var modDoc = require('./modules/repository/doc');
 var Cache = require('./lib/route-cache');
 var cache = new Cache({
@@ -16,19 +16,11 @@ setInterval(function () {
 	loop++;
 	switch (mod) {
 	case 0:
-		//baja el manifiesto, lo parsea y lo guarda en la base datos y lo actualiza en la base de datos
-		/*loadLib.loadComps(function (err, res) {
-		    if (err) {
-		        winston.log('error', err.message, err);
-		    } else {
-		        winston.log('debug', 'Components and developers loaded', res);
-		    }
-		});*/
-		loadLib.updProcs(function (err, res) {
+		loadNet.saveNetworkStatus(function (err, res) {
 			if (err) {
-				winston.log('error', err.message, err);
+				winston.log('error', err.message, err.stack);
 			} else {
-				winston.log('debug', 'Proccesses updated', res);
+				winston.log('debug', 'Network status updated', res);
 			}
 		});
 		break;
@@ -36,7 +28,7 @@ setInterval(function () {
 		//verifica que cada componente esta dentro en la carpeta que le corresponde
 		loadLib.updComps(function (err, res) {
 			if (err) {
-				winston.log('error', err.message, err);
+				winston.log('error', err.message, err.stack);
 			} else {
 				winston.log('debug', 'Components updated', res);
 			}
@@ -46,7 +38,7 @@ setInterval(function () {
 		//se descarga la informacion de los developers
 		loadLib.updDevs(function (err, res) {
 			if (err) {
-				winston.log('error', err.message, err);
+				winston.log('error', err.message, err.stack);
 			} else {
 				winston.log('debug', 'Developers updated', res);
 				cache.clear();
@@ -54,9 +46,7 @@ setInterval(function () {
 		});
 		break;
 	case 3:
-		winston.log('info', 'Getting documentation');
-		syncLib.getBook();
-		winston.log('info', 'Documentation loaded');
+		winston.log('info', 'Doing nothing');
 		break;
 	case 4:
 		winston.log('info', 'Doing nothing');
@@ -65,13 +55,7 @@ setInterval(function () {
 		winston.log('info', 'Doing nothing');
 		break;
 	case 6:
-		modDoc.generateBookPdf(function (err) {
-			if (err) {
-				winston.log('error', err);
-			} else {
-				winston.log('info', 'Books are generated');
-			}
-		});
+		winston.log('info', 'Doing nothing');
 		break;
 	case 7:
 		winston.log('info', 'Doing nothing');
@@ -86,12 +70,7 @@ setInterval(function () {
 		winston.log('info', 'Doing nothing');
 		break;
 	case 11:
-		loadNet.getNetwork(function (err) {
-			if (err) {
-				winston.log('info', err);
-			}
-			winston.log('info', 'Get Network and loading');
-		});
+		winston.log('info', 'Doing nothing');
 		break;
 	}
 }, _INTERVAL);
