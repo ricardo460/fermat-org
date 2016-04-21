@@ -1,7 +1,7 @@
 //global variables
 var user_data = getUserID(),
     axs_key = '',
-    environment = '',
+    environment = 'testing',
     current = 'layer',
     request = 'add',
     referenceName = '',
@@ -44,6 +44,10 @@ function init() {
                 sel();
             });
 
+            $('#perm-link').click(function(event) {
+                location.href = 'perm';
+            });
+
             $('#type').bind('keydown', function(event) {
                 if(event.key === 'ArrowUp' || event.key === 'ArrowDown') {
                     current = this.value;
@@ -54,8 +58,8 @@ function init() {
             $('#layerSuperLayer').change(function() {
                 $("#layerOrder").empty();
                 if(document.getElementById("layerSuperLayer").value === "false")
-                    retrieveData("layer", "layers", false); 
-                else   
+                    retrieveData("layer", "layers", false);
+                else
                     retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
             });
 
@@ -63,8 +67,8 @@ function init() {
                 if(event.key === 'ArrowUp' || event.key === 'ArrowDown'){
                     $("#layerOrder").empty();
                     if(document.getElementById("layerSuperLayer").value === "false")
-                        retrieveData("layer", "layers", false); 
-                    else   
+                        retrieveData("layer", "layers", false);
+                    else
                         retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
                 }
             });
@@ -82,9 +86,9 @@ function init() {
 }
 
 function deleteStructure(element, type){
-    
+
     if(confirm("Are you sure you want to remove the " + element.name + "? (Removing this layer will delete all of it's associated components)") === true){
-        
+
         var url;
 
         switch(type) {
@@ -125,7 +129,7 @@ function deleteStructure(element, type){
 }
 
 function modifyStructure(element, type){
-    
+
     add();
     var url;
 
@@ -149,11 +153,11 @@ function modifyStructure(element, type){
     }).success (
         function (res) {
             if(type === 'layer'){
-                
+
                 document.getElementById('nextName').style.display = 'block';
                 document.getElementById("layerName").value = res.name.capitalize();
                 document.getElementById("layerLang").value = res.lang;
-                
+
                 referenceName = res.name;
                 referenceId = element.id;
                 $("#layerOrder").empty();
@@ -166,14 +170,14 @@ function modifyStructure(element, type){
                     document.getElementById("layerSuperLayer").value = res.suprlay;
                     retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
                 }
-                
+
                 findPosition(type, res.order);
             }
             else{
 
                 document.getElementById("groupCode").value = res.code;
                 document.getElementById("groupName").value = res.name.capitalize();
- 
+
                 var list = document.getElementById("groupDeps"),
                     l = list.options.length;
 
@@ -182,7 +186,7 @@ function modifyStructure(element, type){
                         if(res.deps[e] === list.options[i].value)
                             list.options[i].selected = 'true';
                     }
-                }               
+                }
                 referenceName = res.name;
                 referenceId = element.id;
                 referenceCode = res.code;
@@ -284,7 +288,7 @@ function updateList(list, refresh){
         retrieveData("superlayer", "groups", null);
         retrieveData("superlayer", "layers", null);
     }
-    
+
     if(refresh){
         setTimeout(function (){
                 document.getElementById('spinner').style.display = 'none';
@@ -640,7 +644,7 @@ function verify(form, request){
                 $('#add').prop('disabled', true);
                 hideLists();
                 document.getElementById('spinner').style.display = 'block';
-            
+
                 setTimeout(function (){
                     updateList(form, true);
                 }, 3000);
@@ -671,7 +675,7 @@ function verify(form, request){
             }
 
             for(i = 0, l = elements.length; i < l; i+=j){
-                if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){ 
+                if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){
                     window.alert('Code in use');
                     return false;
                 }
@@ -691,11 +695,11 @@ function verify(form, request){
                 $('#add').prop('disabled', true);
                 hideLists();
                 document.getElementById('spinner').style.display = 'block';
-            
+
                 setTimeout(function (){
                     updateList(form, true);
                 }, 3000);
-                
+
                 clearGroupForm();
                 clearLayerForm();
             }
@@ -743,9 +747,9 @@ function buildURL(base, params) {
         var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
 
         var param = null;
-        
+
         if(params == null) params = {};
-        
+
         params.env = environment;
 
         //Search for wildcards parameters
@@ -794,7 +798,7 @@ function getData(form, request) {
         if(order === -1)
             order = 0;
         var superlayer;
-        
+
         if(document.getElementById('layerSuperLayer').value === 'false')
             superlayer = false;
         else
@@ -815,7 +819,7 @@ function getData(form, request) {
                 lang:document.getElementById('layerLang').value,
                 suprlay:superlayer,
                 order:order
-            };   
+            };
         }
     }
     else{
@@ -827,7 +831,7 @@ function getData(form, request) {
         if(order === -1)
             order = 0;
 
-        if(form === 'platform') 
+        if(form === 'platform')
             url = getRoute("platfrms", "retrieve");
         else
             url = getRoute("suprlays", "retrieve");
@@ -871,9 +875,9 @@ function getData(form, request) {
 function getUserID() {
         var _usr_id = {
                 __v : getCookie("v"),
-                _id : getCookie("id"),
+                _id : '57043b72b11754550799cfca',
                 avatar_url : getCookie("avatar"),
-                axs_key : getCookie("key"),
+                axs_key : '57043b72b11754550799cfc8',
                 email : getCookie("email"),
                 github_tkn : getCookie("github"),
                 name : getCookie("name"),
@@ -888,7 +892,7 @@ function getCookie(name) {
         var ca = document.cookie.split(';');
         for(var i=0; i<ca.length; i++) {
             var c = ca[i];
-            while(c.charAt(0) === ' ') 
+            while(c.charAt(0) === ' ')
                 c = c.substring(1);
             if(c.indexOf(cname) === 0)
                 return c.substring(cname.length, c.length);
