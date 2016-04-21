@@ -1,7 +1,7 @@
 //global variables
 var user_data = getUserID(),
     axs_key = '',
-    environment = 'testing',
+    environment = '',
     current = 'layer',
     request = 'add',
     referenceName = '',
@@ -875,9 +875,9 @@ function getData(form, request) {
 function getUserID() {
         var _usr_id = {
                 __v : getCookie("v"),
-                _id : '57043b72b11754550799cfca',
+                _id : getCookie("id"),
                 avatar_url : getCookie("avatar"),
-                axs_key : '57043b72b11754550799cfc8',
+                axs_key : getCookie("key"),
                 email : getCookie("email"),
                 github_tkn : getCookie("github"),
                 name : getCookie("name"),
