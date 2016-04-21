@@ -292,3 +292,21 @@ var superLayers = {
         return size - 1;
     }
 };
+
+var API_ENV = 'testing';
+var CLIENT_ID = '1d65cbed13dbd026bec8';
+
+switch(window.location.href.match("//[a-z0-9]*.[a-z0-9]*")[0].replace("//", '')) {
+    case "dev.fermat":
+        API_ENV = 'production';
+        CLIENT_ID = 'd00a7c7d4489139327e4';
+        break;
+    case "dev.bitdubai":
+        API_ENV = 'development';
+        CLIENT_ID = 'f98fdd310fe6284f5416';
+        break;
+    case "lab.bitdubai":
+        API_ENV = 'testing';
+        CLIENT_ID = '1d65cbed13dbd026bec8';
+        break;
+}

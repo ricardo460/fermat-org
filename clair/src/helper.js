@@ -4,22 +4,8 @@
 function Helper() {
 
     var self = this;
-    
-    this.ENV = 'production';
 
     this.SERVER = 'http://api.fermat.org';
-
-    switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
-        case "dev":
-            self.ENV = 'production';
-            break;
-        case "lab":
-            self.ENV = 'development';
-            break;
-        case "3d":
-            self.ENV = 'testing';
-            break;
-    }
 
     /**
      * Hides an element vanishing it and then eliminating it from the DOM
@@ -473,7 +459,7 @@ function Helper() {
         
         if(params == null) params = {};
         
-        params.env = self.ENV;
+        params.env = window.API_ENV;
 
         //Search for wildcards parameters
         do {
