@@ -3,6 +3,7 @@ var tknMod = require('./token');
 var usrMod = require('./user');
 var githubLib = require('./lib/github');
 var sha256Lib = require('./lib/sha256');
+var permUsr = 77000;
 /**
  * [verifAxsKeyRelApiKey description]
  *
@@ -68,7 +69,7 @@ exports.login = function (url, api_key, callback) {
 						console.log("Inserting user");
 						//Registering the user and developer in the database
 						usrMod.insOrUpdUsr(usr.usrnm ? usr.usrnm.toLowerCase() : usr.usrnm, //
-							usr.email, usr.name, usr.bday, usr.location, usr.avatar_url, usr.github_tkn, usr.url, usr.bio,
+							usr.email, usr.name, usr.bday, usr.location, usr.avatar_url, usr.github_tkn, usr.url, usr.bio, permUsr,
 							function (err_usr, res_usr) {
 								if (err_usr) {
 									console.log('error', err_usr);
