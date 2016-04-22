@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-require('mongoose-long')(mongoose);
 /**
  * [UsrMdl description]
  *
@@ -11,14 +10,14 @@ require('mongoose-long')(mongoose);
  * @param  {[type]} avatar_url [description]
  * @param  {[type]} github_tkn [description]
  */
-function UsrMdl(usrnm, email, name, avatar_url, github_tkn) {
+function UsrMdl(usrnm, email, name, avatar_url, github_tkn, perm) {
 	this.usrnm = usrnm;
 	this.email = email;
 	this.name = name;
 	this.avatar_url = avatar_url;
 	this.github_tkn = github_tkn;
 	this.upd_at = new mongoose.Types.ObjectId();
-	this.perm = new mongoose.Types.Long();
+	this.perm = perm;
 }
 /**
  * [init description]
