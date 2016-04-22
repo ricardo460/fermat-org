@@ -94,10 +94,13 @@ exports.getNetworkHistory = function (callback) {
 						_id: -1
 					}, function (err, servs) {
 						if (err) return callback(err, null);
+						_wav.servers = servs.length || 0;
+						_wav.clients = 0;
 						for (var i = servs.length - 1; i >= 0; i--) {
-							servs[i]._wave = _wav;
+							_wav.clients += servs[i].extra.current.registeredClientConnection || 0;
+							//servs[i]._wave = _wav;
 						}
-						_wavs.push(servs);
+						_wavs.push(_wav);
 					});
 					loopWavs(++i);
 				} else {
