@@ -14,9 +14,44 @@
         <![endif]-->
     </head>
     <body>
+        
+        <div class="navbar navbar-fermat">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <div class="navbar-brand brand-img">
+                        <img class="brand" alt="img" src="img/Fermat.png">
+                    </div>
+                    <a class="navbar-brand" href=".">Fermat P2P Network Visualization</a>
+                </div>
+            </div>
+        </div>
+        
         <div class="container">
             <div class="row">
                 <div id="map" style="height:50em"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-md-offset-5">
+                    <button type="button" class="btn btn-lg btn-info" data-toggle="modal" data-target="#history">See Network History</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="history" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button id="showHistoryBtn" type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Network History</h4>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                
             </div>
         </div>
         

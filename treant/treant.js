@@ -5,6 +5,12 @@ var map,
     nodes = [],
     infoWindow = null;
 
+$(document).ready(main);
+
+function main() {
+    $("#showHistoryBtn").click(showHistory);
+}
+
 /**
  * Draws the Google Map
  * @author Miguelcldn
@@ -21,6 +27,10 @@ function drawMap() {
     getNodes();
 }
 
+/**
+ * Calls the API server for the nodes data
+ * @author Miguelcldn
+ */
 function getNodes() {
     
     $.ajax({
@@ -73,10 +83,14 @@ function drawDetails(node) {
     
     infoWindow = new google.maps.InfoWindow({
         content : "<div>" +
-        "IP: " + node.extra.location.ip + "<br/>" +
-        "Registered client connections: " + node.extra.current.registeredClientConnection + "<br/>" +
+        "<strong>IP:</strong> " + node.extra.location.ip + "<br/>" +
+        "<strong>Registered client connections:</strong> " + node.extra.current.registeredClientConnection + "<br/>" +
         "</div>"
     });
     
     infoWindow.open(map, node.marker);
+}
+
+function showHistory() {
+    
 }
