@@ -85,6 +85,30 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/v1/net/nodes",
+    "title": "create a wave",
+    "name": "CreateWave",
+    "version": "0.0.1",
+    "group": "Net",
+    "description": "<p>Inserts a wave (state of the network) into the database.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object[]",
+            "optional": false,
+            "field": "body",
+            "description": "<p>An array of javascript objects that represents the nodes connected to a server of the network</p>"
+          }
+        ]
+      }
+    },
+    "filename": "routes/v1/net/index.js",
+    "groupTitle": "Net"
+  },
+  {
+    "type": "post",
     "url": "/v1/net/waves",
     "title": "create a wave",
     "name": "CreateWave",
@@ -174,30 +198,6 @@ define({ "api": [
     "groupTitle": "Net"
   },
   {
-    "type": "post",
-    "url": "/v1/net/nodes",
-    "title": "create a wave",
-    "name": "CreateWave",
-    "version": "0.0.1",
-    "group": "Net",
-    "description": "<p>Inserts a wave (state of the network) into the database.</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Object[]",
-            "optional": false,
-            "field": "body",
-            "description": "<p>An array of javascript objects that represents the nodes connected to a server of the network</p>"
-          }
-        ]
-      }
-    },
-    "filename": "routes/v1/net/index.js",
-    "groupTitle": "Net"
-  },
-  {
     "type": "get",
     "url": "/v1/net/nodes/:hash/childrn",
     "title": "get children",
@@ -223,9 +223,20 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/v1/net/history",
+    "title": "get server network",
+    "name": "getHistory",
+    "version": "0.0.1",
+    "group": "Net",
+    "description": "<p>List servers connected to the P2P network fermat.</p>",
+    "filename": "routes/v1/net/index.js",
+    "groupTitle": "Net"
+  },
+  {
+    "type": "get",
     "url": "/v1/net/servrs",
     "title": "get server network",
-    "name": "GetServerNetwork",
+    "name": "getServer",
     "version": "0.0.1",
     "group": "Net",
     "description": "<p>List servers connected to the P2P network fermat.</p>",

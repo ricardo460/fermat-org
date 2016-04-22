@@ -166,4 +166,17 @@ exports.getServer = function (req, next) {
 		next(err, null);
 	}
 };
+exports.getHistory = function (req, next) {
+	'use strict';
+	try {
+		servMod.getNetworkHistory(function (err_servs, res_servs) {
+			if (err_servs) {
+				return next(err_servs, null);
+			}
+			return next(null, res_servs);
+		});
+	} catch (err) {
+		next(err, null);
+	}
+};
 /*jshint +W069 */

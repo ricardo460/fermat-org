@@ -87,6 +87,7 @@ exports.saveNetworkStatus = function (callback) {
 	var hash = new String(SHA256(config.ip)) + '';
 	var extra = {};
 	doLogin(function (err, auth) {
+		// 'http://' + config.ip + ':9090/fermat/api/serverplatform/listserverconfbyplatform'
 		doRequest(auth, {
 			url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/current/data',
 			method: 'GET'
