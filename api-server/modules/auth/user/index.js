@@ -16,15 +16,15 @@ var DevMdl = require('../../repository/developer/models/dev');
  * @param  {Function} callback   [description]
  * @return {[type]}              [description]
  */
-exports.insOrUpdUsr = function (usrnm, email, name, bday, location, avatar_url, github_tkn, url, bio, perm, callback) {
+exports.insOrUpdUsr = function(usrnm, email, name, bday, location, avatar_url, github_tkn, url, bio, perm, callback) {
 	'use strict';
 	try {
-		usrSrv.findUsrByUsrnm(usrnm, function (err_usr, res_usr) {
+		usrSrv.findUsrByUsrnm(usrnm, function(err_usr, res_usr) {
 			if (err_usr) {
 				return callback(err_usr, null);
 			}
 			if (res_usr) {
-				devMod.insOrUpdDev(usrnm, email, name, bday, location, avatar_url, url, bio, function (err, res) {
+				devMod.insOrUpdDev(usrnm, email, name, bday, location, avatar_url, url, bio, function(err, res) {
 					if (err) {
 						return callback(err, null);
 					}
@@ -48,7 +48,7 @@ exports.insOrUpdUsr = function (usrnm, email, name, bday, location, avatar_url, 
 					res_usr.github_tkn = github_tkn;
 				}
 				if (Object.keys(set_obj).length > 0) {
-					usrSrv.updateUsrById(res_usr._id, set_obj, function (err_upd, res_upd) {
+					usrSrv.updateUsrById(res_usr._id, set_obj, function(err_upd, res_upd) {
 						if (err_upd) {
 							return callback(err_upd, null);
 						}
@@ -60,7 +60,7 @@ exports.insOrUpdUsr = function (usrnm, email, name, bday, location, avatar_url, 
 			} else {
 				var dev = new DevMdl(usrnm, email, name, bday, location, avatar_url, url, bio);
 				var usr = new UsrMdl(usrnm, email, name, avatar_url, github_tkn, perm);
-				usrSrv.insertUsrAndDev(usr, dev, function (err_ins, res_ins) {
+				usrSrv.insertUsrAndDev(usr, dev, function(err_ins, res_ins) {
 					if (err_ins) {
 						return callback(err_ins, null);
 					}
@@ -77,10 +77,10 @@ exports.insOrUpdUsr = function (usrnm, email, name, bday, location, avatar_url, 
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.getUsrs = function (callback) {
+exports.getUsrs = function(callback) {
 	'use strict';
 	try {
-		usrSrv.findAllUsrs({}, {}, function (err, usrs) {
+		usrSrv.findAllUsrs({}, {}, function(err, usrs) {
 			if (err) {
 				return callback(err, null);
 			}
@@ -96,10 +96,10 @@ exports.getUsrs = function (callback) {
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.getUsrsByEmail = function (email, callback) {
+exports.getUsrsByEmail = function(email, callback) {
 	'use strict';
 	try {
-		usrSrv.findUsrByEmail(email, function (err, usr) {
+		usrSrv.findUsrByEmail(email, function(err, usr) {
 			if (err) {
 				return callback(err, null);
 			}
@@ -115,10 +115,10 @@ exports.getUsrsByEmail = function (email, callback) {
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.getUsrsByUsrnm = function (usrnm, callback) {
+exports.getUsrsByUsrnm = function(usrnm, callback) {
 	'use strict';
 	try {
-		usrSrv.findUsrByUsrnm(usrnm, function (err, usr) {
+		usrSrv.findUsrByUsrnm(usrnm, function(err, usr) {
 			if (err) {
 				return callback(err, null);
 			}
@@ -133,10 +133,10 @@ exports.getUsrsByUsrnm = function (usrnm, callback) {
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.delAllUsrs = function (callback) {
+exports.delAllUsrs = function(callback) {
 	'use strict';
 	try {
-		usrSrv.delAllUsrs(function (err, usr) {
+		usrSrv.delAllUsrs(function(err, usr) {
 			if (err) {
 				return callback(err, null);
 			}
@@ -144,5 +144,36 @@ exports.delAllUsrs = function (callback) {
 		});
 	} catch (err) {
 		return callback(err, null);
+	}
+};
+/**
+ * [updPermission description]
+ * @param  {[type]}   usrnm    [description]
+ * @param  {[type]}   perm     [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.updPermission = function(usrnm, perm, callback) {
+	'use strict';
+	try {
+		if (perm !=== undefined || perm !=== null)
+			usrSrv.findUsrByUsrnm(usrnm, function(err, usr) {
+				if (err) {
+					return callback(err, false);
+				}
+				if (usr) {
+					var set_obj = {};
+					set_obj.perm = perm;
+					usrSrv.updateUsrById(usr._id, set_obj, function(err_upd, res_upd) {
+						if (err_upd) {
+							return callback(err_upd, false);
+						}
+						return callback(null, true);
+					});
+				}
+			});
+		else return callback(null, false);
+	} catch (err) {
+		return callback(err, false);
 	}
 };
