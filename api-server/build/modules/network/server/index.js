@@ -83,9 +83,11 @@ exports.getNetworkHistory = function (callback) {
 	wavMod.findAllWaves(function (err, wavs) {
 		if (err) return callback(err, null);
 		else {
+			//console.log('wavs: ' + wavs.length);
 			var _wavs = [];
 			var loopWavs = function (i) {
 				if (i < wavs.length) {
+					//console.log('wav: ' + i);
 					var _wav = wavs[i];
 					servSrv.findServs({
 						_wave_id: _wav._id,
@@ -96,13 +98,15 @@ exports.getNetworkHistory = function (callback) {
 						if (err) return callback(err, null);
 						_wav.servers = servs.length || 0;
 						_wav.clients = 0;
-						for (var i = servs.length - 1; i >= 0; i--) {
-							_wav.clients += servs[i].extra.current.registeredClientConnection || 0;
-							//servs[i]._wave = _wav;
+						//console.log('servs: ' + servs.length);
+						for (var j = servs.length - 1; j >= 0; j--) {
+							_wav.clients += servs[j].extra.current.registeredClientConnection || 0;
+							//servs[j]._wave = _wav;
 						}
+						//console.log('clients: ' + _wav.clients);
 						_wavs.push(_wav);
+						return loopWavs(++i);
 					});
-					loopWavs(++i);
 				} else {
 					return callback(null, _wavs);
 				}
