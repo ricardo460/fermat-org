@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" rel="stylesheet" href="../bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="../bootstrap-theme.min.css" />
+    <link type="text/css" rel="stylesheet" href="../styles.css" />
+    <link type="image/png" rel="icon" href="../../images/favicon.png" />
+    <script src="/common/jquery-2.1.4.min.js"></script>
+    <title>Fermat Table Structure Edit</title>
+</head>
+
+<body>
+    <div class="navbar navbar-fermat">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand brand-img">
+                    <img class="brand" alt="img" src="../img/Fermat.png">
+                </div>
+                <a class="navbar-brand">Fermat TSE</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="main">
+                <div class="container-fluid">
+                    <ul class="nav navbar-nav navbar-right actions">
+                        <li>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <img id="spinner" src="../img/loading_spinner.gif" class="img">
+
+    <table id="users" class="table table-fermat table-hover hidden">
+        <thead>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </thead>
+    </table>
+
+    <form id="perm-form" class="hidden">
+        <h3>Layer</h3>
+        <div class="perm-group">
+            <div class="checkbox">
+                <label>
+                    <input id="layer-add" type="checkbox" value=""> Add
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input id="layer-edt" type="checkbox" value=""> Edit
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input id="layer-del" type="checkbox" value=""> Delete
+                </label>
+            </div>
+        </div>
+
+        <h3>SuperLayer</h3>
+        <div class="perm-group">
+            <div class="checkbox">
+                <label>
+                    <input id="sl-add" type="checkbox" value=""> Add
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input id="sl-edt" type="checkbox" value=""> Edit
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input id="sl-del" type="checkbox" value=""> Delete
+                </label>
+            </div>
+        </div>
+
+        <h3>Platform</h3>
+        <div class="perm-group">
+            <div class="checkbox">
+                <label>
+                    <input id="platform-add" type="checkbox" value=""> Add
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input id="platform-edt" type="checkbox" value=""> Edit
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input id="platform-del" type="checkbox" value=""> Delete
+                </label>
+            </div>
+        </div>
+        <div class="buttons">
+            <button id="ok" type="button">Submit</button>
+            <button id="cancel" type="button">Cancel</button>
+        </div>
+    </form>
+</body>
+
+</html>

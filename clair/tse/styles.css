@@ -5,7 +5,7 @@
     padding-top: 10px;
 }
 .actions * {
-    padding-right: 5px;
+    margin-right: 5px;
 }
 .table-fermat {
     max-width: 90%;
@@ -35,7 +35,25 @@ th {
 .shared * {
     display: inline-block;
 }
+.buttons {
+    margin-top: 25px;
+}
 #spinner {
     display: block;
     margin: 0 auto;
+}
+#perm-form {
+    display: block;
+    max-width: 80%;
+    margin: 0 auto;
+}
+#perm-form h3 {
+    margin-top: 30px;
+}
+.perm-group {
+    margin-left: 20px;
+}
+.perm-group * {
+    display: inline;
+    margin-right: 10px;
 }
