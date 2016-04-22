@@ -16,7 +16,7 @@ var DevMdl = require('../../repository/developer/models/dev');
  * @param  {Function} callback   [description]
  * @return {[type]}              [description]
  */
-exports.insOrUpdUsr = function (usrnm, email, name, bday, location, avatar_url, github_tkn, url, bio, callback) {
+exports.insOrUpdUsr = function (usrnm, email, name, bday, location, avatar_url, github_tkn, url, bio, perm, callback) {
 	'use strict';
 	try {
 		usrSrv.findUsrByUsrnm(usrnm, function (err_usr, res_usr) {
@@ -59,7 +59,7 @@ exports.insOrUpdUsr = function (usrnm, email, name, bday, location, avatar_url, 
 				}
 			} else {
 				var dev = new DevMdl(usrnm, email, name, bday, location, avatar_url, url, bio);
-				var usr = new UsrMdl(usrnm, email, name, avatar_url, github_tkn);
+				var usr = new UsrMdl(usrnm, email, name, avatar_url, github_tkn, perm);
 				usrSrv.insertUsrAndDev(usr, dev, function (err_ins, res_ins) {
 					if (err_ins) {
 						return callback(err_ins, null);
