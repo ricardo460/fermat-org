@@ -91,7 +91,7 @@ exports.getNetworkHistory = function (callback) {
 				"time": dateFromObjectId(servs[i]._wave_id),
 				"_id": servs[i]._wave_id
 			};
-			servs[i]._wave = {};
+			servs[i]._wave = _wave;
 		}
 		return callback(null, servs);
 	});
