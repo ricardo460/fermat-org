@@ -68,8 +68,25 @@ exports.findWave = function (query, callback) {
  */
 exports.findWaves = function (query, limit, sort, callback) {
 	'use strict';
-	waveDao.findSchemaLst(query, limit, sort, function (err, wave) {
-		callback(err, wave);
+	waveDao.findSchemaLst(query, limit, sort, function (err, waves) {
+		callback(err, waves);
+	});
+};
+/**
+ * [findAllWaves description]
+ *
+ * @method findAllWaves
+ *
+ * @param  {[type]}     query    [description]
+ * @param  {[type]}     sort     [description]
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findAllWaves = function (query, sort, callback) {
+	'use strict';
+	waveDao.findAllSchemaLst(query, sort, function (err, waves) {
+		callback(err, waves);
 	});
 };
 /**

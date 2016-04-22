@@ -80,7 +80,35 @@ exports.getLastNetworkStatus = function (callback) {
  * @return {[type]}             [description]
  */
 exports.getNetworkHistory = function (callback) {
-	servSrv.findServs({
+	wavMod.findAllWaves(function (err, wavs) {
+		if (err) return callback(err, null);
+		else {
+			var _wavs = [];
+			var loopWavs = function (i) {
+				if (i < wavs.length) {
+					var _wav = wavs[i];
+					servSrv.findServs({
+						_wave_id: _wav._id,
+						type: 'server'
+					}, {
+						_id: -1
+					}, function (err, servs) {
+						if (err) return callback(err, null);
+						for (var i = servs.length - 1; i >= 0; i--) {
+							servs[i]._wave = _wav;
+						}
+						_wavs.push(servs);
+					});
+					loopWavs(++i);
+				} else {
+					return callback(null, _wavs);
+				}
+			};
+			if (wavs && Array.isArray(wavs) && wavs.length > 0) return loopWavs(0);
+			else return callback(null, _wavs);
+		}
+	});
+	/*servSrv.findServs({
 		type: 'server'
 	}, {
 		_wave_id: 1
@@ -94,5 +122,5 @@ exports.getNetworkHistory = function (callback) {
 			servs[i]._wave = _wave;
 		}
 		return callback(null, servs);
-	});
+	});*/
 };
