@@ -5,16 +5,16 @@ var githubLib = require('./lib/github');
 var sha256Lib = require('./lib/sha256');
 var permUsr = 77000;
 //Components | Workflows | Platforms | Superlayers | Layer
-var elements new Object();
+var elements = new Object();
 elements['Components'] = 0;
 elements['Workflows'] = 1;
 elements['Platforms'] = 2;
 elements['Superlayers'] = 3;
 elements['Layer'] = 4;
-var actions new Object();
+var actions = new Object();
 actions['add'] = 0;
-action['update'] = 1;
-action['delete'] = 2;
+actions['update'] = 1;
+actions['delete'] = 2;
 var octToBin = new Object();
 octToBin['0'] = '000';
 octToBin['1'] = '001';
@@ -303,7 +303,7 @@ exports.checkUsrPermEdit = function(usr_id, element, action, callback) {
 		if (err) return callback(err, false);
 		if (resp_usr) {
 			var idx_elemts = elements[element];
-			var idx_action = action[action];
+			var idx_action = actions[action];
 			var perm = resp_usr.perm.toString();
 			var digit = perm.charAt(idx_elemts);
 			var binry = octToBin[digit];

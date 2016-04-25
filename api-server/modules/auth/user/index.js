@@ -175,19 +175,20 @@ exports.delAllUsrs = function(callback) {
 exports.updPermission = function(usrnm, perm, callback) {
 	'use strict';
 	try {
-		if (perm !=== undefined || perm !=== null)
+		if (perm !== undefined || perm !== null)
 			usrSrv.findUsrByUsrnm(usrnm, function(err, usr) {
 				if (err) {
-					return callback(err, false);
+					return callback(err, "User not found");
 				}
 				if (usr) {
 					var set_obj = {};
 					set_obj.perm = perm;
+					usr.perm = perm;
 					usrSrv.updateUsrById(usr._id, set_obj, function(err_upd, res_upd) {
 						if (err_upd) {
-							return callback(err_upd, false);
+							return callback(err_upd, "User error not updated");
 						}
-						return callback(null, true);
+						return callback(null, usr);
 					});
 				}
 			});
