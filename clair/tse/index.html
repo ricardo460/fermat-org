@@ -29,7 +29,9 @@
             <div class="collapse navbar-collapse" id="main">
                 <div class="container-fluid">
                     <ul class="nav navbar-nav navbar-right actions">
-                        <li><button id="perm-link" class="btn btn-default">Permissions</button></li>
+                        <li>
+                            <button id="perm-link" class="btn btn-default">Permissions</button>
+                        </li>
                         <li>
                             <select class="form-control" id="type">
                                 <option value="layer">Layer</option>
@@ -82,6 +84,29 @@
     </table>
 
     <div class="container">
+        <form id="desForm" class="tse-form hidden">
+            <div class="form-group">
+                <label for="desCode">Code</label>
+                <input class="form-control" id="desCode" required/>
+            </div>
+            <div class="form-group">
+                <label for="desName">Name</label>
+                <input class="form-control" id="desName" required/>
+            </div>
+            <div class="form-group">
+                <label for="desLogo">Header SVG</label>
+                <input class="form-control" id="desHeader" type="file" required/>
+            </div>
+            <div class="form-group">
+                <label for="desLogo">Icon SVG</label>
+                <input class="form-control" id="desIcon" type="file" required/>
+            </div>
+            <div class="buttons">
+                <button type="button" id="submitGroup">Submit</button>
+                <button type="button" onclick="cancel()">Cancel</button>
+            </div>
+        </form>
+
         <form id="groupForm" class="tse-form hidden">
             <div class="form-group">
                 <label for="groupCode">Code</label>
