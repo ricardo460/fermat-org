@@ -4,6 +4,26 @@ var usrMod = require('./user');
 var githubLib = require('./lib/github');
 var sha256Lib = require('./lib/sha256');
 var permUsr = 77000;
+//Components | Workflows | Platforms | Superlayers | Layer
+var elements new Object();
+elements['Components'] = 0;
+elements['Workflows'] = 1;
+elements['Platforms'] = 2;
+elements['Superlayers'] = 3;
+elements['Layer'] = 4;
+var actions new Object();
+actions['add'] = 0;
+action['update'] = 1;
+action['delete'] = 2;
+var octToBin = new Object();
+octToBin['0'] = '000';
+octToBin['1'] = '001';
+octToBin['2'] = '010';
+octToBin['3'] = '011';
+octToBin['4'] = '100';
+octToBin['5'] = '101';
+octToBin['6'] = '110';
+octToBin['7'] = '111';
 /**
  * [verifAxsKeyRelApiKey description]
  *
@@ -263,8 +283,32 @@ exports.verifyTkn = function(axs_key, digest, callback) {
  * @return {[type]}            [description]
  */
 exports.changePermission = function(usrnm, perm, callback) {
+	'use strict';
 	usrMod.updPermission(usrnm, perm, function(err, resp) {
 		if (err) return callback(err, false);
 		if (resp) return callback(null, true);
+	});
+};
+/**
+ * Checks the user permission to edit.
+ * @param  {[type]}   usr_id   [description]
+ * @param  {[type]}   element  [description]
+ * @param  {[type]}   action   [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.checkUsrPermEdit = function(usr_id, element, action, callback) {
+	'use strict';
+	usrMod.getUsrsById(usr_id, function(err, resp_usr) {
+		if (err) return callback(err, false);
+		if (resp_usr) {
+			var idx_elemts = elements[element];
+			var idx_action = action[action];
+			var perm = resp_usr.perm.toString();
+			var digit = perm.charAt(idx_elemts);
+			var binry = octToBin[digit];
+			if (binry.charAt(idx_action) === '1') return callback(null, true);
+			else return callback(null, false);
+		}
 	});
 };

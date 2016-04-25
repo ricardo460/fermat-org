@@ -129,6 +129,25 @@ exports.getUsrsByUsrnm = function(usrnm, callback) {
 	}
 };
 /**
+ * [getUsrsById description]
+ * @param  {[type]}   _id      [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.getUsrsById = function(_id, callback) {
+	'use strict';
+	try {
+		usrSrv.findUsrById(_id, function(err, usr) {
+			if (err) {
+				return callback(err, null);
+			}
+			return callback(null, usr);
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
+/**
  * [delAllUsrs description]
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
