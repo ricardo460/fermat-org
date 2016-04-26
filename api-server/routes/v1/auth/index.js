@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var authMod = require('../../../modules/auth');
 var config = require('../../../config.js');
+var security = require('../../../lib/utils/security');
 /**
  * @api {get} /v1/auth/login sign in and/or log in
  * @apiName Login
@@ -82,16 +83,23 @@ router.get('/logout', function(req, resp, next) {
  */
 router.post('/changePerms', function(req, resp, next) {
     try {
-        console.log("Updating permission to user " + req.usrnm);
-        authMod.changePermission(req.usrnm, req.perm, function(err, resp) {
-            if (err) {
-                console.log("Error change permission", err);
-                resp.status(402).send("Could not change the permission");
-            } else {
-                console.log("Info", "Permission successfully changed");
-                resp.status(200).send("Permission successfully changed");
-            }
-        });
+        if (!security.isValidPerm(req.body.perm)) {
+            resp.status(412).send({
+                "message": "missing or invalid data"
+            });
+        } else {
+            console.log("Updating permission to user " + req.body.usrnm);
+            console.log("Assigning permission: " + req.body.perm);
+            authMod.changePermission(req.body.usrnm, req.body.perm, function(err, res) {
+                if (err) {
+                    console.log("Error change permission", err);
+                    resp.status(402).send("Could not change the permission");
+                } else {
+                    console.log("Info", "Permission successfully changed");
+                    resp.status(200).send(res);
+                }
+            });
+        }
     } catch (err) {
         console.error("Error", err);
     }
