@@ -1,44 +1,27 @@
-var servSrv = require('./services/serv');
-var ServMdl = require('./models/serv');
+var clintSrv = require('./services/clint');
+var ClintMdl = require('./models/clint');
 var wavMod = require('../wave');
+var servMod = require('../server');
 /**
- * [dateFromObjectId description]
+ * [insertClient description]
  *
- * @method dateFromObjectId
+ * @method insertClient
  *
- * @param  {[type]}         objectId [description]
- *
- * @return {[type]}         [description]
- */
-var dateFromObjectId = function (objectId) {
-	objectId = objectId + '';
-	return new Date(parseInt(objectId.substring(0, 8), 16) * 1000);
-};
-/**
- * [insertServer description]
- *
- * @method insertServer
- *
+ * @param  {[type]}     _wave_id [description]
+ * @param  {[type]}     _serv_id [description]
  * @param  {[type]}     hash     [description]
  * @param  {[type]}     extra    [description]
  * @param  {Function}   callback [description]
  *
  * @return {[type]}     [description]
  */
-exports.insertServer = function (hash, extra, callback) {
-	var date = new Date();
-	var desc = "wave " + date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-	wavMod.insertWave(desc, function (err, wave) {
+exports.insertClient = function (_wave_id, _serv_id, hash, extra, callback) {
+	var serv_mdl = new ClintMdl(_wave_id, _serv_id, hash, extra);
+	clintSrv.insertServ(serv_mdl, function (err, serv) {
 		if (err) {
 			return callback(err, null);
 		}
-		var serv_mdl = new ServMdl(wave._id, hash, extra);
-		servSrv.insertServ(serv_mdl, function (err, serv) {
-			if (err) {
-				return callback(err, null);
-			}
-			return callback(null, serv);
-		});
+		return callback(null, serv);
 	});
 };
 /**
@@ -46,88 +29,28 @@ exports.insertServer = function (hash, extra, callback) {
  *
  * @method getLastServerStatus
  *
- * @param  {[type]}            hash     [description]
+ * @param  {[type]}            _serv_id [description]
  * @param  {Function}          callback [description]
  *
  * @return {[type]}            [description]
  */
-exports.getLastNetworkStatus = function (callback) {
+exports.getLastServerStatus = function (_serv_id, callback) {
 	wavMod.findLastWave(function (err, wav) {
 		if (err) return callback(err, null);
 		else {
-			servSrv.findServs({
+			clintSrv.findClints({
+				_serv_id: _serv_id,
 				_wave_id: wav._id,
-				type: 'server'
+				type: 'client'
 			}, {
 				_id: -1
-			}, function (err, servs) {
+			}, function (err, clints) {
 				if (err) return callback(err, null);
-				for (var i = servs.length - 1; i >= 0; i--) {
-					servs[i]._wave = wav;
+				for (var i = clints.length - 1; i >= 0; i--) {
+					clints[i]._wave = wav;
 				}
-				return callback(null, servs);
+				return callback(null, clints);
 			});
 		}
 	});
-};
-/**
- * [getLastNetworkStatus description]
- *
- * @method getLastNetworkStatus
- *
- * @param  {Function}           callback [description]
- *
- * @return {[type]}             [description]
- */
-exports.getNetworkHistory = function (callback) {
-	wavMod.findAllWaves(function (err, wavs) {
-		if (err) return callback(err, null);
-		else {
-			//console.log('wavs: ' + wavs.length);
-			var _wavs = [];
-			var loopWavs = function (i) {
-				if (i < wavs.length) {
-					//console.log('wav: ' + i);
-					var _wav = wavs[i];
-					servSrv.findServs({
-						_wave_id: _wav._id,
-						type: 'server'
-					}, {
-						_id: -1
-					}, function (err, servs) {
-						if (err) return callback(err, null);
-						_wav.servers = servs.length || 0;
-						_wav.clients = 0;
-						//console.log('servs: ' + servs.length);
-						for (var j = servs.length - 1; j >= 0; j--) {
-							_wav.clients += servs[j].extra.current.registeredClientConnection || 0;
-							//servs[j]._wave = _wav;
-						}
-						//console.log('clients: ' + _wav.clients);
-						_wavs.push(_wav);
-						return loopWavs(++i);
-					});
-				} else {
-					return callback(null, _wavs);
-				}
-			};
-			if (wavs && Array.isArray(wavs) && wavs.length > 0) return loopWavs(0);
-			else return callback(null, _wavs);
-		}
-	});
-	/*servSrv.findServs({
-		type: 'server'
-	}, {
-		_wave_id: 1
-	}, function (err, servs) {
-		if (err) return callback(err, null);
-		for (var i = servs.length - 1; i >= 0; i--) {
-			var _wave = {
-				"time": dateFromObjectId(servs[i]._wave_id),
-				"_id": servs[i]._wave_id
-			};
-			servs[i]._wave = _wave;
-		}
-		return callback(null, servs);
-	});*/
 };
