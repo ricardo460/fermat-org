@@ -157,19 +157,39 @@ var isUsername = function(username) {
 	//console.log('invalid username');
 	return 0;
 };
-exports.isValidDate = function(date) {
-	return isValidDate(date);
-};
 /**
  * [isNumeric description]
  * @param  {[type]}  str [description]
  * @return {Boolean}     [description]
  */
-exports.isNumeric = function(str) {
-	if (isValidData(str))
-		if (validator.isNumeric(str))
-			return 1;
+var isNumeric = function(str) {
+	if (validator.isNumeric(str))
+		return 1;
 	return 0;
+};
+var isOctal = function(str) {
+	var num = 0;
+	for (var i = 0; i < str.length; i++) {
+		num = parseInt(str.charAt(i));
+		if(num > 7 || num < 0) 
+			return 0;
+	}
+	return 1;
+};
+/**
+ * [isValidPerm description]
+ * @param  {[type]}  str [description]
+ * @return {Boolean}     [description]
+ */
+exports.isValidPerm = function(str) {
+	if (isValidData(str))
+		if (str.length === 5)
+			if (isNumeric(str) && isOctal(str))
+				return 1;
+	return 0;
+};
+exports.isValidDate = function(date) {
+	return isValidDate(date);
 };
 /**
  * [isAlphanumeric description]
