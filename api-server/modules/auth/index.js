@@ -285,8 +285,8 @@ exports.verifyTkn = function(axs_key, digest, callback) {
 exports.changePermission = function(usrnm, perm, callback) {
 	'use strict';
 	usrMod.updPermission(usrnm, perm, function(err, resp) {
-		if (err) return callback(err, false);
-		if (resp) return callback(null, true);
+		if (err) return callback(err, null);
+		if (resp) return callback(null, resp);
 	});
 };
 /**
