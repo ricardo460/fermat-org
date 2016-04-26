@@ -188,12 +188,15 @@ exports.updPermission = function(usrnm, perm, callback) {
 						if (err_upd) {
 							return callback(err_upd, "User error not updated");
 						}
-						return callback(null, usr);
+						if (res_upd) {
+							console.log("Response: ", res_upd);
+							return callback(null, usr);
+						}
 					});
 				}
 			});
-		else return callback(null, false);
+		else return callback(null, "Error perm undefined");
 	} catch (err) {
-		return callback(err, false);
+		return callback(err, "User error not updated");
 	}
 };
