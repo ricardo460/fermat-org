@@ -77,7 +77,7 @@ var release = function(req) {
 router.post('/', function(req, res, next) {
 	'use strict';
 	try {
-		authMod.checkUsrPermEdit(req.body.usr_id, 'Components', 'add', function(err, chnged) {
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Layer', 'add', function(err, chnged) {
 			if (err) res.status(403).send(err);
 			else {
 				if (chnged === true) {
@@ -101,7 +101,7 @@ router.post('/', function(req, res, next) {
 					}
 				} else
 				if (chnged === false)
-					res.status(403).send("You not have permission to add components");
+					res.status(403).send("You not have permission to add layers");
 			}
 		});
 	} catch (err) {
@@ -179,7 +179,7 @@ router.get('/:layer_id', function(req, res, next) {
 router.put('/:layer_id', function(req, res, next) {
 	'use strict';
 	try {
-		authMod.checkUsrPermEdit(req.body.usr_id, 'Components', 'update', function(err, chnged) {
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Layer', 'update', function(err, chnged) {
 			if (err) res.status(403).send(err);
 			else {
 				if (chnged === true) {
@@ -204,7 +204,7 @@ router.put('/:layer_id', function(req, res, next) {
 					}
 				} else
 				if (chnged === false)
-					res.status(403).send("You not have permission to update components");
+					res.status(403).send("You not have permission to update layers");
 			}
 		});
 	} catch (err) {
@@ -222,7 +222,7 @@ router.put('/:layer_id', function(req, res, next) {
 router.delete('/:layer_id', function(req, res, next) {
 	'use strict';
 	try {
-		authMod.checkUsrPermEdit(req.body.usr_id, 'Components', 'delete', function(err, chnged) {
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Layer', 'delete', function(err, chnged) {
 			if (err) res.status(403).send(err);
 			else {
 				if (chnged === true) {
@@ -249,7 +249,7 @@ router.delete('/:layer_id', function(req, res, next) {
 					}
 				} else
 				if (chnged === false)
-					res.status(403).send("You not have permission to delete components");
+					res.status(403).send("You not have permission to delete layers");
 			}
 		});
 	} catch (err) {
