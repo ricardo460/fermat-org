@@ -89,7 +89,7 @@ var genereting = function(env, usr_id, token, callback) {
 			});
 		}
 	});
-}
+};
 
 var selection = function(env){
 	switch(env){
@@ -98,7 +98,7 @@ var selection = function(env){
 			usr_id = "56c7895cc01a204369238c43";
 			genereting(env, usr_id, token, function(error, result){
 				if (error) {
-					console.log(error)
+					console.log(error);
 				} else {
 					selection("production");
 				}
@@ -109,7 +109,7 @@ var selection = function(env){
 			usr_id = "56c621557d20701f4148eaaa";
 			genereting(env, usr_id, token, function(error, result){
 				if (error) {
-					console.log(error)
+					console.log(error);
 				} else {
 					selection("testing");
 				}
@@ -120,10 +120,10 @@ var selection = function(env){
 			usr_id = "56d9946df87ede9a50462119";
 			genereting(env, usr_id, token, function(error, result){
 				if (error) {
-					console.log(error)
+					console.log(error);
 				}
 			});
 		break;
 	}
-}
-selection("development")
+};
+selection("development");
