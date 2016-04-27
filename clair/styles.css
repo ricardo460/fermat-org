@@ -1,0 +1,1155 @@
+html, body {
+    height: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+body {
+    background-color: #ffffff;
+    margin: 0;
+    font-family: Helvetica, sans-serif;
+    overflow: hidden;
+}
+
+a {
+    color: #000000;
+}
+
+#menu {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+button:active {
+    color: #000000;
+    border: none;
+    background-color: rgba(127,127,127,0.75);
+}
+
+.backButton {
+    position : fixed;
+    top : 10px;
+    left : 10px;
+    z-index: 10;
+}
+
+#welcome, #navigation, #zoom, #slide, #return {
+    position: relative; 
+    z-index: 10;  
+    font: 15px arial; 
+    font-weight: bold; 
+    border-radius: 20px;   
+    color: #909090;
+    display: block;
+    margin: auto;
+    margin-top: 0px;
+    margin-bottom: -35px;
+    display: none;
+    opacity: 0;
+}
+
+#login, #logout {
+    color: rgba(127,127,127,1);
+    background: transparent;
+    outline: 1px solid rgba(127,255,255,0.75);
+    border: 0px;
+    padding: 5px 10px;
+    cursor: pointer;
+    position : fixed;
+    top : 10px;
+    right : 10px;
+    z-index: 15;
+}
+
+#login:active, #logout:active {
+    color: #000000;
+    background-color: rgba(127,127,127,0.75);  
+}
+
+#login:hover, #logout:hover,.backButton:hover, .actionButton:hover  {
+    background-color: rgba(127,127,127,0.5);
+}
+
+#legend {
+    position : fixed;
+    top : 40px;
+    right : 10px;
+    z-index: 10;
+}
+
+#containerLogin{
+    position: fixed;
+    z-index: 1;
+    right: 40px;
+    display: block;
+}
+
+.backButton, .actionButton, #legend {
+    color: rgba(127,127,127,1);
+    background: transparent;
+    outline: 1px solid rgba(127,255,255,0.75);
+    border: 0px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+
+
+.colorBox {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    background-color: #ccc;
+    position: relative;
+}
+
+/**     START
+* @author Ricardo Delgado.
+* CSS FOR FERMAT EDIT FIELD. 
+*/
+
+#div-Edit1 {
+    
+    top: 0.5%;
+    position: relative;
+    width: 100%;
+    height: 5%;
+
+    display:box;
+    box-pack:center;
+    box-align:center;
+    
+    /* Firefox */
+    display:-moz-box;
+    -moz-box-pack:center;
+    -moz-box-align:center;
+
+    /* Chrome */
+    display:-webkit-box;
+    -webkit-box-pack:center;
+    -webkit-box-align:center;
+    
+}
+
+#div-Edit2 {
+    
+    position:relative;
+    display: inline-block;
+    width:100%;
+    height: 6%;
+
+    display:box;
+    box-pack:center;
+    box-align:center;
+    
+    display:-moz-box;
+    -moz-box-pack:center;
+    -moz-box-align:center;
+
+    display:-webkit-box;
+    -webkit-box-pack:center;
+    -webkit-box-align:center;
+    
+}
+
+#select-layer {
+    
+    width:18.3%;
+    
+}
+
+label.edit-Fermat {
+    
+    margin-left: 5px;
+    
+}
+
+select.edit-Fermat {
+    
+    -moz-appearance: none;
+    -webkit-appearance:none;
+    
+    background: url(images/select_arrow.png) no-repeat right;
+    border: 1px solid rgb(15, 184, 157);
+    color: rgba(127,127,127,1);
+    
+}
+
+input.edit-Fermat {
+    
+    border: 1px solid rgb(15, 184, 157);
+    color: rgba(127,127,127,1);
+    
+}
+
+/** 
+END
+*/
+
+/**     START
+* @author Ricardo Delgado.
+* CSS FOR THE BOOK. 
+*/ 
+.flipbook-viewport{
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin:auto;
+}
+
+
+.flipbook{
+    -webkit-transition: -webkit-transform 3s;
+    -moz-transition: -moz-transform 3s;
+    -ms-transition: -ms-transform 3s;
+    -o-transition: -o-transform 3s;
+    transition: transform 3s;
+}
+
+
+.flipbook .shadow{
+    -webkit-transition: -webkit-box-shadow 0.5s;
+    -moz-transition: -moz-box-shadow 0.5s;
+    -o-transition: -webkit-box-shadow 0.5s;
+    -ms-transition: -ms-box-shadow 0.5s;
+
+    -webkit-box-shadow:0 0 10px #999;
+    -moz-box-shadow:0 0 10px #999;
+    -ms-box-shadow:0 0 10px #999;
+    -o-box-shadow:0 0 10px #999;
+    box-shadow:0 0 10px #999;
+}
+
+.flipbook .page{
+    -webkit-box-shadow:0 0 20px rgba(0,0,0,0.2);
+    -moz-box-shadow:0 0 20px rgba(0,0,0,0.2);
+    -ms-box-shadow:0 0 20px rgba(0,0,0,0.2);
+    -o-box-shadow:0 0 20px rgba(0,0,0,0.2);
+    box-shadow:0 0 20px rgba(0,0,0,0.2);
+}
+
+.flipbook .hard{
+    background-color:white;
+    -webkit-box-shadow:none;
+    -moz-box-shadow:none;
+    -ms-box-shadow:none;
+    box-shadow:none;
+}
+#p1, #p2, #pn, #pf{
+    background-repeat:no-repeat;
+    background-size:100% 100%;
+}
+
+.flipbook .own-size{
+    background-color:white;
+    overflow:hidden;
+}
+
+.flipbook .even{
+    background:-webkit-gradient(linear, left top, right top, color-stop(0.95, #fff), color-stop(1, #dadada));
+    background-image:-webkit-linear-gradient(left, #fff 95%, #dadada 100%);
+    background-image:-moz-linear-gradient(left, #fff 95%, #dadada 100%);
+    background-image:-ms-linear-gradient(left, #fff 95%, #dadada 100%);
+    background-image:-o-linear-gradient(left, #fff 95%, #dadada 100%);
+    background-image:linear-gradient(left, #fff 95%, #dadada 100%);
+}
+
+.flipbook .odd{
+    background:-webkit-gradient(linear, right top, left top, color-stop(0.95, #fff), color-stop(1, #cacaca));
+    background-image:-webkit-linear-gradient(right, #fff 95%, #cacaca 100%);
+    background-image:-moz-linear-gradient(right, #fff 95%, #cacaca 100%);
+    background-image:-ms-linear-gradient(right, #fff 95%, #cacaca 100%);
+    background-image:-o-linear-gradient(right, #fff 95%, #cacaca 100%);
+    background-image:linear-gradient(right, #fff 95%, #cacaca 100%);
+}
+
+.table-contents{
+    margin:0px auto;
+    width:100%;
+    padding: 0px;
+    position: relative;
+    left:0px;
+}
+
+#contents1, #contents2{
+    position:absolute;
+    left:45%;
+    color:black;
+    float:top;
+    padding: 0px;
+    margin: 0px;
+}
+
+.table-contents ul{
+    padding-top:12%;
+}
+.table-contents li{
+    list-style:none;
+    left:50%;
+}
+
+.table-contents span{
+    float:right;
+}
+
+.table-contents a{
+    float:left;
+    width:100%;
+    clear:both;
+    text-decoration:none;
+    color:#333;
+    margin:0px auto;
+}
+
+.table-contents a:hover{
+    background:#CAD1EE;
+    float:left;
+    width:100%;
+    clear:both;
+    text-decoration:none;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    -o-border-radius:10px;
+    -ms-border-radius:10px;
+    border-radius:10px;
+}
+
+/**     
+END
+*/ 
+
+@font-face {
+    font-family: Canaro;
+    src: url('fonts/canaro.otf') format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+/**     START
+* @author Daril Rodriguez.
+* CSS FOR FERMAT EDIT MODAL AUTHORS.
+*/
+
+#hidden-area {
+    
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: 11;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    
+}
+
+#modal-devs {
+    
+    z-index: 12;
+    width: 455px;
+    padding: 5px;
+    height: 372px;
+    display: none;
+    position: fixed;
+    background: #00b498;
+        
+}
+
+#modal-devs[data-state="hidden"] {
+    
+    opacity: 0;
+    display: none;
+    
+}
+
+#modal-devs[data-state="show"] {
+    
+    opacity: 1;
+    display: block;
+    
+}
+
+#modal-devs #a {
+    
+    width: 49%;
+    float: left;
+    margin-right: 2%;
+    
+}
+
+#modal-devs #a #finder {
+    
+    float: left;
+    width: 100%;
+    height: 43px;
+    padding-top: 10px;
+    
+}
+
+#modal-devs #a #finder input[type="text"] {
+    
+    width: 76%;
+    border: 0px;
+    float: left;
+    height: 29px;
+    margin-left: 5px;
+    background: #bbebe3;
+    
+}
+
+#modal-devs #a #finder input[type="button"] {
+    
+    width: 15%;
+    float: left;
+    border: 0px;
+    height: 32px;
+    padding: 19px;
+    margin-top: -3px; 
+    margin-left: 5px;
+    border-radius: 30px;
+    background:  no-repeat;
+    background-size: 22px 22px;
+    background-position: center;
+    background-image: url(images/modal/finder.png);
+    
+    transition: .5s all ease 0s;
+    -moz-transition: .5s all ease 0s;
+    -webkit-transition: .5s all ease 0s;
+}
+
+#modal-devs #a #finder input[type="button"]:hover {
+    
+    cursor: pointer;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    background-image: url(images/modal/finder.png);
+    
+}
+
+#modal-devs #a #list {
+    
+    width: 99%;
+    float: left;
+    height: 317px;
+    overflow: auto;
+    background: #bbebe3;
+    
+}
+
+#modal-devs .list-content {
+    
+    width: 100%;
+    float: left;
+    margin-right: 2px;
+    min-height: 100.5%;
+    background-color: #00000000;
+    
+}
+
+#modal-devs .dev-fermat-edit {
+	
+	padding: 2px;
+	height: 40px;
+	margin: 2px;
+    overflow: hidden;
+	background: rgba(0, 0, 0, 0.2);
+	
+    transition: .5s all ease 0s;
+    -moz-transition: .5s all ease 0s;
+    -webkit-transition: .5s all ease 0s;
+    
+}
+
+#modal-devs .dev-fermat-edit div img {
+
+	float: left;
+	width: 20%;
+
+}
+
+#modal-devs .dev-fermat-edit div label {
+
+	width: 59%;
+	float: left;
+	height: 100%;
+	margin-left: 2px;
+	font-family: sans-serif;
+	font-size: 11px;
+	
+}
+
+#modal-devs .dev-fermat-edit div .add_btn {
+	
+	border: 0;
+	width: 19%;
+	float: left;
+	height: 39px;
+	cursor: pointer;
+    border-radius: 39px;
+	background: no-repeat;
+    background-size: 50% ;
+	background-position: center;
+	background-image: url(images/modal/plus.png);
+    
+    transition: .5s all ease 0s;
+    -moz-transition: .5s all ease 0s;
+    -webkit-transition: .5s all ease 0s;
+
+}
+
+#modal-devs .dev-fermat-edit div .add_btn:hover {
+ 
+    cursor: pointer;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    
+}
+
+#modal-devs #b {
+    
+    width: 49%;
+    float: left;
+    height: 99.5%;
+    background: #00000000;
+    
+}
+
+#modal-devs #b #list {
+    
+    width: 99%;
+    float: left;
+    height: 94%;
+    overflow: auto;
+    background: #bbebe3;
+    
+}
+
+#modal-devs .dev-fermat-edit div .rem_btn {
+	
+	border: 0;
+	width: 19%;
+	float: left;
+	height: 39px;
+	cursor: pointer;
+    border-radius: 39px;
+	background: no-repeat;
+    background-size: 50% ;
+	background-position: center;
+	background-image: url(images/modal/minus.png);
+    
+    transition: .5s all ease 0s;
+    -moz-transition: .5s all ease 0s;
+    -webkit-transition: .5s all ease 0s;
+    
+}
+
+#modal-devs .dev-fermat-edit div .rem_btn:hover {
+ 
+    cursor: pointer;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    
+}
+
+#modal-devs #b #buttons {
+    
+    height: 5%;
+    width: 100%;
+    
+}
+
+#modal-devs #b #buttons button {
+    
+    border: 0;
+    width: 49%;
+    padding: 1.5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin: 2px 0px 0 0;
+    font-family: sans-serif;
+    
+}
+
+#modal-devs #b .dev-fermat-edit div img:hover {
+    
+    cursor: pointer;
+	
+}
+
+#modal-devs .dev-fermat-edit[data-expand="true"] {
+    
+    height: 120px;
+    
+}
+
+#modal-devs .dev-fermat-edit .dev-data {
+    
+    padding-top: 30px;
+	font-family: sans-serif;
+	font-size: 12px;
+    
+}
+
+#modal-devs .dev-fermat-edit .dev-data input[type="text"]{
+    
+    border: 0;
+    margin: 2px;
+    border-radius: 0;
+    
+}
+
+#modal-devs .dev-fermat-edit .dev-data select{
+    
+    border: 0;
+    margin: 2px;
+    width: 139px;
+    border-radius: 0;
+    
+}
+
+/**
+* END
+*/
+
+/**     START
+* @author Daril Rodriguez.
+* CSS FOR FERMAT EDIT MODAL DESCRIPTION.
+*/
+
+#modal-desc {
+    
+    opacity: 0;
+    z-index: 12;
+    width: 45.5%;
+    padding: 8px;
+    background: #00cdad;
+    padding-bottom: 4px;
+    
+    position: absolute;
+    left: calc(50% - 22.7%);
+    
+}  
+
+#modal-desc[data-state="hidden"] {
+    
+    opacity: 0;
+    display: none;
+    
+}
+
+#modal-desc[data-state="show"] {
+    
+    opacity: 1;
+    display: block;
+    
+}
+
+#modal-desc label {
+    
+    color: #006053;
+    font-size: 14px;
+    font-family: uppercase;
+    
+}
+
+#modal-desc textarea {
+    
+    border: 0px;
+    width: 100%;
+    resize: none;
+    color: #006053;
+    font-size: 18px;
+    margin-top: 5px;
+    background: #daf0e9;
+    font-family: uppercase;
+    
+}
+
+#modal-desc div {
+    
+    width: 100%;
+    
+}
+
+#modal-desc div button{
+    
+    float: left;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    width: 49.5%;
+    cursor: pointer;
+    font-size: 12px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background: #daf0e9;
+    font-family: sans-serif;
+    
+}
+
+#modal-desc div #modal-desc-accept {
+    
+    float: right;
+    
+}
+
+#modal-desc div button:active {
+    
+    color: #000000;
+    border: none;
+    background-color: rgba(127,127,127,0.75);
+    
+}
+
+/**
+* END
+*/
+
+/**     START
+* @author Daril Rodriguez.
+* CSS FOR WORKFLOW HEADER FIELDS.
+*/
+
+#workflow-header {
+    
+    top: 0.5%;
+    position: relative;
+    width: 100%;
+    height: 5%;
+
+    display:box;
+    box-pack:center;
+    box-align:center;
+    
+    display:-moz-box;
+    -moz-box-pack:center;
+    -moz-box-align:center;
+
+    display:-webkit-box;
+    -webkit-box-pack:center;
+    -webkit-box-align:center;
+}
+
+#workflow-header label {
+    font-size: 1.5vmax;
+    font-family: sans-serif;
+}
+
+/**
+* END
+*/
+
+
+/**     START
+* @author Daril Rodriguez.
+* CSS FOR WORKFLOW MODAL STEPS.
+*/
+
+#modal-steps {
+    z-index: 12;
+    margin: auto;
+    width: 65%;
+    height: 60%;
+    padding: 2px;
+    background: #00cdad;
+    font-family: uppercase;
+}
+
+#modal-steps-div[data-state="show"] {
+    display: block;
+}
+
+#modal-steps-div[data-state="hidden"] {
+    display: none;
+}
+
+#modal-steps-div {
+    z-index: 12;
+    width: 100%;
+    height: 100%;
+    border: 0px;
+    position: absolute;
+}
+
+/*  LEFT  */
+
+#modal-steps #left {
+  float:left;
+  border: 0;
+  width: 50%; 
+  height: 100%;
+  display: inline-block;
+}
+
+#modal-steps #left #inputs{
+  border: 0;
+  float: left;
+  width: 100%;
+  height: 70%;
+  overflow: hidden;
+  display: inline-block;
+}
+
+#modal-steps #left #inputs div{
+  border: 0;
+  float:left;
+  width: 100%; 
+  height: 100%;
+  margin-left: 5px;
+  display: inline-block;
+}
+
+#modal-steps #left #step-Number {
+  width: 100%;
+  float: left;
+  font-size: 1.5vmax;
+  font-family: sans-serif;
+}
+
+#modal-steps #left label {
+  height: 8%;
+  width: 26%;
+  float: left;
+  margin-top: 2px;
+  font-size: 1.4vmax;
+  font-family: sans-serif;
+}
+
+#modal-steps #left #label-compo {
+
+  font-size: 1.3vmax;
+
+}
+
+#modal-steps #left input {
+  border: 0;
+  padding: 0;
+  height: 8%;
+  width: 71%;
+  float: left;
+  margin-top: 2px;
+  font-size: 1.5vmax;
+  font-family: sans-serif;
+}
+
+#modal-steps #left select {
+  height: 8%;
+  width: 71%;
+  float: left;
+  margin-top: 2px;
+  font-size: 1.5vmax;
+  font-family: sans-serif;
+}
+
+#modal-steps #left textarea {   
+    border: 0;
+    width: 98%;
+    float: left;
+    height: 100%;
+    resize: none;
+    max-width: 95%;
+    min-width: 95%;
+    max-height: 48%;
+    min-height: 48%;
+    background: #fff;
+    margin-left: 2px;
+    font-size: 1.5vmax;
+    font-family: sans-serif;
+}
+
+#modal-steps #left #next {
+  border: 0;
+  float:left;
+  width: 100%; 
+  height: 30%;
+  overflow: hidden;
+  display: inline-block;
+}
+
+#modal-steps #left #next #blank {
+  border: 0;
+  width: 100%; 
+  height: 20%;
+  float: left;
+  display: inline-block;
+}
+
+#modal-steps #left #next #blank legend {
+
+  font-family: sans-serif;
+  font-size: 1.5vmax;
+}
+
+#modal-steps #left #next #inputs {
+  border: 0;
+  width: 100%; 
+  height: 55%;
+  padding: 0;
+  float: left;
+  display: inline-block;
+}
+
+#modal-steps #left #next #inputs select {
+  height: 8%;
+  width: 71%;
+  float: left;
+  margin-top: 2px;
+  font-size: 1.5vmax;
+  font-family: sans-serif;
+}
+
+#modal-steps #left #next #inputs fieldset {
+  border: 0;
+  padding: 0;
+}
+
+#modal-steps #left #next #selector-steps {
+  border: 0;
+  width: 100%; 
+  height: 20%;
+  float: left;
+  display: inline-block;
+}
+
+#modal-steps #left #next #selector-steps #graphic-selector {
+  width: 97%;
+  height: 30%;
+  float: left;
+  display: blocK;
+  background: #777;
+}
+
+#modal-steps #left #next #selector-steps #graphic-selector div {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  float:left;
+  position: relative;
+  display: inline-block;
+  background: #777;
+}
+
+#modal-steps #left #next #selector-steps #graphic-selector div:hover {
+  cursor: pointer;
+  background: #666;
+}
+
+#modal-steps #left #next #selector-steps #graphic-selector .on {
+  background: #222;
+}
+
+#modal-steps #left #next #selector-steps #graphic-selector .off {
+  background: #666;
+}
+
+#modal-steps #left #next #selector-steps #input-selector {
+  width: 97%;
+  height: 100%;
+  display: blocK;
+}
+
+#modal-steps #left #next #selector-steps #input-selector button {
+  border: 0;
+  margin: 0;
+  float: left;
+  padding: 0;
+  width: 12.5%;
+  height: 100%;
+  display: inline-blocK;
+  background: rgba(0, 0, 0, 0);
+}
+
+#modal-steps #left #next #selector-steps #input-selector button:hover {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+#modal-steps #left #next #selector-steps #input-selector center {
+  border: 0;
+  width: 50%;
+  height: 100%;
+  float: left;
+}
+
+/*  RIGHT  */
+
+#modal-steps #right {
+  border: 0;
+  width: 50%;
+  height: 100%;
+  display: inline-block;
+}
+
+#modal-steps #right #preview {
+  border: 0;
+  width: 100%;
+  height: 23%;
+  overflow: hidden;
+  display: inline-block;
+  float: left;
+}
+
+#modal-steps #right #preview label {
+  font-family: sans-serif;
+  font-size: 1.5vmax;
+}
+
+#step-Preview {
+  width: 100%;
+  height: 82%;
+  background: #fff;
+}
+
+#modal-steps #right #list {
+  border: 0;
+  width: 100%;
+  height: 69%;
+  display: inline-block;
+  float: left;
+}
+
+#step-List {
+  border: 0px;
+  width: 100%;
+  margin-top: 1%;
+  height: 98.3%;
+  float: right;
+  background: #daf0e9;
+  font-family: sans-serif;
+}
+
+#modal-steps #right #buttons {
+  border: 0;
+  width: 100%;
+  height: 8%;
+  overflow: hidden;
+  display: inline-block;
+  float: left;
+}
+    
+#modal-steps #right #buttons button {
+    border: 0;
+    margin: 0;
+    width: 24%;
+    padding: 0;
+    float: left;
+    height: 100%;
+    margin-left: 1%;
+    margin-top: .8%;
+    cursor: pointer;
+    font-size: 12px;
+    padding-top: 2px;
+    font-size: 1.05vmax;
+    padding-bottom: 2px;
+    background: #daf0e9;
+    font-family: sans-serif;
+}
+
+#modal-steps #right #buttons button:hover {
+    background-color: rgba(127,127,127,0.75)
+}
+    
+/**
+* END
+*/
+
+/**     START
+* @author Daril Rodriguez.
+* CSS FOR GUIDE MODAL.
+*/
+
+#modal-help-div {
+    z-index: 12;
+    width: 100%;
+    height: 100%;
+    border: 0px;
+    position: absolute;
+}
+
+#modal-help-div[data-state="show"] {
+    display: block;
+}
+
+#modal-help-div[data-state="hidden"] {
+    display: none;
+}
+
+#modal-help {
+    z-index: 12;
+    margin: auto;
+    width: 65%;
+    height: 59%;
+    padding: 2px;
+    font-family: uppercase;
+}
+
+#modal-close-shadow {
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+}
+
+#modal-close-div {
+    width: 100%;
+    height: 6%;
+}
+
+#modal-help-close {
+    float: right;
+    border: 0;
+    height: 50%;
+    background: url(images/guide/close.png) no-repeat;
+}
+
+#modal-help-close:hover {
+    cursor: pointer;
+}
+
+#modal-close-icon {
+    background: #fff;
+    height: 25%;
+}
+
+#modal-close-icon img {
+    width: 10%;
+    margin-left: 5%;
+    background: #f99;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6) ;
+}
+
+#modal-help-text {
+    background: #fff;
+    overflow: hidden;
+    height: 58%;
+}
+
+#modal-help-text ul {
+    margin: 0;
+    padding-left: 11%;
+    height: 100%;
+    width: 100%;
+}
+
+#modal-help-text ul li {
+    padding-bottom: 0.1%;
+    color: #fbb;
+}
+
+#modal-help-text ul li p {
+    color: #777;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 1.3vmax;
+}
+
+/**
+* END
+*/
