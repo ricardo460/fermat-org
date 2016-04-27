@@ -6,6 +6,7 @@ var AES = require("crypto-js/aes");
 var SHA256 = require("crypto-js/sha256");
 var config = require('../../../config');
 var servMod = require('../server');
+var clintMod = require('../client');
 /**
  * [doLogin description]
  *
@@ -54,8 +55,11 @@ var doRequest = function (auth, options, type, callback) {
 	auth(options, function (err, res, bod) {
 		if (err) return callback(err, null);
 		//if (res) console.dir(res);
+		//console.dir(err);
+		//console.dir(res);
+		//console.dir(bod);
 		if (bod) {
-			var data;
+			var data, body;
 			switch (type) {
 			case 0:
 				data = JSON.parse(bod);
@@ -63,11 +67,18 @@ var doRequest = function (auth, options, type, callback) {
 				data.registerOtherComponentDetail = JSON.parse(data.registerOtherComponentDetail);
 				break;
 			case 1:
-				var body = JSON.parse(bod);
+				body = JSON.parse(bod);
 				data = JSON.parse(body.data);
 				break;
 			case 2:
-				data = JSON.parse(bod);
+				//console.dir(bod);
+				body = JSON.parse(bod);
+				data = JSON.parse(body.rl);
+				break;
+			case 3:
+				//console.dir(bod);
+				body = JSON.parse(bod);
+				data = JSON.parse(body.rl);
 				break;
 			}
 			return callback(null, data);
@@ -109,7 +120,35 @@ exports.saveNetworkStatus = function (callback) {
 								extra.location = location;
 								servMod.insertServer(hash, extra, function (error, server) {
 									if (error) return callback(error, null);
-									if (server) return callback(null, server);
+									if (server) {
+										callback(null, server);
+										doRequest(auth, {
+											url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/clients/list',
+											method: 'GET'
+										}, 2, function (error, clients) {
+											if (error) console.error(error);
+											if (clients) {
+												//console.dir(clients[0]);
+												for (var i = clients.length - 1; i >= 0; i--) {
+													clintMod.insertClient(server._wave_id, server._id, clients[i].identityPublicKey, clients[i], function (error, client) {
+														if (error) console.dir(error);
+														if (client) {
+															console.dir(client);
+														}
+													});
+													//	doRequest(auth, {
+													//		url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/client/components/details?i=' + clients[i].identityPublicKey,
+													//		method: 'GET'
+													//	}, 3, function (error, comps) {
+													//		if (error) console.dir(error);
+													//		if (comps) {
+													//			console.dir(comps);
+													//		}
+													//	});
+												}
+											}
+										});
+									}
 								});
 							}
 						});

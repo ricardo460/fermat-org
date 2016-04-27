@@ -12,7 +12,7 @@ var cache = new Cache({
 });
 /**
  * @api {get} /v1/net/servrs get server network
- * @apiName GetServerNetwork
+ * @apiName getServer
  * @apiVersion 0.0.1
  * @apiGroup Net
  * @apiDescription List servers connected to the P2P network fermat.
@@ -49,7 +49,57 @@ router.get('/servrs', function (req, res, next) {
 				if (result) {
 					res.status(200).send(result);
 				} else {
+					res.status(200).send(new Error('Invalid network data'));
+				}
+			}
+		});
+	} catch (err) {
+		next(err);
+	}
+});
+/**
+ * @api {get} /v1/net/servrs/:serv_id get server network
+ * @apiName getClients
+ * @apiVersion 0.0.1
+ * @apiGroup Net
+ * @apiDescription List clients connected to a server.
+ */
+router.get('/servrs/:serv_id', function (req, res, next) {
+	'use strict';
+	try {
+		netMod.getClients(req, function (error, result) {
+			if (error) {
+				res.status(200).send(error);
+			} else {
+				if (result) {
+					res.status(200).send(result);
+				} else {
 					res.status(200).send(new Error('Invalid server data'));
+				}
+			}
+		});
+	} catch (err) {
+		next(err);
+	}
+});
+/**
+ * @api {get} /v1/net/history get server network
+ * @apiName getHistory
+ * @apiVersion 0.0.1
+ * @apiGroup Net
+ * @apiDescription List servers connected to the P2P network fermat.
+ */
+router.get('/history', function (req, res, next) {
+	'use strict';
+	try {
+		netMod.getHistory(req, function (error, result) {
+			if (error) {
+				res.status(200).send(error);
+			} else {
+				if (result) {
+					res.status(200).send(result);
+				} else {
+					res.status(200).send(new Error('Invalid network data'));
 				}
 			}
 		});

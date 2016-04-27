@@ -223,9 +223,31 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/v1/net/servrs/:serv_id",
+    "title": "get server network",
+    "name": "getClients",
+    "version": "0.0.1",
+    "group": "Net",
+    "description": "<p>List clients connected to a server.</p>",
+    "filename": "routes/v1/net/index.js",
+    "groupTitle": "Net"
+  },
+  {
+    "type": "get",
+    "url": "/v1/net/history",
+    "title": "get server network",
+    "name": "getHistory",
+    "version": "0.0.1",
+    "group": "Net",
+    "description": "<p>List servers connected to the P2P network fermat.</p>",
+    "filename": "routes/v1/net/index.js",
+    "groupTitle": "Net"
+  },
+  {
+    "type": "get",
     "url": "/v1/net/servrs",
     "title": "get server network",
-    "name": "GetServerNetwork",
+    "name": "getServer",
     "version": "0.0.1",
     "group": "Net",
     "description": "<p>List servers connected to the P2P network fermat.</p>",

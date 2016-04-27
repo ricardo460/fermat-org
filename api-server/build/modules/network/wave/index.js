@@ -75,7 +75,7 @@ exports.findWaveByDate = function (date, callback) {
 exports.findLastWave = function (callback) {
 	'use strict';
 	try {
-		waveSrv.findWaves({}, 10, {
+		waveSrv.findWaves({}, 1, {
 			_id: -1
 		}, function (err, wavs) {
 			if (err) {
@@ -83,6 +83,34 @@ exports.findLastWave = function (callback) {
 			}
 			if (Array.isArray(wavs) && wavs.length > 0) {
 				return callback(null, wavs[0]);
+			} else {
+				return callback(null, null);
+			}
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
+/**
+ * [findAllWaves description]
+ *
+ * @method findAllWaves
+ *
+ * @param  {Function}   callback [description]
+ *
+ * @return {[type]}     [description]
+ */
+exports.findAllWaves = function (callback) {
+	'use strict';
+	try {
+		waveSrv.findAllWaves({}, {
+			_id: -1
+		}, function (err, wavs) {
+			if (err) {
+				return callback(err, null);
+			}
+			if (Array.isArray(wavs) && wavs.length > 0) {
+				return callback(null, wavs);
 			} else {
 				return callback(null, null);
 			}
