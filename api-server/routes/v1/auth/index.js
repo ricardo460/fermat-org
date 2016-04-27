@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var authMod = require('../../../modules/auth');
 var config = require('../../../config.js');
+var security = require('../../../lib/utils/security');
 /**
  * @api {get} /v1/auth/login sign in and/or log in
  * @apiName Login
@@ -19,14 +20,14 @@ var config = require('../../../config.js');
  *       "axs_key": "56b8c4c4288ff76e0f8225d1"
  *     }
  */
-router.get('/login', function (req, resp, next) {
+router.get('/login', function(req, resp, next) {
     'use strict';
     try {
         console.log("Login...");
         var code = req.query.code;
         var api_key = req.query.api_key;
-        var url = "https://github.com/login/oauth/access_token?client_id="+config.client_id+"&client_secret="+config.client_secret+"&" + "code=" + code;
-        authMod.login(url, api_key, function (err_auth, res_auth) {
+        var url = "https://github.com/login/oauth/access_token?client_id=" + config.client_id + "&client_secret=" + config.client_secret + "&" + "code=" + code;
+        authMod.login(url, api_key, function(err_auth, res_auth) {
             if (err_auth) {
                 console.log("Error", err_auth);
                 resp.status(200).send(err_auth);
@@ -50,13 +51,13 @@ router.get('/login', function (req, resp, next) {
  * @apiDescription Removes the token.
  * @apiSuccess {Boolean} isLogout It indicates that the token has been removed.
  */
-router.get('/logout', function (req, resp, next) {
+router.get('/logout', function(req, resp, next) {
     'use strict';
     try {
         console.log("Logout...");
         var axs_key = req.query.axs_key;
         var api_key = req.query.api_key;
-        authMod.logout(api_key, axs_key, function (err_logout, res_logout) {
+        authMod.logout(api_key, axs_key, function(err_logout, res_logout) {
             if (err_logout) {
                 console.log("Error", err_logout);
                 resp.status(200).send(err_logout);
@@ -68,6 +69,39 @@ router.get('/logout', function (req, resp, next) {
     } catch (err) {
         console.error("Error", err);
         next(err);
+    }
+});
+
+/**
+ * @api {post} /v1/auth/changePerms changePermission
+ * @apiName ChangePermission
+ * @apiVersion 1.0
+ * @apiGroup Auth
+ * @apiParam {String} usrnm User name.
+ * @apiParam {Long} perm User permission.
+ * @apiDescription Give permissions to another user.
+ */
+router.post('/changePerms', function(req, resp, next) {
+    try {
+        if (!security.isValidPerm(req.body.perm)) {
+            resp.status(412).send({
+                "message": "missing or invalid data"
+            });
+        } else {
+            console.log("Updating permission to user " + req.body.usrnm);
+            console.log("Assigning permission: " + req.body.perm);
+            authMod.changePermission(req.body.usrnm, req.body.perm, function(err, res) {
+                if (err) {
+                    console.log("Error change permission", err);
+                    resp.status(402).send("Could not change the permission");
+                } else {
+                    console.log("Info", "Permission successfully changed");
+                    resp.status(200).send(res);
+                }
+            });
+        }
+    } catch (err) {
+        console.error("Error", err);
     }
 });
 // router export

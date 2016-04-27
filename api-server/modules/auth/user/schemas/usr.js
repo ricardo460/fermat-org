@@ -36,6 +36,10 @@ var usrSchema = mongoose.Schema({
         required: true,
         'default': null
     },
+    perm: {
+        type: String,
+        required: true
+    },
     upd_at: {
         type: mongoose.Schema.Types.ObjectId,
         'default': new mongoose.Types.ObjectId()
