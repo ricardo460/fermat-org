@@ -299,13 +299,12 @@ exports.changePermission = function(usrnm, perm, callback) {
  */
 exports.checkUsrPermEdit = function(usr_id, element, action, callback) {
 	'use strict';
-	usrMod.getUsrsById(usr_id, function(err, resp_usr) {
+	usrMod.getUsrsById(usr_id, function(err, usr) {
 		if (err) return callback(err, false);
-		if (resp_usr) {
+		if (usr) {
 			var idx_elemts = elements[element];
 			var idx_action = actions[action];
-			var perm = resp_usr.perm.toString();
-			var digit = perm.charAt(idx_elemts);
+			var digit = usr.perm.charAt(idx_elemts);
 			var binry = octToBin[digit];
 			if (binry.charAt(idx_action) === '1') return callback(null, true);
 			else return callback(null, false);

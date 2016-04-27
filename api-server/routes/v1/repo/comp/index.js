@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var repMod = require('../../../../modules/repository');
 var security = require('../../../../lib/utils/security');
+var authMod = require('../../../../modules/auth');
 /**
  * [description]
  *
@@ -14,7 +15,7 @@ var security = require('../../../../lib/utils/security');
  *
  * @return {[type]} [description]
  */
-var lock = function (req, next) {
+var lock = function(req, next) {
 	console.log('doing lock...');
 	try {
 		console.dir(req.params);
@@ -24,7 +25,7 @@ var lock = function (req, next) {
 			req.body.item_type = 'comp';
 			req.body.priority = 5;
 			console.dir(req.body);
-			repMod.doLock(req, function (error, result) {
+			repMod.doLock(req, function(error, result) {
 				if (error) {
 					next(error, null);
 				} else {
@@ -47,9 +48,9 @@ var lock = function (req, next) {
  *
  * @return {[type]} [description]
  */
-var release = function (req) {
+var release = function(req) {
 	try {
-		repMod.doRelease(req, function (error, result) {
+		repMod.doRelease(req, function(error, result) {
 			if (error) {
 				winston.log('error', 'Error releasing comp lock', error);
 			}
@@ -78,28 +79,38 @@ var release = function (req) {
  * @apiParam {String} repo_dir Directory of repo.
  * @apiDescription Add a component to the architecture fermat.
  */
-router.post('/', function (req, res, next) {
+router.post('/', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.body.layer_id) || // required
-			!security.isValidData(req.body.name) || // required
-			!security.isValidTypeComp(req.body.type) || // required
-			!security.isValidDifficulty(req.body.difficulty) || // required
-			!security.isValidLifeCicle(req.body.code_level) || // required
-			(!(typeof req.body.platfrm_id != "undefined" && security.isValidData(req.body.platfrm_id)) && !(typeof req.body.suprlay_id != "undefined" && security.isValidData(req.body.suprlay_id))) || !security.ifExistIsValidData(req.body.description) || !security.ifExistIsValidData(req.body.repo_dir)) {
-			res.status(412).send({
-				"message": "missing or invalid data"
-			});
-		} else {
-			repMod.addComp(req, function (error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					res.status(201).send(result);
-				}
-				release(req);
-			});
-		}
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Components', 'add', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted")
+					if (!security.isValidData(req.body.layer_id) || // required
+						!security.isValidData(req.body.name) || // required
+						!security.isValidTypeComp(req.body.type) || // required
+						!security.isValidDifficulty(req.body.difficulty) || // required
+						!security.isValidLifeCicle(req.body.code_level) || // required
+						(!(typeof req.body.platfrm_id != "undefined" && security.isValidData(req.body.platfrm_id)) && !(typeof req.body.suprlay_id != "undefined" && security.isValidData(req.body.suprlay_id))) || !security.ifExistIsValidData(req.body.description) || !security.ifExistIsValidData(req.body.repo_dir)) {
+						res.status(412).send({
+							"message": "missing or invalid data"
+						});
+					} else {
+						repMod.addComp(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								res.status(201).send(result);
+							}
+							release(req);
+						});
+					}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to add components");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -109,13 +120,13 @@ router.post('/', function (req, res, next) {
  * @apiVersion 0.0.1
  * @apiName ListComps
  * @apiGroup Repo-Comp
-
+ 
  * @apiDescription Get a list of components of the architecture fermat.
  */
-router.get('/', function (req, res, next) {
+router.get('/', function(req, res, next) {
 	'use strict';
 	try {
-		repMod.listComps(req, function (error, result) {
+		repMod.listComps(req, function(error, result) {
 			if (error) {
 				res.status(200).send(error);
 			} else {
@@ -136,34 +147,44 @@ router.get('/', function (req, res, next) {
  * @apiParam {Date} reached    True date of completion.
  * @apiGroup Repo-Comp
  * @apiDescription updates the lifecycle of a component of the architecture fermat.
-
+ 
  */
-router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
+router.put('/:comp_id/life-cicles/:life_cicle_id', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.params.comp_id) || // required
-			!security.isValidData(req.params.life_cicle_id) || // required
-			!security.ifExistIsValidData(req.body.target) ||
-			!security.ifExistIsValidData(req.body.reached)) {
-			res.status(412).send({
-				"message": "missing or invalid data"
-			});
-		} else {
-			repMod.uptLifeCiclesToComp(req, function (error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					if (result) {
-						res.status(200).send(result);
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Components', 'update', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted")
+					if (!security.isValidData(req.params.comp_id) || // required
+						!security.isValidData(req.params.life_cicle_id) || // required
+						!security.ifExistIsValidData(req.body.target) ||
+						!security.ifExistIsValidData(req.body.reached)) {
+						res.status(412).send({
+							"message": "missing or invalid data"
+						});
 					} else {
-						res.status(404).send({
-							message: "NOT FOUND"
+						repMod.uptLifeCiclesToComp(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								if (result) {
+									res.status(200).send(result);
+								} else {
+									res.status(404).send({
+										message: "NOT FOUND"
+									});
+								}
+							}
+							release(req);
 						});
 					}
-				}
-				release(req);
-			});
-		}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to update components");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -174,39 +195,48 @@ router.put('/:comp_id/life-cicles/:life_cicle_id', function (req, res, next) {
  * @apiName AddCompDev
  * @apiParam {ObjectId} comp_id    Unique identifier of the component.
  * @apiParam {ObjectId} dev_id    Unique identifier of the developer.
- * @apiParam {String} role    xxxx.
+ * @apiParam {String} role  Role name.
  * @apiParam {String} scope    xxxxx.
  * @apiParam {Number} percnt    xxxx.
  * @apiGroup Repo-Comp
  * @apiDescription Add component to developer.
  */
-router.post('/:comp_id/comp-devs', function (req, res, next) {
+router.post('/:comp_id/comp-devs', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.params.comp_id) || //
-			!security.isValidData(req.body.dev_id) || //
-			!security.isValidData(req.body.role) || //
-			!security.isValidData(req.body.scope) || //
-			!security.isValidData(req.body.percnt)) {
-			res.status(412).send({
-				"message": "missing or invalid data"
-			});
-		} else {
-			repMod.addCompDev(req, function (error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					if (result) {
-						res.status(201).send(result);
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Components', 'add', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					if (!security.isValidData(req.params.comp_id) || //
+						!security.isValidData(req.body.dev_id) || //
+						!security.isValidData(req.body.role) || //
+						!security.isValidData(req.body.scope) || //
+						!security.isValidData(req.body.percnt)) {
+						res.status(412).send({
+							"message": "missing or invalid data"
+						});
 					} else {
-						res.status(404).send({
-							message: "NOT FOUND"
+						repMod.addCompDev(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								if (result) {
+									res.status(201).send(result);
+								} else {
+									res.status(404).send({
+										message: "NOT FOUND"
+									});
+								}
+							}
+							release(req);
 						});
 					}
-				}
-				release(req);
-			});
-		}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to add components");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -223,34 +253,43 @@ router.post('/:comp_id/comp-devs', function (req, res, next) {
  * @apiGroup Repo-Comp
  * @apiDescription Update component to developer.
  */
-router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
+router.put('/:comp_id/comp-devs/:comp_dev_id', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.params.comp_id) || // required
-			!security.isValidData(req.params.comp_dev_id) || // required
-			!security.ifExistIsValidData(req.body.dev_id) ||
-			!security.ifExistIsValidData(req.body.role) ||
-			!security.ifExistIsValidData(req.body.scope) ||
-			!security.ifExistIsValidData(req.body.percnt)) {
-			res.status(412).send({
-				"message": "missing or invalid data"
-			});
-		} else {
-			repMod.uptCompDev(req, function (error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					if (result) {
-						res.status(200).send(result);
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Components', 'update', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					if (!security.isValidData(req.params.comp_id) || // required
+						!security.isValidData(req.params.comp_dev_id) || // required
+						!security.ifExistIsValidData(req.body.dev_id) ||
+						!security.ifExistIsValidData(req.body.role) ||
+						!security.ifExistIsValidData(req.body.scope) ||
+						!security.ifExistIsValidData(req.body.percnt)) {
+						res.status(412).send({
+							"message": "missing or invalid data"
+						});
 					} else {
-						res.status(404).send({
-							message: "NOT FOUND"
+						repMod.uptCompDev(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								if (result) {
+									res.status(200).send(result);
+								} else {
+									res.status(404).send({
+										message: "NOT FOUND"
+									});
+								}
+							}
+							release(req);
 						});
 					}
-				}
-				release(req);
-			});
-		}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to update components");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -264,31 +303,40 @@ router.put('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
  * @apiGroup Repo-Comp
  * @apiDescription Delete component to developer.
  */
-router.delete('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
+router.delete('/:comp_id/comp-devs/:comp_dev_id', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.params.comp_id) || //
-			!security.isValidData(req.params.comp_dev_id) //
-		) {
-			res.status(412).send({
-				"message": "missing or invalid data"
-			});
-		} else {
-			repMod.delCompDev(req, function (error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					if (result) {
-						res.status(204).send();
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Components', 'delete', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					if (!security.isValidData(req.params.comp_id) || //
+						!security.isValidData(req.params.comp_dev_id) //
+					) {
+						res.status(412).send({
+							"message": "missing or invalid data"
+						});
 					} else {
-						res.status(404).send({
-							message: "NOT FOUND"
+						repMod.delCompDev(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								if (result) {
+									res.status(204).send();
+								} else {
+									res.status(404).send({
+										message: "NOT FOUND"
+									});
+								}
+							}
+							release(req);
 						});
 					}
-				}
-				release(req);
-			});
-		}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to delete components");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -301,14 +349,14 @@ router.delete('/:comp_id/comp-devs/:comp_dev_id', function (req, res, next) {
  * @apiGroup Repo-Comp
  * @apiParam {ObjectId} comp_id Represents the component identifier.
  */
-router.get('/:comp_id', function (req, res, next) {
+router.get('/:comp_id', function(req, res, next) {
 	'use strict';
 	try {
-		lock(req, function (err_lck, res_lck) {
+		lock(req, function(err_lck, res_lck) {
 			if (err_lck) {
 				res.status(423).send(err_lck);
 			} else {
-				repMod.getComp(req, function (error, result) {
+				repMod.getComp(req, function(error, result) {
 					if (error) {
 						res.status(200).send(error);
 					} else {
@@ -342,36 +390,45 @@ router.get('/:comp_id', function (req, res, next) {
  * @apiGroup Repo-Comp
  * @apiParam {ObjectId} comp_id Represents the component identifier.
  */
-router.put('/:comp_id', function (req, res, next) {
+router.put('/:comp_id', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.params.comp_id) ||
-			!security.ifExistIsValidData(req.body.layer_id) ||
-			!security.ifExistIsValidData(req.body.name) ||
-			!security.ifExistIsValidData(req.body.type) ||
-			!security.ifExistIsValidDifficulty(req.body.difficulty) ||
-			!security.ifExistIsValidLifeCicle(req.body.code_level) ||
-			!security.ifExistIsValidData(req.body.description) ||
-			!security.ifExistIsValidData(req.body.repo_dir)) {
-			res.status(412).send({
-				"message": "missing or invalid data"
-			});
-		} else {
-			repMod.uptComp(req, function (error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					if (result) {
-						res.status(200).send(result);
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Components', 'update', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					if (!security.isValidData(req.params.comp_id) ||
+						!security.ifExistIsValidData(req.body.layer_id) ||
+						!security.ifExistIsValidData(req.body.name) ||
+						!security.ifExistIsValidData(req.body.type) ||
+						!security.ifExistIsValidDifficulty(req.body.difficulty) ||
+						!security.ifExistIsValidLifeCicle(req.body.code_level) ||
+						!security.ifExistIsValidData(req.body.description) ||
+						!security.ifExistIsValidData(req.body.repo_dir)) {
+						res.status(412).send({
+							"message": "missing or invalid data"
+						});
 					} else {
-						res.status(404).send({
-							message: "NOT FOUND"
+						repMod.uptComp(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								if (result) {
+									res.status(200).send(result);
+								} else {
+									res.status(404).send({
+										message: "NOT FOUND"
+									});
+								}
+							}
+							release(req);
 						});
 					}
-				}
-				release(req);
-			});
-		}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to update components");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -384,22 +441,31 @@ router.put('/:comp_id', function (req, res, next) {
  * @apiGroup Repo-Comp
  * @apiParam {ObjectId} comp_id Represents the component identifier.
  */
-router.delete('/:comp_id', function (req, res, next) {
+router.delete('/:comp_id', function(req, res, next) {
 	'use strict';
 	try {
-		repMod.delComp(req, function (error, result) {
-			if (error) {
-				res.status(200).send(error);
-			} else {
-				if (result) {
-					res.status(204).send();
-				} else {
-					res.status(404).send({
-						message: "NOT FOUND"
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Components', 'delete', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					repMod.delComp(req, function(error, result) {
+						if (error) {
+							res.status(200).send(error);
+						} else {
+							if (result) {
+								res.status(204).send();
+							} else {
+								res.status(404).send({
+									message: "NOT FOUND"
+								});
+							}
+						}
+						release(req);
 					});
-				}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to delete components");
 			}
-			release(req);
 		});
 	} catch (err) {
 		next(err);
