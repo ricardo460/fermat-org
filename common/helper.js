@@ -542,6 +542,9 @@ function Helper() {
             case "user":
                 tail = "/v1/repo/devs";
                 break;
+            case "history":
+                tail =  "/v1/net/history";
+                break;
 
             case "tableEdit insert":
                 tail = "/v1/repo/usrs/:usrs/comps";
