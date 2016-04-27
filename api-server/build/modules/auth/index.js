@@ -3,6 +3,30 @@ var tknMod = require('./token');
 var usrMod = require('./user');
 var githubLib = require('./lib/github');
 var sha256Lib = require('./lib/sha256');
+var permUsr = 77000;
+//Components | Workflows | Platforms | Superlayers | Layer
+var elements = {
+	'Components': 0,
+	'Workflows': 1,
+	'Platforms': 2,
+	'Superlayers': 3,
+	'Layer': 4
+};
+var actions = {
+	'add': 0,
+	'update': 1,
+	'delete': 2
+};
+var octToBin = {
+	'0': '000',
+	'1': '001',
+	'2': '010',
+	'3': '011',
+	'4': '100',
+	'5': '101',
+	'6': '110',
+	'7': '111'
+};
 /**
  * [verifAxsKeyRelApiKey description]
  *
@@ -68,7 +92,7 @@ exports.login = function (url, api_key, callback) {
 						console.log("Inserting user");
 						//Registering the user and developer in the database
 						usrMod.insOrUpdUsr(usr.usrnm ? usr.usrnm.toLowerCase() : usr.usrnm, //
-							usr.email, usr.name, usr.bday, usr.location, usr.avatar_url, usr.github_tkn, usr.url, usr.bio,
+							usr.email, usr.name, usr.bday, usr.location, usr.avatar_url, usr.github_tkn, usr.url, usr.bio, permUsr,
 							function (err_usr, res_usr) {
 								if (err_usr) {
 									console.log('error', err_usr);
@@ -251,6 +275,42 @@ exports.verifyTkn = function (axs_key, digest, callback) {
 			}
 		} catch (err) {
 			return callback(err, false);
+		}
+	});
+};
+/**
+ * [changePermission description]
+ * @param  {[type]}   usrnm    [description]
+ * @param  {[type]}   perm     [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.changePermission = function (usrnm, perm, callback) {
+	'use strict';
+	usrMod.updPermission(usrnm, perm, function (err, resp) {
+		if (err) return callback(err, null);
+		if (resp) return callback(null, resp);
+	});
+};
+/**
+ * Checks the user permission to edit.
+ * @param  {[type]}   usr_id   [description]
+ * @param  {[type]}   element  [description]
+ * @param  {[type]}   action   [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.checkUsrPermEdit = function (usr_id, element, action, callback) {
+	'use strict';
+	usrMod.getUsrsById(usr_id, function (err, usr) {
+		if (err) return callback(err, false);
+		if (usr) {
+			var idx_elemts = elements[element];
+			var idx_action = actions[action];
+			var digit = usr.perm.charAt(idx_elemts);
+			var binry = octToBin[digit];
+			if (binry.charAt(idx_action) === '1') return callback(null, true);
+			else return callback(null, false);
 		}
 	});
 };

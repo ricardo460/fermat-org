@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var repMod = require('../../../../modules/repository');
 var security = require('../../../../lib/utils/security');
+var authMod = require('../../../../modules/auth');
 /**
  * [description]
  *
@@ -75,26 +76,33 @@ var release = function(req) {
  */
 router.post('/', function(req, res, next) {
 	'use strict';
-	var band = true;
 	try {
-		if (!security.isValidData(req.body.code) || //
-			!security.isValidData(req.body.name) ||
-			!security.ifExistIsValidData(req.body.logo) ||
-			!security.ifExistIsValidData(req.body.order)) {
-			//band = false
-			res.status(412).send({
-				"message": "missing or invalid data"
-			});
-		}
-		else {
-			repMod.addPlatform(req, function(error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					res.status(201).send(result);
-				}
-			});
-		}
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Platforms', 'add', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted");
+					if (!security.isValidData(req.body.code) || //
+						!security.isValidData(req.body.name) ||
+						!security.ifExistIsValidData(req.body.logo) ||
+						!security.ifExistIsValidData(req.body.order)) {
+						res.status(412).send({
+							"message": "missing or invalid data"
+						});
+					} else {
+						repMod.addPlatform(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								res.status(201).send(result);
+							}
+						});
+					}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to add platforms");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -169,29 +177,39 @@ router.get('/:platfrm_id', function(req, res, next) {
 router.put('/:platfrm_id', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.params.platfrm_id) ||
-			!security.ifExistIsValidData(req.body.name) || //
-			!security.ifExistIsValidData(req.body.logo) || //
-			!security.ifExistIsValidData(req.body.order)) {
-			res.status(412).send({
-				"message": "missing or invalid data"
-			});
-		} else {
-			repMod.uptPltf(req, function(error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					if (result) {
-						res.status(200).send(result);
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Platforms', 'update', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted");
+					if (!security.isValidData(req.params.platfrm_id) ||
+						!security.ifExistIsValidData(req.body.name) || //
+						!security.ifExistIsValidData(req.body.logo) || //
+						!security.ifExistIsValidData(req.body.order)) {
+						res.status(412).send({
+							"message": "missing or invalid data"
+						});
 					} else {
-						res.status(404).send({
-							message: "NOT FOUND"
+						repMod.uptPltf(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								if (result) {
+									res.status(200).send(result);
+								} else {
+									res.status(404).send({
+										message: "NOT FOUND"
+									});
+								}
+							}
+							release(req);
 						});
 					}
-				}
-				release(req);
-			});
-		}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to update platforms");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -207,20 +225,30 @@ router.put('/:platfrm_id', function(req, res, next) {
 router.delete('/:platfrm_id', function(req, res, next) {
 	'use strict';
 	try {
-		repMod.delPltf(req, function(error, result) {
-			if (error) {
-				console.log(error);
-				res.status(200).send(error);
-			} else {
-				if (result) {
-					res.status(204).send();
-				} else {
-					res.status(404).send({
-						message: "NOT FOUND"
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Platforms', 'delete', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted");
+					repMod.delPltf(req, function(error, result) {
+						if (error) {
+							console.log(error);
+							res.status(200).send(error);
+						} else {
+							if (result) {
+								res.status(204).send();
+							} else {
+								res.status(404).send({
+									message: "NOT FOUND"
+								});
+							}
+						}
+						release(req);
 					});
-				}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to delete platforms");
 			}
-			release(req);
 		});
 	} catch (err) {
 		next(err);

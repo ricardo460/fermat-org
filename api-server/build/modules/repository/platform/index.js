@@ -28,6 +28,27 @@ var swapOrder = function (action, oldSpot, newSpot, callback) {
 	});
 };
 /**
+ * [getOrdrLstPltfrm description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+var getOrdrLstPltfrm = function (callback) {
+	'use strict';
+	try {
+		platfrmSrv.findPlatfrms({}, 1, {
+			order: -1
+		}, function (err, platfrms) {
+			if (err) {
+				callback(err, null);
+			} else {
+				callback(null, platfrms[0].order);
+			}
+		});
+	} catch (err) {
+		callback(err, null);
+	}
+};
+/**
  * [insOrUpdPlatfrm description]
  *
  * @method insOrUpdPlatfrm
@@ -92,20 +113,41 @@ exports.insOrUpdPlatfrm = function (code, name, logo, deps, order, callback) {
 					return callback(null, res_plat);
 				}
 			} else {
-				if (order === undefined || order === null) order = '0';
-				var platfrm = new PlatfrmMdl(code, name, logo, deps, order);
-				swapOrder('insert', null, platfrm.order, function (err_sld, res_sld) {
-					if (err_sld) {
-						return callback(err_sld, null);
-					} else {
-						platfrmSrv.insertPlatfrm(platfrm, function (err_ins, res_ins) {
-							if (err_ins) {
-								return callback(err_ins, null);
+				if (order === undefined || order === null) getOrdrLstPltfrm(function (err, nu_order) {
+					if (err) return callback(err, null);
+					if (nu_order) {
+						//Putting platform at the end since not provide an order
+						order = parseInt(nu_order) + 1;
+						var platfrm = new PlatfrmMdl(code, name, logo, deps, order);
+						swapOrder('insert', null, platfrm.order, function (err_sld, res_sld) {
+							if (err_sld) {
+								return callback(err_sld, null);
+							} else {
+								platfrmSrv.insertPlatfrm(platfrm, function (err_ins, res_ins) {
+									if (err_ins) {
+										return callback(err_ins, null);
+									}
+									return callback(null, res_ins);
+								});
 							}
-							return callback(null, res_ins);
 						});
 					}
 				});
+				else {
+					var platfrm = new PlatfrmMdl(code, name, logo, deps, order);
+					swapOrder('insert', null, platfrm.order, function (err_sld, res_sld) {
+						if (err_sld) {
+							return callback(err_sld, null);
+						} else {
+							platfrmSrv.insertPlatfrm(platfrm, function (err_ins, res_ins) {
+								if (err_ins) {
+									return callback(err_ins, null);
+								}
+								return callback(null, res_ins);
+							});
+						}
+					});
+				}
 			}
 		});
 	} catch (err) {

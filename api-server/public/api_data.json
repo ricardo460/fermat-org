@@ -1,5 +1,36 @@
 [
   {
+    "type": "post",
+    "url": "/v1/auth/changePerms",
+    "title": "changePermission",
+    "name": "ChangePermission",
+    "version": "0.0.2",
+    "group": "Auth",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "usrnm",
+            "description": "<p>User name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Long",
+            "optional": false,
+            "field": "perm",
+            "description": "<p>User permission.</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Give permissions to another user.</p>",
+    "filename": "routes/v1/auth/index.js",
+    "groupTitle": "Auth"
+  },
+  {
     "type": "get",
     "url": "/v1/auth/login",
     "title": "sign in and/or log in",
@@ -150,58 +181,10 @@
     "groupTitle": "Net"
   },
   {
-    "type": "post",
-    "url": "/v1/net/servers",
-    "title": "create a wave",
-    "name": "CreateWave",
-    "version": "0.0.1",
-    "group": "Net",
-    "description": "<p>Inserts a wave (state of the network) into the database.</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Object[]",
-            "optional": false,
-            "field": "body",
-            "description": "<p>An array of javascript objects that represents the servers of the network</p>"
-          }
-        ]
-      }
-    },
-    "filename": "routes/v1/net/index.js",
-    "groupTitle": "Net"
-  },
-  {
-    "type": "post",
-    "url": "/v1/net/nodes",
-    "title": "create a wave",
-    "name": "CreateWave",
-    "version": "0.0.1",
-    "group": "Net",
-    "description": "<p>Inserts a wave (state of the network) into the database.</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Object[]",
-            "optional": false,
-            "field": "body",
-            "description": "<p>An array of javascript objects that represents the nodes connected to a server of the network</p>"
-          }
-        ]
-      }
-    },
-    "filename": "routes/v1/net/index.js",
-    "groupTitle": "Net"
-  },
-  {
     "type": "get",
     "url": "/v1/net/nodes/:hash/childrn",
     "title": "get children",
-    "name": "GetChildren",
+    "name": "getChildren",
     "version": "0.0.1",
     "group": "Net",
     "description": "<p>Lists all devices connected to a P2P network node given its hash.</p>",
@@ -463,7 +446,7 @@
             "type": "String",
             "optional": false,
             "field": "role",
-            "description": "<p>xxxx.</p>"
+            "description": "<p>Role name.</p>"
           },
           {
             "group": "Parameter",
