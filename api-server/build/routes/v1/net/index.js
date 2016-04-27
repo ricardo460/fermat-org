@@ -49,6 +49,31 @@ router.get('/servrs', function (req, res, next) {
 				if (result) {
 					res.status(200).send(result);
 				} else {
+					res.status(200).send(new Error('Invalid network data'));
+				}
+			}
+		});
+	} catch (err) {
+		next(err);
+	}
+});
+/**
+ * @api {get} /v1/net/servrs/:serv_id get server network
+ * @apiName getClients
+ * @apiVersion 0.0.1
+ * @apiGroup Net
+ * @apiDescription List clients connected to a server.
+ */
+router.get('/servrs/:serv_id', function (req, res, next) {
+	'use strict';
+	try {
+		netMod.getClients(req, function (error, result) {
+			if (error) {
+				res.status(200).send(error);
+			} else {
+				if (result) {
+					res.status(200).send(result);
+				} else {
 					res.status(200).send(new Error('Invalid server data'));
 				}
 			}
@@ -74,7 +99,7 @@ router.get('/history', function (req, res, next) {
 				if (result) {
 					res.status(200).send(result);
 				} else {
-					res.status(200).send(new Error('Invalid server data'));
+					res.status(200).send(new Error('Invalid network data'));
 				}
 			}
 		});
