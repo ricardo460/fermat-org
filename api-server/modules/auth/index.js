@@ -5,25 +5,28 @@ var githubLib = require('./lib/github');
 var sha256Lib = require('./lib/sha256');
 var permUsr = 77000;
 //Components | Workflows | Platforms | Superlayers | Layer
-var elements = new Object();
-elements['Components'] = 0;
-elements['Workflows'] = 1;
-elements['Platforms'] = 2;
-elements['Superlayers'] = 3;
-elements['Layer'] = 4;
-var actions = new Object();
-actions['add'] = 0;
-actions['update'] = 1;
-actions['delete'] = 2;
-var octToBin = new Object();
-octToBin['0'] = '000';
-octToBin['1'] = '001';
-octToBin['2'] = '010';
-octToBin['3'] = '011';
-octToBin['4'] = '100';
-octToBin['5'] = '101';
-octToBin['6'] = '110';
-octToBin['7'] = '111';
+var elements = {
+	'Components': 0,
+	'Workflows': 1,
+	'Platforms': 2,
+	'Superlayers': 3,
+	'Layer': 4
+};
+var actions = {
+	'add': 0,
+	'update': 1,
+	'delete': 2
+};
+var octToBin = {
+	'0': '000',
+	'1': '001',
+	'2': '010',
+	'3': '011',
+	'4': '100',
+	'5': '101',
+	'6': '110',
+	'7': '111'
+};
 /**
  * [verifAxsKeyRelApiKey description]
  *
@@ -35,16 +38,16 @@ octToBin['7'] = '111';
  *
  * @return {[type]}             [description]
  */
-var verifAxsKeyRelApiKey = function(api_key, axs_key, callback) {
+var verifAxsKeyRelApiKey = function (api_key, axs_key, callback) {
 	'use strict';
-	appMod.findAppByApiKey(api_key, function(err, res) {
+	appMod.findAppByApiKey(api_key, function (err, res) {
 		if (err) {
 			console.log('error', err);
 			return callback(err, false);
 		}
 		if (res) {
 			console.log('info', 'APi Key found');
-			tknMod.getTkn(axs_key, function(err_res, res_tkn) {
+			tknMod.getTkn(axs_key, function (err_res, res_tkn) {
 				if (err_res) {
 					console.log('error', err_res);
 					return callback(err_res, false);
@@ -70,10 +73,10 @@ var verifAxsKeyRelApiKey = function(api_key, axs_key, callback) {
  * @param  {Function} callback [description]
  * @return tkn
  */
-exports.login = function(url, api_key, callback) {
+exports.login = function (url, api_key, callback) {
 	try {
 		//verifies that the API key is registered
-		appMod.findAppByApiKey(api_key, function(err_app, res_app) {
+		appMod.findAppByApiKey(api_key, function (err_app, res_app) {
 			if (err_app) {
 				console.log('Error', err_app);
 				return callback(err_app, null);
@@ -81,7 +84,7 @@ exports.login = function(url, api_key, callback) {
 			if (res_app) {
 				console.log('info', 'APi Key found');
 				//Get user data that did login
-				githubLib.getUsrGithub(url, function(error, usr) {
+				githubLib.getUsrGithub(url, function (error, usr) {
 					if (error) {
 						return callback(error, null);
 					}
@@ -90,7 +93,7 @@ exports.login = function(url, api_key, callback) {
 						//Registering the user and developer in the database
 						usrMod.insOrUpdUsr(usr.usrnm ? usr.usrnm.toLowerCase() : usr.usrnm, //
 							usr.email, usr.name, usr.bday, usr.location, usr.avatar_url, usr.github_tkn, usr.url, usr.bio, permUsr,
-							function(err_usr, res_usr) {
+							function (err_usr, res_usr) {
 								if (err_usr) {
 									console.log('error', err_usr);
 									return callback(err_usr, null);
@@ -98,7 +101,7 @@ exports.login = function(url, api_key, callback) {
 								if (res_usr) {
 									console.log('info', 'Usr and Dev inserted');
 									//Generating the token user
-									tknMod.insTkn(res_usr._id, res_app._id, function(err_tkn, res_tkn) {
+									tknMod.insTkn(res_usr._id, res_app._id, function (err_tkn, res_tkn) {
 										if (err_tkn) {
 											console.log('error', err_tkn);
 											return callback(err_tkn, null);
@@ -106,7 +109,7 @@ exports.login = function(url, api_key, callback) {
 										if (res_tkn) {
 											console.log('info', 'Tkn generated');
 											//return token
-											tknMod.getTkn(res_tkn.axs_key, function(err_tk, res_tk) {
+											tknMod.getTkn(res_tkn.axs_key, function (err_tk, res_tk) {
 												if (err_tk) {
 													console.log('Error', err_tkn);
 													return callback(err_tkn, null);
@@ -135,10 +138,10 @@ exports.login = function(url, api_key, callback) {
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.verifiAxsKeyRelApiKey = function(api_key, axs_key, callback) {
+exports.verifiAxsKeyRelApiKey = function (api_key, axs_key, callback) {
 	'use strict';
 	try {
-		verifAxsKeyRelApiKey(api_key, axs_key, function(err, res) {
+		verifAxsKeyRelApiKey(api_key, axs_key, function (err, res) {
 			if (err) {
 				console.log('error', err);
 				return callback(err, false);
@@ -160,17 +163,17 @@ exports.verifiAxsKeyRelApiKey = function(api_key, axs_key, callback) {
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.verifiAxsKeyRelApiKeyAndUsrnm = function(api_key, axs_key, usrnm, callback) {
+exports.verifiAxsKeyRelApiKeyAndUsrnm = function (api_key, axs_key, usrnm, callback) {
 	'use strict';
 	try {
-		appMod.findAppByApiKey(api_key, function(err, res) {
+		appMod.findAppByApiKey(api_key, function (err, res) {
 			if (err) {
 				console.log('error', err);
 				return callback(err, false);
 			}
 			if (res) {
 				console.log('info', 'APi Key found');
-				tknMod.getTkn(axs_key, function(err_res, res_tkn) {
+				tknMod.getTkn(axs_key, function (err_res, res_tkn) {
 					if (err_res) {
 						console.log('error', err_res);
 						return callback(err_res, false);
@@ -200,16 +203,16 @@ exports.verifiAxsKeyRelApiKeyAndUsrnm = function(api_key, axs_key, usrnm, callba
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.logout = function(api_key, axs_key, callback) {
+exports.logout = function (api_key, axs_key, callback) {
 	try {
-		verifAxsKeyRelApiKey(api_key, axs_key, function(err, res_del) {
+		verifAxsKeyRelApiKey(api_key, axs_key, function (err, res_del) {
 			if (err) {
 				console.log('error', err);
 				return callback(err, false);
 			}
 			if (res_del) {
 				console.log("Authorization granted");
-				tknMod.delTkn(axs_key, function(err_res, res_tkn) {
+				tknMod.delTkn(axs_key, function (err_res, res_tkn) {
 					if (err_res) {
 						console.log('error', err_res);
 						return callback(err_res, false);
@@ -243,8 +246,8 @@ exports.logout = function(api_key, axs_key, callback) {
  *
  * @return {[type]}   [description]
  */
-exports.verifyTkn = function(axs_key, digest, callback) {
-	tknMod.getTkn(axs_key, function(err_tkn, res_tkn) {
+exports.verifyTkn = function (axs_key, digest, callback) {
+	tknMod.getTkn(axs_key, function (err_tkn, res_tkn) {
 		try {
 			if (res_tkn) {
 				// var usr = res_tkn._usr_id;
@@ -282,9 +285,9 @@ exports.verifyTkn = function(axs_key, digest, callback) {
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.changePermission = function(usrnm, perm, callback) {
+exports.changePermission = function (usrnm, perm, callback) {
 	'use strict';
-	usrMod.updPermission(usrnm, perm, function(err, resp) {
+	usrMod.updPermission(usrnm, perm, function (err, resp) {
 		if (err) return callback(err, null);
 		if (resp) return callback(null, resp);
 	});
@@ -297,9 +300,9 @@ exports.changePermission = function(usrnm, perm, callback) {
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.checkUsrPermEdit = function(usr_id, element, action, callback) {
+exports.checkUsrPermEdit = function (usr_id, element, action, callback) {
 	'use strict';
-	usrMod.getUsrsById(usr_id, function(err, usr) {
+	usrMod.getUsrsById(usr_id, function (err, usr) {
 		if (err) return callback(err, false);
 		if (usr) {
 			var idx_elemts = elements[element];
