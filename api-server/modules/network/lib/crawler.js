@@ -6,6 +6,7 @@ var AES = require("crypto-js/aes");
 var SHA256 = require("crypto-js/sha256");
 var config = require('../../../config');
 var servMod = require('../server');
+var clintMod = require('../client');
 /**
  * [doLogin description]
  *
@@ -120,26 +121,33 @@ exports.saveNetworkStatus = function (callback) {
 								servMod.insertServer(hash, extra, function (error, server) {
 									if (error) return callback(error, null);
 									if (server) {
-										return callback(null, server);
-										/*doRequest(auth, {
+										callback(null, server);
+										doRequest(auth, {
 											url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/clients/list',
 											method: 'GET'
 										}, 2, function (error, clients) {
-											if (error) console.dir(error);
+											if (error) console.error(error);
 											if (clients) {
-												//for (var i = clients.length - 1; i >= 0; i--) {
-												//	doRequest(auth, {
-												//		url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/client/components/details?i=' + clients[i].identityPublicKey,
-												//		method: 'GET'
-												//	}, 3, function (error, comps) {
-												//		if (error) console.dir(error);
-												//		if (comps) {
-												//			console.dir(comps);
-												//		}
-												//	});
-												//}
+												//console.dir(clients[0]);
+												for (var i = clients.length - 1; i >= 0; i--) {
+													clintMod.insertClient(server._wave_id, server._id, clients[i].identityPublicKey, clients[i], function (error, client) {
+														if (error) console.dir(error);
+														if (client) {
+															console.dir(client);
+														}
+													});
+													//	doRequest(auth, {
+													//		url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/client/components/details?i=' + clients[i].identityPublicKey,
+													//		method: 'GET'
+													//	}, 3, function (error, comps) {
+													//		if (error) console.dir(error);
+													//		if (comps) {
+													//			console.dir(comps);
+													//		}
+													//	});
+												}
 											}
-										});*/
+										});
 									}
 								});
 							}

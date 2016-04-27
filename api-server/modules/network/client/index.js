@@ -16,8 +16,8 @@ var servMod = require('../server');
  * @return {[type]}     [description]
  */
 exports.insertClient = function (_wave_id, _serv_id, hash, extra, callback) {
-	var serv_mdl = new ClintMdl(_wave_id, _serv_id, hash, extra);
-	clintSrv.insertServ(serv_mdl, function (err, serv) {
+	var clint_mdl = new ClintMdl(_wave_id, _serv_id, hash, extra);
+	clintSrv.insertClint(clint_mdl, function (err, serv) {
 		if (err) {
 			return callback(err, null);
 		}
@@ -35,6 +35,7 @@ exports.insertClient = function (_wave_id, _serv_id, hash, extra, callback) {
  * @return {[type]}            [description]
  */
 exports.getLastServerStatus = function (_serv_id, callback) {
+	console.log('module');
 	wavMod.findLastWave(function (err, wav) {
 		if (err) return callback(err, null);
 		else {
