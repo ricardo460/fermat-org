@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var repMod = require('../../../../modules/repository');
 var security = require('../../../../lib/utils/security');
+var authMod = require('../../../../modules/auth');
 /**
  * [description]
  *
@@ -14,7 +15,7 @@ var security = require('../../../../lib/utils/security');
  *
  * @return {[type]} [description]
  */
-var lock = function (req, next) {
+var lock = function(req, next) {
 	console.log('doing lock...');
 	try {
 		console.dir(req.params);
@@ -24,7 +25,7 @@ var lock = function (req, next) {
 			req.body.item_type = 'layer';
 			req.body.priority = 5;
 			console.dir(req.body);
-			repMod.doLock(req, function (error, result) {
+			repMod.doLock(req, function(error, result) {
 				if (error) {
 					next(error, null);
 				} else {
@@ -47,9 +48,9 @@ var lock = function (req, next) {
  *
  * @return {[type]} [description]
  */
-var release = function (req) {
+var release = function(req) {
 	try {
-		repMod.doRelease(req, function (error, result) {
+		repMod.doRelease(req, function(error, result) {
 			if (error) {
 				winston.log('error', 'Error releasing layer lock', error);
 			}
@@ -73,26 +74,36 @@ var release = function (req) {
  * @apiGroup Repo-Layer
  * @apiDescription Add a layer to the architecture of fermat.
  */
-router.post('/', function (req, res, next) {
+router.post('/', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.body.name) || //
-			!security.isValidData(req.body.lang) || //
-			//!security.ifExistIsValidData(req.body.suprlay) || //
-			!security.ifExistIsValidData(req.body.order)) {
-			res.status(412).send({
-				"message": "missing or invalid data"
-			});
-		} else {
-			repMod.addLayer(req, function (error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					res.status(201).send(result);
-				}
-				release(req);
-			});
-		}
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Components', 'add', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted");
+					if (!security.isValidData(req.body.name) || //
+						!security.isValidData(req.body.lang) || //
+						//!security.ifExistIsValidData(req.body.suprlay) || //
+						!security.ifExistIsValidData(req.body.order)) {
+						res.status(412).send({
+							"message": "missing or invalid data"
+						});
+					} else {
+						repMod.addLayer(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								res.status(201).send(result);
+							}
+							release(req);
+						});
+					}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to add components");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -104,10 +115,10 @@ router.post('/', function (req, res, next) {
  * @apiGroup Repo-Layer
  * @apiDescription get a list of layer to the architecture of fermat.
  */
-router.get('/', function (req, res, next) {
+router.get('/', function(req, res, next) {
 	'use strict';
 	try {
-		repMod.listLayers(req, function (error, result) {
+		repMod.listLayers(req, function(error, result) {
 			if (error) {
 				res.status(200).send(error);
 			} else {
@@ -126,14 +137,14 @@ router.get('/', function (req, res, next) {
  * @apiParam {ObjectId} layer_id Unique identifier of the layer.
  * @apiDescription Get a layer to the architecture of fermat.
  */
-router.get('/:layer_id', function (req, res, next) {
+router.get('/:layer_id', function(req, res, next) {
 	'use strict';
 	try {
-		lock(req, function (err_lck, res_lck) {
+		lock(req, function(err_lck, res_lck) {
 			if (err_lck) {
 				res.status(423).send(err_lck);
 			} else {
-				repMod.getLay(req, function (error, result) {
+				repMod.getLay(req, function(error, result) {
 					if (error) {
 						res.status(200).send(error);
 					} else {
@@ -165,27 +176,37 @@ router.get('/:layer_id', function (req, res, next) {
  * @apiParam {Number} order Indicates the position where the layer this with respect to other.
  * @apiDescription Update layer to the architecture of fermat.
  */
-router.put('/:layer_id', function (req, res, next) {
+router.put('/:layer_id', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.params.layer_id) || //
-			!security.ifExistIsValidData(req.body.name) || //
-			!security.ifExistIsValidData(req.body.lang) ||
-			//!security.ifExistIsValidData(req.body.suprlay) ||
-			!security.ifExistIsValidData(req.body.order)) {
-			res.status(412).send({
-				"message": "missing or invalid data"
-			});
-		} else {
-			repMod.uptLay(req, function (error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					res.status(200).send(result);
-				}
-				release(req);
-			});
-		}
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Components', 'update', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted");
+					if (!security.isValidData(req.params.layer_id) || //
+						!security.ifExistIsValidData(req.body.name) || //
+						!security.ifExistIsValidData(req.body.lang) ||
+						//!security.ifExistIsValidData(req.body.suprlay) ||
+						!security.ifExistIsValidData(req.body.order)) {
+						res.status(412).send({
+							"message": "missing or invalid data"
+						});
+					} else {
+						repMod.uptLay(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								res.status(200).send(result);
+							}
+							release(req);
+						});
+					}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to update components");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -198,29 +219,39 @@ router.put('/:layer_id', function (req, res, next) {
  * @apiParam {ObjectId} layer_id Represents the identifier of the layer
  * @apiDescription Delete layer to the architecture of fermat.
  */
-router.delete('/:layer_id', function (req, res, next) {
+router.delete('/:layer_id', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.params.layer_id)) {
-			res.status(412).send({
-				"message": "missing or invalid data"
-			});
-		} else {
-			repMod.delLay(req, function (error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					if (result) {
-						res.status(204).send();
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Components', 'delete', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted");
+					if (!security.isValidData(req.params.layer_id)) {
+						res.status(412).send({
+							"message": "missing or invalid data"
+						});
 					} else {
-						res.status(404).send({
-							message: "NOT FOUND"
+						repMod.delLay(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								if (result) {
+									res.status(204).send();
+								} else {
+									res.status(404).send({
+										message: "NOT FOUND"
+									});
+								}
+							}
+							release(req);
 						});
 					}
-				}
-				release(req);
-			});
-		}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to delete components");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}

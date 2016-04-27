@@ -86,7 +86,7 @@ router.post('/', function(req, res, next) {
 			if (err) res.status(403).send(err);
 			else {
 				if (chnged === true) {
-					console.log("Permission granted")
+					console.log("Permission granted");
 					if (!security.isValidData(req.body.layer_id) || // required
 						!security.isValidData(req.body.name) || // required
 						!security.isValidTypeComp(req.body.type) || // required
@@ -156,7 +156,7 @@ router.put('/:comp_id/life-cicles/:life_cicle_id', function(req, res, next) {
 			if (err) res.status(403).send(err);
 			else {
 				if (chnged === true) {
-					console.log("Permission granted")
+					console.log("Permission granted");
 					if (!security.isValidData(req.params.comp_id) || // required
 						!security.isValidData(req.params.life_cicle_id) || // required
 						!security.ifExistIsValidData(req.body.target) ||
@@ -208,6 +208,7 @@ router.post('/:comp_id/comp-devs', function(req, res, next) {
 			if (err) res.status(403).send(err);
 			else {
 				if (chnged === true) {
+					console.log("Permission granted");
 					if (!security.isValidData(req.params.comp_id) || //
 						!security.isValidData(req.body.dev_id) || //
 						!security.isValidData(req.body.role) || //
@@ -260,6 +261,7 @@ router.put('/:comp_id/comp-devs/:comp_dev_id', function(req, res, next) {
 			if (err) res.status(403).send(err);
 			else {
 				if (chnged === true) {
+					console.log("Permission granted");
 					if (!security.isValidData(req.params.comp_id) || // required
 						!security.isValidData(req.params.comp_dev_id) || // required
 						!security.ifExistIsValidData(req.body.dev_id) ||
@@ -310,6 +312,7 @@ router.delete('/:comp_id/comp-devs/:comp_dev_id', function(req, res, next) {
 			if (err) res.status(403).send(err);
 			else {
 				if (chnged === true) {
+					console.log("Permission granted");
 					if (!security.isValidData(req.params.comp_id) || //
 						!security.isValidData(req.params.comp_dev_id) //
 					) {
@@ -397,6 +400,7 @@ router.put('/:comp_id', function(req, res, next) {
 			if (err) res.status(403).send(err);
 			else {
 				if (chnged === true) {
+					console.log("Permission granted");
 					if (!security.isValidData(req.params.comp_id) ||
 						!security.ifExistIsValidData(req.body.layer_id) ||
 						!security.ifExistIsValidData(req.body.name) ||
@@ -448,6 +452,7 @@ router.delete('/:comp_id', function(req, res, next) {
 			if (err) res.status(403).send(err);
 			else {
 				if (chnged === true) {
+					console.log("Permission granted");
 					repMod.delComp(req, function(error, result) {
 						if (error) {
 							res.status(200).send(error);
