@@ -36,6 +36,11 @@ th {
 .brand-img {
     margin-top: -5px;
 }
+
+.navbar button {
+    margin-right: 10px;
+}
+
 .brand {
     height: 30px;
     background-color: #fff;

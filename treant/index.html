@@ -16,23 +16,22 @@
     </head>
     <body>
         
-        <div class="navbar navbar-fermat">
+        <nav class="navbar navbar-fermat">
             <div class="container-fluid">
-                <div class="navbar-header">
-                    <div class="navbar-brand brand-img">
+                
+                    <div class="navbar-brand brand-img" style="margin-left:-15px">
                         <img class="brand" alt="img" src="img/Fermat.png">
                     </div>
-                    <a class="navbar-brand" href=".">Fermat P2P Network Visualization</a>
-                </div>
-                <div class="container-fluid">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            <button id="showHistoryBtn" type="button" class="btn btn-md btn-default" data-toggle="modal" data-target="#history" style="margin-top:7px">See Network History</button>
-                        </li>
-                    </ul>
-                </div>
+                    <a class="navbar-brand hidden-xs" href=".">Fermat P2P Network Visualization</a>
+                
+                <ul class="nav navbar-nav navbar-right" style="float: right!important;margin-right: -15px;margin:0px">
+                    <li>
+                        <button id="showHistoryBtn" type="button" class="btn btn-default navbar-btn btn-md" data-toggle="modal" data-target="#history" style="margin-top:7px">See Network History</button>
+                        <!--<a id="showHistoryBtn" data-toggle="modal" data-target="#history">See Network History</a>-->
+                    </li>
+                </ul>
             </div>
-        </div>
+        </nav>
         
         <div class="container">
             <div class="row">
