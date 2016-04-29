@@ -16,28 +16,28 @@ var clintMod = require('../client');
  *
  * @return {[type]}   [description]
  */
-var doLogin = function (callback) {
-	var credentials = {
-		user: config.username,
-		password: new String(SHA256(config.password)) + ''
-	};
-	var options = {
-		url: 'http://' + config.ip + ':9090/fermat/api/user/login',
-		method: 'POST',
-		body: credentials,
-		json: true
-	};
-	request(options, function (error, response, body) {
-		if (error) return callback(error, null);
-		if (body && body.success && body.authToken) {
-			var authRequest = request.defaults({
-				headers: {
-					'Authorization': 'Bearer ' + body.authToken
-				}
-			});
-			return callback(null, authRequest);
-		}
-	});
+var doLogin = function(callback) {
+    var credentials = {
+        user: config.username,
+        password: new String(SHA256(config.password)) + ''
+    };
+    var options = {
+        url: 'http://' + config.ip + ':9090/fermat/api/user/login',
+        method: 'POST',
+        body: credentials,
+        json: true
+    };
+    request(options, function(error, response, body) {
+        if (error) return callback(error, null);
+        if (body && body.success && body.authToken) {
+            var authRequest = request.defaults({
+                headers: {
+                    'Authorization': 'Bearer ' + body.authToken
+                }
+            });
+            return callback(null, authRequest);
+        }
+    });
 };
 /**
  * [doRequest description]
@@ -51,39 +51,33 @@ var doLogin = function (callback) {
  *
  * @return {[type]}   [description]
  */
-var doRequest = function (auth, options, type, callback) {
-	auth(options, function (err, res, bod) {
-		if (err) return callback(err, null);
-		//if (res) console.dir(res);
-		//console.dir(err);
-		//console.dir(res);
-		//console.dir(bod);
-		if (bod) {
-			var data, body;
-			switch (type) {
-			case 0:
-				data = JSON.parse(bod);
-				data.registeredNetworkServiceDetail = JSON.parse(data.registeredNetworkServiceDetail);
-				data.registerOtherComponentDetail = JSON.parse(data.registerOtherComponentDetail);
-				break;
-			case 1:
-				body = JSON.parse(bod);
-				data = JSON.parse(body.data);
-				break;
-			case 2:
-				//console.dir(bod);
-				body = JSON.parse(bod);
-				data = JSON.parse(body.rl);
-				break;
-			case 3:
-				//console.dir(bod);
-				body = JSON.parse(bod);
-				data = JSON.parse(body.rl);
-				break;
-			}
-			return callback(null, data);
-		}
-	});
+var doRequest = function(auth, options, type, callback) {
+    auth(options, function(err, res, bod) {
+        if (err) return callback(err, null);
+        if (bod) {
+            var data, body;
+            switch (type) {
+                case 0:
+                    data = JSON.parse(bod);
+                    data.registeredNetworkServiceDetail = JSON.parse(data.registeredNetworkServiceDetail);
+                    data.registerOtherComponentDetail = JSON.parse(data.registerOtherComponentDetail);
+                    break;
+                case 1:
+                    body = JSON.parse(bod);
+                    data = JSON.parse(body.data);
+                    break;
+                case 2:
+                    body = JSON.parse(bod);
+                    data = JSON.parse(body.rl);
+                    break;
+                case 3:
+                    body = JSON.parse(bod);
+                    data = JSON.parse(body.rl);
+                    break;
+            }
+            return callback(null, data);
+        }
+    });
 };
 /**
  * [saveNetworkStatus description]
@@ -94,67 +88,66 @@ var doRequest = function (auth, options, type, callback) {
  *
  * @return {[type]}          [description]
  */
-exports.saveNetworkStatus = function (callback) {
-	var hash = new String(SHA256(config.ip)) + '';
-	var extra = {};
-	doLogin(function (err, auth) {
-		doRequest(auth, {
-			url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/current/data',
-			method: 'GET'
-		}, 0, function (error, current) {
-			if (error) return callback(error, null);
-			if (current) {
-				extra.current = current;
-				doRequest(auth, {
-					url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/system/data',
-					method: 'GET'
-				}, 1, function (error, system) {
-					if (error) return callback(error, null);
-					if (system) {
-						extra.system = system;
-						satelize.satelize({
-							ip: config.ip
-						}, function (error, location) {
-							if (error) return callback(error, null);
-							if (location) {
-								extra.location = location;
-								servMod.insertServer(hash, extra, function (error, server) {
-									if (error) return callback(error, null);
-									if (server) {
-										callback(null, server);
-										doRequest(auth, {
-											url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/clients/list',
-											method: 'GET'
-										}, 2, function (error, clients) {
-											if (error) console.error(error);
-											if (clients) {
-												//console.dir(clients[0]);
-												for (var i = clients.length - 1; i >= 0; i--) {
-													clintMod.insertClient(server._wave_id, server._id, clients[i].identityPublicKey, clients[i], function (error, client) {
-														if (error) console.dir(error);
-														if (client) {
-															console.dir(client);
-														}
-													});
-													//	doRequest(auth, {
-													//		url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/client/components/details?i=' + clients[i].identityPublicKey,
-													//		method: 'GET'
-													//	}, 3, function (error, comps) {
-													//		if (error) console.dir(error);
-													//		if (comps) {
-													//			console.dir(comps);
-													//		}
-													//	});
-												}
-											}
-										});
-									}
-								});
-							}
-						});
-					}
-				});
-			}
-		});
-	});
+exports.saveNetworkStatus = function(callback) {
+    var hash = new String(SHA256(config.ip)) + '';
+    var extra = {};
+    doLogin(function(err, auth) {
+        doRequest(auth, {
+            url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/current/data',
+            method: 'GET'
+        }, 0, function(error, current) {
+            if (error) return callback(error, null);
+            if (current) {
+                extra.current = current;
+                doRequest(auth, {
+                    url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/system/data',
+                    method: 'GET'
+                }, 1, function(error, system) {
+                    if (error) return callback(error, null);
+                    if (system) {
+                        extra.system = system;
+                        satelize.satelize({
+                            ip: config.ip
+                        }, function(error, location) {
+                            if (error) return callback(error, null);
+                            if (location) {
+                                extra.location = location;
+                                servMod.insertServer(hash, extra, function(error, server) {
+                                    if (error) return callback(error, null);
+                                    if (server) {
+                                        callback(null, server);
+                                        doRequest(auth, {
+                                            url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/clients/list',
+                                            method: 'GET'
+                                        }, 2, function(error, clients) {
+                                            if (error) winston.log('error', 'Error on crawler', error);
+                                            if (clients) {
+                                                for (var i = clients.length - 1; i >= 0; i--) {
+                                                    clintMod.insertClient(server._wave_id, server._id, clients[i].identityPublicKey, clients[i], function(error, client) {
+                                                        if (error) winston.log('error', 'Error on crawler', error);
+                                                        if (client) {
+                                                            winston.log('info', 'Client added!');
+                                                        }
+                                                    });
+                                                    //	doRequest(auth, {
+                                                    //		url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/client/components/details?i=' + clients[i].identityPublicKey,
+                                                    //		method: 'GET'
+                                                    //	}, 3, function (error, comps) {
+                                                    //		if (error) console.dir(error);
+                                                    //		if (comps) {
+                                                    //			console.dir(comps);
+                                                    //		}
+                                                    //	});
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
 };
