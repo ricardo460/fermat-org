@@ -530,8 +530,8 @@ function Helper() {
             case "servers":
                 tail = "/v1/net/servrs";
                 break;
-            case "nodes":
-                tail = "/v1/net/nodes/:server/childrn";
+            case "clients":
+                tail = "/v1/net/servrs/:serv_id";
                 break;
             case "login":
                 tail = "/v1/auth/login";
