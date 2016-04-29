@@ -10,7 +10,6 @@ var tilesQtty = [],
     currentRender = "start",
 //Class
     tileManager = new TileManager(),
-    helper = new Helper(),
     logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),

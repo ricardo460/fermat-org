@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- API KEY: AIzaSyD7XZsMPlvmv8ifUFTfO3g8HGFDND_o_Tw -->
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Fermat P2P Visualization</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/styles.css" rel="stylesheet">
+        <link href="/common/vis.min.css" rel="stylesheet">
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        
+        <nav class="navbar navbar-fermat">
+            <div class="container-fluid">
+                
+                    <div class="navbar-brand brand-img" style="margin-left:-15px">
+                        <img class="brand" alt="img" src="img/Fermat.png">
+                    </div>
+                    <a class="navbar-brand hidden-xs" href=".">Fermat P2P Network Visualization</a>
+                
+                <ul class="nav navbar-nav navbar-right" style="float: right!important;margin-right: -15px;margin:0px">
+                    <li>
+                        <button id="showHistoryBtn" type="button" class="btn btn-default navbar-btn btn-md" data-toggle="modal" data-target="#history" style="margin-top:7px">See Network History</button>
+                        <!--<a id="showHistoryBtn" data-toggle="modal" data-target="#history">See Network History</a>-->
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="container">
+            <div class="row">
+                <div id="map"></div>
+            </div>
+        </div>
+        
+        <div id="history" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Network History</h4>
+                    </div>
+                    <div class="modal-body">
+                        <img id="loadingSpinner" src="img/loading_spinner.gif" style="position:absolute;left:10em;top:10em"/>
+                        <div id="historyGraphic" style="min-height:350px"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <script src="/common/jquery-2.1.4.min.js"></script>
+        <script src="/common/bootstrap.min.js"></script>
+        <script src="/common/markerclusterer.js"></script>
+        <script src="/common/helper.js"></script>
+        <script src="/common/vis.min.js"></script>
+        <script src="/common/cli.js"></script>
+        <script src="/common/constants.js"></script>
+        <script src="treant.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?callback=drawMap&key=AIzaSyD7XZsMPlvmv8ifUFTfO3g8HGFDND_o_Tw" async defer></script>
+    </body>
+</html>
