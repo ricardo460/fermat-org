@@ -26,6 +26,8 @@ exports.getServerNetwork = function(req, next) {
                                         res_obj.push(parent);
                                         loopNods(++i);
                                     } else {
+                                        //console.log("en res_chldrn");
+                                        //console.log(res_chldrn);
                                         var children = [];
                                         var loopChldrn = function(j) {
                                             var link = res_chldrn[j];
@@ -77,16 +79,21 @@ exports.getChildren = function(req, next) {
     'use strict';
     try {
         waveMod.findLastWave(function(err_wav, res_wav) {
+            //console.log(res_wav);
             if (err_wav) {
                 next(err_wav, null);
             } else if (res_wav) {
                 nodeMod.findNodsByWaveIdAndHash(res_wav._id, req.params.hash, function(err_nods, res_nods) {
+                    //console.log("en findDNOs");
+                    //console.log(res_nods);
                     if (err_nods) {
                         next(err_nods, null);
                     } else {
                         if (res_nods && Array.isArray(res_nods) && res_nods.length > 0) {
                             var parent = res_nods[0];
                             linkMod.findChildren(res_wav._id, parent._id, function(err_chldrn, res_chldrn) {
+                                //console.log(err_chldrn);
+                                //console.log(res_chldrn);
                                 if (err_chldrn) {
                                     parent.children = [];
                                     next(null, parent);
