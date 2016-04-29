@@ -54,6 +54,7 @@
         "Session" : true,
         "Guide" : true,
         "WorkFlowEdit": true,
-        "API": true
+        "API": true,
+        "WorkFlowManager": true
     }
 }

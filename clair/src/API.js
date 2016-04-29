@@ -320,67 +320,7 @@ function API() {
      * @returns {string} The URL related to the requested route
      */
     this.getAPIUrl = function(route, params) {
-
-        var tail = "";
-
-        switch(route) {
-
-            case "comps":
-                tail = "/v1/repo/comps";
-                break;
-            case "procs":
-                tail = "/v1/repo/procs";
-                break;
-            case "servers":
-                tail = "/v1/net/servrs";
-                break;
-            case "nodes":
-                tail = "/v1/net/nodes/:server/childrn";
-                break;
-            case "login":
-                tail = "/v1/auth/login";
-                break;
-            case "logout":
-                tail = "/v1/auth/logout";
-                break;
-            case "user":
-                tail = "/v1/repo/devs";
-                break;
-
-            case "tableEdit insert":
-                tail = "/v1/repo/usrs/:usrs/comps";
-                break;
-            case "tableEdit get":
-            case 'tableEdit update':
-            case 'tableEdit delete':
-                tail = "/v1/repo/usrs/:usrs/comps/:comp_id";
-                break;
-            case "tableEdit insert dev":
-                tail = "/v1/repo/usrs/:usrs/comps/:comp_id/comp-devs";
-                break;
-            case "tableEdit delete dev":
-            case "tableEdit update dev":
-                tail = "/v1/repo/usrs/:usrs/comps/:comp_id/comp-devs/:devs_id";
-                break;
-
-            case "wolkFlowEdit insert":
-                tail = "/v1/repo/usrs/:usrs/procs";
-                break;
-            case "wolkFlowEdit get":    
-            case "wolkFlowEdit update":
-            case "wolkFlowEdit delete":
-                tail = "/v1/repo/usrs/:usrs/procs/:proc_id";
-                break;
-            case "wolkFlowEdit insert step":
-                tail = "/v1/repo/usrs/:usrs/procs/:proc_id/steps";
-                break;
-            case "wolkFlowEdit delete step":
-            case "wolkFlowEdit update step":
-                tail = "/v1/repo/usrs/:usrs/procs/:proc_id/steps/:steps_id";
-                break;
-        }
-
-        return window.helper.buildURL(window.helper.SERVER + tail, params);
+        return window.helper.getAPIUrl(route, params);
     };
 
     /**
