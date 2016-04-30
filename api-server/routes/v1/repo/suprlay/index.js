@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var repMod = require('../../../../modules/repository');
 var security = require('../../../../lib/utils/security');
+var authMod = require('../../../../modules/auth');
 /**
  * [description]
  *
@@ -76,22 +77,32 @@ var release = function(req) {
 router.post('/', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.body.code) || //
-			!security.isValidData(req.body.name) || //
-			!security.ifExistIsValidData(req.body.logo) ||
-			!security.ifExistIsValidData(req.body.order)) {
-			res.status(412).send({
-				message: 'missing or invalid data'
-			});
-		} else {
-			repMod.addSuprLay(req, function(error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					res.status(201).send(result);
-				}
-			});
-		}
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Superlayers', 'add', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted");
+					if (!security.isValidData(req.body.code) || //
+						!security.isValidData(req.body.name) || //
+						!security.ifExistIsValidData(req.body.logo) ||
+						!security.ifExistIsValidData(req.body.order)) {
+						res.status(412).send({
+							message: 'missing or invalid data'
+						});
+					} else {
+						repMod.addSuprLay(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								res.status(201).send(result);
+							}
+						});
+					}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to add super layers");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -166,32 +177,42 @@ router.get('/:suprlay_id', function(req, res, next) {
 router.put('/:suprlay_id', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.params.suprlay_id) || //
-			!security.ifExistIsValidData(req.body.code) || //
-			!security.ifExistIsValidData(req.body.name) || //
-			!security.ifExistIsValidData(req.body.logo) || //
-			!security.ifExistIsValidData(req.body.order)) {
-			res.status(412).send({
-				message: 'missing or invalid data'
-			});
-		} else {
-			repMod.uptSprlay(req, function(error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					//new
-					if (result) {
-						res.status(200).send(result);
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Superlayers', 'update', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted");
+					if (!security.isValidData(req.params.suprlay_id) || //
+						!security.ifExistIsValidData(req.body.code) || //
+						!security.ifExistIsValidData(req.body.name) || //
+						!security.ifExistIsValidData(req.body.logo) || //
+						!security.ifExistIsValidData(req.body.order)) {
+						res.status(412).send({
+							message: 'missing or invalid data'
+						});
 					} else {
-						res.status(404).send({
-							message: "NOT FOUND"
+						repMod.uptSprlay(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								//new
+								if (result) {
+									res.status(200).send(result);
+								} else {
+									res.status(404).send({
+										message: "NOT FOUND"
+									});
+								}
+								//end new
+							}
+							release(req);
 						});
 					}
-					//end new
-				}
-				release(req);
-			});
-		}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to update super layers");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -207,19 +228,29 @@ router.put('/:suprlay_id', function(req, res, next) {
 router.delete('/:suprlay_id', function(req, res, next) {
 	'use strict';
 	try {
-		repMod.delSprlay(req, function(error, result) {
-			if (error) {
-				res.status(200).send(error);
-			} else {
-				if (result) {
-					res.status(204).send();
-				} else {
-					res.status(404).send({
-						message: "NOT FOUND"
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Superlayers', 'delete', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted");
+					repMod.delSprlay(req, function(error, result) {
+						if (error) {
+							res.status(200).send(error);
+						} else {
+							if (result) {
+								res.status(204).send();
+							} else {
+								res.status(404).send({
+									message: "NOT FOUND"
+								});
+							}
+						}
+						release(req);
 					});
-				}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to delete super layers");
 			}
-			release(req);
 		});
 	} catch (err) {
 		next(err);

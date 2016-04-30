@@ -28,6 +28,27 @@ var swapOrder = function (action, oldSpot, newSpot, callback) {
 	});
 };
 /**
+ * [getOrdrLstSuprlays description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+var getOrdrLstSuprlays = function (callback) {
+	'use strict';
+	try {
+		suprlaySrv.findSuprlays({}, 1, {
+			order: -1
+		}, function (err, suprlays) {
+			if (err) {
+				callback(err, null);
+			} else {
+				callback(null, suprlays[0].order);
+			}
+		});
+	} catch (err) {
+		callback(err, null);
+	}
+};
+/**
  * [insOrUpdSuprlay description]
  *
  * @method insOrUpdSuprlay
@@ -94,20 +115,41 @@ exports.insOrUpdSuprlay = function (code, name, logo, deps, order, callback) {
 					return callback(null, res_supr);
 				}
 			} else {
-				if (order === undefined || order === null) order = '0';
-				var suprlay = new SuprlayMdl(code, name, logo, deps, order);
-				swapOrder('insert', null, suprlay.order, function (err_sld, res_sld) {
-					if (err_sld) {
-						return callback(err_sld, null);
-					} else {
-						suprlaySrv.insertSuprlay(suprlay, function (err_ins, res_ins) {
-							if (err_ins) {
-								return callback(err_ins, null);
+				if (order === undefined || order === null) getOrdrLstSuprlays(function (err, nu_order) {
+					if (err) return callback(err, null);
+					if (nu_order) {
+						//Putting super layer at the end since not provide an order
+						order = parseInt(nu_order) + 1;
+						var suprlay = new SuprlayMdl(code, name, logo, deps, order);
+						swapOrder('insert', null, suprlay.order, function (err_sld, res_sld) {
+							if (err_sld) {
+								return callback(err_sld, null);
+							} else {
+								suprlaySrv.insertSuprlay(suprlay, function (err_ins, res_ins) {
+									if (err_ins) {
+										return callback(err_ins, null);
+									}
+									return callback(null, res_ins);
+								});
 							}
-							return callback(null, res_ins);
 						});
 					}
 				});
+				else {
+					var suprlay = new SuprlayMdl(code, name, logo, deps, order);
+					swapOrder('insert', null, suprlay.order, function (err_sld, res_sld) {
+						if (err_sld) {
+							return callback(err_sld, null);
+						} else {
+							suprlaySrv.insertSuprlay(suprlay, function (err_ins, res_ins) {
+								if (err_ins) {
+									return callback(err_ins, null);
+								}
+								return callback(null, res_ins);
+							});
+						}
+					});
+				}
 			}
 		});
 	} catch (err) {

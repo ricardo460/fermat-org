@@ -12,12 +12,12 @@ var orderLib = require('../../../lib/utils/order');
  *
  * @return {[type]} [description]
  */
-var swapOrder = function(action, oldSpot, newSpot, callback) {
-	orderLib.swapOrder(action, oldSpot, newSpot, function(err, query, set) {
+var swapOrder = function (action, oldSpot, newSpot, callback) {
+	orderLib.swapOrder(action, oldSpot, newSpot, function (err, query, set) {
 		if (err) {
 			return callback(err, null);
 		} else {
-			platfrmSrv.updatePlatfrms(query, set, function(err_srt, res_srt) {
+			platfrmSrv.updatePlatfrms(query, set, function (err_srt, res_srt) {
 				if (err_srt) {
 					return callback(err_srt, null);
 				} else {
@@ -26,6 +26,27 @@ var swapOrder = function(action, oldSpot, newSpot, callback) {
 			});
 		}
 	});
+};
+/**
+ * [getOrdrLstPltfrm description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+var getOrdrLstPltfrm = function (callback) {
+	'use strict';
+	try {
+		platfrmSrv.findPlatfrms({}, 1, {
+			order: -1
+		}, function (err, platfrms) {
+			if (err) {
+				callback(err, null);
+			} else {
+				callback(null, platfrms[0].order);
+			}
+		});
+	} catch (err) {
+		callback(err, null);
+	}
 };
 /**
  * [insOrUpdPlatfrm description]
@@ -41,10 +62,10 @@ var swapOrder = function(action, oldSpot, newSpot, callback) {
  *
  * @return {[type]}        [description]
  */
-exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
+exports.insOrUpdPlatfrm = function (code, name, logo, deps, order, callback) {
 	'use strict';
 	try {
-		platfrmSrv.findPlatfrmByCode(code, function(err_plat, res_plat) {
+		platfrmSrv.findPlatfrmByCode(code, function (err_plat, res_plat) {
 			if (err_plat) {
 				return callback(err_plat, null);
 			}
@@ -68,11 +89,11 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 				}
 				if (Object.keys(set_obj).length > 0) {
 					if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
-						swapOrder('update', res_plat.order, set_obj.order, function(err_sld, res_sld) {
+						swapOrder('update', res_plat.order, set_obj.order, function (err_sld, res_sld) {
 							if (err_sld) {
 								return callback(err_sld, null);
 							} else {
-								platfrmSrv.updatePlatfrmById(res_plat._id, set_obj, function(err, plat) {
+								platfrmSrv.updatePlatfrmById(res_plat._id, set_obj, function (err, plat) {
 									if (err) {
 										return callback(err, null);
 									}
@@ -81,7 +102,7 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 							}
 						});
 					} else {
-						platfrmSrv.updatePlatfrmById(res_plat._id, set_obj, function(err_upd, res_upd) {
+						platfrmSrv.updatePlatfrmById(res_plat._id, set_obj, function (err_upd, res_upd) {
 							if (err_upd) {
 								return callback(err_upd, null);
 							}
@@ -92,17 +113,17 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 					return callback(null, res_plat);
 				}
 			} else {
-				if (order === undefined || order === null) getOrdrLstPltfrm(function(err, nu_order) {
+				if (order === undefined || order === null) getOrdrLstPltfrm(function (err, nu_order) {
 					if (err) return callback(err, null);
 					if (nu_order) {
 						//Putting platform at the end since not provide an order
 						order = parseInt(nu_order) + 1;
 						var platfrm = new PlatfrmMdl(code, name, logo, deps, order);
-						swapOrder('insert', null, platfrm.order, function(err_sld, res_sld) {
+						swapOrder('insert', null, platfrm.order, function (err_sld, res_sld) {
 							if (err_sld) {
 								return callback(err_sld, null);
 							} else {
-								platfrmSrv.insertPlatfrm(platfrm, function(err_ins, res_ins) {
+								platfrmSrv.insertPlatfrm(platfrm, function (err_ins, res_ins) {
 									if (err_ins) {
 										return callback(err_ins, null);
 									}
@@ -114,11 +135,11 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 				});
 				else {
 					var platfrm = new PlatfrmMdl(code, name, logo, deps, order);
-					swapOrder('insert', null, platfrm.order, function(err_sld, res_sld) {
+					swapOrder('insert', null, platfrm.order, function (err_sld, res_sld) {
 						if (err_sld) {
 							return callback(err_sld, null);
 						} else {
-							platfrmSrv.insertPlatfrm(platfrm, function(err_ins, res_ins) {
+							platfrmSrv.insertPlatfrm(platfrm, function (err_ins, res_ins) {
 								if (err_ins) {
 									return callback(err_ins, null);
 								}
@@ -142,37 +163,16 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
  *
  * @return {[type]}    [description]
  */
-exports.getPlatfrms = function(callback) {
+exports.getPlatfrms = function (callback) {
 	'use strict';
 	try {
 		platfrmSrv.findAllPlatfrms({}, {
 			order: 1
-		}, function(err, platfrms) {
+		}, function (err, platfrms) {
 			if (err) {
 				callback(err, null);
 			} else {
 				callback(null, platfrms);
-			}
-		});
-	} catch (err) {
-		callback(err, null);
-	}
-};
-/**
- * [getOrdrLstPltfrm description]
- * @param  {Function} callback [description]
- * @return {[type]}            [description]
- */
-var getOrdrLstPltfrm = function(callback) {
-	'use strict';
-	try {
-		platfrmSrv.findPlatfrms({}, 1, {
-			order: -1
-		}, function(err, platfrms) {
-			if (err) {
-				callback(err, null);
-			} else {
-				callback(null, platfrms[0].order);
 			}
 		});
 	} catch (err) {
@@ -188,10 +188,10 @@ var getOrdrLstPltfrm = function(callback) {
  *
  * @return {[type]}       [description]
  */
-exports.delAllPlatfrms = function(callback) {
+exports.delAllPlatfrms = function (callback) {
 	'use strict';
 	try {
-		platfrmSrv.delAllPlatfrms(function(err, platfrms) {
+		platfrmSrv.delAllPlatfrms(function (err, platfrms) {
 			if (err) {
 				return callback(err, null);
 			}
@@ -211,10 +211,10 @@ exports.delAllPlatfrms = function(callback) {
  *
  * @return {[type]}     [description]
  */
-exports.findPlatfrmById = function(_id, callback) {
+exports.findPlatfrmById = function (_id, callback) {
 	'use strict';
 	try {
-		platfrmSrv.findPlatfrmById(_id, function(err_plat, res_plat) {
+		platfrmSrv.findPlatfrmById(_id, function (err_plat, res_plat) {
 			if (err_plat) {
 				return callback(err_plat, null);
 			}
@@ -240,7 +240,7 @@ exports.findPlatfrmById = function(_id, callback) {
  *
  * @return {[type]}    [description]
  */
-exports.updatePlatfrmById = function(_platfrm_id, code, name, logo, deps, order, callback) {
+exports.updatePlatfrmById = function (_platfrm_id, code, name, logo, deps, order, callback) {
 	'use strict';
 	try {
 		var set_obj = {};
@@ -259,16 +259,16 @@ exports.updatePlatfrmById = function(_platfrm_id, code, name, logo, deps, order,
 		if (typeof order != "undefined") {
 			set_obj.order = order;
 		}
-		platfrmSrv.findPlatfrmById(_platfrm_id, function(err_platfrm, res_platfrm) {
+		platfrmSrv.findPlatfrmById(_platfrm_id, function (err_platfrm, res_platfrm) {
 			if (err_platfrm) {
 				return callback(err_platfrm, null);
 			}
 			if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
-				swapOrder('update', res_platfrm.order, set_obj.order, function(err_sld, res_sld) {
+				swapOrder('update', res_platfrm.order, set_obj.order, function (err_sld, res_sld) {
 					if (err_sld) {
 						return callback(err_sld, null);
 					} else {
-						platfrmSrv.updatePlatfrmById(_platfrm_id, set_obj, function(err, plat) {
+						platfrmSrv.updatePlatfrmById(_platfrm_id, set_obj, function (err, plat) {
 							if (err) {
 								return callback(err, null);
 							}
@@ -277,7 +277,7 @@ exports.updatePlatfrmById = function(_platfrm_id, code, name, logo, deps, order,
 					}
 				});
 			} else {
-				platfrmSrv.updatePlatfrmById(_platfrm_id, set_obj, function(err_upd, res_upd) {
+				platfrmSrv.updatePlatfrmById(_platfrm_id, set_obj, function (err_upd, res_upd) {
 					if (err_upd) {
 						return callback(err_upd, null);
 					}
@@ -299,19 +299,19 @@ exports.updatePlatfrmById = function(_platfrm_id, code, name, logo, deps, order,
  *
  * @return {[type]}        [description]
  */
-exports.delPlatfrmById = function(_id, callback) {
+exports.delPlatfrmById = function (_id, callback) {
 	'use strict';
 	try {
-		var delPlatfrm = function() {
-			platfrmSrv.findPlatfrmById(_id, function(err_platfrm, res_platfrm) {
+		var delPlatfrm = function () {
+			platfrmSrv.findPlatfrmById(_id, function (err_platfrm, res_platfrm) {
 				if (err_platfrm) {
 					return callback(err_platfrm, null);
 				} else if (res_platfrm) {
-					swapOrder('delete', res_platfrm.order, null, function(err_sld, res_sld) {
+					swapOrder('delete', res_platfrm.order, null, function (err_sld, res_sld) {
 						if (err_sld) {
 							return callback(err_sld, null);
 						} else {
-							platfrmSrv.delPlatfrmById(res_platfrm._id, function(err_del, res_del) {
+							platfrmSrv.delPlatfrmById(res_platfrm._id, function (err_del, res_del) {
 								if (err_del) {
 									return callback(err_del, null);
 								}
@@ -325,18 +325,18 @@ exports.delPlatfrmById = function(_id, callback) {
 				// ordering function
 			});
 		};
-		compMod.findCompsByPlatfrmId(_id, function(err_comp, res_comps) {
+		compMod.findCompsByPlatfrmId(_id, function (err_comp, res_comps) {
 			if (err_comp) {
 				return callback(err_comp, null);
 			}
 			if (res_comps.length > 0) {
 				var _comps = res_comps;
-				var loopDelComps = function() {
+				var loopDelComps = function () {
 					if (_comps.length <= 0) {
 						delPlatfrm();
 					} else {
 						var comp = _comps.pop();
-						compMod.delCompById(comp._id, function(err_del_comp, res_del_comp) {
+						compMod.delCompById(comp._id, function (err_del_comp, res_del_comp) {
 							if (err_del_comp) {
 								return callback(err_del_comp, null);
 							} else {

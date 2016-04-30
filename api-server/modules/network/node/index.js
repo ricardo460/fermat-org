@@ -2,9 +2,7 @@
 var nodSrv = require('./services/nod');
 var NodMdl = require('./models/nod');
 var XtraMdl = require('./models/xtra');
-
-
-exports.findNodsByWaveIdAndType = function (_wave_id, type, callback) {
+exports.findNodsByWaveIdAndType = function(_wave_id, type, callback) {
     'use strict';
     try {
         var find_obj = {};
@@ -17,7 +15,7 @@ exports.findNodsByWaveIdAndType = function (_wave_id, type, callback) {
         });
         nodSrv.findNods(find_obj, {
             _id: 1
-        }, function (err, nods) {
+        }, function(err, nods) {
             if (err) {
                 return callback(err, null);
             }
@@ -27,11 +25,10 @@ exports.findNodsByWaveIdAndType = function (_wave_id, type, callback) {
         return callback(err, null);
     }
 };
-
-exports.findNodById = function (_id, callback) {
+exports.findNodById = function(_id, callback) {
     'use strict';
     try {
-        nodSrv.findNodById(_id, function (err, nod) {
+        nodSrv.findNodById(_id, function(err, nod) {
             if (err) {
                 return callback(err, null);
             }
@@ -41,8 +38,7 @@ exports.findNodById = function (_id, callback) {
         return callback(err, null);
     }
 };
-
-exports.findNodsByWaveIdAndHash = function (_wave_id, hash, callback) {
+exports.findNodsByWaveIdAndHash = function(_wave_id, hash, callback) {
     'use strict';
     try {
         var find_obj = {};
@@ -53,11 +49,9 @@ exports.findNodsByWaveIdAndHash = function (_wave_id, hash, callback) {
         find_obj['$and'].push({
             'hash': hash
         });
-        console.log("en el find");
-        console.log(find_obj);
         nodSrv.findNods(find_obj, {
             _id: 1
-        }, function (err, nods) {
+        }, function(err, nods) {
             if (err) {
                 return callback(err, null);
             }
@@ -67,7 +61,6 @@ exports.findNodsByWaveIdAndHash = function (_wave_id, hash, callback) {
         return callback(err, null);
     }
 };
-
 /**
  * [insertNod description]
  *
@@ -86,12 +79,12 @@ exports.findNodsByWaveIdAndHash = function (_wave_id, hash, callback) {
  *
  * @return {[type]}   [description]
  */
-exports.insertNod = function (_wave_id, hash, type, os, sub, curncy, symbl, balnc, status, callback) {
+exports.insertNod = function(_wave_id, hash, type, os, sub, curncy, symbl, balnc, status, callback) {
     'use strict';
     try {
         var xtra = new XtraMdl(os, sub, curncy, symbl, balnc, status);
         var nod = new NodMdl(_wave_id, hash, type, xtra);
-        nodSrv.insertNod(nod, function (err_ins, res_ins) {
+        nodSrv.insertNod(nod, function(err_ins, res_ins) {
             if (err_ins) {
                 return callback(err_ins, null);
             }
@@ -101,5 +94,4 @@ exports.insertNod = function (_wave_id, hash, type, os, sub, curncy, symbl, baln
         return callback(err, null);
     }
 };
-
 /*jshint +W069 */
