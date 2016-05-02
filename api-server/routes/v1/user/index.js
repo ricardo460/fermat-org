@@ -36,7 +36,7 @@ router.post('/:usr_id/changePerms', function (req, resp, next) {
 	}
 });
 /**
- * @api {post} /v1/user/:usrnm getUsrsByUsrnm
+ * @api {get} /v1/user/:usrnm getUsrsByUsrnm
  * @apiName GetUsrsByUsrnm
  * @apiVersion 0.0.2
  * @apiGroup User
