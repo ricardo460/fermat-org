@@ -8,8 +8,8 @@ var security = require('../../../lib/utils/security');
  * @apiVersion 0.0.2
  * @apiGroup Auth
  * @apiParam {String} usrnm User name.
- * @apiParam {Long} perm User permission.
- * @apiParam {Long} usr_id Id of the user who granted permission.
+ * @apiParam {String} perm User permission.
+ * @apiParam {ObjectId} usr_id Id of the user who granted permission.
  * @apiDescription Give permissions to another user.
  */
 router.post('/:usr_id/changePerms', function (req, resp, next) {
