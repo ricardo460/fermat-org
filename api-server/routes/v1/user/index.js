@@ -1,9 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var authMod = require('../../../modules/auth');
 var usrMod = require('../../../modules/auth/user');
 var security = require('../../../lib/utils/security');
-
 /**
  * @api {post} /v1/user/:usr_id/changePerms changePermission
  * @apiName ChangePermission
@@ -37,7 +35,6 @@ router.post('/:usr_id/changePerms', function (req, resp, next) {
 		console.error("Error", err);
 	}
 });
-
 /**
  * @api {post} /v1/user/:usrnm getUsrsByUsrnm
  * @apiName GetUsrsByUsrnm
