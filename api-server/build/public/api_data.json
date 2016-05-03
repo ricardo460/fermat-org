@@ -1,7 +1,7 @@
 [
   {
     "type": "post",
-    "url": "/v1/auth/changePerms",
+    "url": "/v1/user/:usr_id/changePerms",
     "title": "changePermission",
     "name": "ChangePermission",
     "version": "0.0.2",
@@ -18,16 +18,23 @@
           },
           {
             "group": "Parameter",
-            "type": "Long",
+            "type": "String",
             "optional": false,
             "field": "perm",
             "description": "<p>User permission.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "usr_id",
+            "description": "<p>Id of the user who granted permission.</p>"
           }
         ]
       }
     },
     "description": "<p>Give permissions to another user.</p>",
-    "filename": "routes/v1/auth/index.js",
+    "filename": "routes/v1/user/index.js",
     "groupTitle": "Auth"
   },
   {
@@ -1520,5 +1527,29 @@
     "description": "<p>Update super layer from architecture of fermat.</p>",
     "filename": "routes/v1/repo/suprlay/index.js",
     "groupTitle": "Repo_SuprLay"
+  },
+  {
+    "type": "get",
+    "url": "/v1/user/:usrnm",
+    "title": "getUsrsByUsrnm",
+    "name": "GetUsrsByUsrnm",
+    "version": "0.0.2",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "usrnm",
+            "description": "<p>User name of the user who granted permission.</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get user data by usrnm.</p>",
+    "filename": "routes/v1/user/index.js",
+    "groupTitle": "User"
   }
 ]
