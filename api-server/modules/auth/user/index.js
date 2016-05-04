@@ -177,15 +177,24 @@ var saveUsrAssingPerm = function(_master_id, _granted_id, callback) {
 var getNewPerm = function(mast_usr_perm, old_usr_perm, new_usr_perm) {
 	'use strict';
 	var newPermMod = "";
+	var mast_perm = 0;
+	var old_perm = 0;
+	var new_perm = 0;
 	for (var i = 0; i < mast_usr_perm.length; i++) {
-		if (parseInt(mast_usr_perm.chartAt(i)) >= parseInt(old_usr_perm.chartAt(i)))
-			newPermMod = newPermMod + new_usr_perm.chartAt(i);
+		mast_perm = parseInt(mast_usr_perm.charAt(i));
+		old_perm = parseInt(old_usr_perm.charAt(i));
+		new_perm = parseInt(new_usr_perm.charAt(i));
+		if (mast_perm >= old_perm)
+			if (mast_perm >= new_perm)
+				newPermMod = newPermMod + new_usr_perm.charAt(i);
+			else
+				newPermMod = newPermMod + old_usr_perm.charAt(i);
 		else
-			newPermMod = newPermMod + new_usr_perm.chartAt(i);
+			newPermMod = newPermMod + old_usr_perm.charAt(i);
 	}
 	return newPermMod;
 };
-var chkPermUsrMastr = function(_master_usr_id, usrnm, new_perm, callback) {
+var haveGreaterPerm = function(_master_usr_id, usrnm, new_perm, callback) {
 	'use strict';
 	var mastUsrPer = null,
 		oldUsrPerm = null;
@@ -223,7 +232,7 @@ exports.changePermission = function(_master_usr_id, usrnm, perm, callback) {
 				if (err) return callback(err, "User not found");
 				if (usr) {
 					var set_obj = {};
-					chkPermUsrMastr(_master_usr_id, usrnm, perm, function(err, nw_perm) {
+					haveGreaterPerm(_master_usr_id, usrnm, perm, function(err, nw_perm) {
 						if (err) return callback(err, "Permission not granted");
 						if (nw_perm) {
 							set_obj.perm = nw_perm;
