@@ -167,26 +167,26 @@ exports.delAllUsrs = function(callback) {
 		return callback(err, null);
 	}
 };
-var saveUsrAssingPerm = function(master_id, granted_id, callback) {
+var saveUsrAssingPerm = function(_mastr_id, _grantd_id, callback) {
 	'use strict';
 	try {
 		//_granted_id = new mongoose.Types.ObjectId(_granted_id);
-		console.log("searching granted_id: "+granted_id);
-		usrSrv.findUsrPerm(granted_id+"", function(err, user_perm) {
+		console.log("searching granted_id: "+_grantd_id);
+		usrSrv.findUsrPerm(_grantd_id, function(err, user_perm) {
 			if (err) return callback(err, null);
 			if (user_perm) {
 				console.log("match proceded update");
 				var set_obj = {};
 				set_obj.upd_at = new mongoose.Types.ObjectId();
-				set_obj.master_id = master_id;
+				set_obj._mastr_id = _mastr_id;
 				user_perm.upd_at = set_obj.upd_at;
-				usrSrv.updateUsrPerm(granted_id, set_obj, function(err, res_upd) {
+				usrSrv.updateUsrPerm(_grantd_id, set_obj, function(err, res_upd) {
 					if (err) return callback(err, null);
 					if (res_upd) return callback(null, user_perm);
 				});
 			} else {
 				console.log("not match");
-				var usrPerm = new UsrPermMdl(master_id, granted_id);
+				var usrPerm = new UsrPermMdl(_mastr_id, _grantd_id);
 				usrSrv.insertUsrPerm(usrPerm, function(err, res) {
 					if (err) return callback(err, null);
 					if (res) return callback(null, res);
