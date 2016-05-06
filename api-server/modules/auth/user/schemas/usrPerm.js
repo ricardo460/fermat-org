@@ -4,13 +4,12 @@ var mongoose = require('mongoose');
  * @type {[type]}
  */
 var usrPermSchema = mongoose.Schema({
-    _master_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Usr'
+    master_id: {
+        type: mongoose.Schema.Types.ObjectId
     },
-    _granted_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Usr'
+    granted_id: {
+        type: String/*mongoose.Schema.Types.ObjectId/*,
+        ref: 'Usr'*/
     },
     upd_at: {
         type: mongoose.Schema.Types.ObjectId,
@@ -21,9 +20,8 @@ var usrPermSchema = mongoose.Schema({
 });
 
 usrPermSchema.index({
-    _master_id: 1,
-    _granted_id: 1
+    granted_id: 1
 }, {
-    name: "master_granted_indx"
+    name: "granted_indx"
 }); 
 module.exports = usrPermSchema;
