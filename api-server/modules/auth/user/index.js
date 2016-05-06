@@ -170,7 +170,6 @@ exports.delAllUsrs = function(callback) {
 var saveUsrAssingPerm = function(_mastr_id, _grantd_id, callback) {
 	'use strict';
 	try {
-		//_granted_id = new mongoose.Types.ObjectId(_granted_id);
 		console.log("searching granted_id: "+_grantd_id);
 		usrSrv.findUsrPerm(_grantd_id, function(err, user_perm) {
 			if (err) return callback(err, null);
@@ -231,6 +230,8 @@ var haveGreaterPerm = function(_master_usr_id, usrnm, new_perm, callback) {
 					if (grntd_usr) {
 						oldUsrPerm = grntd_usr.perm;
 						new_perm = getNewPerm(mastUsrPer, oldUsrPerm, new_perm);
+						if (oldUsrPerm.match(new_perm))
+							return callback(null, null);	
 						return callback(null, new_perm);
 					}
 				});
@@ -285,7 +286,8 @@ exports.changePermission = function(_master_usr_id, usrnm, perm, callback) {
 									});
 								}
 							});
-						}
+						} else 
+							return callback(null, usr);
 					});
 				}
 			});

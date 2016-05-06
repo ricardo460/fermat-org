@@ -108,8 +108,7 @@ exports.findUsrs = function(query, limit, order, callback) {
  */
 exports.findUsrPerm = function(_grantd_id, callback) {
     'use strict';
-    console.log("_grantd_id", _grantd_id);
-    usrDao.findSchema({
+    usrPermDao.findSchema({
         _grantd_id: _grantd_id
     }, function(err, usr_perm) {
         console.log("usr_perm", usr_perm);
@@ -156,7 +155,7 @@ exports.updateUsrById = function(_id, set, callback) {
  */
 exports.updateUsrPerm = function(_grantd_id, set, callback) {
     'use strict';
-    usrDao.updateSchema({
+    usrPermDao.updateSchema({
         _grantd_id: _grantd_id
     }, set, {}, function(err, usr_perm) {
         callback(err, usr_perm);
