@@ -12,7 +12,7 @@ var cache = new Cache({
 });
 /**
  * @api {get} /v1/net/servrs get server network
- * @apiName GetServerNetwork
+ * @apiName getServer
  * @apiVersion 0.0.1
  * @apiGroup Net
  * @apiDescription List servers connected to the P2P network fermat.
@@ -21,7 +21,7 @@ router.get('/servrs', function (req, res, next) {
 	'use strict';
 	try {
 		// we search for body in cache
-		var body = cache.getBody(req);
+		/*var body = cache.getBody(req);
 		if (body) {
 			// we send it
 			res.status(200).send(body);
@@ -41,14 +41,75 @@ router.get('/servrs', function (req, res, next) {
 					}
 				}
 			});
-		}
+		}*/
+		netMod.getServer(req, function (error, result) {
+			if (error) {
+				res.status(200).send(error);
+			} else {
+				if (result) {
+					res.status(200).send(result);
+				} else {
+					res.status(200).send(new Error('Invalid network data'));
+				}
+			}
+		});
+	} catch (err) {
+		next(err);
+	}
+});
+/**
+ * @api {get} /v1/net/servrs/:serv_id get server network
+ * @apiName getClients
+ * @apiVersion 0.0.1
+ * @apiGroup Net
+ * @apiDescription List clients connected to a server.
+ */
+router.get('/servrs/:serv_id', function (req, res, next) {
+	'use strict';
+	try {
+		netMod.getClients(req, function (error, result) {
+			if (error) {
+				res.status(200).send(error);
+			} else {
+				if (result) {
+					res.status(200).send(result);
+				} else {
+					res.status(200).send(new Error('Invalid server data'));
+				}
+			}
+		});
+	} catch (err) {
+		next(err);
+	}
+});
+/**
+ * @api {get} /v1/net/history get server network
+ * @apiName getHistory
+ * @apiVersion 0.0.1
+ * @apiGroup Net
+ * @apiDescription List servers connected to the P2P network fermat.
+ */
+router.get('/history', function (req, res, next) {
+	'use strict';
+	try {
+		netMod.getHistory(req, function (error, result) {
+			if (error) {
+				res.status(200).send(error);
+			} else {
+				if (result) {
+					res.status(200).send(result);
+				} else {
+					res.status(200).send(new Error('Invalid network data'));
+				}
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
 });
 /**
  * @api {get} /v1/net/nodes/:hash/childrn get children
- * @apiName GetChildren
+ * @apiName getChildren
  * @apiVersion 0.0.1
  * @apiGroup Net
  * @apiDescription Lists all devices connected to a P2P network node given its hash.
@@ -111,131 +172,6 @@ router.post('/waves', function (req, res, next) {
 				res.status(201).send(result);
 			}
 		});
-	}
-});
-//
-var fs = require('fs');
-var path = require('path');
-/**
- * [getLines description]
- *
- * @method getLines
- *
- * @param  {[type]}   path     [description]
- * @param  {Function} callback [description]
- *
- * @return {[type]}   [description]
- */
-var getLines = function (path, callback) {
-	fs.exists(path, (exists) => {
-		if (exists) {
-			fs.readFile(path, 'utf8', (err, data) => {
-				if (err) {
-					return callback(err, null);
-				}
-				return callback(null, data.split('\n'));
-			});
-		} else {
-			return callback(new Error('file does not exist'), null);
-		}
-	});
-};
-/**
- * [setLine description]
- *
- * @method setLine
- *
- * @param  {[type]}   path     [description]
- * @param  {[type]}   line     [description]
- * @param  {Function} callback [description]
- */
-var setLines = function (path, lines, callback) {
-	var text = lines; //.join('\n');
-	fs.exists(path, (exists) => {
-		if (exists) {
-			fs.unlink(path, (err) => {
-				if (err) {
-					return callback(err);
-				}
-				fs.writeFile(path, text, (err) => {
-					if (err) {
-						return callback(err);
-					}
-					return callback(null);
-				});
-			});
-		} else {
-			fs.writeFile(path, text, (err) => {
-				if (err) {
-					return callback(err);
-				}
-				return callback(null);
-			});
-		}
-	});
-};
-/**
- * @api {post} /v1/net/servers create a wave
- * @apiName CreateWave
- * @apiVersion 0.0.1
- * @apiGroup Net
- * @apiDescription Inserts a wave (state of the network) into the database.
- * @apiParam {Object[]} body An array of javascript objects that represents the servers of the network
- */
-router.post('/servers', function (req, res, next) {
-	try {
-		if (req.headers['content-type'] != 'application/json') {
-			throw new Error('Invalid content-type');
-		} else {
-			var d = new Date();
-			var n = d.getTime();
-			var path_out = path.join(__dirname, 'servers_' + n + '.json');
-			var str = JSON.stringify(req.body);
-			var json = JSON.parse(str);
-			setLines(path_out, str, (err) => {
-				if (err) {
-					res.status(200).send(err);
-				} else {
-					res.status(201).send({
-						result: 'check your json file ' + path_out
-					});
-				}
-			});
-		}
-	} catch (err) {
-		next(err);
-	}
-});
-/**
- * @api {post} /v1/net/nodes create a wave
- * @apiName CreateWave
- * @apiVersion 0.0.1
- * @apiGroup Net
- * @apiDescription Inserts a wave (state of the network) into the database.
- * @apiParam {Object[]} body An array of javascript objects that represents the nodes connected to a server of the network
- */
-router.post('/nodes', function (req, res, next) {
-	try {
-		if (req.headers['content-type'] != 'application/json') {
-			throw new Error('Invalid content-type');
-		} else {
-			var d = new Date();
-			var n = d.getTime();
-			var path_out = path.join(__dirname, 'nodes_' + n + '.json');
-			var str = JSON.stringify(req.body);
-			var json = JSON.parse(str);
-			setLines(path_out, str, (err) => {
-				if (err) {
-					res.status(200).send(err);
-				} else {
-					res.status(201).send({
-						result: 'check your json file ' + path_out
-					});
-				}
-			});
-		}
-	} catch (err) {
-		next(err);
 	}
 });
 //

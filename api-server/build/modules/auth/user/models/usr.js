@@ -10,13 +10,14 @@ var mongoose = require('mongoose');
  * @param  {[type]} avatar_url [description]
  * @param  {[type]} github_tkn [description]
  */
-function UsrMdl(usrnm, email, name, avatar_url, github_tkn) {
+function UsrMdl(usrnm, email, name, avatar_url, github_tkn, perm) {
 	this.usrnm = usrnm;
 	this.email = email;
 	this.name = name;
 	this.avatar_url = avatar_url;
 	this.github_tkn = github_tkn;
 	this.upd_at = new mongoose.Types.ObjectId();
+	this.perm = perm;
 }
 /**
  * [init description]
@@ -35,6 +36,7 @@ UsrMdl.prototype.init = function (usrSchema) {
 	this.avatar_url = usrSchema.avatar_url;
 	this.github_tkn = usrSchema.github_tkn;
 	this.upd_at = usrSchema.upd_at;
+	this.perm = usrSchema.perm;
 };
 /**
  * [setUpdate description]

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platforms>
+	<platform>
+		<code>COR</code>
+		<name>core and api</name>
+		<logo>COR_logo.png</logo>
+		<order>0</order>
+		<upd_at>56e1e2648fb3968867d28617</upd_at>
+		<_id>56e1e2648fb3968867d28619</_id>
+	</platform>
+	<platform>
+		<code>PIP</code>
+		<name>plug-ins platform</name>
+		<logo>PIP_logo.png</logo>
+		<deps>P2P</deps>
+		<order>1</order>
+		<upd_at>56e1e2658fb3968867d287fe</upd_at>
+		<_id>56e1e2658fb3968867d28800</_id>
+	</platform>
+	<platform>
+		<code>CHT</code>
+		<name>chat platform</name>
+		<logo></logo>
+		<deps>PIP</deps>
+		<order>2</order>
+		<upd_at>56e1e2678fb3968867d28b18</upd_at>
+		<_id>56e1e2678fb3968867d28b1a</_id>
+	</platform>
+	<platform>
+		<code>WPD</code>
+		<name>wallet production and distribution</name>
+		<logo>WPD_logo.png</logo>
+		<deps>PIP</deps>
+		<order>3</order>
+		<upd_at>56e1e2678fb3968867d28b64</upd_at>
+		<_id>56e1e2678fb3968867d28b66</_id>
+	</platform>
+	<platform>
+		<code>CCP</code>
+		<name>crypto currency platform</name>
+		<logo>CCP_logo.png</logo>
+		<deps>WPD</deps>
+		<deps>BCH</deps>
+		<order>4</order>
+		<upd_at>56e1e2688fb3968867d28d06</upd_at>
+		<_id>56e1e2688fb3968867d28d08</_id>
+	</platform>
+	<platform>
+		<code>CCM</code>
+		<name>crypto commodity money</name>
+		<logo>CCM_logo.png</logo>
+		<deps>CCP</deps>
+		<order>5</order>
+		<upd_at>56e1e2698fb3968867d28fa1</upd_at>
+		<_id>56e1e2698fb3968867d28fa3</_id>
+	</platform>
+	<platform>
+		<code>BNP</code>
+		<name>bank notes platform</name>
+		<logo>BNP_logo.png</logo>
+		<deps>CCM</deps>
+		<order>6</order>
+		<upd_at>56e1e2698fb3968867d290a8</upd_at>
+		<_id>56e1e2698fb3968867d290aa</_id>
+	</platform>
+	<platform>
+		<code>SHP</code>
+		<name>shopping platform</name>
+		<logo>SHP_logo.png</logo>
+		<deps>CCM</deps>
+		<order>7</order>
+		<upd_at>56e1e2698fb3968867d290e4</upd_at>
+		<_id>56e1e2698fb3968867d290e6</_id>
+	</platform>
+	<platform>
+		<code>DAP</code>
+		<name>digital asset platform</name>
+		<logo>DAP_logo.png</logo>
+		<deps>WPD</deps>
+		<deps>BCH</deps>
+		<order>8</order>
+		<upd_at>56e1e26a8fb3968867d29229</upd_at>
+		<_id>56e1e26a8fb3968867d2922b</_id>
+	</platform>
+	<platform>
+		<code>MKT</code>
+		<name>marketing platform</name>
+		<logo>MKT_logo.png</logo>
+		<deps>DAP</deps>
+		<order>9</order>
+		<upd_at>56e1e26b8fb3968867d2952e</upd_at>
+		<_id>56e1e26b8fb3968867d29530</_id>
+	</platform>
+	<platform>
+		<code>TKY</code>
+		<name>tokenly platform</name>
+		<logo>null</logo>
+		<order>10</order>
+		<upd_at>56e44759067cc98e648b6759</upd_at>
+		<_id>56e44759067cc98e648b675b</_id>
+	</platform>
+	<platform>
+		<code>ART</code>
+		<name>artist platform</name>
+		<logo></logo>
+		<deps>DAP</deps>
+		<order>11</order>
+		<upd_at>56e44759067cc98e648b675a</upd_at>
+		<_id>56e1e26b8fb3968867d29625</_id>
+	</platform>
+	<platform>
+		<code>CSH</code>
+		<name>cash handling platform</name>
+		<logo>CSH_logo.png</logo>
+		<deps>WPD</deps>
+		<order>12</order>
+		<upd_at>56e44759067cc98e648b675a</upd_at>
+		<_id>56e1e26c8fb3968867d2971d</_id>
+	</platform>
+	<platform>
+		<code>BNK</code>
+		<name>banking platform</name>
+		<logo>BNK_logo.png</logo>
+		<deps>WPD</deps>
+		<order>13</order>
+		<upd_at>56e44759067cc98e648b675a</upd_at>
+		<_id>56e1e26c8fb3968867d29791</_id>
+	</platform>
+	<platform>
+		<code>CBP</code>
+		<name>crypto broker platform</name>
+		<logo>CBP_logo.png</logo>
+		<deps>CCP</deps>
+		<deps>CSH</deps>
+		<deps>BNK</deps>
+		<order>14</order>
+		<upd_at>56e44759067cc98e648b675a</upd_at>
+		<_id>56e1e26c8fb3968867d29805</_id>
+	</platform>
+	<platform>
+		<code>CDN</code>
+		<name>crypto distribution netword</name>
+		<logo>CDN_logo.png</logo>
+		<deps>CBP</deps>
+		<order>15</order>
+		<upd_at>56e44759067cc98e648b675a</upd_at>
+		<_id>56e1e26e8fb3968867d29c0f</_id>
+	</platform>
+	<platform>
+		<code>DPN</code>
+		<name>device private network</name>
+		<logo>DPN_logo.png</logo>
+		<deps>PIP</deps>
+		<order>16</order>
+		<upd_at>56e44759067cc98e648b675a</upd_at>
+		<_id>56e1e26f8fb3968867d29f1c</_id>
+	</platform>
+	<platform>
+		<code>REP</code>
+		<name>reputation platform</name>
+		<logo>REP_logo.png</logo>
+		<order>17</order>
+		<upd_at>56ec4e48e5781e374b14f1c9</upd_at>
+		<_id>56ec4e48e5781e374b14f1cb</_id>
+	</platform>
+	<platform>
+		<code>INS</code>
+		<name>insurace platform</name>
+		<logo>INS_logo.png</logo>
+		<order>18</order>
+		<upd_at>5703dfd2edc8fa3307a0a7f9</upd_at>
+		<_id>5703dfd2edc8fa3307a0a7fb</_id>
+	</platform>
+	<platform>
+		<code>JOB</code>
+		<name>jobs platform</name>
+		<logo>JOB_logo.png</logo>
+		<order>19</order>
+		<upd_at>5703e02bedc8fa3307a0a814</upd_at>
+		<_id>5703e02bedc8fa3307a0a816</_id>
+	</platform>
+	<platform>
+		<code>PHT</code>
+		<name>photography platform</name>
+		<logo>PHT_logo.png</logo>
+		<order>20</order>
+		<upd_at>5703e059edc8fa3307a0a81a</upd_at>
+		<_id>5703e059edc8fa3307a0a81c</_id>
+	</platform>
+	<platform>
+		<code>SNG</code>
+		<name>singers platform</name>
+		<logo>SNG_logo.png</logo>
+		<order>21</order>
+		<upd_at>5703e0beedc8fa3307a0a820</upd_at>
+		<_id>5703e0beedc8fa3307a0a822</_id>
+	</platform>
+	<platform>
+		<code>LDG</code>
+		<name>lodging platform</name>
+		<logo>LDG_logo.png</logo>
+		<order>22</order>
+		<upd_at>5703e16bedc8fa3307a0a83e</upd_at>
+		<_id>5703e16bedc8fa3307a0a840</_id>
+	</platform>
+</platforms>

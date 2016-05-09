@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var repMod = require('../../../../modules/repository');
 var security = require('../../../../lib/utils/security');
+var authMod = require('../../../../modules/auth');
 /**
  * [description]
  *
@@ -14,7 +15,7 @@ var security = require('../../../../lib/utils/security');
  *
  * @return {[type]} [description]
  */
-var lock = function (req, next) {
+var lock = function(req, next) {
 	console.log('doing lock...');
 	try {
 		console.dir(req.params);
@@ -24,7 +25,7 @@ var lock = function (req, next) {
 			req.body.item_type = 'suprlay';
 			req.body.priority = 5;
 			console.dir(req.body);
-			repMod.doLock(req, function (error, result) {
+			repMod.doLock(req, function(error, result) {
 				if (error) {
 					next(error, null);
 				} else {
@@ -47,9 +48,9 @@ var lock = function (req, next) {
  *
  * @return {[type]} [description]
  */
-var release = function (req) {
+var release = function(req) {
 	try {
-		repMod.doRelease(req, function (error, result) {
+		repMod.doRelease(req, function(error, result) {
 			if (error) {
 				winston.log('error', 'Error releasing suprlay lock', error);
 			}
@@ -73,25 +74,35 @@ var release = function (req) {
  * @apiParam {Number} order Indicates the position where the suprlay this with respect to other.
  * @apiDescription Add a super layer to the architecture of fermat.
  */
-router.post('/', function (req, res, next) {
+router.post('/', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.body.code) || //
-			!security.isValidData(req.body.name) || //
-			!security.ifExistIsValidData(req.body.logo) || //
-			!security.isValidData(req.body.order)) {
-			res.status(412).send({
-				message: 'missing or invalid data'
-			});
-		} else {
-			repMod.addSuprLay(req, function (error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					res.status(201).send(result);
-				}
-			});
-		}
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Superlayers', 'add', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted");
+					if (!security.isValidData(req.body.code) || //
+						!security.isValidData(req.body.name) || //
+						!security.ifExistIsValidData(req.body.logo) ||
+						!security.ifExistIsValidData(req.body.order)) {
+						res.status(412).send({
+							message: 'missing or invalid data'
+						});
+					} else {
+						repMod.addSuprLay(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								res.status(201).send(result);
+							}
+						});
+					}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to add super layers");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -103,10 +114,10 @@ router.post('/', function (req, res, next) {
  * @apiGroup Repo-SuprLay
  * @apiDescription Get list super layer from architecture of fermat.
  */
-router.get('/', function (req, res, next) {
+router.get('/', function(req, res, next) {
 	'use strict';
 	try {
-		repMod.listSuprLays(req, function (error, result) {
+		repMod.listSuprLays(req, function(error, result) {
 			if (error) {
 				res.status(200).send(error);
 			} else {
@@ -125,14 +136,14 @@ router.get('/', function (req, res, next) {
  * @apiParam {ObjectId} suprlay_id Unique identifier of the suprlay.
  * @apiDescription Get superlayer from architecture of fermat.
  */
-router.get('/:suprlay_id', function (req, res, next) {
+router.get('/:suprlay_id', function(req, res, next) {
 	'use strict';
 	try {
-		lock(req, function (err_lck, res_lck) {
+		lock(req, function(err_lck, res_lck) {
 			if (err_lck) {
 				res.status(423).send(err_lck);
 			} else {
-				repMod.getSprlay(req, function (error, result) {
+				repMod.getSprlay(req, function(error, result) {
 					if (error) {
 						res.status(200).send(error);
 					} else {
@@ -163,35 +174,45 @@ router.get('/:suprlay_id', function (req, res, next) {
  * @apiParam {Number} order Indicates the position where the suprlay this with respect to other.
  * @apiDescription Update super layer from architecture of fermat.
  */
-router.put('/:suprlay_id', function (req, res, next) {
+router.put('/:suprlay_id', function(req, res, next) {
 	'use strict';
 	try {
-		if (!security.isValidData(req.params.suprlay_id) || //
-			!security.ifExistIsValidData(req.body.code) || //
-			!security.ifExistIsValidData(req.body.name) || //
-			!security.ifExistIsValidData(req.body.logo) || //
-			!security.ifExistIsValidData(req.body.order)) {
-			res.status(412).send({
-				message: 'missing or invalid data'
-			});
-		} else {
-			repMod.uptSprlay(req, function (error, result) {
-				if (error) {
-					res.status(200).send(error);
-				} else {
-					//new
-					if (result) {
-						res.status(200).send(result);
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Superlayers', 'update', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted");
+					if (!security.isValidData(req.params.suprlay_id) || //
+						!security.ifExistIsValidData(req.body.code) || //
+						!security.ifExistIsValidData(req.body.name) || //
+						!security.ifExistIsValidData(req.body.logo) || //
+						!security.ifExistIsValidData(req.body.order)) {
+						res.status(412).send({
+							message: 'missing or invalid data'
+						});
 					} else {
-						res.status(404).send({
-							message: "NOT FOUND"
+						repMod.uptSprlay(req, function(error, result) {
+							if (error) {
+								res.status(200).send(error);
+							} else {
+								//new
+								if (result) {
+									res.status(200).send(result);
+								} else {
+									res.status(404).send({
+										message: "NOT FOUND"
+									});
+								}
+								//end new
+							}
+							release(req);
 						});
 					}
-					//end new
-				}
-				release(req);
-			});
-		}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to update super layers");
+			}
+		});
 	} catch (err) {
 		next(err);
 	}
@@ -204,22 +225,32 @@ router.put('/:suprlay_id', function (req, res, next) {
  * @apiParam {ObjectId} suprlay_id Unique identifier of the suprlay.
  * @apiDescription Delete super layer from architecture of fermat.
  */
-router.delete('/:suprlay_id', function (req, res, next) {
+router.delete('/:suprlay_id', function(req, res, next) {
 	'use strict';
 	try {
-		repMod.delSprlay(req, function (error, result) {
-			if (error) {
-				res.status(200).send(error);
-			} else {
-				if (result) {
-					res.status(204).send();
-				} else {
-					res.status(404).send({
-						message: "NOT FOUND"
+		authMod.checkUsrPermEdit(req.body.usr_id, 'Superlayers', 'delete', function(err, chnged) {
+			if (err) res.status(403).send(err);
+			else {
+				if (chnged === true) {
+					console.log("Permission granted");
+					repMod.delSprlay(req, function(error, result) {
+						if (error) {
+							res.status(200).send(error);
+						} else {
+							if (result) {
+								res.status(204).send();
+							} else {
+								res.status(404).send({
+									message: "NOT FOUND"
+								});
+							}
+						}
+						release(req);
 					});
-				}
+				} else
+				if (chnged === false)
+					res.status(403).send("You not have permission to delete super layers");
 			}
-			release(req);
 		});
 	} catch (err) {
 		next(err);
