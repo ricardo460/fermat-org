@@ -4,9 +4,9 @@ var mongoose = require('mongoose');
  * @param {[type]} _master_id  [description]
  * @param {[type]} _granted_id [description]
  */
-function UsrPermMdl(_master_id, _granted_id) {
-	this._master_id = _master_id;
-	this._granted_id = _granted_id;
+function UsrPermMdl(_mastr_id, _grantd_id) {
+	this._mastr_id = _mastr_id;
+	this._grantd_id = _grantd_id;
 	this.upd_at = new mongoose.Types.ObjectId();
 }
 /**
@@ -15,8 +15,9 @@ function UsrPermMdl(_master_id, _granted_id) {
  * @return {[type]}               [description]
  */
 UsrPermMdl.prototype.init = function (usrPermSchema) {
-	this._master_id = usrPermSchema._master_id;
-	this._granted_id = usrPermSchema._granted_id;
+	this._id = usrPermSchema._id;
+	this._mastr_id = usrPermSchema._mastr_id;
+	this._grantd_id = usrPermSchema._grantd_id;
 	this.upd_at = usrPermSchema.upd_at;
 };
 /**

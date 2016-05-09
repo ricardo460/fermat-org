@@ -1,3 +1,4 @@
+var mongoose = require('mongoose');
 var devMod = require('../../repository/developer');
 var usrSrv = require('./services/usr');
 var UsrMdl = require('./models/usr');
@@ -166,14 +167,79 @@ exports.delAllUsrs = function(callback) {
 		return callback(err, null);
 	}
 };
-var saveUsrAssingPerm = function(_master_id, _granted_id, callback) {
+var saveUsrAssingPerm = function(_mastr_id, _grantd_id, callback) {
 	'use strict';
-
-	var usrPerm = new UsrPermMdl(_master_id, _granted_id);
-	usrSrv.insertUsrPerm(usrPerm, function(err, res) {
-		if (err) return callback(err, null);
-		if (res) return callback(null, res);
-	});
+	try {
+		console.log("searching granted_id: "+_grantd_id);
+		usrSrv.findUsrPerm(_grantd_id, function(err, user_perm) {
+			if (err) return callback(err, null);
+			if (user_perm) {
+				console.log("match proceded update");
+				var set_obj = {};
+				set_obj.upd_at = new mongoose.Types.ObjectId();
+				set_obj._mastr_id = _mastr_id;
+				user_perm.upd_at = set_obj.upd_at;
+				usrSrv.updateUsrPerm(_grantd_id, set_obj, function(err, res_upd) {
+					if (err) return callback(err, null);
+					if (res_upd) return callback(null, user_perm);
+				});
+			} else {
+				console.log("not match");
+				var usrPerm = new UsrPermMdl(_mastr_id, _grantd_id);
+				usrSrv.insertUsrPerm(usrPerm, function(err, res) {
+					if (err) return callback(err, null);
+					if (res) return callback(null, res);
+				});
+			}
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
+var getNewPerm = function(mast_usr_perm, old_usr_perm, new_usr_perm) {
+	'use strict';
+	var newPermMod = "";
+	var mast_perm = 0;
+	var old_perm = 0;
+	var new_perm = 0;
+	for (var i = 0; i < mast_usr_perm.length; i++) {
+		mast_perm = parseInt(mast_usr_perm.charAt(i));
+		old_perm = parseInt(old_usr_perm.charAt(i));
+		new_perm = parseInt(new_usr_perm.charAt(i));
+		if (mast_perm >= old_perm)
+			if (mast_perm >= new_perm)
+				newPermMod = newPermMod + new_usr_perm.charAt(i);
+			else
+				newPermMod = newPermMod + old_usr_perm.charAt(i);
+		else
+			newPermMod = newPermMod + old_usr_perm.charAt(i);
+	}
+	return newPermMod;
+};
+var haveGreaterPerm = function(_master_usr_id, usrnm, new_perm, callback) {
+	'use strict';
+	var mastUsrPer = null,
+		oldUsrPerm = null;
+	try {
+		usrSrv.findUsrById(_master_usr_id, function(err, mast_usr) {
+			if (err) return callback(err, null);
+			if (mast_usr) {
+				mastUsrPer = mast_usr.perm;
+				usrSrv.findUsrByUsrnm(usrnm, function(err, grntd_usr) {
+					if (err) return callback(err, null);
+					if (grntd_usr) {
+						oldUsrPerm = grntd_usr.perm;
+						new_perm = getNewPerm(mastUsrPer, oldUsrPerm, new_perm);
+						if (oldUsrPerm.match(new_perm))
+							return callback(null, null);	
+						return callback(null, new_perm);
+					}
+				});
+			}
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
 };
 /**
  * [changePermission description]
@@ -187,30 +253,47 @@ exports.changePermission = function(_master_usr_id, usrnm, perm, callback) {
 	try {
 		if (perm !== undefined || perm !== null)
 			usrSrv.findUsrByUsrnm(usrnm, function(err, usr) {
-				if (err) return callback(err, "User not found");
+				if (err) {
+					console.log(err, " :User not found");
+					return callback(err, null);
+				}
 				if (usr) {
 					var set_obj = {};
-					set_obj.perm = perm;
-					usr.perm = perm;
-					usrSrv.updateUsrById(usr._id, set_obj, function(err_upd, res_upd) {
-						if (err_upd) {
-							return callback(err_upd, "User error not updated");
+					haveGreaterPerm(_master_usr_id, usrnm, perm, function(err, nw_perm) {
+						if (err) {
+							console.log(err, " :Permission not granted");
+							return callback(err, null);
 						}
-						if (res_upd) {
-							console.log("Response: ", res_upd);
-							saveUsrAssingPerm(_master_usr_id, usr._id, function(err, res) {
-								if (err) return callback(err, "Error saving the user that assign permission");
-								if (res) {
-									console.log ("Saving the user that assign permission");
-									return callback(null, usr);
+						if (nw_perm) {
+							set_obj.perm = nw_perm;
+							usr.perm = nw_perm;
+							usrSrv.updateUsrById(usr._id, set_obj, function(err_upd, res_upd) {
+								if (err_upd) {
+									console.log(err_upd, " :User error not updated");
+									return callback(err_upd, null);
+								}
+								if (res_upd) {
+									console.log("Response: ", res_upd);
+									saveUsrAssingPerm(_master_usr_id, usr._id, function(err, res) {
+										if (err) {
+											console.log(err+": Error saving the user that assign permission");
+											return callback(err, null);
+										}
+										if (res) {
+											console.log("Saving the user that assign permission");
+											return callback(null, usr);
+										}
+									});
 								}
 							});
-						}
+						} else 
+							return callback(null, usr);
 					});
 				}
 			});
-		else return callback(null, "Error perm undefined");
+		else return callback("Error perm undefined", null);
 	} catch (err) {
-		return callback(err, "User error not updated");
+		console.log(err, " :User error not updated");
+		return callback(err, null);
 	}
 };
