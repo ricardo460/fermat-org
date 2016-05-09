@@ -5,7 +5,7 @@ var security = require('../../../lib/utils/security');
 /**
  * @api {post} /v1/user/:usr_id/changePerms change user permission
  * @apiName ChangePermission
- * @apiVersion 1.0
+ * @apiVersion 1.0.0
  * @apiGroup User
  * @apiParam {String} usrnm User name.
  * @apiParam {String} perm User permission.
@@ -38,7 +38,7 @@ router.post('/:usr_id/changePerms', function(req, resp, next) {
 /**
  * @api {get} /v1/user/:usrnm get user by username
  * @apiName GetUsrsByUsrnm
- * @apiVersion 1.0
+ * @apiVersion 1.0.0
  * @apiGroup User
  * @apiParam {String} usrnm User name of the user who granted permission.
  * @apiDescription Get user data by usrnm.

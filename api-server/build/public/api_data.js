@@ -1,43 +1,5 @@
 define({ "api": [
   {
-    "type": "post",
-    "url": "/v1/user/:usr_id/changePerms",
-    "title": "changePermission",
-    "name": "ChangePermission",
-    "version": "0.0.2",
-    "group": "Auth",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "usrnm",
-            "description": "<p>User name.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "perm",
-            "description": "<p>User permission.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "ObjectId",
-            "optional": false,
-            "field": "usr_id",
-            "description": "<p>Id of the user who granted permission.</p>"
-          }
-        ]
-      }
-    },
-    "description": "<p>Give permissions to another user.</p>",
-    "filename": "routes/v1/user/index.js",
-    "groupTitle": "Auth"
-  },
-  {
     "type": "get",
     "url": "/v1/auth/login",
     "title": "sign in and/or log in",
@@ -1529,11 +1491,49 @@ define({ "api": [
     "groupTitle": "Repo_SuprLay"
   },
   {
+    "type": "post",
+    "url": "/v1/user/:usr_id/changePerms",
+    "title": "change user permission",
+    "name": "ChangePermission",
+    "version": "1.0.0",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "usrnm",
+            "description": "<p>User name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "perm",
+            "description": "<p>User permission.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "usr_id",
+            "description": "<p>Id of the user who granted permission.</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Give permissions to another user.</p>",
+    "filename": "routes/v1/user/index.js",
+    "groupTitle": "User"
+  },
+  {
     "type": "get",
     "url": "/v1/user/:usrnm",
-    "title": "getUsrsByUsrnm",
+    "title": "get user by username",
     "name": "GetUsrsByUsrnm",
-    "version": "0.0.2",
+    "version": "1.0.0",
     "group": "User",
     "parameter": {
       "fields": {

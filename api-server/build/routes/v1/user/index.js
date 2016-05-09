@@ -3,10 +3,10 @@ var router = express.Router();
 var usrMod = require('../../../modules/auth/user');
 var security = require('../../../lib/utils/security');
 /**
- * @api {post} /v1/user/:usr_id/changePerms changePermission
+ * @api {post} /v1/user/:usr_id/changePerms change user permission
  * @apiName ChangePermission
- * @apiVersion 0.0.2
- * @apiGroup Auth
+ * @apiVersion 1.0.0
+ * @apiGroup User
  * @apiParam {String} usrnm User name.
  * @apiParam {String} perm User permission.
  * @apiParam {ObjectId} usr_id Id of the user who granted permission.
@@ -24,7 +24,7 @@ router.post('/:usr_id/changePerms', function(req, resp, next) {
             usrMod.changePermission(req.params.usr_id, req.body.usrnm, req.body.perm, function(err, res) {
                 if (err) {
                     console.log("Error change permission", err);
-                    resp.status(402).send("Could not change the permission");
+                    resp.status(402).send(err+" :Could not change the permission");
                 } else {
                     console.log("Info", "Permission successfully changed");
                     resp.status(200).send(res);
@@ -36,9 +36,9 @@ router.post('/:usr_id/changePerms', function(req, resp, next) {
     }
 });
 /**
- * @api {get} /v1/user/:usrnm getUsrsByUsrnm
+ * @api {get} /v1/user/:usrnm get user by username
  * @apiName GetUsrsByUsrnm
- * @apiVersion 0.0.2
+ * @apiVersion 1.0.0
  * @apiGroup User
  * @apiParam {String} usrnm User name of the user who granted permission.
  * @apiDescription Get user data by usrnm.
