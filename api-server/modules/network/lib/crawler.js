@@ -129,6 +129,7 @@ exports.saveNetworkStatus = function(callback) {
                                                             winston.log('info', 'Client added!');
                                                         }
                                                     });
+                                                    // /fermat/api/serverplatform/listserverconfbyplatform
                                                     //	doRequest(auth, {
                                                     //		url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/client/components/details?i=' + clients[i].identityPublicKey,
                                                     //		method: 'GET'
