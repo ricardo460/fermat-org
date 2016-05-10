@@ -24,7 +24,7 @@ function API() {
             url = window.helper.SERVER + "/v1/repo/usrs/"+usr._id+"/";
 
             param = {
-                env : window.helper.ENV,
+                env : window.API_ENV,
                 axs_key : usr.axs_key
             };
 
@@ -106,7 +106,7 @@ function API() {
 
         param = {
                 usrs : usr._id,
-                env : window.helper.ENV,
+                env : window.API_ENV,
                 axs_key : usr.axs_key
             };
 
@@ -225,7 +225,7 @@ function API() {
 
         param = {
                 usrs : usr._id,
-                env : window.helper.ENV,
+                env : window.API_ENV,
                 axs_key : usr.axs_key
             };
 
