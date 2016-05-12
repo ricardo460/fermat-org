@@ -6,7 +6,8 @@ var user_data = getUserID(),
     request = 'add',
     referenceName = '',
     referenceId = '',
-    referenceCode = '';
+    referenceCode = '',
+    referenceOrder = '';
 //global constants
 var SERVER = 'http://api.fermat.org';
 
@@ -74,7 +75,6 @@ function init() {
             });
 
             $('#submitLayer').click(function() {
-                console.log(request);
                 verify(current,request);
             });
 
@@ -102,15 +102,6 @@ function deleteStructure(element, type){
                 url = getRoute("suprlays", "delete", element.id);
                 break;
         }
-
-        $.ajax({
-            url: url,
-            method: "GET"
-        }).success (
-            function (res) {
-                updateData(type, res.order, 'delete');
-            }
-        );
 
         sendRequest(url, 'DELETE');
 
@@ -159,6 +150,7 @@ function modifyStructure(element, type){
                 document.getElementById("layerLang").value = res.lang;
 
                 referenceName = res.name;
+                referenceOrder = res.order;
                 referenceId = element.id;
                 $("#layerOrder").empty();
 
@@ -190,6 +182,7 @@ function modifyStructure(element, type){
                 referenceName = res.name;
                 referenceId = element.id;
                 referenceCode = res.code;
+                referenceOrder = res.order;
 
                 findPosition(type, res.order);
             }
@@ -358,7 +351,7 @@ function clearGroupForm() {
 
 function clearLayerForm() {
     document.getElementById('layerName').value = '';
-    document.getElementById('layerNext').value = '';
+    document.getElementById('layerNext').innerHTML = '';
     document.getElementById('nextName').style.display = 'none';
 }
 
@@ -374,70 +367,6 @@ function showForm(id) {
 
 function hideForm(id) {
     $(id).addClass('hidden');
-}
-
-function updateData(list, position, mode){
-
-    var url;
-
-    switch(list) {
-        case "layer":
-            url = getRoute("layers", "retrieve");
-            break;
-        case "platform":
-            url = getRoute("platfrms", "retrieve");
-            break;
-        case "superlayer":
-            url = getRoute("suprlays", "retrieve");
-            break;
-    }
-
-    $.ajax({
-        url: url,
-        method: "GET",
-        contentType: "application/json",
-        dataType: "json"
-    }).success (
-        function (res) {
-
-            var l = res.length - 1;
-
-            if(mode === 'insert'){
-                for(i = l; i > position + 1; i--){
-                    switch(list) {
-                        case "layer":
-                            url = getRoute("layer", "update", res[i]._id);
-                            break;
-                        case "platform":
-                            url = getRoute("platfrm", "update", res[i]._id);
-                            break;
-                        case "superlayer":
-                            url = getRoute("suprlay", "update", res[i]._id);
-                            break;
-                    }
-                    res[i].order = parseInt(res[i].order) + 1;
-                    sendRequest(url, 'PUT', res[i]);
-                }
-            }
-            else{
-                for(i = position + 1; i < l; i++){
-                    switch(list) {
-                        case "layer":
-                            url = getRoute("layer", "update", res[i]._id);
-                            break;
-                        case "platform":
-                            url = getRoute("platfrm", "update", res[i]._id);
-                            break;
-                        case "superlayer":
-                            url = getRoute("suprlay", "update", res[i]._id);
-                            break;
-                    }
-                    res[i].order = res[i].order - 1;
-                    sendRequest(url, 'PUT', res[i]);
-                }
-            }
-        }
-    );
 }
 
 function retrieveData(repo, form, code){
@@ -485,11 +414,12 @@ function setFields(data, form, type, superlayer){
                 $("#layerSuperLayer").append($("<option></option>").val(data[i].code).html(data[i].code + " - " + data[i].name.capitalize()));
             }
             if(type === "layer")
-                if(data[i].suprlay === superlayer)
+                if(data[i].suprlay === superlayer && data[i].name !== referenceName)
                     $("#layerOrder").append($("<option></option>").val(data[i].order).html(data[i].name.capitalize()));
         }
         if(form === "group")
-            $("#groupOrder").append($("<option></option>").val(data[i].order).html(data[i].code + " - " + data[i].name.capitalize()));
+            if(data[i].name !== referenceName)
+                $("#groupOrder").append($("<option></option>").val(data[i].order).html(data[i].code + " - " + data[i].name.capitalize()));
         if(form === "groups")
             $("#groupDeps").append($("<option></option>").val(data[i].code).html(data[i].code + " - " + data[i].name.capitalize()));
     }
@@ -532,8 +462,6 @@ function getRoute(form, route, id){
 
     url = SERVER.replace('http://', '') + tail;
     url = 'http://' + self.buildURL(url, param);
-
-    console.log(route + " - " + url);
     return url;
 }
 
@@ -566,7 +494,6 @@ function verify(form, request){
 
             if(proceed){
                 url = getRoute("layers", "insert");
-                updateData(form, data.order, 'insert');
                 sendRequest(url, 'POST', data);
                 updateList('layer', false);
             }
@@ -605,7 +532,6 @@ function verify(form, request){
 
             if(proceed){
                 url = getRoute(repo, "insert");
-                updateData(form, data.order, 'insert');
                 sendRequest(url, 'POST', data);
                 updateList(form, false);
             }
@@ -613,9 +539,6 @@ function verify(form, request){
     }
     else{
         if(form === "layer"){
-
-            if(document.getElementById('layerPos').value === 'after')
-                data.order += -1;
 
             list = document.getElementById('layerList');
             elements = list.getElementsByTagName('td');
@@ -628,14 +551,10 @@ function verify(form, request){
             }
 
             if(proceed){
-                if(data.name !== referenceName){
-                    if(document.getElementById('layerPos').value === 'after')
-                        data.order += 1;
-                    else
-                        data.order -= 1;
-                }
+                if(data.order > referenceOrder)
+                    data.order--;
+
                 url = getRoute("layers", "update", referenceId);
-                updateData(form, data.order, 'insert');
                 sendRequest(url, 'PUT', data);
 
                 cancel();
@@ -687,7 +606,6 @@ function verify(form, request){
 
             if(proceed){
                 url = getRoute(repo, "insert");
-                updateData(form, data.order, 'insert');
                 sendRequest(url, 'PUT', data);
 
                 cancel();
