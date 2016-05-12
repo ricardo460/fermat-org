@@ -42,6 +42,15 @@ th {
     display: block;
     margin: 0 auto;
 }
+#perm {
+    max-width: 80%;
+    margin: 0 auto;
+    margin-bottom: 5px;
+}
+.perm-class {
+    display: inline;
+    margin-right: 20px;
+}
 #perm-form {
     display: block;
     max-width: 80%;
