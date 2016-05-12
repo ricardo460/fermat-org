@@ -1,15 +1,16 @@
 var user_data = getUserID(),
     axs_key = '',
-    environment = '';
+    environment = '',
+    perm = 00000;
 //global constants
 var SERVER = 'http://api.fermat.org';
 
 function init() {
-    if(user_data._id === ''){
-        window.alert("Error. Please login first or request authorization to use this module");
-        window.location.replace(window.location.href.replace(window.location.pathname, ''));
-    }
-    else{
+    //if(user_data._id === ''){
+        //window.alert("Error. Please login first or request authorization to use this module");
+        //window.location.replace(window.location.href.replace(window.location.pathname, ''));
+    //}
+    //else{
 
         switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
             case "dev":
@@ -23,7 +24,8 @@ function init() {
                 break;
         }
 
-        environment = 'production';
+        checkPermissions();
+        environment = 'development';
         axs_key = user_data.axs_key;
 
         getUsers();
@@ -31,8 +33,12 @@ function init() {
         setTimeout(function (){
                 document.getElementById('spinner').style.display = 'none';
                 $('#users').removeClass('hidden');
+                tagPermissions("platform");
+                tagPermissions("superlayer");
+                tagPermissions("layer");
+                $('#perm').removeClass('hidden');
         }, 3000);
-    }
+    //}
 }
 
 function getUsers(){
@@ -70,6 +76,8 @@ function getRoute(route){
 
     if(route === 'users')
         tail = "/v1/repo/devs";
+    else
+        tail = "/v1/user/" + user_data.usrnm;
     
     param = {
         env : environment,
@@ -134,31 +142,83 @@ function buildURL(base, params) {
 }
 
 function getUserID() {
-        var _usr_id = {
-                __v : getCookie("v"),
-                _id : '571a619a3f372f8e2574f0d1',
-                avatar_url : getCookie("avatar"),
-                axs_key : '571a619a3f372f8e2574f0cf',
-                email : getCookie("email"),
-                github_tkn : getCookie("github"),
-                name : getCookie("name"),
-                upd_at : getCookie("update"),
-                usrnm : getCookie("usrnm")
-        };
-        return _usr_id;
+    var _usr_id = {
+        __v : getCookie("v"),
+        _id : '570e44e3019d61dc4de9f331',
+        avatar_url : getCookie("avatar"),
+        axs_key : '570e44e3019d61dc4de9f32f',
+        email : getCookie("email"),
+        github_tkn : getCookie("github"),
+        name : getCookie("name"),
+        upd_at : getCookie("update"),
+        usrnm : 'isatab'
+    };
+    return _usr_id;
+}
+
+function checkPermissions() {
+    var url = getRoute(null, 'perm');
+
+    $.ajax({
+            url: url,
+            method: "GET"
+    }).success (
+        function (res) {
+            perm = parseInt(res.perm);
+            return perm;
+        }
+    );
+}
+
+function tagPermissions(structure) {
+    var digit;
+
+    if(structure === "platform"){
+        digit = Math.floor((perm % 11000) / 100);
+        setTag(digit, structure);
     }
+    else if(structure === "superlayer"){
+        digit = Math.floor((perm % 11100) / 10);
+        setTag(digit, structure);
+    }
+    else if(structure === "layer"){
+        digit = Math.floor((perm % 11110));
+        setTag(digit, structure);
+    }
+}
+
+function setTag(digit, structure) {
+    console.log(digit+structure);
+    if(digit % 2 === 1)
+        document.getElementById("tag-"+structure+"-del").className += "label label-success";
+    else
+        document.getElementById("tag-"+structure+"-del").className += "label label-danger";
+
+    digit = Math.floor(digit / 2);
+
+    if(digit % 2 === 1)
+        document.getElementById("tag-"+structure+"-mod").className += "label label-success";
+    else
+        document.getElementById("tag-"+structure+"-mod").className += "label label-danger";
+
+    if(Math.floor(digit / 2) === 1)
+        document.getElementById("tag-"+structure+"-add").className += "label label-success";
+    else
+        document.getElementById("tag-"+structure+"-add").className += "label label-danger";
+}
+
 
 function getCookie(name) {
-        var cname = name + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0; i<ca.length; i++) {
-            var c = ca[i];
-            while(c.charAt(0) === ' ')
-                c = c.substring(1);
-            if(c.indexOf(cname) === 0)
-                return c.substring(cname.length, c.length);
-        }
-        return "";
+    var cname = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while(c.charAt(0) === ' ')
+            c = c.substring(1);
+        if(c.indexOf(cname) === 0)
+            return c.substring(cname.length, c.length);
+    }
+    return "";
 }
 
 String.prototype.capitalize = function() {
