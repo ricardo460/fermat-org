@@ -35,7 +35,7 @@ function createControlPanel() {
     controlText.style.lineHeight = '38px';
     controlText.style.paddingLeft = '5px';
     controlText.style.paddingRight = '5px';
-    controlText.innerHTML = '<input type="checkbox" value="nodes" checked onChange="onOptionChanged(this)">Nodes</input><br>'+
+    controlText.innerHTML = '<input type="checkbox" value="nodes" checked onChange="onOptionChanged(this)">Nodes</input><br>' +
         '<input type="checkbox" value="clients" onChange="onOptionChanged(this)">Clients</input>';
     controlUI.appendChild(controlText);
     
@@ -135,8 +135,12 @@ function createMarkers(list, label) {
         
         if(node.extra !== undefined && node.extra.location !== undefined && node.extra.location.latitude !== undefined && node.extra.location.longitude !== undefined) {
             var marker = new google.maps.Marker({
-                label : label,
-                position : {lat : node.extra.location.latitude, lng : node.extra.location.longitude}
+                title : label,
+                position : {lat : node.extra.location.latitude, lng : node.extra.location.longitude},
+                icon : {
+                    url : "img/test.svg",
+                    scaledSize: new google.maps.Size(30, 30)
+                },
             });
             
             node.marker = marker;
