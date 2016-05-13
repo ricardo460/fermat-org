@@ -7,16 +7,17 @@ var user_data = getUserID(),
     referenceName = '',
     referenceId = '',
     referenceCode = '',
-    referenceOrder = '';
+    referenceOrder = '',
+    perm = 00000;
 //global constants
 var SERVER = 'http://api.fermat.org';
 
 function init() {
-    if(user_data._id === ''){
-        window.alert("Error. Please login first or request authorization to use this module");
-        window.location.replace(window.location.href.replace(window.location.pathname, ''));
-    }
-    else{
+    //if(user_data._id === ''){
+        //window.alert("Error. Please login first or request authorization to use this module");
+        //window.location.replace(window.location.href.replace(window.location.pathname, ''));
+    //}
+    //else{
         $('#type').prop('disabled', true);
         $('#add').prop('disabled', true);
 
@@ -32,6 +33,8 @@ function init() {
                 break;
         }
 
+        checkPermissions();
+        environment = 'development';
         axs_key = user_data.axs_key;
 
         updateList('layer',true);
@@ -45,6 +48,10 @@ function init() {
                 sel();
             });
 
+            $('#perm-link').click(function(event) {
+                location.href = 'perm';
+            });
+
             $('#type').bind('keydown', function(event) {
                 if(event.key === 'ArrowUp' || event.key === 'ArrowDown') {
                     current = this.value;
@@ -55,8 +62,8 @@ function init() {
             $('#layerSuperLayer').change(function() {
                 $("#layerOrder").empty();
                 if(document.getElementById("layerSuperLayer").value === "false")
-                    retrieveData("layer", "layers", false); 
-                else   
+                    retrieveData("layer", "layers", false);
+                else
                     retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
             });
 
@@ -64,8 +71,8 @@ function init() {
                 if(event.key === 'ArrowUp' || event.key === 'ArrowDown'){
                     $("#layerOrder").empty();
                     if(document.getElementById("layerSuperLayer").value === "false")
-                        retrieveData("layer", "layers", false); 
-                    else   
+                        retrieveData("layer", "layers", false);
+                    else
                         retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
                 }
             });
@@ -75,16 +82,16 @@ function init() {
             });
 
             $('#submitGroup').click(function() {
-                //verify(current,request);
+                verify(current,request);
             });
         });
-    }
+    //}
 }
 
 function deleteStructure(element, type){
-    
-    if(confirm("Are you sure you want to remove the " + element.name + "? (Removing this layer will delete all of it's associated components)") === true){
-        
+
+    if(confirm("Are you sure you want to remove the " + element.name + "? (Removing this " + type + " will delete all of it's associated components)") === true){
+
         var url;
 
         switch(type) {
@@ -116,7 +123,7 @@ function deleteStructure(element, type){
 }
 
 function modifyStructure(element, type){
-    
+
     add();
     var url;
 
@@ -140,11 +147,11 @@ function modifyStructure(element, type){
     }).success (
         function (res) {
             if(type === 'layer'){
-                
+
                 document.getElementById('nextName').style.display = 'block';
                 document.getElementById("layerName").value = res.name.capitalize();
                 document.getElementById("layerLang").value = res.lang;
-                
+
                 referenceName = res.name;
                 referenceOrder = res.order;
                 referenceId = element.id;
@@ -158,14 +165,14 @@ function modifyStructure(element, type){
                     document.getElementById("layerSuperLayer").value = res.suprlay;
                     retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
                 }
-                
+
                 findPosition(type, res.order);
             }
             else{
 
                 document.getElementById("groupCode").value = res.code;
                 document.getElementById("groupName").value = res.name.capitalize();
- 
+
                 var list = document.getElementById("groupDeps"),
                     l = list.options.length;
 
@@ -174,7 +181,7 @@ function modifyStructure(element, type){
                         if(res.deps[e] === list.options[i].value)
                             list.options[i].selected = 'true';
                     }
-                }               
+                }
                 referenceName = res.name;
                 referenceId = element.id;
                 referenceCode = res.code;
@@ -262,9 +269,11 @@ function updateList(list, refresh){
         while(table.rows.length > 1) {
             table.deleteRow(1);
         }
-        $("groupOrder").empty();
+        $("#groupOrder").empty();
+        $("#groupDeps").empty();
         retrieveData("platform", null);
-        retrieveData("platform", "groups", null);
+        retrieveData("platform", "platform", null);
+        retrieveData("superlayer", "platform", null);
     }
     else{
         table = document.getElementById("superlayerList");
@@ -273,17 +282,23 @@ function updateList(list, refresh){
         }
         $("#layerSuperLayer").empty();
         $("#groupOrder").empty();
+        $("#groupDeps").empty();
         retrieveData("superlayer", null);
-        retrieveData("superlayer", "groups", null);
+        retrieveData("superlayer", "superlayer", null);
+        retrieveData("platform", "superlayer", null);
         retrieveData("superlayer", "layers", null);
     }
-    
+
     if(refresh){
         setTimeout(function (){
                 document.getElementById('spinner').style.display = 'none';
                 sel();
                 $('#type').prop('disabled', false);
                 $('#add').prop('disabled', false);
+                tagPermissions("platform");
+                tagPermissions("superlayer");
+                tagPermissions("layer");
+                $('#perm').removeClass('hidden');
         }, 2000);
     }
 }
@@ -329,10 +344,12 @@ function sel() {
         $('#layerList').addClass('hidden');
         $('#superlayerList').removeClass('hidden');
         $('#platformList').addClass('hidden');
+        updateList(current);
     } else if (current === 'platform') {
         $('#layerList').addClass('hidden');
         $('#superlayerList').addClass('hidden');
         $('#platformList').removeClass('hidden');
+        updateList(current);
     } else {
         $('#layerList').removeClass('hidden');
         $('#superlayerList').addClass('hidden');
@@ -413,11 +430,13 @@ function setFields(data, form, type, superlayer){
                 if(data[i].suprlay === superlayer && data[i].name !== referenceName)
                     $("#layerOrder").append($("<option></option>").val(data[i].order).html(data[i].name.capitalize()));
         }
-        if(form === "group")
-            if(data[i].name !== referenceName)
-                $("#groupOrder").append($("<option></option>").val(data[i].order).html(data[i].code + " - " + data[i].name.capitalize()));
-        if(form === "groups")
-            $("#groupDeps").append($("<option></option>").val(data[i].code).html(data[i].code + " - " + data[i].name.capitalize()));
+        else{
+            if(data[i].name !== referenceName){
+                if(form === type)
+                    $("#groupOrder").append($("<option></option>").val(data[i].order).html(data[i].code + " - " + data[i].name.capitalize()));
+                $("#groupDeps").append($("<option></option>").val(data[i].code).html(data[i].code + " - " + data[i].name.capitalize()));
+            }
+        }
     }
 }
 
@@ -433,10 +452,10 @@ function fillTable(repo, data){
             else
                 $('#layerList').append("<tr><td>" + data[i].name.capitalize() + "</td><td>" + data[i].lang.capitalize() + "</td><td>" + "</td><td>" + data[i].order + "</td><td>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"layer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"layer"' + ")'>Delete</button>" + "</td></tr>");
         }
-        //else if(repo === "platform")
-            //$('#platformList').append("<tr><th>" + data[i].code + "</th><th>" + data[i].name.capitalize() + "</th><th>" + data[i].order + "</th><th>" + data[i].deps + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"platform"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='platform: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"platform"' + ")'>Delete</button>" + "</th></tr>");
-        //else
-            //$('#superlayerList').append("<tr><th>" + data[i].code + "</th><th>" + data[i].name.capitalize() + "</th><th>" + data[i].order + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"superlayer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='superlayer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"superlayer"' + ")'>Delete</button>" + "</th></tr>");
+        else if(repo === "platform")
+            $('#platformList').append("<tr><td>" + data[i].code + "</td><td>" + data[i].name.capitalize() + "</td><td>" + data[i].order + "</td><td>" + data[i].deps + "</td><td>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"platform"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='platform: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"platform"' + ")'>Delete</button>" + "</td></tr>");
+        else
+            $('#superlayerList').append("<tr><td>" + data[i].code + "</td><td>" + data[i].name.capitalize() + "</td><td>" + data[i].order + "</td><td>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"superlayer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='superlayer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"superlayer"' + ")'>Delete</button>" + "</td></tr>");
     }
 }
 
@@ -450,6 +469,8 @@ function getRoute(form, route, id){
         tail = "/v1/repo/usrs/" + user_data._id + "/" + form;
     else if(route === 'update' || route === 'delete')
         tail = "/v1/repo/usrs/" + user_data._id + "/" + form + "/" + id;
+    else
+        tail = "/v1/user/" + user_data.usrnm;
 
     param = {
         env : environment,
@@ -490,7 +511,7 @@ function verify(form, request){
 
             if(proceed){
                 url = getRoute("layers", "insert");
-                sendRequest(url, 'POST', data);
+                sendRequest(url, 'POST', data, form);
                 updateList('layer', false);
             }
         }
@@ -528,7 +549,7 @@ function verify(form, request){
 
             if(proceed){
                 url = getRoute(repo, "insert");
-                sendRequest(url, 'POST', data);
+                sendRequest(url, 'POST', data, form);
                 updateList(form, false);
             }
         }
@@ -551,7 +572,7 @@ function verify(form, request){
                     data.order--;
 
                 url = getRoute("layers", "update", referenceId);
-                sendRequest(url, 'PUT', data);
+                sendRequest(url, 'PUT', data, form);
 
                 cancel();
 
@@ -559,7 +580,7 @@ function verify(form, request){
                 $('#add').prop('disabled', true);
                 hideLists();
                 document.getElementById('spinner').style.display = 'block';
-            
+
                 setTimeout(function (){
                     updateList(form, true);
                 }, 3000);
@@ -590,7 +611,7 @@ function verify(form, request){
             }
 
             for(i = 0, l = elements.length; i < l; i+=j){
-                if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){ 
+                if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){
                     window.alert('Code in use');
                     return false;
                 }
@@ -602,18 +623,18 @@ function verify(form, request){
 
             if(proceed){
                 url = getRoute(repo, "insert");
-                sendRequest(url, 'PUT', data);
+                sendRequest(url, 'PUT', data, form);
 
                 cancel();
                 $('#type').prop('disabled', true);
                 $('#add').prop('disabled', true);
                 hideLists();
                 document.getElementById('spinner').style.display = 'block';
-            
+
                 setTimeout(function (){
                     updateList(form, true);
                 }, 3000);
-                
+
                 clearGroupForm();
                 clearLayerForm();
             }
@@ -621,7 +642,7 @@ function verify(form, request){
     }
 }
 
-function sendRequest(url, method, data){
+function sendRequest(url, method, data, type){
 
     if(method !== 'DELETE'){
         $.ajax({
@@ -631,9 +652,9 @@ function sendRequest(url, method, data){
         }).success (
             function (res) {
                 if(method === 'POST')
-                    window.alert('New layer created successfully.');
+                    window.alert('New ' + type + ' created successfully.');
                 else
-                    window.alert('Layer information has been modified.');
+                    window.alert(type  + ' information has been modified.');
             }
         );
     }
@@ -644,7 +665,7 @@ function sendRequest(url, method, data){
             method: "DELETE"
         }).success (
             function (res) {
-                window.alert('The layer has been completely removed.');
+                window.alert('The ' + type + ' has been completely removed.');
             }
         );
     }
@@ -661,9 +682,9 @@ function buildURL(base, params) {
         var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
 
         var param = null;
-        
+
         if(params == null) params = {};
-        
+
         params.env = environment;
 
         //Search for wildcards parameters
@@ -712,7 +733,7 @@ function getData(form, request) {
         if(order === -1)
             order = 0;
         var superlayer;
-        
+
         if(document.getElementById('layerSuperLayer').value === 'false')
             superlayer = false;
         else
@@ -733,7 +754,7 @@ function getData(form, request) {
                 lang:document.getElementById('layerLang').value,
                 suprlay:superlayer,
                 order:order
-            };   
+            };
         }
     }
     else{
@@ -745,7 +766,7 @@ function getData(form, request) {
         if(order === -1)
             order = 0;
 
-        if(form === 'platform') 
+        if(form === 'platform')
             url = getRoute("platfrms", "retrieve");
         else
             url = getRoute("suprlays", "retrieve");
@@ -787,26 +808,77 @@ function getData(form, request) {
 }
 
 function getUserID() {
-        var _usr_id = {
-                __v : getCookie("v"),
-                _id : getCookie("id"),
-                avatar_url : getCookie("avatar"),
-                axs_key : getCookie("key"),
-                email : getCookie("email"),
-                github_tkn : getCookie("github"),
-                name : getCookie("name"),
-                upd_at : getCookie("update"),
-                usrnm : getCookie("usrnm")
-        };
-        return _usr_id;
+    var _usr_id = {
+         __v : getCookie("v"),
+        _id : '570e44e3019d61dc4de9f331',
+        avatar_url : getCookie("avatar"),
+        axs_key : '570e44e3019d61dc4de9f32f',
+        email : getCookie("email"),
+        github_tkn : getCookie("github"),
+        name : getCookie("name"),
+        upd_at : getCookie("update"),
+        usrnm : 'isatab'
+    };
+    return _usr_id;
+}
+
+function checkPermissions() {
+    var url = getRoute(null, 'perm');
+
+    $.ajax({
+            url: url,
+            method: "GET"
+    }).success (
+        function (res) {
+            perm = parseInt(res.perm);
+            return perm;
+        }
+    );
+}
+
+function tagPermissions(structure) {
+    var digit;
+
+    if(structure === "platform"){
+        digit = Math.floor((perm % 11000) / 100);
+        setTag(digit, structure);
     }
+    else if(structure === "superlayer"){
+        digit = Math.floor((perm % 11100) / 10);
+        setTag(digit, structure);
+    }
+    else if(structure === "layer"){
+        digit = Math.floor((perm % 11110));
+        setTag(digit, structure);
+    }
+}
+
+function setTag(digit, structure) {
+    console.log(digit+structure);
+    if(digit % 2 === 1)
+        document.getElementById("tag-"+structure+"-del").className += "label label-success";
+    else
+        document.getElementById("tag-"+structure+"-del").className += "label label-danger";
+
+    digit = Math.floor(digit / 2);
+
+    if(digit % 2 === 1)
+        document.getElementById("tag-"+structure+"-mod").className += "label label-success";
+    else
+        document.getElementById("tag-"+structure+"-mod").className += "label label-danger";
+
+    if(Math.floor(digit / 2) === 1)
+        document.getElementById("tag-"+structure+"-add").className += "label label-success";
+    else
+        document.getElementById("tag-"+structure+"-add").className += "label label-danger";
+}
 
 function getCookie(name) {
         var cname = name + "=";
         var ca = document.cookie.split(';');
         for(var i=0; i<ca.length; i++) {
             var c = ca[i];
-            while(c.charAt(0) === ' ') 
+            while(c.charAt(0) === ' ')
                 c = c.substring(1);
             if(c.indexOf(cname) === 0)
                 return c.substring(cname.length, c.length);
