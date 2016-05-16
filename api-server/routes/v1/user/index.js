@@ -24,7 +24,7 @@ router.post('/:usr_id/changePerms', function(req, resp, next) {
             usrMod.changePermission(req.params.usr_id, req.body.usrnm, req.body.perm, function(err, res) {
                 if (err) {
                     console.log("Error change permission", err);
-                    resp.status(402).send(err+" :Could not change the permission");
+                    resp.status(402).send(err + " :Could not change the permission");
                 } else {
                     console.log("Info", "Permission successfully changed");
                     resp.status(200).send(res);
@@ -60,6 +60,28 @@ router.get('/:usrnm', function(req, resp, next) {
                 }
             });
         }
+    } catch (err) {
+        console.error("Error", err);
+    }
+});
+/**
+ * @api {get} /v1/user/users get user list
+ * @apiName GetUsrs
+ * @apiVersion 1.0.0
+ * @apiGroup User
+ * @apiDescription Get users list.
+ */
+router.get('/users', function(req, resp, next) {
+    try {
+        usrMod.getUsrs(function(err, res) {
+            if (err) {
+                console.log("Error getting users", err);
+                resp.status(402).send("Could not get user list");
+            } else {
+                console.log("Info", "User list successfully obtained");
+                resp.status(200).send(res);
+            }
+        });
     } catch (err) {
         console.error("Error", err);
     }
