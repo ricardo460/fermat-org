@@ -101,12 +101,15 @@ exports.saveNetworkStatus = function(callback) {
     var fillClientData = function(auth, client, server, callback) {
         doRequest(auth, {
             url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/client/components/details',
-            method: 'GET'
+            method: 'GET',
+            qs : {
+                i : client.identityPublicKey
+            }
         }, 3, function(error, data) {
             
             if(error) return callback(error, null);
             
-            client.actorsData = data;
+            client.comps = data;
             clintMod.insertClient(server._wave_id, server._id, client.identityPublicKey, client, callback);
         });
     };
