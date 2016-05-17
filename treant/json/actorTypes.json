@@ -1,0 +1,37 @@
+/*	DEVICE_USER             ("DUS"),
+    EXTRA_USER              ("EUS"),
+    INTRA_USER              ("IUS"),        -> platformComponentType(ACTOR_INTRA_USER)
+    SHOP                    ("SHP"),
+    CBP_CRYPTO_BROKER       ("CBPCRBR"),    -> CRYPTO_BROKER
+    CBP_CRYPTO_CUSTOMER     ("CBPCRCU"),    -> CRYPTO_CUSTOMER
+    CCM_INTRA_WALLET_USER   ("CCMIU"),
+    CCP_INTRA_WALLET_USER   ("CCPIU"),
+    DAP_ASSET_ISSUER        ("DAPASIS"),    -> ASSET_ISSUER_ACTOR
+    DAP_ASSET_REDEEM_POINT  ("DAPARP"),     -> ASSET_REDEEM_POINT_ACTOR
+    DAP_ASSET_USER          ("DAPASUS"),    -> ASSET_USER_ACTOR
+    ART_ARTIST              ("AART"),       -> ARTIST_ACTOR
+    ART_FAN                 ("AFAN"),
+    CHAT                    ("CHT");        -> ACTOR_CHAT
+
+//Reading networkServiceType
+*/
+{
+    properties : [
+        "networkServiceType",
+        "platformComponentType"
+    ],
+    actors : [
+        "ACTOR_INTRA_USER",
+        //SHOP
+        "CRYPTO_BROKER",
+        "CRYPTO_CUSTOMER",
+        //CCM_INTRA_WALLET_USER
+        //CCP_INTRA_WALLET_USER
+        "ASSET_ISSUER_ACTOR",
+        "ASSET_REDEEM_POINT_ACTOR",
+        "ASSET_USER_ACTOR",
+        "ARTIST_ACTOR",
+        "FAN_ACTOR",
+        "ACTOR_CHAT"
+    ]
+}
