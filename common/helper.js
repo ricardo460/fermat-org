@@ -8,6 +8,7 @@ function Helper() {
     var self = this;
 
     this.SERVER = 'http://api.fermat.org';
+    //this.SERVER = 'http://localhost';
 
     /**
      * Hides an element vanishing it and then eliminating it from the DOM
