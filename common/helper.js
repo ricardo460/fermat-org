@@ -162,6 +162,15 @@ function Helper() {
 
         return result.trim();
     };
+    
+    /**
+     * Transforms a string to MARCO_CASE
+     * @param   {string} input The input string
+     * @returns {string} The MACRO_CASE'd version of the input
+     */
+    this.toMACRO_CASE = function(input) {
+        return input.toUpperCase().split(' ').join('_');
+    };
 
     /**
      * Extract the code of a plugin
