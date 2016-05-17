@@ -35,6 +35,7 @@ var doLogin = function(callback) {
                     'Authorization': 'Bearer ' + body.authToken
                 }
             });
+            winston.log('info', 'AuthToken: %s', body.authToken);
             return callback(null, authRequest);
         }
     });
@@ -97,6 +98,18 @@ exports.saveNetworkStatus = function(callback) {
             winston.log('info', 'Client added!');
         }
     };
+    var fillClientData = function(auth, client, server, callback) {
+        doRequest(auth, {
+            url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/client/components/details',
+            method: 'GET'
+        }, 3, function(error, data) {
+            
+            if(error) return callback(error, null);
+            
+            client.actorsData = data;
+            clintMod.insertClient(server._wave_id, server._id, client.identityPublicKey, client, callback);
+        });
+    };
     doLogin(function(err, auth) {
         doRequest(auth, {
             url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/current/data',
@@ -129,17 +142,7 @@ exports.saveNetworkStatus = function(callback) {
                                             if (error) winston.log('error', 'Error on crawler', error);
                                             if (clients) {
                                                 for (var i = clients.length - 1; i >= 0; i--) {
-                                                    clintMod.insertClient(server._wave_id, server._id, clients[i].identityPublicKey, clients[i], reportResult);
-                                                    // /fermat/api/serverplatform/listserverconfbyplatform
-                                                    //	doRequest(auth, {
-                                                    //		url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/client/components/details?i=' + clients[i].identityPublicKey,
-                                                    //		method: 'GET'
-                                                    //	}, 3, function (error, comps) {
-                                                    //		if (error) console.dir(error);
-                                                    //		if (comps) {
-                                                    //			console.dir(comps);
-                                                    //		}
-                                                    //	});
+                                                    fillClientData(auth, clients[i], server, reportResult);
                                                 }
                                             }
                                         });
