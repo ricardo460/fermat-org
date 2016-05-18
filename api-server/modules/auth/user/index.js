@@ -219,20 +219,26 @@ var getNewPerm = function(mast_usr_perm, old_usr_perm, new_usr_perm) {
 var haveGreaterPerm = function(_master_usr_id, usrnm, new_perm, callback) {
 	'use strict';
 	var mastUsrPer = null,
-		oldUsrPerm = null;
+		oldUsrPerm = null,
+		mastUsrType = null,
+		grntdUsrType = null;
 	try {
 		usrSrv.findUsrById(_master_usr_id, function(err, mast_usr) {
 			if (err) return callback(err, null);
 			if (mast_usr) {
 				mastUsrPer = mast_usr.perm;
+				mastUsrType = mast_usr.type;
 				usrSrv.findUsrByUsrnm(usrnm, function(err, grntd_usr) {
 					if (err) return callback(err, null);
 					if (grntd_usr) {
 						oldUsrPerm = grntd_usr.perm;
-						new_perm = getNewPerm(mastUsrPer, oldUsrPerm, new_perm);
-						if (oldUsrPerm.match(new_perm))
-							return callback(null, null);
-						return callback(null, new_perm);
+						grntdUsrType = grntd_usr.type;
+						if (mastUsrType.match(grntdUsrType)) {
+							new_perm = getNewPerm(mastUsrPer, oldUsrPerm, new_perm);
+							if (oldUsrPerm.match(new_perm))
+								return callback(null, null);
+							return callback(null, new_perm);
+						} else return callback(null, null);
 					}
 				});
 			}
