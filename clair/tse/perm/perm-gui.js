@@ -1,7 +1,8 @@
 var user_data = getUserID(),
     axs_key = '',
     environment = '',
-    perm = 00000;
+    perm = 00000,
+    userList;
 //global constants
 var SERVER = 'http://api.fermat.org';
 
@@ -37,7 +38,7 @@ function init() {
                 tagPermissions("superlayer");
                 tagPermissions("layer");
                 $('#perm').removeClass('hidden');
-        }, 3000);
+        }, 7000);
     //}
 }
 
@@ -50,25 +51,60 @@ function getUsers(){
         method: "GET"
     }).success (
         function (res) {
-            fillTable(res);
+            userList = res;
+            for(var i = 0; i < userList.length; i++)
+                if(userList[i].usrnm !== user_data.usrnm)
+                    verifyUser(userList[i].usrnm);
         }
     );
 }
 
-function fillTable(data){
+function verifyUser(user){
+    var url = getRoute('perm', user);
 
-    var i,
-        l = data.length;
+    $.ajax({
+        url: url,
+        method: "GET"
+    }).success (
+        function (res) {
+            console.log(user + " " + res.perm + res);
+            if(comparePermissions(res.perm))
+                fillTable(res);
 
-    for(i = 0; i < l; i++){
-        if(data[i].name !== null)
-            $('#users').append("<tr><td>" + data[i].usrnm + "</td><td>" + data[i].name + "</td><td>" + "<button id='" + i + "' name='perm: " + data[i].usrnm + "' onclick=''>Modify</button>" + "</td></tr>");
-        else
-            $('#users').append("<tr><td>" + data[i].usrnm + "</td><td>" + "</td><td>" + "<button id='" + i + "' name='perm: " + data[i].usrnm + "' onclick=''>Modify</button>" + "</td></tr>");
-    }
+        }
+    );
 }
 
-function getRoute(route){
+function comparePermissions(code){
+    var digit,
+        codeDigit;
+
+    digit = Math.floor((perm % 11000) / 100);
+    codeDigit = Math.floor((code % 11000) / 100);
+    if(validatePermission(digit, null, false, codeDigit))
+        return true;
+    else
+        digit = Math.floor((perm % 11100) / 10);
+        codeDigit = Math.floor((code % 11100) / 10);
+        if(validatePermission(digit, null, false, codeDigit))
+            return true;
+        else
+            digit = Math.floor(perm % 11110);
+            codeDigit = Math.floor(code % 11110);
+            if(validatePermission(digit, null, false, codeDigit))
+                return true;
+            else
+                return false;
+}
+
+function fillTable(data){
+    if(data.name !== null)
+        $('#users').append("<tr><td>" + data.usrnm + "</td><td>" + data.name + "</td><td>" + "<button id='" + data._id + "' name='perm: " + data.usrnm + "' onclick=''>Modify</button>" + "</td></tr>");
+    else
+        $('#users').append("<tr><td>" + data.usrnm + "</td><td>" + "</td><td>" + "<button id='" + data._id + "' name='perm: " + data.usrnm + "' onclick=''>Modify</button>" + "</td></tr>");
+}
+
+function getRoute(route, user){
 
     var tail = "",
         param,
@@ -77,7 +113,7 @@ function getRoute(route){
     if(route === 'users')
         tail = "/v1/repo/devs";
     else
-        tail = "/v1/user/" + user_data.usrnm;
+        tail = "/v1/user/" + user;
     
     param = {
         env : environment,
@@ -157,7 +193,7 @@ function getUserID() {
 }
 
 function checkPermissions() {
-    var url = getRoute(null, 'perm');
+    var url = getRoute('perm', user_data.usrnm);
 
     $.ajax({
             url: url,
@@ -175,36 +211,52 @@ function tagPermissions(structure) {
 
     if(structure === "platform"){
         digit = Math.floor((perm % 11000) / 100);
-        setTag(digit, structure);
+        validatePermission(digit, structure, true);
     }
     else if(structure === "superlayer"){
         digit = Math.floor((perm % 11100) / 10);
-        setTag(digit, structure);
+        validatePermission(digit, structure, true);
     }
     else if(structure === "layer"){
         digit = Math.floor((perm % 11110));
-        setTag(digit, structure);
+        validatePermission(digit, structure, true);
     }
 }
 
-function setTag(digit, structure) {
-    console.log(digit+structure);
+function validatePermission(digit, structure, setTag, compareDigit) {
     if(digit % 2 === 1)
-        document.getElementById("tag-"+structure+"-del").className += "label label-success";
+        if(setTag === true)
+            document.getElementById("tag-"+structure+"-del").className += "label label-success";
+        else
+            if(compareDigit % 2 === 0)
+                return true;
     else
-        document.getElementById("tag-"+structure+"-del").className += "label label-danger";
+        if(setTag === true)
+            document.getElementById("tag-"+structure+"-del").className += "label label-danger";
 
     digit = Math.floor(digit / 2);
 
     if(digit % 2 === 1)
-        document.getElementById("tag-"+structure+"-mod").className += "label label-success";
+        if(setTag === true)
+            document.getElementById("tag-"+structure+"-mod").className += "label label-success";
+        else{
+            compareDigit = Math.floor(compareDigit / 2);
+            if(compareDigit % 2 === 0)
+                return true;
+        }
     else
-        document.getElementById("tag-"+structure+"-mod").className += "label label-danger";
+        if(setTag === true)
+            document.getElementById("tag-"+structure+"-mod").className += "label label-danger";
 
     if(Math.floor(digit / 2) === 1)
-        document.getElementById("tag-"+structure+"-add").className += "label label-success";
+        if(setTag === true)
+            document.getElementById("tag-"+structure+"-add").className += "label label-success";
+        else
+            if(Math.floor(compareDigit / 2) === 0)
+                return true;
     else
-        document.getElementById("tag-"+structure+"-add").className += "label label-danger";
+        if(setTag === true)
+            document.getElementById("tag-"+structure+"-add").className += "label label-danger";
 }
 
 
