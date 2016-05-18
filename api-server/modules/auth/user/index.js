@@ -236,9 +236,9 @@ var haveGreaterPerm = function(_master_usr_id, usrnm, new_perm, callback) {
 						if (mastUsrType.match(grntdUsrType)) {
 							new_perm = getNewPerm(mastUsrPer, oldUsrPerm, new_perm);
 							if (oldUsrPerm.match(new_perm))
-								return callback("Permission not granted. You do not have sufficient permissions", null);
+								return callback("Permission not granted. You do not have such permissions", null);
 							return callback(null, new_perm);
-						} else return callback("Permission not granted. Not have the same type of user", null);
+						} else return callback("Permission not granted. Must be the same type of user", null);
 					}
 				});
 			}
