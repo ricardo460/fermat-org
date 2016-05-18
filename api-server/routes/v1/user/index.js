@@ -55,7 +55,7 @@ router.get('/:usrnm', function(req, resp, next) {
                     console.log("Error getting user", err);
                     resp.status(402).send("Could not get user");
                 } else {
-                    console.log("Info", "User successfully obtained");
+                    console.log("Info", "Userss successfully obtained");
                     resp.status(200).send(res);
                 }
             });
@@ -65,23 +65,56 @@ router.get('/:usrnm', function(req, resp, next) {
     }
 });
 /**
- * @api {get} /v1/user/users get user list
+ * @api {get} /v1/user/list/users get user list
  * @apiName GetUsrs
  * @apiVersion 1.0.0
  * @apiGroup User
  * @apiDescription Get users list.
  */
-router.get('/users', function(req, resp, next) {
+router.get('/list/users', function(req, resp, next) {
     try {
         usrMod.getUsrs(function(err, res) {
             if (err) {
                 console.log("Error getting users", err);
                 resp.status(402).send("Could not get user list");
-            } else {
+            } 
+            if(res) {
                 console.log("Info", "User list successfully obtained");
                 resp.status(200).send(res);
             }
         });
+    } catch (err) {
+        console.error("Error", err);
+    }
+});
+
+/**
+ * @api {post} /v1/user/assignTypeUser assign user type
+ * @apiName AssignTypeUser
+ * @apiVersion 1.0.0
+ * @apiGroup User
+ * @apiParam {String} user_id User id.
+ * @apiParam {String} type User type (Ex. Developer, Designer).
+ * @apiDescription assign user type.
+ */
+router.post('/assignTypeUser', function(req, resp, next) {
+    try {
+        if (!security.isObjectID(req.body.user_id) ||
+            !security.isValidData(req.body.type)) {
+            resp.status(412).send({
+                "message": "missing or invalid data"
+            });
+        } else {
+            usrMod.assignTypeUser(req.body.user_id, req.body.type, function(err, res) {
+                if (err) {
+                    console.log("Error to assign user type", err);
+                    resp.status(402).send("Could not assign user type");
+                } else {
+                    console.log("Info", "user type assigned successfully");
+                    resp.status(200).send(res);
+                }
+            });
+        }
     } catch (err) {
         console.error("Error", err);
     }
