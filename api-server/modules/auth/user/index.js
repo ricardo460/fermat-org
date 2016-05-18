@@ -170,7 +170,7 @@ exports.delAllUsrs = function(callback) {
 var saveUsrAssingPerm = function(_mastr_id, _grantd_id, callback) {
 	'use strict';
 	try {
-		console.log("searching granted_id: "+_grantd_id);
+		console.log("searching granted_id: " + _grantd_id);
 		usrSrv.findUsrPerm(_grantd_id, function(err, user_perm) {
 			if (err) return callback(err, null);
 			if (user_perm) {
@@ -231,7 +231,7 @@ var haveGreaterPerm = function(_master_usr_id, usrnm, new_perm, callback) {
 						oldUsrPerm = grntd_usr.perm;
 						new_perm = getNewPerm(mastUsrPer, oldUsrPerm, new_perm);
 						if (oldUsrPerm.match(new_perm))
-							return callback(null, null);	
+							return callback(null, null);
 						return callback(null, new_perm);
 					}
 				});
@@ -276,7 +276,7 @@ exports.changePermission = function(_master_usr_id, usrnm, perm, callback) {
 									console.log("Response: ", res_upd);
 									saveUsrAssingPerm(_master_usr_id, usr._id, function(err, res) {
 										if (err) {
-											console.log(err+": Error saving the user that assign permission");
+											console.log(err + ": Error saving the user that assign permission");
 											return callback(err, null);
 										}
 										if (res) {
@@ -286,12 +286,47 @@ exports.changePermission = function(_master_usr_id, usrnm, perm, callback) {
 									});
 								}
 							});
-						} else 
+						} else
 							return callback(null, usr);
 					});
 				}
 			});
 		else return callback("Error perm undefined", null);
+	} catch (err) {
+		console.log(err, " :User error not updated");
+		return callback(err, null);
+	}
+};
+/**
+ * [assignTypeUser description]
+ * @param  {[type]}   _id      [description]
+ * @param  {[type]}   type     [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.assignTypeUser = function(_id, type, callback) {
+	'use strict';
+	try {
+		var set_obj = {};
+		usrSrv.findUsrById(_id, function(err, usr) {
+			if (err) {
+				console.log(err, " :User not found");
+				return callback(err, null);
+			}
+			if (usr) {
+				set_obj.type = type;
+				usr.type = type;
+				usrSrv.updateUsrById(_id, set_obj, function(err, res) {
+					if (err) {
+						console.log(err, " :Type user no assigned");
+						return callback(err, null);
+					}
+					if (res) {
+						return callback(null, usr);
+					}
+				});
+			}
+		});
 	} catch (err) {
 		console.log(err, " :User error not updated");
 		return callback(err, null);
