@@ -349,6 +349,11 @@ function Camera(position, renderer, renderFunc) {
         
         return raycaster.intersectObjects(elements);
     };
+
+    this.getRayCast = function(raycaster, mouse){
+
+        raycaster.setFromCamera(mouse, camera);
+    };
     
     /**
      * Moves the camera to a position
