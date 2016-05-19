@@ -36,26 +36,26 @@ router.post('/:usr_id/changePerms', function(req, resp, next) {
     }
 });
 /**
- * @api {get} /v1/user/:usrnm get user by username
+ * @api {post} /v1/user get user by username
  * @apiName GetUsrsByUsrnm
  * @apiVersion 1.0.0
  * @apiGroup User
  * @apiParam {String} usrnm User name of the user who granted permission.
  * @apiDescription Get user data by usrnm.
  */
-router.get('/:usrnm', function(req, resp, next) {
+router.post('/', function(req, resp, next) {
     try {
-        if (!security.isValidData(req.params.usrnm)) {
+        if (!security.isValidData(req.body.usrnm)) {
             resp.status(412).send({
                 "message": "missing or invalid data"
             });
         } else {
-            usrMod.getUsrsByUsrnm(req.params.usrnm, function(err, res) {
+            usrMod.getUsrsByUsrnm(req.body.usrnm, function(err, res) {
                 if (err) {
                     console.log("Error getting user", err);
                     resp.status(402).send("Could not get user");
                 } else {
-                    console.log("Info", "Userss successfully obtained");
+                    console.log("Info", "Users successfully obtained");
                     resp.status(200).send(res);
                 }
             });
@@ -65,13 +65,13 @@ router.get('/:usrnm', function(req, resp, next) {
     }
 });
 /**
- * @api {get} /v1/user/list/users get user list
+ * @api {get} /v1/user/users get user list
  * @apiName GetUsrs
  * @apiVersion 1.0.0
  * @apiGroup User
  * @apiDescription Get users list.
  */
-router.get('/list/users', function(req, resp, next) {
+router.get('/users', function(req, resp, next) {
     try {
         usrMod.getUsrs(function(err, res) {
             if (err) {
