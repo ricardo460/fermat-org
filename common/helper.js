@@ -1,3 +1,5 @@
+/* jshint eqnull:true, browser:true, jquery:true, -W117:flase */
+
 /**
  * Static object with help functions commonly used
  */
@@ -40,11 +42,11 @@ function Helper() {
 
     this.hideButtons = function(){
 
-        if($('#developerButton') != null)
+        if($('#developerButton') !== null)
           window.helper.hide($('#developerButton'), 1000);
-        if($('#showFlows') != null)
+        if($('#showFlows') !== null)
           window.helper.hide($('#showFlows'), 1000);
-        if($('#showScreenshots') != null)
+        if($('#showScreenshots') !== null)
           window.helper.hide($('#showScreenshots'), 1000);
     };
 
@@ -506,6 +508,80 @@ function Helper() {
     this.clone = function(obj) {
         return JSON.parse(JSON.stringify(obj));
     };
+    
+    /**
+     * Returns the route of the API server
+     * @author Miguel Celedon
+     * @param   {string} route The name of the route to get
+     * @returns {string} The URL related to the requested route
+     */
+    this.getAPIUrl = function(route, params) {
+        
+        var tail = "";
+
+        switch(route) {
+
+            case "comps":
+                tail = "/v1/repo/comps";
+                break;
+            case "procs":
+                tail = "/v1/repo/procs";
+                break;
+            case "servers":
+                tail = "/v1/net/servrs";
+                break;
+            case "clients":
+                tail = "/v1/net/servrs/:serv_id";
+                break;
+            case "login":
+                tail = "/v1/auth/login";
+                break;
+            case "logout":
+                tail = "/v1/auth/logout";
+                break;
+            case "user":
+                tail = "/v1/repo/devs";
+                break;
+            case "history":
+                tail =  "/v1/net/history";
+                break;
+
+            case "tableEdit insert":
+                tail = "/v1/repo/usrs/:usrs/comps";
+                break;
+            case "tableEdit get":
+            case 'tableEdit update':
+            case 'tableEdit delete':
+                tail = "/v1/repo/usrs/:usrs/comps/:comp_id";
+                break;
+            case "tableEdit insert dev":
+                tail = "/v1/repo/usrs/:usrs/comps/:comp_id/comp-devs";
+                break;
+            case "tableEdit delete dev":
+            case "tableEdit update dev":
+                tail = "/v1/repo/usrs/:usrs/comps/:comp_id/comp-devs/:devs_id";
+                break;
+
+            case "wolkFlowEdit insert":
+                tail = "/v1/repo/usrs/:usrs/procs";
+                break;
+            case "wolkFlowEdit get":    
+            case "wolkFlowEdit update":
+            case "wolkFlowEdit delete":
+                tail = "/v1/repo/usrs/:usrs/procs/:proc_id";
+                break;
+            case "wolkFlowEdit insert step":
+                tail = "/v1/repo/usrs/:usrs/procs/:proc_id/steps";
+                break;
+            case "wolkFlowEdit delete step":
+            case "wolkFlowEdit update step":
+                tail = "/v1/repo/usrs/:usrs/procs/:proc_id/steps/:steps_id";
+                break;
+        }
+
+        return self.buildURL(self.SERVER + tail, params);
+    };
 
 }
 
+var helper = new Helper();

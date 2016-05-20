@@ -150,58 +150,10 @@ define({ "api": [
     "groupTitle": "Net"
   },
   {
-    "type": "post",
-    "url": "/v1/net/servers",
-    "title": "create a wave",
-    "name": "CreateWave",
-    "version": "0.0.1",
-    "group": "Net",
-    "description": "<p>Inserts a wave (state of the network) into the database.</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Object[]",
-            "optional": false,
-            "field": "body",
-            "description": "<p>An array of javascript objects that represents the servers of the network</p>"
-          }
-        ]
-      }
-    },
-    "filename": "routes/v1/net/index.js",
-    "groupTitle": "Net"
-  },
-  {
-    "type": "post",
-    "url": "/v1/net/nodes",
-    "title": "create a wave",
-    "name": "CreateWave",
-    "version": "0.0.1",
-    "group": "Net",
-    "description": "<p>Inserts a wave (state of the network) into the database.</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Object[]",
-            "optional": false,
-            "field": "body",
-            "description": "<p>An array of javascript objects that represents the nodes connected to a server of the network</p>"
-          }
-        ]
-      }
-    },
-    "filename": "routes/v1/net/index.js",
-    "groupTitle": "Net"
-  },
-  {
     "type": "get",
     "url": "/v1/net/nodes/:hash/childrn",
     "title": "get children",
-    "name": "GetChildren",
+    "name": "getChildren",
     "version": "0.0.1",
     "group": "Net",
     "description": "<p>Lists all devices connected to a P2P network node given its hash.</p>",
@@ -223,9 +175,31 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/v1/net/servrs/:serv_id",
+    "title": "get server network",
+    "name": "getClients",
+    "version": "0.0.1",
+    "group": "Net",
+    "description": "<p>List clients connected to a server.</p>",
+    "filename": "routes/v1/net/index.js",
+    "groupTitle": "Net"
+  },
+  {
+    "type": "get",
+    "url": "/v1/net/history",
+    "title": "get server network",
+    "name": "getHistory",
+    "version": "0.0.1",
+    "group": "Net",
+    "description": "<p>List servers connected to the P2P network fermat.</p>",
+    "filename": "routes/v1/net/index.js",
+    "groupTitle": "Net"
+  },
+  {
+    "type": "get",
     "url": "/v1/net/servrs",
     "title": "get server network",
-    "name": "GetServerNetwork",
+    "name": "getServer",
     "version": "0.0.1",
     "group": "Net",
     "description": "<p>List servers connected to the P2P network fermat.</p>",
@@ -441,7 +415,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "role",
-            "description": "<p>xxxx.</p>"
+            "description": "<p>Role name.</p>"
           },
           {
             "group": "Parameter",
@@ -892,7 +866,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "code",
-            "description": "<p>xxxxx.</p>"
+            "description": "<p>Platform code.</p>"
           },
           {
             "group": "Parameter",
@@ -998,6 +972,34 @@ define({ "api": [
             "optional": false,
             "field": "platfrm_id",
             "description": "<p>Represents the identifier of the platform.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Platform code.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Platform name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "logo",
+            "description": "<p>Platform logo.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "order",
+            "description": "<p>Indicates the position where the platform this with respect to other.</p>"
           }
         ]
       }
@@ -1118,7 +1120,7 @@ define({ "api": [
     "groupTitle": "Repo_Proc"
   },
   {
-    "type": "put",
+    "type": "delete",
     "url": "/v1/repo/usrs/:usr_id/procs/:proc_id",
     "title": "delete process",
     "version": "0.0.1",
@@ -1173,7 +1175,7 @@ define({ "api": [
     "groupTitle": "Repo_Proc"
   },
   {
-    "type": "delete",
+    "type": "get",
     "url": "/v1/repo/usrs/:usr_id/procs/:proc_id",
     "title": "get process",
     "version": "0.0.1",
@@ -1487,5 +1489,109 @@ define({ "api": [
     "description": "<p>Update super layer from architecture of fermat.</p>",
     "filename": "routes/v1/repo/suprlay/index.js",
     "groupTitle": "Repo_SuprLay"
+  },
+  {
+    "type": "post",
+    "url": "/v1/user/assignTypeUser",
+    "title": "assign user type",
+    "name": "AssignTypeUser",
+    "version": "1.0.0",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>User id.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>User type (Ex. Developer, Designer).</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>assign user type.</p>",
+    "filename": "routes/v1/user/index.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/v1/user/:usr_id/changePerms",
+    "title": "change user permission",
+    "name": "ChangePermission",
+    "version": "1.0.0",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "usrnm",
+            "description": "<p>User name.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "perm",
+            "description": "<p>User permission.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ObjectId",
+            "optional": false,
+            "field": "usr_id",
+            "description": "<p>Id of the user who granted permission.</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Give permissions to another user.</p>",
+    "filename": "routes/v1/user/index.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "get",
+    "url": "/v1/user/users",
+    "title": "get user list",
+    "name": "GetUsrs",
+    "version": "1.0.0",
+    "group": "User",
+    "description": "<p>Get users list.</p>",
+    "filename": "routes/v1/user/index.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/v1/user",
+    "title": "get user by username",
+    "name": "GetUsrsByUsrnm",
+    "version": "1.0.0",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "usrnm",
+            "description": "<p>User name of the user who granted permission.</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Get user data by usrnm.</p>",
+    "filename": "routes/v1/user/index.js",
+    "groupTitle": "User"
   }
 ] });

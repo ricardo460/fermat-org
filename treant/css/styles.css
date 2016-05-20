@@ -1,0 +1,50 @@
+#map {
+    top: 50px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    position: absolute;
+}
+
+.container {
+    margin-top: 1em;
+}
+
+.row {
+    margin-bottom: 20px;
+}
+
+[class*="col-"] {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+img {
+    transition: opacity 1s;
+}
+
+.navbar-fermat {
+    max-width: 100%;
+    background-image: linear-gradient(to bottom, #59D1BD 0, #009A80 100%);
+}
+th {
+    color: #DA332A;
+}
+.navbar-brand {
+    color: #fff;
+}
+.brand-img {
+    margin-top: -5px;
+}
+
+.navbar button {
+    margin-right: 10px;
+}
+
+.brand {
+    height: 30px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin: 0px;
+    padding: 0px;
+}

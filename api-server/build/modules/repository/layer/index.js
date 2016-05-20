@@ -28,6 +28,27 @@ var swapOrder = function (action, oldSpot, newSpot, callback) {
 	});
 };
 /**
+ * [getOrdrLstLayrs description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+var getOrdrLstLayrs = function (callback) {
+	'use strict';
+	try {
+		layerSrv.findLayers({}, 1, {
+			order: -1
+		}, function (err, layers) {
+			if (err) {
+				callback(err, null);
+			} else {
+				callback(null, layers[0].order);
+			}
+		});
+	} catch (err) {
+		callback(err, null);
+	}
+};
+/**
  * [insOrUpdLayer description]
  *
  * @method insOrUpdLayer
@@ -65,9 +86,9 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
 						res_lay.suprlay = null;
 					}
 				}
-				if (order !== -1 && order !== res_lay.order) {
-					set_obj.order = order;
-					res_lay.order = order;
+				if (order && order !== '' && order + '' !== '-1' && order + '' !== res_lay.order + '') {
+					set_obj.order = parseInt(order);
+					res_lay.order = parseInt(order);
 				}
 				if (Object.keys(set_obj).length > 0) {
 					if (typeof set_obj.order != 'undefined' && set_obj.order > -1) {
@@ -99,19 +120,41 @@ exports.insOrUpdLayer = function (name, lang, suprlay, order, callback) {
 					suprlay = null;
 				}
 				if (name && lang) {
-					var layer = new LayerMdl(name, lang, suprlay || null, order);
-					swapOrder('insert', null, layer.order, function (err_sld, res_sld) {
-						if (err_sld) {
-							return callback(err_sld, null);
-						} else {
-							layerSrv.insertLayer(layer, function (err_ins, res_ins) {
-								if (err_ins) {
-									return callback(err_ins, null);
+					if (order === undefined || order === null) getOrdrLstLayrs(function (err, nu_order) {
+						if (err) return callback(err, null);
+						if (nu_order) {
+							//Putting layer at the end since not provide an order
+							order = parseInt(nu_order) + 1;
+							var layer = new LayerMdl(name, lang, suprlay || null, order);
+							swapOrder('insert', null, layer.order, function (err_sld, res_sld) {
+								if (err_sld) {
+									return callback(err_sld, null);
+								} else {
+									layerSrv.insertLayer(layer, function (err_ins, res_ins) {
+										if (err_ins) {
+											return callback(err_ins, null);
+										}
+										return callback(null, res_ins);
+									});
 								}
-								return callback(null, res_ins);
 							});
 						}
 					});
+					else {
+						var layer = new LayerMdl(name, lang, suprlay || null, order);
+						swapOrder('insert', null, layer.order, function (err_sld, res_sld) {
+							if (err_sld) {
+								return callback(err_sld, null);
+							} else {
+								layerSrv.insertLayer(layer, function (err_ins, res_ins) {
+									if (err_ins) {
+										return callback(err_ins, null);
+									}
+									return callback(null, res_ins);
+								});
+							}
+						});
+					}
 				} else {
 					return callback(null, null);
 				}

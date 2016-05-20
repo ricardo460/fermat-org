@@ -3,7 +3,7 @@ var loadLib = require('./modules/repository/lib/loader');
 var Cache = require('./lib/route-cache');
 var db = require('./db');
 var cache = new Cache({
-	type: 'file'
+    type: 'file'
 });
 winston.log('info', 'Attempting manual update...');
 /*loadLib.loadComps(function (err, res) {
@@ -19,13 +19,13 @@ winston.log('info', 'Attempting manual update...');
 //		winston.log('error', err.message, err);
 //	} else {
 //		winston.log('debug', 'Developers updated', res);
-loadLib.updProcs(function (err, res) {
-	if (err) {
-		winston.log('error', err.message, err);
-	} else {
-		winston.log('debug', 'Processes updated', res);
-		cache.clear();
-	}
+loadLib.updProcs(function(err, res) {
+    if (err) {
+        winston.log('error', err.message, err);
+    } else {
+        winston.log('debug', 'Processes updated', res);
+        cache.clear();
+    }
 });
 //	}
 //});

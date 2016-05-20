@@ -31,7 +31,7 @@ function CLI() {
      */
     this.shutDown = function() {
 
-        scene = new THREE.Scene();
+        window.scene = new THREE.Scene();
 
     };
     
