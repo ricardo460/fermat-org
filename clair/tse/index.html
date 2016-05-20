@@ -35,6 +35,8 @@
                         <li>
                             <select class="form-control" id="type">
                                 <option value="layer">Layer</option>
+                                <option value="platform">Platform</option>
+                                <option value="superlayer">Superlayer</option>
                             </select>
                         </li>
                         <li>
@@ -48,26 +50,26 @@
 
     <img id="spinner" src="img/loading_spinner.gif" class="img">
 
-    <div id="perm" class="perm-box">
+    <div id="perm" class="perm-box hidden">
         <div class="perm-class">
-            <span>Layer:</span>
-            <span class="label label-danger">Add</span>
-            <span class="label label-danger">Edit</span>
-            <span class="label label-danger">Delete</span>
+            <span>Platform:</span>
+            <span id="tag-platform-add">Add</span>
+            <span id="tag-platform-mod">Modify</span>
+            <span id="tag-platform-del">Delete</span>
         </div>
 
         <div class="perm-class">
             <span>Superlayer:</span>
-            <span class="label label-danger">Add</span>
-            <span class="label label-danger">Edit</span>
-            <span class="label label-danger">Delete</span>
+            <span id="tag-superlayer-add">Add</span>
+            <span id="tag-superlayer-mod">Modify</span>
+            <span id="tag-superlayer-del">Delete</span>
         </div>
 
         <div class="perm-class">
-            <span>Platform:</span>
-            <span class="label label-danger">Add</span>
-            <span class="label label-danger">Edit</span>
-            <span class="label label-danger">Delete</span>
+            <span>Layer:</span>
+            <span id="tag-layer-add">Add</span>
+            <span id="tag-layer-mod">Modify</span>
+            <span id="tag-layer-del">Delete</span>
         </div>
     </div>
 
@@ -139,6 +141,9 @@
                 <label for="groupName">Name</label>
                 <input class="form-control" id="groupName" required/>
             </div>
+            <div class="form-group" id="groupNextName" style="display:none">
+                <label id="groupNext">Currently next to:</label>
+            </div>
             <div class="shared">
                 <div class="form-group">
                     <label for="groupOrder">Position:</label>
@@ -203,7 +208,9 @@
             </div>
         </form>
     </div>
-    <script src="bootstrap.min.js"></script>
+    <script src="/common/bootstrap.min.js"></script>
+    <script src="/common/helper.js"></script>
+    <script src="/common/cli.js"></script>
     <script src="tse.js"></script>
 </body>
 
