@@ -1492,6 +1492,37 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/v1/user/assignTypeUser",
+    "title": "assign user type",
+    "name": "AssignTypeUser",
+    "version": "1.0.0",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>User id.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>User type (Ex. Developer, Designer).</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>assign user type.</p>",
+    "filename": "routes/v1/user/index.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
     "url": "/v1/user/:usr_id/changePerms",
     "title": "change user permission",
     "name": "ChangePermission",
@@ -1530,7 +1561,18 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v1/user/:usrnm",
+    "url": "/v1/user/users",
+    "title": "get user list",
+    "name": "GetUsrs",
+    "version": "1.0.0",
+    "group": "User",
+    "description": "<p>Get users list.</p>",
+    "filename": "routes/v1/user/index.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/v1/user",
     "title": "get user by username",
     "name": "GetUsrsByUsrnm",
     "version": "1.0.0",

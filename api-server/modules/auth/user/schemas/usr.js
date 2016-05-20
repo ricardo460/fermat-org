@@ -40,6 +40,11 @@ var usrSchema = mongoose.Schema({
         type: String,
         required: true
     },
+     type: {
+        type: String,
+        trim: true,
+        'default': null
+    },
     upd_at: {
         type: mongoose.Schema.Types.ObjectId,
         'default': new mongoose.Types.ObjectId()
