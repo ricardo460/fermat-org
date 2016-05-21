@@ -16,22 +16,32 @@
 //Reading networkServiceType
 */
 {
-    properties : [
-        "networkServiceType",
-        "platformComponentType"
-    ],
-    actors : [
-        "ACTOR_INTRA_USER",
-        //SHOP
-        "CRYPTO_BROKER",
-        "CRYPTO_CUSTOMER",
-        //CCM_INTRA_WALLET_USER
-        //CCP_INTRA_WALLET_USER
-        "ASSET_ISSUER_ACTOR",
-        "ASSET_REDEEM_POINT_ACTOR",
-        "ASSET_USER_ACTOR",
-        "ARTIST_ACTOR",
-        "FAN_ACTOR",
-        "ACTOR_CHAT"
-    ]
+    clients : {
+        properties : [
+            "networkServiceType",
+            "platformComponentType"
+        ],
+        actors : [
+            "ACTOR_INTRA_USER",
+            //SHOP
+            "CRYPTO_BROKER",
+            "CRYPTO_CUSTOMER",
+            //CCM_INTRA_WALLET_USER
+            //CCP_INTRA_WALLET_USER
+            "ASSET_ISSUER_ACTOR",
+            "ASSET_REDEEM_POINT_ACTOR",
+            "ASSET_USER_ACTOR",
+            "ARTIST_ACTOR",
+            "FAN_ACTOR",
+            "ACTOR_CHAT"
+        ]
+    },
+    nodes : {
+        properties : [
+            "registerOtherComponentDetail",
+            "registeredNetworkServiceDetail",
+            "registeredNetworkServiceTotal",
+            "registeredClientConnection"
+        ]
+    }
 }

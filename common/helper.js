@@ -7,8 +7,8 @@ function Helper() {
 
     var self = this;
 
-    this.SERVER = 'http://api.fermat.org';
-    //this.SERVER = 'http://localhost';
+    //this.SERVER = 'http://api.fermat.org';
+    this.SERVER = 'http://localhost';
 
     /**
      * Hides an element vanishing it and then eliminating it from the DOM
@@ -154,6 +154,7 @@ function Helper() {
      */
     this.capFirstLetter = function(string) {
 
+        string = string.toLowerCase();
         var words = string.split(" ");
         var result = "";
 
@@ -171,6 +172,11 @@ function Helper() {
      */
     this.toMACRO_CASE = function(input) {
         return input.toUpperCase().split(' ').join('_');
+    };
+    
+    this.fromMACRO_CASE = function(input) {
+        input = input.split("_").join(" ");
+        return self.capFirstLetter(input);
     };
 
     /**
