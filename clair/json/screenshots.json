@@ -85,15 +85,15 @@
 		}
 	},
 
-	"WPD": {
+	"APD": {
 		"Desktop": {
 			"Wallet Manager": {
 				"name" : "Wallet Manager",
 				"screenshots": {
-					"Screenshots_1" : "images/wallet_screenshots/WPD/Desktop/Wallet Manager/1.png",
-					"Screenshots_2" : "images/wallet_screenshots/WPD/Desktop/Wallet Manager/2.png",
-					"Screenshots_3" : "images/wallet_screenshots/WPD/Desktop/Wallet Manager/3.png",
-					"Screenshots_4" : "images/wallet_screenshots/WPD/Desktop/Wallet Manager/4.png"
+					"Screenshots_1" : "images/wallet_screenshots/APD/Desktop/Wallet Manager/1.png",
+					"Screenshots_2" : "images/wallet_screenshots/APD/Desktop/Wallet Manager/2.png",
+					"Screenshots_3" : "images/wallet_screenshots/APD/Desktop/Wallet Manager/3.png",
+					"Screenshots_4" : "images/wallet_screenshots/APD/Desktop/Wallet Manager/4.png"
 				}
 			}
 		}
