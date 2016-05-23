@@ -122,7 +122,7 @@ function clearMarkers(list) {
  * @author Miguelcldn
  * @param {Array} list Response from the server
  */
-function createMarkers(list, label) {
+function createMarkers(list, title) {
     
     var newNodes = [];
     
@@ -135,7 +135,7 @@ function createMarkers(list, label) {
         
         if(node.extra !== undefined && node.extra.location !== undefined && node.extra.location.latitude !== undefined && node.extra.location.longitude !== undefined) {
             var marker = new google.maps.Marker({
-                title : label,
+                title : title,
                 position : {lat : node.extra.location.latitude, lng : node.extra.location.longitude},
                 icon : {
                     url : "img/test.svg",
@@ -164,17 +164,47 @@ function drawDetails(node) {
     if(infoWindow !== null) infoWindow.close();
     
     var content = "";
+    var details = null;
     
-    if(node.marker.label === "Node") {
-        content = "<div>" +
+    if(node.marker.title === "Node") {
+        content = "<div class='info-window'>" +
         "<strong>IP:</strong> " + node.extra.location.ip + "<br/>" +
-        "<strong>Registered client connections:</strong> " + node.extra.current.registeredClientConnection + "<br/>" +
-        "</div>";
+        "<strong>Clients:</strong> " + node.extra.current.registeredClientConnection + "<br/><br/>";
+        
+        details = node.extra.current.registeredNetworkServiceDetail;
+        
+        if(details) {
+            
+            content += "<strong>Network Services:</strong><br/>";
+            
+            content += "<table>";
+            for(var ns in details) {
+                content += "<tr><td>-" + window.helper.fromMACRO_CASE(ns) + ": " + details[ns] + "</td></tr>";
+            }
+            content += "</table>";
+        }
+        
+        content += "</div>";
     }
     else {
-        content = "<div>" +
-        "<strong>IP:</strong> " + node.extra.location.ip + "<br/>" +
-        "</div>";
+        content = "<div class='info-window'>";
+        
+        if(node.extra.location.ip)
+            content += "<strong>IP:</strong> " + node.extra.location.ip + "<br/>";
+        
+        details = node.extra.comps;
+        
+        if(details && details.length !== 0) {
+            
+            content += "<strong>Network Services:</strong><br/>";
+            
+            for(var i = 0; i < details.length; i++) {
+                if(details[i].networkServiceType !== "UNDEFINED")
+                    content += "-" + window.helper.fromMACRO_CASE(details[i].networkServiceType) + "<br/>";
+            }
+        }
+        
+        content += "</div>";
     }
     
     infoWindow = new google.maps.InfoWindow({

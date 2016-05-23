@@ -37,6 +37,12 @@ th {
     margin-top: -5px;
 }
 
+div.info-window {
+    /*max-height: 150px;
+    width: 20em;
+    overflow-x: hidden;*/
+}
+
 .navbar button {
     margin-right: 10px;
 }
