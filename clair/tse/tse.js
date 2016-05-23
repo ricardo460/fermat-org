@@ -8,7 +8,7 @@ var user_data = getUserID(),
     referenceId = '',
     referenceCode = '',
     referenceOrder = '',
-    perm = 00000;
+    perm = 77000;
 //global constants
 var SERVER = 'http://api.fermat.org';
 
@@ -106,7 +106,7 @@ function deleteStructure(element, type){
                 break;
         }
 
-        sendRequest(url, 'DELETE');
+        sendRequest(url, 'DELETE', null, type);
 
         $('#type').prop('disabled', true);
         $('#add').prop('disabled', true);
@@ -251,6 +251,7 @@ function findPosition(type, order){
 
 function updateList(list, refresh){
     var table;
+    $('#perm').addClass('hidden');
     if(list === 'layer'){
         table = document.getElementById("layerList");
         while(table.rows.length > 1) {
@@ -513,6 +514,7 @@ function verify(form, request){
                 url = getRoute("layers", "insert");
                 sendRequest(url, 'POST', data, form);
                 updateList('layer', false);
+                clearLayerForm();
             }
         }
         else{
@@ -551,6 +553,7 @@ function verify(form, request){
                 url = getRoute(repo, "insert");
                 sendRequest(url, 'POST', data, form);
                 updateList(form, false);
+                clearGroupForm();
             }
         }
     }
@@ -654,7 +657,11 @@ function sendRequest(url, method, data, type){
                 if(method === 'POST')
                     window.alert('New ' + type + ' created successfully.');
                 else
-                    window.alert(type  + ' information has been modified.');
+                    window.alert(type + ' information has been modified.');
+            }
+        ).error (
+            function (xhr, status, error) {
+                window.alert(xhr.responseText);
             }
         );
     }
@@ -666,6 +673,10 @@ function sendRequest(url, method, data, type){
         }).success (
             function (res) {
                 window.alert('The ' + type + ' has been completely removed.');
+            }
+        ).error (
+            function (xhr, status, error) {
+                window.alert(xhr.responseText);
             }
         );
     }
@@ -810,7 +821,7 @@ function getData(form, request) {
 function getUserID() {
     var _usr_id = {
          __v : getCookie("v"),
-        _id : '570e44e3019d61dc4de9f331',
+        _id : '56f19f0a301492726c80881a',
         avatar_url : getCookie("avatar"),
         axs_key : '570e44e3019d61dc4de9f32f',
         email : getCookie("email"),
