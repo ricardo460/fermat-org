@@ -220,7 +220,8 @@ function getClients(nodeList) {
     for(var i = 0; i < nodeList.length; i++) {
     
         $.ajax({
-            url : window.helper.getAPIUrl("clients", {serv_id : nodeList[i]._id}),
+            //url : window.helper.getAPIUrl("clients", {serv_id : nodeList[i]._id}),
+            url : "json/dummyClients.json",
             method: "GET",
             crossDomain: true,
             success : success,
@@ -236,7 +237,8 @@ function getClients(nodeList) {
 function getNodes() {
     
     $.ajax({
-        url : window.helper.getAPIUrl("servers"),
+        //url : window.helper.getAPIUrl("servers"),
+        url : "json/dummyServrs.json",
         method: "GET",
         crossDomain: true,
         success : function(list) {
