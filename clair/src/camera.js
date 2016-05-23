@@ -321,6 +321,14 @@ function Camera(position, renderer, renderFunc) {
     this.getFocus = function() { 
         return focus;
     };
+
+    this.offFocus = function(){
+        focus = true;
+    };
+
+    this.onFocus = function(){
+        focus = null;
+    };
     
     /**
      * Casts a ray between the camera to the target

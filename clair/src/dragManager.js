@@ -8,9 +8,9 @@ function DragManager() {
 
     this.objects = [];
 
-    this.mouseMoveCallBack = function(){};
-    this.mouseDownCallBack = function(){};
-    this.MouseUpCallBack = function(){};
+    this.mouseMoveCallBack = null;
+    this.mouseDownCallBack = null;
+    this.MouseUpCallBack = null;
 
     var self = this;
 
@@ -27,7 +27,7 @@ function DragManager() {
 
         plane = new THREE.Mesh(
                 new THREE.PlaneBufferGeometry(MAX_DISTANCE * 1.5, MAX_DISTANCE * 0.5),
-                new THREE.MeshBasicMaterial({visible: false})
+                new THREE.MeshBasicMaterial({visible: false,color: Math.random() * 0xffffff})
             );
 
         window.scene.add(plane);
@@ -68,23 +68,31 @@ function DragManager() {
         }
         else{ 
 
-            var intersects = rayCaster.intersectObjects(self.objects);
+            var intersects = rayCaster.intersectObjects(self.objects, true);
 
             if (intersects.length > 0) {
 
-                if (INTERSECTED != intersects[0].object) {
+                if(INTERSECTED != intersects[0].object){
 
                     INTERSECTED = intersects[0].object;
 
-                    plane.position.copy(INTERSECTED.position);
+                    if(INTERSECTED.parent.type === "LOD"){
+                        plane.position.copy(INTERSECTED.parent.position);
+                       // INTERSECTED.parent.material.opacity = 0.5;
+                    }
+                    else{
+                        plane.position.copy(INTERSECTED.position);
+                        //INTERSECTED.material.opacity = 0.5;
+                    }
+                    
                 }
-
                 container.style.cursor = 'pointer';
             } 
             else{
 
                 INTERSECTED = null;
                 container.style.cursor = 'default';
+                window.camera.enable();
             }
         }
     }
@@ -106,7 +114,7 @@ function DragManager() {
             if (intersects.length > 0){
                 offset.copy(intersects[0].point).sub(plane.position);
             }
-
+            window.camera.disable();
             document.body.style.cursor = 'move';
         }
     }
@@ -116,14 +124,25 @@ function DragManager() {
         event.preventDefault();
 
         if (INTERSECTED){
-            plane.position.copy(INTERSECTED.position);
+
+            if(INTERSECTED.parent.type === "LOD"){
+                plane.position.copy(INTERSECTED.parent.position);
+                //INTERSECTED.parent.material.opacity = 1;
+            }
+            else{
+                plane.position.copy(INTERSECTED.position);
+               // INTERSECTED.material.opacity = 1;
+            }
+
             SELECTED = null;
         }
-
+        window.camera.enable();
         container.style.cursor = 'default';
     }
 
     this.test = function(){
+
+        //self.objects = window.signLayer.getmesh();
 
         self.objects = [];
 
@@ -134,9 +153,14 @@ function DragManager() {
                 self.objects.push(tile);
         }
 
-        /*self.mouseMoveCallBack = function(mesh, position){
-            mesh.position.copy(position);
-        };*/
+        window.camera.offFocus();
 
+        self.mouseMoveCallBack = function(mesh, position){
+
+            if(mesh.parent.type === "LOD")
+                mesh.parent.position.copy(position);
+            else
+                mesh.position.copy(position);
+        };
     }
 }
