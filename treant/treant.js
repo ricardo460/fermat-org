@@ -2,9 +2,13 @@
 
 var map,
     markClusterer,
-    nodes = [],
-    clients = [],
-    infoWindow = null;
+    elements = {
+        nodes : [],
+        clients : [],
+        actors : {}
+    },
+    infoWindow = null,
+    actorTypes = {};
 
 $(document).ready(main);
 
@@ -118,6 +122,76 @@ function clearMarkers(list) {
 }
 
 /**
+ * Creates the differents actor markers
+ * @author Miguelcldn
+ * @param {Array} clients The list of clients to extract the actors
+ */
+function createActors(clients) {
+    
+    var actorsList = {};
+    
+    var setListener = function(act) {
+        act.marker.addListener('click', function() {drawDetails(act);});
+    };
+    
+    for(var i = 0; i < clients.length; i++) {
+        
+        var comps = clients[i].extra.comps;
+        
+        if(comps) {
+            for(var j = 0; j < comps.length; j++) {
+                
+                var comp = comps[i];
+                
+                if(comp.location) {
+                    
+                    var actorType = ((comp.networkServiceType !== "UNDEFINED") ? comp.networkServiceType : comp.platformComponentType) || "UNDEFINED";
+                    var title = window.helper.fromMACRO_CASE(actorType);
+                    var actorHasMarker = actorTypes.clients.actors.indexOf(actorType) != -1;
+                    var url = "img/actors/";
+                    
+                    if(actorHasMarker) {
+                        url += actorType;
+                    }
+                    else {
+                        url += "generic";
+                        window.console.log("Found generic actor: " + actorType);
+                    }
+                    
+                    url += ".svg";
+                    
+                    
+                    var marker = new google.maps.Marker({
+                        title : title,
+                        position : {lat : comp.location.latitude, lng : comp.location.longitude},
+                        icon : {
+                            url : url,
+                            scaledSize: new google.maps.Size(30, 30)
+                        }
+                    });
+                    
+                    var actor = {
+                        indentityPublicKey : comp.identityPublicKey,
+                        networkServiceType : comp.networkServiceType,
+                        type : actorType
+                    };
+                    
+                    if(comp.extraData) actor.extraData = JSON.parse(comp.extraData);
+                    if(comp.alias) actor.alias = comp.alias;
+                    
+                    actor.marker = marker;
+                    
+                    if(window.elements.actors[actorType] !== undefined) window.elements.actors[actorType] = [];
+                    
+                    window.elements.actors[actorType].push(actor);
+                    setListener(actor);
+                }
+            }
+        }
+    }
+}
+
+/**
  * Draws the Fermat Nodes
  * @author Miguelcldn
  * @param {Array} list Response from the server
@@ -166,9 +240,10 @@ function drawDetails(node) {
     var content = "";
     var details = null;
     
+    content += "<div class='info-window'>";
+    
     if(node.marker.title === "Node") {
-        content = "<div class='info-window'>" +
-        "<strong>IP:</strong> " + node.extra.location.ip + "<br/>" +
+        content = "<strong>IP:</strong> " + node.extra.location.ip + "<br/>" +
         "<strong>Clients:</strong> " + node.extra.current.registeredClientConnection + "<br/><br/>";
         
         details = node.extra.current.registeredNetworkServiceDetail;
@@ -183,11 +258,8 @@ function drawDetails(node) {
             }
             content += "</table>";
         }
-        
-        content += "</div>";
     }
-    else {
-        content = "<div class='info-window'>";
+    else if(node.marker.title === "Client") {
         
         if(node.extra.location.ip)
             content += "<strong>IP:</strong> " + node.extra.location.ip + "<br/>";
@@ -203,15 +275,28 @@ function drawDetails(node) {
                     content += "-" + window.helper.fromMACRO_CASE(details[i].networkServiceType) + "<br/>";
             }
         }
-        
-        content += "</div>";
     }
+    else if(actorTypes.clients.actors.indexOf(node.marker.title) != -1) {
+        content += "<strong>" + node.type + "</strong><br/>";
+        
+        if(node.alias) content += node.alias + "<br/>";
+        if(node.extraData) {
+            if(node.extraData.PHRASE) content += "Phrase: " + node.extraData.PHRASE + "<br/>";
+            if(node.extraData.AVATAR_IMG) content += ""; //Show profile picture;
+        }
+    }
+    else {
+        content = "No details available";
+    }
+    
+    content += "</div>";
     
     infoWindow = new google.maps.InfoWindow({
         content : content
     });
     
     infoWindow.open(map, node.marker);
+    
 }
 
 /**
@@ -228,7 +313,27 @@ function drawMap() {
     window.markClusterer = new MarkerClusterer(window.map);
     window.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(createControlPanel());
     
-    getNodes();
+    //Load the config file before loading anything else
+    $.ajax({
+        url: "json/actorTypes.json",
+        method: "GET",
+        crossDomain: true,
+        success: function(list) {
+            window.actorTypes = list;
+            getNodes();
+        },
+        error: function(request, error) {
+            window.alert("Could not retrieve the data, see console for details.");
+            window.console.dir(error);
+        }
+        
+    });
+}
+
+function getActors(clientList) {
+    var actorList = {};
+    
+    
 }
 
 /**
@@ -239,7 +344,8 @@ function drawMap() {
 function getClients(nodeList) {
     
     var success = function(list) {
-        window.clients = createMarkers(list, "Client");
+        window.elements.clients = createMarkers(list, "Client");
+        getActors(list);
     };
     
     var error = function(request, error) {
@@ -272,8 +378,8 @@ function getNodes() {
         method: "GET",
         crossDomain: true,
         success : function(list) {
-            window.nodes = createMarkers(list, "Node");
-            showMarkers(window.nodes);
+            window.elements.nodes = createMarkers(list, "Node");
+            showMarkers(window.elements.nodes);
             getClients(list);
         },
         error : function(request, error) {
@@ -336,7 +442,7 @@ function main() {
  * @param {DOMObject} cb The combobox
  */
 function onOptionChanged(cb) {
-    var list = (cb.value === "nodes") ? window.nodes : window.clients,
+    var list = (cb.value === "nodes") ? window.elements.nodes : window.elements.clients,
         action = (cb.checked === true) ? showMarkers : clearMarkers;
     
     action(list);
