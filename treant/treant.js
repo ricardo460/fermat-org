@@ -39,9 +39,19 @@ function createControlPanel() {
     controlText.style.lineHeight = '38px';
     controlText.style.paddingLeft = '5px';
     controlText.style.paddingRight = '5px';
+    
     controlText.innerHTML = '<input type="checkbox" value="nodes" checked onChange="onOptionChanged(this)">Nodes</input><br>' +
-        '<input type="checkbox" value="clients" onChange="onOptionChanged(this)">Clients</input>';
+        '<input type="checkbox" value="clients" onChange="onOptionChanged(this)">Clients</input><br>' + 
+        '<input type="checkbox" value="actors" onChange="onOptionChanged(this)">Actors</input>';
     controlUI.appendChild(controlText);
+    
+    /*//Create the filter options
+    var options = "";
+    for(var actor in actorTypes) {
+        
+        
+        
+    }*/
     
     return controlDiv;
 }
@@ -141,14 +151,14 @@ function createActors(clients) {
         if(comps) {
             for(var j = 0; j < comps.length; j++) {
                 
-                var comp = comps[i];
+                var comp = comps[j];
                 
                 if(comp.location) {
                     
                     var actorType = ((comp.networkServiceType !== "UNDEFINED") ? comp.networkServiceType : comp.platformComponentType) || "UNDEFINED";
                     var title = window.helper.fromMACRO_CASE(actorType);
                     var actorHasMarker = actorTypes.clients.actors.indexOf(actorType) != -1;
-                    var url = "img/actors/";
+                    var url = "img/markers/";
                     
                     if(actorHasMarker) {
                         url += actorType;
@@ -163,7 +173,8 @@ function createActors(clients) {
                     
                     var marker = new google.maps.Marker({
                         title : title,
-                        position : {lat : comp.location.latitude, lng : comp.location.longitude},
+                        position : randomizeLocation(comp.location),
+                        //position : { lat : comp.location.latitude, lng : comp.location.longitude },
                         icon : {
                             url : url,
                             scaledSize: new google.maps.Size(30, 30)
@@ -176,12 +187,12 @@ function createActors(clients) {
                         type : actorType
                     };
                     
-                    if(comp.extraData) actor.extraData = JSON.parse(comp.extraData);
+                    if(comp.extraData && comp.extraData[0] === "{") actor.extraData = JSON.parse(comp.extraData);
                     if(comp.alias) actor.alias = comp.alias;
                     
                     actor.marker = marker;
                     
-                    if(window.elements.actors[actorType] !== undefined) window.elements.actors[actorType] = [];
+                    if(window.elements.actors[actorType] === undefined) window.elements.actors[actorType] = [];
                     
                     window.elements.actors[actorType].push(actor);
                     setListener(actor);
@@ -189,6 +200,8 @@ function createActors(clients) {
             }
         }
     }
+    
+    window.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(createControlPanel());
 }
 
 /**
@@ -276,17 +289,17 @@ function drawDetails(node) {
             }
         }
     }
-    else if(actorTypes.clients.actors.indexOf(node.marker.title) != -1) {
-        content += "<strong>" + node.type + "</strong><br/>";
+    else if(actorTypes.clients.actors.indexOf(window.helper.toMACRO_CASE(node.marker.title)) != -1) {
+        content += "<strong>" + node.marker.title + "</strong><br/>";
         
-        if(node.alias) content += node.alias + "<br/>";
         if(node.extraData) {
+            if(node.alias) content += node.alias + "<br/>";
             if(node.extraData.PHRASE) content += "Phrase: " + node.extraData.PHRASE + "<br/>";
             if(node.extraData.AVATAR_IMG) content += ""; //Show profile picture;
         }
     }
     else {
-        content = "No details available";
+        content = "<strong>" + node.marker.title + "</strong><br>No details available";
     }
     
     content += "</div>";
@@ -311,7 +324,6 @@ function drawMap() {
     });
     
     window.markClusterer = new MarkerClusterer(window.map);
-    window.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(createControlPanel());
     
     //Load the config file before loading anything else
     $.ajax({
@@ -330,12 +342,6 @@ function drawMap() {
     });
 }
 
-function getActors(clientList) {
-    var actorList = {};
-    
-    
-}
-
 /**
  * Based on the nodes IDs, load the clients
  * @author Miguelcldn
@@ -345,7 +351,7 @@ function getClients(nodeList) {
     
     var success = function(list) {
         window.elements.clients = createMarkers(list, "Client");
-        getActors(list);
+        createActors(list);
     };
     
     var error = function(request, error) {
@@ -442,10 +448,15 @@ function main() {
  * @param {DOMObject} cb The combobox
  */
 function onOptionChanged(cb) {
-    var list = (cb.value === "nodes") ? window.elements.nodes : window.elements.clients,
+    var list = window.elements[cb.value],
         action = (cb.checked === true) ? showMarkers : clearMarkers;
     
-    action(list);
+    if(cb.value === "actors") {
+        for(var ac in window.elements.actors) {
+            action(window.elements.actors[ac]);
+        }
+    }
+    else action(list);
 }
 
 /**
@@ -481,4 +492,11 @@ function showMarkers(list) {
     
     markClusterer.resetViewport();
     markClusterer.redraw();
+}
+
+function randomizeLocation(location) {
+    return {
+        lat : location.latitude + ((Math.random() * 10 % 3) / 10),
+        lng : location.longitude + ((Math.random() * 10 % 3) / 10)
+    };
 }
