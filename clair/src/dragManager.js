@@ -1,5 +1,4 @@
 /**
- * Responsible for drawing the p2p network
  * @author Ricardo Delgado
  */
 function DragManager() {
@@ -78,7 +77,7 @@ function DragManager() {
 
                     if(INTERSECTED.parent.type === "LOD"){
                         plane.position.copy(INTERSECTED.parent.position);
-                       // INTERSECTED.parent.material.opacity = 0.5;
+                        //INTERSECTED.parent.material.opacity = 0.5;
                     }
                     else{
                         plane.position.copy(INTERSECTED.position);
@@ -138,29 +137,5 @@ function DragManager() {
         }
         window.camera.enable();
         container.style.cursor = 'default';
-    }
-
-    this.test = function(){
-
-        //self.objects = window.signLayer.getmesh();
-
-        self.objects = [];
-
-        for(var i = 0; i < window.tilesQtty.length; i++){
-
-                var tile = window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
-
-                self.objects.push(tile);
-        }
-
-        window.camera.offFocus();
-
-        self.mouseMoveCallBack = function(mesh, position){
-
-            if(mesh.parent.type === "LOD")
-                mesh.parent.position.copy(position);
-            else
-                mesh.position.copy(position);
-        };
     }
 }
