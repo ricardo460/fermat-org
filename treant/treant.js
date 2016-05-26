@@ -295,7 +295,7 @@ function drawDetails(node) {
         if(node.extraData) {
             if(node.alias) content += node.alias + "<br/>";
             if(node.extraData.PHRASE) content += "Phrase: " + node.extraData.PHRASE + "<br/>";
-            if(node.extraData.AVATAR_IMG) content += ""; //Show profile picture;
+            if(node.extraData.AVATAR_IMG) content += "<img src='data:image/png;base64," + node.extraData.AVATAR_IMG + "'/>";
         }
     }
     else {
@@ -458,6 +458,21 @@ function onOptionChanged(cb) {
     }
     else action(list);
 }
+
+/*function processImage(data) {
+    var changes = {
+        "\\n" : "",
+        "\u003d" : "="
+    }
+    
+    var output = data;
+    
+    for(var before in changes) {
+        output = output.split(before).join(changes[before]);
+    }
+    
+    return output;
+}*/
 
 /**
  * Gets and shows the nodes history
