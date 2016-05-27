@@ -29,9 +29,9 @@ function init() {
             location.href = '../';
         });
 
-        checkPermissions();
         environment = 'development';
         axs_key = user_data.axs_key;
+        checkPermissions();
 
         getUsers();
 
@@ -64,19 +64,17 @@ function getUsers(){
 }
 
 function verifyUser(user){
-    var url = getRoute('perm', user);
-
-    console.log(url);
-
+    var url = getRoute('perm');
     $.ajax({
         url: url,
-        method: "GET"
+        method: "POST",
+        data: {
+            usrnm: user
+        }
     }).success (
         function (res) {
-            console.log(user + " " + res.perm + res);
             if(comparePermissions(res.perm))
                 fillTable(res);
-
         }
     );
 }
@@ -110,17 +108,17 @@ function fillTable(data){
         $('#users').append("<tr><td>" + data.usrnm + "</td><td>" + "</td><td>" + "<button id='" + data._id + "' name='perm: " + data.usrnm + "' onclick=''>Modify</button>" + "</td></tr>");
 }
 
-function getRoute(route, user){
+function getRoute(route){
 
     var tail = "",
         param,
         url;
 
     if(route === 'users')
-        tail = "/v1/repo/devs";
+        tail = "/v1/user/users";
     else
-        tail = "/v1/user/" + user;
-    
+        tail = "/v1/user/";
+
     param = {
         env : environment,
         axs_key : axs_key
@@ -199,11 +197,14 @@ function getUserID() {
 }
 
 function checkPermissions() {
-    var url = getRoute('perm', user_data.usrnm);
+    var url = getRoute('perm');
 
     $.ajax({
             url: url,
-            method: "GET"
+            method: "POST",
+            data: {
+                usrnm: user_data.usrnm
+            }
     }).success (
         function (res) {
             perm = parseInt(res.perm);
