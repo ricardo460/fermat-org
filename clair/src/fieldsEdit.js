@@ -196,12 +196,12 @@ function FieldsEdit() {
 
         workflowHeader();
         workflowDescription();
-        workflowModalSteps();
+        //workflowModalSteps();
 
-        createbutton(function(){
+        /*createbutton(function(){
             self.actions.exit = null;
             window.workFlowEdit.save();  
-        });
+        });*/
 
     };
 
@@ -245,7 +245,7 @@ function FieldsEdit() {
         var title = document.getElementById("workflow-header-title");
         var desc = document.getElementById("modal-desc-textarea");
         var platform = document.getElementById("workflow-header-plataform");
-        var steps = document.getElementById("step-List").valueJson.slice();
+        var steps = [];
 
         if(steps.length > 1){
 

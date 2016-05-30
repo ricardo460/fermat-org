@@ -150,6 +150,8 @@ function WorkFlowEdit() {
         }
     };
 
+
+
     function createElement(){
 
         var mesh = classFlow.createTitleBox();
@@ -214,26 +216,32 @@ function WorkFlowEdit() {
 
             mesh = window.fieldsEdit.objects.tile.mesh;
 
+            showBrowser(false);
+
+            buttonModeEditSteps();
+
+            window.removeEventListener('keydown', window.camera.onKeyDown, false);
+
+            window.addEventListener('keydown', newOnKeyDown, false);
+
             window.fieldsEdit.actions.exit = function(){
 
                 classFlow.deleteStep();
 
                 classFlow = null;
 
+                showBrowser(true);
+
                 window.camera.resetPosition();
 
+                window.headers.transformWorkFlow(2000);
+
+                window.removeEventListener('keydown', newOnKeyDown, false);
+
+                window.addEventListener('keydown', window.camera.onKeyDown, false);
+
+
             };
-
-            animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
-
-                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, 950, 1), 2000);
-
-                if(typeof(callback) === 'function')
-                    callback();
-
-                window.helper.showBackButton();
-
-            });
         }
         else if(window.fieldsEdit.actions.type === "update"){
 
@@ -294,6 +302,18 @@ function WorkFlowEdit() {
 
             });
             
+        }
+    }
+
+
+
+    function showBrowser(state){
+
+        var browsers = window.browserManager.objects.mesh;
+
+        for(var i = 0; i < browsers.length; i++){
+            var mesh = browsers[i];
+            mesh.visible = state;
         }
     }
 
@@ -974,4 +994,99 @@ function WorkFlowEdit() {
                 })
             .start();
     }
+
+    //Botones 
+
+    function buttonModeEditSteps(position){
+
+        window.helper.hide('backButton', 0, true);
+
+        window.actualView = false;
+
+        displayField(false);
+
+        cleanButtons();
+
+        window.tileManager.transform(false, 2000);
+
+        window.signLayer.transformSignLayer();
+
+        var newCenter = position || new THREE.Vector3(0, 0, 0);
+        var transition = 3000;
+
+        newCenter = window.viewManager.translateToSection('table', newCenter);
+        window.camera.move(newCenter.x, newCenter.y, camera.getMaxDistance() / 2, transition, true);
+        
+        window.headers.transformTable(transition);
+
+        window.buttonsManager.createButtons('button-preview', 'Workflow Preview', function(){
+            buttonModePreview();}, null, null, "left");
+
+        window.buttonsManager.createButtons('button-path', 'Edit Path', function(){
+            buttonModeEditPath();}, null, null, "right");
+    }
+
+    function buttonModeEditPath(){
+
+        cleanButtons();
+
+        window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
+            buttonModeEditSteps();}, null, null, "left");
+    }
+
+    function buttonModePreview(){
+
+        cleanButtons();
+
+        displayField(true);
+
+        window.actualView = 'workflows';
+
+        var mesh = window.fieldsEdit.objects.tile.mesh;
+
+        animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
+
+            window.camera.setFocus(mesh, new THREE.Vector4(0, 0, 950, 1), 2000);
+
+            window.headers.transformWorkFlow(2000);
+
+            window.helper.show('backButton', 0);
+
+            window.buttonsManager.createButtons('button-save', 'Save', function(){
+                buttonModePreview();}, null, null, "right");
+
+            window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
+                buttonModeEditSteps();}, null, null, "left");
+        });
+       
+    }
+
+    function displayField(visible){
+
+        if(visible)
+            window.helper.show("workflow-header");
+        else
+            window.helper.hide("workflow-header", 1000, true);
+    }
+
+    function newOnKeyDown(event){
+
+        if(event.keyCode === 27 /* ESC */) {
+
+            window.camera.offFocus();
+
+            window.actualView = 'workflows';
+
+            window.camera.onKeyDown(event);
+        }
+    }
+
+    function cleanButtons(){
+
+        window.buttonsManager.deleteButton('button-save');
+        window.buttonsManager.deleteButton('button-preview');
+        window.buttonsManager.deleteButton('button-path');
+        window.buttonsManager.deleteButton('button-Steps');   
+    }
+
 }

@@ -104,16 +104,17 @@ function ButtonsManager() {
      * @param {String}  id  Button ID.
      * @param {Function} callback Function to call when finished.    
      */
-    this.deleteButton = function(id, _side, callback){
+    this.deleteButton = function(id, callback){
 
-        var side = _side || 'left';
+        for(var side in self.objects){
+            
+            for(var i = 0; i < self.objects[side].buttons.length; i++){
 
-        for(var i = 0; i < self.objects[side].buttons.length; i++){
-
-            if(self.objects[side].buttons[i].id === id){
-                self.objects[side].buttons.splice(i,1);
-                window.helper.hide($('#'+id), 1000, callback);
-                
+                if(self.objects[side].buttons[i].id === id){
+                    self.objects[side].buttons.splice(i,1);
+                    window.helper.hide($('#'+id), 1000, callback);
+                    
+                }
             }
         }
     };

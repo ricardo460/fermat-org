@@ -206,7 +206,8 @@ function Camera(position, renderer, renderFunc) {
                     window.viewManager.views[window.actualView].reset();
                 }
 
-                self.resetPosition(duration);
+                if(window.actualView)
+                    self.resetPosition(duration);
             }
         }
     };
