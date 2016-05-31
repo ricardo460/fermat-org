@@ -88,11 +88,13 @@ function API() {
 
         function callAjax(route, port, callback){
 
-            if(!window.disconnected)
-                url = url + route + port;
+            var URL = url + route + port;
+
+            if(window.disconnected)
+                URL = url;
 
             $.ajax({
-                url: url,
+                url: URL,
                 method: "GET"
             }).success (
                 function (res) {
