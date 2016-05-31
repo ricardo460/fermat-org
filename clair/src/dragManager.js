@@ -7,9 +7,20 @@ function DragManager() {
 
     this.objects = [];
 
-    this.mouseMoveCallBack = null;
-    this.mouseDownCallBack = null;
-    this.MouseUpCallBack = null;
+    this.functions = {
+            MOVE : [],
+            CLICK : [],
+            DROP : [],
+            CROSS : []
+        };
+
+    this.styleMouse = {
+            MOVE : 'move',
+            CLICK : 'move',
+            DROP : 'default',
+            CROSS : 'pointer',
+            default : 'default' 
+        };
 
     var self = this;
 
@@ -17,6 +28,7 @@ function DragManager() {
         offset = new THREE.Vector3(),
         container = document.getElementById('container'),
         INTERSECTED = null,
+        OPACITY = null,
         SELECTED = null,
         plane = null;
 
@@ -53,17 +65,28 @@ function DragManager() {
 
         window.camera.getRayCast(rayCaster, mouse);
 
-        if (SELECTED) {
+        var i = 0;
+
+        if (SELECTED) { 
+
             var intersects = rayCaster.intersectObject(plane);
+
             if (intersects.length > 0) {
 
-                if(typeof(self.mouseMoveCallBack) === 'function'){ 
+                var position = intersects[0].point.sub(offset);
 
-                    var position = intersects[0].point.sub(offset);
+                for(i = 0; i < self.functions.MOVE.length; i++){
 
-                    self.mouseMoveCallBack(SELECTED, position);
+                    var action = self.functions.MOVE[i];
+
+                    if(typeof(action) === 'function')
+                        action(SELECTED, position);
                 }
+
+                container.style.cursor = self.styleMouse.MOVE;
             }
+            else
+                container.style.cursor = self.styleMouse.MOVE;
         }
         else{ 
 
@@ -75,28 +98,49 @@ function DragManager() {
 
                     INTERSECTED = intersects[0].object;
 
-                    if(INTERSECTED.parent.type === "LOD"){
+                    for(i = 0; i < self.functions.CROSS.length; i++){
+
+                        var action = self.functions.CROSS[i];
+
+                        if(typeof(action) === 'function')
+                            action();
+                    }
+
+                    if(INTERSECTED.parent.type === "LOD")
                         plane.position.copy(INTERSECTED.parent.position);
-                        //INTERSECTED.parent.material.opacity = 0.5;
-                    }
-                    else{
+                    else
                         plane.position.copy(INTERSECTED.position);
-                        //INTERSECTED.material.opacity = 0.5;
-                    }
-                    
+
+                    if(INTERSECTED !== OPACITY){
+
+                        if(OPACITY)
+                            OPACITY.material.opacity = 1;
+
+                        OPACITY = INTERSECTED;
+
+                        OPACITY.material.opacity = 0.5; 
+                    } 
+
+                    container.style.cursor = self.styleMouse.CROSS;
                 }
-                container.style.cursor = 'pointer';
             } 
             else{
 
                 INTERSECTED = null;
-                container.style.cursor = 'default';
+
+                if(OPACITY){
+                    OPACITY.material.opacity = 1;
+                    OPACITY = null;
+                }
+
+                container.style.cursor = self.styleMouse.default;
+
                 window.camera.enable();
             }
         }
     }
 
-    function mouseDown( event ) {
+    function mouseDown(event) { 
 
         event.preventDefault();
 
@@ -113,29 +157,64 @@ function DragManager() {
             if (intersects.length > 0){
                 offset.copy(intersects[0].point).sub(plane.position);
             }
+
             window.camera.disable();
-            document.body.style.cursor = 'move';
+
+            for(i = 0; i < self.functions.CLICK.length; i++){
+
+                var action = self.functions.CLICK[i];
+
+                if(typeof(action) === 'function')
+                    action();
+            }
+
+            container.style.cursor = self.styleMouse.CLICK;
         }
     }
 
-    function mouseUp(event) {
+    function mouseUp(event) { 
 
         event.preventDefault();
 
         if (INTERSECTED){
 
-            if(INTERSECTED.parent.type === "LOD"){
+            if(INTERSECTED.parent.type === "LOD")
                 plane.position.copy(INTERSECTED.parent.position);
-                //INTERSECTED.parent.material.opacity = 1;
-            }
-            else{
+            else
                 plane.position.copy(INTERSECTED.position);
-               // INTERSECTED.material.opacity = 1;
-            }
 
             SELECTED = null;
+            INTERSECTED = null;
         }
+
         window.camera.enable();
-        container.style.cursor = 'default';
+
+        container.style.cursor = self.styleMouse.DROP;
+
+        for(i = 0; i < self.functions.DROP.length; i++){
+
+            var action = self.functions.DROP[i];
+
+            if(typeof(action) === 'function')
+                action();
+        }
+    }
+
+    function resetStyleMouse(){
+
+        self.styleMouse.CLICK = 'move';
+        self.styleMouse.CROSS = 'pointer';
+        self.styleMouse.MOVE = 'move';
+        self.styleMouse.DROP = 'default';
+    }
+
+    function cleanFunctions(){
+
+        self.functions = {
+            MOVE : [],
+            CLICK : [],
+            DROP : [],
+            CROSS : []
+        };
     }
 }

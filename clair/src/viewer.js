@@ -8,6 +8,7 @@ var tilesQtty = [],
     stats = null,
     headersUp = false,
     currentRender = "start",
+    disconnected = true,
 //Class
     tileManager = new TileManager(),
     logo = new Logo(),

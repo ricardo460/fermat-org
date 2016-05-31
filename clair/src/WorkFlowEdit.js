@@ -4,6 +4,13 @@ function WorkFlowEdit() {
 
     var classFlow = null;
 
+    var jsonSteps = [];
+
+    var steps = {
+        mesh : [],
+        tile : []
+    };
+
     this.addButton = function(_id){
 
         var id = null,
@@ -214,6 +221,10 @@ function WorkFlowEdit() {
 
             createElement();
 
+            jsonSteps = [];
+
+            window.dragManager.on();
+
             mesh = window.fieldsEdit.objects.tile.mesh;
 
             showBrowser(false);
@@ -231,6 +242,8 @@ function WorkFlowEdit() {
                 classFlow = null;
 
                 showBrowser(true);
+
+                window.dragManager.off();
 
                 window.camera.resetPosition();
 
@@ -304,8 +317,6 @@ function WorkFlowEdit() {
             
         }
     }
-
-
 
     function showBrowser(state){
 
@@ -1007,6 +1018,8 @@ function WorkFlowEdit() {
 
         cleanButtons();
 
+        window.dragManager.objects = [];
+
         window.tileManager.transform(false, 2000);
 
         window.signLayer.transformSignLayer();
@@ -1030,9 +1043,59 @@ function WorkFlowEdit() {
 
         cleanButtons();
 
+        window.dragManager.objects = [];
+
         window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
             buttonModeEditSteps();}, null, null, "left");
+
+        if(jsonSteps.length <= 0){
+
+            window.dragManager.styleMouse.CROSS = 'copy';
+
+            for(var i = 0; i < window.tilesQtty.length; i++){
+
+                var tile = window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
+
+                window.dragManager.objects.push(tile);
+            }
+        }
+        else{
+
+        }
+
+        var action = function(mesh, position){
+
+            if(mesh.parent.type === "LOD")
+                mesh.parent.position.copy(position);
+            else
+                mesh.position.copy(position);
+        };
+
+        window.dragManager.functions.MOVE.push(action); 
     }
+
+    this.createButon = function(){
+
+        var tileWidth = (window.TILE_DIMENSION.width - window.TILE_SPACING) / 2,
+            tileHeight = (window.TILE_DIMENSION.height - window.TILE_SPACING) / 4;
+
+        var mesh =  new THREE.Mesh(
+                    new THREE.PlaneBufferGeometry(tileHeight, tileHeight),
+                    new THREE.MeshBasicMaterial({
+                            side: THREE.DoubleSide,
+                            color: Math.random() * 0xffffff
+                        })
+                    );
+
+        window.scene.add(mesh);
+
+        var tile = window.helper.getSpecificTile(window.tilesQtty[0]).mesh;
+
+        window.camera.setFocus(tile, new THREE.Vector4(0, 0, 950, 1), 2000);
+
+        mesh.position.set(tile.position.x - tileWidth, tile.position.y, tile.position.z + 2);
+    
+    return mesh;}
 
     function buttonModePreview(){
 
@@ -1057,8 +1120,7 @@ function WorkFlowEdit() {
 
             window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
                 buttonModeEditSteps();}, null, null, "left");
-        });
-       
+        }); 
     }
 
     function displayField(visible){
