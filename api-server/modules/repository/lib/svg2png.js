@@ -1,5 +1,5 @@
-const pn = require("pn");
-const svg2png = require("svg2png");
+var pn = require('pn/fs');
+var svg2png = require('svg2png');
 var fs = require('pn/fs');
 /**
  * [svgToPng description]
@@ -7,11 +7,11 @@ var fs = require('pn/fs');
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.svgToPng = function(svg_file, callback) {
+exports.svgToPng = function(path, filename, callback) {
 	try {
-		pn.readFile(svg_file)
+		pn.readFile(path)
 			.then(svg2png)
-			.then(buffer => fs.writeFile("dest.png", buffer))
+			.then(buffer => fs.writeFile("./uploads/"+filename+".png", buffer))
 			.catch(e => console.error(e));
 	} catch (err) {
 		console.log("Error: " + err);
