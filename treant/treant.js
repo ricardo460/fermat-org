@@ -3,9 +3,8 @@
 var map,
     markClusterer,
     elements = {
-        nodes : [],
-        clients : [],
-        actors : {}
+        NETWORK_NODE : [],
+        NETWORK_CLIENT : []
     },
     infoWindow = null,
     actorTypes = {};
@@ -108,7 +107,7 @@ function createGraphic(data) {
     for(var i = 0; i < data.length; i++) {
         var element = data[i];
         items.push({x: new Date(element.time), y: element.servers, group: 0});
-        items.push({x: new Date(element.time), y: element.clients, group: 1});
+        items.push({x: new Date(element.time), y: element.NETWORK_CLIENT, group: 1});
     }
     
     var dataSet = new vis.DataSet(items);
@@ -153,6 +152,8 @@ function createGraphic(data) {
  */
 function clearMarkers(list) {
     
+    if(list === undefined) return;
+    
     for(var i = 0; i < list.length; i++) {
         if(list[i].marker !== undefined)
             markClusterer.removeMarker(list[i].marker, true);
@@ -188,51 +189,49 @@ function createActors(clients) {
                     
                     var actorType = ((comp.networkServiceType !== "UNDEFINED") ? comp.networkServiceType : comp.platformComponentType) || "UNDEFINED";
                     var title = window.helper.fromMACRO_CASE(actorType);
-                    var actorHasMarker = actorTypes.clients.actors.indexOf(actorType) != -1;
+                    var actorHasMarker = actorTypes.indexOf(actorType) != -1;
                     var url = "img/markers/";
                     
                     if(actorHasMarker) {
                         url += actorType;
-                    }
-                    else {
-                        url += "generic";
-                        window.console.log("Found generic actor: " + actorType);
-                    }
                     
-                    url += ".svg";
-                    
-                    
-                    var marker = new google.maps.Marker({
-                        title : title,
-                        position : randomizeLocation(comp.location),
-                        //position : { lat : comp.location.latitude, lng : comp.location.longitude },
-                        icon : {
-                            url : url,
-                            scaledSize: new google.maps.Size(30, 30)
-                        }
-                    });
-                    
-                    var actor = {
-                        indentityPublicKey : comp.identityPublicKey,
-                        networkServiceType : comp.networkServiceType,
-                        type : actorType
-                    };
-                    
-                    if(comp.extraData && comp.extraData[0] === "{") actor.extraData = JSON.parse(comp.extraData);
-                    if(comp.alias) actor.alias = comp.alias;
-                    
-                    actor.marker = marker;
-                    
-                    if(window.elements.actors[actorType] === undefined) window.elements.actors[actorType] = [];
-                    
-                    window.elements.actors[actorType].push(actor);
-                    setListener(actor);
+						url += ".svg";
+						
+						
+						var marker = new google.maps.Marker({
+							title : title,
+							position : randomizeLocation(comp.location),
+							//position : { lat : comp.location.latitude, lng : comp.location.longitude },
+							icon : {
+								url : url,
+								scaledSize: new google.maps.Size(50, 50)
+							}
+						});
+						
+						var actor = {
+							indentityPublicKey : comp.identityPublicKey,
+							networkServiceType : comp.networkServiceType,
+							type : actorType
+						};
+						
+						if(comp.extraData && comp.extraData[0] === "{") actor.extraData = JSON.parse(comp.extraData);
+						if(comp.alias) actor.alias = comp.alias;
+						
+						actor.marker = marker;
+						
+						var list = (actorHasMarker) ? actorType : "OTHER";
+						if(window.elements[list] === undefined) window.elements[list] = [];
+						window.elements[list].push(actor);
+						setListener(actor);
+					}
                 }
             }
         }
     }
     
     window.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(createControlPanel());
+    toggleFilter('ALL');
+    
 }
 
 /**
@@ -250,14 +249,15 @@ function createMarkers(list, title) {
     
     for(var i = 0; i < list.length; i++) {
         var node = list[i];
+		var url = (title === "Node") ? "NETWORK_NODE.svg" : "NETWORK_CLIENT.svg";
         
         if(node.extra !== undefined && node.extra.location !== undefined && node.extra.location.latitude !== undefined && node.extra.location.longitude !== undefined) {
             var marker = new google.maps.Marker({
                 title : title,
                 position : {lat : node.extra.location.latitude, lng : node.extra.location.longitude},
                 icon : {
-                    url : "img/test.svg",
-                    scaledSize: new google.maps.Size(30, 30)
+                    url : "img/markers/" + url,
+                    scaledSize: new google.maps.Size(50, 50)
                 },
             });
             
@@ -320,7 +320,7 @@ function drawDetails(node) {
             }
         }
     }
-    else if(actorTypes.clients.actors.indexOf(window.helper.toMACRO_CASE(node.marker.title)) != -1) {
+    else if(actorTypes.indexOf(window.helper.toMACRO_CASE(node.marker.title)) != -1) {
         content += "<strong>" + node.marker.title + "</strong><br/>";
         
         if(node.extraData) {
@@ -354,7 +354,7 @@ function drawMap() {
         zoom: 2
     });
     
-    window.markClusterer = new MarkerClusterer(window.map);
+    window.markClusterer = new MarkerClusterer(window.map, [], { gridSize : 50 });
     
     //Load the config file before loading anything else
     $.ajax({
@@ -362,7 +362,10 @@ function drawMap() {
         method: "GET",
         crossDomain: true,
         success: function(list) {
-            window.actorTypes = list;
+            window.actorTypes = list.clients.actors;
+            for(var i = 0; i < actorTypes.length; i++) {
+                elements[actorTypes[i]] = [];
+            }
             getNodes();
         },
         error: function(request, error) {
@@ -381,20 +384,21 @@ function drawMap() {
 function getClients(nodeList) {
     
     var success = function(list) {
-        window.elements.clients = createMarkers(list, "Client");
+        window.elements.NETWORK_CLIENT = createMarkers(list, "Client");
         createActors(list);
     };
     
     var error = function(request, error) {
         window.alert("Could not retrieve the data, see console for details.");
         window.console.dir(error);
+        success([]);
     };
     
     for(var i = 0; i < nodeList.length; i++) {
     
         $.ajax({
-            //url : window.helper.getAPIUrl("clients", {serv_id : nodeList[i]._id}),
-            url : "json/dummyClients.json",
+            url : window.helper.getAPIUrl("clients", {serv_id : nodeList[i]._id}),
+            //url : "json/dummyClients.json",
             method: "GET",
             crossDomain: true,
             success : success,
@@ -410,13 +414,12 @@ function getClients(nodeList) {
 function getNodes() {
     
     $.ajax({
-        //url : window.helper.getAPIUrl("servers"),
-        url : "json/dummyServrs.json",
+        url : window.helper.getAPIUrl("servers"),
+        //url : "json/dummyServrs.json",
         method: "GET",
         crossDomain: true,
         success : function(list) {
-            window.elements.nodes = createMarkers(list, "Node");
-            showMarkers(window.elements.nodes);
+            window.elements.NETWORK_NODE = createMarkers(list, "Node");
             getClients(list);
         },
         error : function(request, error) {
@@ -424,45 +427,6 @@ function getNodes() {
             window.console.dir(error);
         }
     });
-    
-//    createMarkers(loadTestData());
-//    createClients(loadTestData());
-}
-
-/**
- * Loads test data
- * @author Miguelcldn
- * @returns {object} The thest data
- */
-function loadTestData() {
-    var list = [],
-        MAX_LAT = 50,
-        MAX_LNG = 150,
-        getLatLng = function() {
-            return { latitude: Math.random() * MAX_LAT * 2.5 - MAX_LAT, longitude : Math.random() * MAX_LNG * 2 - MAX_LNG};
-        },
-        getIP = function() {
-            return Math.floor(Math.random() * 255) +"."+ Math.floor(Math.random() * 255) +"."+ Math.floor(Math.random() * 255) +"."+ Math.floor(Math.random() * 255);
-        },
-        getNumber = function(){
-            return Math.floor(Math.random() * 30);
-        };
-    
-    for(var i = 0; i < 500; i++) {
-        var location = getLatLng();
-        location.ip = getIP();
-        
-        list.push({
-            extra : {
-                location : location,
-                current : {
-                    registeredClientConnection : getNumber()
-                }
-            }
-        });
-    }
-    
-    return list;
 }
 
 /**
@@ -476,34 +440,48 @@ function main() {
 /**
  * Hides or shows the nodes (Event)
  * @author Miguelcldn
- * @param {DOMObject} cb The combobox
+ * @param {string}  id            The ID of the filter to toggle
+ * @param {boolean} [forcedState] If provided, the forced state about enable/disable
  */
-function onOptionChanged(cb) {
-    var list = window.elements[cb.value],
-        action = (cb.checked === true) ? showMarkers : clearMarkers;
+function toggleFilter(id, forcedState) {
     
-    if(cb.value === "actors") {
-        for(var ac in window.elements.actors) {
-            action(window.elements.actors[ac]);
-        }
-    }
-    else action(list);
-}
+    var list, caption, logo, enable, action, iterator;
+    
+    switch(id) {
+        case 'ALL':
+            
+            for(iterator in window.elements) {
+                toggleFilter(iterator, true);
+            }
+            break;
+            
+        case 'NONE':
+            
+            for(iterator in window.elements) {
+                toggleFilter(iterator, false);
+            }
+            break;
+            
+        default:
+            
+            list = window.elements[id];
+            caption = $('#' + id + '-caption');
+            logo = $('#' + id + '-logo');
+            enable = (forcedState === undefined) ? caption.hasClass('disabled') : forcedState;
 
-/*function processImage(data) {
-    var changes = {
-        "\\n" : "",
-        "\u003d" : "="
+            action = (enable) ? showMarkers : clearMarkers;
+            var classOperation = '';
+
+            if(forcedState === true) classOperation = 'removeClass';
+            else if(forcedState === false) classOperation = 'addClass';
+            else classOperation = 'toggleClass';
+            
+            caption[classOperation]('disabled');
+            logo[classOperation]('disabled');
+
+            action(list);
     }
-    
-    var output = data;
-    
-    for(var before in changes) {
-        output = output.split(before).join(changes[before]);
-    }
-    
-    return output;
-}*/
+}
 
 /**
  * Gets and shows the nodes history
@@ -531,8 +509,11 @@ function showHistory() {
  * @param {Array} list The list of elements to show
  */
 function showMarkers(list) {
+    
+    if(list === undefined) return;
+    
     for(var i = 0; i < list.length; i++) {
-        if(list[i].marker !== undefined)
+        if(list[i].marker !== undefined && markClusterer.getMarkers().indexOf(list[i].marker) === -1)
             markClusterer.addMarker(list[i].marker, true);
     }
     
