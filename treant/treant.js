@@ -18,6 +18,15 @@ $(document).ready(main);
  * @returns {DOMObject} The div of the control panel
  */
 function createControlPanel() {
+    
+    var createFilter = function(id, caption) {
+        return '' + 
+            '<td onclick="toggleFilter(\'' + id + '\')")"><div id="' + id + '-Filter">' +
+            '<img id="' + id + '-logo" src="img/markers/' + id + '.svg"/>' +
+            '<span id="' + id + '-caption">' + caption +
+            '</span></div></td>';
+    };
+    
     // Create a div to hold the control.
     var controlDiv = document.createElement('div');
 
@@ -25,7 +34,6 @@ function createControlPanel() {
     var controlUI = document.createElement('div');
     controlUI.style.backgroundColor = '#fff';
     controlUI.style.border = '2px solid #fff';
-    controlUI.style.cursor = 'pointer';
     controlUI.style.marginBottom = '22px';
     controlUI.style.textAlign = 'center';
     controlUI.title = 'Options';
@@ -40,18 +48,41 @@ function createControlPanel() {
     controlText.style.paddingLeft = '5px';
     controlText.style.paddingRight = '5px';
     
-    controlText.innerHTML = '<input type="checkbox" value="nodes" checked onChange="onOptionChanged(this)">Nodes</input><br>' +
-        '<input type="checkbox" value="clients" onChange="onOptionChanged(this)">Clients</input><br>' + 
-        '<input type="checkbox" value="actors" onChange="onOptionChanged(this)">Actors</input>';
-    controlUI.appendChild(controlText);
+    /*controlText.innerHTML = '<input type="checkbox" value="NETWORK_NODE" checked onChange="toggleFilter(this)">Nodes</input><br>' +
+        '<input type="checkbox" value="NETWORK_CLIENT" onChange="toggleFilter(this)">Clients</input><br>' + 
+        '<input type="checkbox" value="actors" onChange="toggleFilter(this)">Actors</input>';*/
     
-    /*//Create the filter options
-    var options = "";
-    for(var actor in actorTypes) {
+    //Create the filter options
+    var options = "<table class='filter'>";
+    
+    options += "<tr>";
+    options += createFilter('NETWORK_NODE', 'Network Node');
+    options += createFilter('NETWORK_CLIENT', 'Network Client');
+    options += "</tr>";
+    
+    var pair = false;
+    for(var i = 0; i < actorTypes.length; i++) {
         
+        var actor = actorTypes[i];
         
+        if(!pair) options += "<tr>";
         
-    }*/
+        options += createFilter(actor, window.helper.fromMACRO_CASE(actor));
+        
+        if(pair) options += "</tr>";
+        
+        pair = !pair;
+    }
+    
+    options += "<tr>";
+    options += "<td onclick='toggleFilter(\"ALL\")'><div style='padding-left:30px'>All</div></td>";
+    options += "<td onclick='toggleFilter(\"NONE\")'><div style='padding-left:30px'>None</div></td>";
+    options += "</tr>";
+    
+    options += "</table>";
+    
+    controlText.innerHTML = options;
+    controlUI.appendChild(controlText);
     
     return controlDiv;
 }
