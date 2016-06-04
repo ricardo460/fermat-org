@@ -3,60 +3,46 @@ var express = require('express');
 var router = express.Router();
 var multer = require('multer');
 var security = require('../../../lib/utils/security');
-var path = require('path');
-var fileSystem = require('pn/fs');
 var storage = multer.diskStorage({
 	destination: function(req, file, callback) {
 		callback(null, './uploads');
 	},
 	filename: function(req, file, callback) {
-		callback(null, file.fieldname + '-' + Date.now());
+		callback(null, file.fieldname + '-' + Date.now() + '.svg');
 	}
 });
 var upload = multer({
 	storage: storage
 }).single('svg');
 /**
- * [description]
- * @param  {[type]} req   [description]
- * @param  {[type]} res   [description]
- * @return {[type]}     [description]
+ * @api {post} /v1/svg/upload/:type upload svg file
+ * @apiName Upload
+ * @apiVersion 1.0.0
+ * @apiGroup SVG
+ * @apiParam {String} type Image type (header, group).
+ * @apiDescription Converts svg to png file and uploads it to the server via ftp.
  */
-router.post('/convert', function(req, res, next) {
+router.post('/upload/:type', function(req, res, next) {
 	try {
-		console.log("execute route /convert");
-		upload(req, res, function(err) {
-			if (err) {
-				return res.end(err + ": Error uploading file.");
-			}
-			//res.end("File is uploaded");
-			//console.log("File");
-			//console.log(req.file);
-			var fileName = req.file.filename;
-			svg2png.svgToPng(req.file.path, fileName, function(err, resp) {
-				if (err) {
-					console.log(err + ": You can not perform the conversion");
-					res.status(402).send("You can not perform the conversion");
-				}
-				if (resp) {
-					console.log(resp);
-					var filePath = path.join(__dirname, fileName + ".png");
-					console.log('filePath', filePath);
-					var stat = fileSystem.statSync(filePath);
-
-					res.writeHead(200, {
-						'Content-Type': 'image/png',
-						'Content-Length': stat.size
-					});
-
-					var readStream = fileSystem.createReadStream(filePath);
-					// We replaced all the event handlers with a simple call to readStream.pipe()
-					readStream.pipe(res);
-					//res.sendFile('uploads/' + fileName + ".png");
-					//res.status(200).send("ok");
-				}
+		//console.log(req);
+		if (!security.isValidData(req.params.type)) {
+			res.status(412).send({
+				"message": "missing or invalid data"
 			});
-		});
+		} else {
+			console.log("execute route /upload");
+			upload(req, res, function(err) {
+				if (err) {
+					return res.end(err + ": Error uploading file.");
+				}
+				var fileName = req.file.filename;
+				console.log("fileName", fileName);
+				svg2png.svgToPng(req.body.type, fileName, function(err, resp) {
+					if (err) res.status(402).send("You can not perform the conversion");
+					if (resp) res.status(200).send(resp);
+				});
+			});
+		}
 	} catch (err) {
 		console.error("Error", err);
 		res.status(402).send("You can not perform the conversion");
