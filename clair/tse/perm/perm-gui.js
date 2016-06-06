@@ -2,6 +2,8 @@ var user_data = getUserID(),
     axs_key = '',
     environment = '',
     perm = 00000,
+    usertype = 'developer',
+    reference,
     userList;
 //global constants
 var SERVER = 'http://api.fermat.org';
@@ -29,21 +31,35 @@ function init() {
             location.href = '../';
         });
 
+        checkPermissions();
         environment = 'development';
         axs_key = user_data.axs_key;
-        checkPermissions();
 
-        getUsers();
+        updateUserList(true);
 
-        setTimeout(function (){
-                document.getElementById('spinner').style.display = 'none';
-                $('#users').removeClass('hidden');
-                tagPermissions("platform");
-                tagPermissions("superlayer");
-                tagPermissions("layer");
-                $('#perm').removeClass('hidden');
-        }, 7000);
+        $('#changePermissions').click(function() {
+                verify();
+        });
     //}
+}
+
+function updateUserList(reload){
+    var table = document.getElementById("users");
+    while(table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+    getUsers();
+
+    if(reload !== true){
+        setTimeout(function (){
+            document.getElementById('spinner').style.display = 'none';
+            $('#users').removeClass('hidden');
+            tagPermissions("platform");
+            tagPermissions("superlayer");
+            tagPermissions("layer");
+            $('#perm').removeClass('hidden');
+        }, 7000);
+    }
 }
 
 function getUsers(){
@@ -64,17 +80,19 @@ function getUsers(){
 }
 
 function verifyUser(user){
-    var url = getRoute('perm');
+    var url = getRoute('perm', user);
+
+    console.log(url);
+
     $.ajax({
         url: url,
-        method: "POST",
-        data: {
-            usrnm: user
-        }
+        method: "GET"
     }).success (
         function (res) {
+            console.log(user + " " + res.perm + res);
             if(comparePermissions(res.perm))
                 fillTable(res);
+
         }
     );
 }
@@ -103,21 +121,182 @@ function comparePermissions(code){
 
 function fillTable(data){
     if(data.name !== null)
-        $('#users').append("<tr><td>" + data.usrnm + "</td><td>" + data.name + "</td><td>" + "<button id='" + data._id + "' name='perm: " + data.usrnm + "' onclick=''>Modify</button>" + "</td></tr>");
+        $('#users').append("<tr><td>" + data.usrnm + "</td><td>" + data.name + "</td><td>" + "<button id='" + data.usrnm + "' name=" + data.usrnm + " onclick='modifyPermissions(this)'>Modify</button>" + "</td></tr>");
     else
-        $('#users').append("<tr><td>" + data.usrnm + "</td><td>" + "</td><td>" + "<button id='" + data._id + "' name='perm: " + data.usrnm + "' onclick=''>Modify</button>" + "</td></tr>");
+        $('#users').append("<tr><td>" + data.usrnm + "</td><td>" + "</td><td>" + "<button id='" + data.usrnm + "' name=" + data.usrnm + " onclick='modifyPermissions(this)'>Modify</button>" + "</td></tr>");
 }
 
-function getRoute(route){
+function listVisibility(action){
+    if(action === 'hide'){
+        $('#users').addClass('hidden');
+        $('#perm-form').removeClass('hidden');
+    }
+    else{
+        $('#users').removeClass('hidden');
+        $('#perm-form').addClass('hidden');
+    }
+}
+
+function cancel(){
+    listVisibility('show');
+    document.getElementById("platform-add").disabled = false;
+    document.getElementById("platform-mod").disabled = false;
+    document.getElementById("platform-del").disabled = false;
+    document.getElementById("sl-add").disabled = false;
+    document.getElementById("sl-mod").disabled = false;
+    document.getElementById("sl-del").disabled = false;
+    document.getElementById("layer-add").disabled = false;
+    document.getElementById("layer-mod").disabled = false;
+    document.getElementById("layer-del").disabled = false;
+    document.getElementById("platform-add").checked = false;
+    document.getElementById("platform-mod").checked = false;
+    document.getElementById("platform-del").checked = false;
+    document.getElementById("sl-add").checked = false;
+    document.getElementById("sl-mod").checked = false;
+    document.getElementById("sl-del").checked = false;
+    document.getElementById("layer-add").checked = false;
+    document.getElementById("layer-mod").checked = false;
+    document.getElementById("layer-del").checked = false;
+}
+
+function modifyPermissions(element){
+    listVisibility('hide');
+    reference = element.id;
+    var url = getRoute('perm', element.id);
+
+    $.ajax({
+        url: url,
+        method: "GET"
+    }).success (
+        function (res) {
+            var digit,
+                codeDigit,
+                temp = parseInt(res.perm);
+
+            digit = Math.floor((temp % 11000) / 100);
+            codeDigit = Math.floor((perm % 11000) / 100);
+            enable(digit, 'platform', codeDigit);
+
+            digit = Math.floor((temp % 11100) / 10);
+            codeDigit = Math.floor((perm % 11100) / 10);
+            enable(digit, 'sl', codeDigit);
+                
+            digit = Math.floor((Math.floor(temp % 1000)) % 10);
+            codeDigit = Math.floor((Math.floor(perm % 1000)) % 10);
+            enable(digit, 'layer', codeDigit);
+        }
+    );
+}
+
+function enable(digit, structure, compareDigit) {
+    if(digit % 2 === 1){
+        document.getElementById(structure+"-del").checked = true;
+        document.getElementById(structure+"-del").disabled = true;
+    }
+    else{
+        if(compareDigit % 2 === 0)
+            document.getElementById(structure+"-del").disabled = true;   
+    }
+
+    digit = Math.floor(digit / 2);
+
+    if(digit % 2 === 1){
+        document.getElementById(structure+"-mod").checked = true;
+        document.getElementById(structure+"-mod").disabled = true;   
+    }
+    else{
+        compareDigit = Math.floor(compareDigit / 2);
+        if(compareDigit % 2 === 0)
+            document.getElementById(structure+"-mod").disabled = true;
+    }
+
+    if(Math.floor(digit / 2) === 1){
+        document.getElementById(structure+"-add").checked = true;
+        document.getElementById(structure+"-add").disabled = true;
+    }
+    else{
+        if(Math.floor(compareDigit / 2) === 0)
+            document.getElementById(structure+"-add").disabled = true;
+    }
+}
+
+function binaryToOctal(structure){
+    var digit,
+        digitAdd,
+        digitMod,
+        digitDel;
+
+    if(document.getElementById(structure+"-add").checked)
+        digitAdd = 1;
+    else
+        digitAdd = 0;
+    
+    if(document.getElementById(structure+"-mod").checked)
+        digitMod = 1;
+    else
+        digitMod = 0;
+
+    if(document.getElementById(structure+"-del").checked)
+        digitDel = 1;
+    else
+        digitDel = 0;
+
+    digit = (digitAdd * 4) + (digitMod * 2) + (digitDel * 1);
+    return digit;
+}
+
+function verify(){
+    var digitPlatform,
+        digitSuperlayer,
+        digitLayer,
+        url;
+
+    digitPlatform = binaryToOctal('platform');
+    digitSuperlayer = binaryToOctal('sl');
+    digitLayer = binaryToOctal('layer');
+
+    url = getRoute('change', user_data._id);
+
+    digitPlatform = (77000 + (digitPlatform * 100) + (digitSuperlayer * 10) + digitLayer);
+
+    var data = {
+        usrnm : reference,
+        perm: digitPlatform.toString(),
+        usr_id: user_data._id
+    };
+
+    console.log(data);
+    console.log(url);
+
+    $.ajax({
+            url: url,
+            method: "POST",
+            data: data
+    }).success (
+        function (res) {
+            window.alert("Permissions modified successfully");
+            updateUserList();
+            cancel();
+        }
+    ).error (
+        function (xhr, status, error) {
+            window.alert(xhr.responseText);
+        }
+    );
+}
+
+function getRoute(route, user){
 
     var tail = "",
         param,
         url;
 
     if(route === 'users')
-        tail = "/v1/user/users";
-    else
-        tail = "/v1/user/";
+        tail = "/v1/repo/devs";
+    if(route === 'perm')
+        tail = "/v1/user/" + user;
+    if(route === 'change')
+        tail = "/v1/user/" + user + "/changePerms";
 
     param = {
         env : environment,
@@ -184,9 +363,9 @@ function buildURL(base, params) {
 function getUserID() {
     var _usr_id = {
         __v : getCookie("v"),
-        _id : '570e4b43019d61dc4dea1f3a',
+        _id : '570e44e3019d61dc4de9f331',
         avatar_url : getCookie("avatar"),
-        axs_key : '570e4b43019d61dc4dea1f3f',
+        axs_key : '570e44e3019d61dc4de9f32f',
         email : getCookie("email"),
         github_tkn : getCookie("github"),
         name : getCookie("name"),
@@ -197,16 +376,13 @@ function getUserID() {
 }
 
 function checkPermissions() {
-    var url = getRoute('perm');
+    var url = getRoute('perm', user_data.usrnm);
 
     $.ajax({
-        url: url,
-        method: "POST",
-        data: {
-            usrnm: user_data.usrnm
-        }
-    }).success(
-        function(res) {
+            url: url,
+            method: "GET"
+    }).success (
+        function (res) {
             perm = parseInt(res.perm);
             return perm;
         }

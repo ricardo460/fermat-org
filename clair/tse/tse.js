@@ -3,12 +3,13 @@
 var user_data = getUserID(),
     axs_key = '',
     environment = '',
-    current = 'layer',
+    current = 'platform',
     request = 'add',
     referenceName = '',
     referenceId = '',
     referenceCode = '',
     referenceOrder = '',
+    usertype = 'developer',
     perm = 77000;
 //global constants
 var SERVER = 'api.fermat.org';
@@ -41,6 +42,8 @@ function init() {
         updateList('layer',true);
         updateList('platform',true);
         updateList('superlayer',true);
+
+        sel();
 
         $(document).ready(function() {
 
@@ -118,14 +121,14 @@ function deleteStructure(element, type){
             updateList(type, true);
         }, 3000);
 
-        clearGroupForm();
+        clearGroupForm(usertype);
         clearLayerForm();
     }
 }
 
 function modifyStructure(element, type){
 
-    add();
+    add('modify');
     var url;
 
     request = 'modify';
@@ -147,15 +150,17 @@ function modifyStructure(element, type){
         method: "GET"
     }).success (
         function (res) {
+
+            referenceName = res.name;
+            referenceOrder = res.order;
+            referenceId = element.id;
+            
             if(type === 'layer'){
 
                 document.getElementById('nextName').style.display = 'block';
                 document.getElementById("layerName").value = res.name.capitalize();
                 document.getElementById("layerLang").value = res.lang;
 
-                referenceName = res.name;
-                referenceOrder = res.order;
-                referenceId = element.id;
                 $("#layerOrder").empty();
 
                 if(res.suprlay === false){
@@ -170,25 +175,28 @@ function modifyStructure(element, type){
                 findPosition(type, res.order);
             }
             else{
+                if(usertype === 'developer'){
+                    document.getElementById("groupCode").value = res.code;
+                    document.getElementById("groupName").value = res.name.capitalize();
 
-                document.getElementById("groupCode").value = res.code;
-                document.getElementById("groupName").value = res.name.capitalize();
+                    var list = document.getElementById("groupDeps"),
+                        l = list.options.length;
 
-                var list = document.getElementById("groupDeps"),
-                    l = list.options.length;
-
-                for(var e in res.deps){
-                    for(var i = 0; i < l; i++){
-                        if(res.deps[e] === list.options[i].value)
-                            list.options[i].selected = 'true';
+                    for(var e in res.deps){
+                        for(var i = 0; i < l; i++){
+                            if(res.deps[e] === list.options[i].value)
+                                list.options[i].selected = 'true';
+                        }
                     }
-                }
-                referenceName = res.name;
-                referenceId = element.id;
-                referenceCode = res.code;
-                referenceOrder = res.order;
+                    retrieveData(current, current, null);
+                    referenceCode = res.code;
 
-                findPosition(type, res.order);
+                    findPosition(type, res.order);
+                }
+                else{
+                    document.getElementById("desCode").value = res.code;
+                    document.getElementById("desName").value = res.name.capitalize();
+                }
             }
         }
     );
@@ -219,7 +227,7 @@ function findPosition(type, order){
              var l = res.length;
 
              for(var i = 0; i < l; i++){
-                if(res[i].order === order && order === 0){
+                if(res[i].order === order && order === 1){
                     if(type === "layer"){
                             if(res[1].suprlay !== false)
                                 document.getElementById("layerNext").innerHTML = "Currently: Above - " + res[1].name.capitalize() + " (In Superlayer: " + res[1].suprlay + ")";
@@ -274,7 +282,6 @@ function updateList(list, refresh){
         $("#groupOrder").empty();
         $("#groupDeps").empty();
         retrieveData("platform", null);
-        retrieveData("platform", "platform", null);
         retrieveData("superlayer", "platform", null);
     }
     else{
@@ -286,7 +293,6 @@ function updateList(list, refresh){
         $("#groupOrder").empty();
         $("#groupDeps").empty();
         retrieveData("superlayer", null);
-        retrieveData("superlayer", "superlayer", null);
         retrieveData("platform", "superlayer", null);
         retrieveData("superlayer", "layers", null);
     }
@@ -305,7 +311,23 @@ function updateList(list, refresh){
     }
 }
 
-function add(){
+function clearReference(){
+    referenceName = '';
+    referenceId = '';
+    referenceCode = '';
+    referenceOrder = '';
+}
+
+function add(option){
+    
+    if(option !== 'modify'){
+        clearReference();
+        if(current === 'layer')
+            retrieveData(current, 'layers', false);
+        else
+            retrieveData(current, current, null);
+    }
+
     hideLists();
     $('#type').prop('disabled', true);
     $('#add').prop('disabled', true);
@@ -314,18 +336,19 @@ function add(){
         showForm('#layerForm');
         clearLayerForm();
     } else {
-        if(current === 'platform')
-            retrieveData("platforms", "group", null);
-        else
-            retrieveData("superlayers", "group", null);
-        showForm('#groupForm');
-        clearGroupForm();
+        if(usertype === 'developer'){
+            clearGroupForm(usertype);
+            showForm('#groupForm');
+        }
+        else{
+            showForm('#desForm');
+        }
     }
     request = 'add';
 }
 
 function cancel() {
-    clearGroupForm();
+    clearGroupForm(usertype);
     clearLayerForm();
     hideForm(getActiveForm());
     $('#type').prop('disabled', false);
@@ -337,7 +360,10 @@ function getActiveForm() {
     if(current === 'layer') {
         return $('#layerForm');
     } else {
-        return $('#groupForm');
+        if(usertype === 'developer')
+            return $('#groupForm');
+        else
+            return $('#desForm');
     }
 }
 
@@ -346,12 +372,10 @@ function sel() {
         $('#layerList').addClass('hidden');
         $('#superlayerList').removeClass('hidden');
         $('#platformList').addClass('hidden');
-        updateList(current);
     } else if (current === 'platform') {
         $('#layerList').addClass('hidden');
         $('#superlayerList').addClass('hidden');
         $('#platformList').removeClass('hidden');
-        updateList(current);
     } else {
         $('#layerList').removeClass('hidden');
         $('#superlayerList').addClass('hidden');
@@ -359,15 +383,26 @@ function sel() {
     }
 }
 
-function clearGroupForm() {
-    document.getElementById('groupCode').value = '';
-    document.getElementById('groupName').value = '';
+function clearGroupForm(type) {
+    if(type === 'developer'){
+        document.getElementById('groupCode').value = '';
+        document.getElementById('groupName').value = '';
+        document.getElementById('groupDeps').value = '';
+        $("#groupOrder").empty();
+    }
+    else{
+        document.getElementById('desCode').value = '';
+        document.getElementById('desName').value = '';
+        document.getElementById('desHeader').value = '';
+        document.getElementById('desIcon').value = '';
+    }
 }
 
 function clearLayerForm() {
     document.getElementById('layerName').value = '';
     document.getElementById('layerNext').innerHTML = '';
     document.getElementById('nextName').style.display = 'none';
+    $("#layerOrder").empty();
 }
 
 function hideLists() {
@@ -554,7 +589,8 @@ function verify(form, request){
                 url = getRoute(repo, "insert");
                 sendRequest(url, 'POST', data, form);
                 updateList(form, false);
-                clearGroupForm();
+                clearGroupForm(usertype);
+                retrieveData(current, current, null);
             }
         }
     }
@@ -639,7 +675,8 @@ function verify(form, request){
                     updateList(form, true);
                 }, 3000);
 
-                clearGroupForm();
+                clearGroupForm(usertype);
+                retrieveData(current, current, null);
                 clearLayerForm();
             }
         }
