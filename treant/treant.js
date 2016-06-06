@@ -229,9 +229,7 @@ function createActors(clients) {
         }
     }
     
-    window.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(createControlPanel());
     toggleFilter('ALL');
-    
 }
 
 /**
@@ -279,7 +277,10 @@ function createMarkers(list, title) {
  */
 function drawDetails(node) {
     
-    if(infoWindow !== null) infoWindow.close();
+    if(infoWindow !== null) {
+        infoWindow.close();
+        unSetAllFocus();
+    }
     
     var content = "";
     var details = null;
@@ -302,6 +303,8 @@ function drawDetails(node) {
             }
             content += "</table>";
         }
+        
+        setClientsFocus(node);
     }
     else if(node.marker.title === "Client") {
         
@@ -319,6 +322,8 @@ function drawDetails(node) {
                     content += "-" + window.helper.fromMACRO_CASE(details[i].networkServiceType) + "<br/>";
             }
         }
+        
+        setServersFocus(node);
     }
     else if(actorTypes.indexOf(window.helper.toMACRO_CASE(node.marker.title)) != -1) {
         content += "<strong>" + node.marker.title + "</strong><br/>";
@@ -338,6 +343,7 @@ function drawDetails(node) {
     infoWindow = new google.maps.InfoWindow({
         content : content
     });
+    infoWindow.addListener('closeclick', unSetAllFocus);
     
     infoWindow.open(map, node.marker);
     
@@ -387,14 +393,13 @@ function getClients(nodeList) {
         window.elements.NETWORK_CLIENT = createMarkers(list, "Client");
         createActors(list);
     };
-    
     var error = function(request, error) {
         window.alert("Could not retrieve the data, see console for details.");
         window.console.dir(error);
         success([]);
     };
     
-    for(var i = 0; i < nodeList.length; i++) {
+    for(var i = 0; i < nodeList.length - 1; i++) {
     
         $.ajax({
             url : window.helper.getAPIUrl("clients", {serv_id : nodeList[i]._id}),
@@ -405,6 +410,8 @@ function getClients(nodeList) {
             error : error
         });
     }
+
+    window.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(createControlPanel());
 }
 
 /**
@@ -435,6 +442,67 @@ function getNodes() {
  */
 function main() {
     $("#showHistoryBtn").click(showHistory);
+}
+
+function randomizeLocation(location) {
+    return {
+        lat : location.latitude + ((Math.random() * 10 % 3) / 10),
+        lng : location.longitude + ((Math.random() * 10 % 3) / 10)
+    };
+}
+
+function setClientsFocus(node) {
+    for(var i = 0; i < elements.NETWORK_CLIENT.length; i++) {
+        var client = elements.NETWORK_CLIENT[i];
+        
+        if(client.marker && client._serv_id !== node._id) client.marker.setOpacity(0.5);
+    }
+}
+
+function setServersFocus(client) {
+    for(var i = 0; i < elements.NETWORK_NODE.length; i++) {
+        var server = elements.NETWORK_NODE[i];
+        
+        if(server.marker && server._id !== client._serv_id) server.marker.setOpacity(0.5);
+    }
+}
+
+/**
+ * Gets and shows the nodes history
+ * @author Miguelcldn
+ */
+function showHistory() {
+    
+    $("#loadingSpinner").css('display', 'block');
+    
+    $.ajax({
+        url: window.helper.getAPIUrl("history"),
+        method: "GET",
+        crossDomain: true,
+        success: createGraphic,
+        error: function(r, error) {
+            window.alert("Could not retrieve the data, see console for details.");
+            window.console.dir(error);
+        }
+    });
+}
+
+/**
+ * Shows the markers in the map
+ * @author Miguelcldn
+ * @param {Array} list The list of elements to show
+ */
+function showMarkers(list) {
+    
+    if(list === undefined) return;
+    
+    for(var i = 0; i < list.length; i++) {
+        if(list[i].marker !== undefined && markClusterer.getMarkers().indexOf(list[i].marker) === -1)
+            markClusterer.addMarker(list[i].marker, true);
+    }
+    
+    markClusterer.resetViewport();
+    markClusterer.redraw();
 }
 
 /**
@@ -483,47 +551,23 @@ function toggleFilter(id, forcedState) {
     }
 }
 
-/**
- * Gets and shows the nodes history
- * @author Miguelcldn
- */
-function showHistory() {
-    
-    $("#loadingSpinner").css('display', 'block');
-    
-    $.ajax({
-        url: window.helper.getAPIUrl("history"),
-        method: "GET",
-        crossDomain: true,
-        success: createGraphic,
-        error: function(r, error) {
-            window.alert("Could not retrieve the data, see console for details.");
-            window.console.dir(error);
-        }
-    });
+function unSetAllFocus() {
+    unSetClientsFocus();
+    unSetServersFocus();
 }
 
-/**
- * Shows the markers in the map
- * @author Miguelcldn
- * @param {Array} list The list of elements to show
- */
-function showMarkers(list) {
-    
-    if(list === undefined) return;
-    
-    for(var i = 0; i < list.length; i++) {
-        if(list[i].marker !== undefined && markClusterer.getMarkers().indexOf(list[i].marker) === -1)
-            markClusterer.addMarker(list[i].marker, true);
+function unSetClientsFocus() {
+    for(var i = 0; i < elements.NETWORK_CLIENT.length; i++) {
+        var client = elements.NETWORK_CLIENT[i];
+        
+        if(client.marker) client.marker.setOpacity(1);
     }
-    
-    markClusterer.resetViewport();
-    markClusterer.redraw();
 }
 
-function randomizeLocation(location) {
-    return {
-        lat : location.latitude + ((Math.random() * 10 % 3) / 10),
-        lng : location.longitude + ((Math.random() * 10 % 3) / 10)
-    };
+function unSetServersFocus() {
+    for(var i = 0; i < elements.NETWORK_NODE.length; i++) {
+        var server = elements.NETWORK_NODE[i];
+        
+        if(server.marker) server.marker.setOpacity(1);
+    }
 }
