@@ -1,6 +1,6 @@
 [
 	{
-		"_id" : "573b678f0015bd9e1551f5df",
+		"_id" : "573b6da46bef56d619f5170e",
 		"_wave_id" : "573b678f0015bd9e1551f5dc",
 		"hash" : "28830046c58286d173f3f73a0c37ce0eebd3d75d7967b44cf1ada53ad6e33034",
 		"type" : "server",
@@ -9,6 +9,118 @@
 				"timezone" : "America/Los_Angeles",
 				"longitude" : -119.529,
 				"latitude" : 45.7788,
+				"country" : {
+					"zh-CN" : "美国",
+					"ru" : "Сша",
+					"pt-BR" : "Estados Unidos",
+					"ja" : "アメリカ合衆国",
+					"fr" : "États-Unis",
+					"es" : "Estados Unidos",
+					"en" : "United States",
+					"de" : "USA"
+				},
+				"country_code" : "US",
+				"continent" : {
+					"zh-CN" : "北美洲",
+					"ru" : "Северная Америка",
+					"pt-BR" : "América do Norte",
+					"ja" : "北アメリカ",
+					"fr" : "Amérique du Nord",
+					"es" : "Norteamérica",
+					"en" : "North America",
+					"de" : "Nordamerika"
+				},
+				"continent_code" : "NA",
+				"ip" : "52.35.64.221"
+			},
+			"system" : {
+				"System" : [ 
+					{
+						"Swap" : "0.0% [0 kB]",
+						"Memory" : "38.3% [390084 kB]",
+						"CPU" : "0.0%us, 0.0%sy, 0.0%wa",
+						"Load" : "[0.00] [0.01] [0.05]",
+						"Status" : "Running",
+						"Name" : "ip-172-31-35-161.us-west-2.compute.internal"
+					}
+				],
+				"Process" : [ 
+					{
+						"Memory Total" : "30.9% [314468 kB]",
+						"CPU Total" : "0.0%",
+						"Uptime" : "21h 16m",
+						"Status" : "Running",
+						"Name" : "cloud-server"
+					}, 
+					{
+						"Memory Total" : "-",
+						"CPU Total" : "-",
+						"Uptime" : "-",
+						"Status" : "Not monitored",
+						"Name" : "statistics.sh"
+					}, 
+					{
+						"Memory Total" : "30.9% [314468 kB]",
+						"CPU Total" : "0.0%",
+						"Uptime" : "21h 16m",
+						"Status" : "Running",
+						"Name" : "fermat-cloud-server"
+					}
+				],
+				"Filesystem" : [ 
+					{
+						"Inodes usage" : "16.9% [88808 objects]",
+						"Space usage" : "29.2% [1893.2 MB]",
+						"Status" : "Accessible",
+						"Name" : "rootfs"
+					}
+				]
+			},
+			"current" : {
+				"vpnByNetworkServiceDetails" : "{}",
+				"vpnTotal" : 0,
+				"registerOtherComponentDetail" : {
+					"ACTOR_ASSET_ISSUER" : 1,
+					"ACTOR_INTRA_USER" : 3
+				},
+				"registerOtherComponentTotal" : 4,
+				"registeredNetworkServiceDetail" : {
+					"TRANSACTION_TRANSMISSION" : 7,
+					"FAN_ACTOR" : 5,
+					"ARTIST_ACTOR" : 4,
+					"CRYPTO_CUSTOMER" : 7,
+					"ASSET_USER_ACTOR" : 7,
+					"INTRA_USER" : 7,
+					"ACTOR_CHAT" : 6,
+					"ASSET_ISSUER_ACTOR" : 7,
+					"ASSET_TRANSMISSION" : 7,
+					"CRYPTO_ADDRESSES" : 7,
+					"CRYPTO_PAYMENT_REQUEST" : 8,
+					"NEGOTIATION_TRANSMISSION" : 7,
+					"FERMAT_MONITOR" : 9,
+					"CRYPTO_BROKER" : 7,
+					"ASSET_REDEEM_POINT_ACTOR" : 7,
+					"CHAT" : 7,
+					"CRYPTO_TRANSMISSION" : 7
+				},
+				"registeredNetworkServiceTotal" : 116,
+				"registeredClientConnection" : 8,
+				"pendingClientConnection" : 0
+			}
+		},
+		"upd_at" : "573b678f0015bd9e1551f5de",
+		"__v" : 0
+	},
+    {
+		"_id" : "573b678f0015bd9e1551f5d8",
+		"_wave_id" : "573b678f0015bd9e1551f5dc",
+		"hash" : "28830046c58286d173f3f73a0c37ce0eebd3d75d7967b44cf1ada53ad6e33034",
+		"type" : "server",
+		"extra" : {
+			"location" : {
+				"timezone" : "America/Los_Angeles",
+				"longitude" : -149.529,
+				"latitude" : 75.7788,
 				"country" : {
 					"zh-CN" : "美国",
 					"ru" : "Сша",
