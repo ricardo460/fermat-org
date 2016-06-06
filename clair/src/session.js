@@ -311,7 +311,7 @@ function Session() {
     }
 
     function setToken(tkn) {
-        setCookie("id", tkn._id, 7);
+        setCookie("id", tkn._usr_id._id, 7);
         setCookie("key", tkn.axs_key, 7);
         setCookie("update", tkn.upd_at, 7);
         setCookie("v", tkn._usr_id.__v, 7);
