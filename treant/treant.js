@@ -399,7 +399,7 @@ function getClients(nodeList) {
         success([]);
     };
     
-    for(var i = 0; i < nodeList.length - 1; i++) {
+    for(var i = 0; i < nodeList.length; i++) {
     
         $.ajax({
             url : window.helper.getAPIUrl("clients", {serv_id : nodeList[i]._id}),
