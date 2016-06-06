@@ -45,7 +45,7 @@ router.post('/:usr_id/changePerms', function(req, resp, next) {
  */
 router.get('/:usrnm', function(req, resp, next) {
     try {
-        if (!security.isUsername(req.params.usrnm)) {
+        if (!security.isValidData(req.params.usrnm)) {
             resp.status(412).send({
                 "message": "missing or invalid data"
             });

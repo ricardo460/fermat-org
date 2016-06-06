@@ -18,3 +18,5 @@ api-server/cache/production/filecache.json
 api-server/cache/development/filecache.json
 clair/main.js
 sh.exe.stackdump
+*.pem
+*.ppk

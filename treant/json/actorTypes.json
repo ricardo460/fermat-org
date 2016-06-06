@@ -1,0 +1,32 @@
+{
+    "clients" : {
+        "properties" : [
+            "networkServiceType",
+            "platformComponentType"
+        ],
+        "actors" : [
+            "CRYPTO_BROKER",
+            "CRYPTO_CUSTOMER",
+            "ASSET_ISSUER_ACTOR",
+            "ASSET_REDEEM_POINT_ACTOR",
+            "ASSET_USER_ACTOR",
+            "ARTIST_ACTOR",
+            "FAN_ACTOR",
+            "ACTOR_CHAT"
+        ],
+        "pendingActors" : [
+            "ACTOR_INTRA_USER",
+            "*CCM_INTRA_WALLET_USER",
+            "*CCP_INTRA_WALLET_USER",
+            "*SHOP"
+        ]
+    },
+    "nodes" : {
+        "properties" : [
+            "registerOtherComponentDetail",
+            "registeredNetworkServiceDetail",
+            "registeredNetworkServiceTotal",
+            "registeredClientConnection"
+        ]
+    }
+}
