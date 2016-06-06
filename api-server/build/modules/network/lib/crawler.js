@@ -19,7 +19,7 @@ var clintMod = require('../client');
 var doLogin = function(callback) {
     var credentials = {
         user: config.username,
-        password: new String(SHA256(config.password)) + ''
+        password: SHA256(config.password) + ''
     };
     var options = {
         url: 'http://' + config.ip + ':9090/fermat/api/user/login',
@@ -35,6 +35,7 @@ var doLogin = function(callback) {
                     'Authorization': 'Bearer ' + body.authToken
                 }
             });
+            winston.log('info', 'AuthToken: %s', body.authToken);
             return callback(null, authRequest);
         }
     });
@@ -89,8 +90,29 @@ var doRequest = function(auth, options, type, callback) {
  * @return {[type]}          [description]
  */
 exports.saveNetworkStatus = function(callback) {
-    var hash = new String(SHA256(config.ip)) + '';
+    var hash = SHA256(config.ip) + '';
     var extra = {};
+    var reportResult = function(error, client) {
+        if (error) winston.log('error', 'Error on crawler', error);
+        if (client) {
+            winston.log('info', 'Client added!');
+        }
+    };
+    var fillClientData = function(auth, client, server, callback) {
+        doRequest(auth, {
+            url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/client/components/details',
+            method: 'GET',
+            qs : {
+                i : client.identityPublicKey
+            }
+        }, 3, function(error, data) {
+            
+            if(error) return callback(error, null);
+            
+            client.comps = data;
+            clintMod.insertClient(server._wave_id, server._id, client.identityPublicKey, client, callback);
+        });
+    };
     doLogin(function(err, auth) {
         doRequest(auth, {
             url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/current/data',
@@ -123,22 +145,7 @@ exports.saveNetworkStatus = function(callback) {
                                             if (error) winston.log('error', 'Error on crawler', error);
                                             if (clients) {
                                                 for (var i = clients.length - 1; i >= 0; i--) {
-                                                    clintMod.insertClient(server._wave_id, server._id, clients[i].identityPublicKey, clients[i], function(error, client) {
-                                                        if (error) winston.log('error', 'Error on crawler', error);
-                                                        if (client) {
-                                                            winston.log('info', 'Client added!');
-                                                        }
-                                                    });
-                                                    // /fermat/api/serverplatform/listserverconfbyplatform
-                                                    //	doRequest(auth, {
-                                                    //		url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/client/components/details?i=' + clients[i].identityPublicKey,
-                                                    //		method: 'GET'
-                                                    //	}, 3, function (error, comps) {
-                                                    //		if (error) console.dir(error);
-                                                    //		if (comps) {
-                                                    //			console.dir(comps);
-                                                    //		}
-                                                    //	});
+                                                    fillClientData(auth, clients[i], server, reportResult);
                                                 }
                                             }
                                         });
