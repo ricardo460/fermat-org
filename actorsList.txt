@@ -1,0 +1,69 @@
+[{
+	"networkServiceType": "ASSET_ISSUER_ACTOR",
+	"platformComponentType": "NETWORK_SERVICE",
+	"location": {},
+	"name": "Actor Network Service Asset Issuer",
+	"alias": "actor network service asset issuer"
+}, {
+	"networkServiceType": "CRYPTO_BROKER",
+	"platformComponentType": "NETWORK_SERVICE",
+	"location": {},
+	"name": "Crypto Broker Actor Network Service",
+	"alias": "crypto broker actor network service"
+}, {
+	"extraData": "ChatNetworkService",
+	"networkServiceType": "CHAT",
+	"platformComponentType": "NETWORK_SERVICE",
+	"location": {},
+	"name": "Chat Network Service",
+	"alias": "chat network service"
+}, {
+	"networkServiceType": "ASSET_USER_ACTOR",
+	"platformComponentType": "NETWORK_SERVICE",
+	"location": {},
+	"name": "Actor Network Service Asset User",
+	"alias": "actor network service asset user"
+}, {
+	"networkServiceType": "ASSET_REDEEM_POINT_ACTOR",
+	"platformComponentType": "NETWORK_SERVICE",
+	"location": {},
+	"name": "Actor Network Service Asset RedeemPoint",
+	"alias": "actor network service asset redeempoint"
+}, {
+	"networkServiceType": "ACTOR_CHAT",
+	"platformComponentType": "NETWORK_SERVICE",
+	"location": {},
+	"name": "Chat Actor Network Service",
+	"alias": "chat actor network service"
+}, {
+	"networkServiceType": "ARTIST_ACTOR",
+	"platformComponentType": "NETWORK_SERVICE",
+	"location": {},
+	"name": "Artist",
+	"alias": "artist"
+}, {
+	"networkServiceType": "CRYPTO_CUSTOMER",
+	"platformComponentType": "NETWORK_SERVICE",
+	"location": {},
+	"name": "Crypto Customer Actor Network Service",
+	"alias": "crypto customer actor network service"
+}, {
+	"networkServiceType": "FAN_ACTOR",
+	"platformComponentType": "NETWORK_SERVICE",
+	"location": {},
+	"name": "Fan",
+	"alias": "fan"
+}, {
+	"networkServiceType": "INTRA_USER",
+	"platformComponentType": "NETWORK_SERVICE",
+	"location": {},
+	"name": "Intra actor Network Service",
+	"alias": "intra actor network service"
+}, {
+	"extraData": "{\"PHRASE\":\"Available\",\"AVATAR_IMG\":\"{BASE64DATA}/",
+	"networkServiceType": "UNDEFINED",
+	"platformComponentType": "ACTOR_INTRA_USER",
+	"location": {},
+	"name": "Jane Doe_Intra_actor_Network_Service",
+	"alias": "Jane Doe"
+}]
