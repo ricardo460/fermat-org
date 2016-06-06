@@ -184,9 +184,9 @@ function buildURL(base, params) {
 function getUserID() {
     var _usr_id = {
         __v : getCookie("v"),
-        _id : '570e44e3019d61dc4de9f331',
+        _id : '570e4b43019d61dc4dea1f3a',
         avatar_url : getCookie("avatar"),
-        axs_key : '570e44e3019d61dc4de9f32f',
+        axs_key : '570e4b43019d61dc4dea1f3f',
         email : getCookie("email"),
         github_tkn : getCookie("github"),
         name : getCookie("name"),
@@ -200,13 +200,13 @@ function checkPermissions() {
     var url = getRoute('perm');
 
     $.ajax({
-            url: url,
-            method: "POST",
-            data: {
-                usrnm: user_data.usrnm
-            }
-    }).success (
-        function (res) {
+        url: url,
+        method: "POST",
+        data: {
+            usrnm: user_data.usrnm
+        }
+    }).success(
+        function(res) {
             perm = parseInt(res.perm);
             return perm;
         }
