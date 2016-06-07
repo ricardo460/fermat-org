@@ -86,7 +86,10 @@ function verifyUser(user){
 
     $.ajax({
         url: url,
-        method: "GET"
+        method: "POST",
+        data: {
+            'usrnm': user
+        }
     }).success (
         function (res) {
             console.log(user + " " + res.perm + res);
@@ -180,7 +183,7 @@ function modifyPermissions(element){
             digit = Math.floor((temp % 11100) / 10);
             codeDigit = Math.floor((perm % 11100) / 10);
             enable(digit, 'sl', codeDigit);
-                
+
             digit = Math.floor((Math.floor(temp % 1000)) % 10);
             codeDigit = Math.floor((Math.floor(perm % 1000)) % 10);
             enable(digit, 'layer', codeDigit);
@@ -195,14 +198,14 @@ function enable(digit, structure, compareDigit) {
     }
     else{
         if(compareDigit % 2 === 0)
-            document.getElementById(structure+"-del").disabled = true;   
+            document.getElementById(structure+"-del").disabled = true;
     }
 
     digit = Math.floor(digit / 2);
 
     if(digit % 2 === 1){
         document.getElementById(structure+"-mod").checked = true;
-        document.getElementById(structure+"-mod").disabled = true;   
+        document.getElementById(structure+"-mod").disabled = true;
     }
     else{
         compareDigit = Math.floor(compareDigit / 2);
@@ -230,7 +233,7 @@ function binaryToOctal(structure){
         digitAdd = 1;
     else
         digitAdd = 0;
-    
+
     if(document.getElementById(structure+"-mod").checked)
         digitMod = 1;
     else
@@ -294,7 +297,7 @@ function getRoute(route, user){
     if(route === 'users')
         tail = "/v1/repo/devs";
     if(route === 'perm')
-        tail = "/v1/user/" + user;
+        tail = "/v1/user/";
     if(route === 'change')
         tail = "/v1/user/" + user + "/changePerms";
 
@@ -380,7 +383,10 @@ function checkPermissions() {
 
     $.ajax({
             url: url,
-            method: "GET"
+            method: "POST",
+            data: {
+                'usrnm': user_data.usrnm
+            }
     }).success (
         function (res) {
             perm = parseInt(res.perm);

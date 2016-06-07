@@ -154,7 +154,7 @@ function modifyStructure(element, type){
             referenceName = res.name;
             referenceOrder = res.order;
             referenceId = element.id;
-            
+
             if(type === 'layer'){
 
                 document.getElementById('nextName').style.display = 'block';
@@ -319,7 +319,7 @@ function clearReference(){
 }
 
 function add(option){
-    
+
     if(option !== 'modify'){
         clearReference();
         if(current === 'layer')
@@ -507,7 +507,7 @@ function getRoute(form, route, id){
     else if(route === 'update' || route === 'delete')
         tail = "/v1/repo/usrs/" + user_data._id + "/" + form + "/" + id;
     else
-        tail = "/v1/user/" + user_data.usrnm;
+        tail = "/v1/user/";
 
     param = {
         env : environment,
@@ -876,7 +876,10 @@ function checkPermissions() {
 
     $.ajax({
             url: url,
-            method: "GET"
+            method: "POST",
+            data: {
+                'usrnm': user_data.usrnm
+            }
     }).success (
         function (res) {
             perm = parseInt(res.perm);
