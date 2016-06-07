@@ -10,6 +10,6 @@ define({
     "name": "apidoc",
     "time": "2016-05-13T20:11:01.691Z",
     "url": "http://apidocjs.com",
-    "version": "0.15.1"
+    "version": "0.16.1"
   }
 });
