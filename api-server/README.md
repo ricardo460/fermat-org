@@ -4,6 +4,10 @@
 
 ## Installation Guide
 
+###Installing on Windows
+
+You just need to install node.js, mongodb as said in their official websites. For Apicoc and the api-server just skip to the respective sections.
+
 ###Manually installing Node.js
 
 * Go to the [official website](https://nodejs.org/en/) and download the version for linux.
@@ -60,7 +64,7 @@ Open the terminal and type the command
 sudo apt-get install mongodb
 ```
 
-###Install and Configure RockMongo - A Tool to Manage MongoDB
+###Install and Configure RockMongo - A Tool to Manage MongoDB (Deprecated as is incompatible with PHP 7, skip this section, use [Robomongo](https://robomongo.org/) instead)
 
 **Prerequisites**
 * MongoDB

@@ -1,3 +1,4 @@
+
 //global variables
 var user_data = getUserID(),
     axs_key = '',
@@ -11,7 +12,7 @@ var user_data = getUserID(),
     usertype = 'developer',
     perm = 77000;
 //global constants
-var SERVER = 'http://api.fermat.org';
+var SERVER = 'api.fermat.org';
 
 function init() {
     //if(user_data._id === ''){
@@ -34,9 +35,9 @@ function init() {
                 break;
         }
 
-        checkPermissions();
         environment = 'development';
         axs_key = user_data.axs_key;
+        checkPermissions();
 
         updateList('layer',true);
         updateList('platform',true);
