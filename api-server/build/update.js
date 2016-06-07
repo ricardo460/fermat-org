@@ -46,7 +46,15 @@ setInterval(function() {
 		});*/
             break;
         case 3:
-            winston.log('info', 'Doing nothing');
+            //se descarga la informacion de los developers
+            loadLib.loadComps(function (err, res) {
+            if (err) {
+                winston.log('error', err.message, err.stack);
+            } else {
+                winston.log('debug', 'Developers updated', res);
+                cache.clear();
+            }
+        });
             break;
         case 4:
             winston.log('info', 'Doing nothing');

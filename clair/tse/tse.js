@@ -9,7 +9,7 @@ var user_data = getUserID(),
     referenceCode = '',
     referenceOrder = '';
 //global constants
-var SERVER = 'http://api.fermat.org';
+var SERVER = window.helper.SERVER;
 
 function init() {
     if(user_data._id === ''){
@@ -20,17 +20,7 @@ function init() {
         $('#type').prop('disabled', true);
         $('#add').prop('disabled', true);
 
-        switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
-            case "dev":
-                environment = 'production';
-                break;
-            case "lab":
-                environment = 'development';
-                break;
-            case "3d":
-                environment = 'testing';
-                break;
-        }
+        environment = window.API_ENV;
 
         axs_key = user_data.axs_key;
 
@@ -83,7 +73,7 @@ function init() {
 
 function deleteStructure(element, type){
     
-    if(confirm("Are you sure you want to remove the " + element.name + "? (Removing this layer will delete all of it's associated components)") === true){
+    if(window.confirm("Are you sure you want to remove the " + element.name + "? (Removing this layer will delete all of it's associated components)") === true){
         
         var url;
 
@@ -444,7 +434,8 @@ function getRoute(form, route, id){
 
     var tail = "",
         param,
-        url;
+        url,
+        self = this;
 
     if(route === 'insert' || route === 'retrieve')
         tail = "/v1/repo/usrs/" + user_data._id + "/" + form;
@@ -472,7 +463,7 @@ function verify(form, request){
         repo,
         elements,
         nameChange = false;
-        proceed = true;
+        var proceed = true;
 
 
     if(request === "add"){
@@ -702,6 +693,8 @@ function buildURL(base, params) {
 }
 
 function getData(form, request) {
+    
+    var order, data, url;
 
     if(form === 'layer'){
         if(document.getElementById('layerPos').value === "before")
