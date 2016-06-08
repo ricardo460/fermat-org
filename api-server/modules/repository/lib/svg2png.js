@@ -67,6 +67,17 @@ var createDir = function(path_, qt_img) {
 		}
 	}
 };
+var converSvg = function(filePng, filename, descImg) {
+	var pathF = "",
+		pathV = "";
+	console.log('dirF', dir);
+	pathF = path.join(dir, descImg.quality);
+	console.log('pathF', pathF);
+	pathV = createDir(pathF, descImg.quality);
+	descImg.from = pathF + '/' + filePng;
+	filesToSend.push(descImg);
+	convert('.' + pathV + '/' + filePng, filename, descImg.dpi, dir);
+};
 /**
  * [svgToPng description]
  * @param  {[type]}   url_svg  [description]
@@ -74,54 +85,96 @@ var createDir = function(path_, qt_img) {
  * @return {[type]}            [description]
  */
 var svgToPng = function(type, filename, callback) {
-	var qtGroupAndType = [{
+	var descImgGroup = [{
+		from: '',
+		to: '/navi/clair/images/tiles/icons/group/high/',
 		quality: 'high',
 		dpi: 720
 	}, {
+		from: '',
+		to: '/navi/clair/images/tiles/icons/group/medium/',
 		quality: 'medium',
 		dpi: 90
 	}, {
+		from: '',
+		to: '/navi/clair/images/tiles/icons/group/small/',
 		quality: 'small',
 		dpi: 45
 	}, {
+		from: '',
+		to: '/navi/clair/images/tiles/icons/group/mini/',
 		quality: 'mini',
 		dpi: 22
 	}];
-	var qtHeader = [{
+	var descImgType = [{
+		from: '',
+		to: '/navi/clair/images/tiles/icons/type/high/',
 		quality: 'high',
-		dpi: 360
+		dpi: 720
 	}, {
+		from: '',
+		to: '/navi/clair/images/tiles/icons/type/medium/',
 		quality: 'medium',
 		dpi: 90
 	}, {
+		from: '',
+		to: '/navi/clair/images/tiles/icons/type/small/',
+		quality: 'small',
+		dpi: 45
+	}, {
+		from: '',
+		to: '/navi/clair/images/tiles/icons/type/mini/',
+		quality: 'mini',
+		dpi: 22
+	}];
+	var descImgHeader = [{
+		from: '',
+		to: '/navi/clair/images/headers/high/',
+		quality: 'high',
+		dpi: 360
+	}, {
+		from: '',
+		to: '/navi/clair/images/headers/medium/',
+		quality: 'medium',
+		dpi: 90
+	}, {
+		from: '',
+		to: '/navi/clair/images/headers/small/',
 		quality: 'small',
 		dpi: 45
 	}];
-	var filePng = "",
-		pathF = "",
-		pathV = "";
+	var filePng = "";
 	var i = 0;
+	var descSvgOri = {};
 	try {
-		console.log('type', type);
-		filesToSend.push(dir + '/' + filename);
 		filename = filename.split('.')[0];
-		if (type === 'group' || type === 'type') {
-			for (i = 0; i < qtGroupAndType.length; i++) {
+		var fromSvg = dir + '/' + filename + '.svg';
+		if (type === 'group') {
+			descSvgOri.from = fromSvg;
+			descSvgOri.to = '/navi/clair/images/tiles/icons/group/svg/' + filename + '.svg';
+			filesToSend.push(descSvgOri);
+			for (i = 0; i < descImgGroup.length; i++) {
 				filePng = filename + ".png";
-				console.log('dirF', dir);
-				pathF = path.join(dir, qtGroupAndType[i].quality);
-				console.log('pathF', pathF);
-				pathV = createDir(pathF, qtGroupAndType[i].quality);
-				filesToSend.push(pathF + '/' + filePng);
-				convert('.' + pathV + '/' + filePng, filename, qtGroupAndType[i].dpi, dir);
+				descImgGroup[i].to = descImgGroup[i].to + filePng;
+				converSvg(filePng, filename, descImgGroup[i]);
 			}
-		} else {
-			for (i = 0; i < qtHeader.length; i++) {
+		} else if (type === 'type') {
+			descSvgOri.from = fromSvg;
+			descSvgOri.to = '/navi/clair/images/tiles/icons/type/svg/' + filename + '.svg';
+			filesToSend.push(descSvgOri);
+			for (i = 0; i < descImgType.length; i++) {
 				filePng = filename + ".png";
-				pathF = path.join(dir, qtHeader[i].quality);
-				pathV = createDir(pathF, qtHeader[i].quality);
-				filesToSend.push(pathF + '/' + filePng);
-				convert('.' + pathV + '/' + filePng, filename, qtHeader[i].dpi, dir);
+				descImgType[i].to = descImgType[i].to + filePng;
+				converSvg(filePng, filename, descImgType[i]);
+			}
+		} else if (type === 'header') {
+			descSvgOri.from = fromSvg;
+			descSvgOri.to = '/navi/clair/images/headers/svg/' + filename + '.svg';
+			filesToSend.push(descSvgOri);
+			for (i = 0; i < descImgHeader.length; i++) {
+				filePng = filename + ".png";
+				descImgHeader[i].to = descImgHeader[i].to + filePng;
+				converSvg(filePng, filename, descImgHeader[i]);
 			}
 		}
 		return callback(null, 'Conversion completed successfully');
@@ -136,9 +189,9 @@ exports.pushFtp = function(type, filename, callback) {
 		svgToPng(type, filename, function(err, res) {
 			if (err) return callback(err, null);
 			if (res) {
-				console.log('filesToSend', filesToSend);
-				for (var i = 0; i < filesToSend.length; i++) {
-					ftpBitdubai.put(filesToSend[i], 'path/to/remote/file.txt',
+				console.log('filesToSend', filesToSend[0]);
+				//for (var i = 0; i < filesToSend.length; i++) {
+					ftpBitdubai.put(filesToSend[0].from, filesToSend[0].to,
 						function(hadError) {
 							if (!hadError)
 								console.log("File transferred successfully!");
@@ -147,7 +200,7 @@ exports.pushFtp = function(type, filename, callback) {
 								return callback(hadError, null);
 							}
 						});
-				}
+				//}
 				return callback(null, 'Files transferred successfully!');
 			}
 
