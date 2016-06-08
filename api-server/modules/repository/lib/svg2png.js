@@ -5,6 +5,7 @@
 /* global test */
 /* global which */
 require('shelljs/global');
+var winston = require('winston');
 var path = require('path');
 var JSFtp = require("jsftp");
 var fs = require("fs");
@@ -31,17 +32,12 @@ var ftpFermat = new JSFtp({
  * @return {[type]}          [description]
  */
 var convert = function(path_png, name_svg, dpi, dir) {
-	console.log('test', test('-d', dir));
 	if (test('-d', dir)) {
 		cd(dir);
-		console.log('path_png', path_png);
-		console.log('name_svg', name_svg);
 		if (exec('inkscape -e ' + path_png + ' -d ' + dpi + ' ' + name_svg + '.svg').code !== 0) {
 			echo('Error: You can not perform the conversion');
 			throw new Error('You can not perform the conversion');
-			//res.status(402).send("You can not perform the conversion");
 		} else return "Conversion completed successfully";
-		//else res.status(200).send("ok");
 	}
 };
 /**
@@ -50,19 +46,16 @@ var convert = function(path_png, name_svg, dpi, dir) {
  * @return {[type]}      [description]
  */
 var createDir = function(path_, qt_img) {
-	console.log('path ', path_);
 	try {
 		fs.accessSync(path_, fs.F_OK);
-		console.log('return path ', '/' + qt_img);
 		return '/' + qt_img;
 	} catch (e) {
 		try {
-			console.log('creating dir ');
 			fs.mkdirSync(path_);
-			console.log('dir created return path ', '/' + qt_img);
 			return '/' + qt_img;
 		} catch (e) {
 			console.error('Error', e);
+			winston.log('error', e.message, e);
 			if (e.code !== 'EEXIST') throw e;
 		}
 	}
@@ -70,9 +63,7 @@ var createDir = function(path_, qt_img) {
 var converSvg = function(filePng, filename, descImg) {
 	var pathF = "",
 		pathV = "";
-	console.log('dirF', dir);
 	pathF = path.join(dir, descImg.quality);
-	console.log('pathF', pathF);
 	pathV = createDir(pathF, descImg.quality);
 	descImg.from = pathF + '/' + filePng;
 	filesToSend.push(descImg);
@@ -180,6 +171,7 @@ var svgToPng = function(type, filename, callback) {
 		return callback(null, 'Conversion completed successfully');
 	} catch (err) {
 		console.log("Error: " + err);
+		winston.log('error', err.message, err);
 		return callback(err, null);
 	}
 };
@@ -189,18 +181,18 @@ exports.pushFtp = function(type, filename, callback) {
 		svgToPng(type, filename, function(err, res) {
 			if (err) return callback(err, null);
 			if (res) {
-				var sendFiles = function(i) {
+				var loopSendFiles = function(i) {
 					if (i < filesToSend.length) {
-						console.log('filesToSend '+i, filesToSend[i]);
 						ftpBitdubai.put(filesToSend[i].from, filesToSend[i].to,
 							function(hadError) {
 								if (!hadError) {
 									console.log("File transferred successfully!");
-									console.log(filesToSend[i]);
-									sendFiles(++i);
+									console.log(filesToSend[i].from);
+									loopSendFiles(++i);
 								} else {
 									console.log(hadError + ": Error transferring file");
-									console.log(filesToSend[i]);
+									winston.log('error', hadError.message, hadError);
+									console.log(filesToSend[i].from);
 									return callback(hadError, null);
 								}
 							});
@@ -209,11 +201,12 @@ exports.pushFtp = function(type, filename, callback) {
 						return callback(null, 'Files transferred successfully!');
 					}
 				};
-				return sendFiles(0);
+				return loppSendFiles(0);
 			}
 		});
 	} catch (err) {
 		console.log("Error: " + err);
+		winston.log('error', err.message, err);
 		return callback(err, null);
 	}
 };
