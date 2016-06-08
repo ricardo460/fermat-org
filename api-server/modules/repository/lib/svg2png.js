@@ -175,9 +175,19 @@ var svgToPng = function(type, filename, callback) {
 		return callback(err, null);
 	}
 };
-
+var dleteDir = function(paths) {
+	try {
+		for (var i = 0; i < paths.length; i++) 
+			fs.unlinkSync(paths[i].from);
+	} catch (e) {
+		console.error('Error could not delete the file', e);
+		winston.log('Error could not delete the file', e.message, e);
+		throw e;
+	}
+};
 exports.pushFtp = function(type, filename, callback) {
 	try {
+		filesToSend = [];
 		svgToPng(type, filename, function(err, res) {
 			if (err) return callback(err, null);
 			if (res) {
@@ -192,19 +202,22 @@ exports.pushFtp = function(type, filename, callback) {
 								} else {
 									console.log(hadError + ": Error transferring file");
 									winston.log('error', hadError.message, hadError);
+									dleteDir(filesToSend);
 									console.log(filesToSend[i].from);
 									return callback(hadError, null);
 								}
 							});
 					} else {
 						console.log("Files transferred successfully!");
+						dleteDir(filesToSend);
 						return callback(null, 'Files transferred successfully!');
 					}
 				};
-				return loppSendFiles(0);
+				return loopSendFiles(0);
 			}
 		});
 	} catch (err) {
+		dleteDir(filesToSend);
 		console.log("Error: " + err);
 		winston.log('error', err.message, err);
 		return callback(err, null);
