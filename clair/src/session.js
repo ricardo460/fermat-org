@@ -49,7 +49,7 @@ function Session() {
         isLogin = true;
 
         self.usr = { 
-            axs_key: "56d9946df87ede9a50462120",
+            axs_key: "56d9a35af87ede9a504678e0",
             usrnm: "ricardo460",
             upd_at: "56c72bdf7d20701f414de5e3",
             name: "Ricardo Delgado",

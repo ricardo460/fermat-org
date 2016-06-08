@@ -6,11 +6,13 @@ function DragManager() {
     var rayCaster = new THREE.Raycaster();
 
     this.objects = [];
+    this.objectsColision = [];
 
     this.functions = {
             MOVE : [],
             CLICK : [],
             DROP : [],
+            COLISION :[],
             CROSS : []
         };
 
@@ -28,6 +30,7 @@ function DragManager() {
         offset = new THREE.Vector3(),
         container = document.getElementById('container'),
         INTERSECTED = null,
+        INTERSECTED_1 = null,
         OPACITY = null,
         SELECTED = null,
         plane = null;
@@ -165,7 +168,7 @@ function DragManager() {
                 var action = self.functions.CLICK[i];
 
                 if(typeof(action) === 'function')
-                    action();
+                    action(SELECTED);
             }
 
             container.style.cursor = self.styleMouse.CLICK;

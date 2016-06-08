@@ -160,7 +160,6 @@ function ViewManager() {
                     };
                     
                     backButton = reset = function() {
-
                         window.workFlowManager.showWorkFlow();
                     };
 

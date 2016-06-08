@@ -4,12 +4,21 @@ function WorkFlowEdit() {
 
     var classFlow = null;
 
-    var jsonSteps = [];
+    var focus = {
+        mesh : null,
+        data : null
+        };
 
-    var steps = {
-        mesh : [],
-        tile : []
-    };
+    var LIST_STEPS = [];
+
+    var actualMode = null;
+
+    var TILEWIDTH = window.TILE_DIMENSION.width - window.TILE_SPACING;
+    var TILEHEIGHT = window.TILE_DIMENSION.height - window.TILE_SPACING;
+
+    this.get = function(){
+        return LIST_STEPS;
+    }
 
     this.addButton = function(_id){
 
@@ -105,7 +114,6 @@ function WorkFlowEdit() {
             
             window.buttonsManager.createButtons(button, text, callback, null, null, side);
         }   
-    
     };
 
     this.changeTexture = function(){
@@ -124,6 +132,8 @@ function WorkFlowEdit() {
     this.fillStep = function(){
 
         var flow = window.fieldsEdit.getData();
+
+        flow.steps = self.transformData();
 
         classFlow.deleteStep();
 
@@ -156,8 +166,6 @@ function WorkFlowEdit() {
              window.alert(validateFields());
         }
     };
-
-
 
     function createElement(){
 
@@ -221,6 +229,8 @@ function WorkFlowEdit() {
 
             createElement();
 
+            createdetector();
+
             jsonSteps = [];
 
             window.dragManager.on();
@@ -229,7 +239,7 @@ function WorkFlowEdit() {
 
             showBrowser(false);
 
-            buttonModeEditSteps();
+            changeMode('edit-step');
 
             window.removeEventListener('keydown', window.camera.onKeyDown, false);
 
@@ -975,8 +985,7 @@ function WorkFlowEdit() {
         list.update();
 
         if(steps.length > 0)
-            document.getElementById("modal-steps-div").changeStep(0);
-        
+            document.getElementById("modal-steps-div").changeStep(0);   
     }
 
     function animate(mesh, target, duration, callback){
@@ -1063,39 +1072,488 @@ function WorkFlowEdit() {
 
         }
 
-        var action = function(mesh, position){
+        var action = function(tile){
 
-            if(mesh.parent.type === "LOD")
-                mesh.parent.position.copy(position);
-            else
-                mesh.position.copy(position);
+            var type = null;
+
+            if(!tile.userData.type)
+                type = 'tile';
+            else if(tile.userData.type === 'step')
+                type = 'step';
+
+            switch(type) {
+                case "tile":
+                    var parent = null;
+
+                    if(focus.data)
+                        parent = focus.data.userData.id[0];
+
+                    var mesh = addButtonIdStep(LIST_STEPS.length + 1, tile.userData.id, parent);
+
+                    focus.data = mesh;
+                    break;
+                case "step":
+                    focus.data = LIST_STEPS[tile.userData.id[0] - 1].mesh;
+                    updateTileIgnoredAdd();
+                    break;                
+            }
         };
 
-        window.dragManager.functions.MOVE.push(action); 
+        window.dragManager.functions.CLICK.push(action);
+
+        var moveAction = function(mesh, position){ 
+
+            if(!mesh.userData.type)
+                type = 'tile';
+            else if(mesh.userData.type === 'step'){
+                mesh.position.copy(position);
+                focus.mesh.position.copy(position);
+            }
+        } 
+
+        window.dragManager.functions.MOVE.push(moveAction);
     }
 
-    this.createButon = function(){
+    function addButtonIdStep(id, IDtile, parent){
 
-        var tileWidth = (window.TILE_DIMENSION.width - window.TILE_SPACING) / 2,
-            tileHeight = (window.TILE_DIMENSION.height - window.TILE_SPACING) / 4;
+        var mesh = createIdStep(),
+            difference = TILEWIDTH / 2;
 
-        var mesh =  new THREE.Mesh(
-                    new THREE.PlaneBufferGeometry(tileHeight, tileHeight),
-                    new THREE.MeshBasicMaterial({
-                            side: THREE.DoubleSide,
-                            color: Math.random() * 0xffffff
-                        })
-                    );
+        var newArray = [id];
+
+        var tile = window.helper.getSpecificTile(IDtile).mesh;
+
+        var target = window.helper.fillTarget(tile.position.x - difference, tile.position.y, tile.position.z + 1, 'table');
+
+        mesh.position.copy(target.hide.position);
+
+        mesh.rotation.copy(target.hide.rotation);
+
+        mesh.userData = {
+                id : newArray,
+                tile : IDtile,
+                type: 'step'
+            };
+
+        if(parent){
+            var children = LIST_STEPS[parent - 1].children;
+
+            if(children.length > 0)
+                newArray[0] = window.helper.getLastValueArray(children)[0] + 0.5;
+            
+            children.push(newArray);
+        }
+        
+
+        var object = {
+                    order : newArray,
+                    mesh : mesh,
+                    target : target,
+                    tile : IDtile,
+                    children : []
+                };
+
+        LIST_STEPS.push(object);
+
+        mesh.material.map = changeTextureId(id);
+
+        calculatePositionsSteps(IDtile);
+
+        if(parent){
+            orderPositionStep();
+        }
+
+        return mesh;
+
+        function createIdStep(){
+
+            var size = TILEHEIGHT / 6;
+
+            var mesh = new THREE.Mesh(
+                       new THREE.PlaneBufferGeometry(size, size),
+                       new THREE.MeshBasicMaterial({ 
+                            side: THREE.DoubleSide, 
+                            transparent: true, 
+                            map:null 
+                        }));
+
+            mesh.renderOrder = 1;
+
+            mesh.material.depthTest = false;
+
+            window.scene.add(mesh);
+
+                return mesh;
+        }
+    }
+
+    function changeTextureId(id){
+
+        var canvas = document.createElement('canvas');
+            canvas.height = TILEHEIGHT;
+            canvas.width = TILEHEIGHT;
+        var ctx = canvas.getContext('2d');
+        var middle = canvas.width / 2;
+        var image = document.createElement('img');
+        var texture = new THREE.Texture(canvas);
+            texture.minFilter = THREE.NearestFilter;
+
+        image.onload = function() {
+
+            ctx.drawImage(image, 0, 0);
+
+            ctx.textAlign = 'center';
+
+            ctx.font = '48px Canaro, Sans-serif';
+            ctx.fillText(id, middle, middle);
+            
+            texture.needsUpdate = true;
+        };
+
+        image.src = 'images/workflow/buttoncircle.png';
+
+        return texture;
+    }
+
+    function calculatePositionsSteps(idTile){
+
+        var countSteps = [],
+            rootY = window.helper.getSpecificTile(idTile).mesh.position.y,
+            i,
+            mesh = null,
+            target = null;
+
+        var action = function (){updateTileIgnoredAdd();};
+
+        for(i = 0; i < LIST_STEPS.length; i++){
+
+            if(LIST_STEPS[i].tile === idTile)
+                countSteps.push(LIST_STEPS[i]);
+        }
+        
+        if(countSteps.length === 1){ 
+
+            target = countSteps[0].target.show;
+
+            target.position.y = rootY;
+
+            animate(countSteps[0].mesh, countSteps[0].target.show, 1000, action);
+        }
+        else if(countSteps.length === 2){ 
+
+            for(i = 0; i < countSteps.length; i++) {
+
+                target = countSteps[i].target.show;
+
+                mesh = countSteps[i].mesh;
+
+                if(i === 0){
+                    target.position.y = rootY + (TILEHEIGHT / 4);
+                    animate(mesh, target, 1000);
+                }
+                else{
+                    target.position.y = rootY - (TILEHEIGHT / 4);
+                    animate(mesh, target, 1000, action);
+                }
+            }
+        }
+        else if(countSteps.length > 2){
+
+            var difference = (TILEHEIGHT / 6) / 2,
+                topY = rootY + ((TILEHEIGHT / 2) - difference),
+                countSpaceSteps = countSteps.length - 1.
+                distanceSteps = (TILEHEIGHT - difference) / countSpaceSteps;
+
+            for(i = 0; i < countSteps.length; i++) {
+
+                mesh = countSteps[i].mesh;
+
+                target = countSteps[i].target.show;
+
+                target.position.y = topY;
+
+                if(i !== countSpaceSteps)
+                    animate(mesh, target, 1000);
+                else
+                    animate(mesh, target, 1000, action);
+
+                topY = topY - distanceSteps; 
+            }
+        }
+    }
+
+    function orderPositionStep(){
+
+        var array = LIST_STEPS;
+
+        for(var i = 0; i < array.length; i++) {
+
+            for(var t = 0; t < array.length - i; t++) {
+
+                if(array[t + 1]){ 
+
+                    if (array[t].order[0] > array[t + 1].order[0]) {
+
+                        var aux;
+
+                        aux = array[t];
+
+                        array[t] = array[t + 1];
+
+                        array[t + 1] = aux;
+                    }
+                }
+            }
+        }
+
+        for(var k = 0; k < array.length; k++){
+
+            var newId = k + 1;
+
+            if(array[k].order[0] !== newId){
+
+                var mesh = array[k].mesh;
+
+                array[k].order[0] = newId;
+                mesh.userData.id[0] = newId;
+
+                mesh.material.map = changeTextureId(newId);
+            }
+        }
+
+        focus.data = window.helper.getLastValueArray(array).mesh;
+
+        updateTileIgnoredAdd();
+    }
+
+    function updateTileIgnoredAdd(){
+
+        var id = focus.data.userData.id - 1,
+            ignoredTile = focus.data.userData.tile,
+            mesh = focus.mesh;
+
+        window.dragManager.objects = [];
+
+        for(var i = 0; i < LIST_STEPS.length; i++){
+
+            if(i === id)
+                mesh.position.copy(LIST_STEPS[i].mesh.position);
+            
+            window.dragManager.objects.push(LIST_STEPS[i].mesh); 
+            
+        }
+
+        for(var t = 0; t < window.tilesQtty.length; t++){
+
+            if(window.tilesQtty[t] !== ignoredTile){
+
+                var tile = window.helper.getSpecificTile(window.tilesQtty[t]).mesh;
+
+                window.dragManager.objects.push(tile);
+
+            }
+        }
+    }
+
+    this.deleteStep = function(step){
+
+        var list = LIST_STEPS,
+            ORDER = Search(step),
+            tilesCalculatePositions = [],
+            removeStep = [],
+            i = 0, l = 0;
+
+        focus.mesh.material.visible = false;
+
+        if(list[ORDER].children.length > 0){
+
+            var oldChildren = list[ORDER].children,
+                odlStep = list[ORDER].order,
+                newIdStep = Search(oldChildren[0][0]),
+                newStep = list[newIdStep];
+    
+            odlStep[0] = newStep.order[0];
+            newStep.order = odlStep;
+            newStep.mesh.userData.id = odlStep;
+
+            deleteStep(ORDER);
+
+            for(i = 1; i < oldChildren.length; i++){
+
+                fillRemove(oldChildren[i][0]);
+
+                removeStep.push(oldChildren[i][0]);
+            }
+
+            for(i = 0; i < removeStep.length; i++)
+                 deleteStep(Search(removeStep[i]));
+        }
+        else{
+
+            for(i = 0; i < list.length; i++){
+
+                var children = list[i].children;
+
+                for(l = 0; l < children.length; l++){ 
+
+                    if(children[l][0] === step)
+                        children.splice(l, 1);
+                }
+            }
+
+            deleteStep(ORDER);
+        }
+
+        for(i = 0; i < tilesCalculatePositions.length; i++)
+            calculatePositionsSteps(tilesCalculatePositions[i]);
+
+        orderPositionStep();
+
+        focus.mesh.material.visible = true;
+
+        function deleteStep(order){
+
+            removeMesh(list[order]);
+
+            list.splice(order, 1);
+        }
+
+        function removeMesh(data){
+
+            var mesh = data.mesh,
+                target = data.target,
+                tile = data.tile;
+
+            if(!tilesCalculatePositions.find(function(x){if(x === tile) return x;}))
+                tilesCalculatePositions.push(tile);
+
+            animate(mesh, target.hide, 2000, function(){ 
+                window.scene.remove(mesh);
+            });
+        }
+
+        function fillRemove(_order){
+
+            var order = Search(_order),
+                i = 0;
+
+            for(i = 0; i < list[order].children.length; i++){
+
+                var children = list[Search(list[order].children[i][0])].children;
+
+                removeStep.push(list[order].children[i][0]);
+
+                if(children.length > 0)
+                    fillRemove(list[order].children[i][0]);
+            }
+        }
+
+        function Search(order){
+
+            var i = 0;
+
+            for(i = 0; i < list.length; i++){
+
+                if(list[i].order[0] === order)
+                    return i;
+            }
+        }
+    };
+
+    function createdetector(){//cambiar nombre
+
+        var size = TILEHEIGHT / 6;
+
+        var canvas = document.createElement('canvas');
+
+        var img = new Image();
+
+        canvas.height = TILEHEIGHT;
+        canvas.width = TILEHEIGHT;
+
+        var ctx = canvas.getContext('2d');
+
+        img.src = 'images/workflow/focus.png';
+
+        var mesh = new THREE.Mesh(
+                   new THREE.PlaneBufferGeometry(size, size),
+                   new THREE.MeshBasicMaterial({ 
+                        side: THREE.DoubleSide, 
+                        transparent: true, 
+                        map:null 
+                    }));
+
+        mesh.renderOrder = 2;
+
+        mesh.material.depthTest = false;
 
         window.scene.add(mesh);
 
-        var tile = window.helper.getSpecificTile(window.tilesQtty[0]).mesh;
+        img.onload = function() { 
 
-        window.camera.setFocus(tile, new THREE.Vector4(0, 0, 950, 1), 2000);
+            ctx.drawImage(img, 0, 0);
 
-        mesh.position.set(tile.position.x - tileWidth, tile.position.y, tile.position.z + 2);
-    
-    return mesh;}
+            texture = new THREE.Texture(canvas);
+            texture.minFilter = THREE.NearestFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.needsUpdate = true;  
+
+            mesh.material.map = texture;
+
+            focus.mesh = mesh;
+        };
+    }
+
+    this.transformData = function(){
+
+        var json = [];
+
+        for(var i = 0; i < LIST_STEPS.length; i++){
+
+            var tile = window.helper.getSpecificTile(LIST_STEPS[i].tile).data;
+
+            var platfrm = tile.platform || tile.superLayer;
+
+            var children = LIST_STEPS[i].children;
+
+            var next = [];
+
+            for(var l = 0; l < children.length; l++){
+
+                var object = {
+                    id : children[l][0] - 1,
+                    type: "direct call"
+                }
+
+                next.push(object);
+            }
+
+            var step = {
+                id : i,
+                title : "prueba",
+                desc : "test data",
+                type : "start",
+                next : next,
+                name : tile.name,
+                layer : tile.layer,
+                platfrm : platfrm
+            }
+
+            json.push(step);
+        }
+
+        if(json.length > 1){
+
+            for(var i = 1; i < json.length; i++){
+
+                if(i === (json.length - 1))
+                    json[i].type = 'end';
+                else 
+                    json[i].type = 'activity';
+            }
+        }
+        return json;
+    }
 
     function buttonModePreview(){
 
@@ -1111,6 +1569,8 @@ function WorkFlowEdit() {
 
             window.camera.setFocus(mesh, new THREE.Vector4(0, 0, 950, 1), 2000);
 
+            self.fillStep();
+
             window.headers.transformWorkFlow(2000);
 
             window.helper.show('backButton', 0);
@@ -1121,6 +1581,169 @@ function WorkFlowEdit() {
             window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
                 buttonModeEditSteps();}, null, null, "left");
         }); 
+    }
+
+    function changeMode(mode){ 
+
+        cleanButtons();
+
+        window.dragManager.objects = [];
+
+        MODE().exit();
+
+        actualMode = mode;
+
+        MODE().enter();
+
+        function MODE(){
+
+            var actions = {},
+                enter = null, exit = null; 
+
+            switch(actualMode) {
+
+                case 'edit-step':
+                    enter = function() {
+
+                        window.helper.hide('backButton', 0, true);
+
+                        window.actualView = false;
+
+                        displayField(false);
+
+                        window.tileManager.transform(false, 2000);
+
+                        window.signLayer.transformSignLayer();
+
+                        var newCenter = new THREE.Vector3(0, 0, 0);
+                        var transition = 3000;
+
+                        newCenter = window.viewManager.translateToSection('table', newCenter);
+                        window.camera.move(newCenter.x, newCenter.y, camera.getMaxDistance() / 2, transition, true);
+                        
+                        window.headers.transformTable(transition);
+
+                        window.buttonsManager.createButtons('button-preview', 'Workflow Preview', function(){
+                            changeMode('preview');}, null, null, "left");
+
+                        window.buttonsManager.createButtons('button-path', 'Edit Path', function(){
+                            changeMode('edit-path');}, null, null, "right");
+                    };             
+                    
+                    exit = function() {
+                        
+                    };
+
+                    break;   
+                case 'edit-path':
+                    enter = function() {
+
+                        window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
+                            changeMode('edit-step');}, null, null, "left");
+
+                        //if(jsonSteps.length <= 0){
+
+                            window.dragManager.styleMouse.CROSS = 'copy';
+
+                            for(var i = 0; i < window.tilesQtty.length; i++){
+
+                                var tile = window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
+
+                                window.dragManager.objects.push(tile);
+                            }
+                        //}
+                        //else{
+
+                        //}
+
+                        var action = function(tile){
+
+                            var type = null;
+
+                            if(!tile.userData.type)
+                                type = 'tile';
+                            else if(tile.userData.type === 'step')
+                                type = 'step';
+
+                            switch(type) {
+                                case "tile":
+                                    var parent = null;
+
+                                    if(focus.data)
+                                        parent = focus.data.userData.id[0];
+
+                                    var mesh = addButtonIdStep(LIST_STEPS.length + 1, tile.userData.id, parent);
+
+                                    focus.data = mesh;
+                                    break;
+                                case "step":
+                                    focus.data = LIST_STEPS[tile.userData.id[0] - 1].mesh;
+                                    updateTileIgnoredAdd();
+                                    break;                
+                            }
+                        };
+
+                        window.dragManager.functions.CLICK.push(action);
+
+                        var moveAction = function(mesh, position){ 
+
+                            if(!mesh.userData.type)
+                                type = 'tile';
+                            else if(mesh.userData.type === 'step'){
+                                mesh.position.copy(position);
+                                focus.mesh.position.copy(position);
+                            }
+                        } 
+
+                        window.dragManager.functions.MOVE.push(moveAction);
+                    };             
+                    
+                    exit = function() {
+                        
+                    };
+
+                    break; 
+                case 'preview':
+                    enter = function() {
+
+                        displayField(true);
+
+                        window.actualView = 'workflows';
+
+                        var mesh = window.fieldsEdit.objects.tile.mesh;
+
+                        animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
+
+                            window.camera.setFocus(mesh, new THREE.Vector4(0, 0, 950, 1), 2000);
+
+                            self.fillStep();
+
+                            window.headers.transformWorkFlow(2000);
+
+                            window.helper.show('backButton', 0);
+
+                            window.buttonsManager.createButtons('button-save', 'Save', function(){
+                                buttonModePreview();}, null, null, "right");
+
+                            window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
+                                changeMode('edit-step')}, null, null, "left");
+                        });
+                    };             
+                    
+                    exit = function() {
+                        
+                    };
+
+                    break; 
+            } 
+
+            actions = {
+                enter : enter || function(){},
+                exit : exit || function(){}
+            };
+
+            return actions;
+        }
     }
 
     function displayField(visible){

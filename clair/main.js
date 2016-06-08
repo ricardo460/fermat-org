@@ -15,16 +15,16 @@ function API() {
 
         var param;
 
-        //window.session.useTestData();
+        window.session.useTestData();
 
-        if(window.session.getIsLogin()){
+        if(window.session.getIsLogin() && !window.disconnected){
 
             var usr = window.helper.clone(window.session.getUserLogin());
 
             url = window.helper.SERVER + "/v1/repo/usrs/"+usr._id+"/";
 
             param = {
-                env : window.helper.ENV,
+                env : window.API_ENV,
                 axs_key : usr.axs_key
             };
 
@@ -62,13 +62,19 @@ function API() {
         }
         else{
 
-            url = self.getAPIUrl("comps");
+            if(!window.disconnected)
+                url = self.getAPIUrl("comps");
+            else
+                url = 'json/testData/comps.json';
 
             callAjax('', '',function(route, res){
 
                 list = res;
 
-                url = self.getAPIUrl("user");
+                if(!window.disconnected)
+                    url = self.getAPIUrl("user");
+                else
+                    url = 'json/testData/devs.json';
 
                 callAjax('', '',function(route, res){
 
@@ -82,8 +88,13 @@ function API() {
 
         function callAjax(route, port, callback){
 
+            var URL = url + route + port;
+
+            if(window.disconnected)
+                URL = url;
+
             $.ajax({
-                url: url + route + port,
+                url: URL,
                 method: "GET"
             }).success (
                 function (res) {
@@ -106,7 +117,7 @@ function API() {
 
         param = {
                 usrs : usr._id,
-                env : window.helper.ENV,
+                env : window.API_ENV,
                 axs_key : usr.axs_key
             };
 
@@ -225,7 +236,7 @@ function API() {
 
         param = {
                 usrs : usr._id,
-                env : window.helper.ENV,
+                env : window.API_ENV,
                 axs_key : usr.axs_key
             };
 
@@ -320,72 +331,12 @@ function API() {
      * @returns {string} The URL related to the requested route
      */
     this.getAPIUrl = function(route, params) {
-
-        var tail = "";
-
-        switch(route) {
-
-            case "comps":
-                tail = "/v1/repo/comps";
-                break;
-            case "procs":
-                tail = "/v1/repo/procs";
-                break;
-            case "servers":
-                tail = "/v1/net/servrs";
-                break;
-            case "nodes":
-                tail = "/v1/net/nodes/:server/childrn";
-                break;
-            case "login":
-                tail = "/v1/auth/login";
-                break;
-            case "logout":
-                tail = "/v1/auth/logout";
-                break;
-            case "user":
-                tail = "/v1/repo/devs";
-                break;
-
-            case "tableEdit insert":
-                tail = "/v1/repo/usrs/:usrs/comps";
-                break;
-            case "tableEdit get":
-            case 'tableEdit update':
-            case 'tableEdit delete':
-                tail = "/v1/repo/usrs/:usrs/comps/:comp_id";
-                break;
-            case "tableEdit insert dev":
-                tail = "/v1/repo/usrs/:usrs/comps/:comp_id/comp-devs";
-                break;
-            case "tableEdit delete dev":
-            case "tableEdit update dev":
-                tail = "/v1/repo/usrs/:usrs/comps/:comp_id/comp-devs/:devs_id";
-                break;
-
-            case "wolkFlowEdit insert":
-                tail = "/v1/repo/usrs/:usrs/procs";
-                break;
-            case "wolkFlowEdit get":    
-            case "wolkFlowEdit update":
-            case "wolkFlowEdit delete":
-                tail = "/v1/repo/usrs/:usrs/procs/:proc_id";
-                break;
-            case "wolkFlowEdit insert step":
-                tail = "/v1/repo/usrs/:usrs/procs/:proc_id/steps";
-                break;
-            case "wolkFlowEdit delete step":
-            case "wolkFlowEdit update step":
-                tail = "/v1/repo/usrs/:usrs/procs/:proc_id/steps/:steps_id";
-                break;
-        }
-
-        return window.helper.buildURL(window.helper.SERVER + tail, params);
+        return window.helper.getAPIUrl(route, params);
     };
 
     /**
-     * TODO: MUST BE DELETED
      * @author Miguelcldn
+     * @lastmodifiedBy Ricardo Delgado
      * @param {Object} data Post Data
      */
     function exists() { 
@@ -404,15 +355,15 @@ function API() {
                 location = window.TABLE[group].layers[layer].objects;
             
 
-            if(window.tableEdit.formerName){ 
+            if(window.fieldsEdit.actualTile){ 
 
-                if(window.tableEdit.formerName.toLowerCase() === name) 
+                if(window.fieldsEdit.actualTile.name.toLowerCase() === name.toLowerCase()) 
                     return false;
             }
             
             for(var i = 0; i < location.length; i++) {
 
-                if(location[i].data.name.toLowerCase() === name && location[i].data.type === type) {
+                if(location[i].data.name.toLowerCase() === name.toLowerCase() && location[i].data.type === type) {
                     return true;
                 }
             }
@@ -1210,16 +1161,17 @@ function ButtonsManager() {
      * @param {String}  id  Button ID.
      * @param {Function} callback Function to call when finished.    
      */
-    this.deleteButton = function(id, _side, callback){
+    this.deleteButton = function(id, callback){
 
-        var side = _side || 'left';
+        for(var side in self.objects){
+            
+            for(var i = 0; i < self.objects[side].buttons.length; i++){
 
-        for(var i = 0; i < self.objects[side].buttons.length; i++){
-
-            if(self.objects[side].buttons[i].id === id){
-                self.objects[side].buttons.splice(i,1);
-                window.helper.hide($('#'+id), 1000, callback);
-                
+                if(self.objects[side].buttons[i].id === id){
+                    self.objects[side].buttons.splice(i,1);
+                    window.helper.hide($('#'+id), 1000, callback);
+                    
+                }
             }
         }
     };
@@ -1464,10 +1416,15 @@ function Camera(position, renderer, renderFunc) {
             //TWEEN.removeAll();
             var duration = 2000;
 
-            if(viewManager.views && viewManager.views[window.actualView])
-                viewManager.views[window.actualView].reset();
+            if(window.viewManager !== null){
+                
+                if(window.viewManager.views && window.viewManager.views[window.actualView]){
+                    window.viewManager.views[window.actualView].reset();
+                }
 
-            self.resetPosition(duration);
+                if(window.actualView)
+                    self.resetPosition(duration);
+            }
         }
     };
     
@@ -1581,6 +1538,14 @@ function Camera(position, renderer, renderFunc) {
     this.getFocus = function() { 
         return focus;
     };
+
+    this.offFocus = function(){
+        focus = true;
+    };
+
+    this.onFocus = function(){
+        focus = null;
+    };
     
     /**
      * Casts a ray between the camera to the target
@@ -1608,6 +1573,11 @@ function Camera(position, renderer, renderFunc) {
         scene.add(line);*/
         
         return raycaster.intersectObjects(elements);
+    };
+
+    this.getRayCast = function(raycaster, mouse){
+
+        raycaster.setFromCamera(mouse, camera);
     };
     
     /**
@@ -1668,70 +1638,6 @@ function Camera(position, renderer, renderFunc) {
     window.addEventListener('resize', this.onWindowResize, false);
     window.addEventListener('keydown', this.onKeyDown, false);
 }
-/**
- * Command Line Interface. Contains functions defined to be used when debugging
- * @author Miguel Celedon
- */
-function CLI() {
-    
-    /**
-     * Used to execute a condition through an array
-     * @author Miguel Celedon
-     * @param   {Array}    list      The source of the search
-     * @param   {function} condition A function receiving the actual element and must return true or false
-     * @returns {Array}    Set of indices of that array that complies the condition
-     */
-    this.query = function(list, condition) {
-        
-        var found = [];
-        
-        for(var i in list) {
-            if(condition(list[i]))
-                found.push(i);
-        }
-        
-        return found;
-    };
-    
-    /**
-     * This function is meant to be used only for testing in the debug console,
-     * it cleans the entire scene so the website frees some memory and so you can
-     * let it in the background without using so much resources.
-     * @author Miguel Celedon
-     */
-    this.shutDown = function() {
-
-        scene = new THREE.Scene();
-
-    };
-    
-    /**
-     * Executes a click event on a tile
-     * @author Miguel Celedon
-     * @param {number} id The ID (position in the table) of the element
-     */
-    this.forceElementClick = function(id) {
-        
-        var obj = window.objects[id].levels[0].object;
-        
-        obj.userData.onClick(obj);
-        
-    };
-    
-    /**
-     * Moves the camera to a distances so the tiles and elements gets the respective quality
-     * @author Miguelcldn
-     * @param {string} qa Can be {"mini" | "small" | "medium" | "high"}
-     */
-    this.goToQuality = function(qa) {
-        var qs = window.tileManager.levels;
-        var pos = window.camera.getPosition();
-        
-        window.camera.move(pos.x, pos.y, qs[qa] + 1);
-    };
-}
-
-var CLI = new CLI();
 function ClientsViewer(parentNode) {
     
     BaseNetworkViewer.call(this);
@@ -1900,300 +1806,6 @@ ClientsViewer.prototype.closeChild = function() {
     
     return self;
     
-};
-var configAPIUrl = {
-		trueData : {
-			server : 'http://api.fermat.org',
-			port : {
-				devs : 'env=development'
-			},
-			route : {
-				comps : '/v1/repo/comps',
-				procs : '/v1/repo/procs',
-				user : '/v1/repo/devs',
-				servers : '/v1/network/servers',
-				nodes : '/v1/network/node',
-				login : '/v1/auth/login',
-				logout : '/v1/auth/logout'
-			}
-		},
-		testData : {
-			server : 'json/testData',
-			port : {
-				devs : ''
-			},
-			route : {
-				comps : 'comps.json',
-				procs : 'procs.json',
-				user : 'devs.json',
-				servers : 'servers.json',
-				nodes : 'node.json'
-			}
-		}
-};
-
-
-var test_map = {load : "table",table : {top : "",bottom : "",right : "stack",left : ""},stack : {top : "",bottom : "",right : "",left : "table"} };
-var testFlow = [
-    {
-        "platfrm": "CBP",
-        "name": "connection request from customer to broker",
-        "desc": "a customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation.",
-        "prev": "list crypto brokers",
-        "next": null,
-        "steps": [
-            {
-                "id": 0,
-                "title": "select broker and submit request",
-                "desc": "the customer selects a broker from the list and submits the request to connect to him.",
-                "type": "start",
-                "next": [
-                    {
-                        "id": "1",
-                        "type": "direct call"
-                    }
-                ],
-                "name": "crypto broker community",
-                "layer": "sub app",
-                "platfrm": "CBP"
-            },
-            {
-                "id": 1,
-                "title": "route request to network service",
-                "desc": "the module routes this request to the network service to reach the selected broker.",
-                "type": "activity",
-                "next": [
-                    {
-                        "id": "2",
-                        "type": "direct call"
-                    }
-                ],
-                "name": "crypto broker community",
-                "layer": "sub app module",
-                "platfrm": "CBP"
-            },
-            {
-                "id": 2,
-                "title": "call the broker to deliver the request",
-                "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
-                "type": "activity",
-                "next": [
-                    {
-                        "id": "1",
-                        "type": "direct call"
-                    }
-                ],
-                "name": "crypto broker",
-                "layer": "actor network service",
-                "platfrm": "CBP"
-            }
-        ],
-        "upd_at": "5629db8be934756e08c9751a",
-        "_id": "5629db8be934756e08c9751b"
-    }
-];
-var testNetworkNodes = [
-    {
-        id : "server0",
-        type : "node",
-        subType : "server",
-        os : "linux",
-        ady : [
-            {
-                id : "server1",
-                linkType : "connected"
-            }
-        ]
-    },
-    {
-        id : "server1",
-        type : "node",
-        subType : "server",
-        os : "windows",
-        ady : [
-            {
-                id : "server2",
-                linkType : "connected"
-            }
-        ]
-    },
-    {
-        id : "server2",
-        type : "node",
-        subType : "pc",
-        os : "linux",
-        ady : []
-    }
-];
-var testNetworkClients = {
-    server0 : [
-        {
-            id : "client0",
-            type : "client",
-            subType : "phone",
-            ady : [
-                {
-                    id : "server0",
-                    linkType : "connected"
-                },
-                {
-                    id : "client3",
-                    from : "nService0",
-                    linkType : "connected"
-                }
-            ]
-        },
-        {
-            id : "client1",
-            type : "client",
-            subType : "pc",
-            ady : [
-                {
-                    id : "server0",
-                    linkType : "connected"
-                }
-            ]
-        },
-        {
-            id : "client2",
-            type : "client",
-            subType : "phone",
-            ady : [
-                {
-                    id : "server0",
-                    linkType : "connected"
-                }
-            ]
-        }
-    ],
-    server1 : [
-        {
-            id : "client3",
-            type : "client",
-            subType : "phone",
-            ady : [
-                {
-                    id : "server1",
-                    linkType : "connected"
-                },
-                {
-                    id : "client0",
-                    from : "nService0",
-                    linkType : "connected"
-                }
-            ]
-        }
-    ],
-    server2 : []
-};
-var testNetworkServices = {
-    client0 : [
-        {
-            id : "wallet0",
-            type : "wallet",
-            subType : "bitcoin_wallet",
-            currency : "bitcoin",
-            symbol : "BTC",
-            balance : "0.0123",
-            ady : [
-                {
-                    id : "client0",
-                    linkType : "installed"
-                }
-            ]
-        },
-        {
-            id : "nService0",
-            type : "nservice",
-            subType : "ukn_service",
-            ady : [
-                {
-                    id : "client0",
-                    linkType : "running"
-                }
-            ]
-        },
-        {
-            id : "nService1",
-            type : "nservice",
-            subType : "ukn_service",
-            ady : [
-                {
-                    id : "client0",
-                    linkType : "running"
-                }
-            ]
-        },
-        {
-            id : "nService2",
-            type : "nservice",
-            subType : "ukn_service",
-            ady : [
-                {
-                    id : "client0",
-                    linkType : "running"
-                }
-            ]
-        }
-    ],
-    client1 : [],
-    client2 : [],
-    client3 : [
-        {
-            id : "nService0",
-            type : "nservice",
-            subType : "ukn_service",
-            ady : [
-                {
-                    id : "client3",
-                    linkType : "running"
-                }
-            ]
-        }
-    ]
-};
-
-
-var layers = {
-    
-    size : function(){
-        var size = 0;
-        
-        for(var key in this){
-            //if(this.hasOwnProperty(key))
-                size++;
-        }
-        
-        return size - 1;
-    }
-};
-
-var platforms = {
-    
-    size : function(){
-        var size = 0;
-        
-        for(var key in this){
-            //if(this.hasOwnProperty(key))
-                size++;
-        }
-        
-        return size - 1;
-    }
-};
-
-var superLayers = {
-    
-    size : function(){
-        var size = 0;
-        
-        for(var key in this){
-            //if(this.hasOwnProperty(key))
-                size++;
-        }
-        
-        return size - 1;
-    }
 };
 function Developer (){
 
@@ -2679,6 +2291,229 @@ function Developer (){
 /**
  * @author Ricardo Delgado
  */
+function DragManager() {
+
+    var rayCaster = new THREE.Raycaster();
+
+    this.objects = [];
+    this.objectsColision = [];
+
+    this.functions = {
+            MOVE : [],
+            CLICK : [],
+            DROP : [],
+            COLISION :[],
+            CROSS : []
+        };
+
+    this.styleMouse = {
+            MOVE : 'move',
+            CLICK : 'move',
+            DROP : 'default',
+            CROSS : 'pointer',
+            default : 'default' 
+        };
+
+    var self = this;
+
+    var mouse = new THREE.Vector2(),
+        offset = new THREE.Vector3(),
+        container = document.getElementById('container'),
+        INTERSECTED = null,
+        INTERSECTED_1 = null,
+        OPACITY = null,
+        SELECTED = null,
+        plane = null;
+
+    init();
+
+    function init(){
+
+        plane = new THREE.Mesh(
+                new THREE.PlaneBufferGeometry(MAX_DISTANCE * 1.5, MAX_DISTANCE * 0.5),
+                new THREE.MeshBasicMaterial({visible: false,color: Math.random() * 0xffffff})
+            );
+
+        window.scene.add(plane);
+    }
+
+    this.on = function(){
+        window.renderer.domElement.addEventListener('mousemove', mouseMove, false);
+        window.renderer.domElement.addEventListener('mousedown', mouseDown, false);
+        window.renderer.domElement.addEventListener('mouseup', mouseUp, false);
+    };
+
+    this.off = function(){
+        window.renderer.domElement.removeEventListener('mousemove', mouseMove, false);
+        window.renderer.domElement.removeEventListener('mousedown', mouseDown, false);
+        window.renderer.domElement.removeEventListener('mouseup', mouseUp, false);
+    }
+
+    function mouseMove(event) {
+
+        event.preventDefault();
+
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        window.camera.getRayCast(rayCaster, mouse);
+
+        var i = 0;
+
+        if (SELECTED) { 
+
+            var intersects = rayCaster.intersectObject(plane);
+
+            if (intersects.length > 0) {
+
+                var position = intersects[0].point.sub(offset);
+
+                for(i = 0; i < self.functions.MOVE.length; i++){
+
+                    var action = self.functions.MOVE[i];
+
+                    if(typeof(action) === 'function')
+                        action(SELECTED, position);
+                }
+
+                container.style.cursor = self.styleMouse.MOVE;
+            }
+            else
+                container.style.cursor = self.styleMouse.MOVE;
+        }
+        else{ 
+
+            var intersects = rayCaster.intersectObjects(self.objects, true);
+
+            if (intersects.length > 0) {
+
+                if(INTERSECTED != intersects[0].object){
+
+                    INTERSECTED = intersects[0].object;
+
+                    for(i = 0; i < self.functions.CROSS.length; i++){
+
+                        var action = self.functions.CROSS[i];
+
+                        if(typeof(action) === 'function')
+                            action();
+                    }
+
+                    if(INTERSECTED.parent.type === "LOD")
+                        plane.position.copy(INTERSECTED.parent.position);
+                    else
+                        plane.position.copy(INTERSECTED.position);
+
+                    if(INTERSECTED !== OPACITY){
+
+                        if(OPACITY)
+                            OPACITY.material.opacity = 1;
+
+                        OPACITY = INTERSECTED;
+
+                        OPACITY.material.opacity = 0.5; 
+                    } 
+
+                    container.style.cursor = self.styleMouse.CROSS;
+                }
+            } 
+            else{
+
+                INTERSECTED = null;
+
+                if(OPACITY){
+                    OPACITY.material.opacity = 1;
+                    OPACITY = null;
+                }
+
+                container.style.cursor = self.styleMouse.default;
+
+                window.camera.enable();
+            }
+        }
+    }
+
+    function mouseDown(event) { 
+
+        event.preventDefault();
+
+        window.camera.getRayCast(rayCaster, mouse);
+
+        var intersects = rayCaster.intersectObjects(self.objects);
+
+        if (intersects.length > 0) {
+
+            SELECTED = intersects[0].object;
+
+            var intersects = rayCaster.intersectObject(plane);
+
+            if (intersects.length > 0){
+                offset.copy(intersects[0].point).sub(plane.position);
+            }
+
+            window.camera.disable();
+
+            for(i = 0; i < self.functions.CLICK.length; i++){
+
+                var action = self.functions.CLICK[i];
+
+                if(typeof(action) === 'function')
+                    action(SELECTED);
+            }
+
+            container.style.cursor = self.styleMouse.CLICK;
+        }
+    }
+
+    function mouseUp(event) { 
+
+        event.preventDefault();
+
+        if (INTERSECTED){
+
+            if(INTERSECTED.parent.type === "LOD")
+                plane.position.copy(INTERSECTED.parent.position);
+            else
+                plane.position.copy(INTERSECTED.position);
+
+            SELECTED = null;
+            INTERSECTED = null;
+        }
+
+        window.camera.enable();
+
+        container.style.cursor = self.styleMouse.DROP;
+
+        for(i = 0; i < self.functions.DROP.length; i++){
+
+            var action = self.functions.DROP[i];
+
+            if(typeof(action) === 'function')
+                action();
+        }
+    }
+
+    function resetStyleMouse(){
+
+        self.styleMouse.CLICK = 'move';
+        self.styleMouse.CROSS = 'pointer';
+        self.styleMouse.MOVE = 'move';
+        self.styleMouse.DROP = 'default';
+    }
+
+    function cleanFunctions(){
+
+        self.functions = {
+            MOVE : [],
+            CLICK : [],
+            DROP : [],
+            CROSS : []
+        };
+    }
+}
+/**
+ * @author Ricardo Delgado
+ */
 function FieldsEdit() {
 
     this.objects = {
@@ -2874,12 +2709,12 @@ function FieldsEdit() {
 
         workflowHeader();
         workflowDescription();
-        workflowModalSteps();
+        //workflowModalSteps();
 
-        createbutton(function(){
+        /*createbutton(function(){
             self.actions.exit = null;
             window.workFlowEdit.save();  
-        });
+        });*/
 
     };
 
@@ -2923,7 +2758,7 @@ function FieldsEdit() {
         var title = document.getElementById("workflow-header-title");
         var desc = document.getElementById("modal-desc-textarea");
         var platform = document.getElementById("workflow-header-plataform");
-        var steps = document.getElementById("step-List").valueJson.slice();
+        var steps = [];
 
         if(steps.length > 1){
 
@@ -4567,168 +4402,77 @@ function getData() {
  */
 function Guide() {
 
-	  this.objects = {
-            mesh : []
-    };
-
-    var active = false;
-
-    var self = this;
-    
-    var wide = (Math.floor(window.camera.aspectRatio * 10) !== Math.floor(40/3));
-    
-    var Z = 40000,
-        SCALE = (wide) ? 28 : 16;
-
     this.addButton = function(){
+
+        function showHelp() {
+            if(!document.getElementById("modal-help-div")) {
+                var div = document.createElement("div");
+                div.id="modal-help-div";
+                div.dataset.state = "hidden";
+
+                div.innerHTML = `
+                <div id="modal-help">
+                    <div id="modal-close-div"><button id="modal-help-close"></button></div>
+                    <div id="modal-close-shadow">
+                        <div id="modal-close-icon">
+                          <div><img src="images/guide/alert.png"></div>
+                        </div>
+
+                        <div id="modal-help-text">
+                          <ul>
+                            <li><p>Use the blue arrows yo navigate through the site.</p></li>
+                            <li><p>You can zoom in, or zoom out, using the scroll wheel or by<br>
+                            dragging your mouse while holding down the S key and left click.</p></li>
+                            <li><p>Press the Esc key in any view to return to its starting position</p></li>
+                            <li><p>After you zoom in, hold down left click and drag your mouse to <br>pan across the page view</p></li>
+                          </ul>
+                        </div>
+                    </div>
+                </div>
+                `;
+
+                document.body.appendChild(div);
+                
+                document.getElementById("modal-help-close").onclick = function() {
+                    var div = document.getElementById("modal-help-div");
+                    div.dataset.state = "hidden";
+                    
+                    var area = document.getElementById("hidden-area");
+                    window.helper.hide(area, 1000);
+                };
+
+                window.onresize = function() {
+
+                    var button = document.getElementById("modal-help-close");
+                    button.style.width = button.offsetHeight + "px";
+                    button.style.backgroundSize= button.offsetHeight + "px";
+
+                    var m = document.getElementById("modal-help");
+                    var div = document.getElementById("modal-help-div");
+                    var w = (m.offsetHeight*1.4) + "px";
+                    m.style.width = w;
+
+                    var m_y = (window.innerHeight/2) - (m.offsetHeight/2);
+
+                    div.style.top = m_y + "px";
+                };
+            }
+            
+            var div = document.getElementById("modal-help-div");
+            div.dataset.state = "show";
+            var area = document.createElement("div");
+            area.id = "hidden-area";
+            document.body.appendChild(area);
+            window.helper.show(area, 1000);
+            window.onresize();
+        }
 
         var text = 'Help',
             button = 'helpButton',
             side = 'left';
 
-        window.buttonsManager.createButtons(button, text, null, null, null, side);
-    }
-
-    /**
-     * @author Isaías Taborda
-     * Create help text.
-     * @param {String array}  text    Information text.
-     * @param {Number}        width   Text box width.
-     * @param {Number}        height  Text box height.
-     * @param {Number}        posX    Objetive x position.
-     * @param {Number}        posY    Objetive y position.
-     */
-    function createHelp(text, width, height, posX, posY) {
-
-        var material = new THREE.MeshBasicMaterial( {map: null, side:THREE.FrontSide, transparent: true } ); 
-
-        var mesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(width, height),
-            material
-        );
-
-        mesh.position.set(0,0,-10000);
-        mesh.scale.set(SCALE, SCALE, SCALE);
-        mesh.material.opacity = 1;
-
-        window.scene.add(mesh);
-        self.objects.mesh.push(mesh);
-
-        var canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        var context = canvas.getContext('2d');
-        context.globalAlpha = 0.90;
-        context.fillStyle = "#10C6A9";
-        roundRectangle(context, 0, 0, canvas.width, canvas.height);
-        context.font = "Bold 40px Arial";
-        context.fillStyle = "white";
-
-        var size = text.length+1;
-        var spacing = 0;
-        for(var i=1; i < size; i++){
-           var line = text.shift();
-           context.fillText(line, 7, (35 * i) + spacing);
-           spacing += 7;
-        }
-
-        var texture = new THREE.Texture(canvas);
-        texture.needsUpdate = true;
-        texture.minFilter = THREE.NearestFilter;
-
-        mesh.material.map = texture;
-        mesh.material.needsUpdate = true;
-
-        popUp(mesh, posX, posY,3500);
-
-    }
-
-    /**
-     * @author Isaías Taborda
-     * Creates a round corner rectangle for the text.
-     * @param {Object}  ctx    Context.
-     * @param {Number}  x      X-axis position.
-     * @param {Number}  y      Y-axis position.
-     * @param {Number}  width  Width size.
-     * @param {Number}  heigth Height size.
-     */
-    function roundRectangle(ctx, x, y, width, height) {
-      
-      var radius = 10;
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + width - radius, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-      ctx.lineTo(x + width, y + height - radius);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-      ctx.lineTo(x + radius, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-      ctx.lineTo(x, y + radius);
-      ctx.quadraticCurveTo(x, y, x + radius, y);
-      ctx.closePath();
-      ctx.fill();       
-    }
-
-   /**
-     * @author Isaías Taborda.
-     * Animate Button.
-     * @param {Object}     mesh         Text field.
-     * @param {Number}     targetx      The objetive x position.
-     * @param {Number}     targety      The objetive y position.
-     * @param {Number} [duration=2000] Duration of the animation.
-     */
-    function popUp(mesh, targetX, targetY, duration) {
-
-          var _duration = duration || 2000,
-              x = targetX,
-              y = targetY,
-              z = Z;
-
-          new TWEEN.Tween(mesh.position)
-              .to({
-                x : x,
-                y : y,
-                z : z 
-              }, Math.random() * duration + duration)
-              .easing(TWEEN.Easing.Exponential.InOut)
-              .onUpdate(window.render)
-              .start();
-
-    }
-
-    this.showHelp = function(){
-        createHelp(["Use the blue arrows to", "navigate through the site."], 500, 95, -13000, 12000);
-        createHelp(["You can zoom in, or zoom out, using the scroll", "wheel or by dragging your Mouse while holding", "down the S key and left click."], 910, 135, 7500, 12000);
-        createHelp(["After you zoom in, hold down left", "click and drag your Mouse to pan", "across the page view."], 650, 135, -15000, 5000);
-        createHelp(["Press the Esc key in any view to", "return to its starting position."], 625, 95, 15000, 5000);
+        window.buttonsManager.createButtons(button, text, showHelp, null, null, side);
     };
-
-    /**
-     * @author Isaías Taborda.
-     * Eliminates the help text.
-     */
-    this.removeHelp = function(){
-      var duration = 1000;
-      var l = self.objects.mesh.length; 
-
-        for(var i = 0; i < l; i++) {
-          new TWEEN.Tween(self.objects.mesh[i].position)
-            .to({
-                x : 0,
-                y : 0,
-                z : -10000
-            }, Math.random() * duration + duration)
-            .easing(TWEEN.Easing.Bounce.In)
-            .start();
-        }
-
-        setTimeout(function (){
-          for(var i = 0; i < l; i++) {
-              window.scene.remove(self.objects.mesh[i]); // this was separated so the canvas text animates before being deleted
-          }
-          self.objects.mesh = [];
-        }, 3000);
-  };
 }
 /**
  * @class Represents the group of all header icons
@@ -5059,7 +4803,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             positions.stack.push(obj);
         }
 
-        for (i = 0; i < objects.length; i++) {
+        for (i = 0; i < objects.length; i++) { 
             node = getObjectNode(objects[i].name);
 
             var levelDifference = nodesInLevel[0] - nodesInLevel[node.level];
@@ -5486,532 +5230,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     initialize();
     //=========================================================
 }
-
-/**
- * Static object with help functions commonly used
- */
-function Helper() {
-
-    var self = this;
-    
-    this.ENV = 'production';
-
-    this.SERVER = 'http://api.fermat.org';
-
-    switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
-        case "dev":
-            self.ENV = 'production';
-            break;
-        case "lab":
-            self.ENV = 'development';
-            break;
-        case "3d":
-            self.ENV = 'testing';
-            break;
-    }
-
-    /**
-     * Hides an element vanishing it and then eliminating it from the DOM
-     * @param {DOMElement} element         The element to eliminate
-     * @param {Number}     [duration=1000] Duration of the fade animation
-     * @param {Boolean}    [keep=false]     If set true, don't remove the element, just dissapear
-     */
-    this.hide = function(element, duration, keep, callback) {
-
-        var dur = duration || 1000,
-            el = element;
-
-        if(typeof(el) === "string")
-            el = document.getElementById(element);
-
-        if(el) {
-            $(el).fadeTo(duration, 0, function() {
-                if(keep) {
-                    el.style.display = 'none';
-                    el.style.opacity = 0;
-                    el.style.transition = 'display 0s 2s, opacity 2s linear';
-                }
-                else
-                    $(el).remove();
-
-                if(typeof(callback) === 'function')
-                    callback();
-            });
-        }
-
-    };
-
-    this.hideButtons = function(){
-
-        if($('#developerButton') != null)
-          window.helper.hide($('#developerButton'), 1000);
-        if($('#showFlows') != null)
-          window.helper.hide($('#showFlows'), 1000);
-        if($('#showScreenshots') != null)
-          window.helper.hide($('#showScreenshots'), 1000);
-    };
-
-    /**
-     * @author Miguel Celedon
-     *
-     * Shows an HTML element as a fade in
-     * @param {Object} element         DOMElement to show
-     * @param {Number} [duration=1000] Duration of animation
-     */
-    this.show = function(element, duration) {
-
-        duration = duration || 1000;
-
-        if(typeof(element) === "string")
-            element = document.getElementById(element);
-
-        $(element).fadeTo(duration, 1, function() {
-                $(element).show();
-        });
-    };
-
-    /**
-     * Shows a material with transparency on
-     * @param {Object} material                                Material to change its opacity
-     * @param {Number} [duration=2000]                         Duration of animation
-     * @param {Object} [easing=TWEEN.Easing.Exponential.InOut] Easing of the animation
-     * @param {delay}  [delay=0]
-     */
-    this.showMaterial = function(material, duration, easing, delay) {
-
-        if(material && typeof material.opacity !== 'undefined') {
-
-            duration = duration || 2000;
-            easing = (typeof easing !== 'undefined') ? easing : TWEEN.Easing.Exponential.InOut;
-            delay = (typeof delay !== 'undefined') ? delay : 0;
-
-            new TWEEN.Tween(material)
-                .to({opacity : 1}, duration)
-                .easing(easing)
-                .onUpdate(function() { this.needsUpdate = true; })
-                .delay(delay)
-                .start();
-        }
-    };
-
-    /**
-     * Deletes or hides the object
-     * @param {Object}  object          The mesh to hide
-     * @param {Boolean} [keep=true]     If false, delete the object from scene
-     * @param {Number}  [duration=2000] Duration of animation
-     */
-    this.hideObject = function(object, keep, duration) {
-
-        duration = duration || 2000;
-        keep = (typeof keep === 'boolean') ? keep : true;
-
-        new TWEEN.Tween(object.material)
-            .to({opacity : 0}, duration)
-            .onUpdate(function() { this.needsUpdate = true; })
-            .onComplete(function() {
-              if(!keep)
-                window.scene.remove(object);
-            })
-            .start();
-    };
-
-    /**
-     * Clones a tile and *without* it's developer picture
-     * @param   {String} id    The id of the source
-     * @param   {String} newID The id of the created clone
-     * @returns {DOMElement} The cloned tile without it's picture
-     */
-    this.cloneTile = function(id, newID) {
-
-        var clone = document.getElementById(id).cloneNode(true);
-
-        clone.id = newID;
-        clone.style.transform = '';
-        $(clone).find('.picture').remove();
-
-        return clone;
-    };
-
-    /**
-     * Parses ISODate to a javascript Date
-     * @param   {String} date Input
-     * @returns {Date}   js Date object (yyyy-mm-dd)
-     */
-    this.parseDate = function(date) {
-
-        if(date == null)
-          return null;
-
-        var parts = date.split('-');
-
-        return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-    };
-
-    /**
-     * Capitalizes the first letter of a word
-     * @param   {String} string Input
-     * @returns {String} input capitalized
-     */
-    this.capFirstLetter = function(string) {
-
-        var words = string.split(" ");
-        var result = "";
-
-        for(var i = 0; i < words.length; i++){
-            result += words[i].charAt(0).toUpperCase() + words[i].slice(1) + " ";
-        }
-
-        return result.trim();
-    };
-
-    /**
-     * Extract the code of a plugin
-     * @param   {String} pluginName The name of the plugin
-     * @returns {String} Code of the plugin
-     */
-    this.getCode = function(pluginName) {
-
-        var words = pluginName.split(" ");
-        var code = "";
-
-        if(words.length == 1) { //if N = 1, use whole word or 3 first letters
-
-            if(words[0].length <= 4)
-                code = this.capFirstLetter(words[0]);
-            else
-                code = this.capFirstLetter(words[0].slice(0, 3));
-        }
-        else if(words.length == 2) { //if N = 2 use first cap letter, and second letter
-
-            code += words[0].charAt(0).toUpperCase() + words[0].charAt(1);
-            code += words[1].charAt(0).toUpperCase() + words[1].charAt(1);
-        }
-        else { //if N => 3 use the N (up to 4) letters caps
-
-            var max = (words.length < 4) ? words.length : 4;
-
-            for(var i = 0; i < max; i++){
-                code += words[i].charAt(0).toUpperCase();
-            }
-        }
-
-        return code;
-    };
-
-    /**
-     * parse dir route from an element data
-     * @method getRepoDir
-     * @param  {Element}   item table element
-     * @return {String}   directory route
-     */
-    this.getRepoDir = function(item) {
-        //console.dir(item);
-        var _root = "fermat",
-            _group = item.group ? item.group.toUpperCase().split(' ').join('_') : null,
-            _type = item.type ? item.type.toLowerCase().split(' ').join('_') : null,
-            _layer = item.layer ? item.layer.toLowerCase().split(' ').join('_') : null,
-            _name = item.name ? item.name.toLowerCase().split(' ').join('-') : null;
-
-        if(_group && _type && _layer && _name) {
-            return _group + "/" + _type + "/" + _layer + "/" +
-                _root + "-" + _group.split('_').join('-').toLowerCase() + "-" + _type.split('_').join('-') + "-" + _layer.split('_').join('-') + "-" + _name + "-bitdubai";
-        }
-        else
-            return null;
-    };
-
-    /**
-     * Loads a texture and applies it to the given mesh
-     * @param {String}   source     Address of the image to load
-     * @param {Mesh}     object     Mesh to apply the texture
-     * @param {Function} [callback] Function to call when texture gets loaded, with mesh as parameter
-     */
-    this.applyTexture = function(source, object, callback) {
-
-        if(source != null && object != null) {
-
-            var loader = new THREE.TextureLoader();
-
-            loader.load(
-                source,
-                function(tex) {
-                    tex.minFilter = THREE.NearestFilter;
-                    tex.needsUpdate = true;
-                    object.material.map = tex;
-                    object.needsUpdate = true;
-
-                    //console.log(tex.image.currentSrc);
-
-                    if(callback != null && typeof(callback) === 'function')
-                        callback(object);
-                }
-            );
-        }
-    };
-
-    /**
-     * Draws a text supporting word wrap
-     * @param   {String} text       Text to draw
-     * @param   {Number} x          X position
-     * @param   {Number} y          Y position
-     * @param   {Object} context    Canvas context
-     * @param   {Number} maxWidth   Max width of text
-     * @param   {Number} lineHeight Actual line height
-     * @returns {Number} The Y coordinate of the next line
-     */
-    this.drawText = function(text, x, y, context, maxWidth, lineHeight) {
-
-        if(text) {
-            var words = text.split(' ');
-            var line = '';
-
-            for(var n = 0; n < words.length; n++) {
-              var testLine = line + words[n] + ' ';
-              var metrics = context.measureText(testLine);
-              var testWidth = metrics.width;
-              if(testWidth > maxWidth && n > 0) {
-                context.fillText(line, x, y);
-                line = words[n] + ' ';
-                y += lineHeight;
-              }
-              else
-                line = testLine;
-            }
-            context.fillText(line, x, y);
-
-            return y + lineHeight;
-        }
-
-        return 0;
-    };
-
-    /**
-     * Searchs an element given its full name
-     * @param   {String} elementFullName Name of element in format [group]/[layer]/[name]
-     * @returns {Number} The ID of the element in the table
-     */
-    this.searchElement = function(elementFullName) {
-
-        if(typeof elementFullName !== 'string' || elementFullName === 'undefined/undefined/undefined')
-            return -1;
-
-        var group,
-            components = elementFullName.split('/');
-
-        if(components.length === 3) {
-
-            for(var i = 0; i < window.tilesQtty.length; i++){
-
-                var tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
-
-                group = tile.platform || window.layers[tile.layer].super_layer;
-
-                if(group && group.toLowerCase() === components[0].toLowerCase() &&
-                   tile.layer.toLowerCase() === components[1].toLowerCase() &&
-                   tile.name.toLowerCase() === components[2].toLowerCase())
-                    return window.tilesQtty[i];
-            }
-        }
-
-        return -1;
-    };
-
-    /**
-     * Gets a point randomly chosen out of the screen
-     * @author Miguel Celedon
-     * @param   {number}        [z=0]         The desired Z
-     * @param   {string}        [view='home'] The view of the relative center
-     * @returns {THREE.Vector3} A new vector with the point position
-     */
-    this.getOutOfScreenPoint = function(z, view) {
-
-        z = (typeof z !== "undefined") ? z : 0;
-        view = (typeof view !== "undefined") ? view : 'home';
-
-        var away = window.camera.getMaxDistance() * 4;
-        var point = new THREE.Vector3(0, 0, z);
-
-        point.x = Math.random() * away + away * ((Math.floor(Math.random() * 10) % 2) * -1);
-        point.y = Math.random() * away + away * ((Math.floor(Math.random() * 10) % 2) * -1);
-
-        point = window.viewManager.translateToSection(view, point);
-
-        return point;
-    };
-
-    /**
-     * Checks whether the given vector's components are numbers
-     * @author Miguel Celedon
-     * @param   {object}  vector The instance to check
-     * @returns {boolean} True if the vector is valid, false otherwise
-     */
-    this.isValidVector = function(vector) {
-
-        var valid = true;
-
-        if(!vector)
-            valid = false;
-        else if(isNaN(vector.x) || isNaN(vector.y) || isNaN(vector.z))
-            valid = false;
-
-        return valid;
-    };
-
-    this.showBackButton = function() {
-        window.helper.show('backButton');
-    };
-
-    this.hideBackButton = function() {
-        window.helper.hide('backButton', 1000, true);
-    };
-
-    /**
-     * Creates an empty tween which calls render() every update
-     * @author Miguel Celedon
-     * @param {number} [duration=2000] Duration of the tween
-     */
-    this.forceTweenRender = function(duration) {
-
-        duration = (typeof duration !== "undefined") ? duration : 2000;
-
-        new TWEEN.Tween(window)
-        .to({}, duration)
-        .onUpdate(window.render)
-        .start();
-    };
-
-    this.getCenterView = function(view){
-
-        var newCenter = new THREE.Vector3(0, 0, 0);
-
-        newCenter = window.viewManager.translateToSection(view, newCenter);
-
-        return newCenter;
-
-    };
-
-    this.fillTarget = function(x, y, z, view){
-
-        var object3D = new THREE.Object3D();
-
-        var target = {
-                show : {},
-                hide : {}
-            };
-
-        object3D.position.x = Math.random() * 80000 - 40000;
-        object3D.position.y = Math.random() * 80000 - 40000;
-        object3D.position.z = 80000 * 2;
-
-        object3D.position.copy(window.viewManager.translateToSection(view, object3D.position));
-
-        target.hide.position = new THREE.Vector3(object3D.position.x, object3D.position.y, object3D.position.z);
-        target.hide.rotation = new THREE.Vector3(Math.random() * 180, Math.random() * 180, Math.random() * 180);
-
-        target.show.position = new THREE.Vector3(x, y, z);
-        target.show.rotation = new THREE.Vector3(0, 0, 0);
-
-        return target;
-    };
-
-    this.getSpecificTile = function(_id){
-
-        var id = _id.split("_");
-
-        return window.TABLE[id[0]].layers[id[1]].objects[id[2]];
-
-    };
-
-    this.getLastValueArray = function(array){
-
-        var value = array[array.length - 1];
-
-        return value;
-    };
-
-    this.getCountObject = function(object){
-
-        var count = 0;
-
-        for(var i in object){
-            count++;
-        }
-
-        return count;
-    };
-
-    this.getPositionYLayer = function(layer){
-
-        var index = window.layers[layer].index;
-
-        return window.tileManager.dimensions.layerPositions[index];
-    };
-
-    /**
-     * Build and URL based on the address, wildcards and GET parameters
-     * @param   {string} base   The URL address
-     * @param   {Object} params The key=value pairs of the GET parameters and wildcards
-     * @returns {string} Parsed and replaced URL
-     */
-    this.buildURL = function(base, params) {
-
-        var result = base;
-        var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
-
-        var param = null;
-        
-        if(params == null) params = {};
-        
-        params.env = self.ENV;
-
-        //Search for wildcards parameters
-        do {
-
-            param = result.match(':[a-z0-9-zA-Z-_]+');
-
-            if(param !== null) {
-                var paramName = param[0].replace(':', '');
-
-                if(params.hasOwnProperty(paramName) && params[paramName] !== undefined) {
-
-                    result = result.replace(param, params[paramName]);
-                    delete(params[paramName]);
-
-                }
-            }
-        } while(param !== null);
-
-        //Process the GET parameters
-        for(var key in params) {
-            if(params.hasOwnProperty(key) && params[key] !== '') {
-
-                if(areParams === false)
-                    result += "?";
-                else
-                    result += "&";
-
-                result += key + ((params[key] !== undefined) ? ("=" + params[key]) : (''));
-
-                areParams = true;
-            }
-        }
-
-        return result;
-    };
-    
-    /**
-     * Makes a deep copy of an object
-     * @author Miguelcldn
-     * @lastmodifiedBy Ricardo Delgado
-     * @param   {Object} obj The source
-     * @returns {Object} A deep copy of obj
-     */
-    this.clone = function(obj) {
-        return JSON.parse(JSON.stringify(obj));
-    };
-
-}
-
 
 function Loader() {
 
@@ -7222,33 +6440,39 @@ function ScreenshotsAndroid() {
 
 	        		for(var _wallet in json[_group][_layer]){
 
-        				for(var i = 0; i < window.TABLE[_group].layers[_layer].objects.length; i++){
+	        			if(window.TABLE[_group]){
 
-        					var id = _group + "_" + _layer + "_" + i;
-                            
-                            var tile = window.helper.getSpecificTile(id).data;        
+	        				if(window.TABLE[_group].layers[_layer]){
 
-	        				if(tile.type === "Plugin" || tile.type === "Android"){ 
+		        				for(var i = 0; i < window.TABLE[_group].layers[_layer].objects.length; i++){
 
-		        				if(tile.name === _wallet){
-		        					
-		        					var name = json[_group][_layer][_wallet].name,
-		        						position = window.helper.getSpecificTile(id).target.show.position,
-		        						_id = _group + "_" + _layer + "_" + name,
-		        						show = false,
-		        						screenshots = {};
+		        					var id = _group + "_" + _layer + "_" + i;
+		                            
+		                            var tile = window.helper.getSpecificTile(id).data;        
 
-		        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
-		        						show = true;
+			        				if(tile.type === "Plugin" || tile.type === "Android"){ 
 
-	        						for(var _screen in json[_group][_layer][_wallet].screenshots){
-										screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
-									}
+				        				if(tile.name === _wallet){
+				        					
+				        					var name = json[_group][_layer][_wallet].name,
+				        						position = window.helper.getSpecificTile(id).target.show.position,
+				        						_id = _group + "_" + _layer + "_" + name,
+				        						show = false,
+				        						screenshots = {};
 
-									fillScreenshots(id, _id, position, name, show, screenshots);
-		        				}
-		        			}
-	        			}
+				        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
+				        						show = true;
+
+			        						for(var _screen in json[_group][_layer][_wallet].screenshots){
+												screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
+											}
+
+											fillScreenshots(id, _id, position, name, show, screenshots);
+				        				}
+				        			}
+			        			}
+			        		}
+		        		}
 	        		}
 	        	}
 	        }
@@ -7992,18 +7216,6 @@ function Session() {
     var axs_key;
     this.usr = {};
     var code;
-    var clientID = "d00a7c7d4489139327e4";
-    switch (window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
-        case "dev":
-            clientID = 'd00a7c7d4489139327e4';
-            break;
-        case "lab":
-            clientID = 'f98fdd310fe6284f5416';
-            break;
-        case "3d":
-            clientID = '1d65cbed13dbd026bec8';
-            break;
-    }
 
     this.getIsLogin = function() {
         return isLogin;
@@ -8043,6 +7255,27 @@ function Session() {
      * @author Ricardo Delgado
      */
     this.useTestData = function() {
+
+        isLogin = true;
+
+        self.usr = { 
+            axs_key: "56d9a35af87ede9a504678e0",
+            usrnm: "ricardo460",
+            upd_at: "56c72bdf7d20701f414de5e3",
+            name: "Ricardo Delgado",
+            github_tkn: "31a34414535ee9f59b1dfcc1d08bb9b565bf3eae",
+            email: "ricardodelgado460@hotmail.com",
+            avatar_url: "https://avatars.githubusercontent.com/u/13169767?v=3",
+            _id: "56c72bdf7d20701f414de5e4"
+        };
+
+        if(window.disconnected)
+            self.usr.avatar_url = 'images/modal/avatar.png';
+
+        $("#login").fadeOut(2000);
+            $("#logout").fadeIn(2000);
+
+        drawUser(self.usr); 
     };
 
     /**
@@ -8050,7 +7283,7 @@ function Session() {
      */
     this.getAuthCode = function() { //CLientID: c25e3b3b1eb9aa35c773 - Web
         var url = helper.buildURL("https://github.com/login/oauth/authorize", {
-            client_id: clientID
+            client_id: window.CLIENT_ID
         }); //ClientID: f079f2a8fa65313179d5 - localhost
         url += "&redirect_uri=" + window.location.href;
         window.location.href = url;
@@ -8388,6 +7621,10 @@ function SignLayer(){
         },
         self = this;
 
+    this.getmesh = function(){
+        return objects;
+    }
+
     /**
      * Creates a flow box and when texture is loaded, calls fillBox
      * @param   {String}     src     The texture to load
@@ -8485,27 +7722,31 @@ function SignLayer(){
         var objectsSize = objects.length;
         for(var i=0; i<objectsSize; i++) {
             if(objects[i].name === _group.concat(titleSign)) {
-                this.removeSignLayer(i);
-                setTimeout(function(){
+                self.removeSignLayer(i, function(){
                     window.scene.remove(objects[i]);
                     objects.splice(i,1);
                     positions.target.splice(i,1);
                     positions.lastTarget.splice(i,1);
-                }, 5000);
+                });
+
                 break;
             }
         }
     };
 
-    this.removeSignLayer = function(pos){
-        var duration = 5000;
+    this.removeSignLayer = function(pos, callback){
+        var duration = 3000;
         new TWEEN.Tween(objects[pos].position)
             .to({
                 x : positions.lastTarget[pos].x,
                 y : positions.lastTarget[pos].y,
                 z : positions.lastTarget[pos].z
             },duration)
-            .easing(TWEEN.Easing.Bounce.In)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .onComplete(function () {
+                    if(typeof(callback) === 'function')
+                        callback();   
+                })
             .start();
     };
 
@@ -8585,8 +7826,6 @@ function TableEdit() {
         tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
 
     var self = this;
-
-    this.formerName = null;
 
     /**
      * @author Ricardo Delgado
@@ -8717,10 +7956,9 @@ function TableEdit() {
         if(tile.code_level !== undefined)
             document.getElementById('select-State').value = tile.code_level; 
 
-        if(tile.name !== undefined) {
+        if(tile.name !== undefined) 
             document.getElementById('imput-Name').value = tile.name;       
-            self.formerName = tile.name;
-        }
+        
         
         if(tile.devs !== undefined) 
             document.getElementById('modal-devs').value = tile.devs.slice(0);
@@ -8946,13 +8184,25 @@ function TableEdit() {
                     object.data = table;
                     object.target = target;
 
-                    window.camera.move(target.show.position.x, target.show.position.y, target.show.position.z + 8000, 4000);
+                    window.camera.move(target.show.position.x, target.show.position.y, target.show.position.z + 8000, 3000);
 
-                    animate(mesh, target.show, 4500, function(){
+                    animate(mesh, target.show, 3500, function(){
 
-                       window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
-                       window.tileManager.updateElementsByGroup();
+                        window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
+                        window.tileManager.updateElementsByGroup();
                     });
+
+                    setTimeout( function() {
+                        
+                        if(count < 1){
+
+                            if(!window.signLayer.findSignLayer(platform, layer)){
+
+                                window.signLayer.createSignLayer(x, y, layer, platform);
+                                window.signLayer.transformSignLayer();
+                            }
+                        }
+                    }, 2000 );
                             
                     window.TABLE[platform].layers[layer].objects.push(object);
 
@@ -9091,7 +8341,7 @@ function TableEdit() {
                     }
 
                     var positionCameraX = window.TABLE[oldGroup].x,
-                        positionCameraY = helper.getPositionYLayer(oldLayer);
+                        positionCameraY = window.helper.getPositionYLayer(oldLayer);
 
                     window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
 
@@ -9381,7 +8631,7 @@ function TableEdit() {
 
                 var oldLayer = table.layer,
                     oldGroup = table.platform || window.layers[table.layer].super_layer,
-                    arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects,
+                    arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects.slice(),
                     idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
 
                 window.screenshotsAndroid.deleteScreenshots(idScreenshot);
@@ -9447,7 +8697,7 @@ function TableEdit() {
             };
         }
 
-        var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
+        var lastObject = window.helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
 
         var count = window.TABLE[platform].layers[layer].objects.length;
 
@@ -9477,7 +8727,17 @@ function TableEdit() {
         object.data = table;
         object.target = target;
 
-        animate(mesh, target.show, 2500);
+        animate(mesh, target.show, 2500, function(){
+
+            if(count < 1){
+
+                if(!window.signLayer.findSignLayer(platform, layer)){
+
+                    window.signLayer.createSignLayer(x, y, layer, platform);
+                    window.signLayer.transformSignLayer();
+                }
+            }
+        });
                 
         window.TABLE[platform].layers[layer].objects.push(object);
     }
@@ -9572,6 +8832,15 @@ function TableEdit() {
     function modifyRowTable(arrayObject, oldGroup, oldLayer){
 
         var newArrayObject = [];
+
+        if(arrayObject.length < 1){
+
+            if(window.signLayer.findSignLayer(oldGroup,oldLayer)){
+                setTimeout( function() {
+                    window.signLayer.deleteSignLayer(oldGroup,oldLayer);
+                }, 2000 );
+            }
+        }
 
         for(var t = 0; t < arrayObject.length; t++){
 
@@ -9684,7 +8953,7 @@ function TableEdit() {
  */
 function TileManager() {
 
-    var MAX_TILE_DETAIL_SCALE = 5;
+    var MAX_TILE_DETAIL_SCALE = 2;
     if (window.location.hash === '#low') {
         MAX_TILE_DETAIL_SCALE = 2;
     }
@@ -10860,9 +10129,9 @@ var tilesQtty = [],
     stats = null,
     headersUp = false,
     currentRender = "start",
+    disconnected = false,
 //Class
     tileManager = new TileManager(),
-    helper = new Helper(),
     logo = new Logo(),
     signLayer = new SignLayer(),
     developer = new Developer(),
@@ -10879,7 +10148,8 @@ var tilesQtty = [],
     magazine = null,
     networkViewer = null,
     buttonsManager = null,
-    guide = null;
+    guide = null,
+    dragManager = null;
 //Global constants
 var TILE_DIMENSION = {
     width : 231,
@@ -10929,8 +10199,8 @@ function createScene(current, option){
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.domElement.style.position = 'absolute';
         renderer.domElement.id = "canvas";
-        renderer.setClearColor(0xFFFFFF);
-        //renderer.setClearColor(0x313131);//Mode Test.
+        //renderer.setClearColor(0xFFFFFF);
+        renderer.setClearColor(0x313131);//Mode Test.
         document.getElementById('container').appendChild(renderer.domElement);
 
         camera = new Camera(new THREE.Vector3(0, 0, 90000),
@@ -10979,6 +10249,7 @@ function init() {
     fieldsEdit = new FieldsEdit();
     tableEdit = new TableEdit();
     workFlowEdit = new WorkFlowEdit();
+    dragManager = new DragManager();
 
     //View Manager
     viewManager = new ViewManager();
@@ -11015,12 +10286,6 @@ function init() {
 
     setTimeout(function() { initPage(); }, 500);
 
-    setTimeout(function (){
-        guide.active = true;
-        if(actualView === 'home'){
-            guide.showHelp();
-        }
-    }, 15000);
 
     /*setTimeout(function() {
         var loader = new Loader();
@@ -11394,17 +10659,13 @@ function ViewManager() {
                 case 'home':
                     enter = function() {
                         window.logo.stopFade(2000);
-                        //window.guide.addButton();
+                        window.guide.addButton();
                     };
                     
                     exit = function() {
                         
-                        //window.buttonsManager.removeAllButtons();
+                        window.buttonsManager.removeAllButtons();
 
-                        if(window.guide.active){
-                            window.guide.removeHelp();
-                            window.guide.active = false;
-                        }
                     };
                     break;
                 case 'book':
@@ -11437,7 +10698,6 @@ function ViewManager() {
                     };
                     
                     backButton = reset = function() {
-
                         window.workFlowManager.showWorkFlow();
                     };
 
@@ -11546,6 +10806,8 @@ function Workflow(flow) {
         COLUMN_SPACING = 900,
         HEADER_WIDTH = 825,
         HEADER_HEIGHT = 238;
+
+    var account = 0;
 
     var self = this;
 
@@ -11799,6 +11061,7 @@ function Workflow(flow) {
                 }
             }
         }
+        account = 0;
     };
     
     /**
@@ -11854,6 +11117,7 @@ function Workflow(flow) {
 
     /**
      * @lastmodifiedBy Ricardo Delgado
+     * @lastmodifiedBy Emmanuel Colina
      * Draws a single step
      * @param {Object} node The information of the step
      * @param {Number} x    X position
@@ -11872,7 +11136,9 @@ function Workflow(flow) {
 
             if(typeof used[node.element] !== 'undefined') {
 
-                tile = window.helper.getSpecificTile(node.element).mesh.clone();
+                var data = window.helper.clone(window.helper.getSpecificTile(node.element).data);
+
+                tile = window.tileManager.createElement(node.element + "_clone_" + account, data);
                 tile.isClone = true;
 
                 objectsStep.position.origin.push(window.helper.getOutOfScreenPoint(1));
@@ -11880,6 +11146,8 @@ function Workflow(flow) {
 
                 objectsStep.mesh.push(tile);
                 window.scene.add(tile);
+
+                account = account + 1;
             }
             else {
 
@@ -12157,6 +11425,22 @@ function WorkFlowEdit() {
 
     var classFlow = null;
 
+    var focus = {
+        mesh : null,
+        data : null
+        };
+
+    var LIST_STEPS = [];
+
+    var actualMode = null;
+
+    var TILEWIDTH = window.TILE_DIMENSION.width - window.TILE_SPACING;
+    var TILEHEIGHT = window.TILE_DIMENSION.height - window.TILE_SPACING;
+
+    this.get = function(){
+        return LIST_STEPS;
+    }
+
     this.addButton = function(_id){
 
         var id = null,
@@ -12251,7 +11535,6 @@ function WorkFlowEdit() {
             
             window.buttonsManager.createButtons(button, text, callback, null, null, side);
         }   
-    
     };
 
     this.changeTexture = function(){
@@ -12270,6 +11553,8 @@ function WorkFlowEdit() {
     this.fillStep = function(){
 
         var flow = window.fieldsEdit.getData();
+
+        flow.steps = self.transformData();
 
         classFlow.deleteStep();
 
@@ -12365,7 +11650,21 @@ function WorkFlowEdit() {
 
             createElement();
 
+            createdetector();
+
+            jsonSteps = [];
+
+            window.dragManager.on();
+
             mesh = window.fieldsEdit.objects.tile.mesh;
+
+            showBrowser(false);
+
+            changeMode('edit-step');
+
+            window.removeEventListener('keydown', window.camera.onKeyDown, false);
+
+            window.addEventListener('keydown', newOnKeyDown, false);
 
             window.fieldsEdit.actions.exit = function(){
 
@@ -12373,20 +11672,20 @@ function WorkFlowEdit() {
 
                 classFlow = null;
 
+                showBrowser(true);
+
+                window.dragManager.off();
+
                 window.camera.resetPosition();
 
+                window.headers.transformWorkFlow(2000);
+
+                window.removeEventListener('keydown', newOnKeyDown, false);
+
+                window.addEventListener('keydown', window.camera.onKeyDown, false);
+
+
             };
-
-            animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
-
-                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, 950, 1), 2000);
-
-                if(typeof(callback) === 'function')
-                    callback();
-
-                window.helper.showBackButton();
-
-            });
         }
         else if(window.fieldsEdit.actions.type === "update"){
 
@@ -12447,6 +11746,16 @@ function WorkFlowEdit() {
 
             });
             
+        }
+    }
+
+    function showBrowser(state){
+
+        var browsers = window.browserManager.objects.mesh;
+
+        for(var i = 0; i < browsers.length; i++){
+            var mesh = browsers[i];
+            mesh.visible = state;
         }
     }
 
@@ -13097,8 +12406,7 @@ function WorkFlowEdit() {
         list.update();
 
         if(steps.length > 0)
-            document.getElementById("modal-steps-div").changeStep(0);
-        
+            document.getElementById("modal-steps-div").changeStep(0);   
     }
 
     function animate(mesh, target, duration, callback){
@@ -13127,6 +12435,766 @@ function WorkFlowEdit() {
                 })
             .start();
     }
+
+    //Botones 
+
+    function buttonModeEditSteps(position){
+
+        window.helper.hide('backButton', 0, true);
+
+        window.actualView = false;
+
+        displayField(false);
+
+        cleanButtons();
+
+        window.dragManager.objects = [];
+
+        window.tileManager.transform(false, 2000);
+
+        window.signLayer.transformSignLayer();
+
+        var newCenter = position || new THREE.Vector3(0, 0, 0);
+        var transition = 3000;
+
+        newCenter = window.viewManager.translateToSection('table', newCenter);
+        window.camera.move(newCenter.x, newCenter.y, camera.getMaxDistance() / 2, transition, true);
+        
+        window.headers.transformTable(transition);
+
+        window.buttonsManager.createButtons('button-preview', 'Workflow Preview', function(){
+            buttonModePreview();}, null, null, "left");
+
+        window.buttonsManager.createButtons('button-path', 'Edit Path', function(){
+            buttonModeEditPath();}, null, null, "right");
+    }
+
+    function buttonModeEditPath(){
+
+        cleanButtons();
+
+        window.dragManager.objects = [];
+
+        window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
+            buttonModeEditSteps();}, null, null, "left");
+
+        if(jsonSteps.length <= 0){
+
+            window.dragManager.styleMouse.CROSS = 'copy';
+
+            for(var i = 0; i < window.tilesQtty.length; i++){
+
+                var tile = window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
+
+                window.dragManager.objects.push(tile);
+            }
+        }
+        else{
+
+        }
+
+        var action = function(tile){
+
+            var type = null;
+
+            if(!tile.userData.type)
+                type = 'tile';
+            else if(tile.userData.type === 'step')
+                type = 'step';
+
+            switch(type) {
+                case "tile":
+                    var parent = null;
+
+                    if(focus.data)
+                        parent = focus.data.userData.id[0];
+
+                    var mesh = addButtonIdStep(LIST_STEPS.length + 1, tile.userData.id, parent);
+
+                    focus.data = mesh;
+                    break;
+                case "step":
+                    focus.data = LIST_STEPS[tile.userData.id[0] - 1].mesh;
+                    updateTileIgnoredAdd();
+                    break;                
+            }
+        };
+
+        window.dragManager.functions.CLICK.push(action);
+
+        var moveAction = function(mesh, position){ 
+
+            if(!mesh.userData.type)
+                type = 'tile';
+            else if(mesh.userData.type === 'step'){
+                mesh.position.copy(position);
+                focus.mesh.position.copy(position);
+            }
+        } 
+
+        window.dragManager.functions.MOVE.push(moveAction);
+    }
+
+    function addButtonIdStep(id, IDtile, parent){
+
+        var mesh = createIdStep(),
+            difference = TILEWIDTH / 2;
+
+        var newArray = [id];
+
+        var tile = window.helper.getSpecificTile(IDtile).mesh;
+
+        var target = window.helper.fillTarget(tile.position.x - difference, tile.position.y, tile.position.z + 1, 'table');
+
+        mesh.position.copy(target.hide.position);
+
+        mesh.rotation.copy(target.hide.rotation);
+
+        mesh.userData = {
+                id : newArray,
+                tile : IDtile,
+                type: 'step'
+            };
+
+        if(parent){
+            var children = LIST_STEPS[parent - 1].children;
+
+            if(children.length > 0)
+                newArray[0] = window.helper.getLastValueArray(children)[0] + 0.5;
+            
+            children.push(newArray);
+        }
+        
+
+        var object = {
+                    order : newArray,
+                    mesh : mesh,
+                    target : target,
+                    tile : IDtile,
+                    children : []
+                };
+
+        LIST_STEPS.push(object);
+
+        mesh.material.map = changeTextureId(id);
+
+        calculatePositionsSteps(IDtile);
+
+        if(parent){
+            orderPositionStep();
+        }
+
+        return mesh;
+
+        function createIdStep(){
+
+            var size = TILEHEIGHT / 6;
+
+            var mesh = new THREE.Mesh(
+                       new THREE.PlaneBufferGeometry(size, size),
+                       new THREE.MeshBasicMaterial({ 
+                            side: THREE.DoubleSide, 
+                            transparent: true, 
+                            map:null 
+                        }));
+
+            mesh.renderOrder = 1;
+
+            mesh.material.depthTest = false;
+
+            window.scene.add(mesh);
+
+                return mesh;
+        }
+    }
+
+    function changeTextureId(id){
+
+        var canvas = document.createElement('canvas');
+            canvas.height = TILEHEIGHT;
+            canvas.width = TILEHEIGHT;
+        var ctx = canvas.getContext('2d');
+        var middle = canvas.width / 2;
+        var image = document.createElement('img');
+        var texture = new THREE.Texture(canvas);
+            texture.minFilter = THREE.NearestFilter;
+
+        image.onload = function() {
+
+            ctx.drawImage(image, 0, 0);
+
+            ctx.textAlign = 'center';
+
+            ctx.font = '48px Canaro, Sans-serif';
+            ctx.fillText(id, middle, middle);
+            
+            texture.needsUpdate = true;
+        };
+
+        image.src = 'images/workflow/buttoncircle.png';
+
+        return texture;
+    }
+
+    function calculatePositionsSteps(idTile){
+
+        var countSteps = [],
+            rootY = window.helper.getSpecificTile(idTile).mesh.position.y,
+            i,
+            mesh = null,
+            target = null;
+
+        var action = function (){updateTileIgnoredAdd();};
+
+        for(i = 0; i < LIST_STEPS.length; i++){
+
+            if(LIST_STEPS[i].tile === idTile)
+                countSteps.push(LIST_STEPS[i]);
+        }
+        
+        if(countSteps.length === 1){ 
+
+            target = countSteps[0].target.show;
+
+            target.position.y = rootY;
+
+            animate(countSteps[0].mesh, countSteps[0].target.show, 1000, action);
+        }
+        else if(countSteps.length === 2){ 
+
+            for(i = 0; i < countSteps.length; i++) {
+
+                target = countSteps[i].target.show;
+
+                mesh = countSteps[i].mesh;
+
+                if(i === 0){
+                    target.position.y = rootY + (TILEHEIGHT / 4);
+                    animate(mesh, target, 1000);
+                }
+                else{
+                    target.position.y = rootY - (TILEHEIGHT / 4);
+                    animate(mesh, target, 1000, action);
+                }
+            }
+        }
+        else if(countSteps.length > 2){
+
+            var difference = (TILEHEIGHT / 6) / 2,
+                topY = rootY + ((TILEHEIGHT / 2) - difference),
+                countSpaceSteps = countSteps.length - 1.
+                distanceSteps = (TILEHEIGHT - difference) / countSpaceSteps;
+
+            for(i = 0; i < countSteps.length; i++) {
+
+                mesh = countSteps[i].mesh;
+
+                target = countSteps[i].target.show;
+
+                target.position.y = topY;
+
+                if(i !== countSpaceSteps)
+                    animate(mesh, target, 1000);
+                else
+                    animate(mesh, target, 1000, action);
+
+                topY = topY - distanceSteps; 
+            }
+        }
+    }
+
+    function orderPositionStep(){
+
+        var array = LIST_STEPS;
+
+        for(var i = 0; i < array.length; i++) {
+
+            for(var t = 0; t < array.length - i; t++) {
+
+                if(array[t + 1]){ 
+
+                    if (array[t].order[0] > array[t + 1].order[0]) {
+
+                        var aux;
+
+                        aux = array[t];
+
+                        array[t] = array[t + 1];
+
+                        array[t + 1] = aux;
+                    }
+                }
+            }
+        }
+
+        for(var k = 0; k < array.length; k++){
+
+            var newId = k + 1;
+
+            if(array[k].order[0] !== newId){
+
+                var mesh = array[k].mesh;
+
+                array[k].order[0] = newId;
+                mesh.userData.id[0] = newId;
+
+                mesh.material.map = changeTextureId(newId);
+            }
+        }
+
+        focus.data = window.helper.getLastValueArray(array).mesh;
+
+        updateTileIgnoredAdd();
+    }
+
+    function updateTileIgnoredAdd(){
+
+        var id = focus.data.userData.id - 1,
+            ignoredTile = focus.data.userData.tile,
+            mesh = focus.mesh;
+
+        window.dragManager.objects = [];
+
+        for(var i = 0; i < LIST_STEPS.length; i++){
+
+            if(i === id)
+                mesh.position.copy(LIST_STEPS[i].mesh.position);
+            
+            window.dragManager.objects.push(LIST_STEPS[i].mesh); 
+            
+        }
+
+        for(var t = 0; t < window.tilesQtty.length; t++){
+
+            if(window.tilesQtty[t] !== ignoredTile){
+
+                var tile = window.helper.getSpecificTile(window.tilesQtty[t]).mesh;
+
+                window.dragManager.objects.push(tile);
+
+            }
+        }
+    }
+
+    this.deleteStep = function(step){
+
+        var list = LIST_STEPS,
+            ORDER = Search(step),
+            tilesCalculatePositions = [],
+            removeStep = [],
+            i = 0, l = 0;
+
+        focus.mesh.material.visible = false;
+
+        if(list[ORDER].children.length > 0){
+
+            var oldChildren = list[ORDER].children,
+                odlStep = list[ORDER].order,
+                newIdStep = Search(oldChildren[0][0]),
+                newStep = list[newIdStep];
+    
+            odlStep[0] = newStep.order[0];
+            newStep.order = odlStep;
+            newStep.mesh.userData.id = odlStep;
+
+            deleteStep(ORDER);
+
+            for(i = 1; i < oldChildren.length; i++){
+
+                fillRemove(oldChildren[i][0]);
+
+                removeStep.push(oldChildren[i][0]);
+            }
+
+            for(i = 0; i < removeStep.length; i++)
+                 deleteStep(Search(removeStep[i]));
+        }
+        else{
+
+            for(i = 0; i < list.length; i++){
+
+                var children = list[i].children;
+
+                for(l = 0; l < children.length; l++){ 
+
+                    if(children[l][0] === step)
+                        children.splice(l, 1);
+                }
+            }
+
+            deleteStep(ORDER);
+        }
+
+        for(i = 0; i < tilesCalculatePositions.length; i++)
+            calculatePositionsSteps(tilesCalculatePositions[i]);
+
+        orderPositionStep();
+
+        focus.mesh.material.visible = true;
+
+        function deleteStep(order){
+
+            removeMesh(list[order]);
+
+            list.splice(order, 1);
+        }
+
+        function removeMesh(data){
+
+            var mesh = data.mesh,
+                target = data.target,
+                tile = data.tile;
+
+            if(!tilesCalculatePositions.find(function(x){if(x === tile) return x;}))
+                tilesCalculatePositions.push(tile);
+
+            animate(mesh, target.hide, 2000, function(){ 
+                window.scene.remove(mesh);
+            });
+        }
+
+        function fillRemove(_order){
+
+            var order = Search(_order),
+                i = 0;
+
+            for(i = 0; i < list[order].children.length; i++){
+
+                var children = list[Search(list[order].children[i][0])].children;
+
+                removeStep.push(list[order].children[i][0]);
+
+                if(children.length > 0)
+                    fillRemove(list[order].children[i][0]);
+            }
+        }
+
+        function Search(order){
+
+            var i = 0;
+
+            for(i = 0; i < list.length; i++){
+
+                if(list[i].order[0] === order)
+                    return i;
+            }
+        }
+    };
+
+    function createdetector(){//cambiar nombre
+
+        var size = TILEHEIGHT / 6;
+
+        var canvas = document.createElement('canvas');
+
+        var img = new Image();
+
+        canvas.height = TILEHEIGHT;
+        canvas.width = TILEHEIGHT;
+
+        var ctx = canvas.getContext('2d');
+
+        img.src = 'images/workflow/focus.png';
+
+        var mesh = new THREE.Mesh(
+                   new THREE.PlaneBufferGeometry(size, size),
+                   new THREE.MeshBasicMaterial({ 
+                        side: THREE.DoubleSide, 
+                        transparent: true, 
+                        map:null 
+                    }));
+
+        mesh.renderOrder = 2;
+
+        mesh.material.depthTest = false;
+
+        window.scene.add(mesh);
+
+        img.onload = function() { 
+
+            ctx.drawImage(img, 0, 0);
+
+            texture = new THREE.Texture(canvas);
+            texture.minFilter = THREE.NearestFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.needsUpdate = true;  
+
+            mesh.material.map = texture;
+
+            focus.mesh = mesh;
+        };
+    }
+
+    this.transformData = function(){
+
+        var json = [];
+
+        for(var i = 0; i < LIST_STEPS.length; i++){
+
+            var tile = window.helper.getSpecificTile(LIST_STEPS[i].tile).data;
+
+            var platfrm = tile.platform || tile.superLayer;
+
+            var children = LIST_STEPS[i].children;
+
+            var next = [];
+
+            for(var l = 0; l < children.length; l++){
+
+                var object = {
+                    id : children[l][0] - 1,
+                    type: "direct call"
+                }
+
+                next.push(object);
+            }
+
+            var step = {
+                id : i,
+                title : "prueba",
+                desc : "test data",
+                type : "start",
+                next : next,
+                name : tile.name,
+                layer : tile.layer,
+                platfrm : platfrm
+            }
+
+            json.push(step);
+        }
+
+        if(json.length > 1){
+
+            for(var i = 1; i < json.length; i++){
+
+                if(i === (json.length - 1))
+                    json[i].type = 'end';
+                else 
+                    json[i].type = 'activity';
+            }
+        }
+        return json;
+    }
+
+    function buttonModePreview(){
+
+        cleanButtons();
+
+        displayField(true);
+
+        window.actualView = 'workflows';
+
+        var mesh = window.fieldsEdit.objects.tile.mesh;
+
+        animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
+
+            window.camera.setFocus(mesh, new THREE.Vector4(0, 0, 950, 1), 2000);
+
+            self.fillStep();
+
+            window.headers.transformWorkFlow(2000);
+
+            window.helper.show('backButton', 0);
+
+            window.buttonsManager.createButtons('button-save', 'Save', function(){
+                buttonModePreview();}, null, null, "right");
+
+            window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
+                buttonModeEditSteps();}, null, null, "left");
+        }); 
+    }
+
+    function changeMode(mode){ 
+
+        cleanButtons();
+
+        window.dragManager.objects = [];
+
+        MODE().exit();
+
+        actualMode = mode;
+
+        MODE().enter();
+
+        function MODE(){
+
+            var actions = {},
+                enter = null, exit = null; 
+
+            switch(actualMode) {
+
+                case 'edit-step':
+                    enter = function() {
+
+                        window.helper.hide('backButton', 0, true);
+
+                        window.actualView = false;
+
+                        displayField(false);
+
+                        window.tileManager.transform(false, 2000);
+
+                        window.signLayer.transformSignLayer();
+
+                        var newCenter = new THREE.Vector3(0, 0, 0);
+                        var transition = 3000;
+
+                        newCenter = window.viewManager.translateToSection('table', newCenter);
+                        window.camera.move(newCenter.x, newCenter.y, camera.getMaxDistance() / 2, transition, true);
+                        
+                        window.headers.transformTable(transition);
+
+                        window.buttonsManager.createButtons('button-preview', 'Workflow Preview', function(){
+                            changeMode('preview');}, null, null, "left");
+
+                        window.buttonsManager.createButtons('button-path', 'Edit Path', function(){
+                            changeMode('edit-path');}, null, null, "right");
+                    };             
+                    
+                    exit = function() {
+                        
+                    };
+
+                    break;   
+                case 'edit-path':
+                    enter = function() {
+
+                        window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
+                            changeMode('edit-step');}, null, null, "left");
+
+                        //if(jsonSteps.length <= 0){
+
+                            window.dragManager.styleMouse.CROSS = 'copy';
+
+                            for(var i = 0; i < window.tilesQtty.length; i++){
+
+                                var tile = window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
+
+                                window.dragManager.objects.push(tile);
+                            }
+                        //}
+                        //else{
+
+                        //}
+
+                        var action = function(tile){
+
+                            var type = null;
+
+                            if(!tile.userData.type)
+                                type = 'tile';
+                            else if(tile.userData.type === 'step')
+                                type = 'step';
+
+                            switch(type) {
+                                case "tile":
+                                    var parent = null;
+
+                                    if(focus.data)
+                                        parent = focus.data.userData.id[0];
+
+                                    var mesh = addButtonIdStep(LIST_STEPS.length + 1, tile.userData.id, parent);
+
+                                    focus.data = mesh;
+                                    break;
+                                case "step":
+                                    focus.data = LIST_STEPS[tile.userData.id[0] - 1].mesh;
+                                    updateTileIgnoredAdd();
+                                    break;                
+                            }
+                        };
+
+                        window.dragManager.functions.CLICK.push(action);
+
+                        var moveAction = function(mesh, position){ 
+
+                            if(!mesh.userData.type)
+                                type = 'tile';
+                            else if(mesh.userData.type === 'step'){
+                                mesh.position.copy(position);
+                                focus.mesh.position.copy(position);
+                            }
+                        } 
+
+                        window.dragManager.functions.MOVE.push(moveAction);
+                    };             
+                    
+                    exit = function() {
+                        
+                    };
+
+                    break; 
+                case 'preview':
+                    enter = function() {
+
+                        displayField(true);
+
+                        window.actualView = 'workflows';
+
+                        var mesh = window.fieldsEdit.objects.tile.mesh;
+
+                        animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
+
+                            window.camera.setFocus(mesh, new THREE.Vector4(0, 0, 950, 1), 2000);
+
+                            self.fillStep();
+
+                            window.headers.transformWorkFlow(2000);
+
+                            window.helper.show('backButton', 0);
+
+                            window.buttonsManager.createButtons('button-save', 'Save', function(){
+                                buttonModePreview();}, null, null, "right");
+
+                            window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
+                                changeMode('edit-step')}, null, null, "left");
+                        });
+                    };             
+                    
+                    exit = function() {
+                        
+                    };
+
+                    break; 
+            } 
+
+            actions = {
+                enter : enter || function(){},
+                exit : exit || function(){}
+            };
+
+            return actions;
+        }
+    }
+
+    function displayField(visible){
+
+        if(visible)
+            window.helper.show("workflow-header");
+        else
+            window.helper.hide("workflow-header", 1000, true);
+    }
+
+    function newOnKeyDown(event){
+
+        if(event.keyCode === 27 /* ESC */) {
+
+            window.camera.offFocus();
+
+            window.actualView = 'workflows';
+
+            window.camera.onKeyDown(event);
+        }
+    }
+
+    function cleanButtons(){
+
+        window.buttonsManager.deleteButton('button-save');
+        window.buttonsManager.deleteButton('button-preview');
+        window.buttonsManager.deleteButton('button-path');
+        window.buttonsManager.deleteButton('button-Steps');   
+    }
+
 }
 /**
  * Represents a flow of actions related to some tiles
@@ -13261,7 +13329,13 @@ function WorkFlowManager(){
             layer : element.layer,
             component : element.name
         };
-        var url = window.API.getAPIUrl("procs", params);
+
+        var url = '';
+
+        if(!window.disconnected)
+            url = window.API.getAPIUrl("procs", params);
+        else
+            url = 'json/testData/procs.json';
 
         $.ajax({
             url: url,
@@ -13319,7 +13393,12 @@ function WorkFlowManager(){
      */
     this.getHeaderFLow = function() {
 
-        var url = window.API.getAPIUrl("procs");
+        var url = '';
+
+        if(!window.disconnected)
+            url = window.API.getAPIUrl("procs");
+        else
+            url = 'json/testData/procs.json';
 
         $.ajax({
             url: url,
