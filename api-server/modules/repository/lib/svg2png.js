@@ -189,21 +189,28 @@ exports.pushFtp = function(type, filename, callback) {
 		svgToPng(type, filename, function(err, res) {
 			if (err) return callback(err, null);
 			if (res) {
-				console.log('filesToSend', filesToSend[0]);
-				//for (var i = 0; i < filesToSend.length; i++) {
-					ftpBitdubai.put(filesToSend[0].from, filesToSend[0].to,
-						function(hadError) {
-							if (!hadError)
-								console.log("File transferred successfully!");
-							else {
-								console.log("Error transferring file");
-								return callback(hadError, null);
-							}
-						});
-				//}
-				return callback(null, 'Files transferred successfully!');
+				var sendFiles = function(i) {
+					if (i < filesToSend.length) {
+						console.log('filesToSend '+i, filesToSend[i]);
+						ftpBitdubai.put(filesToSend[i].from, filesToSend[i].to,
+							function(hadError) {
+								if (!hadError) {
+									console.log("File transferred successfully!");
+									console.log(filesToSend[i]);
+									sendFiles(++i);
+								} else {
+									console.log(hadError + ": Error transferring file");
+									console.log(filesToSend[i]);
+									return callback(hadError, null);
+								}
+							});
+					} else {
+						console.log("Files transferred successfully!");
+						return callback(null, 'Files transferred successfully!');
+					}
+				};
+				return sendFiles(0);
 			}
-
 		});
 	} catch (err) {
 		console.log("Error: " + err);
