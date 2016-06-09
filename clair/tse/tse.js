@@ -9,7 +9,7 @@ var user_data = getUserID(),
     referenceId = '',
     referenceCode = '',
     referenceOrder = '',
-    usertype = 'developer',
+    usertype = 'designer',
     perm = 77000;
 //global constants
 var SERVER = 'api.fermat.org';
@@ -554,14 +554,49 @@ function verify(form, request){
             }
         }
         else{
+            var form, data;
 
             if(form === 'platform'){
                 list = document.getElementById('platformList');
                 url = getRoute("platfrms", "insert");
+
+                if (usertype === "designer") {
+                    header = document.getElementById('desHeader')[0];
+                    icon = document.getElementById('desIcon')[0];
+
+                    var headerData = new FormData();
+                    var iconData = new FormData();
+                    headerData.append('img', header);
+                    iconData.append('img', icon);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://url1',
+                        data: headerData
+                    }).success(function () {
+
+                    });
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://url2',
+                        data: iconData
+                    }).success(function () {
+
+                    });
+                } else {
+
+                }
             }
             else{
                 list = document.getElementById('superlayerList');
                 url = getRoute("suprlays", "insert");
+
+                if (usertype === "designer") {
+
+                } else {
+
+                }
             }
             elements = list.getElementsByTagName('td');
 
