@@ -18,7 +18,21 @@ var storage = multer.diskStorage({
 var upload = multer({
 	storage: storage
 }).single('svg');
-
+/**
+ * [setVldFleName description]
+ * @param {[type]} req [description]
+ */
+var setVldFleName = function(req) {
+	var newNameSvg = '';
+	if (req.params.type === 'group')
+		newNameSvg = 'icon_' + req.body.code.toUpperCase();
+	else
+		newNameSvg = req.body.code.toUpperCase() + '_logo';
+	var newPath = dir + '/' + newNameSvg + '.svg';
+	var oldPath = dir + '/' + req.file.filename;
+	fs.renameSync(oldPath, newPath);
+	return newNameSvg + '.svg';
+};
 /**
  * @api {post} /v1/svg/upload/:type upload svg file
  * @apiName Upload
@@ -26,6 +40,7 @@ var upload = multer({
  * @apiGroup SVG
  * @apiParam {String} type Image type (headers, group, type).
  * @apiParam {File} svg SVG file to upload.
+ * @apiParam {String} code Image code.
  * @apiDescription Converts svg to png file and uploads it to the server via ftp.
  */
 router.post('/upload/:type', function(req, res, next) {
@@ -46,11 +61,12 @@ router.post('/upload/:type', function(req, res, next) {
 					fs.unlinkSync(dir + '/' + req.file.filename);
 					res.status(412).send('format file invalid');
 				} else {
-					svg2png.pushFtp(req.params.type, req.file.filename,
-					function(err, resp) {
-						if (err) res.status(402).send(err + ": Error transferring files");
-						if (resp) res.status(200).send(resp);
-					});
+					var filename = setVldFleName(req);
+					svg2png.pushFtp(req.params.type, filename,
+						function(err, resp) {
+							if (err) res.status(402).send(err + ": Error transferring files");
+							if (resp) res.status(200).send(resp);
+						});
 				}
 			});
 		}
