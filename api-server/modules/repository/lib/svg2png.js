@@ -177,7 +177,7 @@ var svgToPng = function(type, filename, callback) {
 };
 var dleteDir = function(paths) {
 	try {
-		for (var i = 0; i < paths.length; i++) 
+		for (var i = 0; i < paths.length; i++)
 			fs.unlinkSync(paths[i].from);
 	} catch (e) {
 		console.error('Error could not delete the file', e);
@@ -185,15 +185,27 @@ var dleteDir = function(paths) {
 		throw e;
 	}
 };
-exports.pushFtp = function(type, filename, callback) {
+/**
+ * [pushFtp description]
+ * @param  {[type]}   type     [description]
+ * @param  {[type]}   filename [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.pushFtp = function(type, filename, env, callback) {
+	var ftp = {};
+	filesToSend = [];
 	try {
-		filesToSend = [];
+		if (env === 'develoment')
+			ftp = ftpBitdubai;
+		else
+			ftp = ftpFermat;
 		svgToPng(type, filename, function(err, res) {
 			if (err) return callback(err, null);
 			if (res) {
 				var loopSendFiles = function(i) {
 					if (i < filesToSend.length) {
-						ftpBitdubai.put(filesToSend[i].from, filesToSend[i].to,
+						ftp.put(filesToSend[i].from, filesToSend[i].to,
 							function(hadError) {
 								if (!hadError) {
 									console.log("File transferred successfully!");

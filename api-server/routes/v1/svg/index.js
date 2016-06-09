@@ -8,12 +8,9 @@ var path = require('path');
 var dir = path.join(cwd, 'uploads');
 var storage = multer.diskStorage({
 	destination: function(req, file, callback) {
-		//callback(null, './uploads');
-		console.log('dir', dir);
 		callback(null, dir);
 	},
 	filename: function(req, file, callback) {
-		//callback(null, file.fieldname + '-' + Date.now() + '.svg');
 		callback(null, file.originalname);
 	}
 });
@@ -31,28 +28,29 @@ var upload = multer({
  */
 router.post('/upload/:type', function(req, res, next) {
 	try {
-		console.log(req.body);
 		if (!security.isValidData(req.params.type)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
 			});
 		} else {
-			console.log("execute route /upload");
 			upload(req, res, function(err) {
 				if (err) {
 					console.log(err + ": Error uploading file.");
 					return res.end(err + ": Error uploading file.");
 				}
+				if (!security.isValidData(req.file)) 
+					res.status(412).send('filename missing or invalid');
 				var fileName = req.file.filename;
-				svg2png.pushFtp(req.params.type, fileName, function(err, resp) {
-					if (err) res.status(402).send(err +": You can not perform the conversion");
-					if (resp) res.status(200).send(resp);
-				});
+				svg2png.pushFtp(req.params.type, fileName, req.query.env,
+					function(err, resp) {
+						if (err) res.status(402).send(err + ": Error transferring files");
+						if (resp) res.status(200).send(resp);
+					});
 			});
 		}
 	} catch (err) {
 		console.error("Error", err);
-		res.status(402).send(err+": You can not perform the conversion");
+		res.status(402).send(err + ": Error transferring files");
 	}
 });
 // router export
