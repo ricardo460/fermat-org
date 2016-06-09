@@ -519,6 +519,52 @@ function getRoute(form, route, id){
     return url;
 }
 
+function send() {
+    worked = false;
+
+    code = document.getElementsById('desCode').value;
+    if (/^[A-Z]{3}$/.exec(code) === null) {
+        alert('Erroneous code');
+        return; // Stop doing this
+    }
+
+    header = document.getElementById('desHeader')[0];
+    icon = document.getElementById('desIcon')[0];
+
+    var headerData = new FormData();
+    var iconData = new FormData();
+
+    headerData.append('img', header);
+    headerData.append('type', 'header');
+    headerData.append('code', code);
+
+    iconData.append('img', icon);
+    iconData.append('type', 'icon');
+    iconData.append('code', code);
+
+    $.ajax({
+        type: 'POST',
+        url: 'http://url1',
+        data: headerData
+    }).success(function () {
+        worked = true;
+    }).error(function() {
+        worked = false;
+    });
+
+    $.ajax({
+        type: 'POST',
+        url: 'http://url2',
+        data: iconData
+    }).success(function () {
+        worked = worked && true;
+    }).error(function() {
+        worked = false;
+    });
+
+    return worked;
+}
+
 function verify(form, request){
 
     var url,
@@ -561,40 +607,7 @@ function verify(form, request){
                 url = getRoute("platfrms", "insert");
 
                 if (usertype === "designer") {
-                    code = document.getElementsById('desCode').value;
-                    if (/^[A-Z]{3}$/.exec(code) === null) {
-                        alert('Erroneous code');
-                        return; // Do another thing
-                    }
-
-                    header = document.getElementById('desHeader')[0];
-                    icon = document.getElementById('desIcon')[0];
-
-                    var headerData = new FormData();
-                    var iconData = new FormData();
-                    headerData.append('img', header);
-                    headerData.append('type', 'header');
-                    headerData.append('code', code);
-
-                    iconData.append('img', icon);
-                    iconData.append('type', 'icon');
-                    iconData.append('code', code);
-
-                    $.ajax({
-                        type: 'POST',
-                        url: 'http://url1',
-                        data: headerData
-                    }).success(function () {
-
-                    });
-
-                    $.ajax({
-                        type: 'POST',
-                        url: 'http://url2',
-                        data: iconData
-                    }).success(function () {
-
-                    });
+                    send(); // TODO: something with te result
                 } else {
 
                 }
@@ -604,7 +617,7 @@ function verify(form, request){
                 url = getRoute("suprlays", "insert");
 
                 if (usertype === "designer") {
-
+                    send(); // TODO: something with te result
                 } else {
 
                 }
