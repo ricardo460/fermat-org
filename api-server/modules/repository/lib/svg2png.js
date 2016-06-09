@@ -32,12 +32,17 @@ var ftpFermat = new JSFtp({
  * @return {[type]}          [description]
  */
 var convert = function(path_png, name_svg, dpi, dir) {
-	if (test('-d', dir)) {
-		cd(dir);
-		if (exec('inkscape -e ' + path_png + ' -d ' + dpi + ' ' + name_svg + '.svg').code !== 0) {
-			echo('Error: You can not perform the conversion');
-			throw new Error('You can not perform the conversion');
-		} else return "Conversion completed successfully";
+	if (!which('inkscape')) {
+		echo('Sorry, this script requires inkscape');
+		throw new Error('inkscape not installed on the server: You can not perform the conversion');
+	} else {
+		if (test('-d', dir)) {
+			cd(dir);
+			if (exec('inkscape -e ' + path_png + ' -d ' + dpi + ' ' + name_svg + '.svg').code !== 0) {
+				echo('Error: You can not perform the conversion');
+				throw new Error('You can not perform the conversion');
+			} else return "Conversion completed successfully";
+		}
 	}
 };
 /**
@@ -158,7 +163,7 @@ var svgToPng = function(type, filename, callback) {
 				descImgType[i].to = descImgType[i].to + filePng;
 				converSvg(filePng, filename, descImgType[i]);
 			}
-		} else if (type === 'header') {
+		} else if (type === 'headers') {
 			descSvgOri.from = fromSvg;
 			descSvgOri.to = '/navi/clair/images/headers/svg/' + filename + '.svg';
 			filesToSend.push(descSvgOri);
@@ -167,7 +172,8 @@ var svgToPng = function(type, filename, callback) {
 				descImgHeader[i].to = descImgHeader[i].to + filePng;
 				converSvg(filePng, filename, descImgHeader[i]);
 			}
-		}
+		} else
+			return callback('Unsupported type', null);
 		return callback(null, 'Conversion completed successfully');
 	} catch (err) {
 		console.log("Error: " + err);
@@ -208,8 +214,6 @@ exports.pushFtp = function(type, filename, env, callback) {
 						ftp.put(filesToSend[i].from, filesToSend[i].to,
 							function(hadError) {
 								if (!hadError) {
-									console.log("File transferred successfully!");
-									console.log(filesToSend[i].from);
 									loopSendFiles(++i);
 								} else {
 									console.log(hadError + ": Error transferring file");
@@ -220,7 +224,6 @@ exports.pushFtp = function(type, filename, env, callback) {
 								}
 							});
 					} else {
-						console.log("Files transferred successfully!");
 						dleteDir(filesToSend);
 						return callback(null, 'Files transferred successfully!');
 					}
