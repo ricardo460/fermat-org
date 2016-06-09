@@ -5,6 +5,7 @@
 /* global test */
 /* global which */
 require('shelljs/global');
+var config = require('../../../config.js');
 var winston = require('winston');
 var path = require('path');
 var JSFtp = require("jsftp");
@@ -12,17 +13,11 @@ var fs = require("fs");
 var filesToSend = [];
 var cwd = process.cwd();
 var dir = path.join(cwd, 'uploads');
-var ftpBitdubai = new JSFtp({
-	host: "bitdubai.com",
-	port: 21, // defaults to 21 
-	user: "navi@bitdubai.com", // defaults to "anonymous" 
-	pass: "Dfg15bLP%4L4" // defaults to "@anonymous" 
-});
-var ftpFermat = new JSFtp({
-	host: "fermat.org",
-	port: 21, // defaults to 21 
-	user: "navi@fermat.org", // defaults to "anonymous" 
-	pass: "Dfg15bLP%4L4" // defaults to "@anonymous" 
+var ftp = new JSFtp({
+	host: config.host,
+	port: config.port,
+	user: config.user,
+	pass: config.pass
 });
 /**
  * [convert description]
@@ -198,14 +193,9 @@ var dleteDir = function(paths) {
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports.pushFtp = function(type, filename, env, callback) {
-	var ftp = {};
+exports.pushFtp = function(type, filename, callback) {
 	filesToSend = [];
 	try {
-		if (env === 'develoment')
-			ftp = ftpBitdubai;
-		else
-			ftp = ftpFermat;
 		svgToPng(type, filename, function(err, res) {
 			if (err) return callback(err, null);
 			if (res) {

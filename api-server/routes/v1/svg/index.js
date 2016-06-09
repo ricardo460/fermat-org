@@ -46,7 +46,7 @@ router.post('/upload/:type', function(req, res, next) {
 					fs.unlinkSync(dir + '/' + req.file.filename);
 					res.status(412).send('format file invalid');
 				} else {
-					svg2png.pushFtp(req.params.type, req.file.filename, req.query.env,
+					svg2png.pushFtp(req.params.type, req.file.filename,
 					function(err, resp) {
 						if (err) res.status(402).send(err + ": Error transferring files");
 						if (resp) res.status(200).send(resp);
