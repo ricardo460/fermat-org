@@ -147,7 +147,7 @@ function Session() {
                 
                 else{ 
                     console.log("Error:", tkn);
-                    window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
+                    window.alert("Error: Could not login to Github, please check if your email at Github is public, if not, set it public. If you still encounter this issue please inform at https://github.com/Fermat-ORG/fermat-org/issues");
                 }
             });
         } else {
