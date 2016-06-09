@@ -25,7 +25,7 @@ var upload = multer({
  * @apiVersion 1.0.0
  * @apiGroup SVG
  * @apiParam {String} type Image type (headers, group, type).
- * @apiParam {String} svg SVG file to upload.
+ * @apiParam {File} svg SVG file to upload.
  * @apiDescription Converts svg to png file and uploads it to the server via ftp.
  */
 router.post('/upload/:type', function(req, res, next) {
