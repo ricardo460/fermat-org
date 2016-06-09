@@ -6,6 +6,7 @@
  * @version 0.1
  *
  **/
+ var path = require('path');
 var validator = require('validator'),
 	sanitizer = require('sanitizer');
 // yyyy-MM-dd'T'HH:mm:ss.SSSZ
@@ -250,6 +251,17 @@ exports.apiVersion = function(api_version) {
 	}
 };
 /**
+ * [isValidExtFile description]
+ * @param  {[type]}  filename [description]
+ * @return {Boolean}          [description]
+ */
+exports.isValidExtFile = function(filename) {
+	var ext = path.extname(filename);
+	if (ext === '.svg')
+		return 1;
+	else return 0;
+};
+/**
  * [isValidData description]
  * @param  {[type]}  data [description]
  * @return {Boolean}      [description]
@@ -263,6 +275,7 @@ exports.isValidData = function(data) {
  * @return {Boolean}      [description]
  */
 exports.ifExistIsValidData = function(data) {
+
 	return ifExistIsValidData(data);
 };
 /**

@@ -1492,6 +1492,37 @@
   },
   {
     "type": "post",
+    "url": "/v1/svg/upload/:type",
+    "title": "upload svg file",
+    "name": "Upload",
+    "version": "1.0.0",
+    "group": "SVG",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>Image type (headers, group, type).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "svg",
+            "description": "<p>SVG file to upload.</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Converts svg to png file and uploads it to the server via ftp.</p>",
+    "filename": "routes/v1/svg/index.js",
+    "groupTitle": "SVG"
+  },
+  {
+    "type": "post",
     "url": "/v1/user/assignTypeUser",
     "title": "assign user type",
     "name": "AssignTypeUser",
