@@ -1513,6 +1513,13 @@ define({ "api": [
             "optional": false,
             "field": "svg",
             "description": "<p>SVG file to upload.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Image code.</p>"
           }
         ]
       }
