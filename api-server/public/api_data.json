@@ -1492,7 +1492,7 @@
   },
   {
     "type": "post",
-    "url": "/v1/svg/upload/:type",
+    "url": "/v1/svg/upload/:type/:code",
     "title": "upload svg file",
     "name": "Upload",
     "version": "1.0.0",
