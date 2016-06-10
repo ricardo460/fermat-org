@@ -6,7 +6,7 @@
  * @version 0.1
  *
  **/
- var path = require('path');
+var path = require('path');
 var validator = require('validator'),
 	sanitizer = require('sanitizer');
 // yyyy-MM-dd'T'HH:mm:ss.SSSZ
@@ -172,7 +172,7 @@ var isOctal = function(str) {
 	var num = 0;
 	for (var i = 0; i < str.length; i++) {
 		num = parseInt(str.charAt(i));
-		if(num > 7 || num < 0) 
+		if (num > 7 || num < 0)
 			return 0;
 	}
 	return 1;
@@ -260,6 +260,18 @@ exports.isValidExtFile = function(filename) {
 	if (ext === '.svg')
 		return 1;
 	else return 0;
+};
+/**
+ * [isValidCode description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+exports.isValidCode = function(code) {
+	var expreg = new RegExp("^[a-zA-Z]{3}$");
+	if (isValidData(code))
+		if (expreg.test(code))
+			return 1;
+		else return 0;
 };
 /**
  * [isValidData description]

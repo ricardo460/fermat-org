@@ -25,16 +25,16 @@ var upload = multer({
 var setVldFleName = function(req) {
 	var newNameSvg = '';
 	if (req.params.type === 'group')
-		newNameSvg = 'icon_' + req.body.code.toUpperCase();
+		newNameSvg = 'icon_' + req.params.code.toUpperCase();
 	else
-		newNameSvg = req.body.code.toUpperCase() + '_logo';
+		newNameSvg = req.params.code.toUpperCase() + '_logo';
 	var newPath = dir + '/' + newNameSvg + '.svg';
 	var oldPath = dir + '/' + req.file.filename;
 	fs.renameSync(oldPath, newPath);
 	return newNameSvg + '.svg';
 };
 /**
- * @api {post} /v1/svg/upload/:type upload svg file
+ * @api {post} /v1/svg/upload/:type/:code upload svg file
  * @apiName Upload
  * @apiVersion 1.0.0
  * @apiGroup SVG
@@ -43,13 +43,18 @@ var setVldFleName = function(req) {
  * @apiParam {String} code Image code.
  * @apiDescription Converts svg to png file and uploads it to the server via ftp.
  */
-router.post('/upload/:type', function(req, res, next) {
+router.post('/upload/:type/:code', function(req, res, next) {
 	try {
 		if (!security.isValidData(req.params.type)) {
 			res.status(412).send({
 				"message": "missing or invalid data"
 			});
-		} else {
+		} else if (!security.isValidCode(req.params.code)) {
+			res.status(412).send({
+				"message": "missing or invalid data"
+			});
+		}
+		else {
 			upload(req, res, function(err) {
 				if (err) {
 					console.log(err + ": Error uploading file.");
