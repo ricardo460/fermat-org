@@ -1492,7 +1492,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/v1/svg/upload/:type",
+    "url": "/v1/svg/upload/:type/:code",
     "title": "upload svg file",
     "name": "Upload",
     "version": "1.0.0",
@@ -1513,6 +1513,13 @@ define({ "api": [
             "optional": false,
             "field": "svg",
             "description": "<p>SVG file to upload.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "code",
+            "description": "<p>Image code.</p>"
           }
         ]
       }
