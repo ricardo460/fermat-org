@@ -12,7 +12,7 @@ var user_data = getUserID(),
     usertype = 'designer',
     perm = 77000;
 //global constants
-var SERVER = 'api.fermat.org';
+var SERVER = 'localhost';
 
 function init() {
     //if(user_data._id === ''){
@@ -522,29 +522,33 @@ function getRoute(form, route, id){
 function send() {
     worked = false;
 
-    code = document.getElementsById('desCode').value;
+    code = document.getElementById('desCode').value;
     if (/^[A-Z]{3}$/.exec(code) === null) {
         alert('Erroneous code');
-        return; // Stop doing this
+        return false; // Stop doing this
     }
-
-    header = document.getElementById('desHeader')[0];
-    icon = document.getElementById('desIcon')[0];
 
     var headerData = new FormData();
     var iconData = new FormData();
 
-    headerData.append('img', header);
-    headerData.append('type', 'header');
+    header = document.getElementById('desHeader').files[0];
+    icon = document.getElementById('desIcon').files[0];
+
+    if (header == undefined || icon == undefined) {
+        return false;
+    }
+
+    headerData.append('img', header, header.name);
+    headerData.append('type', 'headers');
     headerData.append('code', code);
 
-    iconData.append('img', icon);
+    iconData.append('img', icon, icon.name);
     iconData.append('type', 'icon');
     iconData.append('code', code);
 
     $.ajax({
         type: 'POST',
-        url: 'http://url1',
+        url: 'url',
         data: headerData
     }).success(function () {
         worked = true;
@@ -554,7 +558,7 @@ function send() {
 
     $.ajax({
         type: 'POST',
-        url: 'http://url2',
+        url: 'url'
         data: iconData
     }).success(function () {
         worked = worked && true;
@@ -607,7 +611,7 @@ function verify(form, request){
                 url = getRoute("platfrms", "insert");
 
                 if (usertype === "designer") {
-                    send(); // TODO: something with te result
+                    console.log("Up: " + send()); // TODO: something with te result
                 } else {
 
                 }
@@ -617,7 +621,7 @@ function verify(form, request){
                 url = getRoute("suprlays", "insert");
 
                 if (usertype === "designer") {
-                    send(); // TODO: something with te result
+                    console.log("Up: " + send()); // TODO: something with te result
                 } else {
 
                 }
