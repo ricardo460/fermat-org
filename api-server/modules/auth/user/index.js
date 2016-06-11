@@ -258,44 +258,49 @@ exports.changePermission = function(_master_usr_id, usrnm, perm, callback) {
 	'use strict';
 	try {
 		if (perm !== undefined || perm !== null)
-			usrSrv.findUsrByUsrnm(usrnm, function(err, usr) {
-				if (err) {
-					console.log(err, " :User not found");
-					return callback(err, null);
-				}
+			usrSrv.findUsrById(_master_usr_id, function(err, usr) {
+				if (err) return callback(err, null);
 				if (usr) {
-					var set_obj = {};
-					haveGreaterPerm(_master_usr_id, usrnm, perm, function(err, nw_perm) {
+					usrSrv.findUsrByUsrnm(usrnm, function(err, usr) {
 						if (err) {
-							console.log(err, " :Permission not granted");
+							console.log(err, " :User not found");
 							return callback(err, null);
 						}
-						if (nw_perm) {
-							set_obj.perm = nw_perm;
-							usr.perm = nw_perm;
-							usrSrv.updateUsrById(usr._id, set_obj, function(err_upd, res_upd) {
-								if (err_upd) {
-									console.log(err_upd, " :User error not updated");
-									return callback(err_upd, null);
+						if (usr) {
+							var set_obj = {};
+							haveGreaterPerm(_master_usr_id, usrnm, perm, function(err, nw_perm) {
+								if (err) {
+									console.log(err, " :Permission not granted");
+									return callback(err, null);
 								}
-								if (res_upd) {
-									console.log("Response: ", res_upd);
-									saveUsrAssingPerm(_master_usr_id, usr._id, function(err, res) {
-										if (err) {
-											console.log(err + ": Error saving the user that assign permission");
-											return callback(err, null);
+								if (nw_perm) {
+									set_obj.perm = nw_perm;
+									usr.perm = nw_perm;
+									usrSrv.updateUsrById(usr._id, set_obj, function(err_upd, res_upd) {
+										if (err_upd) {
+											console.log(err_upd, " :User error not updated");
+											return callback(err_upd, null);
 										}
-										if (res) {
-											console.log("Saving the user that assign permission");
-											return callback(null, usr);
+										if (res_upd) {
+											console.log("Response: ", res_upd);
+											saveUsrAssingPerm(_master_usr_id, usr._id, function(err, res) {
+												if (err) {
+													console.log(err + ": Error saving the user that assign permission");
+													return callback(err, null);
+												}
+												if (res) {
+													console.log("Saving the user that assign permission");
+													return callback(null, usr);
+												}
+											});
 										}
 									});
-								}
+								} else
+									return callback(null, usr);
 							});
-						} else
-							return callback(null, usr);
+						}
 					});
-				}
+				} else return callback("The user is not in the database", null);
 			});
 		else return callback("Error perm undefined", null);
 	} catch (err) {
