@@ -540,7 +540,8 @@ function send() {
     var header = document.getElementById('desHeader').files[0];
     var icon = document.getElementById('desIcon').files[0];
 
-    if (header == undefined || icon == undefined) {
+    if (header === undefined || icon === undefined) {
+        window.alert("You must select the Header and Icon images.");
         return false;
     }
 
@@ -564,7 +565,7 @@ function send() {
     };
     iconReq.onload = function () {
         worked = worked && (iconReq.status === 200);
-    }
+    };
 
     headerReq.send(headerData);
     iconReq.send(iconReq);
@@ -582,12 +583,13 @@ function verify(form, request){
         list,
         repo,
         elements,
-        nameChange = false;
+        nameChange = false,
+        fileCheck = 200,
         proceed = true;
 
 
     if(request === "add"){
-        if(form === "layer"){
+        if(form === "layer"){   //Add layer
 
             list = document.getElementById('layerList');
             elements = list.getElementsByTagName('td');
@@ -606,28 +608,15 @@ function verify(form, request){
                 clearLayerForm();
             }
         }
-        else{
-            var data;
+        else{                   //Add group
 
             if(form === 'platform'){
                 list = document.getElementById('platformList');
                 url = getRoute("platfrms", "insert");
-
-                if (usertype === "designer") {
-                    console.log("Up: " + send()); // TODO: something with te result
-                } else {
-
-                }
             }
             else{
                 list = document.getElementById('superlayerList');
                 url = getRoute("suprlays", "insert");
-
-                if (usertype === "designer") {
-                    console.log("Up: " + send()); // TODO: something with te result
-                } else {
-
-                }
             }
             elements = list.getElementsByTagName('td');
 
@@ -651,7 +640,10 @@ function verify(form, request){
                 }
             }
 
-            if(proceed){
+            if(usertype === "designer")
+                fileCheck = send();
+
+            if(proceed && fileCheck !== false){
                 url = getRoute(repo, "insert");
                 sendRequest(url, 'POST', data, form);
                 updateList(form, false);
@@ -661,7 +653,7 @@ function verify(form, request){
         }
     }
     else{
-        if(form === "layer"){
+        if(form === "layer"){ //Modify layer
 
             list = document.getElementById('layerList');
             elements = list.getElementsByTagName('td');
@@ -695,7 +687,7 @@ function verify(form, request){
                 clearLayerForm();
             }
         }
-        else{
+        else{                   //Modify group
 
             if(form === 'platform'){
                 list = document.getElementById('platformList');
@@ -726,6 +718,9 @@ function verify(form, request){
                     return false;
                 }
             }
+
+            if(usertype === "designer")
+                fileCheck = send();
 
             if(proceed){
                 url = getRoute(repo, "insert");
