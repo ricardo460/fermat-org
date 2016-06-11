@@ -12,7 +12,7 @@ var user_data = getUserID(),
     usertype = 'designer',
     perm = 77000;
 //global constants
-var SERVER = 'api.fermat.org';
+var SERVER = 'localhost';
 
 function init() {
     //if(user_data._id === ''){
@@ -506,6 +506,8 @@ function getRoute(form, route, id){
         tail = "/v1/repo/usrs/" + user_data._id + "/" + form;
     else if(route === 'update' || route === 'delete')
         tail = "/v1/repo/usrs/" + user_data._id + "/" + form + "/" + id;
+    else if(form === 'svg')
+        tail = "/v1/svg/upload/" + route + "/" + id;
     else
         tail = "/v1/user/";
 
@@ -519,48 +521,53 @@ function getRoute(form, route, id){
     return url;
 }
 
+/**
+ * Sends to the server the headers and logos.
+ * Uses a custom AJAX call. BEWARE.
+ */
 function send() {
-    worked = false;
+    var worked = false;
 
-    code = document.getElementsById('desCode').value;
+    var code = document.getElementById('desCode').value;
     if (/^[A-Z]{3}$/.exec(code) === null) {
-        alert('Erroneous code');
-        return; // Stop doing this
+        // alert('Erroneous code');
+        return false; // Stop doing this
     }
-
-    header = document.getElementById('desHeader')[0];
-    icon = document.getElementById('desIcon')[0];
 
     var headerData = new FormData();
     var iconData = new FormData();
 
-    headerData.append('img', header);
-    headerData.append('type', 'header');
+    var header = document.getElementById('desHeader').files[0];
+    var icon = document.getElementById('desIcon').files[0];
+
+    if (header == undefined || icon == undefined) {
+        return false;
+    }
+
+    headerData.append('svg', header, header.name);
+    headerData.append('type', 'headers');
     headerData.append('code', code);
 
-    iconData.append('img', icon);
-    iconData.append('type', 'icon');
+    iconData.append('svg', icon, icon.name);
+    iconData.append('type', 'group');
     iconData.append('code', code);
 
-    $.ajax({
-        type: 'POST',
-        url: 'http://url1',
-        data: headerData
-    }).success(function () {
-        worked = true;
-    }).error(function() {
-        worked = false;
-    });
+    var headerReq = new XMLHttpRequest();
+    var iconReq = new XMLHttpRequest();
 
-    $.ajax({
-        type: 'POST',
-        url: 'http://url2',
-        data: iconData
-    }).success(function () {
-        worked = worked && true;
-    }).error(function() {
-        worked = false;
-    });
+    // synchronous calls
+    headerReq.open('POST', getRoute('svg', 'headers', code), false);
+    iconReq.open('POST', getRoute('svg', 'group', code), false);
+
+    headerReq.onload = function () {
+        worked = (headerReq.status === 200);
+    };
+    iconReq.onload = function () {
+        worked = worked && (iconReq.status === 200);
+    }
+
+    headerReq.send(headerData);
+    iconReq.send(iconReq);
 
     return worked;
 }
@@ -607,7 +614,7 @@ function verify(form, request){
                 url = getRoute("platfrms", "insert");
 
                 if (usertype === "designer") {
-                    send(); // TODO: something with te result
+                    console.log("Up: " + send()); // TODO: something with te result
                 } else {
 
                 }
@@ -617,7 +624,7 @@ function verify(form, request){
                 url = getRoute("suprlays", "insert");
 
                 if (usertype === "designer") {
-                    send(); // TODO: something with te result
+                    console.log("Up: " + send()); // TODO: something with te result
                 } else {
 
                 }
