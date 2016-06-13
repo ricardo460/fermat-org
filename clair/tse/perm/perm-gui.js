@@ -5,8 +5,6 @@ var user_data = getUserID(),
     usertype = 'developer',
     reference,
     userList;
-//global constants
-var SERVER = 'http://api.fermat.org';
 
 function init() {
     //if(user_data._id === ''){
@@ -14,19 +12,7 @@ function init() {
         //window.location.replace(window.location.href.replace(window.location.pathname, ''));
     //}
     //else{
-
-        switch(window.location.href.match("//[a-z0-9]*")[0].replace("//", '')) {
-            case "dev":
-                environment = 'production';
-                break;
-            case "lab":
-                environment = 'development';
-                break;
-            case "3d":
-                environment = 'testing';
-                break;
-        }
-
+        environment = API_ENV;
         $('#perm-link').click(function(event) {
             location.href = '../';
         });
@@ -297,7 +283,7 @@ function getRoute(route, user){
     if(route === 'users')
         tail = "/v1/repo/devs";
     if(route === 'perm')
-        tail = "/v1/user/";
+        tail = "/v1/user/users";
     if(route === 'change')
         tail = "/v1/user/" + user + "/changePerms";
 
@@ -306,61 +292,9 @@ function getRoute(route, user){
         axs_key : axs_key
     };
 
-    url = SERVER.replace('http://', '') + tail;
-    url = 'http://' + self.buildURL(url, param);
+    url = window.helper.SERVER.replace('http://', '') + tail;
+    url = 'http://' + window.helper.buildURL(url, param);
     return url;
-}
-
-    /**
-     * Build and URL based on the address, wildcards and GET parameters
-     * @param   {string} base   The URL address
-     * @param   {Object} params The key=value pairs of the GET parameters and wildcards
-     * @returns {string} Parsed and replaced URL
-     */
-function buildURL(base, params) {
-
-        var result = base;
-        var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
-
-        var param = null;
-
-        if(params == null) params = {};
-
-        params.env = environment;
-
-        //Search for wildcards parameters
-        do {
-
-            param = result.match(':[a-z0-9]+');
-
-            if(param !== null) {
-                var paramName = param[0].replace(':', '');
-
-                if(params.hasOwnProperty(paramName) && params[paramName] !== undefined) {
-
-                    result = result.replace(param, params[paramName]);
-                    delete(params[paramName]);
-
-                }
-            }
-        } while(param !== null);
-
-        //Process the GET parameters
-        for(var key in params) {
-            if(params.hasOwnProperty(key) && params[key] !== '') {
-
-                if(areParams === false)
-                    result += "?";
-                else
-                    result += "&";
-
-                result += key + ((params[key] !== undefined) ? ("=" + params[key]) : (''));
-
-                areParams = true;
-            }
-        }
-
-        return result;
 }
 
 function getUserID() {
