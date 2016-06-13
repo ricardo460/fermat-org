@@ -695,11 +695,11 @@ function verify(form, request){
 
             if(form === 'platform'){
                 list = document.getElementById('platformList');
-                url = getRoute("platfrms","insert");
+                url = getRoute("platfrms", "update", referenceId);
             }
             else{
                 list = document.getElementById('superlayerList');
-                url = getRoute("suprlays","insert");
+                url = getRoute("suprlays", "update", referenceId);
             }
             elements = list.getElementsByTagName('td');
 
