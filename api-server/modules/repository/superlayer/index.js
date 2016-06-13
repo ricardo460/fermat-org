@@ -285,7 +285,7 @@ exports.updateSuprlayById = function (_sprly_id, code, name, logo, deps, order, 
 					});
 				}
 			} else {
-				return callback(null, null);
+				return callback('The super layer does not exist', null);
 			}
 		});
 	} catch (err) {
