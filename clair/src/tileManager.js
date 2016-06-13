@@ -84,7 +84,7 @@ function TileManager() {
                 section[id] = newLayer.slice(0); //Use a copy
             }
 
-            isSuperLayer.push(false);
+            isSuperLayer.push(false); //Just to initialize
         }
 
         for (var j = 0; j <= groupsQtty; j++) {
@@ -191,7 +191,7 @@ function TileManager() {
             code = _suprlays[i].code;
             window.superLayers[code] = {};
             window.superLayers[code].name = _suprlays[i].name;
-            window.superLayers[code].index = _suprlays[i].order - 1;
+            window.superLayers[code].index = _suprlays[i].order;
             window.superLayers[code]._id = _suprlays[i]._id;
             window.superLayers[code].dependsOn = _suprlays[i].deps;
             window.TABLE[code] = {
