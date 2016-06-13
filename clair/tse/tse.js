@@ -85,8 +85,12 @@ function init() {
                 verify(current,request);
             });
 
-            $('#submitGroup').click(function() {
+            $('#submitGroupDes').click(function() {
                 verify(current,request);
+            });
+
+            $('#submitGroupDev').click(function() {
+                verify(current, request);
             });
         });
     //}
