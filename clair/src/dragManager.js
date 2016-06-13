@@ -33,7 +33,8 @@ function DragManager() {
         INTERSECTED_1 = null,
         OPACITY = null,
         SELECTED = null,
-        plane = null;
+        plane = null,
+        STATE = false;
 
     init();
 
@@ -48,15 +49,21 @@ function DragManager() {
     }
 
     this.on = function(){
-        window.renderer.domElement.addEventListener('mousemove', mouseMove, false);
-        window.renderer.domElement.addEventListener('mousedown', mouseDown, false);
-        window.renderer.domElement.addEventListener('mouseup', mouseUp, false);
+
+        if(!STATE){ 
+            window.renderer.domElement.addEventListener('mousemove', mouseMove, false);
+            window.renderer.domElement.addEventListener('mousedown', mouseDown, false);
+            window.renderer.domElement.addEventListener('mouseup', mouseUp, false);
+        }
     };
 
     this.off = function(){
-        window.renderer.domElement.removeEventListener('mousemove', mouseMove, false);
-        window.renderer.domElement.removeEventListener('mousedown', mouseDown, false);
-        window.renderer.domElement.removeEventListener('mouseup', mouseUp, false);
+
+        if(STATE){ 
+            window.renderer.domElement.removeEventListener('mousemove', mouseMove, false);
+            window.renderer.domElement.removeEventListener('mousedown', mouseDown, false);
+            window.renderer.domElement.removeEventListener('mouseup', mouseUp, false);
+        }
     }
 
     function mouseMove(event) {
@@ -70,7 +77,7 @@ function DragManager() {
 
         var i = 0;
 
-        if (SELECTED) { 
+        if(SELECTED){ 
 
             var intersects = rayCaster.intersectObject(plane);
 
@@ -121,7 +128,7 @@ function DragManager() {
 
                         OPACITY = INTERSECTED;
 
-                        OPACITY.material.opacity = 0.5; 
+                        OPACITY.material.opacity = 0.8; 
                     } 
 
                     container.style.cursor = self.styleMouse.CROSS;
