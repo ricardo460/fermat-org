@@ -21,7 +21,7 @@ function init() {
         environment = 'development';
         axs_key = user_data.axs_key;
 
-        updateUserList(true);
+        updateUserList(false);
 
         $('#changePermissions').click(function() {
                 verify();
@@ -66,7 +66,7 @@ function getUsers(){
 }
 
 function verifyUser(user){
-    var url = getRoute('perm', user);
+    var url = getRoute('perm');
 
     console.log(url);
 
@@ -155,7 +155,10 @@ function modifyPermissions(element){
 
     $.ajax({
         url: url,
-        method: "GET"
+        method: "POST",
+        data: {
+            'usrnm': element.id
+        }
     }).success (
         function (res) {
             var digit,
@@ -281,11 +284,13 @@ function getRoute(route, user){
         url;
 
     if(route === 'users')
-        tail = "/v1/repo/devs";
-    if(route === 'perm')
         tail = "/v1/user/users";
+    if(route === 'perm')
+        tail = "/v1/user";
     if(route === 'change')
         tail = "/v1/user/" + user + "/changePerms";
+    if(route === 'user')
+        tail = "/v1/user"
 
     param = {
         env : environment,
@@ -300,7 +305,7 @@ function getRoute(route, user){
 function getUserID() {
     var _usr_id = {
         __v : getCookie("v"),
-        _id : '570e44e3019d61dc4de9f331',
+        _id : '56f19f0a301492726c80881a',
         avatar_url : getCookie("avatar"),
         axs_key : '570e44e3019d61dc4de9f32f',
         email : getCookie("email"),
@@ -313,7 +318,7 @@ function getUserID() {
 }
 
 function checkPermissions() {
-    var url = getRoute('perm', user_data.usrnm);
+    var url = getRoute('user');
 
     $.ajax({
             url: url,
