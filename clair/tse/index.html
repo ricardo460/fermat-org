@@ -30,12 +30,17 @@
                 <div class="container-fluid">
                     <ul class="nav navbar-nav navbar-right actions">
                         <li>
-                            <select id="type">
+                            <button id="perm-link" class="btn btn-default">Permissions</button>
+                        </li>
+                        <li>
+                            <select class="form-control" id="type">
+                                <option value="platform">Platform</option>
+                                <option value="superlayer">Superlayer</option>
                                 <option value="layer">Layer</option>
                             </select>
                         </li>
                         <li>
-                            <button id="add" onclick='add()'>Add</button>
+                            <button class="btn btn-default" type="button" id="add" onclick='add()'>Add</button>
                         </li>
                     </ul>
                 </div>
@@ -44,6 +49,29 @@
     </div>
 
     <img id="spinner" src="img/loading_spinner.gif" class="img">
+
+    <div id="perm" class="perm-box hidden">
+        <div class="perm-class">
+            <span>Platform:</span>
+            <span id="tag-platform-add">Add</span>
+            <span id="tag-platform-mod">Modify</span>
+            <span id="tag-platform-del">Delete</span>
+        </div>
+
+        <div class="perm-class">
+            <span>Superlayer:</span>
+            <span id="tag-superlayer-add">Add</span>
+            <span id="tag-superlayer-mod">Modify</span>
+            <span id="tag-superlayer-del">Delete</span>
+        </div>
+
+        <div class="perm-class">
+            <span>Layer:</span>
+            <span id="tag-layer-add">Add</span>
+            <span id="tag-layer-mod">Modify</span>
+            <span id="tag-layer-del">Delete</span>
+        </div>
+    </div>
 
     <table id="superlayerList" class="table table-fermat table-hover hidden">
         <thead>
@@ -81,6 +109,29 @@
     </table>
 
     <div class="container">
+        <form id="desForm" class="tse-form hidden">
+            <div class="form-group">
+                <label for="desCode">Code</label>
+                <input class="form-control" id="desCode" required/>
+            </div>
+            <div class="form-group">
+                <label for="desName">Name</label>
+                <input class="form-control" id="desName" required/>
+            </div>
+            <div class="form-group">
+                <label for="desLogo">Header SVG</label>
+                <input class="form-control" id="desHeader" type="file" required/>
+            </div>
+            <div class="form-group">
+                <label for="desLogo">Icon SVG</label>
+                <input class="form-control" id="desIcon" type="file" required/>
+            </div>
+            <div class="buttons">
+                <button type="button" id="submitGroupDes">Submit</button>
+                <button type="button" onclick="cancel()">Cancel</button>
+            </div>
+        </form>
+
         <form id="groupForm" class="tse-form hidden">
             <div class="form-group">
                 <label for="groupCode">Code</label>
@@ -109,7 +160,7 @@
                 </select>
             </div>
             <div class="buttons">
-                <button type="button" id="submitGroup">Submit</button>
+                <button type="button" id="submitGroupDev">Submit</button>
                 <button type="button" onclick="cancel()">Cancel</button>
             </div>
         </form>
@@ -155,9 +206,9 @@
         </form>
     </div>
     <script src="/common/bootstrap.min.js"></script>
+    <script src="/common/cli.js"></script>
     <script src="/common/constants.js"></script>
     <script src="/common/helper.js"></script>
-    <script src="/common/cli.js"></script>
     <script src="tse.js"></script>
 </body>
 
