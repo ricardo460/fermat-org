@@ -6,6 +6,7 @@
  * @version 0.1
  *
  **/
+var path = require('path');
 var validator = require('validator'),
 	sanitizer = require('sanitizer');
 // yyyy-MM-dd'T'HH:mm:ss.SSSZ
@@ -171,7 +172,7 @@ var isOctal = function(str) {
 	var num = 0;
 	for (var i = 0; i < str.length; i++) {
 		num = parseInt(str.charAt(i));
-		if(num > 7 || num < 0) 
+		if (num > 7 || num < 0)
 			return 0;
 	}
 	return 1;
@@ -250,6 +251,29 @@ exports.apiVersion = function(api_version) {
 	}
 };
 /**
+ * [isValidExtFile description]
+ * @param  {[type]}  filename [description]
+ * @return {Boolean}          [description]
+ */
+exports.isValidExtFile = function(filename) {
+	var ext = path.extname(filename);
+	if (ext === '.svg')
+		return 1;
+	else return 0;
+};
+/**
+ * [isValidCode description]
+ * @param  {[type]}  data [description]
+ * @return {Boolean}      [description]
+ */
+exports.isValidCode = function(code) {
+	var expreg = new RegExp("^[a-zA-Z]{3}$");
+	if (isValidData(code))
+		if (expreg.test(code))
+			return 1;
+		else return 0;
+};
+/**
  * [isValidData description]
  * @param  {[type]}  data [description]
  * @return {Boolean}      [description]
@@ -263,6 +287,7 @@ exports.isValidData = function(data) {
  * @return {Boolean}      [description]
  */
 exports.ifExistIsValidData = function(data) {
+
 	return ifExistIsValidData(data);
 };
 /**

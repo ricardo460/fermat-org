@@ -1,15 +1,16 @@
+
 //global variables
 var user_data = getUserID(),
     axs_key = '',
     environment = '',
-    current = 'layer',
+    current = 'platform',
     request = 'add',
     referenceName = '',
     referenceId = '',
     referenceCode = '',
-    referenceOrder = '';
-//global constants
-var SERVER = window.helper.SERVER;
+    referenceOrder = '',
+    usertype = 'designer',
+    perm = 77000;
 
 function init() {
     if(user_data._id === ''){
@@ -23,16 +24,23 @@ function init() {
         environment = window.API_ENV;
 
         axs_key = user_data.axs_key;
+        checkPermissions();
 
         updateList('layer',true);
         updateList('platform',true);
         updateList('superlayer',true);
+
+        sel();
 
         $(document).ready(function() {
 
             $('#type').change(function() {
                 current = this.value;
                 sel();
+            });
+
+            $('#perm-link').click(function(event) {
+                location.href = 'perm';
             });
 
             $('#type').bind('keydown', function(event) {
@@ -45,8 +53,8 @@ function init() {
             $('#layerSuperLayer').change(function() {
                 $("#layerOrder").empty();
                 if(document.getElementById("layerSuperLayer").value === "false")
-                    retrieveData("layer", "layers", false); 
-                else   
+                    retrieveData("layer", "layers", false);
+                else
                     retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
             });
 
@@ -54,8 +62,8 @@ function init() {
                 if(event.key === 'ArrowUp' || event.key === 'ArrowDown'){
                     $("#layerOrder").empty();
                     if(document.getElementById("layerSuperLayer").value === "false")
-                        retrieveData("layer", "layers", false); 
-                    else   
+                        retrieveData("layer", "layers", false);
+                    else
                         retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
                 }
             });
@@ -64,8 +72,12 @@ function init() {
                 verify(current,request);
             });
 
-            $('#submitGroup').click(function() {
-                //verify(current,request);
+            $('#submitGroupDes').click(function() {
+                verify(current,request);
+            });
+
+            $('#submitGroupDev').click(function() {
+                verify(current, request);
             });
         });
     }
@@ -89,7 +101,7 @@ function deleteStructure(element, type){
                 break;
         }
 
-        sendRequest(url, 'DELETE');
+        sendRequest(url, 'DELETE', null, type);
 
         $('#type').prop('disabled', true);
         $('#add').prop('disabled', true);
@@ -100,14 +112,14 @@ function deleteStructure(element, type){
             updateList(type, true);
         }, 3000);
 
-        clearGroupForm();
+        clearGroupForm(usertype);
         clearLayerForm();
     }
 }
 
 function modifyStructure(element, type){
-    
-    add();
+
+    add('modify');
     var url;
 
     request = 'modify';
@@ -129,15 +141,17 @@ function modifyStructure(element, type){
         method: "GET"
     }).success (
         function (res) {
+
+            referenceName = res.name;
+            referenceOrder = res.order;
+            referenceId = element.id;
+
             if(type === 'layer'){
-                
+
                 document.getElementById('nextName').style.display = 'block';
                 document.getElementById("layerName").value = res.name.capitalize();
                 document.getElementById("layerLang").value = res.lang;
-                
-                referenceName = res.name;
-                referenceOrder = res.order;
-                referenceId = element.id;
+
                 $("#layerOrder").empty();
 
                 if(res.suprlay === false){
@@ -148,29 +162,32 @@ function modifyStructure(element, type){
                     document.getElementById("layerSuperLayer").value = res.suprlay;
                     retrieveData("layer", "layers", document.getElementById("layerSuperLayer").value);
                 }
-                
+
                 findPosition(type, res.order);
             }
             else{
+                if(usertype === 'developer'){
+                    document.getElementById("groupCode").value = res.code;
+                    document.getElementById("groupName").value = res.name.capitalize();
 
-                document.getElementById("groupCode").value = res.code;
-                document.getElementById("groupName").value = res.name.capitalize();
- 
-                var list = document.getElementById("groupDeps"),
-                    l = list.options.length;
+                    var list = document.getElementById("groupDeps"),
+                        l = list.options.length;
 
-                for(var e in res.deps){
-                    for(var i = 0; i < l; i++){
-                        if(res.deps[e] === list.options[i].value)
-                            list.options[i].selected = 'true';
+                    for(var e in res.deps){
+                        for(var i = 0; i < l; i++){
+                            if(res.deps[e] === list.options[i].value)
+                                list.options[i].selected = 'true';
+                        }
                     }
-                }               
-                referenceName = res.name;
-                referenceId = element.id;
-                referenceCode = res.code;
-                referenceOrder = res.order;
+                    retrieveData(current, current, null);
+                    referenceCode = res.code;
 
-                findPosition(type, res.order);
+                    findPosition(type, res.order);
+                }
+                else{
+                    document.getElementById("desCode").value = res.code;
+                    document.getElementById("desName").value = res.name.capitalize();
+                }
             }
         }
     );
@@ -201,7 +218,7 @@ function findPosition(type, order){
              var l = res.length;
 
              for(var i = 0; i < l; i++){
-                if(res[i].order === order && order === 0){
+                if(res[i].order === order && order === 1){
                     if(type === "layer"){
                             if(res[1].suprlay !== false)
                                 document.getElementById("layerNext").innerHTML = "Currently: Above - " + res[1].name.capitalize() + " (In Superlayer: " + res[1].suprlay + ")";
@@ -234,6 +251,7 @@ function findPosition(type, order){
 
 function updateList(list, refresh){
     var table;
+    $('#perm').addClass('hidden');
     if(list === 'layer'){
         table = document.getElementById("layerList");
         while(table.rows.length > 1) {
@@ -252,9 +270,10 @@ function updateList(list, refresh){
         while(table.rows.length > 1) {
             table.deleteRow(1);
         }
-        $("groupOrder").empty();
+        $("#groupOrder").empty();
+        $("#groupDeps").empty();
         retrieveData("platform", null);
-        retrieveData("platform", "groups", null);
+        retrieveData("superlayer", "platform", null);
     }
     else{
         table = document.getElementById("superlayerList");
@@ -263,22 +282,43 @@ function updateList(list, refresh){
         }
         $("#layerSuperLayer").empty();
         $("#groupOrder").empty();
+        $("#groupDeps").empty();
         retrieveData("superlayer", null);
-        retrieveData("superlayer", "groups", null);
+        retrieveData("platform", "superlayer", null);
         retrieveData("superlayer", "layers", null);
     }
-    
+
     if(refresh){
         setTimeout(function (){
                 document.getElementById('spinner').style.display = 'none';
                 sel();
                 $('#type').prop('disabled', false);
                 $('#add').prop('disabled', false);
+                tagPermissions("platform");
+                tagPermissions("superlayer");
+                tagPermissions("layer");
+                $('#perm').removeClass('hidden');
         }, 2000);
     }
 }
 
-function add(){
+function clearReference(){
+    referenceName = '';
+    referenceId = '';
+    referenceCode = '';
+    referenceOrder = '';
+}
+
+function add(option){
+
+    if(option !== 'modify'){
+        clearReference();
+        if(current === 'layer')
+            retrieveData(current, 'layers', false);
+        else
+            retrieveData(current, current, null);
+    }
+
     hideLists();
     $('#type').prop('disabled', true);
     $('#add').prop('disabled', true);
@@ -287,18 +327,19 @@ function add(){
         showForm('#layerForm');
         clearLayerForm();
     } else {
-        if(current === 'platform')
-            retrieveData("platforms", "group", null);
-        else
-            retrieveData("superlayers", "group", null);
-        showForm('#groupForm');
-        clearGroupForm();
+        if(usertype === 'developer'){
+            clearGroupForm(usertype);
+            showForm('#groupForm');
+        }
+        else{
+            showForm('#desForm');
+        }
     }
     request = 'add';
 }
 
 function cancel() {
-    clearGroupForm();
+    clearGroupForm(usertype);
     clearLayerForm();
     hideForm(getActiveForm());
     $('#type').prop('disabled', false);
@@ -310,7 +351,10 @@ function getActiveForm() {
     if(current === 'layer') {
         return $('#layerForm');
     } else {
-        return $('#groupForm');
+        if(usertype === 'developer')
+            return $('#groupForm');
+        else
+            return $('#desForm');
     }
 }
 
@@ -330,15 +374,26 @@ function sel() {
     }
 }
 
-function clearGroupForm() {
-    document.getElementById('groupCode').value = '';
-    document.getElementById('groupName').value = '';
+function clearGroupForm(type) {
+    if(type === 'developer'){
+        document.getElementById('groupCode').value = '';
+        document.getElementById('groupName').value = '';
+        document.getElementById('groupDeps').value = '';
+        $("#groupOrder").empty();
+    }
+    else{
+        document.getElementById('desCode').value = '';
+        document.getElementById('desName').value = '';
+        document.getElementById('desHeader').value = '';
+        document.getElementById('desIcon').value = '';
+    }
 }
 
 function clearLayerForm() {
     document.getElementById('layerName').value = '';
     document.getElementById('layerNext').innerHTML = '';
     document.getElementById('nextName').style.display = 'none';
+    $("#layerOrder").empty();
 }
 
 function hideLists() {
@@ -403,11 +458,13 @@ function setFields(data, form, type, superlayer){
                 if(data[i].suprlay === superlayer && data[i].name !== referenceName)
                     $("#layerOrder").append($("<option></option>").val(data[i].order).html(data[i].name.capitalize()));
         }
-        if(form === "group")
-            if(data[i].name !== referenceName)
-                $("#groupOrder").append($("<option></option>").val(data[i].order).html(data[i].code + " - " + data[i].name.capitalize()));
-        if(form === "groups")
-            $("#groupDeps").append($("<option></option>").val(data[i].code).html(data[i].code + " - " + data[i].name.capitalize()));
+        else{
+            if(data[i].name !== referenceName){
+                if(form === type)
+                    $("#groupOrder").append($("<option></option>").val(data[i].order).html(data[i].code + " - " + data[i].name.capitalize()));
+                $("#groupDeps").append($("<option></option>").val(data[i].code).html(data[i].code + " - " + data[i].name.capitalize()));
+            }
+        }
     }
 }
 
@@ -423,10 +480,10 @@ function fillTable(repo, data){
             else
                 $('#layerList').append("<tr><td>" + data[i].name.capitalize() + "</td><td>" + data[i].lang.capitalize() + "</td><td>" + "</td><td>" + data[i].order + "</td><td>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"layer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"layer"' + ")'>Delete</button>" + "</td></tr>");
         }
-        //else if(repo === "platform")
-            //$('#platformList').append("<tr><th>" + data[i].code + "</th><th>" + data[i].name.capitalize() + "</th><th>" + data[i].order + "</th><th>" + data[i].deps + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"platform"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='platform: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"platform"' + ")'>Delete</button>" + "</th></tr>");
-        //else
-            //$('#superlayerList').append("<tr><th>" + data[i].code + "</th><th>" + data[i].name.capitalize() + "</th><th>" + data[i].order + "</th><th>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"superlayer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='superlayer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"superlayer"' + ")'>Delete</button>" + "</th></tr>");
+        else if(repo === "platform")
+            $('#platformList').append("<tr><td>" + data[i].code + "</td><td>" + data[i].name.capitalize() + "</td><td>" + data[i].order + "</td><td>" + data[i].deps + "</td><td>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"platform"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='platform: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"platform"' + ")'>Delete</button>" + "</td></tr>");
+        else
+            $('#superlayerList').append("<tr><td>" + data[i].code + "</td><td>" + data[i].name.capitalize() + "</td><td>" + data[i].order + "</td><td>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"superlayer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='superlayer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"superlayer"' + ")'>Delete</button>" + "</td></tr>");
     }
 }
 
@@ -441,15 +498,71 @@ function getRoute(form, route, id){
         tail = "/v1/repo/usrs/" + user_data._id + "/" + form;
     else if(route === 'update' || route === 'delete')
         tail = "/v1/repo/usrs/" + user_data._id + "/" + form + "/" + id;
+    else if(form === 'svg')
+        tail = "/v1/svg/upload/" + route + "/" + id;
+    else
+        tail = "/v1/user/";
 
     param = {
         env : environment,
         axs_key : axs_key
     };
 
-    url = SERVER.replace('http://', '') + tail;
-    url = 'http://' + self.buildURL(url, param);
+    url = window.helper.SERVER.replace('http://', '') + tail;
+    url = 'http://' + window.helper.buildURL(url, param);
     return url;
+}
+
+/**
+ * Sends to the server the headers and logos.
+ * Uses a custom AJAX call. BEWARE.
+ */
+function send() {
+    var worked = false;
+
+    var code = document.getElementById('desCode').value;
+    if (/^[A-Z]{3}$/.exec(code) === null) {
+        // alert('Erroneous code');
+        return false; // Stop doing this
+    }
+
+    var headerData = new FormData();
+    var iconData = new FormData();
+
+    var header = document.getElementById('desHeader').files[0];
+    var icon = document.getElementById('desIcon').files[0];
+
+    if (header === undefined || icon === undefined) {
+        window.alert("You must select the Header and Icon images.");
+        return false;
+    }
+
+    headerData.append('svg', header, header.name);
+    headerData.append('type', 'headers');
+    headerData.append('code', code);
+
+    iconData.append('svg', icon, icon.name);
+    iconData.append('type', 'group');
+    iconData.append('code', code);
+
+    var headerReq = new XMLHttpRequest();
+    var iconReq = new XMLHttpRequest();
+
+    // synchronous calls
+    headerReq.open('POST', getRoute('svg', 'headers', code), false);
+    iconReq.open('POST', getRoute('svg', 'group', code), false);
+
+    headerReq.onload = function () {
+        worked = (headerReq.status === 200);
+    };
+    iconReq.onload = function () {
+        worked = worked && (iconReq.status === 200);
+    };
+
+    headerReq.send(headerData);
+    iconReq.send(iconReq);
+
+    return worked;
 }
 
 function verify(form, request){
@@ -462,12 +575,13 @@ function verify(form, request){
         list,
         repo,
         elements,
-        nameChange = false;
-        var proceed = true;
+        nameChange = false,
+        fileCheck = 200,
+        proceed = true;
 
 
     if(request === "add"){
-        if(form === "layer"){
+        if(form === "layer"){   //Add layer
 
             list = document.getElementById('layerList');
             elements = list.getElementsByTagName('td');
@@ -481,11 +595,12 @@ function verify(form, request){
 
             if(proceed){
                 url = getRoute("layers", "insert");
-                sendRequest(url, 'POST', data);
+                sendRequest(url, 'POST', data, form);
                 updateList('layer', false);
+                clearLayerForm();
             }
         }
-        else{
+        else{                   //Add group
 
             if(form === 'platform'){
                 list = document.getElementById('platformList');
@@ -517,15 +632,20 @@ function verify(form, request){
                 }
             }
 
-            if(proceed){
+            if(usertype === "designer")
+                fileCheck = send();
+
+            if(proceed && fileCheck !== false){
                 url = getRoute(repo, "insert");
-                sendRequest(url, 'POST', data);
+                sendRequest(url, 'POST', data, form);
                 updateList(form, false);
+                clearGroupForm(usertype);
+                retrieveData(current, current, null);
             }
         }
     }
     else{
-        if(form === "layer"){
+        if(form === "layer"){ //Modify layer
 
             list = document.getElementById('layerList');
             elements = list.getElementsByTagName('td');
@@ -542,7 +662,7 @@ function verify(form, request){
                     data.order--;
 
                 url = getRoute("layers", "update", referenceId);
-                sendRequest(url, 'PUT', data);
+                sendRequest(url, 'PUT', data, form);
 
                 cancel();
 
@@ -550,7 +670,7 @@ function verify(form, request){
                 $('#add').prop('disabled', true);
                 hideLists();
                 document.getElementById('spinner').style.display = 'block';
-            
+
                 setTimeout(function (){
                     updateList(form, true);
                 }, 3000);
@@ -559,15 +679,15 @@ function verify(form, request){
                 clearLayerForm();
             }
         }
-        else{
+        else{                   //Modify group
 
             if(form === 'platform'){
                 list = document.getElementById('platformList');
-                url = getRoute("platfrms","insert");
+                url = getRoute("platfrms", "update", referenceId);
             }
             else{
                 list = document.getElementById('superlayerList');
-                url = getRoute("suprlays","insert");
+                url = getRoute("suprlays", "update", referenceId);
             }
             elements = list.getElementsByTagName('td');
 
@@ -581,7 +701,7 @@ function verify(form, request){
             }
 
             for(i = 0, l = elements.length; i < l; i+=j){
-                if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){ 
+                if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){
                     window.alert('Code in use');
                     return false;
                 }
@@ -591,28 +711,32 @@ function verify(form, request){
                 }
             }
 
+            if(usertype === "designer")
+                fileCheck = send();
+
             if(proceed){
                 url = getRoute(repo, "insert");
-                sendRequest(url, 'PUT', data);
+                sendRequest(url, 'PUT', data, form);
 
                 cancel();
                 $('#type').prop('disabled', true);
                 $('#add').prop('disabled', true);
                 hideLists();
                 document.getElementById('spinner').style.display = 'block';
-            
+
                 setTimeout(function (){
                     updateList(form, true);
                 }, 3000);
-                
-                clearGroupForm();
+
+                clearGroupForm(usertype);
+                retrieveData(current, current, null);
                 clearLayerForm();
             }
         }
     }
 }
 
-function sendRequest(url, method, data){
+function sendRequest(url, method, data, type){
 
     if(method !== 'DELETE'){
         $.ajax({
@@ -622,9 +746,13 @@ function sendRequest(url, method, data){
         }).success (
             function (res) {
                 if(method === 'POST')
-                    window.alert('New layer created successfully.');
+                    window.alert('New ' + type + ' created successfully.');
                 else
-                    window.alert('Layer information has been modified.');
+                    window.alert(type + ' information has been modified.');
+            }
+        ).error (
+            function (xhr, status, error) {
+                window.alert(xhr.responseText);
             }
         );
     }
@@ -635,61 +763,14 @@ function sendRequest(url, method, data){
             method: "DELETE"
         }).success (
             function (res) {
-                window.alert('The layer has been completely removed.');
+                window.alert('The ' + type + ' has been completely removed.');
+            }
+        ).error (
+            function (xhr, status, error) {
+                window.alert(xhr.responseText);
             }
         );
     }
-}
-    /**
-     * Build and URL based on the address, wildcards and GET parameters
-     * @param   {string} base   The URL address
-     * @param   {Object} params The key=value pairs of the GET parameters and wildcards
-     * @returns {string} Parsed and replaced URL
-     */
-function buildURL(base, params) {
-
-        var result = base;
-        var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
-
-        var param = null;
-        
-        if(params == null) params = {};
-        
-        params.env = environment;
-
-        //Search for wildcards parameters
-        do {
-
-            param = result.match(':[a-z0-9]+');
-
-            if(param !== null) {
-                var paramName = param[0].replace(':', '');
-
-                if(params.hasOwnProperty(paramName) && params[paramName] !== undefined) {
-
-                    result = result.replace(param, params[paramName]);
-                    delete(params[paramName]);
-
-                }
-            }
-        } while(param !== null);
-
-        //Process the GET parameters
-        for(var key in params) {
-            if(params.hasOwnProperty(key) && params[key] !== '') {
-
-                if(areParams === false)
-                    result += "?";
-                else
-                    result += "&";
-
-                result += key + ((params[key] !== undefined) ? ("=" + params[key]) : (''));
-
-                areParams = true;
-            }
-        }
-
-        return result;
 }
 
 function getData(form, request) {
@@ -705,7 +786,7 @@ function getData(form, request) {
         if(order === -1)
             order = 0;
         var superlayer;
-        
+
         if(document.getElementById('layerSuperLayer').value === 'false')
             superlayer = false;
         else
@@ -726,7 +807,7 @@ function getData(form, request) {
                 lang:document.getElementById('layerLang').value,
                 suprlay:superlayer,
                 order:order
-            };   
+            };
         }
     }
     else{
@@ -738,7 +819,7 @@ function getData(form, request) {
         if(order === -1)
             order = 0;
 
-        if(form === 'platform') 
+        if(form === 'platform')
             url = getRoute("platfrms", "retrieve");
         else
             url = getRoute("suprlays", "retrieve");
@@ -780,26 +861,79 @@ function getData(form, request) {
 }
 
 function getUserID() {
-        var _usr_id = {
-                __v : getCookie("v"),
-                _id : getCookie("id"),
-                avatar_url : getCookie("avatar"),
-                axs_key : getCookie("key"),
-                email : getCookie("email"),
-                github_tkn : getCookie("github"),
-                name : getCookie("name"),
-                upd_at : getCookie("update"),
-                usrnm : getCookie("usrnm")
-        };
-        return _usr_id;
+    var _usr_id = {
+         __v : getCookie("v"),
+        _id : '56f19f0a301492726c80881a',
+        avatar_url : getCookie("avatar"),
+        axs_key : '570e44e3019d61dc4de9f32f',
+        email : getCookie("email"),
+        github_tkn : getCookie("github"),
+        name : getCookie("name"),
+        upd_at : getCookie("update"),
+        usrnm : 'isatab'
+    };
+    return _usr_id;
+}
+
+function checkPermissions() {
+    var url = getRoute(null, 'perm');
+
+    $.ajax({
+            url: url,
+            method: "POST",
+            data: {
+                'usrnm': user_data.usrnm
+            }
+    }).success (
+        function (res) {
+            perm = parseInt(res.perm);
+            return perm;
+        }
+    );
+}
+
+function tagPermissions(structure) {
+    var digit;
+
+    if(structure === "platform"){
+        digit = Math.floor((perm % 11000) / 100);
+        setTag(digit, structure);
     }
+    else if(structure === "superlayer"){
+        digit = Math.floor((perm % 11100) / 10);
+        setTag(digit, structure);
+    }
+    else if(structure === "layer"){
+        digit = Math.floor((perm % 11110));
+        setTag(digit, structure);
+    }
+}
+
+function setTag(digit, structure) {
+    if(digit % 2 === 1)
+        document.getElementById("tag-"+structure+"-del").className += "label label-success";
+    else
+        document.getElementById("tag-"+structure+"-del").className += "label label-danger";
+
+    digit = Math.floor(digit / 2);
+
+    if(digit % 2 === 1)
+        document.getElementById("tag-"+structure+"-mod").className += "label label-success";
+    else
+        document.getElementById("tag-"+structure+"-mod").className += "label label-danger";
+
+    if(Math.floor(digit / 2) === 1)
+        document.getElementById("tag-"+structure+"-add").className += "label label-success";
+    else
+        document.getElementById("tag-"+structure+"-add").className += "label label-danger";
+}
 
 function getCookie(name) {
         var cname = name + "=";
         var ca = document.cookie.split(';');
         for(var i=0; i<ca.length; i++) {
             var c = ca[i];
-            while(c.charAt(0) === ' ') 
+            while(c.charAt(0) === ' ')
                 c = c.substring(1);
             if(c.indexOf(cname) === 0)
                 return c.substring(cname.length, c.length);
