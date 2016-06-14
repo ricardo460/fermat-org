@@ -173,9 +173,9 @@ To run the project, follow these steps:
  	 gulp nodemon-prod
 	```
 
-The project should be running. The development server on port 8002, the test server on port 8001 and the production server on port 8000. The proxy server is used to redirect requests to the servers as directed by the variable env (develoment, testing, prod) that is passed in the URL of each request.
+The project should be running. The development server on port 8002, the test server on port 8001 and the production server on port 8000. The proxy server is used to redirect requests to the servers as directed by the variable env (development, testing, prod) that is passed in the URL of each request.
 
-For example if you pass env=develoment in the url of the request; then the request is sent to the development server.
+For example if you pass env=development in the url of the request; then the request is sent to the development server.
 
 	- env=testing Request sent to the test server.
 
@@ -200,7 +200,7 @@ sudo apt-get install apache2
 * Publish the application fermat.org on your apache server.
 	* Copy the folder platform-visualization in /var/www/html.
 
-* Finally open your Web browser and type http://localhost/platform-visualization/index.html
+* Finally open your web browser and type http://localhost/platform-visualization/index.html
 	* if the page does not open and you get this error in the web console THREE.WebGLRenderer: Error creating WebGL context. You must update your browser.
 	* We recommend using the google chrome browser.
 
@@ -227,7 +227,7 @@ The project is structured as follows:
 	* **proxy.js [file]** creates proxy servers and starts http server to redirect requests according to version.
 	* **starter.sh [file]** starts the server.
 	* **test.js [file]** tests are implemented here to generate documentation that is in the repository.
-	* **update.js [file]** you download all the repository and updates the database.
+	* **update.js [file]** you download all the repository and update the database.
 
 * **p2p-network-visualization** which has all the logic that is used to plot the Fermat p2p network that includes servers, clients, each client wallets etc.
 
