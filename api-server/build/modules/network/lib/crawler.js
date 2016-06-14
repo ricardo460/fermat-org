@@ -35,7 +35,7 @@ var doLogin = function(callback) {
                     'Authorization': 'Bearer ' + body.authToken
                 }
             });
-            //winston.log('info', 'AuthToken: %s', body.authToken);
+            winston.log('info', 'AuthToken: %s', body.authToken);
             return callback(null, authRequest);
         }
     });
