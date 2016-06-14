@@ -906,7 +906,6 @@ function tagPermissions(structure) {
 }
 
 function setTag(digit, structure) {
-    console.log(digit+structure);
     if(digit % 2 === 1)
         document.getElementById("tag-"+structure+"-del").className += "label label-success";
     else

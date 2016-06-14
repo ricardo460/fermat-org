@@ -68,8 +68,6 @@ function getUsers(){
 function verifyUser(user){
     var url = getRoute('perm');
 
-    console.log(url);
-
     $.ajax({
         url: url,
         method: "POST",
@@ -78,10 +76,8 @@ function verifyUser(user){
         }
     }).success (
         function (res) {
-            console.log(user + " " + res.perm + res);
             if(comparePermissions(res.perm))
                 fillTable(res);
-
         }
     );
 }
@@ -183,32 +179,41 @@ function modifyPermissions(element){
 function enable(digit, structure, compareDigit) {
     if(digit % 2 === 1){
         document.getElementById(structure+"-del").checked = true;
-        document.getElementById(structure+"-del").disabled = true;
+        if(perm !== 77777)
+            document.getElementById(structure+"-del").disabled = true;
     }
     else{
-        if(compareDigit % 2 === 0)
-            document.getElementById(structure+"-del").disabled = true;
+        if(compareDigit % 2 === 0){
+            if(perm !== 77777)
+                document.getElementById(structure+"-del").disabled = true;
+        }
     }
 
     digit = Math.floor(digit / 2);
 
     if(digit % 2 === 1){
         document.getElementById(structure+"-mod").checked = true;
-        document.getElementById(structure+"-mod").disabled = true;
+        if(perm !== 77777)
+            document.getElementById(structure+"-mod").disabled = true;
     }
     else{
         compareDigit = Math.floor(compareDigit / 2);
-        if(compareDigit % 2 === 0)
-            document.getElementById(structure+"-mod").disabled = true;
+        if(compareDigit % 2 === 0){
+            if(perm !== 77777)
+                document.getElementById(structure+"-mod").disabled = true;
+        }
     }
 
     if(Math.floor(digit / 2) === 1){
         document.getElementById(structure+"-add").checked = true;
-        document.getElementById(structure+"-add").disabled = true;
+        if(perm !== 77777)
+            document.getElementById(structure+"-add").disabled = true;
     }
     else{
-        if(Math.floor(compareDigit / 2) === 0)
+        if(Math.floor(compareDigit / 2) === 0){
+            if(perm !== 77777)
             document.getElementById(structure+"-add").disabled = true;
+        }
     }
 }
 
@@ -257,9 +262,6 @@ function verify(){
         usr_id: user_data._id
     };
 
-    console.log(data);
-    console.log(url);
-
     $.ajax({
             url: url,
             method: "POST",
@@ -290,7 +292,7 @@ function getRoute(route, user){
     if(route === 'change')
         tail = "/v1/user/" + user + "/changePerms";
     if(route === 'user')
-        tail = "/v1/user"
+        tail = "/v1/user";
 
     param = {
         env : environment,
