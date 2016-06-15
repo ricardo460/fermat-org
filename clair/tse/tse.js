@@ -84,9 +84,9 @@ function init() {
 }
 
 function deleteStructure(element, type){
-    
+
     if(window.confirm("Are you sure you want to remove the " + element.name + "? (Removing this layer will delete all of it's associated components)") === true){
-        
+
         var url;
 
         switch(type) {
@@ -560,7 +560,7 @@ function send() {
     };
 
     headerReq.send(headerData);
-    iconReq.send(iconReq);
+    iconReq.send(iconData);
 
     return worked;
 }
@@ -774,7 +774,7 @@ function sendRequest(url, method, data, type){
 }
 
 function getData(form, request) {
-    
+
     var order, data, url;
 
     if(form === 'layer'){
@@ -863,14 +863,14 @@ function getData(form, request) {
 function getUserID() {
     var _usr_id = {
          __v : getCookie("v"),
-        _id : '56f19f0a301492726c80881a',
+        _id : '57043b72b11754550799cfc1',
         avatar_url : getCookie("avatar"),
-        axs_key : '570e44e3019d61dc4de9f32f',
+        axs_key : '57043b72b11754550799cfc8',
         email : getCookie("email"),
         github_tkn : getCookie("github"),
         name : getCookie("name"),
         upd_at : getCookie("update"),
-        usrnm : 'isatab'
+        usrnm : 'simonorono'
     };
     return _usr_id;
 }
