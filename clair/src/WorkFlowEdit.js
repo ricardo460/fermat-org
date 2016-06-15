@@ -20,11 +20,11 @@ function WorkFlowEdit() {
 
     this.get = function(){
         return EDIT_STEPS;
-    }
+    };
 
     this.getp = function(){
         return PREVIEW_STEPS;
-    }
+    };
 
     this.addButton = function(_id){
 
@@ -233,7 +233,7 @@ function WorkFlowEdit() {
 
             flow = window.fieldsEdit.getData();
 
-            classFlow = new Workflow(flow);
+            classFlow = new window.Workflow(flow);
 
             createElement();
 
@@ -293,7 +293,7 @@ function WorkFlowEdit() {
                 }
             }
 
-            classFlow = new Workflow(flow);
+            classFlow = new window.Workflow(flow);
 
             createElement();
 
@@ -345,7 +345,7 @@ function WorkFlowEdit() {
         }
     }
 
-    function resetSteps(steps){
+   /* function resetSteps(steps){
 
         var removeStep = [],
             i = 0;
@@ -417,7 +417,7 @@ function WorkFlowEdit() {
 
         return steps;
     }
-
+    */
     function showBrowser(state){
 
         var browsers = window.browserManager.objects.mesh;
@@ -548,7 +548,7 @@ function WorkFlowEdit() {
 
     function addWorkFlow(flow, duration){
 
-        var newFlow = new Workflow(flow);
+        var newFlow = new window.Workflow(flow);
 
         var _target = new THREE.Vector3();
 
@@ -754,7 +754,7 @@ function WorkFlowEdit() {
             function fillSteps(newSteps, oldSteps){ 
 
                 var difference,
-                    i;   
+                    i, l;   
 
                 if(newSteps.length > oldSteps.length){
 
@@ -781,10 +781,10 @@ function WorkFlowEdit() {
                             }
                             else if(newSteps[i].next.length !== 0){
 
-                                for(var t = 0; t < newSteps[i].next.length; t++){
+                                for(l = 0; l < newSteps[i].next.length; l++){
 
-                                    if(newSteps[i].next[t].id !== oldSteps[i].next[t].id ||
-                                       newSteps[i].next[t].type !== oldSteps[i].next[t].type){
+                                    if(newSteps[i].next[l].id !== oldSteps[i].next[l].id ||
+                                       newSteps[i].next[l].type !== oldSteps[i].next[l].type){
                                         newSteps[i]._id = oldSteps[i]._id;
                                         config.update.steps.push(newSteps[i]);
                                     }
@@ -811,10 +811,10 @@ function WorkFlowEdit() {
                         }
                         else if(newSteps[i].next.length !== 0){
 
-                            for(var t = 0; t < newSteps[i].next.length; t++){
+                            for(l = 0; l < newSteps[i].next.length; l++){
 
-                                if(newSteps[i].next[t].id !== oldSteps[i].next[t].id ||
-                                   newSteps[i].next[t].type !== oldSteps[i].next[t].type){
+                                if(newSteps[i].next[l].id !== oldSteps[i].next[l].id ||
+                                   newSteps[i].next[l].type !== oldSteps[i].next[l].type){
                                     newSteps[i]._id = oldSteps[i]._id;
                                     config.update.steps.push(newSteps[i]);
                                 }
@@ -848,10 +848,10 @@ function WorkFlowEdit() {
                             }
                             else if(newSteps[i].next.length !== 0){
 
-                                for(var t = 0; t < newSteps[i].next.length; t++){
+                                for(l = 0; l < newSteps[i].next.length; l++){
 
-                                    if(newSteps[i].next[t].id !== oldSteps[i].next[t].id ||
-                                       newSteps[i].next[t].type !== oldSteps[i].next[t].type){
+                                    if(newSteps[i].next[l].id !== oldSteps[i].next[l].id ||
+                                       newSteps[i].next[l].type !== oldSteps[i].next[l].type){
                                         newSteps[i]._id = oldSteps[i]._id;
                                         config.update.steps.push(newSteps[i]);
                                     }
@@ -1069,11 +1069,7 @@ function WorkFlowEdit() {
             document.getElementById("workflow-header-title").value = flow.name;
         
         if(flow.desc !== undefined)
-            document.getElementById("modal-desc-textarea").value = flow.desc;
-
-
-        if(steps.length > 0)
-            document.getElementById("modal-steps-div").changeStep(0);   
+            document.getElementById("modal-desc-textarea").value = flow.desc; 
     }
 
     function animate(mesh, target, duration, callback){
@@ -1486,6 +1482,8 @@ function WorkFlowEdit() {
             var canvas = document.createElement('canvas');
 
             var img = new Image();
+            
+            var texture = null;
 
             canvas.height = TILEHEIGHT;
             canvas.width = TILEHEIGHT;
@@ -1581,7 +1579,7 @@ function WorkFlowEdit() {
 
             for(i = 0; i < PREVIEW_STEPS.length; i++){
 
-                var order = null, title = null, platfrm = null, layer = null, name = null,
+                var order = null, title = null, platform = null, layer = null, name = null,
                     IDtile = null, parent = null;
 
                 order = PREVIEW_STEPS[i].id + 1;
@@ -1623,7 +1621,7 @@ function WorkFlowEdit() {
             }
             return null;
         }
-    }
+    };
 
     function changeMode(mode){ 
 
@@ -1755,13 +1753,15 @@ function WorkFlowEdit() {
 
                         var moveAction = function(mesh, position){ 
 
+                            var type;
+
                             if(!mesh.userData.type)
                                 type = 'tile';
                             else if(mesh.userData.type === 'step'){
                                 mesh.position.copy(position);
                                 focus.mesh.position.copy(position);
                             }
-                        } 
+                        }; 
 
                         window.dragManager.functions.MOVE.push(moveAction);
                     };             
