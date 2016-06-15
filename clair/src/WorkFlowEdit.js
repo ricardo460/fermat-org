@@ -22,6 +22,10 @@ function WorkFlowEdit() {
         return EDIT_STEPS;
     }
 
+    this.getp = function(){
+        return PREVIEW_STEPS;
+    }
+
     this.addButton = function(_id){
 
         var id = null,
@@ -135,7 +139,7 @@ function WorkFlowEdit() {
 
         var flow = window.fieldsEdit.getData();
 
-        flow.steps = self.transformData('PREVIEW');
+        flow.steps = PREVIEW_STEPS;
 
         classFlow.deleteStep();
 
@@ -221,6 +225,8 @@ function WorkFlowEdit() {
         var flow = null,
             mesh = null;
 
+        createMeshFocus();
+
         if(window.fieldsEdit.actions.type === "insert"){
 
             window.fieldsEdit.createFieldWorkFlowEdit();
@@ -262,8 +268,6 @@ function WorkFlowEdit() {
                 window.removeEventListener('keydown', newOnKeyDown, false);
 
                 window.addEventListener('keydown', window.camera.onKeyDown, false);
-
-
             };
         }
         else if(window.fieldsEdit.actions.type === "update"){
@@ -275,6 +279,19 @@ function WorkFlowEdit() {
             flow = workFlow.flow;
 
             flow = window.helper.clone(flow);
+
+            var steps = flow.steps;
+
+            for(var i = 0; i < steps.length; i++){
+
+                if(steps[i].element !== -1){
+
+                    var data = window.helper.getSpecificTile(steps[i].element).data;
+
+                    steps[i].layer = data.layer;
+                    steps[i].name = data.name;
+                }
+            }
 
             classFlow = new Workflow(flow);
 
@@ -326,6 +343,79 @@ function WorkFlowEdit() {
             });
             
         }
+    }
+
+    function resetSteps(steps){
+
+        var removeStep = [],
+            i = 0;
+
+        for(i = 0; i < steps.length; i++){
+
+            if(steps[i].element !== -1){
+
+                var data = window.helper.getSpecificTile(steps[i].element).data;
+
+                steps[i].layer = data.layer;
+                steps[i].name = data.name;
+            }
+            else{
+                removeStep.push(steps[i]);
+            }
+        }   
+
+        for(i = 0; i < steps.length; i++){
+
+            if(steps[i].element === -1){
+
+                var data = window.helper.getSpecificTile(steps[i].element).data;
+
+                steps[i].layer = data.layer;
+                steps[i].name = data.name;
+            }
+        }
+
+        function orderPositionStep(array){
+
+            var array = EDIT_STEPS;
+
+            for(var i = 0; i < array.length; i++) {
+
+                for(var t = 0; t < array.length - i; t++) {
+
+                    if(array[t + 1]){ 
+
+                        if (array[t].order[0] > array[t + 1].order[0]) {
+
+                            var aux;
+
+                            aux = array[t];
+
+                            array[t] = array[t + 1];
+
+                            array[t + 1] = aux;
+                        }
+                    }
+                }
+            }
+
+            for(var k = 0; k < array.length; k++){
+
+                var newId = k + 1;
+
+                if(array[k].order[0] !== newId){
+
+                    var mesh = array[k].mesh;
+
+                    array[k].order[0] = newId;
+                    mesh.userData.id[0] = newId;
+
+                    mesh.material.map = changeTextureId(newId);
+                }
+            }
+        }     
+
+        return steps;
     }
 
     function showBrowser(state){
@@ -939,9 +1029,9 @@ function WorkFlowEdit() {
 
                 for(i = 0; i < window.TABLE[platform].layers[layer].objects.length; i++){
                     
-                    tile = window.TABLE[platform].layers[layer].objects[i].data; 
+                    tile = window.TABLE[platform].layers[layer].objects[i]; 
                     
-                    if(tile.name.toLowerCase() === name.toLowerCase())
+                    if(tile.data.name.toLowerCase() === name.toLowerCase())
                         return tile.id;
                 }
             }
@@ -970,23 +1060,6 @@ function WorkFlowEdit() {
 
         window.fieldsEdit.actualFlow = window.helper.clone(flow);
 
-        var steps = flow.steps;
-
-        for(var i = 0; i < steps.length; i++){
-
-            if(steps[i].element !== -1){
-
-                var data = window.helper.getSpecificTile(steps[i].element).data;
-
-                steps[i].layer = data.layer;
-                steps[i].name = data.name;
-            }
-        }
-
-        var list = document.getElementById("step-List");
-
-        list.valueJson = steps.slice();
-
         window.fieldsEdit.actualFlow.id = id;
 
         if(flow.platfrm !== undefined)
@@ -998,7 +1071,6 @@ function WorkFlowEdit() {
         if(flow.desc !== undefined)
             document.getElementById("modal-desc-textarea").value = flow.desc;
 
-        list.update();
 
         if(steps.length > 0)
             document.getElementById("modal-steps-div").changeStep(0);   
@@ -1018,12 +1090,12 @@ function WorkFlowEdit() {
 
         new TWEEN.Tween(mesh.position)
             .to({x : x, y : y, z : z}, _duration)
-            .easing(TWEEN.Easing.Cubic.Out)
+            .easing(TWEEN.Easing.Exponential.InOut)
             .start();
 
         new TWEEN.Tween(mesh.rotation)
             .to({x: rx, y: ry, z: rz}, _duration + 500)
-            .easing(TWEEN.Easing.Cubic.Out)
+            .easing(TWEEN.Easing.Exponential.InOut)
             .onComplete(function () {
                     if(typeof(callback) === 'function')
                         callback();   
@@ -1038,7 +1110,7 @@ function WorkFlowEdit() {
 
         var newArray = [id];
 
-        var tile = window.helper.getSpecificTile(IDtile).mesh;
+        var tile = window.helper.getSpecificTile(IDtile).target.show;
 
         var target = window.helper.fillTarget(tile.position.x - difference, tile.position.y, tile.position.z + 1, 'table');
 
@@ -1135,7 +1207,7 @@ function WorkFlowEdit() {
     function calculatePositionsSteps(idTile){
 
         var countSteps = [],
-            rootY = window.helper.getSpecificTile(idTile).mesh.position.y,
+            rootY = window.helper.getSpecificTile(idTile).target.show.position.y,
             i,
             mesh = null,
             target = null;
@@ -1154,7 +1226,10 @@ function WorkFlowEdit() {
 
             target.position.y = rootY;
 
-            animate(countSteps[0].mesh, countSteps[0].target.show, 1000, action);
+            if(actualMode === 'edit-path')
+                animate(countSteps[0].mesh, countSteps[0].target.show, 500, action);
+            else
+                countSteps[0].mesh.position.copy(countSteps[0].target.show.position);
         }
         else if(countSteps.length === 2){ 
 
@@ -1165,12 +1240,22 @@ function WorkFlowEdit() {
                 mesh = countSteps[i].mesh;
 
                 if(i === 0){
+
                     target.position.y = rootY + (TILEHEIGHT / 4);
-                    animate(mesh, target, 1000);
+
+                    if(actualMode === 'edit-path')
+                        animate(mesh, target, 1000);
+                    else
+                        mesh.position.copy(target.position);
                 }
                 else{
+
                     target.position.y = rootY - (TILEHEIGHT / 4);
-                    animate(mesh, target, 1000, action);
+
+                    if(actualMode === 'edit-path')
+                        animate(mesh, target, 1000, action);
+                    else
+                        mesh.position.copy(target.position);
                 }
             }
         }
@@ -1178,8 +1263,8 @@ function WorkFlowEdit() {
 
             var difference = (TILEHEIGHT / 6) / 2,
                 topY = rootY + ((TILEHEIGHT / 2) - difference),
-                countSpaceSteps = countSteps.length - 1.
-                distanceSteps = (TILEHEIGHT - difference) / countSpaceSteps;
+                countSpaceSteps = countSteps.length - 1,
+                distanceSteps = (TILEHEIGHT - difference - ((TILEHEIGHT / 6) / 2)) / countSpaceSteps;
 
             for(i = 0; i < countSteps.length; i++) {
 
@@ -1189,10 +1274,22 @@ function WorkFlowEdit() {
 
                 target.position.y = topY;
 
-                if(i !== countSpaceSteps)
-                    animate(mesh, target, 1000);
-                else
-                    animate(mesh, target, 1000, action);
+                if(i !== countSpaceSteps){
+
+                    if(actualMode === 'edit-path')
+                        animate(mesh, target, 1000);
+                    else
+                        mesh.position.copy(target.position);
+                }
+                else{
+
+                    target.position.y = topY;
+
+                    if(actualMode === 'edit-path')
+                        animate(mesh, target, 1000, action);
+                    else
+                        mesh.position.copy(target.position);
+                }
 
                 topY = topY - distanceSteps; 
             }
@@ -1245,29 +1342,32 @@ function WorkFlowEdit() {
 
     function updateTileIgnoredAdd(){
 
-        var id = focus.data.userData.id - 1,
-            ignoredTile = focus.data.userData.tile,
-            mesh = focus.mesh;
+        if(actualMode === "edit-path"){ 
 
-        window.dragManager.objects = [];
+            var id = focus.data.userData.id - 1,
+                ignoredTile = focus.data.userData.tile,
+                mesh = focus.mesh;
 
-        for(var i = 0; i < EDIT_STEPS.length; i++){
+            window.dragManager.objects = [];
 
-            if(i === id)
-                mesh.position.copy(EDIT_STEPS[i].mesh.position);
-            
-            window.dragManager.objects.push(EDIT_STEPS[i].mesh); 
-            
-        }
+            for(var i = 0; i < EDIT_STEPS.length; i++){
 
-        for(var t = 0; t < window.tilesQtty.length; t++){
+                if(i === id)
+                    mesh.position.copy(EDIT_STEPS[i].mesh.position);
+                
+                window.dragManager.objects.push(EDIT_STEPS[i].mesh); 
+                
+            }
 
-            if(window.tilesQtty[t] !== ignoredTile){
+            for(var t = 0; t < window.tilesQtty.length; t++){
 
-                var tile = window.helper.getSpecificTile(window.tilesQtty[t]).mesh;
+                if(window.tilesQtty[t] !== ignoredTile){
 
-                window.dragManager.objects.push(tile);
+                    var tile = window.helper.getSpecificTile(window.tilesQtty[t]).mesh;
 
+                    window.dragManager.objects.push(tile);
+
+                }
             }
         }
     }
@@ -1484,7 +1584,7 @@ function WorkFlowEdit() {
                 var order = null, title = null, platfrm = null, layer = null, name = null,
                     IDtile = null, parent = null;
 
-                order = PREVIEW_STEPS[i].id;
+                order = PREVIEW_STEPS[i].id + 1;
 
                 title = PREVIEW_STEPS[i].title;
 
@@ -1496,70 +1596,15 @@ function WorkFlowEdit() {
 
                 IDtile = getIdSpecificTile(name, platform, layer);
 
-                parent = searchParent(order);
+                parent = searchParent(order - 1);
+
+                if(typeof parent === 'number')
+                    parent = parent + 1;
 
                 var mesh = addIdStep(order, IDtile, parent);
 
                 focus.data = mesh;
             }
-
-            /*
-                id : i,
-                title : "prueba",
-                desc : "test data",
-                type : "start",
-                next : next,
-                name : tile.name,
-                layer : tile.layer,
-                platfrm : platfrm
-
-                "steps": [
-                {
-                    "id": 0,
-                    "title": "select broker and submit request",
-                    "desc": "the customer selects a broker from the list and submits the request to connect to him.",
-                    "type": "start",
-                    "next": [
-                        {
-                            "id": "1",
-                            "type": "direct call"
-                        }
-                    ],
-                    "name": "crypto broker community",
-                    "layer": "sub app",
-                    "platfrm": "CBP"
-                },
-                {
-                    "id": 1,
-                    "title": "route request to network service",
-                    "desc": "the module routes this request to the network service to reach the selected broker.",
-                    "type": "activity",
-                    "next": [
-                        {
-                            "id": "2",
-                            "type": "direct call"
-                        }
-                    ],
-                    "name": "crypto broker community",
-                    "layer": "sub app module",
-                    "platfrm": "CBP"
-                },
-                {
-                    "id": 2,
-                    "title": "call the broker to deliver the request",
-                    "desc": "the network service places a call to the broker and then it delivers the request via the fermat network.",
-                    "type": "activity",
-                    "next": [
-                        {
-                            "id": "1",
-                            "type": "direct call"
-                        }
-                    ],
-                    "name": "crypto broker",
-                    "layer": "actor network service",
-                    "platfrm": "CBP"
-                }]
-            */
         }
 
         function searchParent(id){
@@ -1573,13 +1618,11 @@ function WorkFlowEdit() {
                 for(l = 0; l < next.length; l++){
 
                     if(next[l].id === id)    
-                        return PREVIEW_STEPS[i].order;
+                        return PREVIEW_STEPS[i].id;
                 }
             }
             return null;
         }
-
-        return json;
     }
 
     function changeMode(mode){ 
@@ -1606,7 +1649,7 @@ function WorkFlowEdit() {
 
         cleanButtons();
 
-        window.dragManager.objects = [];
+        window.dragManager.reset();
 
         MODE().exit();
 
@@ -1622,23 +1665,6 @@ function WorkFlowEdit() {
 
                 case 'edit-step':
                     enter = function() {
-
-                        createMeshFocus();
-
-                        self.transformData();
-
-                        /* daril */
-
-                        for(var i = 0; i < EDIT_STEPS.length; i++){
-                            window.dragManager.objects.push(EDIT_STEPS[i].mesh);
-                        }
-
-                        var action = function(tile){
-
-                            console.log(tile);
-                        };
-
-                        window.dragManager.functions.CLICK.push(action);
 
                         window.dragManager.on();
 
@@ -1667,9 +1693,11 @@ function WorkFlowEdit() {
                     
                     exit = function() {
 
-                        if(mode === 'preview'){ 
+                        if(mode === 'preview'){
 
-                            cleanEDIT_STEPS();
+                            self.transformData('PREVIEW');
+
+                            cleanEditStep();
 
                             window.dragManager.off();
                         }
@@ -1681,20 +1709,20 @@ function WorkFlowEdit() {
 
                         buttons.steps();
 
-                        //if(jsonSteps.length <= 0){
+                        window.dragManager.styleMouse.CROSS = 'copy';
 
-                            window.dragManager.styleMouse.CROSS = 'copy';
+                        if(EDIT_STEPS.length > 0){
+                            updateTileIgnoredAdd();
+                        }
+                        else{
 
-                            for(var i = 0; i < window.tilesQtty.length; i++){
+                            for(var t = 0; t < window.tilesQtty.length; t++){
 
-                                var tile = window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
+                                var tile = window.helper.getSpecificTile(window.tilesQtty[t]).mesh;
 
                                 window.dragManager.objects.push(tile);
-                            }
-                        //}
-                        //else{
-
-                        //}
+                            }                           
+                        }
 
                         var action = function(tile){
 
@@ -1750,8 +1778,6 @@ function WorkFlowEdit() {
 
                         buttons.save();
 
-                        buttons.steps();
-
                         displayField(true);
 
                         window.actualView = 'workflows';
@@ -1766,10 +1792,16 @@ function WorkFlowEdit() {
 
                             window.headers.transformWorkFlow(2000);
 
+                            buttons.steps();
+
                         });
                     };             
                     
                     exit = function() {
+
+                        if(mode === 'edit-step'){
+                            self.transformData();
+                        }
                         
                     };
 
@@ -1805,7 +1837,7 @@ function WorkFlowEdit() {
         }
     }
 
-    function cleanEDIT_STEPS(){
+    function cleanEditStep(){
 
         var target = window.helper.fillTarget(0, 0, 0, 'table');
 
@@ -1818,14 +1850,9 @@ function WorkFlowEdit() {
             }); 
         }
 
-        animate(focus.mesh, target.hide, 2000, function(){
-            window.scene.remove(focus.mesh);
-        });
+        focus.data = null;
 
-        focus = {
-            mesh : null,
-            data : null
-        };
+        EDIT_STEPS = [];
     } 
 
     function cleanButtons(){

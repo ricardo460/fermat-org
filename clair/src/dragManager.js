@@ -227,4 +227,11 @@ function DragManager() {
             CROSS : []
         };
     }
+
+    this.reset = function(){
+        cleanFunctions();
+        resetStyleMouse();
+        self.objects = [];
+        self.objectsColision = [];
+    }
 }
