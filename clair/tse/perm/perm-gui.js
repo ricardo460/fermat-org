@@ -7,11 +7,11 @@ var user_data = getUserID(),
     userList;
 
 function init() {
-    //if(user_data._id === ''){
-        //window.alert("Error. Please login first or request authorization to use this module");
-        //window.location.replace(window.location.href.replace(window.location.pathname, ''));
-    //}
-    //else{
+    if(user_data._id === ''){
+        window.alert("Error. Please login first or request authorization to use this module");
+        window.location.replace(window.location.href.replace(window.location.pathname, ''));
+    }
+    else{
         environment = API_ENV;
         $('#perm-link').click(function(event) {
             location.href = '../';
@@ -26,7 +26,7 @@ function init() {
         $('#changePermissions').click(function() {
                 verify();
         });
-    //}
+    }
 }
 
 function updateUserList(reload){
@@ -76,8 +76,9 @@ function verifyUser(user){
         }
     }).success (
         function (res) {
-            if(comparePermissions(res.perm))
-                fillTable(res);
+            if(res.type === usertype)
+                if(comparePermissions(res.perm))
+                    fillTable(res);
         }
     );
 }
@@ -91,13 +92,13 @@ function comparePermissions(code){
     if(validatePermission(digit, null, false, codeDigit))
         return true;
     else
-        digit = Math.floor((perm % 11100) / 10);
-        codeDigit = Math.floor((code % 11100) / 10);
+        digit = Math.floor(((perm % 11000) % 100) / 10);
+        codeDigit = Math.floor(((code % 11000) % 100) / 10);
         if(validatePermission(digit, null, false, codeDigit))
             return true;
         else
-            digit = Math.floor(perm % 11110);
-            codeDigit = Math.floor(code % 11110);
+            digit = Math.floor((Math.floor(perm % 1000)) % 10);
+            codeDigit = Math.floor((Math.floor(code % 1000)) % 10);
             if(validatePermission(digit, null, false, codeDigit))
                 return true;
             else
@@ -165,8 +166,8 @@ function modifyPermissions(element){
             codeDigit = Math.floor((perm % 11000) / 100);
             enable(digit, 'platform', codeDigit);
 
-            digit = Math.floor((temp % 11100) / 10);
-            codeDigit = Math.floor((perm % 11100) / 10);
+            digit = Math.floor(((temp % 11000) % 100) / 10);
+            codeDigit = Math.floor(((perm % 11000) % 100) / 10);
             enable(digit, 'sl', codeDigit);
 
             digit = Math.floor((Math.floor(temp % 1000)) % 10);
@@ -309,7 +310,7 @@ function getUserID() {
         __v : getCookie("v"),
         _id : '56f19f0a301492726c80881a',
         avatar_url : getCookie("avatar"),
-        axs_key : '570e44e3019d61dc4de9f32f',
+        axs_key : '5762ca11c76ae9a9574ed497',
         email : getCookie("email"),
         github_tkn : getCookie("github"),
         name : getCookie("name"),
@@ -344,11 +345,11 @@ function tagPermissions(structure) {
         validatePermission(digit, structure, true);
     }
     else if(structure === "superlayer"){
-        digit = Math.floor((perm % 11100) / 10);
+        digit = Math.floor(((perm % 11000) % 100) / 10);
         validatePermission(digit, structure, true);
     }
     else if(structure === "layer"){
-        digit = Math.floor((perm % 11110));
+        digit = Math.floor((Math.floor(perm % 1000)) % 10);
         validatePermission(digit, structure, true);
     }
 }
