@@ -70,6 +70,7 @@ var release = function(req) {
  * @apiParam {String} code Platform code.
  * @apiParam {String} name Platform name.
  * @apiParam {String} logo Platform logo.
+ * @apiParam {String} deps Platform dependencies example (APD, BCH, WPD).
  * @apiParam {Number} order Indicates the position where the platform this with respect to other.
  * @apiGroup Repo-Platform
  * @apiDescription Add a platform to the architecture of fermat.
@@ -171,6 +172,7 @@ router.get('/:platfrm_id', function(req, res, next) {
  * @apiParam {String} code Platform code.
  * @apiParam {String} name Platform name.
  * @apiParam {String} logo Platform logo.
+ * @apiParam {String} deps Platform dependencies example (APD, BCH, WPD).
  * @apiParam {Number} order Indicates the position where the platform this with respect to other.
  * @apiDescription Update platform from the architecture of fermat.
  */
