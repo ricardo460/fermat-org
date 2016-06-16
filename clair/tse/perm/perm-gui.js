@@ -2,7 +2,7 @@ var user_data = getUserID(),
     axs_key = '',
     environment = '',
     perm = 00000,
-    usertype = 'developer',
+    usertype = '',
     reference,
     userList;
 
@@ -24,7 +24,7 @@ function init() {
         updateUserList(false);
 
         $('#changePermissions').click(function() {
-                verify();
+            verify();
         });
     }
 }
@@ -264,13 +264,13 @@ function verify(){
     };
 
     $.ajax({
-            url: url,
-            method: "POST",
-            data: data
+        url: url,
+        method: "POST",
+        data: data
     }).success (
         function (res) {
             window.alert("Permissions modified successfully");
-            updateUserList();
+            updateUserList(true);
             cancel();
         }
     ).error (
@@ -308,14 +308,14 @@ function getRoute(route, user){
 function getUserID() {
     var _usr_id = {
         __v : getCookie("v"),
-        _id : '56f19f0a301492726c80881a',
+        _id : getCookie("id"),
         avatar_url : getCookie("avatar"),
-        axs_key : '5762ca11c76ae9a9574ed497',
+        axs_key : getCookie("key"),
         email : getCookie("email"),
         github_tkn : getCookie("github"),
         name : getCookie("name"),
         upd_at : getCookie("update"),
-        usrnm : 'isatab'
+        usrnm : getCookie("usrnm")
     };
     return _usr_id;
 }

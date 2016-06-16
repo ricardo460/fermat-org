@@ -9,7 +9,7 @@ var user_data = getUserID(),
     referenceId = '',
     referenceCode = '',
     referenceOrder = '',
-    usertype = 'designer',
+    usertype = '',
     perm = 77000;
 
 function init() {
@@ -120,7 +120,7 @@ function deleteStructure(element, type){
 
 function modifyStructure(element, type){
 
-    add('modify');
+    add("modify");
     var url;
 
     request = 'modify';
@@ -171,18 +171,27 @@ function modifyStructure(element, type){
                     document.getElementById("groupCode").value = res.code;
                     document.getElementById("groupName").value = res.name.capitalize();
 
-                    var list = document.getElementById("groupDeps"),
-                        l = list.options.length;
-
-                    for(var e in res.deps){
-                        for(var i = 0; i < l; i++){
-                            if(res.deps[e] === list.options[i].value)
-                                list.options[i].selected = 'true';
-                        }
-                    }
                     retrieveData(current, current, null);
-                    referenceCode = res.code;
 
+                    if(current === 'superlayer')
+                        retrieveData("platform", "superlayer", null);
+                    else
+                        retrieveData("superlayer", "platform", null);
+                    
+                    setTimeout(function (){
+                        var list = document.getElementById("groupDeps"),
+                            l = list.options.length,
+                            newRes = res.deps[0].split(",");
+                        
+                        for(var e in newRes){
+                            for(var i = 0; i < l; i++){
+                                if(newRes[e] === list.options[i].value)
+                                    list.options[i].selected = 'true';
+                            }
+                        }
+                    }, 500);
+
+                    referenceCode = res.code;
                     findPosition(type, res.order);
                 }
                 else{
@@ -312,12 +321,18 @@ function clearReference(){
 
 function add(option){
 
-    if(option !== 'modify'){
+    if(option !== "modify"){
+        request = 'add';
         clearReference();
         if(current === 'layer')
             retrieveData(current, 'layers', false);
-        else
+        else{
             retrieveData(current, current, null);
+            if(current === 'superlayer')
+                retrieveData("platform", "superlayer", null);
+            else
+                retrieveData("superlayer", "platform", null);
+        }
     }
 
     hideLists();
@@ -336,7 +351,6 @@ function add(option){
             showForm('#desForm');
         }
     }
-    request = 'add';
 }
 
 function cancel() {
@@ -381,6 +395,7 @@ function clearGroupForm(type) {
         document.getElementById('groupName').value = '';
         document.getElementById('groupDeps').value = '';
         $("#groupOrder").empty();
+        $("#groupDeps").empty();
     }
     else{
         document.getElementById('desCode').value = '';
@@ -710,7 +725,7 @@ function verify(form, request){
                     window.alert('Code in use');
                     return false;
                 }
-                if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML && (data.name.toLowerCase()).capitalize() !== referenceName){
+                if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML && (data.name.toLowerCase()) !== referenceName){
                     window.alert('Name in use');
                     return false;
                 }
@@ -724,7 +739,7 @@ function verify(form, request){
                     window.alert('Code in use');
                     return false;
                 }
-                if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML && (data.name.toLowerCase()).capitalize() !== referenceName){
+                if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML && (data.name.toLowerCase()) !== referenceName){
                     window.alert('Name in use');
                     return false;
                 }
@@ -734,7 +749,7 @@ function verify(form, request){
                 fileCheck = send();
 
             if(proceed){
-                url = getRoute(repo, "insert");
+                url = getRoute(repo, "update", referenceId);
                 sendRequest(url, 'PUT', data, form);
 
                 cancel();
@@ -843,28 +858,28 @@ function getData(form, request) {
         else
             url = getRoute("suprlays", "retrieve");
 
+        var list = document.getElementById("groupDeps"),
+            l = list.options.length,
+            dependencies = '';
+
+        for(var i = 0; i < l; i++){
+            if(list.options[i].selected === true){
+                if(dependencies !== '')
+                    dependencies += ',';
+                dependencies += list.options[i].value;
+            }   
+        }
+
         if(request === 'add'){
             data = {
                 code:document.getElementById('groupCode').value,
                 name:document.getElementById('groupName').value.toLowerCase(),
                 logo:document.getElementById('groupCode').value + "_logo.png",
-                deps:$('#groupDeps').val(),
+                deps:dependencies,
                 order:order
             };
         }
         else{
-
-            var list = document.getElementById("groupDeps"),
-                l = list.options.length,
-                dependencies = '';
-
-            for(var i = 0; i < l; i++){
-                if(list.options[i].selected === true){
-                    if(dependencies !== '')
-                        dependencies += ',';
-                    dependencies += list.options[i].value;
-                }   
-            }
 
             if(form === 'platform'){
                 data = {
@@ -895,14 +910,14 @@ function getData(form, request) {
 function getUserID() {
     var _usr_id = {
          __v : getCookie("v"),
-        _id : '57043b72b11754550799cfc1',
+        _id : getCookie("id"),
         avatar_url : getCookie("avatar"),
-        axs_key : '57043b72b11754550799cfc8',
+        axs_key : getCookie("key"),
         email : getCookie("email"),
         github_tkn : getCookie("github"),
         name : getCookie("name"),
         upd_at : getCookie("update"),
-        usrnm : 'simonorono'
+        usrnm : getCookie("usrnm")
     };
     return _usr_id;
 }
