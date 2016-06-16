@@ -6,13 +6,13 @@ function DragManager() {
     var rayCaster = new THREE.Raycaster();
 
     this.objects = [];
-    this.objectsColision = [];
+    this.objectsCollision = [];
 
     this.functions = {
             MOVE : [],
             CLICK : [],
             DROP : [],
-            COLISION :[],
+            COLLISION :[],
             CROSS : []
         };
 
@@ -26,11 +26,13 @@ function DragManager() {
 
     var self = this;
 
+    var POSITION = null;
+
     var mouse = new THREE.Vector2(),
         offset = new THREE.Vector3(),
         container = document.getElementById('container'),
         INTERSECTED = null,
-        INTERSECTED_1 = null,
+        COLLISION = null,
         OPACITY = null,
         SELECTED = null,
         plane = null,
@@ -64,7 +66,7 @@ function DragManager() {
             window.renderer.domElement.removeEventListener('mousedown', mouseDown, false);
             window.renderer.domElement.removeEventListener('mouseup', mouseUp, false);
         }
-    }
+    };
 
     function mouseMove(event) {
 
@@ -85,6 +87,23 @@ function DragManager() {
 
                 var position = intersects[0].point.sub(offset);
 
+                POSITION = position;
+
+                if(self.objectsCollision.length > 0){ 
+
+                    var collision = rayCaster.intersectObjects(self.objectsCollision, true);
+
+                    if(collision.length > 0) {
+
+                        if(COLLISION !== collision[0].object)
+                            COLLISION = collision[0].object;
+                    }
+                    else{ 
+                        COLLISION = null;
+                    }
+
+                }
+
                 for(i = 0; i < self.functions.MOVE.length; i++){
 
                     var action = self.functions.MOVE[i];
@@ -92,6 +111,7 @@ function DragManager() {
                     if(typeof(action) === 'function')
                         action(SELECTED, position);
                 }
+        
 
                 container.style.cursor = self.styleMouse.MOVE;
             }
@@ -156,6 +176,8 @@ function DragManager() {
 
         window.camera.getRayCast(rayCaster, mouse);
 
+        var i = 0;
+
         var intersects = rayCaster.intersectObjects(self.objects);
 
         if (intersects.length > 0) {
@@ -184,18 +206,9 @@ function DragManager() {
 
     function mouseUp(event) { 
 
+        var i = 0;
+
         event.preventDefault();
-
-        if (INTERSECTED){
-
-            if(INTERSECTED.parent.type === "LOD")
-                plane.position.copy(INTERSECTED.parent.position);
-            else
-                plane.position.copy(INTERSECTED.position);
-
-            SELECTED = null;
-            INTERSECTED = null;
-        }
 
         window.camera.enable();
 
@@ -206,7 +219,19 @@ function DragManager() {
             var action = self.functions.DROP[i];
 
             if(typeof(action) === 'function')
-                action();
+                action(SELECTED, INTERSECTED, COLLISION, POSITION);
+        }
+
+        if(INTERSECTED){
+
+            if(INTERSECTED.parent.type === "LOD")
+                plane.position.copy(INTERSECTED.parent.position);
+            else
+                plane.position.copy(INTERSECTED.position);
+
+            SELECTED = null;
+            INTERSECTED = null;
+            COLLISION = null;
         }
     }
 

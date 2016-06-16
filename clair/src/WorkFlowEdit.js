@@ -4,7 +4,7 @@ function WorkFlowEdit() {
 
     var classFlow = null;
 
-    var focus = {
+    var FOCUS = {
             mesh : null,
             data : null
         };
@@ -1331,38 +1331,61 @@ function WorkFlowEdit() {
             }
         }
 
-        focus.data = window.helper.getLastValueArray(array).mesh;
+        if(array.length > 0){ 
 
-        updateTileIgnoredAdd();
+            FOCUS.data = window.helper.getLastValueArray(array).mesh;
+
+            updateTileIgnoredAdd();
+        }
+        else{
+
+            var mesh = FOCUS.mesh;
+
+            var target = window.helper.fillTarget(0, 0, 0, 'table');
+
+            target.hide.rotation.x = 0;
+            target.hide.rotation.y = 0;
+            target.hide.rotation.z = 0;
+
+            animate(mesh, target.hide, 500);
+
+            FOCUS.data = null;
+
+            window.dragManager.objects = getAllTiles();
+        }
+
     }
 
     function updateTileIgnoredAdd(){
 
-        if(actualMode === "edit-path"){ 
+        if(actualMode === "edit-path"){
 
-            var id = focus.data.userData.id - 1,
-                ignoredTile = focus.data.userData.tile,
-                mesh = focus.mesh;
+            if(FOCUS.data){ 
 
-            window.dragManager.objects = [];
+                var id = FOCUS.data.userData.id - 1,
+                    ignoredTile = FOCUS.data.userData.tile,
+                    mesh = FOCUS.mesh;
 
-            for(var i = 0; i < EDIT_STEPS.length; i++){
+                window.dragManager.objects = [];
 
-                if(i === id)
-                    mesh.position.copy(EDIT_STEPS[i].mesh.position);
-                
-                window.dragManager.objects.push(EDIT_STEPS[i].mesh); 
-                
-            }
+                for(var i = 0; i < EDIT_STEPS.length; i++){
 
-            for(var t = 0; t < window.tilesQtty.length; t++){
+                    if(i === id)
+                        mesh.position.copy(EDIT_STEPS[i].mesh.position);
+                    
+                    window.dragManager.objects.push(EDIT_STEPS[i].mesh); 
+                    
+                }
 
-                if(window.tilesQtty[t] !== ignoredTile){
+                for(var t = 0; t < window.tilesQtty.length; t++){
 
-                    var tile = window.helper.getSpecificTile(window.tilesQtty[t]).mesh;
+                    if(window.tilesQtty[t] !== ignoredTile){
 
-                    window.dragManager.objects.push(tile);
+                        var tile = window.helper.getSpecificTile(window.tilesQtty[t]).mesh;
 
+                        window.dragManager.objects.push(tile);
+
+                    }
                 }
             }
         }
@@ -1376,7 +1399,7 @@ function WorkFlowEdit() {
             removeStep = [],
             i = 0, l = 0;
 
-        focus.mesh.material.visible = false;
+        FOCUS.mesh.material.visible = false;
 
         if(list[ORDER].children.length > 0){
 
@@ -1422,7 +1445,7 @@ function WorkFlowEdit() {
 
         orderPositionStep();
 
-        focus.mesh.material.visible = true;
+        FOCUS.mesh.material.visible = true;
 
         function deleteStep(order){
 
@@ -1475,7 +1498,7 @@ function WorkFlowEdit() {
 
     function createMeshFocus(){
 
-        if(!focus.mesh){ 
+        if(!FOCUS.mesh){ 
 
             var size = TILEHEIGHT / 6;
 
@@ -1517,7 +1540,7 @@ function WorkFlowEdit() {
 
                 mesh.material.map = texture;
 
-                focus.mesh = mesh;
+                FOCUS.mesh = mesh;
             };
         }
     }
@@ -1601,7 +1624,7 @@ function WorkFlowEdit() {
 
                 var mesh = addIdStep(order, IDtile, parent);
 
-                focus.data = mesh;
+                FOCUS.data = mesh;
             }
         }
 
@@ -1714,12 +1737,7 @@ function WorkFlowEdit() {
                         }
                         else{
 
-                            for(var t = 0; t < window.tilesQtty.length; t++){
-
-                                var tile = window.helper.getSpecificTile(window.tilesQtty[t]).mesh;
-
-                                window.dragManager.objects.push(tile);
-                            }                           
+                            window.dragManager.objects = getAllTiles();
                         }
 
                         var action = function(tile){
@@ -1735,16 +1753,53 @@ function WorkFlowEdit() {
                                 case "tile":
                                     var parent = null;
 
-                                    if(focus.data)
-                                        parent = focus.data.userData.id[0];
+                                    if(FOCUS.data)
+                                        parent = FOCUS.data.userData.id[0];
 
                                     var mesh = addIdStep(EDIT_STEPS.length + 1, tile.userData.id, parent);
 
-                                    focus.data = mesh;
+                                    FOCUS.data = mesh;
                                     break;
                                 case "step":
-                                    focus.data = EDIT_STEPS[tile.userData.id[0] - 1].mesh;
+
+                                    FOCUS.data = EDIT_STEPS[tile.userData.id[0] - 1].mesh;
+
                                     updateTileIgnoredAdd();
+
+                                    window.dragManager.objectsCollision = getAllTiles(tile.userData.tile);
+                                    
+                                    var drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
+
+                                        if(SELECTED){
+
+                                            var orderFocus = FOCUS.data.userData.id[0];
+
+                                            console.log(FOCUS.data.userData.id[0]); 
+
+                                            if(COLLISION){
+
+                                                if(!validateCollisionTileSteps(orderFocus, COLLISION.userData.id))
+                                                    resetPositionIdStepMesh(orderFocus);
+                                                else
+                                                    changeTileStep(orderFocus, COLLISION.userData.id);
+                                            }
+                                            else{
+
+                                                if(calculateAreaTile(SELECTED.position)){
+                                                    resetPositionIdStepMesh(orderFocus);
+                                                }
+                                                else{
+                                                    self.deleteStep(orderFocus);
+                                                }
+                                            }
+                                        }
+
+                                        window.dragManager.objectsCollision = [];
+                                        window.dragManager.functions.DROP = [];
+                                    }
+
+                                    window.dragManager.functions.DROP = [drop];
+
                                     break;                
                             }
                         };
@@ -1759,7 +1814,7 @@ function WorkFlowEdit() {
                                 type = 'tile';
                             else if(mesh.userData.type === 'step'){
                                 mesh.position.copy(position);
-                                focus.mesh.position.copy(position);
+                                FOCUS.mesh.position.copy(position);
                             }
                         }; 
 
@@ -1817,6 +1872,138 @@ function WorkFlowEdit() {
         }
     }
 
+    function changeTileStep(orderFocus, newTile){
+
+        var step = EDIT_STEPS[orderFocus - 1];
+
+        var oldTile = step.tile;
+
+        var difference = TILEWIDTH / 2;
+
+        var tile = window.helper.getSpecificTile(newTile).target.show;
+
+        var target = window.helper.fillTarget(tile.position.x - difference, tile.position.y, tile.position.z + 1, 'table');
+
+        step.target = target;
+
+        step.tile = newTile;
+
+        step.mesh.userData.tile = newTile;
+
+        calculatePositionsSteps(newTile);
+
+        calculatePositionsSteps(oldTile);
+
+        //resetPositionIdStepMesh(orderFocus);
+    }
+
+    function resetPositionIdStepMesh(orderFocus){
+
+        var focus = FOCUS.mesh;
+
+        var step = EDIT_STEPS[orderFocus - 1];
+
+        focus.visible = false;
+
+        var mesh = step.mesh;
+
+        var xInit = mesh.position.x - 5;
+
+        var xEnd = mesh.position.x + 5;
+
+        var target = step.target.show;
+
+        if(target.position.x >= xInit && target.position.x <= xEnd)
+            focus.visible = true;
+
+        animate(mesh, target, 400, function(){
+            FOCUS.mesh.position.copy(mesh.position);
+            focus.visible = true;
+        });
+    }
+
+    function validateCollisionTileSteps(orderStepFocus, tileValidate){
+
+        var validate = true,
+            stepFocus = EDIT_STEPS[orderStepFocus - 1],
+            children = stepFocus.children,
+            parent = searchParentStep(orderStepFocus);
+
+        if(parent){
+            if(tileValidate === EDIT_STEPS[parent - 1].tile)
+                validate = false;
+        }
+
+        if(children.length > 0){
+
+            for(var i = 0; i < children.length; i++){
+
+                var order = children[i][0];
+
+                if(tileValidate === EDIT_STEPS[order - 1].tile)
+                    validate = false;
+            }
+        }
+
+        return validate;
+
+    }
+
+    function searchParentStep(order){
+
+        var i, l;
+
+        for(i = 0; i < EDIT_STEPS.length; i++){
+
+            var children = EDIT_STEPS[i].children;
+
+            for(l = 0; l < children.length; l++){
+
+                if(children[l][0] === order)
+                    return EDIT_STEPS[i].order[0];
+            }
+        }
+
+        return false;
+    }
+
+    function getAllTiles(idIgnore){
+
+        var array = [];
+
+        for(var t = 0; t < window.tilesQtty.length; t++){
+
+            if(window.tilesQtty[t] !== idIgnore){
+
+                var tile = window.helper.getSpecificTile(window.tilesQtty[t]).mesh;
+
+                array.push(tile);
+            }
+        }
+
+        return array;
+
+    }
+
+    function calculateAreaTile(position){
+
+        var tile = window.helper.getSpecificTile(FOCUS.data.userData.tile).target.show;
+
+        console.log(FOCUS.data.userData.id[0]);
+
+        var x = position.x,
+            y = position.y,
+            xInit = tile.position.x - (TILEWIDTH / 2) - window.TILE_SPACING,
+            yInit = tile.position.y + (TILEHEIGHT / 2),
+            xEnd = xInit + TILEWIDTH;
+            yEnd = yInit - TILEHEIGHT;
+
+        if((x >= xInit && x <= xEnd) && (y <= yInit && y >= yEnd))
+            return true;
+        else
+            return false;
+    }
+
     function displayField(visible){
 
         if(visible)
@@ -1850,7 +2037,7 @@ function WorkFlowEdit() {
             }); 
         }
 
-        focus.data = null;
+        FOCUS.data = null;
 
         EDIT_STEPS = [];
     } 
@@ -1861,6 +2048,10 @@ function WorkFlowEdit() {
         window.buttonsManager.deleteButton('button-preview');
         window.buttonsManager.deleteButton('button-path');
         window.buttonsManager.deleteButton('button-Steps');   
+    }
+
+    this.getFocus = function(){
+        return FOCUS;
     }
 
 }
