@@ -155,8 +155,7 @@ function WorkFlowEdit() {
 
         classFlow.showSteps();
 
-    };
-
+    }
     this.save = function(){
 
         if(validateFields() === ''){ 
@@ -345,7 +344,7 @@ function WorkFlowEdit() {
         }
     }
 
-   /* function resetSteps(steps){
+    function resetSteps(steps){
 
         var removeStep = [],
             i = 0;
@@ -362,18 +361,30 @@ function WorkFlowEdit() {
             else{
                 removeStep.push(steps[i]);
             }
-        }   
-
-        for(i = 0; i < steps.length; i++){
-
-            if(steps[i].element === -1){
-
-                var data = window.helper.getSpecificTile(steps[i].element).data;
-
-                steps[i].layer = data.layer;
-                steps[i].name = data.name;
-            }
         }
+
+        for(i = 0; i < removeStep.length; i++)   
+
+        var oldChildren = list[ORDER].children,
+            odlStep = list[ORDER].order,
+            newIdStep = Search(oldChildren[0][0]),
+            newStep = list[newIdStep];
+
+        odlStep[0] = newStep.order[0];
+        newStep.order = odlStep;
+        newStep.mesh.userData.id = odlStep;
+
+        deleteStep(ORDER);
+
+        for(i = 1; i < oldChildren.length; i++){
+
+            fillRemove(oldChildren[i][0]);
+
+            removeStep.push(oldChildren[i][0]);
+        }
+
+        for(i = 0; i < removeStep.length; i++)
+             deleteStep(Search(removeStep[i]));
 
         function orderPositionStep(array){
 
@@ -417,7 +428,7 @@ function WorkFlowEdit() {
 
         return steps;
     }
-    */
+    
     function showBrowser(state){
 
         var browsers = window.browserManager.objects.mesh;
@@ -595,7 +606,6 @@ function WorkFlowEdit() {
             window.workFlowManager.getObjHeaderFlow().push(newFlow);
 
         }, duration);
-
     }
 
     function modifyWorkFlow(){ 
@@ -1391,7 +1401,7 @@ function WorkFlowEdit() {
         }
     }
 
-    this.deleteStep = function(step){
+    function deleteSteps(step){
 
         var list = EDIT_STEPS,
             ORDER = Search(step),
@@ -1403,26 +1413,31 @@ function WorkFlowEdit() {
 
         if(list[ORDER].children.length > 0){
 
-            var oldChildren = list[ORDER].children,
-                odlStep = list[ORDER].order,
-                newIdStep = Search(oldChildren[0][0]),
-                newStep = list[newIdStep];
-    
-            odlStep[0] = newStep.order[0];
-            newStep.order = odlStep;
-            newStep.mesh.userData.id = odlStep;
+            if(validateChildrenTiles()){ 
 
-            deleteStep(ORDER);
+                var oldChildren = list[ORDER].children,
+                    odlStep = list[ORDER].order,
+                    newIdStep = Search(oldChildren[0][0]),
+                    newStep = list[newIdStep];
+        
+                odlStep[0] = newStep.order[0];
+                newStep.order = odlStep;
+                newStep.mesh.userData.id = odlStep;
 
-            for(i = 1; i < oldChildren.length; i++){
+                deleteStep(ORDER);
 
-                fillRemove(oldChildren[i][0]);
+                for(i = 1; i < oldChildren.length; i++){
 
-                removeStep.push(oldChildren[i][0]);
+                    fillRemove(oldChildren[i][0]);
+
+                    removeStep.push(oldChildren[i][0]);
+                }
+
+                for(i = 0; i < removeStep.length; i++)
+                     deleteStep(Search(removeStep[i]));
+            }else{
+                resetPositionIdStepMesh(step);
             }
-
-            for(i = 0; i < removeStep.length; i++)
-                 deleteStep(Search(removeStep[i]));
         }
         else{
 
@@ -1446,6 +1461,29 @@ function WorkFlowEdit() {
         orderPositionStep();
 
         FOCUS.mesh.material.visible = true;
+
+        function validateChildrenTiles(){
+
+            var children = list[ORDER].children;
+
+            var parent = searchParentStep(step);
+
+            if(parent){
+
+                var parentTile = list[parent - 1].tile;
+
+                for(i = 0; i < children.length; i++){
+
+                    var idTile = list[children[i][0] - 1].tile;
+
+                    if(parentTile === idTile){
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
 
         function deleteStep(order){
 
@@ -1774,8 +1812,6 @@ function WorkFlowEdit() {
 
                                             var orderFocus = FOCUS.data.userData.id[0];
 
-                                            console.log(FOCUS.data.userData.id[0]); 
-
                                             if(COLLISION){
 
                                                 if(!validateCollisionTileSteps(orderFocus, COLLISION.userData.id))
@@ -1789,14 +1825,14 @@ function WorkFlowEdit() {
                                                     resetPositionIdStepMesh(orderFocus);
                                                 }
                                                 else{
-                                                    self.deleteStep(orderFocus);
+                                                    deleteSteps(orderFocus);
                                                 }
                                             }
                                         }
 
                                         window.dragManager.objectsCollision = [];
                                         window.dragManager.functions.DROP = [];
-                                    }
+                                    };
 
                                     window.dragManager.functions.DROP = [drop];
 
@@ -1946,7 +1982,6 @@ function WorkFlowEdit() {
         }
 
         return validate;
-
     }
 
     function searchParentStep(order){
@@ -1982,20 +2017,17 @@ function WorkFlowEdit() {
         }
 
         return array;
-
     }
 
     function calculateAreaTile(position){
 
         var tile = window.helper.getSpecificTile(FOCUS.data.userData.tile).target.show;
 
-        console.log(FOCUS.data.userData.id[0]);
-
         var x = position.x,
             y = position.y,
             xInit = tile.position.x - (TILEWIDTH / 2) - window.TILE_SPACING,
             yInit = tile.position.y + (TILEHEIGHT / 2),
-            xEnd = xInit + TILEWIDTH;
+            xEnd = xInit + TILEWIDTH,
             yEnd = yInit - TILEHEIGHT;
 
         if((x >= xInit && x <= xEnd) && (y <= yInit && y >= yEnd))
@@ -2014,7 +2046,7 @@ function WorkFlowEdit() {
 
     function newOnKeyDown(event){
 
-        if(event.keyCode === 27 /* ESC */) {
+        if(event.keyCode === 27) {
 
             window.camera.offFocus();
 
@@ -2052,6 +2084,6 @@ function WorkFlowEdit() {
 
     this.getFocus = function(){
         return FOCUS;
-    }
+    };
 
 }
