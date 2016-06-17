@@ -1139,7 +1139,6 @@ function WorkFlowEdit() {
             children.push(newArray);
         }
         
-
         var object = {
                     order : newArray,
                     mesh : mesh,
