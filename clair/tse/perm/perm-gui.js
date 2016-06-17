@@ -332,6 +332,7 @@ function checkPermissions() {
     }).success (
         function (res) {
             perm = parseInt(res.perm);
+            usertype = res.type;
             return perm;
         }
     );

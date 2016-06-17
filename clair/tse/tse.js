@@ -177,26 +177,40 @@ function modifyStructure(element, type){
                         retrieveData("platform", "superlayer", null);
                     else
                         retrieveData("superlayer", "platform", null);
-                    
+
+                        setTimeout(function (){
+                            var list = document.getElementById("groupDeps"),
+                                l = list.options.length;
+
+                            for(var e in res.deps){
+                                for(var i = 0; i < l; i++){
+                                    if(res.deps[e] === list.options[i].value)
+                                        list.options[i].selected = 'true';
+                                }
+                            }
+
+                        }, 750);
+
+                    referenceCode = res.code;
+                    findPosition(type, res.order);
+                }
+                else {
+                    document.getElementById("desCode").value = res.code;
+                    document.getElementById("desName").value = res.name.capitalize();
+
                     setTimeout(function (){
                         var list = document.getElementById("groupDeps"),
-                            l = list.options.length,
-                            newRes = res.deps[0].split(",");
-                        
-                        for(var e in newRes){
+                            l = list.options.length;
+
+                        for(var e in res.deps){
                             for(var i = 0; i < l; i++){
-                                if(newRes[e] === list.options[i].value)
+                                if(res.deps[e] === list.options[i].value)
                                     list.options[i].selected = 'true';
                             }
                         }
                     }, 500);
 
                     referenceCode = res.code;
-                    findPosition(type, res.order);
-                }
-                else{
-                    document.getElementById("desCode").value = res.code;
-                    document.getElementById("desName").value = res.name.capitalize();
                 }
             }
         }
@@ -228,7 +242,7 @@ function findPosition(type, order){
              var l = res.length;
 
              for(var i = 0; i < l; i++){
-                if(res[i].order === order && order === 1){
+                if(res[i].order === order && order === 0){
                     if(type === "layer"){
                             if(res[1].suprlay !== false)
                                 document.getElementById("layerNext").innerHTML = "Currently: Above - " + res[1].name.capitalize() + " (In Superlayer: " + res[1].suprlay + ")";
@@ -748,6 +762,9 @@ function verify(form, request){
             if(usertype === "designer")
                 fileCheck = send();
 
+            if(data.order > referenceOrder)
+                data.order--;
+
             if(proceed){
                 url = getRoute(repo, "update", referenceId);
                 sendRequest(url, 'PUT', data, form);
@@ -809,8 +826,6 @@ function sendRequest(url, method, data, type){
 
 function getData(form, request) {
 
-    var order, data, url;
-
     if(form === 'layer'){
         if(document.getElementById('layerPos').value === "before")
             order = document.getElementById('layerOrder').value;
@@ -867,23 +882,15 @@ function getData(form, request) {
                 if(dependencies !== '')
                     dependencies += ',';
                 dependencies += list.options[i].value;
-            }   
+            }
         }
+
+        if(dependencies === '')
+            dependencies = undefined;
 
         if(request === 'add'){
-            data = {
-                code:document.getElementById('groupCode').value,
-                name:document.getElementById('groupName').value.toLowerCase(),
-                logo:document.getElementById('groupCode').value + "_logo.png",
-                deps:dependencies,
-                order:order
-            };
-        }
-        else{
-
-            if(form === 'platform'){
+            if(usertype !== 'designer'){
                 data = {
-                    platfrm_id:referenceId,
                     code:document.getElementById('groupCode').value,
                     name:document.getElementById('groupName').value.toLowerCase(),
                     logo:document.getElementById('groupCode').value + "_logo.png",
@@ -893,13 +900,57 @@ function getData(form, request) {
             }
             else{
                 data = {
-                    suprlay_id:referenceId,
-                    code:document.getElementById('groupCode').value,
-                    name:document.getElementById('groupName').value.toLowerCase(),
-                    logo:document.getElementById('groupCode').value + "_logo.png",
-                    deps:dependencies,
-                    order:order
+                    code:document.getElementById('desCode').value,
+                    name:document.getElementById('desName').value.toLowerCase(),
+                    logo:document.getElementById('desCode').value + "_logo.png",
+                    deps:dependencies
                 };
+            }
+        }
+        else{
+            if(form === 'platform'){
+                if(usertype !== 'designer'){
+                    data = {
+                        platfrm_id:referenceId,
+                        code:document.getElementById('groupCode').value,
+                        name:document.getElementById('groupName').value.toLowerCase(),
+                        logo:document.getElementById('groupCode').value + "_logo.png",
+                        deps:dependencies,
+                        order:order
+                    };
+                }
+                else{
+                    data = {
+                        platfrm_id:referenceId,
+                        code:document.getElementById('desCode').value,
+                        name:document.getElementById('desName').value.toLowerCase(),
+                        logo:document.getElementById('desCode').value + "_logo.png",
+                        deps:dependencies,
+                        order:document.getElementById('groupOrder').value
+                    };
+                }
+            }
+            else{
+                if(usertype !== 'designer'){
+                    data = {
+                        suprlay_id:referenceId,
+                        code:document.getElementById('groupCode').value,
+                        name:document.getElementById('groupName').value.toLowerCase(),
+                        logo:document.getElementById('groupCode').value + "_logo.png",
+                        deps:dependencies,
+                        order:order
+                    };
+                }
+                else{
+                    data = {
+                        suprlay_id:referenceId,
+                        code:document.getElementById('desCode').value,
+                        name:document.getElementById('desName').value.toLowerCase(),
+                        logo:document.getElementById('desCode').value + "_logo.png",
+                        deps:dependencies,
+                        order:document.getElementById('groupOrder').value
+                    };
+                }
             }
         }
     }
@@ -934,6 +985,7 @@ function checkPermissions() {
     }).success (
         function (res) {
             perm = parseInt(res.perm);
+            usertype = res.type;
             return perm;
         }
     );
