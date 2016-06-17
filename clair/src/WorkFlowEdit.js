@@ -25,6 +25,48 @@ function WorkFlowEdit() {
     this.getp = function(){
         return PREVIEW_STEPS;
     };
+    
+    // function callback(input_value);
+    // string input_value;
+    
+    this.showModal = function(title, desc, callback_title, callback_desc) {
+        
+        var div = document.createElement("div");
+        div.id  = "step-modal";
+        
+        div.innerHTML += `
+          <div id="step-modal-a">
+            <label>Title:</label><br>
+            <input type="text" id="step-modal-title">
+          </div>
+          <div id="step-modal-b">
+            <label>Description:</label><br>
+            <textarea rows="8" id="step-modal-desc">
+            </textarea>
+          </div>
+        `;
+        
+        document.body.appendChild(div);
+        
+        var _title = document.getElementById("step-modal-title");
+        var _desc  = document.getElementById("step-modal-desc");
+        
+        _title.value = title;
+        _desc.value  = desc;
+        
+        _title.oninput = function() {callback_title(_title.value);}
+        _desc.oninput  = function() {callback_desc(_desc.value);}
+        
+        window.onresize  = function() {
+            div.style.height = (div.offsetWidth * 0.9) + "px";
+        };
+        
+        window.onresize();
+    };
+    
+    this.hiddenModal = function() {
+        window.helper.hide(document.getElementById("step-modal"), 500);
+    };
 
     this.addButton = function(_id){
 
@@ -2262,7 +2304,7 @@ function WorkFlowEdit() {
                         }; 
 
                         window.dragManager.functions.MOVE.push(moveAction);
-                    };             
+                    };
                     
                     exit = function() {
                         
