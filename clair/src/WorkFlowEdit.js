@@ -1139,13 +1139,13 @@ function WorkFlowEdit() {
             children.push(newArray);
         }
         
-
         var object = {
                     order : newArray,
                     mesh : mesh,
                     target : target,
                     tile : IDtile,
-                    children : []
+                    children : [],
+                    existArrow: false
                 };
 
         EDIT_STEPS.push(object);
@@ -1157,8 +1157,6 @@ function WorkFlowEdit() {
         if(parent){
             orderPositionStep();
         }
-
-        return mesh;
 
         function createIdStep(){
 
@@ -1180,7 +1178,416 @@ function WorkFlowEdit() {
 
                 return mesh;
         }
+
+        // Validaciones 
+
+        if(EDIT_STEPS.length > 1){
+
+            for (var i = 0; i < EDIT_STEPS.length; i++) {
+                
+                if(EDIT_STEPS[i].existArrow === false){
+
+                    for (var j = 0; j < EDIT_STEPS.length; j++) {
+
+                        if(EDIT_STEPS[i].children[0] !== undefined){
+                            if(EDIT_STEPS[i].children[0][0] === EDIT_STEPS[j].order[0]){
+                                self.createLineStep(EDIT_STEPS[i].target.show, 
+                                                    EDIT_STEPS[j].target.show,
+                                                    EDIT_STEPS[i].order[0],
+                                                    EDIT_STEPS[j].order[0],
+                                                    EDIT_STEPS[i].tile,
+                                                    EDIT_STEPS[j].tile);
+                                EDIT_STEPS[i].existArrow = true;
+                                break;
+                            }
+                        } 
+                    } 
+                }
+            }
+        }
+
+        return mesh;
     }
+
+    var vertexOriginX, 
+        vertexOriginY, 
+        vertexDestX, 
+        vertexDestY, 
+        vectorArrow = '', 
+        //'Estructura de las flechas'
+        LIST_ARROWS = [],
+        objArrow = {
+            tileOriginId : null,
+            tileTargetId : null,
+            originID: null,
+            targetID: null,
+            vector1: null,
+            meshPrimary: null,
+            vector2:null,
+            meshSecondary: null,
+            arrow: null,
+            type: null
+        };
+
+    this.createLineStep = function(meshOrigin, meshTarget, idOrigin, idTarget, tileOrigin, tileTarget){ // nuevc
+
+        var lineMaterial, lineStep, mesh, vertexPositions, geometry, from, to;
+
+        vertexOriginX = meshOrigin.position.x;
+        vertexOriginY = meshOrigin.position.y;
+        vertexDestX = meshTarget.position.x;
+        vertexDestY = meshTarget.position.y;
+
+        objArrow.originID = idOrigin;
+        objArrow.targetID = idTarget;
+        objArrow.tileOriginId = tileOrigin;
+        objArrow.tileTargetId = tileTarget;
+
+        if((vertexOriginY >  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es descendente diagonal
+            
+            from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
+            to = new THREE.Vector3(vertexOriginX + (calculateVector(vertexOriginX,vertexDestX)), vertexOriginY - (28), 2);
+           
+            vectorArrow = 'arrowDesc';
+        }
+        else if((vertexOriginY <  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es ascendente diagonal
+            from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
+            to = new THREE.Vector3(vertexOriginX + (calculateVector(vertexOriginX,vertexDestX)), vertexOriginY + (28), 2);
+
+            vectorArrow = 'arrowAsc';
+        }
+
+        if((vertexOriginX == vertexDestX) && (vertexOriginY > vertexDestY)){ // si es vertical descendente
+
+            from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
+            to = new THREE.Vector3(vertexOriginX, vertexOriginY - (28), 2);
+
+            vectorArrow = 'arrowDescVer';
+        }
+        else if((vertexOriginX == vertexDestX) && (vertexOriginY < vertexDestY)){ // si es vertical ascendente
+           
+            from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
+            to = new THREE.Vector3(vertexOriginX, vertexOriginY + (28), 2);
+
+            vectorArrow = 'arrowAscVer';
+        }
+
+        if((vertexOriginY == vertexDestY) && (vertexOriginX < vertexDestX)){ // Horizontal Derecha
+
+            from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
+            to = new THREE.Vector3(vertexOriginX + (28), vertexOriginY, 2);
+
+            vectorArrow = 'arrowRight';
+        } 
+
+        if((vertexOriginY == vertexDestY) && (vertexOriginX > vertexDestX)){ // Horizontal Derecha
+
+            from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
+            to = new THREE.Vector3(vertexOriginX - (28), vertexOriginY, 2);
+
+            vectorArrow = 'arrowLeft';
+        } 
+                
+        var direction = to.clone().sub(from);
+
+        var length = direction.length();
+
+        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xFF0000, 0.1, 0.1); // Arrow Rojo
+
+        scene.add(arrowHelper);
+
+        mesh = createSimbol();// primer mesh(boton)
+
+        switch(vectorArrow){
+
+            case 'arrowDesc':
+                mesh.position.set(vertexOriginX + (calculateVector(vertexOriginX,vertexDestX)), vertexOriginY - (28), 2); // primer mesh(boton)
+                break;
+
+            case 'arrowAsc':
+                mesh.position.set(vertexOriginX + (calculateVector(vertexOriginX,vertexDestX)), vertexOriginY + (28), 2); // primer mesh(boton)*/
+                break;
+
+            case 'arrowDescVer':
+                mesh.position.set(vertexOriginX, vertexOriginY - (28), 2); // primer mesh(boton)
+                break;
+
+            case 'arrowAscVer':
+                mesh.position.set(vertexOriginX, vertexOriginY + (28), 2); // primer mesh(boton)
+                break;
+
+            case 'arrowRight':
+                mesh.position.set(vertexOriginX + (28), vertexOriginY, 2); // primer mesh(boton)
+                break;
+
+            case 'arrowLeft':
+                mesh.position.set(vertexOriginX - (28), vertexOriginY, 2); // primer mesh(boton)
+                break;
+
+            default:
+                break;
+        }
+
+        objArrow.type = vectorArrow;
+        objArrow.vector1 = arrowHelper;
+        objArrow.meshPrimary = mesh;
+
+        directionLineMesh();
+
+        LIST_ARROWS.push(objArrow);
+
+        objArrow = {
+            tileOriginId : null,
+            tileTargetId : null,
+            originID: null,
+            targetID: null,
+            vector1: null,
+            meshPrimary: null,
+            vector2:null,
+            meshSecondary: null,
+            arrow: null,
+            type: null
+        };
+
+    };
+
+    function calculateVector(vectorOriginX, vectorTargetX){
+
+        var CONSTX = 231, switch_ = true, valueOriginX = vectorOriginX, count = 0;
+
+        if(vectorOriginX > vectorTargetX){ // vamos contando hacia la izquierda
+
+
+            while(switch_){
+
+
+                if(valueOriginX == vectorTargetX)
+                    switch_ = false;
+                else{
+                    valueOriginX = valueOriginX - CONSTX;
+                    count = count - calculateVectorY();
+                }
+            }
+
+        }else{
+            while(switch_){
+
+
+                if(valueOriginX == vectorTargetX)
+                    switch_ = false;
+                else{
+                    valueOriginX = valueOriginX + CONSTX;
+                    count = count + calculateVectorY();
+                }
+            }
+        }
+
+        return count;
+    }
+
+    function calculateVectorY(){
+
+        var CONSTY = 140, switch_ = true, countTileY = 0, value = 0, vectorOriginY, vectorTargetY;
+
+        vectorOriginY = vertexOriginY;
+        vectorTargetY = vertexDestY;
+        if(vertexOriginY < vertexDestY){
+
+
+            while(switch_){
+
+
+                if(vectorOriginY == vectorTargetY)
+                    switch_ = false;
+                else{
+                    vectorOriginY = vectorOriginY + CONSTY;
+                    countTileY = countTileY + 1;
+                }
+            }
+
+        }else{
+            while(switch_){
+
+                if(vectorOriginY == vectorTargetY)
+                    switch_ = false;
+                else{
+                    vectorOriginY = vectorOriginY - CONSTY;
+                    countTileY = countTileY + 1;
+                }
+            }
+        }
+
+        if(countTileY == 1)
+            value = 45;
+
+        if(countTileY == 2)
+            value = 25;
+
+        if(countTileY == 3)
+            value = 15;
+
+        if(countTileY > 3 && countTileY < 9)
+            value = 10;
+        else if(countTileY >= 9){
+            value = (countTileY * 5) / 9;
+        }
+
+        return value;
+    }
+
+    function directionLineMesh(){ // nuevo
+
+        var lineMaterial, lineStep, mesh, vertexPositions, from, to;
+
+        lineBuffer = new THREE.BufferGeometry();
+        lineMaterial = new THREE.LineBasicMaterial({color : 0x0000FF}); // vector Azul
+
+        switch(vectorArrow){
+
+            case 'arrowDesc':
+
+                from = new THREE.Vector3(vertexOriginX + (calculateVector(vertexOriginX,vertexDestX)), vertexOriginY - (28), 2);
+                to = new THREE.Vector3(vertexOriginX + (calculateVector(vertexOriginX,vertexDestX)*2), vertexOriginY - (56), 2);
+                break;
+            case 'arrowAsc':
+
+                from = new THREE.Vector3(vertexOriginX + (calculateVector(vertexOriginX,vertexDestX)), vertexOriginY + (28), 2);
+                to = new THREE.Vector3(vertexOriginX + (calculateVector(vertexOriginX,vertexDestX)*2), vertexOriginY + (56), 2); 
+                break;
+            case 'arrowDescVer':
+
+                from = new THREE.Vector3(vertexOriginX, vertexOriginY - (28), 2);
+                to = new THREE.Vector3(vertexOriginX, vertexOriginY - (56), 2); 
+                break;
+            case 'arrowAscVer':
+
+                from = new THREE.Vector3(vertexOriginX, vertexOriginY + (28), 2);
+                to = new THREE.Vector3(vertexOriginX, vertexOriginY + (56), 2); 
+                break;
+            case 'arrowRight':
+
+                from = new THREE.Vector3(vertexOriginX + 28, vertexOriginY, 2);
+                to = new THREE.Vector3(vertexOriginX + 56, vertexOriginY, 2);
+                break;
+            case 'arrowLeft':
+
+                from = new THREE.Vector3(vertexOriginX - 28, vertexOriginY, 2);
+                to = new THREE.Vector3(vertexOriginX - 56, vertexOriginY, 2);
+                break;
+            default:
+                break;
+        }
+
+        var direction = to.clone().sub(from);
+
+        var length = direction.length();
+
+        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0x0000FF, 0.1, 0.1); // Arrow Azul
+
+        scene.add(arrowHelper);
+        
+        mesh = createSimbol();
+
+        objArrow.vector2 = arrowHelper;
+        objArrow.meshSecondary = mesh;
+
+        directionArrowMesh();
+
+        switch(vectorArrow){
+
+            case 'arrowDesc':
+                mesh.position.set(vertexOriginX + (calculateVector(vertexOriginX,vertexDestX)*2), vertexOriginY - (56), 2); // segundo mesh(boton)
+                break;
+            case 'arrowAsc':
+                mesh.position.set(vertexOriginX + (calculateVector(vertexOriginX,vertexDestX)*2), vertexOriginY + (56), 2); // segundo mesh(boton)*/
+                break;
+            case 'arrowDescVer':
+                mesh.position.set(vertexOriginX, vertexOriginY - (56), 2); // segundo mesh(boton)
+                break;
+            case 'arrowAscVer':
+                mesh.position.set(vertexOriginX, vertexOriginY + (56), 2); // segundo mesh(boton)
+                break;
+
+            case 'arrowRight':
+                mesh.position.set(vertexOriginX + (56), vertexOriginY, 2); // segundo mesh(boton)
+                break;
+
+            case 'arrowLeft':
+                mesh.position.set(vertexOriginX - (56), vertexOriginY, 2); // segundo mesh(boton)
+                break;
+            default:
+                break;
+        }
+    }
+
+    function createSimbol(){
+
+        var tileWidth = (window.TILE_DIMENSION.width - window.TILE_SPACING) / 2,
+            tileHeight = (window.TILE_DIMENSION.height - window.TILE_SPACING) / 8;
+
+        var mesh =  new THREE.Mesh(
+                    new THREE.PlaneBufferGeometry(tileHeight, tileHeight),
+                    new THREE.MeshBasicMaterial({
+                            side: THREE.DoubleSide,
+                            color: Math.random() * 0xffffff
+                        })
+                    );
+
+        window.scene.add(mesh);
+        return mesh;
+    }
+
+    function directionArrowMesh(){ // nuevo
+
+        var from, to;
+
+         switch(vectorArrow){
+
+            case 'arrowDesc':
+                from = new THREE.Vector3(vertexOriginX + (calculateVector(vertexOriginX,vertexDestX)*2), vertexOriginY - (56), 2);
+                to = new THREE.Vector3(vertexDestX, vertexDestY + (10), 2);
+                break;
+            case 'arrowAsc':
+                from = new THREE.Vector3(vertexOriginX + (calculateVector(vertexOriginX,vertexDestX)*2), vertexOriginY + (56), 2);
+                to = new THREE.Vector3(vertexDestX, vertexDestY - (10), 2);
+                break;
+            case 'arrowDescVer':
+                from = new THREE.Vector3(vertexOriginX, vertexOriginY - (56), 2);
+                to = new THREE.Vector3(vertexDestX, vertexDestY + (10), 2);
+                break;
+            case 'arrowAscVer':
+                 from = new THREE.Vector3(vertexOriginX, vertexOriginY + (56), 2);
+                to = new THREE.Vector3(vertexDestX, vertexDestY - (10), 2);
+                break;
+
+            case 'arrowRight':
+                from = new THREE.Vector3(vertexOriginX + (56), vertexDestY, 2);
+                to = new THREE.Vector3(vertexDestX - (10), vertexDestY, 2);
+                break;
+
+            case 'arrowLeft':
+                from = new THREE.Vector3(vertexOriginX - (56), vertexDestY, 2);
+                to = new THREE.Vector3(vertexDestX + (10), vertexDestY, 2);
+                break;
+            default:
+                break;
+        }
+
+        var direction = to.clone().sub(from);
+
+        var length = direction.length();
+
+        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xFF0000, 4*2, 4*2); // Arrow Rojo
+
+        scene.add(arrowHelper);
+
+        objArrow.arrow = arrowHelper;
+    }
+
+
+  
+
+
 
     function changeTextureId(id){
 
