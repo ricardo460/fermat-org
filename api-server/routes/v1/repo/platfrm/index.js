@@ -93,9 +93,9 @@ router.post('/', function(req, res, next) {
 					} else {
 						repMod.addPlatform(req, function(error, result) {
 							if (error) {
-								res.status(200).send(error);
+								res.status(403).send(error);
 							} else {
-								res.status(201).send(result);
+								res.status(200).send(result);
 							}
 						});
 					}

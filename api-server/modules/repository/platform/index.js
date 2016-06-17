@@ -80,7 +80,7 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 					res_plat.logo = logo;
 				}
 				if (deps && deps !== res_plat.deps) {
-					if (deps !== undefined || deps !== null)
+					if (deps !== undefined || deps !== null || deps.length !== 0)
 						deps = deps.split(',');
 					else
 						deps = [];
@@ -117,7 +117,7 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 					return callback(null, res_plat);
 				}
 			} else {
-				if (deps === undefined || deps === null)
+				if (deps === undefined || deps === null || deps.length === 0)
 					deps = [];
 				else
 					deps = deps.split(',');
@@ -159,7 +159,7 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 			}
 		});
 	} catch (err) {
-		callback(err, null);
+		return callback(err, null);
 	}
 };
 /**
@@ -178,13 +178,13 @@ exports.getPlatfrms = function(callback) {
 			order: 1
 		}, function(err, platfrms) {
 			if (err) {
-				callback(err, null);
+				return callback(err, null);
 			} else {
-				callback(null, platfrms);
+				return callback(null, platfrms);
 			}
 		});
 	} catch (err) {
-		callback(err, null);
+		return callback(err, null);
 	}
 };
 /**

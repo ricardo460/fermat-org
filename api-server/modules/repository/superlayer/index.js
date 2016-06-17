@@ -82,7 +82,7 @@ exports.insOrUpdSuprlay = function(code, name, logo, deps, order, callback) {
 					res_supr.logo = logo;
 				}
 				if (deps && deps !== res_supr.deps) {
-					if (deps !== undefined || deps !== null)
+					if (deps !== undefined || deps !== null || deps.length !== 0)
 						deps = deps.replace(" ", "").split(',');
 					else
 						deps = [];
@@ -119,7 +119,7 @@ exports.insOrUpdSuprlay = function(code, name, logo, deps, order, callback) {
 					return callback(null, res_supr);
 				}
 			} else {
-				if (deps === undefined || deps === null)
+				if (deps === undefined || deps === null || deps.length === 0)
 					deps = [];
 				else
 					deps = deps.split(',');
