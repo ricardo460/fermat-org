@@ -65,3 +65,18 @@ span.disabled {
     bottom: 0px;
     position: absolute;
 }
+
+.gm-style-iw {
+}
+
+/*
+.gm-style-iw div {
+    overflow: hidden !important;
+    min-height: 2500px;
+}*/
+
+.info-window {
+    font-family: Roboto,Arial,sans-serif;
+    min-width: 15em;
+}
+
