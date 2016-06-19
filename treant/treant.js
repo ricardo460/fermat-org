@@ -217,7 +217,8 @@ function createActors(clients) {
 							position : randomizeLocation(comp.location),
 							icon : {
 								url : url,
-								scaledSize: new google.maps.Size(50, 50)
+								scaledSize: new google.maps.Size(50, 50),
+                                anchor: new google.maps.Point(25,25)
 							}
 						});
 						
@@ -268,7 +269,8 @@ function createMarkers(list, title) {
                 position : {lat : node.extra.location.latitude, lng : node.extra.location.longitude},
                 icon : {
                     url : "img/markers/" + url,
-                    scaledSize: new google.maps.Size(50, 50)
+                    scaledSize: new google.maps.Size(50, 50),
+                    anchor: new google.maps.Point(25,25)
                 },
             });
             
