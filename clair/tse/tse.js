@@ -9,7 +9,7 @@ var user_data = getUserID(),
     referenceId = '',
     referenceCode = '',
     referenceOrder = '',
-    usertype = 'designer',
+    usertype = '',
     perm = 77000;
 
 function init() {
@@ -18,6 +18,7 @@ function init() {
         window.location.replace(window.location.href.replace(window.location.pathname, ''));
     }
     else{
+        environment = API_ENV;
         $('#type').prop('disabled', true);
         $('#add').prop('disabled', true);
 
@@ -119,7 +120,7 @@ function deleteStructure(element, type){
 
 function modifyStructure(element, type){
 
-    add('modify');
+    add("modify");
     var url;
 
     request = 'modify';
@@ -170,23 +171,46 @@ function modifyStructure(element, type){
                     document.getElementById("groupCode").value = res.code;
                     document.getElementById("groupName").value = res.name.capitalize();
 
-                    var list = document.getElementById("groupDeps"),
-                        l = list.options.length;
-
-                    for(var e in res.deps){
-                        for(var i = 0; i < l; i++){
-                            if(res.deps[e] === list.options[i].value)
-                                list.options[i].selected = 'true';
-                        }
-                    }
                     retrieveData(current, current, null);
-                    referenceCode = res.code;
 
+                    if(current === 'superlayer')
+                        retrieveData("platform", "superlayer", null);
+                    else
+                        retrieveData("superlayer", "platform", null);
+
+                        setTimeout(function (){
+                            var list = document.getElementById("groupDeps"),
+                                l = list.options.length;
+
+                            for(var e in res.deps){
+                                for(var i = 0; i < l; i++){
+                                    if(res.deps[e] === list.options[i].value)
+                                        list.options[i].selected = 'true';
+                                }
+                            }
+
+                        }, 750);
+
+                    referenceCode = res.code;
                     findPosition(type, res.order);
                 }
-                else{
+                else {
                     document.getElementById("desCode").value = res.code;
                     document.getElementById("desName").value = res.name.capitalize();
+
+                    setTimeout(function (){
+                        var list = document.getElementById("groupDeps"),
+                            l = list.options.length;
+
+                        for(var e in res.deps){
+                            for(var i = 0; i < l; i++){
+                                if(res.deps[e] === list.options[i].value)
+                                    list.options[i].selected = 'true';
+                            }
+                        }
+                    }, 500);
+
+                    referenceCode = res.code;
                 }
             }
         }
@@ -218,7 +242,7 @@ function findPosition(type, order){
              var l = res.length;
 
              for(var i = 0; i < l; i++){
-                if(res[i].order === order && order === 1){
+                if(res[i].order === order && order === 0){
                     if(type === "layer"){
                             if(res[1].suprlay !== false)
                                 document.getElementById("layerNext").innerHTML = "Currently: Above - " + res[1].name.capitalize() + " (In Superlayer: " + res[1].suprlay + ")";
@@ -311,12 +335,18 @@ function clearReference(){
 
 function add(option){
 
-    if(option !== 'modify'){
+    if(option !== "modify"){
+        request = 'add';
         clearReference();
         if(current === 'layer')
             retrieveData(current, 'layers', false);
-        else
+        else{
             retrieveData(current, current, null);
+            if(current === 'superlayer')
+                retrieveData("platform", "superlayer", null);
+            else
+                retrieveData("superlayer", "platform", null);
+        }
     }
 
     hideLists();
@@ -335,7 +365,6 @@ function add(option){
             showForm('#desForm');
         }
     }
-    request = 'add';
 }
 
 function cancel() {
@@ -380,6 +409,7 @@ function clearGroupForm(type) {
         document.getElementById('groupName').value = '';
         document.getElementById('groupDeps').value = '';
         $("#groupOrder").empty();
+        $("#groupDeps").empty();
     }
     else{
         document.getElementById('desCode').value = '';
@@ -483,7 +513,7 @@ function fillTable(repo, data){
         else if(repo === "platform")
             $('#platformList').append("<tr><td>" + data[i].code + "</td><td>" + data[i].name.capitalize() + "</td><td>" + data[i].order + "</td><td>" + data[i].deps + "</td><td>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"platform"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='platform: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"platform"' + ")'>Delete</button>" + "</td></tr>");
         else
-            $('#superlayerList').append("<tr><td>" + data[i].code + "</td><td>" + data[i].name.capitalize() + "</td><td>" + data[i].order + "</td><td>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"superlayer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='superlayer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"superlayer"' + ")'>Delete</button>" + "</td></tr>");
+            $('#superlayerList').append("<tr><td>" + data[i].code + "</td><td>" + data[i].name.capitalize() + "</td><td>" + data[i].order + "</td><td>" + data[i].deps + "</td><td>" + "<button id='" + data[i]._id + "' name='layer: " + data[i].name.capitalize() + "' onclick='modifyStructure(this," + '"superlayer"' + ")'>Modify</button>" + "<button id='" + data[i]._id + "' name='superlayer: " + data[i].name.capitalize() + "' onclick='deleteStructure(this," + '"superlayer"' + ")'>Delete</button>" + "</td></tr>");
     }
 }
 
@@ -602,24 +632,33 @@ function verify(form, request){
         }
         else{                   //Add group
 
-            if(form === 'platform'){
-                list = document.getElementById('platformList');
+            if(form === 'platform')
                 url = getRoute("platfrms", "insert");
-            }
-            else{
-                list = document.getElementById('superlayerList');
+            else
                 url = getRoute("suprlays", "insert");
-            }
-            elements = list.getElementsByTagName('td');
 
-            if(form === 'platform'){
-                j = 5;
+            if(form === 'platform')
                 repo = "platfrms";
-            }
-            else{
-                j = 4;
+            else
                 repo = "suprlays";
+
+            list = document.getElementById('platformList');
+            elements = list.getElementsByTagName('td');
+            j = 5;
+
+            for(i = 0, l = elements.length; i < l; i+=j){
+                if(data.code.toUpperCase() === elements[i].innerHTML){
+                    window.alert('Code in use');
+                    return false;
+                }
+                if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML){
+                    window.alert('Name in use');
+                    return false;
+                }
             }
+
+            list = document.getElementById('superlayerList');
+            elements = list.getElementsByTagName('td');
 
             for(i = 0, l = elements.length; i < l; i+=j){
                 if(data.code.toUpperCase() === elements[i].innerHTML){
@@ -681,31 +720,40 @@ function verify(form, request){
         }
         else{                   //Modify group
 
-            if(form === 'platform'){
-                list = document.getElementById('platformList');
+            if(form === 'platform')
                 url = getRoute("platfrms", "update", referenceId);
-            }
-            else{
-                list = document.getElementById('superlayerList');
+            else
                 url = getRoute("suprlays", "update", referenceId);
-            }
-            elements = list.getElementsByTagName('td');
 
-            if(form === 'platform'){
-                j = 5;
+            if(form === 'platform')
                 repo = "platfrms";
-            }
-            else{
-                j = 4;
+            else
                 repo = "suprlays";
-            }
+
+            list = document.getElementById('platformList');
+            elements = list.getElementsByTagName('td');
+            j = 5;
 
             for(i = 0, l = elements.length; i < l; i+=j){
                 if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){
                     window.alert('Code in use');
                     return false;
                 }
-                if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML && (data.name.toLowerCase()).capitalize() !== referenceName){
+                if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML && (data.name.toLowerCase()) !== referenceName){
+                    window.alert('Name in use');
+                    return false;
+                }
+            }
+
+            list = document.getElementById('superlayerList');
+            elements = list.getElementsByTagName('td');
+
+            for(i = 0, l = elements.length; i < l; i+=j){
+                if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){
+                    window.alert('Code in use');
+                    return false;
+                }
+                if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML && (data.name.toLowerCase()) !== referenceName){
                     window.alert('Name in use');
                     return false;
                 }
@@ -714,8 +762,11 @@ function verify(form, request){
             if(usertype === "designer")
                 fileCheck = send();
 
+            if(data.order > referenceOrder)
+                data.order--;
+
             if(proceed){
-                url = getRoute(repo, "insert");
+                url = getRoute(repo, "update", referenceId);
                 sendRequest(url, 'PUT', data, form);
 
                 cancel();
@@ -775,8 +826,6 @@ function sendRequest(url, method, data, type){
 
 function getData(form, request) {
 
-    var order, data, url;
-
     if(form === 'layer'){
         if(document.getElementById('layerPos').value === "before")
             order = document.getElementById('layerOrder').value;
@@ -824,35 +873,84 @@ function getData(form, request) {
         else
             url = getRoute("suprlays", "retrieve");
 
-        if(request === 'add'){
-            data = {
-                code:document.getElementById('groupCode').value,
-                name:document.getElementById('groupName').value.toLowerCase(),
-                logo:document.getElementById('groupCode').value + "_logo.png",
-                deps:$('#groupDeps').val(),
-                order:order
-            };
+        var list = document.getElementById("groupDeps"),
+            l = list.options.length,
+            dependencies = '';
+
+        for(var i = 0; i < l; i++){
+            if(list.options[i].selected === true){
+                if(dependencies !== '')
+                    dependencies += ',';
+                dependencies += list.options[i].value;
+            }
         }
-        else{
-            if(form === 'platform'){
+
+        if(dependencies === '')
+            dependencies = undefined;
+
+        if(request === 'add'){
+            if(usertype !== 'designer'){
                 data = {
-                    platfrm_id:referenceId,
                     code:document.getElementById('groupCode').value,
                     name:document.getElementById('groupName').value.toLowerCase(),
                     logo:document.getElementById('groupCode').value + "_logo.png",
-                    deps:$('#groupDeps').val(),
+                    deps:dependencies,
                     order:order
                 };
             }
             else{
                 data = {
-                    suprlay_id:referenceId,
-                    code:document.getElementById('groupCode').value,
-                    name:document.getElementById('groupName').value.toLowerCase(),
-                    logo:document.getElementById('groupCode').value + "_logo.png",
-                    deps:$('#groupDeps').val(),
-                    order:order
+                    code:document.getElementById('desCode').value,
+                    name:document.getElementById('desName').value.toLowerCase(),
+                    logo:document.getElementById('desCode').value + "_logo.png",
+                    deps:dependencies
                 };
+            }
+        }
+        else{
+            if(form === 'platform'){
+                if(usertype !== 'designer'){
+                    data = {
+                        platfrm_id:referenceId,
+                        code:document.getElementById('groupCode').value,
+                        name:document.getElementById('groupName').value.toLowerCase(),
+                        logo:document.getElementById('groupCode').value + "_logo.png",
+                        deps:dependencies,
+                        order:order
+                    };
+                }
+                else{
+                    data = {
+                        platfrm_id:referenceId,
+                        code:document.getElementById('desCode').value,
+                        name:document.getElementById('desName').value.toLowerCase(),
+                        logo:document.getElementById('desCode').value + "_logo.png",
+                        deps:dependencies,
+                        order:document.getElementById('groupOrder').value
+                    };
+                }
+            }
+            else{
+                if(usertype !== 'designer'){
+                    data = {
+                        suprlay_id:referenceId,
+                        code:document.getElementById('groupCode').value,
+                        name:document.getElementById('groupName').value.toLowerCase(),
+                        logo:document.getElementById('groupCode').value + "_logo.png",
+                        deps:dependencies,
+                        order:order
+                    };
+                }
+                else{
+                    data = {
+                        suprlay_id:referenceId,
+                        code:document.getElementById('desCode').value,
+                        name:document.getElementById('desName').value.toLowerCase(),
+                        logo:document.getElementById('desCode').value + "_logo.png",
+                        deps:dependencies,
+                        order:document.getElementById('groupOrder').value
+                    };
+                }
             }
         }
     }
@@ -863,14 +961,14 @@ function getData(form, request) {
 function getUserID() {
     var _usr_id = {
          __v : getCookie("v"),
-        _id : '57043b72b11754550799cfc1',
+        _id : getCookie("id"),
         avatar_url : getCookie("avatar"),
-        axs_key : '57043b72b11754550799cfc8',
+        axs_key : getCookie("key"),
         email : getCookie("email"),
         github_tkn : getCookie("github"),
         name : getCookie("name"),
         upd_at : getCookie("update"),
-        usrnm : 'simonorono'
+        usrnm : getCookie("usrnm")
     };
     return _usr_id;
 }
@@ -887,6 +985,7 @@ function checkPermissions() {
     }).success (
         function (res) {
             perm = parseInt(res.perm);
+            usertype = res.type;
             return perm;
         }
     );
