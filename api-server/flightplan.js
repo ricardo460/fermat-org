@@ -67,8 +67,8 @@ plan.remote('deploy', function (remote) {
 		}
 		remote.exec('ln -fsn  /home/ubuntu/secret.json ' + remote.runtime.root + '/versions/secret.json');
 		remote.with('cd ' + versionFolder, function () {
-			remote.sudo('npm install --production');
 			remote.sudo('forever stopall');
+			remote.sudo('npm install --production');
 			remote.sudo('NODE_ENV=production PORT=8000 forever start bin/www');
 			remote.sudo('NODE_ENV=testing PORT=8001 forever start bin/www');
 			remote.sudo('NODE_ENV=development PORT=8002 forever start bin/www');
