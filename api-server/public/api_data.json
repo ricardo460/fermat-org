@@ -884,6 +884,13 @@
           },
           {
             "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "deps",
+            "description": "<p>Platform dependencies example (APD, BCH, WPD).</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "Number",
             "optional": false,
             "field": "order",
@@ -993,6 +1000,13 @@
             "optional": false,
             "field": "logo",
             "description": "<p>Platform logo.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "deps",
+            "description": "<p>Platform dependencies example (APD, BCH, WPD).</p>"
           },
           {
             "group": "Parameter",
@@ -1367,6 +1381,13 @@
           },
           {
             "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "deps",
+            "description": "<p>Superlay dependencies example (APD, BCH, WPD).</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "Number",
             "optional": false,
             "field": "order",
@@ -1475,6 +1496,13 @@
             "optional": false,
             "field": "logo",
             "description": "<p>Superlay logo.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "deps",
+            "description": "<p>Superlay dependencies example (APD, BCH, WPD).</p>"
           },
           {
             "group": "Parameter",
