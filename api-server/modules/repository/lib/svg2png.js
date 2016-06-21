@@ -76,61 +76,64 @@ var converSvg = function(filePng, filename, descImg) {
  * @return {[type]}            [description]
  */
 var svgToPng = function(type, filename, callback) {
+	var nmRootDir = '/navi';
+	if (config.env === 'testing')
+		nmRootDir = '/navi_lab';
 	var descImgGroup = [{
 		from: '',
-		to: '/navi/clair/images/tiles/icons/group/high/',
+		to: nmRootDir + '/clair/images/tiles/icons/group/high/',
 		quality: 'high',
 		dpi: 720
 	}, {
 		from: '',
-		to: '/navi/clair/images/tiles/icons/group/medium/',
+		to: nmRootDir + '/clair/images/tiles/icons/group/medium/',
 		quality: 'medium',
 		dpi: 90
 	}, {
 		from: '',
-		to: '/navi/clair/images/tiles/icons/group/small/',
+		to: nmRootDir + '/clair/images/tiles/icons/group/small/',
 		quality: 'small',
 		dpi: 45
 	}, {
 		from: '',
-		to: '/navi/clair/images/tiles/icons/group/mini/',
+		to: nmRootDir + '/clair/images/tiles/icons/group/mini/',
 		quality: 'mini',
 		dpi: 22
 	}];
 	var descImgType = [{
 		from: '',
-		to: '/navi/clair/images/tiles/icons/type/high/',
+		to: nmRootDir + '/clair/images/tiles/icons/type/high/',
 		quality: 'high',
 		dpi: 720
 	}, {
 		from: '',
-		to: '/navi/clair/images/tiles/icons/type/medium/',
+		to: nmRootDir + '/clair/images/tiles/icons/type/medium/',
 		quality: 'medium',
 		dpi: 90
 	}, {
 		from: '',
-		to: '/navi/clair/images/tiles/icons/type/small/',
+		to: nmRootDir + '/clair/images/tiles/icons/type/small/',
 		quality: 'small',
 		dpi: 45
 	}, {
 		from: '',
-		to: '/navi/clair/images/tiles/icons/type/mini/',
+		to: nmRootDir + '/clair/images/tiles/icons/type/mini/',
 		quality: 'mini',
 		dpi: 22
 	}];
 	var descImgHeader = [{
 		from: '',
-		to: '/navi/clair/images/headers/high/',
+		to: nmRootDir + '/clair/images/headers/high/',
 		quality: 'high',
 		dpi: 360
 	}, {
 		from: '',
-		to: '/navi/clair/images/headers/medium/',
+		to: nmRootDir + '/clair/images/headers/medium/',
 		quality: 'medium',
 		dpi: 90
 	}, {
 		from: '',
-		to: '/navi/clair/images/headers/small/',
+		to: nmRootDir + '/clair/images/headers/small/',
 		quality: 'small',
 		dpi: 45
 	}];
@@ -142,7 +145,7 @@ var svgToPng = function(type, filename, callback) {
 		var fromSvg = dir + '/' + filename + '.svg';
 		if (type === 'group') {
 			descSvgOri.from = fromSvg;
-			descSvgOri.to = '/navi/clair/images/tiles/icons/group/svg/' + filename + '.svg';
+			descSvgOri.to = nmRootDir + '/clair/images/tiles/icons/group/svg/' + filename + '.svg';
 			filesToSend.push(descSvgOri);
 			for (i = 0; i < descImgGroup.length; i++) {
 				filePng = filename + ".png";
@@ -151,7 +154,7 @@ var svgToPng = function(type, filename, callback) {
 			}
 		} else if (type === 'type') {
 			descSvgOri.from = fromSvg;
-			descSvgOri.to = '/navi/clair/images/tiles/icons/type/svg/' + filename + '.svg';
+			descSvgOri.to = nmRootDir + '/clair/images/tiles/icons/type/svg/' + filename + '.svg';
 			filesToSend.push(descSvgOri);
 			for (i = 0; i < descImgType.length; i++) {
 				filePng = filename + ".png";
@@ -160,7 +163,7 @@ var svgToPng = function(type, filename, callback) {
 			}
 		} else if (type === 'headers') {
 			descSvgOri.from = fromSvg;
-			descSvgOri.to = '/navi/clair/images/headers/svg/' + filename + '.svg';
+			descSvgOri.to = nmRootDir + '/clair/images/headers/svg/' + filename + '.svg';
 			filesToSend.push(descSvgOri);
 			for (i = 0; i < descImgHeader.length; i++) {
 				filePng = filename + ".png";

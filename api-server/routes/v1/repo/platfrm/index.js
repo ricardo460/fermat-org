@@ -70,6 +70,7 @@ var release = function(req) {
  * @apiParam {String} code Platform code.
  * @apiParam {String} name Platform name.
  * @apiParam {String} logo Platform logo.
+ * @apiParam {String} deps Platform dependencies example (APD, BCH, WPD).
  * @apiParam {Number} order Indicates the position where the platform this with respect to other.
  * @apiGroup Repo-Platform
  * @apiDescription Add a platform to the architecture of fermat.
@@ -92,9 +93,9 @@ router.post('/', function(req, res, next) {
 					} else {
 						repMod.addPlatform(req, function(error, result) {
 							if (error) {
-								res.status(200).send(error);
+								res.status(403).send(error);
 							} else {
-								res.status(201).send(result);
+								res.status(200).send(result);
 							}
 						});
 					}
@@ -171,6 +172,7 @@ router.get('/:platfrm_id', function(req, res, next) {
  * @apiParam {String} code Platform code.
  * @apiParam {String} name Platform name.
  * @apiParam {String} logo Platform logo.
+ * @apiParam {String} deps Platform dependencies example (APD, BCH, WPD).
  * @apiParam {Number} order Indicates the position where the platform this with respect to other.
  * @apiDescription Update platform from the architecture of fermat.
  */

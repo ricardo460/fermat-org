@@ -80,6 +80,10 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 					res_plat.logo = logo;
 				}
 				if (deps && deps !== res_plat.deps) {
+					if (deps !== undefined || deps !== null || deps.length !== 0)
+						deps = deps.split(',');
+					else
+						deps = [];
 					set_obj.deps = deps;
 					res_plat.deps = deps;
 				}
@@ -113,6 +117,10 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 					return callback(null, res_plat);
 				}
 			} else {
+				if (deps === undefined || deps === null || deps.length === 0)
+					deps = [];
+				else
+					deps = deps.split(',');
 				if (order === undefined || order === null) getOrdrLstPltfrm(function(err, nu_order) {
 					if (err) return callback(err, null);
 					if (nu_order) {
@@ -151,7 +159,7 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 			}
 		});
 	} catch (err) {
-		callback(err, null);
+		return callback(err, null);
 	}
 };
 /**
@@ -170,13 +178,13 @@ exports.getPlatfrms = function(callback) {
 			order: 1
 		}, function(err, platfrms) {
 			if (err) {
-				callback(err, null);
+				return callback(err, null);
 			} else {
-				callback(null, platfrms);
+				return callback(null, platfrms);
 			}
 		});
 	} catch (err) {
-		callback(err, null);
+		return callback(err, null);
 	}
 };
 /**
@@ -254,6 +262,7 @@ exports.updatePlatfrmById = function(_platfrm_id, code, name, logo, deps, order,
 			set_obj.logo = logo;
 		}
 		if (deps) {
+			deps = deps.split(',');
 			set_obj.deps = deps;
 		}
 		if (typeof order != "undefined") {
@@ -288,6 +297,29 @@ exports.updatePlatfrmById = function(_platfrm_id, code, name, logo, deps, order,
 			} else
 				return callback('The platform does not exist', null);
 
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
+/**
+ * [updateDepsPlatfrmById description]
+ * @param  {[type]}   _platfrm_id [description]
+ * @param  {[type]}   deps        [description]
+ * @param  {Function} callback    [description]
+ * @return {[type]}               [description]
+ */
+exports.updateDepsPlatfrmById = function(_platfrm_id, deps, callback) {
+	'use strict';
+	try {
+		var set_obj = {};
+		if (deps)
+			set_obj.deps = deps;
+		platfrmSrv.updatePlatfrmById(_platfrm_id, set_obj, function(err, plat) {
+			if (err) {
+				return callback(err, null);
+			}
+			return callback(null, set_obj);
 		});
 	} catch (err) {
 		return callback(err, null);
