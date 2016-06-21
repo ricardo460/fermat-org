@@ -302,6 +302,29 @@ exports.updateSuprlayById = function(_sprly_id, code, name, logo, deps, order, c
 	}
 };
 /**
+ * [updateDepsSuperlayById description]
+ * @param  {[type]}   _suprlay_id [description]
+ * @param  {[type]}   deps        [description]
+ * @param  {Function} callback    [description]
+ * @return {[type]}               [description]
+ */
+exports.updateDepsSuperlayById = function(_suprlay_id, deps, callback) {
+	'use strict';
+	try {
+		var set_obj = {};
+		if (deps)
+			set_obj.deps = deps;
+		suprlaySrv.updateSuprlayById(_suprlay_id, set_obj, function(err, res_upd) {
+			if (err) {
+				return callback(err, null);
+			}
+			return callback(null, set_obj);
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
+/**
  * [delSuprlayById description]
  *
  * @method delSuprlayById

@@ -303,6 +303,29 @@ exports.updatePlatfrmById = function(_platfrm_id, code, name, logo, deps, order,
 	}
 };
 /**
+ * [updateDepsPlatfrmById description]
+ * @param  {[type]}   _platfrm_id [description]
+ * @param  {[type]}   deps        [description]
+ * @param  {Function} callback    [description]
+ * @return {[type]}               [description]
+ */
+exports.updateDepsPlatfrmById = function(_platfrm_id, deps, callback) {
+	'use strict';
+	try {
+		var set_obj = {};
+		if (deps)
+			set_obj.deps = deps;
+		platfrmSrv.updatePlatfrmById(_platfrm_id, set_obj, function(err, plat) {
+			if (err) {
+				return callback(err, null);
+			}
+			return callback(null, set_obj);
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
+/**
  * [delPlatfrmById description]
  *
  * @method delPlatfrmById
