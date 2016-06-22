@@ -123,6 +123,28 @@ var isObjectID = function(str) {
 	}
 };
 /**
+ * [isValidDeps description]
+ * @param  {[type]}  deps [description]
+ * @return {Boolean}      [description]
+ */
+var isValidDeps = function(deps) {
+	var bnd = 0;
+
+	if (deps === undefined || deps === null)
+		return 1;
+	if (ifExistIsValidData(deps)) {
+		deps = deps.split(',');
+		console.log(deps);
+		for (var i = 0; i < deps.length; i++) {
+			if (isObjectID(deps[i]))
+				bnd = 1;
+			else return 0;
+		}
+		return bnd;
+	} 
+	return 0;
+};
+/**
  * [isEmail description]
  * @param  {[type]}  email [description]
  * @return {Boolean}       [description]
@@ -176,6 +198,14 @@ var isOctal = function(str) {
 			return 0;
 	}
 	return 1;
+};
+/**
+ * [isValidDeps description]
+ * @param  {[type]}  str [description]
+ * @return {Boolean}     [description]
+ */
+exports.isValidDeps = function(str) {
+	return isValidDeps(str);
 };
 /**
  * [isValidPerm description]
