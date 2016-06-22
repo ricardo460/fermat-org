@@ -31,10 +31,6 @@ th {
     margin: 0px;
     padding: 0px;
 }
-.shared {}
-.shared * {
-    display: inline-block;
-}
 .buttons {
     margin-top: 25px;
 }
