@@ -66,6 +66,7 @@ var getOrdrLstPltfrm = function(callback) {
  */
 exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 	'use strict';
+	var existDepd = null;
 	try {
 		platfrmSrv.findPlatfrmByCode(code, function(err_plat, res_plat) {
 			if (err_plat) {
@@ -86,6 +87,8 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 						deps = deps.split(',');
 					else
 						deps = [];
+					existDepd = mapsCodes.existDeps(deps);
+					if (!existDepd.valid) return callback('Dependencies id ' + existDepd._id + ' not found', null);
 					set_obj.deps = deps;
 					res_plat.deps = deps;
 				}
@@ -123,6 +126,8 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 					deps = [];
 				else
 					deps = deps.split(',');
+				existDepd = mapsCodes.existDeps(deps);
+				if (!existDepd.valid) return callback('Dependencies id ' + existDepd._id + ' not found', null);
 				if (order === undefined || order === null) getOrdrLstPltfrm(function(err, nu_order) {
 					if (err) return callback(err, null);
 					if (nu_order) {
@@ -278,6 +283,7 @@ exports.updatePlatfrmById = function(_platfrm_id, code, name, logo, deps, order,
 	'use strict';
 	try {
 		var set_obj = {};
+		var existDepd = null;
 		if (code) {
 			set_obj.code = code;
 		}
@@ -289,6 +295,8 @@ exports.updatePlatfrmById = function(_platfrm_id, code, name, logo, deps, order,
 		}
 		if (deps) {
 			deps = deps.split(',');
+			existDepd = mapsCodes.existDeps(deps);
+			if (!existDepd.valid) return callback('Dependencies id ' + existDepd._id + ' not found', null);
 			set_obj.deps = deps;
 		}
 		if (typeof order != "undefined") {

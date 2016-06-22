@@ -45,6 +45,22 @@ function CodePlatfSuprl() {
 		throw err;
 	}
 }
+CodePlatfSuprl.prototype.existDeps = function(deps) {
+	var platfrmCode = null;
+	var suprlayCode = null;
+	var notExis = {};
+	for (var i = 0; i < deps.length; i++) {
+		platfrmCode = mapPlatfrms[deps[i]];
+		suprlayCode = mapSuprlay[deps[i]];
+		if ((platfrmCode === undefined || platfrmCode === null) && (suprlayCode === undefined || suprlayCode === null)) {
+			notExis._id = deps[i];
+			notExis.valid = false;
+			return notExis;
+		}
+	}
+	notExis.valid = true;
+	return notExis;
+};
 CodePlatfSuprl.prototype.mapsCodePlatfrm = function mapsCodePlatfrm() {
 	return mapPlatfrms;
 };
