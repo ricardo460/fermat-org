@@ -2,6 +2,8 @@ var platfrmSrv = require('./services/platfrm');
 var PlatfrmMdl = require('./models/platfrm');
 var compMod = require('../component');
 var orderLib = require('../../../lib/utils/order');
+var MapsCodesPlatfSuprl = require("../lib/codes_platf_suprlay");
+var mapsCodes = new MapsCodesPlatfSuprl();
 /**
  * [sort description]
  *
@@ -173,6 +175,7 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
  */
 exports.getPlatfrms = function(callback) {
 	'use strict';
+
 	try {
 		platfrmSrv.findAllPlatfrms({}, {
 			order: 1
@@ -180,6 +183,18 @@ exports.getPlatfrms = function(callback) {
 			if (err) {
 				return callback(err, null);
 			} else {
+				var mapPlatfrms = mapsCodes.mapsCodePlatfrm();
+				var mapSuprlays = mapsCodes.mapsCodeSuprlay();
+				for (var i = 0; i < platfrms.length; i++) {
+					for (var j = 0; j < platfrms[i].deps.length; j++) {
+						var platfrmCode = mapPlatfrms[platfrms[i].deps[j]];
+						var suprlayCode = mapSuprlays[platfrms[i].deps[j]];
+						if (platfrmCode)
+							platfrms[i].deps[j] = platfrmCode;
+						else if (suprlayCode)
+							platfrms[i].deps[j] = suprlayCode;
+					}
+				}
 				return callback(null, platfrms);
 			}
 		});
@@ -225,8 +240,19 @@ exports.findPlatfrmById = function(_id, callback) {
 		platfrmSrv.findPlatfrmById(_id, function(err_plat, res_plat) {
 			if (err_plat) {
 				return callback(err_plat, null);
+			} else {
+				var mapPlatfrms = mapsCodes.mapsCodePlatfrm();
+				var mapSuprlays = mapsCodes.mapsCodeSuprlay();
+				for (var j = 0; j < res_plat.deps.length; j++) {
+					var platfrmCode = mapPlatfrms[res_plat.deps[j]];
+					var suprlayCode = mapSuprlays[res_plat.deps[j]];
+					if (platfrmCode)
+						res_plat.deps[j] = platfrmCode;
+					else if (suprlayCode)
+						res_plat.deps[j] = suprlayCode;
+				}
+				return callback(null, res_plat);
 			}
-			return callback(null, res_plat);
 		});
 	} catch (err) {
 		return callback(err, null);
