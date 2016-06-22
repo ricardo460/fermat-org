@@ -71,7 +71,7 @@ var release = function(req) {
  * @apiParam {String} code Superlay code.
  * @apiParam {String} name Superlay name.
  * @apiParam {String} logo Superlay logo.
- * @apiParam {String} deps Superlay dependencies example (APD, BCH, WPD).
+ * @apiParam {String} deps Superlay dependencies.
  * @apiParam {Number} order Indicates the position where the suprlay this with respect to other.
  * @apiDescription Add a super layer to the architecture of fermat.
  */
@@ -86,6 +86,7 @@ router.post('/', function(req, res, next) {
 					if (!security.isValidData(req.body.code) || //
 						!security.isValidData(req.body.name) || //
 						!security.ifExistIsValidData(req.body.logo) ||
+						!security.isValidDeps(req.body.deps) ||
 						!security.ifExistIsValidData(req.body.order)) {
 						res.status(412).send({
 							message: 'missing or invalid data'
@@ -93,9 +94,9 @@ router.post('/', function(req, res, next) {
 					} else {
 						repMod.addSuprLay(req, function(error, result) {
 							if (error) {
-								res.status(200).send(error);
+								res.status(403).send(error);
 							} else {
-								res.status(201).send(result);
+								res.status(200).send(result);
 							}
 						});
 					}
@@ -172,7 +173,7 @@ router.get('/:suprlay_id', function(req, res, next) {
  * @apiParam {String} code Superlay code.
  * @apiParam {String} name Superlay name.
  * @apiParam {String} logo Superlay logo.
- * @apiParam {String} deps Superlay dependencies example (APD, BCH, WPD).
+ * @apiParam {String} deps Superlay dependencies.
  * @apiParam {Number} order Indicates the position where the suprlay this with respect to other.
  * @apiDescription Update super layer from architecture of fermat.
  */
