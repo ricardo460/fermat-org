@@ -80,6 +80,10 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 					res_plat.logo = logo;
 				}
 				if (deps && deps !== res_plat.deps) {
+					if (deps !== undefined || deps !== null)
+						deps = deps.split(',');
+					else
+						deps = [];
 					set_obj.deps = deps;
 					res_plat.deps = deps;
 				}
@@ -113,6 +117,10 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 					return callback(null, res_plat);
 				}
 			} else {
+				if (deps === undefined || deps === null)
+					deps = [];
+				else
+					deps = deps.split(',');
 				if (order === undefined || order === null) getOrdrLstPltfrm(function(err, nu_order) {
 					if (err) return callback(err, null);
 					if (nu_order) {
@@ -254,6 +262,7 @@ exports.updatePlatfrmById = function(_platfrm_id, code, name, logo, deps, order,
 			set_obj.logo = logo;
 		}
 		if (deps) {
+			deps = deps.split(',');
 			set_obj.deps = deps;
 		}
 		if (typeof order != "undefined") {

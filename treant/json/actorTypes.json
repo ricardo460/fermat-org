@@ -5,14 +5,38 @@
             "platformComponentType"
         ],
         "actors" : [
-            "CRYPTO_BROKER",
-            "CRYPTO_CUSTOMER",
-            "ASSET_ISSUER_ACTOR",
-            "ASSET_REDEEM_POINT_ACTOR",
-            "ASSET_USER_ACTOR",
-            "ARTIST_ACTOR",
-            "FAN_ACTOR",
-            "ACTOR_CHAT"
+            {
+                "name" : "CRYPTO_BROKER",
+                "label": "Crypto Brokers"
+            },
+            {
+                "name" : "CRYPTO_CUSTOMER",
+                "label": "Crypto Broker Customers"
+            },
+            {
+                "name" : "ASSET_ISSUER_ACTOR",
+                "label": "Asset Issuers"
+            },
+            {
+                "name" : "ASSET_REDEEM_POINT_ACTOR",
+                "label": "Asset Redeem Points"
+            },
+            {
+                "name" : "ASSET_USER_ACTOR",
+                "label": "Asset Users"
+            },
+            {
+                "name" : "ARTIST_ACTOR",
+                "label": "Artists"
+            },
+            {
+                "name" : "FAN_ACTOR",
+                "label": "Artists' Fans"
+            },
+            {
+                "name" : "ACTOR_CHAT",
+                "label": "Chat Users"
+            }
         ],
         "pendingActors" : [
             "ACTOR_INTRA_USER",

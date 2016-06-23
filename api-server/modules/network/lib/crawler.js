@@ -18,11 +18,11 @@ var clintMod = require('../client');
  */
 var doLogin = function(callback) {
     var credentials = {
-        user: config.username,
-        password: SHA256(config.password) + ''
+        user: config.network.username,
+        password: SHA256(config.network.password) + ''
     };
     var options = {
-        url: 'http://' + config.ip + ':9090/fermat/api/user/login',
+        url: 'http://' + config.network.ip + ':9090/fermat/api/user/login',
         method: 'POST',
         body: credentials,
         json: true
@@ -90,7 +90,7 @@ var doRequest = function(auth, options, type, callback) {
  * @return {[type]}          [description]
  */
 exports.saveNetworkStatus = function(callback) {
-    var hash = SHA256(config.ip) + '';
+    var hash = SHA256(config.network.ip) + '';
     var extra = {};
     var reportResult = function(error, client) {
         if (error) winston.log('error', 'Error on crawler', error);
@@ -100,7 +100,7 @@ exports.saveNetworkStatus = function(callback) {
     };
     var fillClientData = function(auth, client, server, callback) {
         doRequest(auth, {
-            url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/client/components/details',
+            url: 'http://' + config.network.ip + ':9090/fermat/api/admin/monitoring/client/components/details',
             method: 'GET',
             qs : {
                 i : client.identityPublicKey
@@ -115,21 +115,21 @@ exports.saveNetworkStatus = function(callback) {
     };
     doLogin(function(err, auth) {
         doRequest(auth, {
-            url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/current/data',
+            url: 'http://' + config.network.ip + ':9090/fermat/api/admin/monitoring/current/data',
             method: 'GET'
         }, 0, function(error, current) {
             if (error) return callback(error, null);
             if (current) {
                 extra.current = current;
                 doRequest(auth, {
-                    url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/system/data',
+                    url: 'http://' + config.network.ip + ':9090/fermat/api/admin/monitoring/system/data',
                     method: 'GET'
                 }, 1, function(error, system) {
                     if (error) return callback(error, null);
                     if (system) {
                         extra.system = system;
                         satelize.satelize({
-                            ip: config.ip
+                            ip: config.network.ip
                         }, function(error, location) {
                             if (error) return callback(error, null);
                             if (location) {
@@ -139,7 +139,7 @@ exports.saveNetworkStatus = function(callback) {
                                     if (server) {
                                         callback(null, server);
                                         doRequest(auth, {
-                                            url: 'http://' + config.ip + ':9090/fermat/api/admin/monitoring/clients/list',
+                                            url: 'http://' + config.network.ip + ':9090/fermat/api/admin/monitoring/clients/list',
                                             method: 'GET'
                                         }, 2, function(error, clients) {
                                             if (error) winston.log('error', 'Error on crawler', error);
