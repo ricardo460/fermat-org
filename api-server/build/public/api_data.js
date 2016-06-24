@@ -887,7 +887,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "deps",
-            "description": "<p>Platform dependencies example (APD, BCH, WPD).</p>"
+            "description": "<p>Platform dependencies.</p>"
           },
           {
             "group": "Parameter",
@@ -1006,7 +1006,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "deps",
-            "description": "<p>Platform dependencies example (APD, BCH, WPD).</p>"
+            "description": "<p>Platform dependencies.</p>"
           },
           {
             "group": "Parameter",
@@ -1384,7 +1384,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "deps",
-            "description": "<p>Superlay dependencies example (APD, BCH, WPD).</p>"
+            "description": "<p>Superlay dependencies.</p>"
           },
           {
             "group": "Parameter",
@@ -1502,7 +1502,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "deps",
-            "description": "<p>Superlay dependencies example (APD, BCH, WPD).</p>"
+            "description": "<p>Superlay dependencies.</p>"
           },
           {
             "group": "Parameter",
