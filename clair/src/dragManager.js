@@ -17,8 +17,8 @@ function DragManager() {
         };
 
     this.styleMouse = {
-            MOVE : 'move',
-            CLICK : 'move',
+            MOVE : 'default',
+            CLICK : 'default',
             DROP : 'default',
             CROSS : 'pointer',
             default : 'default' 
@@ -165,7 +165,7 @@ function DragManager() {
 
                 container.style.cursor = self.styleMouse.default;
 
-                window.camera.enable();
+                //window.camera.enable();
             }
         }
     }
@@ -192,15 +192,15 @@ function DragManager() {
 
             window.camera.disable();
 
-            for(i = 0; i < self.functions.CLICK.length; i++){
-
-                var action = self.functions.CLICK[i];
-
-                if(typeof(action) === 'function')
-                    action(SELECTED);
-            }
-
             container.style.cursor = self.styleMouse.CLICK;
+        }
+
+        for(i = 0; i < self.functions.CLICK.length; i++){
+
+            var action = self.functions.CLICK[i];
+
+            if(typeof(action) === 'function')
+                action(SELECTED);
         }
     }
 
@@ -237,9 +237,9 @@ function DragManager() {
 
     function resetStyleMouse(){
 
-        self.styleMouse.CLICK = 'move';
+        self.styleMouse.CLICK = 'default';
         self.styleMouse.CROSS = 'pointer';
-        self.styleMouse.MOVE = 'move';
+        self.styleMouse.MOVE = 'default';
         self.styleMouse.DROP = 'default';
     }
 
@@ -254,6 +254,9 @@ function DragManager() {
     }
 
     this.reset = function(){
+        SELECTED = null;
+        INTERSECTED = null;
+        COLLISION = null;
         cleanFunctions();
         resetStyleMouse();
         self.objects = [];

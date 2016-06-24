@@ -123,7 +123,7 @@ function ButtonsManager() {
      * @author Ricardo Delgado
      * Removes all created buttons. 
      */
-    this.removeAllButtons = function(){
+    this.removeAllButtons = function(action){
 
         if(self.objects.left.buttons.length !== 0 || self.objects.right.buttons.length !== 0){
 
@@ -137,10 +137,12 @@ function ButtonsManager() {
             if($('#'+actualButton.id) != null) 
                 window.helper.hide($('#'+actualButton.id), 1000); 
             
-                self.removeAllButtons();
+                self.removeAllButtons(action);
         }
-        else
-            window.fieldsEdit.removeAllFields();
+        else{
+            if(!action)
+                window.fieldsEdit.removeAllFields();
+        }
     };
 
     function calculatePosition(sucesorButton, side, x){

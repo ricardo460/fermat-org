@@ -24,8 +24,10 @@ function ScreenshotsAndroid() {
     var action = { state : false, mesh : null };
 
 	var onClick = function(target) {
-		change(target.userData.id);
-		window.buttonsManager.removeAllButtons();
+		if(actualView === "table"){ 
+			change(target.userData.id);
+			window.buttonsManager.removeAllButtons();
+		}
 	};
 
 	this.getScreenshots = function(){
