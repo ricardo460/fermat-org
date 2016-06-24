@@ -336,6 +336,24 @@ exports.updatePlatfrmById = function(_platfrm_id, code, name, logo, deps, order,
 		return callback(err, null);
 	}
 };
+var updateDepsPlatfrmById = function(_platfrm_id, deps, callback) {
+	'use strict';
+	try {
+		var set_obj = {};
+		if (deps) {
+			deps = deps.split(',');
+			set_obj.deps = deps;
+		}
+		platfrmSrv.updatePlatfrmById(_platfrm_id, set_obj, function(err, plat) {
+			if (err) {
+				return callback(err, null);
+			}
+			return callback(null, set_obj);
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
 /**
  * [updateDepsPlatfrmById description]
  * @param  {[type]}   _platfrm_id [description]
@@ -346,14 +364,49 @@ exports.updatePlatfrmById = function(_platfrm_id, code, name, logo, deps, order,
 exports.updateDepsPlatfrmById = function(_platfrm_id, deps, callback) {
 	'use strict';
 	try {
-		var set_obj = {};
-		if (deps)
-			set_obj.deps = deps;
-		platfrmSrv.updatePlatfrmById(_platfrm_id, set_obj, function(err, plat) {
+		updatePlatfrmById(_platfrm_id, deps, function(err, plat) {
 			if (err) {
 				return callback(err, null);
 			}
-			return callback(null, set_obj);
+			return callback(null, plat);
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
+var updDeps = function(_id, callback) {
+	try {
+		platfrmSrv.findAllPlatfrms({}, {
+			order: 1
+		}, function(err, platfrms) {
+			if (err) {
+				return callback(err, null);
+			} else {
+				var foundDep = null;
+				var loopPlatfrm = function(i) {
+					if (i < platfrms.length) {
+						foundDep = false;
+						for (var j = 0; j < platfrms[i].deps.length; j++) {
+							if (_id === platfrms[i].deps[j]) {
+								platfrms[i].deps.splice(j, 1);
+								foundDep = true;
+							}
+						}
+						if (foundDep)
+							updateDepsPlatfrmById(_id, platfrms[i].deps,
+								function(err, res) {
+									if (err) return callback(err, null);
+									else {
+										loopPlatfrm(i++);
+									}
+								});
+						else loopPlatfrm(i++);
+					} else return callback(null, platfrms);
+				}
+				loopPlatfrm(0);
+
+
+			}
 		});
 	} catch (err) {
 		return callback(err, null);
