@@ -2,6 +2,8 @@ var suprlaySrv = require('./services/suprlay');
 var SuprlayMdl = require('./models/suprlay');
 var compMod = require('../component');
 var orderLib = require('../../../lib/utils/order');
+var MapsCodesPlatfSuprl = require("../lib/codes_platf_suprlay");
+var mapsCodes = new MapsCodesPlatfSuprl();
 /**
  * [sort description]
  *
@@ -65,6 +67,7 @@ var getOrdrLstSuprlays = function(callback) {
  */
 exports.insOrUpdSuprlay = function(code, name, logo, deps, order, callback) {
 	'use strict';
+	var existDepd = null;
 	try {
 		//order = code ? getOrder(code) : null;
 		suprlaySrv.findSuprlayByCode(code, function(err_supr, res_supr) {
@@ -82,10 +85,12 @@ exports.insOrUpdSuprlay = function(code, name, logo, deps, order, callback) {
 					res_supr.logo = logo;
 				}
 				if (deps && deps !== res_supr.deps) {
-					if (deps !== undefined || deps !== null)
+					if (deps !== undefined || deps !== null || deps.length !== 0)
 						deps = deps.replace(" ", "").split(',');
 					else
 						deps = [];
+					existDepd = mapsCodes.existDeps(deps);
+					if (!existDepd.valid) return callback('Dependencies id ' + existDepd._id + ' not found', null);
 					set_obj.deps = deps;
 					res_supr.deps = deps;
 				}
@@ -119,10 +124,12 @@ exports.insOrUpdSuprlay = function(code, name, logo, deps, order, callback) {
 					return callback(null, res_supr);
 				}
 			} else {
-				if (deps === undefined || deps === null)
+				if (deps === undefined || deps === null || deps.length === 0)
 					deps = [];
 				else
 					deps = deps.split(',');
+				existDepd = mapsCodes.existDeps(deps);
+				if (!existDepd.valid) return callback('Dependencies id ' + existDepd._id + ' not found', null);
 				if (order === undefined || order === null) getOrdrLstSuprlays(function(err, nu_order) {
 					if (err) return callback(err, null);
 					if (nu_order) {
@@ -182,6 +189,18 @@ exports.getSuprlays = function(callback) {
 			if (err) {
 				callback(err, null);
 			} else {
+				var mapPlatfrms = mapsCodes.mapsCodePlatfrm();
+				var mapSuprlays = mapsCodes.mapsCodeSuprlay();
+				for (var i = 0; i < suprlays.length; i++) {
+					for (var j = 0; j < suprlays[i].deps.length; j++) {
+						var platfrmCode = mapPlatfrms[suprlays[i].deps[j]];
+						var suprlayCode = mapSuprlays[suprlays[i].deps[j]];
+						if (platfrmCode)
+							suprlays[i].deps[j] = platfrmCode;
+						else if (suprlayCode)
+							suprlays[i].deps[j] = suprlayCode;
+					}
+				}
 				callback(null, suprlays);
 			}
 		});
@@ -226,6 +245,16 @@ exports.findSuprlayById = function(_id, callback) {
 		if (err_suprlay) {
 			return callback(err_suprlay, null);
 		} else if (res_suprlay) {
+			var mapPlatfrms = mapsCodes.mapsCodePlatfrm();
+			var mapSuprlays = mapsCodes.mapsCodeSuprlay();
+			for (var j = 0; j < res_suprlay.deps.length; j++) {
+				var platfrmCode = mapPlatfrms[res_suprlay.deps[j]];
+				var suprlayCode = mapSuprlays[res_suprlay.deps[j]];
+				if (platfrmCode)
+					res_suprlay.deps[j] = platfrmCode;
+				else if (suprlayCode)
+					res_suprlay.deps[j] = suprlayCode;
+			}
 			return callback(null, res_suprlay);
 		} else {
 			return callback(null, null);
@@ -252,6 +281,7 @@ exports.updateSuprlayById = function(_sprly_id, code, name, logo, deps, order, c
 	'use strict';
 	try {
 		var set_obj = {};
+		var existDepd = null;
 		if (code) {
 			set_obj.code = code;
 		}
@@ -263,6 +293,8 @@ exports.updateSuprlayById = function(_sprly_id, code, name, logo, deps, order, c
 		}
 		if (deps) {
 			deps = deps.split(',');
+			existDepd = mapsCodes.existDeps(deps);
+			if (!existDepd.valid) return callback('Dependencies id ' + existDepd._id + ' not found', null);
 			set_obj.deps = deps;
 		}
 		if (typeof order != "undefined") {
@@ -296,6 +328,29 @@ exports.updateSuprlayById = function(_sprly_id, code, name, logo, deps, order, c
 			} else {
 				return callback('The super layer does not exist', null);
 			}
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
+/**
+ * [updateDepsSuperlayById description]
+ * @param  {[type]}   _suprlay_id [description]
+ * @param  {[type]}   deps        [description]
+ * @param  {Function} callback    [description]
+ * @return {[type]}               [description]
+ */
+exports.updateDepsSuperlayById = function(_suprlay_id, deps, callback) {
+	'use strict';
+	try {
+		var set_obj = {};
+		if (deps)
+			set_obj.deps = deps;
+		suprlaySrv.updateSuprlayById(_suprlay_id, set_obj, function(err, res_upd) {
+			if (err) {
+				return callback(err, null);
+			}
+			return callback(null, set_obj);
 		});
 	} catch (err) {
 		return callback(err, null);
