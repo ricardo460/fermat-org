@@ -107,7 +107,7 @@ exports.findPlatfrms = function (query, limit, order, callback) {
  */
 exports.findAllPlatfrms = function (query, order, callback) {
     'use strict';
-    platfrmDao.findAllSchemaLst(query, order, function (err, platfrm) {
+    platfrmDao.findAllSchemaLst(query, order, function(err, platfrm) {
         callback(err, platfrm);
     });
 };

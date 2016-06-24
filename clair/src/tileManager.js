@@ -84,7 +84,7 @@ function TileManager() {
                 section[id] = newLayer.slice(0); //Use a copy
             }
 
-            isSuperLayer.push(false); //Just to initialize
+            isSuperLayer.push(false);
         }
 
         for (var j = 0; j <= groupsQtty; j++) {
@@ -204,7 +204,7 @@ function TileManager() {
         for (i = 0, l = _platfrms.length; i < l; i++) {
             code = _platfrms[i].code;
             window.platforms[code] = {};
-            window.platforms[code].index = _platfrms[i].order - 1;
+            window.platforms[code].index = _platfrms[i].order;
             window.platforms[code].dependsOn = _platfrms[i].deps;
             /* FIXME!!!!!! */
             for(var q = 0; q < window.platforms[code].dependsOn.length; q++) {
@@ -224,7 +224,7 @@ function TileManager() {
             window.layers[name] = {};
             //TODO: Temp fix of the server
             window.layers[name].super_layer = (_layers[i].suprlay !== "false") ? _layers[i].suprlay : false;
-            window.layers[name].index = _layers[i].order - 1;
+            window.layers[name].index = _layers[i].order;
             window.layers[name]._id = _layers[i]._id;
         }
 
@@ -236,10 +236,10 @@ function TileManager() {
             var _layer = getSPL(_comp._layer_id, _layers);
 
             var layerID = _layer.order;
-            layerID = (layerID === undefined) ? layers.size() : layerID - 1;
+            layerID = (layerID === undefined) ? layers.size() : layerID;
 
             var platformID = _platfrm ? _platfrm.order : undefined;
-            platformID = (platformID === undefined) ? window.platforms.size() : platformID - 1;
+            platformID = (platformID === undefined) ? window.platforms.size() : platformID;
 
             var _author = getBestDev(_comp.devs, "author");
             var _maintainer = getBestDev(_comp.devs, "maintainer");
@@ -319,7 +319,7 @@ function TileManager() {
 
         groupsQtty = _platfrms.length;
         layersQtty = list.layers.length;
-        _firstLayer = _layers[0].order - 1;
+        _firstLayer = _layers[0].order;
     };
 
     /**
