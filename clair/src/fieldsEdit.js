@@ -1088,6 +1088,57 @@ function FieldsEdit() {
 
         workflowPreview(step);
     };
+
+    this.createStepsList = function() {
+
+        var div = document.getElementById("steps-list");
+
+        if(!div){ 
+        
+            div = document.createElement("div");
+            div.id  = "steps-list";
+
+            var object = {
+                id : "steps-list",
+                text : ""
+            };
+
+            div.dataset.state = "hidden";
+
+            self.objects.row1.buttons.push(object);
+            
+            div.innerHTML += 
+            `
+            <div id="steps-list-content">
+            </div>
+            <div id="steps-list-expand">
+            <button id="steps-expand"></button>
+            </div>
+            `;
+            
+            document.body.appendChild(div);
+
+            document.getElementById("steps-list-expand").onclick = function() {
+
+                var element = document.getElementById("steps-list");
+
+                if(element.dataset.state == "hidden") 
+                    element.dataset.state = "show"; 
+                else 
+                    element.dataset.state = "hidden";
+            };
+        }
+    };
+    
+    this.hiddenStepsList = function(state, duration) {
+
+        duration = duration || 500;
+
+        if(state)
+            window.helper.show(document.getElementById("steps-list"), duration);
+        else
+            window.helper.hide(document.getElementById("steps-list"), duration, true);
+    };
     
     this.hiddenModal = function(duration) {
 

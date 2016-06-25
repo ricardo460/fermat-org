@@ -44,8 +44,8 @@ var starProxyServer = function () {
 			winston.log('info', 'Redirecting to dev api...');
 			dev_proxy.proxyRequest(req, res);
 		} else if (req.url.indexOf('env=testing') > -1) {
-			// redirect to dev api
-			winston.log('info', 'Redirecting to dev api...');
+			// redirect to test api
+			winston.log('info', 'Redirecting to test api...');
 			test_proxy.proxyRequest(req, res);
 		} else {
 			// redirect to prod api

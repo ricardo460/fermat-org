@@ -319,9 +319,9 @@ function WorkFlowEdit() {
                     allWorkFlow[i].showAllFlow();
             }
 
-            classFlow.deleteStep();
+            //classFlow.deleteStep();
 
-            classFlow = null;
+            //classFlow = null;
 
             showBrowser(true);
 
@@ -330,6 +330,8 @@ function WorkFlowEdit() {
             EDIT_STEPS = [];
 
             PREVIEW_STEPS = [];
+
+            window.fieldsEdit.hiddenModal();
 
             window.camera.resetPosition();
 
@@ -635,6 +637,8 @@ function WorkFlowEdit() {
 
         var flow = window.fieldsEdit.getData();
 
+        flow.steps = PREVIEW_STEPS;
+
         var params = getParamsData(flow);  
 
         window.API.postRoutesEdit('wolkFlowEdit', 'insert', params, null,
@@ -698,7 +702,9 @@ function WorkFlowEdit() {
                     var param = {};
 
                     param.type = steps[0].type;
-                    param.comp_id = getIdSpecificTile(steps[0].name, steps[0].platfrm, steps[0].layer);
+
+                    mesh = window.helper.getSpecificTile(getIdSpecificTile(steps[0].name, steps[0].platfrm, steps[0].layer)).data;
+                    param.comp_id = mesh.id;
                     param.title = steps[0].title;
                     if(steps[0].desc)
                         param.desc = steps[0].desc;
@@ -1063,7 +1069,8 @@ function WorkFlowEdit() {
                     if(task !== 'delete'){ 
 
                         param.type = array[0].type;
-                        param.comp_id = getIdSpecificTile(array[0].name);
+                        mesh = window.helper.getSpecificTile(getIdSpecificTile(steps[0].name, steps[0].platfrm, steps[0].layer)).data;
+                        param.comp_id = mesh.id;
                         param.title = array[0].title;
                         if(array[0].desc)
                             param.desc = array[0].desc;
@@ -1221,20 +1228,6 @@ function WorkFlowEdit() {
                 }
             }
         }
-
-        for(var platfrm in window.TABLE){
-
-            for(var _layer in window.TABLE[platfrm].layers){
-
-                for(i = 0; i < window.TABLE[platfrm].layers[_layer].objects.length; i++){
-                    
-                    tile = window.TABLE[platfrm].layers[_layer].objects[i].data; 
-                    
-                    if(tile.name.toLowerCase() === name.toLowerCase())
-                        return tile.id;
-                }   
-            }        
-        } 
     }
 
     function fillFields(id){
@@ -2910,6 +2903,37 @@ function WorkFlowEdit() {
         window.buttonsManager.deleteButton('button-preview');
         window.buttonsManager.deleteButton('button-path');
         window.buttonsManager.deleteButton('button-Steps');   
+    }
+
+    function listOrden(){
+        function add_step(){
+            var canvas = document.createElement('canvas');
+            canvas.className = "steps-list-step";
+            var ctx = canvas.getContext("2d");
+            
+            canvas.dataset.num = count;
+            canvas.onclick = function () {
+                // -- ricardo --
+                alert(this.dataset.num);
+            };
+            
+            document.getElementById("steps-list-content").appendChild(canvas);
+            
+            canvas.width  = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            ctx.width  = canvas.offsetWidth;
+            ctx.height = canvas.offsetHeight;
+            
+            ctx.beginPath();
+            ctx.arc(ctx.width/2, ctx.height/2, 45, 0, 2*Math.PI);
+            ctx.stroke();
+            
+            ctx.font = "30px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText(count, ctx.width/2, ctx.height/2 + 10);
+            
+            count++;
+        }
     }
 
     this.getFocus = function(){

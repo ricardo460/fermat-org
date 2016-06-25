@@ -168,7 +168,7 @@ function Session() {
                 
                 else{ 
                     console.log("Error:", tkn);
-                    window.alert("Error: Could not login to Github, please inform at https://github.com/Fermat-ORG/fermat-org/issues");
+                    window.alert("Error: Could not login to Github, please check if your email at Github is public, if not, set it public. If you still encounter this issue please inform at https://github.com/Fermat-ORG/fermat-org/issues");
                 }
             });
         } else {
@@ -332,7 +332,7 @@ function Session() {
     }
 
     function setToken(tkn) {
-        setCookie("id", tkn._id, 7);
+        setCookie("id", tkn._usr_id._id, 7);
         setCookie("key", tkn.axs_key, 7);
         setCookie("update", tkn.upd_at, 7);
         setCookie("v", tkn._usr_id.__v, 7);

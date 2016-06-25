@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+<form id="fo">
+    <input type="file" id="f"/>
+    <input type="submit"/>
+</form>
+<script type="text/javascript">
+var form = document.getElementById('fo');
+form.onsubmit = function (event) {
+    event.preventDefault();
+    var file = document.getElementById('f').files[0];
+    console.log(file);
+
+    var data = new FormData();
+    data.append('svg', file, file.name);
+    data.append('code', 'AAA');
+    data.append('type', 'headers');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://localhost:8002/v1/svg/upload/headers/AAA', false);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            console.log("Good");
+        } else {
+            console.log("Bad");
+        }
+    };
+    xhr.send(data);
+};
+</script>
+</body>
+</html>

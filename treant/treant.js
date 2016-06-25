@@ -2,11 +2,28 @@
 
 var map,
     markClusterer,
-    nodes = [],
-    clients = [],
-    infoWindow = null;
+    elements = {
+        NETWORK_NODE : [],
+        NETWORK_CLIENT : []
+    },
+    infoWindow = null,
+    actorTypes = {},
+    lines = [];
 
 $(document).ready(main);
+
+function checkEdges() {
+    var markers = markClusterer.getMarkers();
+    
+    for(var i = 0; i < lines.length; i++) {
+        if(markers.indexOf(lines[i].client) === -1 || markers.indexOf(lines[i].server) === -1) {
+            lines[i].line.setMap(null);
+        }
+        else {
+            lines[i].line.setMap(map);
+        }
+    }
+}
 
 /**
  * Draws the control panel
@@ -14,6 +31,15 @@ $(document).ready(main);
  * @returns {DOMObject} The div of the control panel
  */
 function createControlPanel() {
+    
+    var createFilter = function(id, caption) {
+        return '' + 
+            '<td onclick="toggleFilter(\'' + id + '\')")"><div id="' + id + '-Filter">' +
+            '<img id="' + id + '-logo" src="img/markers/' + id + '.svg"/>' +
+            '<span id="' + id + '-caption">' + caption +
+            '</span></div></td>';
+    };
+    
     // Create a div to hold the control.
     var controlDiv = document.createElement('div');
 
@@ -21,7 +47,6 @@ function createControlPanel() {
     var controlUI = document.createElement('div');
     controlUI.style.backgroundColor = '#fff';
     controlUI.style.border = '2px solid #fff';
-    controlUI.style.cursor = 'pointer';
     controlUI.style.marginBottom = '22px';
     controlUI.style.textAlign = 'center';
     controlUI.title = 'Options';
@@ -35,8 +60,41 @@ function createControlPanel() {
     controlText.style.lineHeight = '38px';
     controlText.style.paddingLeft = '5px';
     controlText.style.paddingRight = '5px';
-    controlText.innerHTML = '<input type="checkbox" value="nodes" checked onChange="onOptionChanged(this)">Nodes</input><br>' +
-        '<input type="checkbox" value="clients" onChange="onOptionChanged(this)">Clients</input>';
+    
+    /*controlText.innerHTML = '<input type="checkbox" value="NETWORK_NODE" checked onChange="toggleFilter(this)">Nodes</input><br>' +
+        '<input type="checkbox" value="NETWORK_CLIENT" onChange="toggleFilter(this)">Clients</input><br>' + 
+        '<input type="checkbox" value="actors" onChange="toggleFilter(this)">Actors</input>';*/
+    
+    //Create the filter options
+    var options = "<table class='filter'>";
+    
+    options += "<tr>";
+    options += createFilter('NETWORK_NODE', 'Nodes');
+    options += createFilter('NETWORK_CLIENT', 'Devices');
+    options += "</tr>";
+    
+    var pair = false;
+    for(var i = 0; i < actorTypes.length; i++) {
+        
+        var actor = actorTypes[i];
+        
+        if(!pair) options += "<tr>";
+        
+        options += createFilter(actor.name, actor.label);
+        
+        if(pair) options += "</tr>";
+        
+        pair = !pair;
+    }
+    
+    options += "<tr>";
+    options += "<td onclick='toggleFilter(\"ALL\")'><div style='padding-left:30px'>All</div></td>";
+    options += "<td onclick='toggleFilter(\"NONE\")'><div style='padding-left:30px'>None</div></td>";
+    options += "</tr>";
+    
+    options += "</table>";
+    
+    controlText.innerHTML = options;
     controlUI.appendChild(controlText);
     
     return controlDiv;
@@ -58,7 +116,7 @@ function createGraphic(data) {
     container.innerHTML = "";
     
     groups.add({id : 0, content: "Nodes"});
-    groups.add({id : 1, content: "Clients"});
+    groups.add({id : 1, content: "Devices"});
     
     for(var i = 0; i < data.length; i++) {
         var element = data[i];
@@ -108,6 +166,8 @@ function createGraphic(data) {
  */
 function clearMarkers(list) {
     
+    if(list === undefined) return;
+    
     for(var i = 0; i < list.length; i++) {
         if(list[i].marker !== undefined)
             markClusterer.removeMarker(list[i].marker, true);
@@ -118,11 +178,80 @@ function clearMarkers(list) {
 }
 
 /**
+ * Creates the differents actor markers
+ * @author Miguelcldn
+ * @param {Array} clients The list of clients to extract the actors
+ */
+function createActors(clients) {
+    
+    var actorsList = {};
+    
+    var setListener = function(act) {
+        act.marker.addListener('click', function() {drawDetails(act);});
+    };
+    
+    for(var i = 0; i < clients.length; i++) {
+        
+        var comps = clients[i].extra.comps;
+        
+        if(comps) {
+            for(var j = 0; j < comps.length; j++) {
+                
+                var comp = comps[j];
+                
+                if(comp.location) {
+                    
+                    var actorType = ((comp.networkServiceType !== "UNDEFINED") ? comp.networkServiceType : comp.platformComponentType) || "UNDEFINED";
+                    var actorHasMarker = searchActor(actorType) != -1;
+                    var title = (actorHasMarker) ? actorTypes[searchActor(actorType)].label : window.helper.fromMACRO_CASE(actorType);
+                    var url = "img/markers/";
+                    
+                    if(actorHasMarker) {
+                        url += actorType;
+                    
+						url += ".svg";
+						
+						
+						var marker = new google.maps.Marker({
+							title : title,
+							position : randomizeLocation(comp.location),
+							icon : {
+								url : url,
+								scaledSize: new google.maps.Size(50, 50),
+                                anchor: new google.maps.Point(25,25)
+							}
+						});
+						
+						var actor = {
+							indentityPublicKey : comp.identityPublicKey,
+							networkServiceType : comp.networkServiceType,
+							type : actorType
+						};
+						
+						if(comp.extraData && comp.extraData[0] === "{") actor.extraData = JSON.parse(comp.extraData);
+						if(comp.alias) actor.alias = comp.alias;
+						
+						actor.marker = marker;
+						
+						var list = (actorHasMarker) ? actorType : "OTHER";
+						if(window.elements[list] === undefined) window.elements[list] = [];
+						window.elements[list].push(actor);
+						setListener(actor);
+					}
+                }
+            }
+        }
+    }
+    
+    toggleFilter('ALL');
+}
+
+/**
  * Draws the Fermat Nodes
  * @author Miguelcldn
  * @param {Array} list Response from the server
  */
-function createMarkers(list, label) {
+function createMarkers(list, title) {
     
     var newNodes = [];
     
@@ -132,14 +261,16 @@ function createMarkers(list, label) {
     
     for(var i = 0; i < list.length; i++) {
         var node = list[i];
+		var url = (title === "Node") ? "NETWORK_NODE.svg" : "NETWORK_CLIENT.svg";
         
         if(node.extra !== undefined && node.extra.location !== undefined && node.extra.location.latitude !== undefined && node.extra.location.longitude !== undefined) {
             var marker = new google.maps.Marker({
-                title : label,
+                title : title,
                 position : {lat : node.extra.location.latitude, lng : node.extra.location.longitude},
                 icon : {
-                    url : "img/test.svg",
-                    scaledSize: new google.maps.Size(30, 30)
+                    url : "img/markers/" + url,
+                    scaledSize: new google.maps.Size(50, 50),
+                    anchor: new google.maps.Point(25,25)
                 },
             });
             
@@ -161,27 +292,78 @@ function createMarkers(list, label) {
  */
 function drawDetails(node) {
     
-    if(infoWindow !== null) infoWindow.close();
+    if(infoWindow !== null) {
+        infoWindow.close();
+        unSetAllFocus();
+    }
     
     var content = "";
+    var details = null;
     
-    if(node.marker.label === "Node") {
-        content = "<div>" +
-        "<strong>IP:</strong> " + node.extra.location.ip + "<br/>" +
-        "<strong>Registered client connections:</strong> " + node.extra.current.registeredClientConnection + "<br/>" +
-        "</div>";
+    content += "<div id='nsWindow' class='info-window'>";
+    
+    if(node.marker.title === "Node") {
+        content += "<strong>IP:</strong> " + node.extra.location.ip + "<br/>" +
+        "<strong>Clients:</strong> " + node.extra.current.registeredClientConnection + "<br/><br/>";
+        
+        details = node.extra.current.registeredNetworkServiceDetail;
+        
+        if(details) {
+            
+            content += "<strong>Network Services:</strong><br/>";
+            
+            content += "<table>";
+            for(var ns in details) {
+                content += "<tr><td>-" + window.helper.fromMACRO_CASE(ns) + ": " + details[ns] + "</td></tr>";
+            }
+            content += "</table>";
+        }
+        
+        setClientsFocus(node);
+    }
+    else if(node.marker.title === "Device") {
+        
+        if(node.extra.location.ip)
+            content += "<strong>IP:</strong> " + node.extra.location.ip + "<br/>";
+        
+        details = node.extra.comps;
+        
+        if(details && details.length !== 0) {
+            
+            content += "<strong>Network Services:</strong><br/>";
+            
+            for(var i = 0; i < details.length; i++) {
+                if(details[i].networkServiceType !== "UNDEFINED")
+                    content += "-" + window.helper.fromMACRO_CASE(details[i].networkServiceType) + "<br/>";
+            }
+        }
+        
+        setServersFocus(node);
+    }
+    else if(searchActor(node.marker.title) != -1) {
+        content += "<strong>" + node.marker.title + "</strong><br/>";
+        
+        if(node.extraData) {
+            if(node.alias) content += node.alias + "<br/>";
+            if(node.extraData.PHRASE) content += "Phrase: " + node.extraData.PHRASE + "<br/>";
+            if(node.extraData.AVATAR_IMG) content += "<img src='data:image/png;base64," + node.extraData.AVATAR_IMG + "'/>";
+        }
     }
     else {
-        content = "<div>" +
-        "<strong>IP:</strong> " + node.extra.location.ip + "<br/>" +
-        "</div>";
+        content += "<strong>" + node.marker.title + "</strong><br>No details available";
     }
+    
+    content += "</div>";
     
     infoWindow = new google.maps.InfoWindow({
         content : content
     });
+    //infoWindow.setCloseSrc("img/close_if.png");
+    //$("#nsWindow").parent().parent().height()
+    infoWindow.addListener('closeclick', unSetAllFocus);
     
     infoWindow.open(map, node.marker);
+    
 }
 
 /**
@@ -195,10 +377,26 @@ function drawMap() {
         zoom: 2
     });
     
-    window.markClusterer = new MarkerClusterer(window.map);
-    window.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(createControlPanel());
+    window.markClusterer = new MarkerClusterer(window.map, [], { gridSize : 50 });
     
-    getNodes();
+    //Load the config file before loading anything else
+    $.ajax({
+        url: "json/actorTypes.json",
+        method: "GET",
+        crossDomain: true,
+        success: function(list) {
+            window.actorTypes = list.clients.actors;
+            for(var i = 0; i < actorTypes.length; i++) {
+                elements[actorTypes[i].name] = [];
+            }
+            getNodes();
+        },
+        error: function(request, error) {
+            window.alert("Could not retrieve the data, see console for details.");
+            window.console.dir(error);
+        }
+        
+    });
 }
 
 /**
@@ -209,24 +407,28 @@ function drawMap() {
 function getClients(nodeList) {
     
     var success = function(list) {
-        window.clients = createMarkers(list, "Client");
+        window.elements.NETWORK_CLIENT = createMarkers(list, "Device");
+        createActors(list);
     };
-    
     var error = function(request, error) {
         window.alert("Could not retrieve the data, see console for details.");
         window.console.dir(error);
+        success([]);
     };
     
     for(var i = 0; i < nodeList.length; i++) {
     
         $.ajax({
             url : window.helper.getAPIUrl("clients", {serv_id : nodeList[i]._id}),
+            //url : "json/dummyClients.json",
             method: "GET",
             crossDomain: true,
             success : success,
             error : error
         });
     }
+
+    window.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(createControlPanel());
 }
 
 /**
@@ -237,57 +439,19 @@ function getNodes() {
     
     $.ajax({
         url : window.helper.getAPIUrl("servers"),
+        //url : "json/dummyServrs.json",
         method: "GET",
         crossDomain: true,
         success : function(list) {
-            window.nodes = createMarkers(list, "Node");
-            showMarkers(window.nodes);
+            window.elements.NETWORK_NODE = createMarkers(list, "Node");
             getClients(list);
+            toggleFilter('ALL');
         },
         error : function(request, error) {
             window.alert("Could not retrieve the data, see console for details.");
             window.console.dir(error);
         }
     });
-    
-//    createMarkers(loadTestData());
-//    createClients(loadTestData());
-}
-
-/**
- * Loads test data
- * @author Miguelcldn
- * @returns {object} The thest data
- */
-function loadTestData() {
-    var list = [],
-        MAX_LAT = 50,
-        MAX_LNG = 150,
-        getLatLng = function() {
-            return { latitude: Math.random() * MAX_LAT * 2.5 - MAX_LAT, longitude : Math.random() * MAX_LNG * 2 - MAX_LNG};
-        },
-        getIP = function() {
-            return Math.floor(Math.random() * 255) +"."+ Math.floor(Math.random() * 255) +"."+ Math.floor(Math.random() * 255) +"."+ Math.floor(Math.random() * 255);
-        },
-        getNumber = function(){
-            return Math.floor(Math.random() * 30);
-        };
-    
-    for(var i = 0; i < 500; i++) {
-        var location = getLatLng();
-        location.ip = getIP();
-        
-        list.push({
-            extra : {
-                location : location,
-                current : {
-                    registeredClientConnection : getNumber()
-                }
-            }
-        });
-    }
-    
-    return list;
 }
 
 /**
@@ -298,16 +462,68 @@ function main() {
     $("#showHistoryBtn").click(showHistory);
 }
 
-/**
- * Hides or shows the nodes (Event)
- * @author Miguelcldn
- * @param {DOMObject} cb The combobox
- */
-function onOptionChanged(cb) {
-    var list = (cb.value === "nodes") ? window.nodes : window.clients,
-        action = (cb.checked === true) ? showMarkers : clearMarkers;
+function randomizeLocation(location) {
+    return {
+        lat : location.latitude + ((Math.random() * 10 % 3) / 10),
+        lng : location.longitude + ((Math.random() * 10 % 3) / 10)
+    };
+}
+
+function searchActor(actorType) {
+    for(var p = 0; p < actorTypes.length; p++) {
+        if(actorTypes[p].name === actorType || actorTypes[p].label === actorType) {
+            return p;
+        }
+    }
+
+    return -1;
+}
+
+function setClientsFocus(node) {
+    for(var i = 0; i < elements.NETWORK_CLIENT.length; i++) {
+        var client = elements.NETWORK_CLIENT[i];
+        
+        //if(client.marker && client._serv_id !== node._id) client.marker.setOpacity(0.5);
+        if(client.marker && client._serv_id === node._id) {
+            connectMarkers(client, node);
+        }
+        
+    }
+}
+
+function connectMarkers(client, server) {
     
-    action(list);
+    var clientPos = {
+        lat : client.marker.position.lat() + 0,
+        lng : client.marker.position.lng()
+    };
+    var serverPos = {
+        lat : server.marker.position.lat() + 0,
+        lng : server.marker.position.lng()
+    };
+    
+    var line = new google.maps.Polyline({
+        
+        path : [clientPos, serverPos],
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.7,
+        strokeWeight: 3,
+        map: map
+        });
+
+        lines.push({line: line, client: client.marker, server: server.marker});
+        checkEdges();
+}
+
+function setServersFocus(client) {
+    for(var i = 0; i < elements.NETWORK_NODE.length; i++) {
+        var server = elements.NETWORK_NODE[i];
+        
+        //if(server.marker && server._id !== client._serv_id) server.marker.setOpacity(0.5);
+        if(server.marker && server._id === client._serv_id) {
+            connectMarkers(client, server);
+        }
+    }
 }
 
 /**
@@ -336,11 +552,88 @@ function showHistory() {
  * @param {Array} list The list of elements to show
  */
 function showMarkers(list) {
+    
+    if(list === undefined) return;
+    
     for(var i = 0; i < list.length; i++) {
-        if(list[i].marker !== undefined)
+        if(list[i].marker !== undefined && markClusterer.getMarkers().indexOf(list[i].marker) === -1)
             markClusterer.addMarker(list[i].marker, true);
     }
     
     markClusterer.resetViewport();
     markClusterer.redraw();
+}
+
+/**
+ * Hides or shows the nodes (Event)
+ * @author Miguelcldn
+ * @param {string}  id            The ID of the filter to toggle
+ * @param {boolean} [forcedState] If provided, the forced state about enable/disable
+ */
+function toggleFilter(id, forcedState) {
+    
+    var list, caption, logo, enable, action, iterator;
+    
+    switch(id) {
+        case 'ALL':
+            
+            for(iterator in window.elements) {
+                toggleFilter(iterator, true);
+            }
+            break;
+            
+        case 'NONE':
+            
+            for(iterator in window.elements) {
+                toggleFilter(iterator, false);
+            }
+            break;
+            
+        default:
+            
+            list = window.elements[id];
+            caption = $('#' + id + '-caption');
+            logo = $('#' + id + '-logo');
+            enable = (forcedState === undefined) ? caption.hasClass('disabled') : forcedState;
+
+            action = (enable) ? showMarkers : clearMarkers;
+            var classOperation = '';
+
+            if(forcedState === true) classOperation = 'removeClass';
+            else if(forcedState === false) classOperation = 'addClass';
+            else classOperation = 'toggleClass';
+            
+            caption[classOperation]('disabled');
+            logo[classOperation]('disabled');
+
+            action(list);
+    }
+    
+    checkEdges();
+}
+
+function unSetAllFocus() {
+    //unSetClientsFocus();
+    //unSetServersFocus();
+    
+    for(var i = 0; i < lines.length; i++) lines[i].line.setMap(null);
+    
+    lines = [];
+}
+
+function unSetClientsFocus() {
+    for(var i = 0; i < elements.NETWORK_CLIENT.length; i++) {
+        var client = elements.NETWORK_CLIENT[i];
+        
+        if(client.marker) client.marker.setOpacity(1);
+    }
+    
+}
+
+function unSetServersFocus() {
+    for(var i = 0; i < elements.NETWORK_NODE.length; i++) {
+        var server = elements.NETWORK_NODE[i];
+        
+        if(server.marker) server.marker.setOpacity(1);
+    }
 }

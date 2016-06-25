@@ -1233,3 +1233,75 @@ END
 /**
 * END
 */
+
+#steps-list {
+  position: fixed;
+  left: 0px;
+  background: #eee;
+  width: 200px;
+  height: 100%;
+  transition: 1s all ease 0s;
+}
+
+#steps-list-content {
+  display: inline-block;
+  float: left;
+  width: 190px;
+  height: 100%;
+  padding-top: 5px;
+  background: #eee;
+  overflow: auto;
+}
+
+#steps-list-expand {
+  display: inline-block;
+  float: left;
+  width: 10px;
+  height: 100%;
+  background: #e4e4e4;
+}
+
+#steps-list-expand:hover {
+  background: #dadada;
+  cursor: pointer;
+}
+
+.steps-list-step {
+  float: left;
+  margin: 2.5px;
+  width: 97%;
+  height: 100px;
+  background: #fff;
+}
+
+.steps-list-step:hover {
+  cursor: pointer;
+  background: #fbfbfb;
+}
+
+#steps-expand {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid #000;
+  padding: 0;
+  border-radius: 5px;
+  height: 20px;
+  background: #000;
+  margin-left: 3px;
+  width: 4px;
+}
+
+#steps-expand:hover {
+  cursor: pointer;
+}
+
+#steps-list[data-state="hidden"] {
+  left: -190px;
+  transition: 1s all ease 0s;
+}
+
+#steps-list[data-state="show"] {
+  left: 0px;
+  transition: 1s all ease 0s;
+}
