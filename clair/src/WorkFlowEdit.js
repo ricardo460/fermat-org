@@ -1350,31 +1350,176 @@ function WorkFlowEdit() {
             orderPositionStep();
         }
 
-        function createIdStep(){
+        // Validaciones 
 
-            var height = TILEHEIGHT / 9;
-            var width = TILEHEIGHT / 5;
+        if(EDIT_STEPS.length > 1){ // nuevo
 
-            var mesh = new THREE.Mesh(
-                       new THREE.PlaneBufferGeometry(width, height),
-                       new THREE.MeshBasicMaterial({ 
-                            side: THREE.DoubleSide, 
-                            transparent: true, 
-                            map:null 
-                        }));
+            for (var i = 0; i < EDIT_STEPS.length; i++) {
 
-            mesh.renderOrder = 1;
+                if(EDIT_STEPS[i].children[0] !== undefined){
+                    
+                    for (var q = 0; q < EDIT_STEPS[i].children.length; q++) {
 
-            mesh.scale.set(1.4, 1.4, 1.4);
+                        for (var j = 0; j < EDIT_STEPS.length; j++) {
 
-            mesh.material.needsUpdate = true;
+                             if(EDIT_STEPS[i].children[q][0] === EDIT_STEPS[j].order[0]){// if 2
+                                                      
+                                 if(EDIT_STEPS.length === 2){
+                                    self.createLineStep(EDIT_STEPS[i].target.show, 
+                                                        EDIT_STEPS[j].target.show,
+                                                        EDIT_STEPS[i].order[0],
+                                                        EDIT_STEPS[j].order[0],
+                                                        EDIT_STEPS[i].tile,
+                                                        EDIT_STEPS[j].tile, false);
 
-            mesh.material.depthTest = false;
+                                    updateArrowStep(EDIT_STEPS[j].tile);
+                                 }else{
 
-            window.scene.add(mesh);
+                                    for (var k = 0; k < LIST_ARROWS.length; k++) {
+                                        
+                                        if((LIST_ARROWS[k].originID === EDIT_STEPS[i].order[0]) && (LIST_ARROWS[k].targetID === EDIT_STEPS[j].order[0])){
+                                            find = true;
+                                        } 
+                                    }
 
-                return mesh;
+                                    if(find === false){
+                                        self.createLineStep(EDIT_STEPS[i].target.show, 
+                                                            EDIT_STEPS[j].target.show,
+                                                            EDIT_STEPS[i].order[0],
+                                                            EDIT_STEPS[j].order[0],
+                                                            EDIT_STEPS[i].tile,
+                                                            EDIT_STEPS[j].tile, false);
+
+                                        updateArrowStep(EDIT_STEPS[j].tile);
+                                    }
+                                    find = false;
+                                }
+                            }//if 2
+                        }
+                    }
+                } 
+            }
         }
+
+        // Depuramos el objeto LIST_ARROWS
+
+        for(var m = 0; m < LIST_ARROWS.length; m++){ // nuevo
+
+           if(debug(LIST_ARROWS[m].originID, LIST_ARROWS[m].targetID) === false){
+
+                window.scene.remove(LIST_ARROWS[m].arrow);
+                window.scene.remove(LIST_ARROWS[m].meshPrimary);
+                window.scene.remove(LIST_ARROWS[m].meshSecondary);
+                window.scene.remove(LIST_ARROWS[m].vector1);
+                window.scene.remove(LIST_ARROWS[m].vector2);
+
+                LIST_ARROWS.splice(m, 1);
+           }
+
+        }
+
+        function debug(origin, target){ // nuevo
+
+            var _search = false;
+
+            for (var n = 0; n < EDIT_STEPS.length; n++) {
+                            
+                for (var o = 0; o < EDIT_STEPS[n].children.length; o++) {
+
+                    if(LIST_ARROWS[m].originID === EDIT_STEPS[n].order[0] && LIST_ARROWS[m].targetID === EDIT_STEPS[n].children[o][0]){
+
+                        _search =  true;
+                    }
+                    
+                }   
+            }
+
+            return _search;
+        }
+
+        return mesh;
+    }
+
+    function createIdStep(){
+
+        var height = TILEHEIGHT / 9;
+        var width = TILEHEIGHT / 5;
+
+        var mesh = new THREE.Mesh(
+                   new THREE.PlaneBufferGeometry(width, height),
+                   new THREE.MeshBasicMaterial({ 
+                        side: THREE.DoubleSide, 
+                        transparent: true, 
+                        map:null 
+                    }));
+
+        mesh.renderOrder = 1;
+
+        mesh.scale.set(1.4, 1.4, 1.4);
+
+        mesh.material.needsUpdate = true;
+
+        mesh.material.depthTest = false;
+
+        window.scene.add(mesh);
+
+        return mesh;
+    }
+
+    function addIdStepDrag(idOrigen, idTarget, IDtile){
+
+        var mesh = createIdStep(),
+            difference = TILEWIDTH / 2,
+            stepOrigen = EDIT_STEPS[idOrigen - 1],
+            stepTarget = EDIT_STEPS[idTarget - 1];
+
+        var newArray = [idTarget];
+
+        var tile = window.helper.getSpecificTile(IDtile).target.show;
+
+        var target = window.helper.fillTarget(tile.position.x - difference, tile.position.y, tile.position.z + 1, 'table');
+
+        mesh.position.copy(target.hide.position);
+
+        mesh.rotation.copy(target.hide.rotation);
+
+        mesh.userData = {
+                id : newArray,
+                tile : IDtile,
+                type: 'step'
+            };
+
+        var children = stepOrigen.children;
+
+        for(var i = 0; i < children.length; i++){
+
+            if(children[i][0] === idTarget){
+                children[i] = newArray;
+            }
+        }
+    
+        var object = {
+                    order : newArray,
+                    mesh : mesh,
+                    target : target,
+                    tile : IDtile,
+                    children : [],
+                    existArrow: false,
+                    title : [''],
+                    desc : ['']
+                };
+
+        stepTarget.order[0] =  stepTarget.order[0] + 0.5;
+
+        object.children.push(stepTarget.order);
+
+        EDIT_STEPS.push(object);
+
+        mesh.material.map = changeTextureId(idTarget, parent);
+
+        calculatePositionsSteps(IDtile);
+
+        orderPositionStep();
 
         // Validaciones 
 
@@ -2703,6 +2848,8 @@ function WorkFlowEdit() {
                                     type = 'tile';
                                 else if(tile.userData.type === 'step')
                                     type = 'step';
+                                else 
+                                    type = tile.userData.type;
 
                                 switch(type) {
                                     case "tile":
@@ -2754,7 +2901,7 @@ function WorkFlowEdit() {
                                         window.dragManager.functions.DROP = [drop];
 
                                         break;
-                                    case "changeStep":
+                                    case "changeStep": 
 
                                         window.dragManager.objectsCollision = getAllTiles(tile.userData.tile);
                                         
@@ -2762,23 +2909,20 @@ function WorkFlowEdit() {
 
                                             if(SELECTED){
 
-                                                var orderFocus = FOCUS.data.userData.id[0];
+                                                var origen = SELECTED.userData.originOrder;
+
+                                                var target = SELECTED.userData.targetOrder;
 
                                                 if(COLLISION){
 
-                                                    if(!validateCollisionTileSteps(orderFocus, COLLISION.userData.id))
-                                                        resetPositionIdStepMesh(orderFocus);
+                                                    if(!validateCollisionTile(origen, COLLISION.userData.id) || !validateCollisionTile(target, COLLISION.userData.id))
+                                                        console.log("resetPosition");
                                                     else
-                                                        changeTileStep(orderFocus, COLLISION.userData.id);
+                                                        addIdStepDrag(origen, target, COLLISION.userData.id);
                                                 }
                                                 else{
 
-                                                    if(calculateAreaTile(SELECTED.position)){
-                                                        resetPositionIdStepMesh(orderFocus);
-                                                    }
-                                                    else{
-                                                        deleteSteps(orderFocus);
-                                                    }
+                                                    console.log("resetPosition");
                                                 }
                                             }
 
@@ -3200,6 +3344,17 @@ function WorkFlowEdit() {
                     validate = false;
             }
         }
+
+        return validate;
+    }
+
+    function validateCollisionTile(order, tileValidate){
+
+        var validate = true,
+            stepFocus = EDIT_STEPS[order - 1];
+
+        if(stepFocus.tile === tileValidate)
+            validate = false;
 
         return validate;
     }
