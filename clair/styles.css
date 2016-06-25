@@ -1160,54 +1160,74 @@ END
 */
 
 #step-modal {
-    position: absolute;
-    overflow: hidden;
-    width: 30%;
-    height: 30%;
-    top: 5%;
-    left: 35%;
-    display: block;
-    background: #EEE;
-    border: 10px solid #eee;
+   position: absolute;
+   overflow: hidden;
+   width: 30%;
+   height: 30%;
+   top: 5%;
+   left: 35%;
+   display: block;
+   background: #EEE;
+   border: 10px solid #eee;
+}
+
+#step-modal-c label {
+   height: 20%;
+   font-size: 1.5vmax;
 }
 
 #step-modal-a label {
-    height: 50%;
-    font-size: 1.5vmax;
+   height: 50%;
+   font-size: 1.5vmax;
 }
 
 #step-modal-b label {
-    height: 20%;
-    font-size: 1.5vmax;
+   height: 20%;
+   font-size: 1.5vmax;
+}
+
+#step-modal-c {
+   float: left;
+   width: 100%;
+   display: inline-block;
+   height: 30%;
+   font-size: 1.5vmax;
 }
 
 #step-modal-a {
-    float: left;
-    width: 100%;
-    display: inline-block;
-    height: 22%;
-    font-size: 1.5vmax;
+   float: left;
+   width: 100%;
+   display: inline-block;
+   height: 22%;
+   font-size: 1.5vmax;
 }
 
 #step-modal-b {
-    float: left;
-    width: 100%;
-    display: inline-block;
-    height: 88%;
+   float: left;
+   width: 100%;
+   display: inline-block;
+   height: 58%;
 }
 
 #step-modal-desc {
-    width: 100%;
-    resize: none;
-    font-size: 1.5vmax;
-    height: 80%;
+   width: 100%;
+   resize: none;
+   font-size: 1.5vmax;
+   height: 80%;
 }
-  
+ 
 #step-modal-title {
-    height: 50%;
-    width: 100%;
-    resize: none;
-    font-size: 1.5vmax;
+   height: 50%;
+   width: 100%;
+   resize: none;
+   font-size: 1.5vmax;
+}
+ 
+#step-modal-canvas {
+   height: 60%;
+   width: 100%;
+   font-size: 1.5vmax;
+   background: #FFF;
 }
 
 /**
