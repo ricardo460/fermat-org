@@ -51,7 +51,7 @@ function WorkFlowEdit() {
     }; 
 
     this.getr = function(){
-        return REPARED_STEPS;
+        return LIST_ARROWS;
     };   
 
     this.addButton = function(_id){
@@ -1573,6 +1573,12 @@ function WorkFlowEdit() {
 
         mesh = createSimbol();// primer mesh(boton)
 
+        mesh.userData = {
+            originOrder : idOrigin,
+            targetOrder : idTarget,
+            type : 'changeStep'
+        };
+
         switch(vectorArrow){
 
             case 'arrowDesc':
@@ -1802,6 +1808,12 @@ function WorkFlowEdit() {
 
         objArrow.vector2 = arrowHelper;
         objArrow.meshSecondary = mesh;
+
+        mesh.userData = {
+            originOrder : objArrow.originID,
+            targetOrder : objArrow.targetID,
+            type : 'fork'
+        };
 
         directionArrowMesh(midPoint.x, midPoint.y);
 
@@ -2114,6 +2126,12 @@ function WorkFlowEdit() {
                     
                     window.dragManager.objects.push(EDIT_STEPS[i].mesh); 
                     
+                }
+
+                for(var i = 0; i < LIST_ARROWS.length; i++){
+                    
+                    window.dragManager.objects.push(LIST_ARROWS[i].meshPrimary);
+                    window.dragManager.objects.push(LIST_ARROWS[i].meshSecondary);  
                 }
 
                 for(var t = 0; t < window.tilesQtty.length; t++){
@@ -2735,7 +2753,51 @@ function WorkFlowEdit() {
 
                                         window.dragManager.functions.DROP = [drop];
 
-                                    break;
+                                        break;
+                                    case "changeStep":
+
+                                        window.dragManager.objectsCollision = getAllTiles(tile.userData.tile);
+                                        
+                                        var drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
+
+                                            if(SELECTED){
+
+                                                var orderFocus = FOCUS.data.userData.id[0];
+
+                                                if(COLLISION){
+
+                                                    if(!validateCollisionTileSteps(orderFocus, COLLISION.userData.id))
+                                                        resetPositionIdStepMesh(orderFocus);
+                                                    else
+                                                        changeTileStep(orderFocus, COLLISION.userData.id);
+                                                }
+                                                else{
+
+                                                    if(calculateAreaTile(SELECTED.position)){
+                                                        resetPositionIdStepMesh(orderFocus);
+                                                    }
+                                                    else{
+                                                        deleteSteps(orderFocus);
+                                                    }
+                                                }
+                                            }
+
+                                            window.dragManager.objectsCollision = [];
+                                            window.dragManager.functions.DROP = [];
+                                        };
+
+                                        window.dragManager.functions.DROP = [drop];
+                                        break;
+                                    case "fork":
+                                        var parent = null;
+
+                                        if(FOCUS.data)
+                                            parent = FOCUS.data.userData.id[0];
+
+                                        var mesh = addIdStep(EDIT_STEPS.length + 1, tile.userData.id, parent);
+
+                                        FOCUS.data = mesh;
+                                        break;
                                 }
                             }
                         };
@@ -2752,6 +2814,8 @@ function WorkFlowEdit() {
                                 mesh.position.copy(position);
                                 FOCUS.mesh.position.copy(position);
                             }
+                            else
+                                mesh.position.copy(position);
                         }; 
 
                         window.dragManager.functions.MOVE.push(moveAction);
