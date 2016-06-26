@@ -39,7 +39,9 @@ function WorkFlowEdit() {
             vector2:null,
             meshSecondary: null,
             arrow: null,
-            type: null
+            type: null,
+            meshPrimaryPosition: [],
+            meshSecondaryPosition: []
     };
 
     this.get = function(){
@@ -1621,6 +1623,7 @@ function WorkFlowEdit() {
     this.createLineStep = function(meshOrigin, meshTarget, idOrigin, idTarget, tileOrigin, tileTarget, _isTrue, _indice){ // nuevo
 
         var mesh, vertexPositions, geometry, from, to, listSteps, midPoint, distanceX, distanceY, indice = _indice || 0;
+        var positionMesh = {x: null, y: null, z : null};
 
         vertexOriginX = meshOrigin.position.x;
         vertexOriginY = meshOrigin.position.y;
@@ -1761,9 +1764,15 @@ function WorkFlowEdit() {
                 break;
         }
 
+
         objArrow.type = vectorArrow;
         objArrow.vector1 = arrowHelper;
         objArrow.meshPrimary = mesh;
+
+        positionMesh.x = midPoint.x;
+        positionMesh.y = midPoint.y;
+        positionMesh.z = 3;
+        objArrow.meshPrimaryPosition.push(positionMesh);
 
 
         directionLineMesh(midPoint.x, midPoint.y);
@@ -1784,7 +1793,9 @@ function WorkFlowEdit() {
                 vector2:null,
                 meshSecondary: null,
                 arrow: null,
-                type: null
+                type: null,
+                meshPrimaryPosition: [],
+                meshSecondaryPosition: []
             };
         }
         else{
@@ -1802,7 +1813,9 @@ function WorkFlowEdit() {
                 vector2:null,
                 meshSecondary: null,
                 arrow: null,
-                type: null
+                type: null,
+                meshPrimaryPosition: [],
+                meshSecondaryPosition: []
             };
         }   
     };
@@ -1869,7 +1882,6 @@ function WorkFlowEdit() {
                                 }
                             }
                         }      
-                    
                     }
                 }  
             }
@@ -1891,6 +1903,7 @@ function WorkFlowEdit() {
     function directionLineMesh(x, y){// nuevo
 
         var mesh, vertexPositions, from, to, midPoint;
+        var positionMesh = {x: null, y: null, z : null};
 
         switch(vectorArrow){
 
@@ -1998,6 +2011,11 @@ function WorkFlowEdit() {
             default:
                 break;
         }
+
+        positionMesh.x = midPoint.x;
+        positionMesh.y = midPoint.y;
+        positionMesh.z = 3;
+        objArrow.meshSecondaryPosition.push(positionMesh);
     }
 
     function createSimbol(){ // nuevo
