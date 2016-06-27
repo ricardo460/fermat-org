@@ -39,7 +39,9 @@ function WorkFlowEdit() {
             vector2:null,
             meshSecondary: null,
             arrow: null,
-            type: null
+            type: null,
+            meshPrimaryPosition: [],
+            meshSecondaryPosition: []
     };
 
     this.get = function(){
@@ -1608,12 +1610,20 @@ function WorkFlowEdit() {
             return _search;
         }
 
+        if(actualMode === "edit-path"){ // nuevo
+
+            self.deleteArrow();
+            self.updateArrow();
+
+        }
+
         return mesh;
     }
 
     this.createLineStep = function(meshOrigin, meshTarget, idOrigin, idTarget, tileOrigin, tileTarget, _isTrue, _indice){ // nuevo
 
         var mesh, vertexPositions, geometry, from, to, listSteps, midPoint, distanceX, distanceY, indice = _indice || 0;
+        var positionMesh = {x: null, y: null, z : null};
 
         vertexOriginX = meshOrigin.position.x;
         vertexOriginY = meshOrigin.position.y;
@@ -1754,9 +1764,15 @@ function WorkFlowEdit() {
                 break;
         }
 
+
         objArrow.type = vectorArrow;
         objArrow.vector1 = arrowHelper;
         objArrow.meshPrimary = mesh;
+
+        positionMesh.x = midPoint.x;
+        positionMesh.y = midPoint.y;
+        positionMesh.z = 3;
+        objArrow.meshPrimaryPosition.push(positionMesh);
 
 
         directionLineMesh(midPoint.x, midPoint.y);
@@ -1777,7 +1793,9 @@ function WorkFlowEdit() {
                 vector2:null,
                 meshSecondary: null,
                 arrow: null,
-                type: null
+                type: null,
+                meshPrimaryPosition: [],
+                meshSecondaryPosition: []
             };
         }
         else{
@@ -1795,7 +1813,9 @@ function WorkFlowEdit() {
                 vector2:null,
                 meshSecondary: null,
                 arrow: null,
-                type: null
+                type: null,
+                meshPrimaryPosition: [],
+                meshSecondaryPosition: []
             };
         }   
     };
@@ -1862,7 +1882,6 @@ function WorkFlowEdit() {
                                 }
                             }
                         }      
-                    
                     }
                 }  
             }
@@ -1884,6 +1903,7 @@ function WorkFlowEdit() {
     function directionLineMesh(x, y){// nuevo
 
         var mesh, vertexPositions, from, to, midPoint;
+        var positionMesh = {x: null, y: null, z : null};
 
         switch(vectorArrow){
 
@@ -1991,6 +2011,11 @@ function WorkFlowEdit() {
             default:
                 break;
         }
+
+        positionMesh.x = midPoint.x;
+        positionMesh.y = midPoint.y;
+        positionMesh.z = 3;
+        objArrow.meshSecondaryPosition.push(positionMesh);
     }
 
     function createSimbol(){ // nuevo
@@ -2356,29 +2381,7 @@ function WorkFlowEdit() {
 
         updateTextureParent();
 
-        updateArrow();
-
-        function updateArrow(){// nuevo // Update after deleted
-
-            for (var i = 0; i < EDIT_STEPS.length; i++) {
-                
-                for (var j = 0; j < EDIT_STEPS[i].children.length; j++) {
-                    
-                    for (var k = 0; k < EDIT_STEPS.length; k++) {
-                        
-                        if(EDIT_STEPS[i].children[j][0] === EDIT_STEPS[k].order[0]){
-
-                            self.createLineStep(EDIT_STEPS[i].target.show, 
-                                                EDIT_STEPS[k].target.show,
-                                                EDIT_STEPS[i].order[0],
-                                                EDIT_STEPS[k].order[0],
-                                                EDIT_STEPS[i].tile,
-                                                EDIT_STEPS[k].tile, false);
-                        }
-                    }
-                }
-            }
-        }
+        self.updateArrow();
 
         function validateChildrenTiles(){
 
@@ -2407,30 +2410,9 @@ function WorkFlowEdit() {
 
             removeMesh(list[order]);
 
-            deleteArrow();
+            self.deleteArrow();
 
             list.splice(order, 1);
-        }
-
-        function deleteArrow(){ // nuevo
-
-            var indice = [];
-
-            for(var j = 0; j < LIST_ARROWS.length; j++){
-
-                window.scene.remove(LIST_ARROWS[j].arrow);
-                window.scene.remove(LIST_ARROWS[j].meshPrimary);
-                window.scene.remove(LIST_ARROWS[j].meshSecondary);
-                window.scene.remove(LIST_ARROWS[j].vector1);
-                window.scene.remove(LIST_ARROWS[j].vector2);
-
-                indice.push(j);
-            }
-
-            indice.reverse();
-            for(var k = 0; k < indice.length; k++){
-                LIST_ARROWS.splice(indice[k], 1);
-            }
         }
 
         function removeMesh(data){
@@ -2474,6 +2456,49 @@ function WorkFlowEdit() {
             }
         }
     }
+
+    this.updateArrow =  function(){// nuevo // Update after deleted
+
+        for (var i = 0; i < EDIT_STEPS.length; i++) {
+            
+            for (var j = 0; j < EDIT_STEPS[i].children.length; j++) {
+                
+                for (var k = 0; k < EDIT_STEPS.length; k++) {
+                    
+                    if(EDIT_STEPS[i].children[j][0] === EDIT_STEPS[k].order[0]){
+
+                        self.createLineStep(EDIT_STEPS[i].target.show, 
+                                            EDIT_STEPS[k].target.show,
+                                            EDIT_STEPS[i].order[0],
+                                            EDIT_STEPS[k].order[0],
+                                            EDIT_STEPS[i].tile,
+                                            EDIT_STEPS[k].tile, false);
+                    }
+                }
+            }
+        }
+    };
+
+    this.deleteArrow = function(){ // nuevo
+
+        var indice = [];
+
+        for(var j = 0; j < LIST_ARROWS.length; j++){
+
+            window.scene.remove(LIST_ARROWS[j].arrow);
+            window.scene.remove(LIST_ARROWS[j].meshPrimary);
+            window.scene.remove(LIST_ARROWS[j].meshSecondary);
+            window.scene.remove(LIST_ARROWS[j].vector1);
+            window.scene.remove(LIST_ARROWS[j].vector2);
+
+            indice.push(j);
+        }
+
+        indice.reverse();
+        for(var k = 0; k < indice.length; k++){
+            LIST_ARROWS.splice(indice[k], 1);
+        }
+    };
 
     function updateTextureParent(){
 
