@@ -136,10 +136,16 @@ function DragManager() {
                             action();
                     }
 
-                    if(INTERSECTED.parent.type === "LOD")
-                        plane.position.copy(INTERSECTED.parent.position);
+                    if(INTERSECTED.parent){
+
+                        if(INTERSECTED.parent.type === "LOD")
+                            plane.position.copy(INTERSECTED.parent.position);
+                        else
+                            plane.position.copy(INTERSECTED.position);
+                    }
                     else
                         plane.position.copy(INTERSECTED.position);
+            
 
                     if(INTERSECTED !== OPACITY){
 
@@ -224,8 +230,13 @@ function DragManager() {
 
         if(INTERSECTED){
 
-            if(INTERSECTED.parent.type === "LOD")
-                plane.position.copy(INTERSECTED.parent.position);
+            if(INTERSECTED.parent){
+
+                if(INTERSECTED.parent.type === "LOD")
+                    plane.position.copy(INTERSECTED.parent.position);
+                else
+                    plane.position.copy(INTERSECTED.position);
+            }
             else
                 plane.position.copy(INTERSECTED.position);
 

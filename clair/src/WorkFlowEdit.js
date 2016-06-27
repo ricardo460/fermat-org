@@ -32,16 +32,14 @@ function WorkFlowEdit() {
             tileTargetId : null,
             originID: null,
             targetID: null,
-            positionOrigin: null,
-            positionTarget: null,
             vector1: null,
             meshPrimary: null,
             vector2:null,
             meshSecondary: null,
             arrow: null,
             type: null,
-            meshPrimaryPosition: [],
-            meshSecondaryPosition: []
+            meshPrimaryTarget:null,
+            meshSecondaryTarget: null
     };
 
     this.get = function(){
@@ -1726,7 +1724,7 @@ function WorkFlowEdit() {
 
         scene.add(arrowHelper);
 
-        mesh = createSimbol();// primer mesh(boton)
+        mesh = createSimbol();
 
         mesh.userData = {
             originOrder : idOrigin,
@@ -1769,15 +1767,13 @@ function WorkFlowEdit() {
         objArrow.vector1 = arrowHelper;
         objArrow.meshPrimary = mesh;
 
-        positionMesh.x = midPoint.x;
-        positionMesh.y = midPoint.y;
-        positionMesh.z = 3;
-        objArrow.meshPrimaryPosition.push(positionMesh);
+        var target = window.helper.fillTarget(midPoint.x, midPoint.y, 3, 'table');
+        objArrow.meshPrimaryTarget = target;
 
 
         directionLineMesh(midPoint.x, midPoint.y);
 
-        if(_isTrue){ // update
+        if(_isTrue){
 
             LIST_ARROWS[indice] = objArrow;
 
@@ -1786,16 +1782,14 @@ function WorkFlowEdit() {
                 tileTargetId : null,
                 originID: null,
                 targetID: null,
-                positionOrigin: null,
-                positionTarget: null,
                 vector1: null,
                 meshPrimary: null,
                 vector2:null,
                 meshSecondary: null,
                 arrow: null,
                 type: null,
-                meshPrimaryPosition: [],
-                meshSecondaryPosition: []
+                meshPrimaryTarget: [],
+                meshSecondaryTarget: []
             };
         }
         else{
@@ -1817,7 +1811,149 @@ function WorkFlowEdit() {
                 meshPrimaryPosition: [],
                 meshSecondaryPosition: []
             };
-        }   
+        }  
+
+        function directionLineMesh(x, y){// nuevo
+
+            var mesh, vertexPositions, from, to, midPoint;
+            var positionMesh = {x: null, y: null, z : null};
+
+            switch(vectorArrow){
+
+                case 'arrowDesc':
+                    from = new THREE.Vector3(x, y, 2);
+                    
+                    midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
+                
+                    to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
+
+                    break;
+
+                case 'arrowAsc':
+                    from = new THREE.Vector3(x, y, 2);
+                    
+                    midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
+                
+                    to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
+
+                    break;
+
+                case 'arrowDescVer':
+                    from = new THREE.Vector3(x, y, 2);
+                    
+                    midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
+                
+                    to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
+                    break;
+
+                case 'arrowAscVer':
+                    from = new THREE.Vector3(x, y, 2);
+                    
+                    midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
+                
+                    to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
+                    break;
+
+                case 'arrowRight':
+                    from = new THREE.Vector3(x, y, 2);
+                    
+                    midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
+                
+                    to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
+                    break;
+
+                case 'arrowLeft':
+                    from = new THREE.Vector3(x, y, 2);
+                    
+                    midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
+                
+                    to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
+                    break;
+
+                default:
+                    break;
+            }
+
+            var direction = to.clone().sub(from);
+
+            var length = direction.length();
+
+            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xFF0000, 0.1, 0.1); // Arrow Azul
+
+            scene.add(arrowHelper);
+            
+            mesh = createSimbol();
+
+            mesh.material.map = createTextureButton();
+
+            objArrow.vector2 = arrowHelper;
+            objArrow.meshSecondary = mesh;
+
+            mesh.userData = {
+                originOrder : objArrow.originID,
+                targetOrder : objArrow.targetID,
+                type : 'fork'
+            };
+
+            directionArrowMesh(midPoint.x, midPoint.y);
+
+            switch(vectorArrow){
+
+                case 'arrowDesc':
+                    mesh.position.set(midPoint.x, midPoint.y, 3);
+                    break;
+
+                case 'arrowAsc':
+                    mesh.position.set(midPoint.x, midPoint.y, 3);
+                    break;
+
+                case 'arrowDescVer':
+                    mesh.position.set(midPoint.x, midPoint.y, 3);
+                    break;
+
+                case 'arrowAscVer':
+                    mesh.position.set(midPoint.x, midPoint.y, 3);
+                    break;
+
+                case 'arrowRight':
+                    mesh.position.set(midPoint.x, midPoint.y, 3);
+                    break;
+
+                case 'arrowLeft':
+                    mesh.position.set(midPoint.x, midPoint.y, 3);
+                    break;
+
+                default:
+                    break;
+            }
+
+            var target = window.helper.fillTarget(midPoint.x, midPoint.y, 3, 'table');
+            objArrow.meshSecondaryTarget = target;
+        }
+
+        function createTextureButton(){
+
+            var canvas = document.createElement('canvas');
+                canvas.height = 62;
+                canvas.width = 62;
+            var ctx = canvas.getContext('2d');
+            var image = document.createElement('img');
+            var texture = new THREE.Texture(canvas);
+                texture.minFilter = THREE.NearestFilter;
+
+            image.onload = function() {
+
+                ctx.drawImage(image, 0, 0);
+
+                ctx.textAlign = 'center';
+                
+                texture.needsUpdate = true;
+            };
+
+            image.src = 'images/workflow/button_y.png';
+
+            return texture;
+        }
     };
     
     function updateArrowStep(tileTarget){ // nuevo
@@ -1900,124 +2036,6 @@ function WorkFlowEdit() {
         return mid;
     }
 
-    function directionLineMesh(x, y){// nuevo
-
-        var mesh, vertexPositions, from, to, midPoint;
-        var positionMesh = {x: null, y: null, z : null};
-
-        switch(vectorArrow){
-
-            case 'arrowDesc':
-                from = new THREE.Vector3(x, y, 2);
-                
-                midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
-            
-                to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
-
-                break;
-
-            case 'arrowAsc':
-                from = new THREE.Vector3(x, y, 2);
-                
-                midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
-            
-                to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
-
-                break;
-
-            case 'arrowDescVer':
-                from = new THREE.Vector3(x, y, 2);
-                
-                midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
-            
-                to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
-                break;
-
-            case 'arrowAscVer':
-                from = new THREE.Vector3(x, y, 2);
-                
-                midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
-            
-                to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
-                break;
-
-            case 'arrowRight':
-                from = new THREE.Vector3(x, y, 2);
-                
-                midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
-            
-                to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
-                break;
-
-            case 'arrowLeft':
-                from = new THREE.Vector3(x, y, 2);
-                
-                midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
-            
-                to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
-                break;
-
-            default:
-                break;
-        }
-
-        var direction = to.clone().sub(from);
-
-        var length = direction.length();
-
-        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xFF0000, 0.1, 0.1); // Arrow Azul
-
-        scene.add(arrowHelper);
-        
-        mesh = createSimbol();
-
-        objArrow.vector2 = arrowHelper;
-        objArrow.meshSecondary = mesh;
-
-        mesh.userData = {
-            originOrder : objArrow.originID,
-            targetOrder : objArrow.targetID,
-            type : 'fork'
-        };
-
-        directionArrowMesh(midPoint.x, midPoint.y);
-
-        switch(vectorArrow){
-
-            case 'arrowDesc':
-                mesh.position.set(midPoint.x, midPoint.y, 3);
-                break;
-
-            case 'arrowAsc':
-                mesh.position.set(midPoint.x, midPoint.y, 3);
-                break;
-
-            case 'arrowDescVer':
-                mesh.position.set(midPoint.x, midPoint.y, 3);
-                break;
-
-            case 'arrowAscVer':
-                mesh.position.set(midPoint.x, midPoint.y, 3);
-                break;
-
-            case 'arrowRight':
-                mesh.position.set(midPoint.x, midPoint.y, 3);
-                break;
-
-            case 'arrowLeft':
-                mesh.position.set(midPoint.x, midPoint.y, 3);
-                break;
-
-            default:
-                break;
-        }
-
-        positionMesh.x = midPoint.x;
-        positionMesh.y = midPoint.y;
-        positionMesh.z = 3;
-        objArrow.meshSecondaryPosition.push(positionMesh);
-    }
-
     function createSimbol(){ // nuevo
 
         var tileWidth = (window.TILE_DIMENSION.width - window.TILE_SPACING) / 2,
@@ -2027,11 +2045,18 @@ function WorkFlowEdit() {
                     new THREE.PlaneBufferGeometry(tileHeight, tileHeight),
                     new THREE.MeshBasicMaterial({
                             side: THREE.DoubleSide,
-                            color: Math.random() * 0xffffff
-                        })
-                    );
+                            transparent: true, 
+                            map:null 
+                    }));
+
+        mesh.renderOrder = 1;
+
+        mesh.material.needsUpdate = true;
+
+        mesh.material.depthTest = false;
 
         window.scene.add(mesh);
+
         return mesh;
     }
 
@@ -2941,13 +2966,12 @@ function WorkFlowEdit() {
                                                 if(COLLISION){
 
                                                     if(!validateCollisionTile(origen, COLLISION.userData.id) || !validateCollisionTile(target, COLLISION.userData.id))
-                                                        console.log("resetPosition");
+                                                        resetPositionStepMeshButtons(SELECTED, type, origen, target);
                                                     else
                                                         addIdStepDrag(origen, target, COLLISION.userData.id);
                                                 }
                                                 else{
-
-                                                    console.log("resetPosition");
+                                                    resetPositionStepMeshButtons(SELECTED, type, origen, target);
                                                 }
                                             }
 
@@ -2958,14 +2982,36 @@ function WorkFlowEdit() {
                                         window.dragManager.functions.DROP = [drop];
                                         break;
                                     case "fork":
-                                        var parent = null;
+                                       window.dragManager.objectsCollision = getAllTiles(tile.userData.tile);
+                                        
+                                        var drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
 
-                                        if(FOCUS.data)
-                                            parent = FOCUS.data.userData.id[0];
+                                            if(SELECTED){
 
-                                        var mesh = addIdStep(EDIT_STEPS.length + 1, tile.userData.id, parent);
+                                                var origen = SELECTED.userData.originOrder;
 
-                                        FOCUS.data = mesh;
+                                                var target = SELECTED.userData.targetOrder;
+
+                                                resetPositionStepMeshButtons(SELECTED, type, origen, target);
+
+                                                if(COLLISION){                                                 
+
+                                                    if(validateCollisionTile(origen, COLLISION.userData.id)){
+
+                                                        parent = origen;
+
+                                                        var mesh = addIdStep(EDIT_STEPS.length + 1, COLLISION.userData.id, parent);
+
+                                                        FOCUS.data = mesh;
+                                                    }
+                                                }
+                                            }
+
+                                            window.dragManager.objectsCollision = [];
+                                            window.dragManager.functions.DROP = [];
+                                        };
+
+                                        window.dragManager.functions.DROP = [drop];
                                         break;
                                 }
                             }
@@ -3345,6 +3391,23 @@ function WorkFlowEdit() {
             FOCUS.mesh.position.copy(mesh.position);
             focus.visible = true;
         });
+    }
+
+    function resetPositionStepMeshButtons(mesh, type, IdOrigen, IdTarget){
+
+        var object = LIST_ARROWS.find(function(x){
+            if(x.originID === IdOrigen && x.targetID === IdTarget)
+                return x;
+        });
+
+        var target = null;
+
+        if(type === 'changeStep')
+            target = object.meshPrimaryTarget.show;
+        else
+            target = object.meshSecondaryTarget.show;
+
+        animate(mesh, target, 300);
     }
 
     function validateCollisionTileSteps(orderStepFocus, tileValidate){
