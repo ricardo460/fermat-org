@@ -1235,6 +1235,7 @@ END
 */
 
 #steps-list {
+  z-index: 11;
   position: fixed;
   left: 0px;
   background: #eee;
@@ -1250,7 +1251,8 @@ END
   height: 100%;
   padding-top: 5px;
   background: #eee;
-  overflow: auto;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 
 #steps-list-expand {

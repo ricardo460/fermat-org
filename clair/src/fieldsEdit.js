@@ -1115,8 +1115,35 @@ function FieldsEdit() {
             <button id="steps-expand"></button>
             </div>
             `;
+			
+			div.addStep = function(i, obj) {
+				var canvas = document.createElement('canvas');
+				canvas.className = "steps-list-step";
+				var ctx = canvas.getContext("2d");
+				
+				canvas.dataset.num = i;
+				canvas.onclick = function () {
+					// -- ricardo --
+					alert(this.dataset.num);
+				};
+				
+				document.getElementById("steps-list-content").appendChild(canvas);
+				
+				canvas.width  = canvas.offsetWidth;
+				canvas.height = canvas.offsetHeight;
+				ctx.width  = canvas.offsetWidth;
+				ctx.height = canvas.offsetHeight;
+				
+				ctx.beginPath();
+				ctx.arc(ctx.width/2, ctx.height/2, 45, 0, 2*Math.PI);
+				ctx.stroke();
+				
+				ctx.font = "30px Arial";
+				ctx.textAlign = "center";
+				ctx.fillText(i, ctx.width/2, ctx.height/2 + 10);
+			}
             
-            document.body.appendChild(div);
+            document.body.appendChild(div); 
 
             document.getElementById("steps-list-expand").onclick = function() {
 
@@ -1129,6 +1156,17 @@ function FieldsEdit() {
             };
         }
     };
+	
+	this.updateStepList = function() {
+		var _obj = window.workFlowEdit.get();
+		var div = document.getElementById("steps-list");
+		var con = document.getElementById("steps-list-content");
+		
+		con.innerHTML = "";
+		for(var i = 0; i < _obj.length; i++) {
+			div.addStep(i+1, _obj[i]);
+		}
+	};
     
     this.hiddenStepsList = function(state, duration) {
 
