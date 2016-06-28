@@ -19,6 +19,11 @@ function WorkFlowEdit() {
 
     var SHOW_ARROW = [];
 
+    var TYPE = {
+            async : 0xFF0000,
+            direct: 0x0000FF
+        };
+
     var actualMode = null;
 
     var TILEWIDTH = window.TILE_DIMENSION.width - window.TILE_SPACING;
@@ -1292,7 +1297,7 @@ function WorkFlowEdit() {
             .start();
     }
 
-    function addIdStep(id, IDtile, parent){
+    function addIdStep(id, IDtile, parent, typeCall){
 
         var mesh = createIdStep(),
             difference = TILEWIDTH / 2;
@@ -1323,6 +1328,9 @@ function WorkFlowEdit() {
                 id : newArray,
                 type : 'direct call'
             };
+
+            if(typeCall)
+                obj.type = typeCall;
             
             children.push(obj);
         }
@@ -1392,7 +1400,7 @@ function WorkFlowEdit() {
                                     }
                                     find = false;
                                 }
-                            }//if 2
+                            }
                         }
                     }
                 } 
@@ -1670,7 +1678,7 @@ function WorkFlowEdit() {
 
     this.createLineStep = function(meshOrigin, meshTarget, idOrigin, idTarget, tileOrigin, tileTarget, update, _indice){ // nuevo
 
-        var mesh, vertexPositions, geometry, from, to, listSteps, midPoint, distanceX, distanceY, indice = _indice || 0;
+        var mesh, vertexPositions, geometry, from, to, color, listSteps, midPoint, distanceX, distanceY, indice = _indice || 0;
         var positionMesh = {x: null, y: null, z : null};
 
         var objArrow = null;
@@ -1689,16 +1697,20 @@ function WorkFlowEdit() {
                 vector2:null,
                 meshSecondary: null,
                 arrow: null,
-                type: {
-                    name : 'direct call',
-                    color : 0xFF0000
-                },
                 meshPrimaryTarget: [],
                 meshSecondaryTarget: []
             };
         }
 
-        var colorArrow = objArrow.type.color;
+        var object = EDIT_STEPS[idOrigin - 1].children.find(function(x){
+            if(x.id[0] === idTarget)
+                return x;
+        });
+
+        if(object.type === "direct call")
+            color = TYPE.direct;
+        else
+            color = TYPE.async;
 
         var vertexOriginX = meshOrigin.position.x,
             vertexOriginY = meshOrigin.position.y,
@@ -1768,7 +1780,7 @@ function WorkFlowEdit() {
 
         var length = direction.length();
 
-        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, colorArrow, 0.1, 0.1); // Arrow Rojo
+        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1); // Arrow Rojo
 
         window.scene.add(arrowHelper);
 
@@ -1815,7 +1827,7 @@ function WorkFlowEdit() {
 
             var length = direction.length();
 
-            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, colorArrow, 0.1, 0.1); // Arrow Azul
+            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1); // Arrow Azul
 
             scene.add(arrowHelper);
             
@@ -1877,7 +1889,7 @@ function WorkFlowEdit() {
 
             var length = direction.length();
 
-            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, colorArrow, 4*2, 4*2); // Arrow Rojo
+            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 4*2, 4*2); // Arrow Rojo
 
             scene.add(arrowHelper);
 
@@ -2557,7 +2569,7 @@ function WorkFlowEdit() {
             for(i = 0; i < PREVIEW_STEPS.length; i++){
 
                 var order = null, title = null, platform = null, layer = null, name = null,
-                    IDtile = null, parent = null, desc = null, id = null;
+                    IDtile = null, parent = null, desc = null, id = null, typeCall = null;
 
                 order = PREVIEW_STEPS[i].id + 1;
 
@@ -2575,17 +2587,16 @@ function WorkFlowEdit() {
 
                 parent = searchParent(order - 1);
 
-                if(parent)
+                if(parent){
                     id = parent.id + 1;
+                    typeCall = parent.typeCall;
+                }
 
-                var mesh = addIdStep(order, IDtile, id);
+                var mesh = addIdStep(order, IDtile, id, typeCall);
 
                 EDIT_STEPS[order - 1].title[0] = title;
 
                 EDIT_STEPS[order - 1].desc[0] = desc;
-
-                if(parent)
-                    searchChildren(order, parent.typeCall);
 
                 FOCUS.data = mesh;
             }
@@ -2699,6 +2710,8 @@ function WorkFlowEdit() {
                         var z = camera.getMaxDistance() / 2;
 
                         if(EDIT_STEPS.length > 0){
+
+                            updateStepList();
 
                             window.dragManager.objects = [];
                             
