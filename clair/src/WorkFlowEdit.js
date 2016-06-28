@@ -6,7 +6,9 @@ function WorkFlowEdit() {
 
     var FOCUS = {
             mesh : null,
-            data : null
+            data : null,
+            arrow1 : null,
+            arrow2 : null
         };
 
     var EDIT_STEPS = [];
@@ -14,6 +16,8 @@ function WorkFlowEdit() {
     var PREVIEW_STEPS = [];
 
     var REPARED_STEPS = [];
+
+    var SHOW_ARROW = [];
 
     var actualMode = null;
 
@@ -40,13 +44,14 @@ function WorkFlowEdit() {
             type: null,
             meshPrimaryTarget:null,
             meshSecondaryTarget: null
-    };
+        };
 
     this.get = function(){
         return EDIT_STEPS;
     };
 
     this.getp = function(){
+        updateStepList();
         return PREVIEW_STEPS;
     }; 
 
@@ -1466,6 +1471,47 @@ function WorkFlowEdit() {
         return mesh;
     }
 
+    function hideArrowConfig(type, IdOrigen, IdTarget, state){
+
+        var object = LIST_ARROWS.find(function(x){
+            if(x.originID === IdOrigen && x.targetID === IdTarget)
+                return x;
+        });
+
+        var mesh = null;
+
+        if(type !== 'changeStep'){
+            mesh = object.meshPrimary;
+            object.meshSecondary = false;
+        }
+        else{
+            mesh = object.meshSecondary;
+            object.meshPrimary = false;
+        }
+
+        tileOrigen = window.helper.getSpecificTile(object.tileOriginId).mesh;
+
+        tileTarget = window.helper.getSpecificTile(object.tileTargetId).mesh;
+
+        var from = new THREE.Vector3(tileOrigen.position.x, tileOrigen.position.y, 2);
+
+        var to = new THREE.Vector3(mesh.position.x, mesh.position.y, 2);
+
+        var direction = to.clone().sub(from);
+
+        var length = direction.length();
+
+        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xFF0000, 0.1, 0.1);
+
+        window.scene.add(arrowHelper);
+
+        object.arrow = false;
+        object.vector1 = false;
+        object.vector2 = false;
+
+        SHOW_ARROW.push(object);
+    }
+
     function addIdStepDrag(idOrigen, idTarget, IDtile){
 
         var mesh = createIdStep(),
@@ -1722,9 +1768,11 @@ function WorkFlowEdit() {
 
         var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xFF0000, 0.1, 0.1); // Arrow Rojo
 
-        scene.add(arrowHelper);
+        window.scene.add(arrowHelper);
 
         mesh = createSimbol();
+
+        mesh.material.map = createTextureButton('+');
 
         mesh.userData = {
             originOrder : idOrigin,
@@ -1762,14 +1810,12 @@ function WorkFlowEdit() {
                 break;
         }
 
-
         objArrow.type = vectorArrow;
         objArrow.vector1 = arrowHelper;
         objArrow.meshPrimary = mesh;
 
         var target = window.helper.fillTarget(midPoint.x, midPoint.y, 3, 'table');
         objArrow.meshPrimaryTarget = target;
-
 
         directionLineMesh(midPoint.x, midPoint.y);
 
@@ -1884,7 +1930,7 @@ function WorkFlowEdit() {
             
             mesh = createSimbol();
 
-            mesh.material.map = createTextureButton();
+            mesh.material.map = createTextureButton('y');
 
             objArrow.vector2 = arrowHelper;
             objArrow.meshSecondary = mesh;
@@ -1931,11 +1977,11 @@ function WorkFlowEdit() {
             objArrow.meshSecondaryTarget = target;
         }
 
-        function createTextureButton(){
+        function createTextureButton(src){
 
             var canvas = document.createElement('canvas');
-                canvas.height = 62;
-                canvas.width = 62;
+                canvas.height = 65;
+                canvas.width = 65;
             var ctx = canvas.getContext('2d');
             var image = document.createElement('img');
             var texture = new THREE.Texture(canvas);
@@ -1950,7 +1996,7 @@ function WorkFlowEdit() {
                 texture.needsUpdate = true;
             };
 
-            image.src = 'images/workflow/button_y.png';
+            image.src = 'images/workflow/button_'+src+'.png';
 
             return texture;
         }
@@ -2306,6 +2352,8 @@ function WorkFlowEdit() {
 
         if(actualMode === "edit-path"){
 
+            updateStepList();
+
             if(FOCUS.data){ 
 
                 var id = FOCUS.data.userData.id - 1,
@@ -2590,6 +2638,28 @@ function WorkFlowEdit() {
 
                 FOCUS.mesh = mesh;
             };
+
+            var from = new THREE.Vector3(0, 0, 0);
+
+            var direction = from.clone().sub(from);
+
+            var length = direction.length();
+
+            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xFF0000, 0.1, 0.1);
+
+            arrowHelper.visible = false;
+
+            FOCUS.arrow1 = arrowHelper;
+
+            window.scene.add(arrowHelper);
+
+            arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xFF0000, 0.1, 0.1);
+
+            arrowHelper.visible = false;
+
+            FOCUS.arrow2 = arrowHelper;
+
+            window.scene.add(arrowHelper);
         }
     }
 
@@ -2749,6 +2819,8 @@ function WorkFlowEdit() {
                         window.dragManager.on();
 
                         window.helper.hide('backButton', 0, true);
+
+                        window.fieldsEdit.hiddenStepsList(true);
 
                         buttons.preview();
 
@@ -3047,6 +3119,8 @@ function WorkFlowEdit() {
                         window.helper.show('backButton', 0);
 
                         buttons.save();
+
+                        window.fieldsEdit.hiddenStepsList(false);
 
                         displayField(true);
 
@@ -3519,6 +3593,22 @@ function WorkFlowEdit() {
         }
     }
 
+    function updateStepList(){
+
+        var _obj = EDIT_STEPS;
+        var div = document.getElementById("steps-list");
+        var con = document.getElementById("steps-list-content");
+        
+        con.innerHTML = "";
+
+        for(var i = 0; i < _obj.length; i++) {
+
+            var id = i + 1;
+
+            div.addStep(id, _obj[i]);
+        }
+    }
+
     function cleanEditStep(){
 
         var target = window.helper.fillTarget(0, 0, 0, 'table');
@@ -3543,37 +3633,6 @@ function WorkFlowEdit() {
         window.buttonsManager.deleteButton('button-preview');
         window.buttonsManager.deleteButton('button-path');
         window.buttonsManager.deleteButton('button-Steps');   
-    }
-
-    function listOrden(){
-        function add_step(){
-            var canvas = document.createElement('canvas');
-            canvas.className = "steps-list-step";
-            var ctx = canvas.getContext("2d");
-            
-            canvas.dataset.num = count;
-            canvas.onclick = function () {
-                // -- ricardo --
-                alert(this.dataset.num);
-            };
-            
-            document.getElementById("steps-list-content").appendChild(canvas);
-            
-            canvas.width  = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            ctx.width  = canvas.offsetWidth;
-            ctx.height = canvas.offsetHeight;
-            
-            ctx.beginPath();
-            ctx.arc(ctx.width/2, ctx.height/2, 45, 0, 2*Math.PI);
-            ctx.stroke();
-            
-            ctx.font = "30px Arial";
-            ctx.textAlign = "center";
-            ctx.fillText(count, ctx.width/2, ctx.height/2 + 10);
-            
-            count++;
-        }
     }
 
     this.getFocus = function(){

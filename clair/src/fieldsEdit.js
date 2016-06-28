@@ -196,6 +196,7 @@ function FieldsEdit() {
 
         workflowHeader();
         workflowDescription();
+        createStepsList();
     };
 
     this.changeLayer = function(platform){
@@ -1089,7 +1090,7 @@ function FieldsEdit() {
         workflowPreview(step);
     };
 
-    this.createStepsList = function() {
+    function createStepsList(){
 
         var div = document.getElementById("steps-list");
 
@@ -1116,15 +1117,19 @@ function FieldsEdit() {
             </div>
             `;
 			
-			div.addStep = function(i, obj) {
+			div.addStep = function(i, _obj) {
+
 				var canvas = document.createElement('canvas');
 				canvas.className = "steps-list-step";
 				var ctx = canvas.getContext("2d");
 				
-				canvas.dataset.num = i;
 				canvas.onclick = function () {
-					// -- ricardo --
-					alert(this.dataset.num);
+
+					var mesh = _obj.mesh;
+
+                    var position = mesh.position;
+
+                    window.camera.move(position.x, position.y, 200, 1500, true);
 				};
 				
 				document.getElementById("steps-list-content").appendChild(canvas);
@@ -1156,17 +1161,7 @@ function FieldsEdit() {
             };
         }
     };
-	
-	this.updateStepList = function() {
-		var _obj = window.workFlowEdit.get();
-		var div = document.getElementById("steps-list");
-		var con = document.getElementById("steps-list-content");
-		
-		con.innerHTML = "";
-		for(var i = 0; i < _obj.length; i++) {
-			div.addStep(i+1, _obj[i]);
-		}
-	};
+
     
     this.hiddenStepsList = function(state, duration) {
 
@@ -1247,8 +1242,5 @@ function FieldsEdit() {
         var canvas = document.getElementById('step-modal-canvas');
         var ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-
-    
+    }  
 }
