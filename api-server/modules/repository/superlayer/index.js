@@ -2,8 +2,10 @@ var suprlaySrv = require('./services/suprlay');
 var SuprlayMdl = require('./models/suprlay');
 var compMod = require('../component');
 var orderLib = require('../../../lib/utils/order');
-var MapsCodesPlatfSuprl = require("../lib/codes_platf_suprlay");
-var mapsCodes = new MapsCodesPlatfSuprl();
+var mapsCodes = require("../lib/codes_platf_suprlay");
+var mapPlatfrms = null;
+var mapSuprlays = null;
+
 /**
  * [sort description]
  *
@@ -171,6 +173,25 @@ exports.insOrUpdSuprlay = function(code, name, logo, deps, order, callback) {
 		callback(err, null);
 	}
 };
+var loadCodes = function(callback) {
+	try {
+		mapsCodes.loadCodesPlatform(function(err, mapsCodPlatfrm) {
+			if (err) return callback(err, null);
+			if (mapsCodPlatfrm) {
+				mapPlatfrms = mapsCodPlatfrm;
+				mapsCodes.loadCodesSuprlays(function(err, mapsCodSuprlay) {
+					if (err) return callback(err, null);
+					if (mapsCodSuprlay) {
+						mapSuprlays = mapsCodSuprlay;
+						return callback(null, true);
+					}
+				});
+			}
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
 /**
  * [getSuprlays description]
  *
@@ -187,25 +208,28 @@ exports.getSuprlays = function(callback) {
 			order: 1
 		}, function(err, suprlays) {
 			if (err) {
-				callback(err, null);
+				return callback(err, null);
 			} else {
-				var mapPlatfrms = mapsCodes.mapsCodePlatfrm();
-				var mapSuprlays = mapsCodes.mapsCodeSuprlay();
-				for (var i = 0; i < suprlays.length; i++) {
-					for (var j = 0; j < suprlays[i].deps.length; j++) {
-						var platfrmCode = mapPlatfrms[suprlays[i].deps[j]];
-						var suprlayCode = mapSuprlays[suprlays[i].deps[j]];
-						if (platfrmCode)
-							suprlays[i].deps[j] = platfrmCode;
-						else if (suprlayCode)
-							suprlays[i].deps[j] = suprlayCode;
-					}
-				}
-				callback(null, suprlays);
+				loadCodes(function(err, res) {
+					if (err) return callback(err, null);
+					if (res) {
+						for (var i = 0; i < suprlays.length; i++) {
+							for (var j = 0; j < suprlays[i].deps.length; j++) {
+								var platfrmCode = mapPlatfrms[suprlays[i].deps[j]];
+								var suprlayCode = mapSuprlays[suprlays[i].deps[j]];
+								if (platfrmCode)
+									suprlays[i].deps[j] = platfrmCode;
+								else if (suprlayCode)
+									suprlays[i].deps[j] = suprlayCode;
+							}
+						}
+						return callback(null, suprlays);
+					} else return callback('Error getting codes', null);
+				});
 			}
 		});
 	} catch (err) {
-		callback(err, null);
+		return callback(err, null);
 	}
 };
 /**
@@ -245,17 +269,20 @@ exports.findSuprlayById = function(_id, callback) {
 		if (err_suprlay) {
 			return callback(err_suprlay, null);
 		} else if (res_suprlay) {
-			var mapPlatfrms = mapsCodes.mapsCodePlatfrm();
-			var mapSuprlays = mapsCodes.mapsCodeSuprlay();
-			for (var j = 0; j < res_suprlay.deps.length; j++) {
-				var platfrmCode = mapPlatfrms[res_suprlay.deps[j]];
-				var suprlayCode = mapSuprlays[res_suprlay.deps[j]];
-				if (platfrmCode)
-					res_suprlay.deps[j] = platfrmCode;
-				else if (suprlayCode)
-					res_suprlay.deps[j] = suprlayCode;
-			}
-			return callback(null, res_suprlay);
+			loadCodes(function(err, res) {
+				if (err) return callback(err, null);
+				if (res) {
+					for (var j = 0; j < res_suprlay.deps.length; j++) {
+						var platfrmCode = mapPlatfrms[res_suprlay.deps[j]];
+						var suprlayCode = mapSuprlays[res_suprlay.deps[j]];
+						if (platfrmCode)
+							res_suprlay.deps[j] = platfrmCode;
+						else if (suprlayCode)
+							res_suprlay.deps[j] = suprlayCode;
+					}
+					return callback(null, res_suprlay);
+				} else return callback('Error getting codes', null);
+			});
 		} else {
 			return callback(null, null);
 		}
@@ -344,8 +371,9 @@ exports.updateDepsSuperlayById = function(_suprlay_id, deps, callback) {
 	'use strict';
 	try {
 		var set_obj = {};
-		if (deps)
+		if (deps.length > 0) {
 			set_obj.deps = deps;
+		} else set_obj.deps = [];
 		suprlaySrv.updateSuprlayById(_suprlay_id, set_obj, function(err, res_upd) {
 			if (err) {
 				return callback(err, null);
