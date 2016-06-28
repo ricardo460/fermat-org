@@ -32,7 +32,6 @@ function WorkFlowEdit() {
     };
 
     this.getp = function(){
-        updateStepList();
         return PREVIEW_STEPS;
     }; 
 
@@ -408,8 +407,12 @@ function WorkFlowEdit() {
 
                 var parent = searchStepParent(id);
 
-                if(typeof parent === 'number'){
-                    searchStep(parent + 1).children.push(object.order);
+                if(typeof parent.id === 'number'){
+                    var obj = {
+                        id : object.order,
+                        type : parent.typeCall
+                    };
+                    searchStep(parent.id + 1).children.push(obj);
                 }
             }
 
@@ -457,10 +460,10 @@ function WorkFlowEdit() {
 
                 for(var i = 0; i < children.length; i++){
 
-                    var idTile = array[children[i][0] - 1].tile;
+                    var idTile = array[children[i].id[0] - 1].tile;
 
                     if(tile === idTile){
-                        return array[children[i][0] - 1].order[0];
+                        return array[children[i].id[0] - 1].order[0];
                     }
                 }
 
@@ -490,9 +493,13 @@ function WorkFlowEdit() {
                     var _id = parseInt(next[l].id);
 
                     if(_id === id){
-                        return steps[i].id;
-                    }
 
+                        var obj = {
+                            id : steps[i].id,
+                            typeCall : next[l].type
+                        }
+                        return obj;
+                    }
                 }
             }
 
@@ -510,7 +517,7 @@ function WorkFlowEdit() {
 
                 var oldChildren = list[ORDER].children,
                     odlStep = list[ORDER].order,
-                    newIdStep = Search(oldChildren[0][0]),
+                    newIdStep = Search(oldChildren[0].id[0]),
                     newStep = list[newIdStep];
         
                 odlStep[0] = newStep.order[0];
@@ -520,9 +527,9 @@ function WorkFlowEdit() {
 
                 for(i = 1; i < oldChildren.length; i++){
 
-                    fillRemove(oldChildren[i][0]);
+                    fillRemove(oldChildren[i].id[0]);
 
-                    removeStep.push(oldChildren[i][0]);
+                    removeStep.push(oldChildren[i].id[0]);
                 }
 
                 for(i = 0; i < removeStep.length; i++)
@@ -536,7 +543,7 @@ function WorkFlowEdit() {
 
                     for(l = 0; l < children.length; l++){ 
 
-                        if(children[l][0] === step)
+                        if(children[l].id[0] === step)
                             children.splice(l, 1);
                     }
                 }
@@ -558,12 +565,12 @@ function WorkFlowEdit() {
 
                 for(i = 0; i < list[order].children.length; i++){
 
-                    var children = list[Search(list[order].children[i][0])].children;
+                    var children = list[Search(list[order].children[i].id[0])].children;
 
-                    removeStep.push(list[order].children[i][0]);
+                    removeStep.push(list[order].children[i].id[0]);
 
                     if(children.length > 0)
-                        fillRemove(list[order].children[i][0]);
+                        fillRemove(list[order].children[i].id[0]);
                 }
             }
 
@@ -1310,9 +1317,14 @@ function WorkFlowEdit() {
             var children = EDIT_STEPS[parent - 1].children;
 
             if(children.length > 0)
-                newArray[0] = window.helper.getLastValueArray(children)[0] + 0.5;
+                newArray[0] = window.helper.getLastValueArray(children).id[0] + 0.5;
+
+            var obj = {
+                id : newArray,
+                type : 'direct call'
+            };
             
-            children.push(newArray);
+            children.push(obj);
         }
         
         var object = {
@@ -1342,13 +1354,13 @@ function WorkFlowEdit() {
 
             for (var i = 0; i < EDIT_STEPS.length; i++) {
 
-                if(EDIT_STEPS[i].children[0] !== undefined){
+                if(EDIT_STEPS[i].children.length > 0){
                     
                     for (var q = 0; q < EDIT_STEPS[i].children.length; q++) {
 
                         for (var j = 0; j < EDIT_STEPS.length; j++) {
 
-                             if(EDIT_STEPS[i].children[q][0] === EDIT_STEPS[j].order[0]){// if 2
+                             if(EDIT_STEPS[i].children[q].id[0] === EDIT_STEPS[j].order[0]){// if 2
                                                       
                                  if(EDIT_STEPS.length === 2){
                                     self.createLineStep(EDIT_STEPS[i].target.show, 
@@ -1412,7 +1424,7 @@ function WorkFlowEdit() {
                             
                 for (var o = 0; o < EDIT_STEPS[n].children.length; o++) {
 
-                    if(LIST_ARROWS[m].originID === EDIT_STEPS[n].order[0] && LIST_ARROWS[m].targetID === EDIT_STEPS[n].children[o][0]){
+                    if(LIST_ARROWS[m].originID === EDIT_STEPS[n].order[0] && LIST_ARROWS[m].targetID === EDIT_STEPS[n].children[o].id[0]){
 
                         _search =  true;
                     }
@@ -1526,8 +1538,8 @@ function WorkFlowEdit() {
 
         for(var i = 0; i < children.length; i++){
 
-            if(children[i][0] === idTarget){
-                children[i] = newArray;
+            if(children[i].id[0] === idTarget){
+                children[i].id = newArray;
             }
         }
     
@@ -1544,7 +1556,12 @@ function WorkFlowEdit() {
 
         stepTarget.order[0] =  stepTarget.order[0] + 0.5;
 
-        object.children.push(stepTarget.order);
+        var obj = {
+                id : stepTarget.order,
+                type : 'direct call'
+            };
+
+        object.children.push(obj);
 
         EDIT_STEPS.push(object);
 
@@ -1566,7 +1583,7 @@ function WorkFlowEdit() {
 
                         for (var j = 0; j < EDIT_STEPS.length; j++) {
 
-                             if(EDIT_STEPS[i].children[q][0] === EDIT_STEPS[j].order[0]){// if 2
+                             if(EDIT_STEPS[i].children[q].id[0] === EDIT_STEPS[j].order[0]){// if 2
                                                       
                                  if(EDIT_STEPS.length === 2){
                                     self.createLineStep(EDIT_STEPS[i].target.show, 
@@ -1630,7 +1647,7 @@ function WorkFlowEdit() {
                             
                 for (var o = 0; o < EDIT_STEPS[n].children.length; o++) {
 
-                    if(LIST_ARROWS[m].originID === EDIT_STEPS[n].order[0] && LIST_ARROWS[m].targetID === EDIT_STEPS[n].children[o][0]){
+                    if(LIST_ARROWS[m].originID === EDIT_STEPS[n].order[0] && LIST_ARROWS[m].targetID === EDIT_STEPS[n].children[o].id[0]){
 
                         _search =  true;
                     }
@@ -1656,7 +1673,13 @@ function WorkFlowEdit() {
         var mesh, vertexPositions, geometry, from, to, listSteps, midPoint, distanceX, distanceY, indice = _indice || 0;
         var positionMesh = {x: null, y: null, z : null};
 
-        var objArrow = {
+        var objArrow = null;
+
+        if(update){
+            objArrow = LIST_ARROWS[indice];
+        }
+        else{
+            objArrow = {
                 tileOriginId : null,
                 tileTargetId : null,
                 originID: null,
@@ -1666,10 +1689,16 @@ function WorkFlowEdit() {
                 vector2:null,
                 meshSecondary: null,
                 arrow: null,
-                type: null,
+                type: {
+                    name : 'direct call',
+                    color : 0xFF0000
+                },
                 meshPrimaryTarget: [],
                 meshSecondaryTarget: []
             };
+        }
+
+        var colorArrow = objArrow.type.color;
 
         var vertexOriginX = meshOrigin.position.x,
             vertexOriginY = meshOrigin.position.y,
@@ -1739,7 +1768,7 @@ function WorkFlowEdit() {
 
         var length = direction.length();
 
-        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xFF0000, 0.1, 0.1); // Arrow Rojo
+        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, colorArrow, 0.1, 0.1); // Arrow Rojo
 
         window.scene.add(arrowHelper);
 
@@ -1786,7 +1815,7 @@ function WorkFlowEdit() {
 
             var length = direction.length();
 
-            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xFF0000, 0.1, 0.1); // Arrow Azul
+            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, colorArrow, 0.1, 0.1); // Arrow Azul
 
             scene.add(arrowHelper);
             
@@ -1848,7 +1877,7 @@ function WorkFlowEdit() {
 
             var length = direction.length();
 
-            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xFF0000, 4*2, 4*2); // Arrow Rojo
+            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, colorArrow, 4*2, 4*2); // Arrow Rojo
 
             scene.add(arrowHelper);
 
@@ -1868,7 +1897,7 @@ function WorkFlowEdit() {
                     
                     for (var o = 0; o < list[i].children.length; o++) {
 
-                        if((list[i].order[0] === LIST_ARROWS[j].originID) && (list[i].children[o][0] === LIST_ARROWS[j].targetID)){ // buscamos la flecha a borrar para crear otra con la nueva posicion // if 2
+                        if((list[i].order[0] === LIST_ARROWS[j].originID) && (list[i].children[o].id[0] === LIST_ARROWS[j].targetID)){ // buscamos la flecha a borrar para crear otra con la nueva posicion // if 2
 
                             window.scene.remove(LIST_ARROWS[j].arrow);
                             window.scene.remove(LIST_ARROWS[j].meshPrimary);
@@ -1878,7 +1907,7 @@ function WorkFlowEdit() {
 
                             for (var k = 0; k < list.length; k++) {
 
-                                if(list[i].children[o][0] === list[k].order[0]){
+                                if(list[i].children[o].id[0] === list[k].order[0]){
 
                                     self.createLineStep(list[i].target.show, 
                                                         list[k].target.show, 
@@ -1896,7 +1925,7 @@ function WorkFlowEdit() {
 
                         for(var r = 0; r < list[t].children.length; r++){
 
-                            if(list[i].order[0] === list[t].children[r][0]){
+                            if(list[i].order[0] === list[t].children[r].id[0]){
 
                                 for(var m = 0; m < LIST_ARROWS.length; m++){
 
@@ -2210,7 +2239,7 @@ function WorkFlowEdit() {
 
                 var oldChildren = list[ORDER].children,
                     odlStep = list[ORDER].order,
-                    newIdStep = Search(oldChildren[0][0]),
+                    newIdStep = Search(oldChildren[0].id[0]),
                     newStep = list[newIdStep];
         
                 odlStep[0] = newStep.order[0];
@@ -2221,9 +2250,9 @@ function WorkFlowEdit() {
 
                 for(i = 1; i < oldChildren.length; i++){
 
-                    fillRemove(oldChildren[i][0]);
+                    fillRemove(oldChildren[i].id[0]);
 
-                    removeStep.push(oldChildren[i][0]);
+                    removeStep.push(oldChildren[i].id[0]);
                 }
 
                 for(i = 0; i < removeStep.length; i++)
@@ -2240,7 +2269,7 @@ function WorkFlowEdit() {
 
                 for(l = 0; l < children.length; l++){ 
 
-                    if(children[l][0] === step)
+                    if(children[l].id[0] === step)
                         children.splice(l, 1);
                 }
             }
@@ -2271,7 +2300,7 @@ function WorkFlowEdit() {
 
                 for(i = 0; i < children.length; i++){
 
-                    var idTile = list[children[i][0] - 1].tile;
+                    var idTile = list[children[i].id[0] - 1].tile;
 
                     if(parentTile === idTile){
                         return false;
@@ -2312,12 +2341,12 @@ function WorkFlowEdit() {
 
             for(i = 0; i < list[order].children.length; i++){
 
-                var children = list[Search(list[order].children[i][0])].children;
+                var children = list[Search(list[order].children[i].id[0])].children;
 
-                removeStep.push(list[order].children[i][0]);
+                removeStep.push(list[order].children[i].id[0]);
 
                 if(children.length > 0)
-                    fillRemove(list[order].children[i][0]);
+                    fillRemove(list[order].children[i].id[0]);
             }
         }
 
@@ -2341,7 +2370,7 @@ function WorkFlowEdit() {
                 
                 for (var k = 0; k < EDIT_STEPS.length; k++) {
                     
-                    if(EDIT_STEPS[i].children[j][0] === EDIT_STEPS[k].order[0]){
+                    if(EDIT_STEPS[i].children[j].id[0] === EDIT_STEPS[k].order[0]){
 
                         self.createLineStep(EDIT_STEPS[i].target.show, 
                                             EDIT_STEPS[k].target.show,
@@ -2487,8 +2516,8 @@ function WorkFlowEdit() {
                 for(l = 0; l < children.length; l++){
 
                     var object = {
-                        id : children[l][0] - 1,
-                        type: "direct call"
+                        id : children[l].id[0] - 1,
+                        type: children[l].type
                     };
 
                     next.push(object);
@@ -2528,7 +2557,7 @@ function WorkFlowEdit() {
             for(i = 0; i < PREVIEW_STEPS.length; i++){
 
                 var order = null, title = null, platform = null, layer = null, name = null,
-                    IDtile = null, parent = null, desc = null;
+                    IDtile = null, parent = null, desc = null, id = null;
 
                 order = PREVIEW_STEPS[i].id + 1;
 
@@ -2546,14 +2575,17 @@ function WorkFlowEdit() {
 
                 parent = searchParent(order - 1);
 
-                if(typeof parent === 'number')
-                    parent = parent + 1;
+                if(parent)
+                    id = parent.id + 1;
 
-                var mesh = addIdStep(order, IDtile, parent);
+                var mesh = addIdStep(order, IDtile, id);
 
                 EDIT_STEPS[order - 1].title[0] = title;
 
                 EDIT_STEPS[order - 1].desc[0] = desc;
+
+                if(parent)
+                    searchChildren(order, parent.typeCall);
 
                 FOCUS.data = mesh;
             }
@@ -2569,11 +2601,36 @@ function WorkFlowEdit() {
 
                 for(l = 0; l < next.length; l++){
 
-                    if(next[l].id === id)    
-                        return PREVIEW_STEPS[i].id;
+                    if(next[l].id === id){
+
+                        var obj = {
+                            id : PREVIEW_STEPS[i].id,
+                            typeCall : next[l].type
+                        };
+                        return obj;
+                    }    
                 }
             }
             return null;
+        }
+
+        function searchChildren(id, type){
+
+            var i, l;
+
+            for(i = 0; i < EDIT_STEPS.length; i++){
+
+                var children = EDIT_STEPS[i].children;
+
+                for(l = 0; l < children.length; l++){
+
+                    if(children[l].id[0] === id){
+
+                        EDIT_STEPS[i].children[l].type = type;
+                        return null;
+                    }    
+                }
+            }
         }
     }
 
@@ -3106,7 +3163,7 @@ function WorkFlowEdit() {
         updateArrowStepAfterChangeTile(oldTile, newTile, orderFocus);
     }
 
-    function updateArrowStepAfterChangeTile(oldTile, newTile, orderFocus){ // nuevo
+    function updateArrowStepAfterChangeTile(oldTile, newTile, orderFocus){ 
 
         for (var i = 0; i < EDIT_STEPS.length; i++) { 
            
@@ -3116,7 +3173,7 @@ function WorkFlowEdit() {
 
                     for (var j = 0; j < EDIT_STEPS.length; j++) { 
 
-                        if(EDIT_STEPS[i].children[s][0] === EDIT_STEPS[j].order[0]){ // target // if 2
+                        if(EDIT_STEPS[i].children[s].id[0] === EDIT_STEPS[j].order[0]){ // target // if 2
 
                             for (var k = 0; k < LIST_ARROWS.length; k++) {
                             
@@ -3145,13 +3202,13 @@ function WorkFlowEdit() {
 
                 for (var t = 0; t < EDIT_STEPS[i].children.length; t++) {
 
-                    if(orderFocus === EDIT_STEPS[i].children[t][0]){ // buscamos el padre y el origen a la vez
+                    if(orderFocus === EDIT_STEPS[i].children[t].id[0]){ // buscamos el padre y el origen a la vez
 
                         for (var n = 0; n < EDIT_STEPS[i].children.length; n++) {
                             
                             for (var l = 0; l < EDIT_STEPS.length; l++) {
                                 
-                                if(EDIT_STEPS[i].children[n][0] === EDIT_STEPS[l].order[0]){ // target
+                                if(EDIT_STEPS[i].children[n].id[0] === EDIT_STEPS[l].order[0]){ // target
 
                                     for (var m = 0; m < LIST_ARROWS.length; m++) {
                                         
@@ -3186,7 +3243,7 @@ function WorkFlowEdit() {
 
                         for (var o = 0; o < EDIT_STEPS.length; o++) {
 
-                            if((EDIT_STEPS[i].children[u][0] === EDIT_STEPS[o].order[0])){ // target // if 2 padre hijo
+                            if((EDIT_STEPS[i].children[u].id[0] === EDIT_STEPS[o].order[0])){ // target // if 2 padre hijo
 
                                 for (var p = 0; p < LIST_ARROWS.length; p++) {
                                     
@@ -3217,7 +3274,7 @@ function WorkFlowEdit() {
 
                         for (var w = 0; w < EDIT_STEPS[q].children.length; w++) {
                             
-                            if(EDIT_STEPS[i].order[0] === EDIT_STEPS[q].children[w][0]){ // origin // if 2 hijo padre
+                            if(EDIT_STEPS[i].order[0] === EDIT_STEPS[q].children[w].id[0]){ // origin // if 2 hijo padre
 
                                 for (var r = 0; r < LIST_ARROWS.length; r++) {
                                     
@@ -3303,7 +3360,7 @@ function WorkFlowEdit() {
 
             for(var i = 0; i < children.length; i++){
 
-                var order = children[i][0];
+                var order = children[i].id[0];
 
                 if(tileValidate === EDIT_STEPS[order - 1].tile)
                     validate = false;
@@ -3334,7 +3391,7 @@ function WorkFlowEdit() {
 
             for(l = 0; l < children.length; l++){
 
-                if(children[l][0] === order)
+                if(children[l].id[0] === order)
                     return EDIT_STEPS[i].order[0];
             }
         }
