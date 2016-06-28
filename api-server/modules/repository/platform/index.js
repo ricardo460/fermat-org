@@ -5,7 +5,6 @@ var PlatfrmMdl = require('./models/platfrm');
 var compMod = require('../component');
 var orderLib = require('../../../lib/utils/order');
 var mapsCodes = require("../lib/codes_platf_suprlay");
-var mongoose = require('mongoose');
 var mapPlatfrms = null;
 var mapSuprlays = null;
 /**
@@ -423,8 +422,7 @@ var updDeps = function(_id, callback) {
 					if (i < suprlays.length) {
 						foundDep = false;
 						for (var j = 0; j < suprlays[i].deps.length; j++) {
-							_id = new mongoose.Schema.Types.ObjectId(_id);
-							if (_id === suprlays[i].deps[j]) {
+							if (_id + '' === suprlays[i].deps[j] + '') {
 								suprlays[i].deps.splice(j, 1);
 								foundDep = true;
 							}
@@ -444,12 +442,8 @@ var updDeps = function(_id, callback) {
 					if (i < platfrms.length) {
 						foundDep = false;
 						for (var j = 0; j < platfrms[i].deps.length; j++) {
-							console.log(_id + '===' + platfrms[i].deps[j]);
-							//_id = new mongoose.Schema.Types.ObjectId(_id);
 							if (_id + '' === platfrms[i].deps[j] + '') {
-								console.log('deps before', platfrms[i].deps);
 								platfrms[i].deps.splice(j, 1);
-								console.log('deps after', platfrms[i].deps);
 								foundDep = true;
 							}
 						}
@@ -472,6 +466,22 @@ var updDeps = function(_id, callback) {
 				};
 				loopPlatfrm(0);
 			}
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
+/**
+ * [updDeps description]
+ * @param  {[type]}   _id      [description]
+ * @param  {Function} callback [description]
+ * @return {[type]}            [description]
+ */
+exports.updDeps = function(_id, callback) {
+	try {
+		updDeps(_id, function(err, res_upd) {
+			if (err) return callback(err, null);
+			if (res_upd) return callback(null, res_upd);
 		});
 	} catch (err) {
 		return callback(err, null);
