@@ -19,14 +19,15 @@ var clintSchema = mongoose.Schema({
 		trim: true,
 		required: true
 	},
-	//("server" | "client")
+	//("server" | "client" | "actor")
 	type: {
 		type: String,
 		lowercase: true,
 		trim: true,
 		required: true
 	},
-	extra: {},
+	location: mongoose.Schema.Types.Mixed,
+    networkServices: [String],
 	upd_at: {
 		type: mongoose.Schema.Types.ObjectId,
 		'default': new mongoose.Types.ObjectId()

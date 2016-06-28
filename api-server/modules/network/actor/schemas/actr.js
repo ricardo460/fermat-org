@@ -1,13 +1,17 @@
 var mongoose = require('mongoose');
 /**
- * this schema represents each serve in the network
+ * this schema represents each actor in the network
  *
  * @type {[type]}
  */
-var servSchema = mongoose.Schema({
+var actrSchema = mongoose.Schema({
 	_wave_id: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Wave'
+	},
+	_serv_id: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Serv'
 	},
 	hash: {
 		type: String,
@@ -15,43 +19,40 @@ var servSchema = mongoose.Schema({
 		trim: true,
 		required: true
 	},
-	//("server" | "client")
+	//("server" | "client" | "actor")
 	type: {
 		type: String,
 		lowercase: true,
 		trim: true,
 		required: true
 	},
-    location: mongoose.Schema.Types.Mixed,
-    lastIP: {
-        type: String
-    },
-    os: {
+    actorType: {
         type: String,
-        trim: true
+        uppercase: true,
+        trim: true,
+        required: true
     },
-	networkServices: mongoose.Schema.Types.Mixed,
-    conectedClients: {
-        type: Number,
-        default: 0
-    },
+    links: [String],
+    location: {},
+    profile: {},
 	upd_at: {
 		type: mongoose.Schema.Types.ObjectId,
 		'default': new mongoose.Types.ObjectId()
 	}
 }, {
-	collection: 'servs'
+	collection: 'actrs'
 });
 /**
  * [hash description]
  *
  * @type {number}
  */
-servSchema.index({
+actrSchema.index({
 	hash: 1,
 	type: 1,
+	_serv_id: 1,
 	_wave_id: 1
 }, {
-	name: "servs_cp_indx"
+	name: "actrs_cp_indx"
 });
-module.exports = servSchema;
+module.exports = actrSchema;

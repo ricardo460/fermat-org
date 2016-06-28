@@ -151,6 +151,17 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/v1/net/servrs/:serv_id/actors",
+    "title": "get server actors",
+    "name": "getActors",
+    "version": "0.0.1",
+    "group": "Net",
+    "description": "<p>List actors connected to a server.</p>",
+    "filename": "routes/v1/net/index.js",
+    "groupTitle": "Net"
+  },
+  {
+    "type": "get",
     "url": "/v1/net/nodes/:hash/childrn",
     "title": "get children",
     "name": "getChildren",
@@ -175,8 +186,8 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v1/net/servrs/:serv_id",
-    "title": "get server network",
+    "url": "/v1/net/servrs/:serv_id/clients",
+    "title": "get server clients",
     "name": "getClients",
     "version": "0.0.1",
     "group": "Net",

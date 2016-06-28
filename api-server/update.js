@@ -9,14 +9,15 @@ var cache = new Cache({
 });
 var _INTERVAL = 300000;
 var loop = 0;
-winston.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 60);
-setInterval(function() {
+var update = function() {
     'use strict';
-    var mod = loop % 12;
+    var mod = loop % 12; //5 minutes and 12 loops = 1 hour
+    winston.log('info', 'Updating %s', mod);
     loop++;
     switch (mod) {
         case 0:
             loadNet.saveNetworkStatus(function(err, res) {
+                winston.log('info', 'Updated ns');
                 if (err) {
                     winston.log('error', err.message, err.stack);
                 } else {
@@ -45,40 +46,21 @@ setInterval(function() {
 			}
 		});*/
             break;
-        case 3:
+        default:
+            //Nothing else to update
             //se descarga la informacion de los developers
-            loadLib.loadComps(function (err, res) {
+            /*loadLib.loadComps(function (err, res) {
             if (err) {
                 winston.log('error', err.message, err.stack);
             } else {
                 winston.log('debug', 'Developers updated', res);
                 cache.clear();
             }
-        });
-            break;
-        case 4:
-            winston.log('info', 'Doing nothing');
-            break;
-        case 5:
-            winston.log('info', 'Doing nothing');
-            break;
-        case 6:
-            winston.log('info', 'Doing nothing');
-            break;
-        case 7:
-            winston.log('info', 'Doing nothing');
-            break;
-        case 8:
-            winston.log('info', 'Doing nothing');
-            break;
-        case 9:
-            winston.log('info', 'Doing nothing');
-            break;
-        case 10:
-            winston.log('info', 'Doing nothing');
-            break;
-        case 11:
+        });*/
             winston.log('info', 'Doing nothing');
             break;
     }
-}, _INTERVAL);
+};
+winston.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 60);
+update();
+setInterval(update, _INTERVAL);
