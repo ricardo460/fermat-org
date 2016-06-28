@@ -62,33 +62,34 @@ exports.existDeps = function(deps, callback) {
 	var platfrmCode = null;
 	var suprlayCode = null;
 	var notExis = {};
-	if (deps.length === 0) {
+	 if (deps) {
+		var loopDeps = function(i) {
+			if (i < deps.length) {
+				platfrmSrv.findPlatfrmById(deps[i], function(err, platfrm) {
+					if (err) return callback(err, null);
+					if (platfrm) {
+						loopDeps(++i);
+					} else {
+						suprlaySrv.findSuprlayById(deps[i], function(err, suprlay) {
+							if (err) return callback(err, null);
+							if (suprlay) {
+								loopDeps(++i);
+							} else {
+								notExis._id = deps[i];
+								notExis.valid = false;
+								return callback(null, notExis);
+							}
+						});
+					}
+				});
+			} else {
+				notExis.valid = true;
+				return callback(null, notExis);
+			}
+		};
+		loopDeps(0);
+	} else {
 		notExis.valid = true;
 		return callback(null, notExis);
 	}
-	var loopDeps = function(i) {
-		if (i < deps.length) {
-			platfrmSrv.findPlatfrmById(deps[i], function(err, platfrm) {
-				if (err) return callback(err, null);
-				if (platfrm) {
-					loopDeps(++i);
-				} else {
-					suprlaySrv.findSuprlayById(deps[i], function(err, suprlay) {
-						if (err) return callback(err, null);
-						if (suprlay) {
-							loopDeps(++i);
-						} else {
-							notExis._id = deps[i];
-							notExis.valid = false;
-							return callback(null, notExis);
-						}
-					});
-				}
-			});
-		} else {
-			notExis.valid = true;
-			return callback(null, notExis);
-		}
-	};
-	loopDeps(0);
 };

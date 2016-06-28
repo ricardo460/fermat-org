@@ -70,9 +70,7 @@ var getOrdrLstPltfrm = function(callback) {
 exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 	'use strict';
 	try {
-		if (deps === undefined || deps === null) {
-			deps = [];
-		} else {
+		if (deps) {
 			deps = deps.split(',');
 		}
 		mapsCodes.existDeps(deps, function(err, exist) {
@@ -133,6 +131,7 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 							if (nu_order) {
 								//Putting platform at the end since not provide an order
 								order = parseInt(nu_order) + 1;
+								if (deps === undefined || deps === null) deps = [];
 								var platfrm = new PlatfrmMdl(code, name, logo, deps, order);
 								swapOrder('insert', null, platfrm.order, function(err_sld, res_sld) {
 									if (err_sld) {
@@ -149,6 +148,7 @@ exports.insOrUpdPlatfrm = function(code, name, logo, deps, order, callback) {
 							}
 						});
 						else {
+							if (deps === undefined || deps === null) deps = [];
 							var platfrm = new PlatfrmMdl(code, name, logo, deps, order);
 							swapOrder('insert', null, platfrm.order, function(err_sld, res_sld) {
 								if (err_sld) {
@@ -310,9 +310,7 @@ exports.findPlatfrmById = function(_id, callback) {
 exports.updatePlatfrmById = function(_platfrm_id, code, name, logo, deps, order, callback) {
 	'use strict';
 	try {
-		if (deps === undefined || deps === null) {
-			deps = [];
-		} else {
+		if (deps) {
 			deps = deps.split(',');
 		}
 		mapsCodes.existDeps(deps, function(err, exist) {

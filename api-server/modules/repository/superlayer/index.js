@@ -71,9 +71,7 @@ var getOrdrLstSuprlays = function(callback) {
 exports.insOrUpdSuprlay = function(code, name, logo, deps, order, callback) {
 	'use strict';
 	try {
-		if (deps === undefined || deps === null) {
-			deps = [];
-		} else {
+		if (deps) {
 			deps = deps.split(',');
 		}
 		mapsCodes.existDeps(deps, function(err, exist) {
@@ -134,6 +132,7 @@ exports.insOrUpdSuprlay = function(code, name, logo, deps, order, callback) {
 							if (nu_order) {
 								//Putting super layer at the end since not provide an order
 								order = parseInt(nu_order) + 1;
+								if (deps === undefined || deps === null) deps = [];
 								var suprlay = new SuprlayMdl(code, name, logo, deps, order);
 								swapOrder('insert', null, suprlay.order, function(err_sld, res_sld) {
 									if (err_sld) {
@@ -150,6 +149,7 @@ exports.insOrUpdSuprlay = function(code, name, logo, deps, order, callback) {
 							}
 						});
 						else {
+							if (deps === undefined || deps === null) deps = [];
 							var suprlay = new SuprlayMdl(code, name, logo, deps, order);
 							swapOrder('insert', null, suprlay.order, function(err_sld, res_sld) {
 								if (err_sld) {
@@ -306,9 +306,7 @@ exports.findSuprlayById = function(_id, callback) {
 exports.updateSuprlayById = function(_sprly_id, code, name, logo, deps, order, callback) {
 	'use strict';
 	try {
-		if (deps === undefined || deps === null) {
-			deps = [];
-		} else {
+		if (deps) {
 			deps = deps.split(',');
 		}
 		mapsCodes.existDeps(deps, function(err, exist) {
