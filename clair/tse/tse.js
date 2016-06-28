@@ -180,11 +180,13 @@ function modifyStructure(element, type){
 
                         setTimeout(function (){
                             var list = document.getElementById("groupDeps"),
-                                l = list.options.length;
+                                l = list.options.length,
+                                depCode;
 
                             for(var e in res.deps){
                                 for(var i = 0; i < l; i++){
-                                    if(res.deps[e] === list.options[i].value)
+                                    depCode = list.options[i].innerHTML.slice(0,3);
+                                    if(res.deps[e] === depCode)
                                         list.options[i].selected = 'true';
                                 }
                             }
@@ -200,11 +202,13 @@ function modifyStructure(element, type){
 
                     setTimeout(function (){
                         var list = document.getElementById("groupDeps"),
-                            l = list.options.length;
+                            l = list.options.length,
+                            depCode;
 
                         for(var e in res.deps){
                             for(var i = 0; i < l; i++){
-                                if(res.deps[e] === list.options[i].value)
+                                depCode = list.options[i].innerHTML.slice(0,3);
+                                if(res.deps[e] === depCode)
                                     list.options[i].selected = 'true';
                             }
                         }
@@ -492,7 +496,7 @@ function setFields(data, form, type, superlayer){
             if(data[i].name !== referenceName){
                 if(form === type)
                     $("#groupOrder").append($("<option></option>").val(data[i].order).html(data[i].code + " - " + data[i].name.capitalize()));
-                $("#groupDeps").append($("<option></option>").val(data[i].code).html(data[i].code + " - " + data[i].name.capitalize()));
+                $("#groupDeps").append($("<option></option>").val(data[i]._id).html(data[i].code + " - " + data[i].name.capitalize()));
             }
         }
     }
@@ -618,7 +622,7 @@ function verify(form, request){
 
             for(i = 0, l = elements.length; i < l; i+=5){
                 if(data.name === elements[i].innerHTML.toLowerCase()){
-                    window.alert('Layer name in use');
+                    window.alert('Layer name in use, check the layer list to check which layer names are already taken.');
                     return false;
                 }
             }
@@ -648,11 +652,11 @@ function verify(form, request){
 
             for(i = 0, l = elements.length; i < l; i+=j){
                 if(data.code.toUpperCase() === elements[i].innerHTML){
-                    window.alert('Code in use');
+                    window.alert('Code in use, there is a platform currently using this code.');
                     return false;
                 }
                 if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML){
-                    window.alert('Name in use');
+                    window.alert('Name in use, this name has already been taken by another platform.');
                     return false;
                 }
             }
@@ -662,11 +666,11 @@ function verify(form, request){
 
             for(i = 0, l = elements.length; i < l; i+=j){
                 if(data.code.toUpperCase() === elements[i].innerHTML){
-                    window.alert('Code in use');
+                    window.alert('Code in use, there is a superlayer currently using this code.');
                     return false;
                 }
                 if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML){
-                    window.alert('Name in use');
+                    window.alert('Name in use, this name has already been taken by another superlayer.');
                     return false;
                 }
             }
@@ -691,7 +695,7 @@ function verify(form, request){
 
             for(i = 0, l = elements.length; i < l; i+=5){
                 if(data.name === elements[i].innerHTML.toLowerCase() && data.name !== referenceName){
-                    window.alert('Layer name in use');
+                    window.alert('Layer name in use, check the layer list to check which layer names are already taken.');
                     return false;
                 }
             }
@@ -736,11 +740,11 @@ function verify(form, request){
 
             for(i = 0, l = elements.length; i < l; i+=j){
                 if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){
-                    window.alert('Code in use');
+                    window.alert('Code in use, there is a platform currently using this code.');
                     return false;
                 }
                 if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML && (data.name.toLowerCase()) !== referenceName){
-                    window.alert('Name in use');
+                    window.alert('Name in use, this name has already been taken by another platform.');
                     return false;
                 }
             }
@@ -750,11 +754,11 @@ function verify(form, request){
 
             for(i = 0, l = elements.length; i < l; i+=j){
                 if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){
-                    window.alert('Code in use');
+                    window.alert('Code in use, there is a superlayer currently using this code.');
                     return false;
                 }
                 if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML && (data.name.toLowerCase()) !== referenceName){
-                    window.alert('Name in use');
+                    window.alert('Name in use, this name has already been taken by another superlayer.');
                     return false;
                 }
             }
