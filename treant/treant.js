@@ -374,7 +374,10 @@ function drawDetails(node) {
         if(node.profile) {
             if(node.profile.name) content += node.profile.name + "<br/>";
             if(node.profile.phrase) content += "Phrase: " + node.profile.phrase + "<br/>";
-            if(node.profile.picture) content += "<img class='profile-pic' src='data:image/png;base64," + node.profile.picture + "'/>";
+            if(node.profile.picture) {
+                var mimeType = guessImageMime(node.profile.picture);
+                content += "<img class='profile-pic' src='data:" + mimeType + ";base64," + node.profile.picture + "'/>";
+            }
         }
     }
     else {
@@ -508,6 +511,18 @@ function getNodes() {
             window.console.dir(error);
         }
     });
+}
+
+/**
+ * Guesses the image's mime-type
+ * @author Miguelcldn
+ * @param   {string} data The base64-encoded string
+ * @returns {string} The mime-type
+ */
+function guessImageMime(data){
+    if(data.charAt(0)=='/') { return "image/jpeg"; }
+    else if(data.charAt(0)=='R') { return "image/gif"; }
+    else if(data.charAt(0)=='i') { return "image/png"; }
 }
 
 /**
