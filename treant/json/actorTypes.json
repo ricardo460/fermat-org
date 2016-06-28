@@ -9,7 +9,7 @@
             "label": "Crypto Broker Customers"
         },
         {
-            "code" : "ASSET_ISSUER_ACTOR",
+            "code" : "DAPASIS",
             "label": "Asset Issuers"
         },
         {
@@ -17,15 +17,15 @@
             "label": "Asset Redeem Points"
         },
         {
-            "code" : "ASSET_USER_ACTOR",
+            "code" : "DAPASUS",
             "label": "Asset Users"
         },
         {
-            "code" : "ARTIST_ACTOR",
+            "code" : "AART",
             "label": "Artists"
         },
         {
-            "code" : "FAN_ACTOR",
+            "code" : "AFAN",
             "label": "Artists' Fans"
         },
         {

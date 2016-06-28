@@ -36,6 +36,10 @@ th {
     max-width: 100%;
     background-image: linear-gradient(to bottom, #59D1BD 0, #009A80 100%);
 }
+.profile-pic {
+    max-height: 150px;
+    max-width: 150px;
+}
 .row {
     margin-bottom: 20px;
 }
