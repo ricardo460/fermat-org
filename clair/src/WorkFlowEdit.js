@@ -1721,13 +1721,13 @@ function WorkFlowEdit() {
 
             if(angleDeg <= -1 && angleDeg >= -90){
 
-                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians, angleDeg);
+                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
                 to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
 
             }
             else if(angleDeg <= -91 && angleDeg >= -180){
 
-                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians, angleDeg);
+                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
                 to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
             }
             
@@ -1740,13 +1740,13 @@ function WorkFlowEdit() {
 
             if(angleDeg >= 1 && angleDeg <= 90){
 
-                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians, angleDeg);
+                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
                 to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
 
             }
             else if(angleDeg >= 91 && angleDeg <= 180){
 
-                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians, angleDeg);
+                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
                 to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
             }
 
@@ -1838,7 +1838,7 @@ function WorkFlowEdit() {
                 case 'arrowDesc':
                     from = new THREE.Vector3(x, y, 2);
                     
-                    meshTrinogometry = trigonometry(x, y, 30, angleRadians, angleDeg);
+                    meshTrinogometry = trigonometry(x, y, 30, angleRadians);
 
                     to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
 
@@ -1847,7 +1847,7 @@ function WorkFlowEdit() {
                 case 'arrowAsc':
                     from = new THREE.Vector3(x, y, 2);
             
-                    meshTrinogometry = trigonometry(x, y, 30, angleRadians, angleDeg);
+                    meshTrinogometry = trigonometry(x, y, 30, angleRadians);
 
                     to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
 
@@ -2035,7 +2035,7 @@ function WorkFlowEdit() {
         }
     }
     
-    function trigonometry(vertexOriginX, vertexOriginY, hypotenuse, angleRadians, angleDeg){ // emmanuel
+    function trigonometry(vertexOriginX, vertexOriginY, hypotenuse, angleRadians){ // emmanuel
 
         var co, ca, vector = new THREE.Vector3(), x, y;
 
@@ -2045,17 +2045,8 @@ function WorkFlowEdit() {
         co = Math.sin(angleRadians) * hypotenuse;
         ca = Math.cos(angleRadians) * hypotenuse;
 
-        if((angleDeg >= 1 && angleDeg <= 90) || (angleDeg >= 91 && angleDeg <= 180)){
-
-            x = x + ca;
-            y = y + co;
-        }
-
-        if((angleDeg <= -1 && angleDeg >= -90) || (angleDeg <= -91 && angleDeg >= -180)){
-
-            x = x + ca;
-            y = y + co;
-        }
+        x = x + ca;
+        y = y + co;
 
         vector.x = x;
         vector.y = y;
