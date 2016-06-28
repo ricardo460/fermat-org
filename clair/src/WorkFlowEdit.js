@@ -4,8 +4,6 @@ function WorkFlowEdit() {
 
     var classFlow = null;
 
-    var vectorArrow = '';
-
     var FOCUS = {
             mesh : null,
             data : null,
@@ -20,6 +18,11 @@ function WorkFlowEdit() {
     var REPARED_STEPS = [];
 
     var SHOW_ARROW = [];
+
+    var TYPE = {
+            async : 0xFF0000,
+            direct: 0x0000FF
+        };
 
     var actualMode = null;
 
@@ -1294,7 +1297,7 @@ function WorkFlowEdit() {
             .start();
     }
 
-    function addIdStep(id, IDtile, parent){
+    function addIdStep(id, IDtile, parent, typeCall){
 
         var mesh = createIdStep(),
             difference = TILEWIDTH / 2;
@@ -1325,6 +1328,9 @@ function WorkFlowEdit() {
                 id : newArray,
                 type : 'direct call'
             };
+
+            if(typeCall)
+                obj.type = typeCall;
             
             children.push(obj);
         }
@@ -1394,7 +1400,7 @@ function WorkFlowEdit() {
                                     }
                                     find = false;
                                 }
-                            }//if 2
+                            }
                         }
                     }
                 } 
@@ -1672,8 +1678,8 @@ function WorkFlowEdit() {
 
     this.createLineStep = function(meshOrigin, meshTarget, idOrigin, idTarget, tileOrigin, tileTarget, update, _indice){ // nuevo
 
-        var mesh, vertexPositions, geometry, from, to, listSteps, midPoint, distanceX, distanceY, indice = _indice || 0;
-        var positionMesh = {x: null, y: null, z : null}, meshTrinogometry;
+        var mesh, vertexPositions, geometry, from, to, color, listSteps, midPoint, distanceX, distanceY, indice = _indice || 0;
+        var positionMesh = {x: null, y: null, z : null};
 
         var objArrow = null;
 
@@ -1691,16 +1697,20 @@ function WorkFlowEdit() {
                 vector2:null,
                 meshSecondary: null,
                 arrow: null,
-                type: {
-                    name : 'direct call',
-                    color : 0xFF0000
-                },
                 meshPrimaryTarget: [],
                 meshSecondaryTarget: []
             };
         }
 
-        var colorArrow = objArrow.type.color;
+        var object = EDIT_STEPS[idOrigin - 1].children.find(function(x){
+            if(x.id[0] === idTarget)
+                return x;
+        });
+
+        if(object.type === "direct call")
+            color = TYPE.direct;
+        else
+            color = TYPE.async;
 
         var vertexOriginX = meshOrigin.position.x,
             vertexOriginY = meshOrigin.position.y,
@@ -1712,91 +1722,65 @@ function WorkFlowEdit() {
         objArrow.tileOriginId = tileOrigin;
         objArrow.tileTargetId = tileTarget;
 
-        var angleDeg = Math.atan2(vertexDestY - vertexOriginY, vertexDestX - vertexOriginX) * 180 / Math.PI; // emmanuel
-        var angleRadians = Math.atan2(vertexDestY - vertexOriginY, vertexDestX - vertexOriginX); // emmanuel
-
         if((vertexOriginY >  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es descendente diagonal
             
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
+            midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
+            midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, midPoint.x, midPoint.y);
 
-            if(angleDeg <= -1 && angleDeg >= -90){
-
-                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-                to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-
-            }
-            else if(angleDeg <= -91 && angleDeg >= -180){
-
-                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-                to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-            }
-            
-            vectorArrow = 'arrowDesc';
+            to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
         }
-        else if((vertexOriginY <  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es ascendente diagonal // emmanuel
+        else if((vertexOriginY <  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es ascendente diagonal
         
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
-            if(angleDeg >= 1 && angleDeg <= 90){
+            midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
+            midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, midPoint.x, midPoint.y);
 
-                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-                to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-
-            }
-            else if(angleDeg >= 91 && angleDeg <= 180){
-
-                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-                to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-            }
-
-            vectorArrow = 'arrowAsc';
+            to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
         }
 
         if((vertexOriginX == vertexDestX) && (vertexOriginY > vertexDestY)){ // si es vertical descendente
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
+            midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
+            midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, midPoint.x, midPoint.y);
 
-            to = new THREE.Vector3(vertexOriginX, vertexOriginY - 20, 2);
-
-            meshTrinogometry = to;
-            vectorArrow = 'arrowDescVer';
+            to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
         }
         else if((vertexOriginX == vertexDestX) && (vertexOriginY < vertexDestY)){ // si es vertical ascendente
            
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
+            midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
+            midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, midPoint.x, midPoint.y);
 
-            to = new THREE.Vector3(vertexOriginX, vertexOriginY + 20, 2);
-
-            meshTrinogometry = to;
-            vectorArrow = 'arrowAscVer';
+            to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
         }
 
         if((vertexOriginY == vertexDestY) && (vertexOriginX < vertexDestX)){ // Horizontal Derecha
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
-            
-            to = new THREE.Vector3(vertexOriginX + 40, vertexOriginY, 2);
-            
-            meshTrinogometry = to;
-            vectorArrow = 'arrowRight';
+            midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
+            midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, midPoint.x, midPoint.y);
+
+            to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
         } 
 
         if((vertexOriginY == vertexDestY) && (vertexOriginX > vertexDestX)){ // Horizontal Derecha
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
-            
-            to = new THREE.Vector3(vertexOriginX - 40, vertexOriginY, 2);
-            
-            meshTrinogometry = to;
-            vectorArrow = 'arrowLeft';
-        } 
+            midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
+            midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, midPoint.x, midPoint.y);
 
+            to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
+        } 
+                
         var direction = to.clone().sub(from);
 
         var length = direction.length();
 
-        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, colorArrow, 0.1, 0.1); // Arrow Rojo
+        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1); // Arrow Rojo
 
         window.scene.add(arrowHelper);
 
@@ -1810,16 +1794,16 @@ function WorkFlowEdit() {
             type : 'changeStep'
         };
 
-        mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
+        mesh.position.set(midPoint.x, midPoint.y, 3);
 
         //objArrow.type = vectorArrow;
         objArrow.vector1 = arrowHelper;
         objArrow.meshPrimary = mesh;
 
-        var target = window.helper.fillTarget(meshTrinogometry.x, meshTrinogometry.y, 3, 'table');
+        var target = window.helper.fillTarget(midPoint.x, midPoint.y, 3, 'table');
         objArrow.meshPrimaryTarget = target;
 
-        directionLineMesh(meshTrinogometry.x, meshTrinogometry.y);
+        directionLineMesh(midPoint.x, midPoint.y);
 
         if(update){
             LIST_ARROWS[indice] = objArrow;
@@ -1830,74 +1814,20 @@ function WorkFlowEdit() {
 
         function directionLineMesh(x, y){
 
-            var mesh, vertexPositions, from, to, midPoint, meshTrinogometry;
+            var mesh, vertexPositions, from, to, midPoint;
             var positionMesh = {x: null, y: null, z : null};
 
-            switch(vectorArrow){
-
-                case 'arrowDesc':
-                    from = new THREE.Vector3(x, y, 2);
-                    
-                    meshTrinogometry = trigonometry(x, y, 30, angleRadians);
-
-                    to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-
-                    break;
-
-                case 'arrowAsc':
-                    from = new THREE.Vector3(x, y, 2);
+            from = new THREE.Vector3(x, y, 2);
             
-                    meshTrinogometry = trigonometry(x, y, 30, angleRadians);
+            midPoint = midPointCoordinates(vertexOriginX, vertexOriginY, vertexDestX, vertexDestY);
+        
+            to = new THREE.Vector3(midPoint.x, midPoint.y, 2);
 
-                    to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-
-                    break;
-
-                case 'arrowDescVer':
-                    from = new THREE.Vector3(x, y, 2);
-                    
-                    to = new THREE.Vector3(x, y - 20, 2);
-
-                    meshTrinogometry = to;
-
-                    break;
-
-                case 'arrowAscVer':
-                    from = new THREE.Vector3(x, y, 2);
-                    
-                    to = new THREE.Vector3(x, y + 20, 2);
-
-                    meshTrinogometry = to;
-
-                    break;
-
-                case 'arrowRight':
-                    from = new THREE.Vector3(x, y, 2);
-                
-                    to = new THREE.Vector3(x + 30, y, 2);
-
-                    meshTrinogometry = to;
-
-                    break;
-
-                case 'arrowLeft':
-                    from = new THREE.Vector3(x, y, 2);
-
-                    to = new THREE.Vector3(x - 30, y, 2);
-
-                    meshTrinogometry = to;
-
-                    break;
-
-                default:
-                    break;
-            }
-            
             var direction = to.clone().sub(from);
 
             var length = direction.length();
 
-            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, colorArrow, 0.1, 0.1); // Arrow Azul
+            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1); // Arrow Azul
 
             scene.add(arrowHelper);
             
@@ -1914,13 +1844,13 @@ function WorkFlowEdit() {
                 type : 'fork'
             };
 
-            directionArrowMesh(meshTrinogometry.x, meshTrinogometry.y);
+            directionArrowMesh(midPoint.x, midPoint.y);
 
 
-            mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
+            mesh.position.set(midPoint.x, midPoint.y, 3);
                     
 
-            var target = window.helper.fillTarget(meshTrinogometry.x, meshTrinogometry.y, 3, 'table');
+            var target = window.helper.fillTarget(midPoint.x, midPoint.y, 3, 'table');
             objArrow.meshSecondaryTarget = target;
         }
 
@@ -1959,7 +1889,7 @@ function WorkFlowEdit() {
 
             var length = direction.length();
 
-            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, colorArrow, 4*2, 4*2); // Arrow Rojo
+            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 4*2, 4*2); // Arrow Rojo
 
             scene.add(arrowHelper);
 
@@ -2035,23 +1965,16 @@ function WorkFlowEdit() {
         }
     }
     
-    function trigonometry(vertexOriginX, vertexOriginY, hypotenuse, angleRadians){ // emmanuel
+    function midPointCoordinates(origenX, origenY, targetX, targetY){ // nuevo
 
-        var co, ca, vector = new THREE.Vector3(), x, y;
+        var xMid, yMid, mid;
 
-        x = vertexOriginX;
-        y = vertexOriginY;
+        xMid = ((origenX) + (targetX)) / 2;
+        yMid = ((origenY) + (targetY)) / 2;
 
-        co = Math.sin(angleRadians) * hypotenuse;
-        ca = Math.cos(angleRadians) * hypotenuse;
+        mid = new THREE.Vector3(xMid, yMid);
 
-        x = x + ca;
-        y = y + co;
-
-        vector.x = x;
-        vector.y = y;
-
-        return vector;
+        return mid;
     }
 
     function createSimbol(){ // nuevo
@@ -2646,7 +2569,7 @@ function WorkFlowEdit() {
             for(i = 0; i < PREVIEW_STEPS.length; i++){
 
                 var order = null, title = null, platform = null, layer = null, name = null,
-                    IDtile = null, parent = null, desc = null, id = null;
+                    IDtile = null, parent = null, desc = null, id = null, typeCall = null;
 
                 order = PREVIEW_STEPS[i].id + 1;
 
@@ -2664,17 +2587,16 @@ function WorkFlowEdit() {
 
                 parent = searchParent(order - 1);
 
-                if(parent)
+                if(parent){
                     id = parent.id + 1;
+                    typeCall = parent.typeCall;
+                }
 
-                var mesh = addIdStep(order, IDtile, id);
+                var mesh = addIdStep(order, IDtile, id, typeCall);
 
                 EDIT_STEPS[order - 1].title[0] = title;
 
                 EDIT_STEPS[order - 1].desc[0] = desc;
-
-                if(parent)
-                    searchChildren(order, parent.typeCall);
 
                 FOCUS.data = mesh;
             }
@@ -2788,6 +2710,8 @@ function WorkFlowEdit() {
                         var z = camera.getMaxDistance() / 2;
 
                         if(EDIT_STEPS.length > 0){
+
+                            updateStepList();
 
                             window.dragManager.objects = [];
                             
@@ -3249,13 +3173,146 @@ function WorkFlowEdit() {
 
         setTimeout(function() { focus.visible = true; }, 1500);
 
-        updateArrowStepAfterChangeTile();
+        updateArrowStepAfterChangeTile(oldTile, newTile, orderFocus);
     }
 
-    function updateArrowStepAfterChangeTile(){
+    function updateArrowStepAfterChangeTile(oldTile, newTile, orderFocus){ 
 
-        self.deleteArrow();
-        self.updateArrow();
+        for (var i = 0; i < EDIT_STEPS.length; i++) { 
+           
+           if((orderFocus === EDIT_STEPS[i].order[0]) && (EDIT_STEPS[i].children.length !== 0)){  
+                                                                                                    
+                for (var s = 0; s < EDIT_STEPS[i].children.length; s++) {
+
+                    for (var j = 0; j < EDIT_STEPS.length; j++) { 
+
+                        if(EDIT_STEPS[i].children[s].id[0] === EDIT_STEPS[j].order[0]){ // target // if 2
+
+                            for (var k = 0; k < LIST_ARROWS.length; k++) {
+                            
+                                if((orderFocus === LIST_ARROWS[k].originID) && (EDIT_STEPS[j].order[0] === LIST_ARROWS[k].targetID)){
+
+                                    window.scene.remove(LIST_ARROWS[k].arrow);
+                                    window.scene.remove(LIST_ARROWS[k].meshPrimary);
+                                    window.scene.remove(LIST_ARROWS[k].meshSecondary);
+                                    window.scene.remove(LIST_ARROWS[k].vector1);
+                                    window.scene.remove(LIST_ARROWS[k].vector2);
+
+                                    self.createLineStep(EDIT_STEPS[i].target.show, 
+                                                        EDIT_STEPS[j].target.show, 
+                                                        EDIT_STEPS[i].order[0], 
+                                                        EDIT_STEPS[j].order[0],
+                                                        EDIT_STEPS[i].tile,
+                                                        EDIT_STEPS[j].tile, true, k);
+                                }
+                            }
+                        } // if 2 
+                    }
+                }    
+            }
+
+            if(EDIT_STEPS[i].children.length !== 0){ 
+
+                for (var t = 0; t < EDIT_STEPS[i].children.length; t++) {
+
+                    if(orderFocus === EDIT_STEPS[i].children[t].id[0]){ // buscamos el padre y el origen a la vez
+
+                        for (var n = 0; n < EDIT_STEPS[i].children.length; n++) {
+                            
+                            for (var l = 0; l < EDIT_STEPS.length; l++) {
+                                
+                                if(EDIT_STEPS[i].children[n].id[0] === EDIT_STEPS[l].order[0]){ // target
+
+                                    for (var m = 0; m < LIST_ARROWS.length; m++) {
+                                        
+                                        if(EDIT_STEPS[i].order[0] === LIST_ARROWS[m].originID && EDIT_STEPS[l].order[0] === LIST_ARROWS[m].targetID){
+
+                                            window.scene.remove(LIST_ARROWS[m].arrow);
+                                            window.scene.remove(LIST_ARROWS[m].meshPrimary);
+                                            window.scene.remove(LIST_ARROWS[m].meshSecondary);
+                                            window.scene.remove(LIST_ARROWS[m].vector1);
+                                            window.scene.remove(LIST_ARROWS[m].vector2);
+
+                                            self.createLineStep(EDIT_STEPS[i].target.show, 
+                                                            EDIT_STEPS[l].target.show, 
+                                                            EDIT_STEPS[i].order[0], 
+                                                            EDIT_STEPS[l].order[0],
+                                                            EDIT_STEPS[i].tile,
+                                                            EDIT_STEPS[l].tile, true, m);
+                                        }
+                                    }
+                                }
+                            }   
+                        }
+                    }
+                }               
+            }
+            
+            if((oldTile === EDIT_STEPS[i].tile || newTile === EDIT_STEPS[i].tile) && orderFocus !== EDIT_STEPS[i].order[0]){ // origin
+
+                for (var u = 0; u < EDIT_STEPS[i].children.length; u++){
+                    
+                    if(EDIT_STEPS[i].children.length !== 0){
+
+                        for (var o = 0; o < EDIT_STEPS.length; o++) {
+
+                            if((EDIT_STEPS[i].children[u].id[0] === EDIT_STEPS[o].order[0])){ // target // if 2 padre hijo
+
+                                for (var p = 0; p < LIST_ARROWS.length; p++) {
+                                    
+                                    if(EDIT_STEPS[i].order[0] === LIST_ARROWS[p].originID){
+
+                                        window.scene.remove(LIST_ARROWS[p].arrow);
+                                        window.scene.remove(LIST_ARROWS[p].meshPrimary);
+                                        window.scene.remove(LIST_ARROWS[p].meshSecondary);
+                                        window.scene.remove(LIST_ARROWS[p].vector1);
+                                        window.scene.remove(LIST_ARROWS[p].vector2);
+
+                                        self.createLineStep(EDIT_STEPS[i].target.show, 
+                                                            EDIT_STEPS[o].target.show, 
+                                                            EDIT_STEPS[i].order[0], 
+                                                            EDIT_STEPS[o].order[0],
+                                                            EDIT_STEPS[i].tile,
+                                                            EDIT_STEPS[o].tile, true, p);
+                                    }
+                                }
+                            } // if 2
+                        }     
+                    }
+                }
+
+                for (var q = 0; q < EDIT_STEPS.length; q++) {
+                    
+                    if(EDIT_STEPS[q].children.length !== 0){
+
+                        for (var w = 0; w < EDIT_STEPS[q].children.length; w++) {
+                            
+                            if(EDIT_STEPS[i].order[0] === EDIT_STEPS[q].children[w].id[0]){ // origin // if 2 hijo padre
+
+                                for (var r = 0; r < LIST_ARROWS.length; r++) {
+                                    
+                                    if(EDIT_STEPS[q].order[0] === LIST_ARROWS[r].originID){
+
+                                        window.scene.remove(LIST_ARROWS[r].arrow);
+                                        window.scene.remove(LIST_ARROWS[r].meshPrimary);
+                                        window.scene.remove(LIST_ARROWS[r].meshSecondary);
+                                        window.scene.remove(LIST_ARROWS[r].vector1);
+                                        window.scene.remove(LIST_ARROWS[r].vector2);
+
+                                        self.createLineStep(EDIT_STEPS[q].target.show, 
+                                                            EDIT_STEPS[i].target.show, 
+                                                            EDIT_STEPS[q].order[0], 
+                                                            EDIT_STEPS[i].order[0],
+                                                            EDIT_STEPS[q].tile,
+                                                            EDIT_STEPS[i].tile, true, r);
+                                    }
+                                }
+                            } // if 2
+                        }  
+                    }
+                }
+            }
+        }
     }
 
     function resetPositionIdStepMesh(orderFocus){
