@@ -1307,3 +1307,30 @@ END
   left: 0px;
   transition: 1s all ease 0s;
 }
+
+.steps-button-close {
+	position: absolute;
+	right: 0;
+	width: 20px;
+	height: 20px;
+	border: 0;
+	border-radius: 5px;
+	background: #F04F4F;
+	background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("images/workflow/add_btn.png");
+    transform: rotate(45deg);
+	transition: 1s all ease-in 0s;
+}
+
+.steps-button-close:hover {
+	cursor: pointer;
+    transform: rotate(-45deg);
+}
+
+.steps-div-close {
+	position: relative;
+	float: left;
+	width: 100%;
+}
