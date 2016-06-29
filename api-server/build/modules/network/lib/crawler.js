@@ -23,7 +23,8 @@ var doRequest = function(ip, route, callback) {
     request({
         url : url,
         json : true,
-        method: 'GET'
+        method: 'GET',
+        timeout: 20000
     }, function(error, response, body) {
         if(error) {
             return callback(error, null);
@@ -195,7 +196,9 @@ exports.saveNetworkStatus = function(callback) {
     
     var reportEnd = function(err, server) {
         listLength--;
-        winston.log('info', 'Visited server %s with IP: %s', server.hash, server.lastIP);
+        if(server) {
+            winston.log('info', 'Visited server %s with IP: %s', server.hash, server.lastIP);
+        }
         if(listLength === 0) return callback(null, seed);
     };
     

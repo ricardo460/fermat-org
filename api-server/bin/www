@@ -13,6 +13,9 @@ var app = require('../app');
 var http = require('http');
 var update = require('../update');
 
+winston.remove(winston.transports.Console);
+winston.add(winston.transports.Console, {'timestamp':true});
+
 winston.log('info', 'Setting %s environment', config.env);
 
 /**
