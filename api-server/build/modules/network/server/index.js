@@ -25,14 +25,14 @@ var dateFromObjectId = function (objectId) {
  *
  * @return {[type]}     [description]
  */
-exports.insertServer = function (hash, extra, callback) {
+exports.insertServer = function (hash, location, lastIP, networkServices, callback) {
 	var date = new Date();
 	var desc = "wave " + date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 	wavMod.insertWave(desc, function (err, wave) {
 		if (err) {
 			return callback(err, null);
 		}
-		var serv_mdl = new ServMdl(wave._id, hash, extra);
+		var serv_mdl = new ServMdl(wave._id, hash, location, lastIP, networkServices);
 		servSrv.insertServ(serv_mdl, function (err, serv) {
 			if (err) {
 				return callback(err, null);
@@ -40,6 +40,10 @@ exports.insertServer = function (hash, extra, callback) {
 			return callback(null, serv);
 		});
 	});
+};
+
+exports.updateServer = function(_id, _wav_id, set, callback) {
+    servSrv.updateServById(_id, _wav_id, set, callback);
 };
 /**
  * [getLastServerStatus description]
@@ -62,6 +66,7 @@ exports.getLastNetworkStatus = function (callback) {
 				_id: -1
 			}, function (err, servs) {
 				if (err) return callback(err, null);
+                
 				for (var i = servs.length - 1; i >= 0; i--) {
 					servs[i]._wave = wav;
 				}
@@ -100,7 +105,7 @@ exports.getNetworkHistory = function (callback) {
 						_wav.clients = 0;
 						//console.log('servs: ' + servs.length);
 						for (var j = servs.length - 1; j >= 0; j--) {
-							_wav.clients += servs[j].extra.current.registeredClientConnection || 0;
+							_wav.clients += servs[j].conectedClients || 0;
 							//servs[j]._wave = _wav;
 						}
 						//console.log('clients: ' + _wav.clients);

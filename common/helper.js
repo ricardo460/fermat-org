@@ -547,7 +547,10 @@ function Helper() {
                 tail = "/v1/net/servrs";
                 break;
             case "clients":
-                tail = "/v1/net/servrs/:serv_id";
+                tail = "/v1/net/servrs/:serv_id/clients";
+                break;
+            case "actors":
+                tail = "/v1/net/servrs/:serv_id/actors";
                 break;
             case "login":
                 tail = "/v1/auth/login";

@@ -1,56 +1,40 @@
 {
-    "clients" : {
-        "properties" : [
-            "networkServiceType",
-            "platformComponentType"
-        ],
-        "actors" : [
-            {
-                "name" : "CRYPTO_BROKER",
-                "label": "Crypto Brokers"
-            },
-            {
-                "name" : "CRYPTO_CUSTOMER",
-                "label": "Crypto Broker Customers"
-            },
-            {
-                "name" : "ASSET_ISSUER_ACTOR",
-                "label": "Asset Issuers"
-            },
-            {
-                "name" : "ASSET_REDEEM_POINT_ACTOR",
-                "label": "Asset Redeem Points"
-            },
-            {
-                "name" : "ASSET_USER_ACTOR",
-                "label": "Asset Users"
-            },
-            {
-                "name" : "ARTIST_ACTOR",
-                "label": "Artists"
-            },
-            {
-                "name" : "FAN_ACTOR",
-                "label": "Artists' Fans"
-            },
-            {
-                "name" : "ACTOR_CHAT",
-                "label": "Chat Users"
-            }
-        ],
-        "pendingActors" : [
-            "ACTOR_INTRA_USER",
-            "*CCM_INTRA_WALLET_USER",
-            "*CCP_INTRA_WALLET_USER",
-            "*SHOP"
-        ]
-    },
-    "nodes" : {
-        "properties" : [
-            "registerOtherComponentDetail",
-            "registeredNetworkServiceDetail",
-            "registeredNetworkServiceTotal",
-            "registeredClientConnection"
-        ]
-    }
+    "actors" : [
+        {
+            "code" : "CBPCRBR",
+            "label": "Crypto Brokers"
+        },
+        {
+            "code" : "CBPCRCU",
+            "label": "Crypto Broker Customers"
+        },
+        {
+            "code" : "DAPASIS",
+            "label": "Asset Issuers"
+        },
+        {
+            "code" : "DAPARP",
+            "label": "Asset Redeem Points"
+        },
+        {
+            "code" : "DAPASUS",
+            "label": "Asset Users"
+        },
+        {
+            "code" : "AART",
+            "label": "Artists"
+        },
+        {
+            "code" : "AFAN",
+            "label": "Artists' Fans"
+        },
+        {
+            "code" : "CHT",
+            "label": "Chat Users"
+        },
+        {
+            "code" : "IUS",
+            "label": "Intra Users"
+        }
+    ]
 }
