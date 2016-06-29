@@ -1117,35 +1117,49 @@ function FieldsEdit() {
             </div>
             `;
 			
-			div.addStep = function(i, _obj) {
-
+			div.addStep = function(i, obj) {
+				var div = document.createElement('div');
+				var div2 = document.createElement('div');
+				var close = document.createElement('button');
 				var canvas = document.createElement('canvas');
+				
+				div.className = "steps-list-step";
+				div2.className = "steps-div-close";
+				close.className = "steps-button-close";
 				canvas.className = "steps-list-step";
 				var ctx = canvas.getContext("2d");
 				
+				div.appendChild(div2);
+				div2.appendChild(close);
+				div.appendChild(canvas);
+				
+				canvas.dataset.num = i;
 				canvas.onclick = function () {
-
-					var mesh = _obj.mesh;
-
-                    var position = mesh.position;
-
-                    window.camera.move(position.x, position.y, 200, 1500, true);
+					// -- ricardo --
+					alert(this.dataset.num);
 				};
 				
-				document.getElementById("steps-list-content").appendChild(canvas);
+				close.onclick = function () {
+					// -- ricardo --
+					alert(this.dataset.num);
+				};
+				
+				document.getElementById("steps-list-content").appendChild(div);
 				
 				canvas.width  = canvas.offsetWidth;
 				canvas.height = canvas.offsetHeight;
 				ctx.width  = canvas.offsetWidth;
 				ctx.height = canvas.offsetHeight;
 				
-				ctx.beginPath();
-				ctx.arc(ctx.width/2, ctx.height/2, 45, 0, 2*Math.PI);
-				ctx.stroke();
-				
-				ctx.font = "30px Arial";
-				ctx.textAlign = "center";
-				ctx.fillText(i, ctx.width/2, ctx.height/2 + 10);
+				var img = new Image();
+				img.src = "images/workflow/step.png";
+				img.onload = function() {
+					ctx.drawImage(img, ctx.width/2 - 45, ctx.height/2 - 45, 90, 90);
+					
+					ctx.font = "30px Arial";
+					ctx.textAlign = "center";
+					ctx.fillText(i, ctx.width/2, ctx.height/2 + 10);
+				}
 			}
             
             document.body.appendChild(div); 
