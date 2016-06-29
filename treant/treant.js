@@ -12,6 +12,10 @@ var map,
 
 $(document).ready(main);
 
+/**
+ * Checks if an edge already exists
+ * @author Miguelcldn
+ */
 function checkEdges() {
     var markers = markClusterer.getMarkers();
     
@@ -23,6 +27,36 @@ function checkEdges() {
             lines[i].line.setMap(map);
         }
     }
+}
+
+/**
+ * Connects two markers with a line
+ * @author Miguelcldn
+ * @param {object} client Client marker
+ * @param {object} server Server marker
+ */
+function connectMarkers(client, server) {
+    
+    var clientPos = {
+        lat : client.marker.position.lat() + 0,
+        lng : client.marker.position.lng()
+    };
+    var serverPos = {
+        lat : server.marker.position.lat() + 0,
+        lng : server.marker.position.lng()
+    };
+    
+    var line = new google.maps.Polyline({
+        
+        path : [clientPos, serverPos],
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.7,
+        strokeWeight: 3,
+        map: map
+        });
+
+        lines.push({line: line, client: client.marker, server: server.marker});
+        checkEdges();
 }
 
 /**
@@ -218,7 +252,7 @@ function createActors(actors) {
                 });
                 
                 if(actor.location.latitude === 0 && actor.location.longitude === 0) {
-                    marker.setPosition(randomizeLocation(actor.location, 90));
+                    marker.setPosition(randomizeLocation(actor.location, 45, 120));
                 }
                 
                 actor.marker = marker;
@@ -264,7 +298,7 @@ function createMarkers(list, title) {
             });
             
             if(location.latitude === 0 && location.longitude === 0) {
-                marker.setPosition(randomizeLocation(location, 90));
+                marker.setPosition(randomizeLocation(location, 45, 120));
             }else {
                 marker.setPosition(randomizeLocation(location, 0.1));
             }
@@ -340,7 +374,10 @@ function drawDetails(node) {
         if(node.profile) {
             if(node.profile.name) content += node.profile.name + "<br/>";
             if(node.profile.phrase) content += "Phrase: " + node.profile.phrase + "<br/>";
-            if(node.profile.picture) content += "<img style='max-height: 330px;max-width: 330px;' src='data:image/png;base64," + node.profile.picture + "'/>";
+            if(node.profile.picture) {
+                var mimeType = guessImageMime(node.profile.picture);
+                content += "<img class='profile-pic' src='data:" + mimeType + ";base64," + node.profile.picture + "'/>";
+            }
         }
     }
     else {
@@ -393,6 +430,11 @@ function drawMap() {
     });
 }
 
+/**
+ * Gets the actors from a server
+ * @author Miguelcldn
+ * @param {Array} nodeList The list of servers
+ */
 function getActors(nodeList) {
     var success = function(list) {
         createActors(list);
@@ -472,6 +514,18 @@ function getNodes() {
 }
 
 /**
+ * Guesses the image's mime-type
+ * @author Miguelcldn
+ * @param   {string} data The base64-encoded string
+ * @returns {string} The mime-type
+ */
+function guessImageMime(data){
+    if(data.charAt(0)=='/') { return "image/jpeg"; }
+    else if(data.charAt(0)=='R') { return "image/gif"; }
+    else if(data.charAt(0)=='i') { return "image/png"; }
+}
+
+/**
  * Entry point
  * @author Miguelcldn
  */
@@ -479,16 +533,31 @@ function main() {
     $("#showHistoryBtn").click(showHistory);
 }
 
-function randomizeLocation(location, distance) {
+/**
+ * Sets a random position of a point
+ * @author Miguelcldn
+ * @param   {object} location             The source location
+ * @param   {number} [distance=1]         The radious or latitude range
+ * @param   {number} [distanceX=distance] The longitude range
+ * @returns {object} A LatLng literal
+ */
+function randomizeLocation(location, distance, distanceX) {
     
     distance = distance || 1;
+    distanceX = distanceX || distance;
     
     return {
         lat : location.latitude + ((Math.random() * distance * 2- (distance))),
-        lng : location.longitude + ((Math.random() * distance * 2 - (distance)))
+        lng : location.longitude + ((Math.random() * distanceX * 2 - (distanceX)))
     };
 }
 
+/**
+ * Looks for an actor in the actors list
+ * @author Miguelcldn
+ * @param   {string} actorType The actor type code
+ * @returns {number} The position of the actor in the list or -1 if not found
+ */
 function searchActor(actorType) {
     for(var p = 0; p < actorTypes.length; p++) {
         if(actorTypes[p].code === actorType || actorTypes[p].label === actorType) {
@@ -499,6 +568,11 @@ function searchActor(actorType) {
     return -1;
 }
 
+/**
+ * Links the clients with the server
+ * @author Miguelcldn
+ * @param {object} node The server to use as center
+ */
 function setClientsFocus(node) {
     for(var i = 0; i < elements.NETWORK_CLIENT.length; i++) {
         var client = elements.NETWORK_CLIENT[i];
@@ -511,30 +585,11 @@ function setClientsFocus(node) {
     }
 }
 
-function connectMarkers(client, server) {
-    
-    var clientPos = {
-        lat : client.marker.position.lat() + 0,
-        lng : client.marker.position.lng()
-    };
-    var serverPos = {
-        lat : server.marker.position.lat() + 0,
-        lng : server.marker.position.lng()
-    };
-    
-    var line = new google.maps.Polyline({
-        
-        path : [clientPos, serverPos],
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.7,
-        strokeWeight: 3,
-        map: map
-        });
-
-        lines.push({line: line, client: client.marker, server: server.marker});
-        checkEdges();
-}
-
+/**
+ * Links the servers with the client
+ * @author Miguelcldn
+ * @param {object} client The client to use as center
+ */
 function setServersFocus(client) {
     for(var i = 0; i < elements.NETWORK_NODE.length; i++) {
         var server = elements.NETWORK_NODE[i];
@@ -632,6 +687,10 @@ function toggleFilter(id, forcedState) {
     checkEdges();
 }
 
+/**
+ * Unlinks all nodes
+ * @author Miguelcldn
+ */
 function unSetAllFocus() {
     //unSetClientsFocus();
     //unSetServersFocus();
@@ -641,6 +700,10 @@ function unSetAllFocus() {
     lines = [];
 }
 
+/**
+ * Unlinks the clients
+ * @author Miguelcldn
+ */
 function unSetClientsFocus() {
     for(var i = 0; i < elements.NETWORK_CLIENT.length; i++) {
         var client = elements.NETWORK_CLIENT[i];
@@ -650,6 +713,10 @@ function unSetClientsFocus() {
     
 }
 
+/**
+ * Unlinks the servers
+ * @author Miguelcldn
+ */
 function unSetServersFocus() {
     for(var i = 0; i < elements.NETWORK_NODE.length; i++) {
         var server = elements.NETWORK_NODE[i];
