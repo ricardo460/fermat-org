@@ -42,7 +42,11 @@ function WorkFlowEdit() {
 
     this.getr = function(){
         return SHOW_ARROW;
-    };   
+    };  
+
+    this.deleteStepList = function(step){
+        deleteSteps(step);
+    } 
 
     this.addButton = function(_id){
 
@@ -1373,8 +1377,8 @@ function WorkFlowEdit() {
                                  if(EDIT_STEPS.length === 2){
                                     self.createLineStep(EDIT_STEPS[i].target.show, 
                                                         EDIT_STEPS[j].target.show,
-                                                        EDIT_STEPS[i].order[0],
-                                                        EDIT_STEPS[j].order[0],
+                                                        EDIT_STEPS[i].order,
+                                                        EDIT_STEPS[j].order,
                                                         EDIT_STEPS[i].tile,
                                                         EDIT_STEPS[j].tile, false);
 
@@ -1383,7 +1387,7 @@ function WorkFlowEdit() {
 
                                     for (var k = 0; k < LIST_ARROWS.length; k++) {
                                         
-                                        if((LIST_ARROWS[k].originID === EDIT_STEPS[i].order[0]) && (LIST_ARROWS[k].targetID === EDIT_STEPS[j].order[0])){
+                                        if((LIST_ARROWS[k].originID[0] === EDIT_STEPS[i].order[0]) && (LIST_ARROWS[k].targetID[0] === EDIT_STEPS[j].order[0])){
                                             find = true;
                                         } 
                                     }
@@ -1391,8 +1395,8 @@ function WorkFlowEdit() {
                                     if(find === false){
                                         self.createLineStep(EDIT_STEPS[i].target.show, 
                                                             EDIT_STEPS[j].target.show,
-                                                            EDIT_STEPS[i].order[0],
-                                                            EDIT_STEPS[j].order[0],
+                                                            EDIT_STEPS[i].order,
+                                                            EDIT_STEPS[j].order,
                                                             EDIT_STEPS[i].tile,
                                                             EDIT_STEPS[j].tile, false);
 
@@ -1411,7 +1415,7 @@ function WorkFlowEdit() {
 
         for(var m = 0; m < LIST_ARROWS.length; m++){ // nuevo
 
-           if(debug(LIST_ARROWS[m].originID, LIST_ARROWS[m].targetID) === false){
+           if(debug(LIST_ARROWS[m].originID[0], LIST_ARROWS[m].targetID[0]) === false){
 
                 window.scene.remove(LIST_ARROWS[m].arrow);
                 window.scene.remove(LIST_ARROWS[m].meshPrimary);
@@ -1432,7 +1436,7 @@ function WorkFlowEdit() {
                             
                 for (var o = 0; o < EDIT_STEPS[n].children.length; o++) {
 
-                    if(LIST_ARROWS[m].originID === EDIT_STEPS[n].order[0] && LIST_ARROWS[m].targetID === EDIT_STEPS[n].children[o].id[0]){
+                    if(LIST_ARROWS[m].originID[0] === EDIT_STEPS[n].order[0] && LIST_ARROWS[m].targetID[0] === EDIT_STEPS[n].children[o].id[0]){
 
                         _search =  true;
                     }
@@ -1511,13 +1515,13 @@ function WorkFlowEdit() {
             var mesh = null;
 
             object.dataArrow = LIST_ARROWS.find(function(x){
-                if(x.originID === IdOrigen && x.targetID === IdTarget)
+                if(x.originID[0] === IdOrigen && x.targetID[0] === IdTarget)
                     return x;
             });
 
             if(!object.dataArrow){
                 object.dataArrow = LIST_ARROWS.find(function(x){
-                    if(x.originID === IdTarget && x.targetID === IdOrigen)
+                    if(x.originID[0] === IdTarget && x.targetID[0] === IdOrigen)
                         return x;
                 });
             }
@@ -1743,8 +1747,8 @@ function WorkFlowEdit() {
                                  if(EDIT_STEPS.length === 2){
                                     self.createLineStep(EDIT_STEPS[i].target.show, 
                                                         EDIT_STEPS[j].target.show,
-                                                        EDIT_STEPS[i].order[0],
-                                                        EDIT_STEPS[j].order[0],
+                                                        EDIT_STEPS[i].order,
+                                                        EDIT_STEPS[j].order,
                                                         EDIT_STEPS[i].tile,
                                                         EDIT_STEPS[j].tile, false);
 
@@ -1753,7 +1757,7 @@ function WorkFlowEdit() {
 
                                     for (var k = 0; k < LIST_ARROWS.length; k++) {
                                         
-                                        if((LIST_ARROWS[k].originID === EDIT_STEPS[i].order[0]) && (LIST_ARROWS[k].targetID === EDIT_STEPS[j].order[0])){
+                                        if((LIST_ARROWS[k].originID[0] === EDIT_STEPS[i].order[0]) && (LIST_ARROWS[k].targetID[0] === EDIT_STEPS[j].order[0])){
                                             find = true;
                                         } 
                                     }
@@ -1761,8 +1765,8 @@ function WorkFlowEdit() {
                                     if(find === false){
                                         self.createLineStep(EDIT_STEPS[i].target.show, 
                                                             EDIT_STEPS[j].target.show,
-                                                            EDIT_STEPS[i].order[0],
-                                                            EDIT_STEPS[j].order[0],
+                                                            EDIT_STEPS[i].order,
+                                                            EDIT_STEPS[j].order,
                                                             EDIT_STEPS[i].tile,
                                                             EDIT_STEPS[j].tile, false);
 
@@ -1779,7 +1783,7 @@ function WorkFlowEdit() {
 
         for(var m = 0; m < LIST_ARROWS.length; m++){ // nuevo
 
-           if(debug(LIST_ARROWS[m].originID, LIST_ARROWS[m].targetID) === false){
+           if(debug(LIST_ARROWS[m].originID[0], LIST_ARROWS[m].targetID[0]) === false){
 
                 window.scene.remove(LIST_ARROWS[m].arrow);
                 window.scene.remove(LIST_ARROWS[m].meshPrimary);
@@ -1800,7 +1804,7 @@ function WorkFlowEdit() {
                             
                 for (var o = 0; o < EDIT_STEPS[n].children.length; o++) {
 
-                    if(LIST_ARROWS[m].originID === EDIT_STEPS[n].order[0] && LIST_ARROWS[m].targetID === EDIT_STEPS[n].children[o].id[0]){
+                    if(LIST_ARROWS[m].originID[0] === EDIT_STEPS[n].order[0] && LIST_ARROWS[m].targetID[0] === EDIT_STEPS[n].children[o].id[0]){
 
                         _search =  true;
                     }
@@ -1848,7 +1852,7 @@ function WorkFlowEdit() {
         }
 
         var object = EDIT_STEPS[idOrigin - 1].children.find(function(x){
-            if(x.id[0] === idTarget)
+            if(x.id[0] === idTarget[0])
                 return x;
         });
 
@@ -2136,7 +2140,7 @@ function WorkFlowEdit() {
                     
                     for (var o = 0; o < list[i].children.length; o++) {
 
-                        if((list[i].order[0] === LIST_ARROWS[j].originID) && (list[i].children[o].id[0] === LIST_ARROWS[j].targetID)){ // buscamos la flecha a borrar para crear otra con la nueva posicion // if 2
+                        if((list[i].order[0] === LIST_ARROWS[j].originID[0]) && (list[i].children[o].id[0] === LIST_ARROWS[j].targetID[0])){ // buscamos la flecha a borrar para crear otra con la nueva posicion // if 2
 
                             window.scene.remove(LIST_ARROWS[j].arrow);
                             window.scene.remove(LIST_ARROWS[j].meshPrimary);
@@ -2150,8 +2154,8 @@ function WorkFlowEdit() {
 
                                     self.createLineStep(list[i].target.show, 
                                                         list[k].target.show, 
-                                                        list[i].order[0], 
-                                                        list[k].order[0],
+                                                        list[i].order, 
+                                                        list[k].order,
                                                         list[i].tile,
                                                         list[k].tile, true, j);
                                 }
@@ -2168,7 +2172,7 @@ function WorkFlowEdit() {
 
                                 for(var m = 0; m < LIST_ARROWS.length; m++){
 
-                                    if(list[t].order[0] === LIST_ARROWS[m].originID && list[i].order[0] === LIST_ARROWS[m].targetID){
+                                    if(list[t].order[0] === LIST_ARROWS[m].originID[0] && list[i].order[0] === LIST_ARROWS[m].targetID[0]){
 
                                         window.scene.remove(LIST_ARROWS[m].arrow);
                                         window.scene.remove(LIST_ARROWS[m].meshPrimary);
@@ -2178,8 +2182,8 @@ function WorkFlowEdit() {
 
                                         self.createLineStep(list[t].target.show, 
                                                             list[i].target.show, 
-                                                            list[t].order[0], 
-                                                            list[i].order[0],
+                                                            list[t].order, 
+                                                            list[i].order,
                                                             list[t].tile,
                                                             list[i].tile, true, m);
                                     }
@@ -2408,6 +2412,8 @@ function WorkFlowEdit() {
         }
         else{
 
+            updateStepList();
+
             var mesh = FOCUS.mesh;
 
             var target = window.helper.fillTarget(0, 0, 0, 'table');
@@ -2620,8 +2626,8 @@ function WorkFlowEdit() {
 
                         self.createLineStep(EDIT_STEPS[i].target.show, 
                                             EDIT_STEPS[k].target.show,
-                                            EDIT_STEPS[i].order[0],
-                                            EDIT_STEPS[k].order[0],
+                                            EDIT_STEPS[i].order,
+                                            EDIT_STEPS[k].order,
                                             EDIT_STEPS[i].tile,
                                             EDIT_STEPS[k].tile, false);
                     }
@@ -3114,19 +3120,19 @@ function WorkFlowEdit() {
                                         break;
                                     case "changeStep":
 
-                                        hideArrowConfig(false, type, tile.userData.originOrder, tile.userData.targetOrder);
+                                        hideArrowConfig(false, type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
 
                                         window.dragManager.objectsCollision = getAllTiles(tile.userData.tile);
                                         
                                         var drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
 
-                                            hideArrowConfig(true, type, tile.userData.originOrder, tile.userData.targetOrder);
+                                            hideArrowConfig(true, type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
 
                                             if(SELECTED){
 
-                                                var origen = SELECTED.userData.originOrder;
+                                                var origen = SELECTED.userData.originOrder[0];
 
-                                                var target = SELECTED.userData.targetOrder;
+                                                var target = SELECTED.userData.targetOrder[0];
 
                                                 if(COLLISION){
 
@@ -3148,16 +3154,16 @@ function WorkFlowEdit() {
                                         break;
                                     case "fork":
                                         window.dragManager.objectsCollision = getAllTiles(tile.userData.tile);
-                                        hideArrowConfig(false, type, tile.userData.originOrder, tile.userData.targetOrder);
+                                        hideArrowConfig(false, type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
                                         var drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
 
-                                            hideArrowConfig(true, type, tile.userData.originOrder, tile.userData.targetOrder);
+                                            hideArrowConfig(true, type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
 
                                             if(SELECTED){
 
-                                                var origen = SELECTED.userData.originOrder;
+                                                var origen = SELECTED.userData.originOrder[0];
 
-                                                var target = SELECTED.userData.targetOrder;
+                                                var target = SELECTED.userData.targetOrder[0];
 
                                                 resetPositionStepMeshButtons(SELECTED, type, origen, target);
 
@@ -3438,7 +3444,7 @@ function WorkFlowEdit() {
     function resetPositionStepMeshButtons(mesh, type, IdOrigen, IdTarget){
 
         var object = LIST_ARROWS.find(function(x){
-            if(x.originID === IdOrigen && x.targetID === IdTarget)
+            if(x.originID[0] === IdOrigen && x.targetID[0] === IdTarget)
                 return x;
         });
 

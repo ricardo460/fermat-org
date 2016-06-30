@@ -1118,6 +1118,7 @@ function FieldsEdit() {
             `;
 			
 			div.addStep = function(i, obj) {
+
 				var div = document.createElement('div');
 				var div2 = document.createElement('div');
 				var close = document.createElement('button');
@@ -1134,14 +1135,19 @@ function FieldsEdit() {
 				div.appendChild(canvas);
 				
 				canvas.dataset.num = i;
+
 				canvas.onclick = function () {
-					// -- ricardo --
-					alert(this.dataset.num);
+
+					var mesh = obj.mesh;
+
+                    var position = mesh.position;
+
+                    window.camera.move(position.x, position.y, 200, 1500, true);
 				};
 				
 				close.onclick = function () {
-					// -- ricardo --
-					alert(this.dataset.num);
+
+                    window.workFlowEdit.deleteStepList(obj.order[0]);
 				};
 				
 				document.getElementById("steps-list-content").appendChild(div);
@@ -1158,6 +1164,7 @@ function FieldsEdit() {
 					
 					ctx.font = "30px Arial";
 					ctx.textAlign = "center";
+                    ctx.fillStyle = "#FFFFFF";
 					ctx.fillText(i, ctx.width/2, ctx.height/2 + 10);
 				}
 			}
