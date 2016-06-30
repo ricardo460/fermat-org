@@ -14,10 +14,10 @@ var filesToSend = [];
 var cwd = process.cwd();
 var dir = path.join(cwd, 'uploads');
 var ftp = new JSFtp({
-	host: config.host,
-	port: config.port,
-	user: config.user,
-	pass: config.pass
+	host: config.ftp.host,
+	port: config.ftp.port,
+	user: config.ftp.user,
+	pass: config.ftp.pass
 });
 /**
  * [convert description]
