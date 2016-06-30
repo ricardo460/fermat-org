@@ -1308,6 +1308,40 @@ END
   transition: 1s all ease 0s;
 }
 
+.steps-alert {
+    position: absolute;
+    right: 0;
+    top: 40px;
+    width: 20px;
+    height: 20px;
+    border: 0;
+    border-radius: 5px;
+}
+
+.steps-alert-error {
+    background: #F00;
+    background-size: 70%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("images/workflow/error.png");
+}
+
+.steps-alert-locked {
+    background: #666;
+    background-size: 70%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("images/workflow/locked.png");
+}
+
+.steps-alert-good {
+    background: #E0E040;
+    background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("images/workflow/tick.png");
+}
+
 .steps-button-close {
 	position: absolute;
 	right: 0;
@@ -1319,14 +1353,11 @@ END
 	background-size: 60%;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url("images/workflow/add_btn.png");
-    transform: rotate(45deg);
-	transition: 1s all ease-in 0s;
+    background-image: url("images/workflow/cross.png");
 }
 
 .steps-button-close:hover {
 	cursor: pointer;
-    transform: rotate(-45deg);
 }
 
 .steps-div-close {
