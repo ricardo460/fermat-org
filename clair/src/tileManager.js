@@ -693,81 +693,50 @@ function TileManager() {
         for(var i = 0; i < window.tilesQtty.length; i++){
 
             var id = window.tilesQtty[i];
-
             var mesh = this.createElement(id);
-
             scene.add(mesh);
-
             window.helper.getSpecificTile(id).mesh = mesh;
 
             var object = new THREE.Object3D();
 
             //Row (Y)
             var tile = window.helper.getSpecificTile(id).data;
-
             var group = tile.platform || window.layers[tile.layer].super_layer;
-
             var row = tile.layerID;
 
             if (layers[tile.layer].super_layer) {
-
                 object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
-
                 section[row]++;
-
             } else {
-
                 //Column (X)
                 var column = tile.platformID;
-
                 object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
-
                 section[row][column]++;
             }
 
-
             object.position.y = -((layerPosition[row]) * window.TILE_DIMENSION.height) + (layersQtty * window.TILE_DIMENSION.height / 2);
-
+            
             if(typeof layerCoordinates[row] === 'undefined')
                 layerCoordinates[row] = object.position.y;
-
-
+            
             /*start Positioning tiles*/
 
             object.position.copy(window.viewManager.translateToSection('table', object.position));
 
             if(layers[tile.layer].super_layer){
-
                 if(typeof window.TABLE[layers[tile.layer].super_layer].x === 'undefined')
                     window.TABLE[layers[tile.layer].super_layer].x = object.position.x;
-
             }
 
             var target = window.helper.fillTarget(object.position.x, object.position.y, object.position.z, 'table');
 
             window.helper.getSpecificTile(id).target = target;
-
             mesh.position.copy(target.hide.position);
-
             mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
 
             /*End*/
             if(!window.signLayer.findSignLayer(group, tile.layer)){
-                if(i === 0 ){ //entra a la primera
-                    window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
-                    signRow = tile.layerID;
-                    signColumn = tile.platformID;
-                    window.TABLE[group].layers[tile.layer].y = object.position.y;
-                }
-
-                if(tile.layerID !== signRow && tile.platformID === signColumn && layers[tile.layer].super_layer === false){ // solo cambio de filas
-                    window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
-                    signRow = tile.layerID;
-                    signColumn = tile.platformID;
-                    window.TABLE[group].layers[tile.layer].y = object.position.y;
-                }
-
-                else if(signColumn !== tile.platformID && layers[tile.layer].super_layer === false){ //cambio de columna
+                if(tile.layerID !== signRow || tile.platformID !== signColumn){ // Column or layer change
                     window.signLayer.createSignLayer(object.position.x, object.position.y, tile.layer, group);
                     signRow = tile.layerID;
                     signColumn = tile.platformID;
