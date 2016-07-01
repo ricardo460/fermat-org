@@ -22,9 +22,9 @@ var platfrmSchema = mongoose.Schema({
     },
     deps: [{
         // code reference
-        type: String,
-        uppercase: true,
-        trim: true,
+        type: mongoose.Schema.Types.ObjectId,
+        //uppercase: true,
+        //trim: true,
         required: true
     }],
     order: {

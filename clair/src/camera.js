@@ -206,7 +206,8 @@ function Camera(position, renderer, renderFunc) {
                     window.viewManager.views[window.actualView].reset();
                 }
 
-                self.resetPosition(duration);
+                if(window.actualView)
+                    self.resetPosition(duration);
             }
         }
     };
@@ -321,6 +322,14 @@ function Camera(position, renderer, renderFunc) {
     this.getFocus = function() { 
         return focus;
     };
+
+    this.offFocus = function(){
+        focus = true;
+    };
+
+    this.onFocus = function(){
+        focus = null;
+    };
     
     /**
      * Casts a ray between the camera to the target
@@ -348,6 +357,11 @@ function Camera(position, renderer, renderFunc) {
         scene.add(line);*/
         
         return raycaster.intersectObjects(elements);
+    };
+
+    this.getRayCast = function(raycaster, mouse){
+
+        raycaster.setFromCamera(mouse, camera);
     };
     
     /**

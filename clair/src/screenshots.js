@@ -24,8 +24,10 @@ function ScreenshotsAndroid() {
     var action = { state : false, mesh : null };
 
 	var onClick = function(target) {
-		change(target.userData.id);
-		window.buttonsManager.removeAllButtons();
+		if(actualView === "table"){ 
+			change(target.userData.id);
+			window.buttonsManager.removeAllButtons();
+		}
 	};
 
 	this.getScreenshots = function(){
@@ -160,33 +162,39 @@ function ScreenshotsAndroid() {
 
 	        		for(var _wallet in json[_group][_layer]){
 
-        				for(var i = 0; i < window.TABLE[_group].layers[_layer].objects.length; i++){
+	        			if(window.TABLE[_group]){
 
-        					var id = _group + "_" + _layer + "_" + i;
-                            
-                            var tile = window.helper.getSpecificTile(id).data;        
+	        				if(window.TABLE[_group].layers[_layer]){
 
-	        				if(tile.type === "Plugin" || tile.type === "Android"){ 
+		        				for(var i = 0; i < window.TABLE[_group].layers[_layer].objects.length; i++){
 
-		        				if(tile.name === _wallet){
-		        					
-		        					var name = json[_group][_layer][_wallet].name,
-		        						position = window.helper.getSpecificTile(id).target.show.position,
-		        						_id = _group + "_" + _layer + "_" + name,
-		        						show = false,
-		        						screenshots = {};
+		        					var id = _group + "_" + _layer + "_" + i;
+		                            
+		                            var tile = window.helper.getSpecificTile(id).data;        
 
-		        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
-		        						show = true;
+			        				if(tile.type === "Plugin" || tile.type === "Android"){ 
 
-	        						for(var _screen in json[_group][_layer][_wallet].screenshots){
-										screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
-									}
+				        				if(tile.name === _wallet){
+				        					
+				        					var name = json[_group][_layer][_wallet].name,
+				        						position = window.helper.getSpecificTile(id).target.show.position,
+				        						_id = _group + "_" + _layer + "_" + name,
+				        						show = false,
+				        						screenshots = {};
 
-									fillScreenshots(id, _id, position, name, show, screenshots);
-		        				}
-		        			}
-	        			}
+				        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
+				        						show = true;
+
+			        						for(var _screen in json[_group][_layer][_wallet].screenshots){
+												screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
+											}
+
+											fillScreenshots(id, _id, position, name, show, screenshots);
+				        				}
+				        			}
+			        			}
+			        		}
+		        		}
 	        		}
 	        	}
 	        }
