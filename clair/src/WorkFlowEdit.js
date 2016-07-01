@@ -4,50 +4,6 @@ function WorkFlowEdit() {
 
     var classFlow = null;
 
-    var vectorArrow = '';
-
-    var FOCUS = {
-            mesh : null,
-            data : null,
-        };
-
-    var EDIT_STEPS = [];
-
-    var PREVIEW_STEPS = [];
-
-    var REPARED_STEPS = [];
-
-    var SHOW_ARROW = [];
-
-    var TYPE = {
-            async : 0xFF0000,
-            direct: 0x0000FF
-        };
-
-    var actualMode = null;
-
-    var TILEWIDTH = window.TILE_DIMENSION.width - window.TILE_SPACING;
-    var TILEHEIGHT = window.TILE_DIMENSION.height - window.TILE_SPACING;
-
-    var LIST_ARROWS = [];
-
-
-    this.get = function(){
-        return EDIT_STEPS;
-    };
-
-    this.getp = function(){
-        return PREVIEW_STEPS;
-    }; 
-
-    this.getr = function(){
-        return SHOW_ARROW;
-    };  
-
-    this.deleteStepList = function(step){
-        deleteSteps(step);
-    } 
-
     this.addButton = function(_id){
 
         var id = null,
@@ -103,14 +59,14 @@ function WorkFlowEdit() {
 
                 callback = function(){
 
-                    //validateLock(id, function(){ 
+                    validateLock(id, function(){ 
 
                         window.fieldsEdit.actions.type = "update";
                         window.buttonsManager.removeAllButtons(); 
                         drawHeaderFlow(id, function(){
-                            //window.fieldsEdit.createFieldWorkFlowEdit();
+                            window.fieldsEdit.createFieldWorkFlowEdit();
                         });
-                    //});
+                    });
                 };
             }
 
@@ -142,6 +98,7 @@ function WorkFlowEdit() {
             
             window.buttonsManager.createButtons(button, text, callback, null, null, side);
         }   
+    
     };
 
     this.changeTexture = function(){
@@ -161,8 +118,6 @@ function WorkFlowEdit() {
 
         var flow = window.fieldsEdit.getData();
 
-        flow.steps = PREVIEW_STEPS;
-
         classFlow.deleteStep();
 
         var target = window.fieldsEdit.objects.tile.target.show;
@@ -177,7 +132,8 @@ function WorkFlowEdit() {
 
         classFlow.showSteps();
 
-    }
+    };
+
     this.save = function(){
 
         if(validateFields() === ''){ 
@@ -246,398 +202,98 @@ function WorkFlowEdit() {
         var flow = null,
             mesh = null;
 
-        createMeshFocus();
-
-        showBrowser(false);
-
-        window.removeEventListener('keydown', window.camera.onKeyDown, false);
-
-        window.addEventListener('keydown', newOnKeyDown, false);
-
-        window.fieldsEdit.createFieldWorkFlowEdit();
-
         if(window.fieldsEdit.actions.type === "insert"){
+
+            window.fieldsEdit.createFieldWorkFlowEdit();
 
             flow = window.fieldsEdit.getData();
 
-            classFlow = new window.Workflow(flow);
+            classFlow = new Workflow(flow);
 
             createElement();
 
             mesh = window.fieldsEdit.objects.tile.mesh;
 
-            changeMode('edit-step');
+            window.fieldsEdit.actions.exit = function(){
 
+                classFlow.deleteStep();
+
+                classFlow = null;
+
+                window.camera.resetPosition();
+
+            };
+
+            animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
+
+                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, 950, 1), 2000);
+
+                if(typeof(callback) === 'function')
+                    callback();
+
+                window.helper.showBackButton();
+
+            });
         }
         else if(window.fieldsEdit.actions.type === "update"){
 
             var workFlow = window.workFlowManager.getObjHeaderFlow()[id];
 
+            workFlow.deleteStep();
+
             flow = workFlow.flow;
 
             flow = window.helper.clone(flow);
 
-            var steps = flow.steps;
-
-            for(var i = 0; i < steps.length; i++){
-
-                if(steps[i].element !== -1){
-
-                    var data = window.helper.getSpecificTile(steps[i].element).data;
-
-                    steps[i].layer = data.layer;
-                    steps[i].name = data.name;
-                }
-            }
-
-            EDIT_STEPS = resetSteps(steps);
-
-            transformData('PREVIEW');
-
-            EDIT_STEPS = [];
-
-            classFlow = new window.Workflow(flow);
+            classFlow = new Workflow(flow);
 
             createElement();
 
             mesh = window.fieldsEdit.objects.tile.mesh;
 
-            fillFields(id);
+            window.fieldsEdit.actions.exit = function(){
 
-            var res = msjDeleteSteps();
+                classFlow.deleteStep();
 
-            if(res){
+                classFlow = null;
 
-                REPARED_STEPS = res;
-                changeMode('repared');
-            }
-            else{
+                window.camera.resetPosition();
 
-                workFlow.deleteStep();
-                changeMode('preview');
-            }
+            };
+
+            animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
+
+                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, 950, 1), 2000);
+
+                if(typeof(callback) === 'function')
+                    callback();
+
+                fillFields(id);
+
+                self.changeTexture();
+
+                self.fillStep();
+
+                window.headers.transformWorkFlow(2000);
+
+                var allWorkFlow = window.workFlowManager.getObjHeaderFlow();
+
+                for(var i = 0; i < allWorkFlow.length ; i++) {
+
+                    if(allWorkFlow[i].action){
+
+                        allWorkFlow[i].deleteStep();
+                        allWorkFlow[i].action = false;
+                        allWorkFlow[i].showAllFlow();
+                    }
+                    else
+                        allWorkFlow[i].showAllFlow();
+                }
+
+                window.helper.showBackButton();
+
+            });
             
-        }
-
-        window.fieldsEdit.actions.exit = function(){
-
-            var allWorkFlow = window.workFlowManager.getObjHeaderFlow();
-
-            for(var i = 0; i < allWorkFlow.length ; i++) {
-
-                if(allWorkFlow[i].action){
-
-                    allWorkFlow[i].deleteStep();
-                    allWorkFlow[i].action = false;
-                    allWorkFlow[i].showAllFlow();
-                }
-                else
-                    allWorkFlow[i].showAllFlow();
-            }
-
-            //classFlow.deleteStep();
-
-            //classFlow = null;
-
-            showBrowser(true);
-
-            window.dragManager.off();
-
-            EDIT_STEPS = [];
-
-            PREVIEW_STEPS = [];
-
-            window.fieldsEdit.hiddenModal();
-
-            window.camera.resetPosition();
-
-            window.headers.transformWorkFlow(2000);
-
-            window.removeEventListener('keydown', newOnKeyDown, false);
-
-            window.addEventListener('keydown', window.camera.onKeyDown, false);
-        };
-
-        function msjDeleteSteps(){
-
-            var steps = window.fieldsEdit.actualFlow.steps;
-
-            var order = [];
-
-            var msj = "Se han eliminado los siguientes pasos: \n";
-
-            for(var i = 0; i < steps.length; i++){
-
-                var title = steps[i].title;
-
-                if(!PREVIEW_STEPS.find(function(x){if(x.title === title) return x;})){
-                    order.push(steps[i]);
-                }
-            }
-            if(order.length > 0){
-
-                order.find(function(x){msj += "* ("+(x.id + 1)+")" +x.title +".\n";});
-
-                msj += "Por los siguentes motivos: \n * No tener un TILE asignado." +
-                "\n * Repetir continuamente el mismo TILE.";
-
-                if(window.confirm(msj)) 
-                    return order;
-                else
-                    false;
-            }       
-        }
-    }
-
-    function resetSteps(steps){
-
-        var array = [];
-
-        for(var i = 0; i < steps.length; i++){
-
-            var object = {
-                    order : [],
-                    children :[],
-                    title : [],
-                    desc : [],
-                    tile : null
-                };
-
-            var id = steps[i].id;
-
-            object.order[0] = id + 1;
-            object.title[0] = steps[i].title;
-            object.desc[0] = steps[i].desc;
-
-            if(steps[i].element !== -1)
-                object.tile = steps[i].element;
-
-            if(id !== 0){
-
-                var parent = searchStepParent(id);
-
-                if(typeof parent.id === 'number'){
-                    var obj = {
-                        id : object.order,
-                        type : parent.typeCall
-                    };
-                    searchStep(parent.id + 1).children.push(obj);
-                }
-            }
-
-            array.push(object);
-        }
-
-        validateTiles();
-
-        return array;
-
-        function validateTiles(){
-
-            var deleteStep = null;
-
-            for(var i = 0; i < array.length; i++){
-
-                if(!deleteStep){
-
-                    if(!array[i].tile)
-                        deleteStep = array[i].order[0];
-                }
-            }
-
-            for(var i = 0; i < array.length; i++){
-
-                if(!deleteStep){
-
-                    var id = validateChildrenTiles(array[i].order[0] - 1);
-
-                    if(id)
-                        deleteStep = id;
-                }
-            }
-
-            if(deleteStep){
-                deleteSteps(array, deleteStep);
-                validateTiles();
-            }
-
-            function validateChildrenTiles(order){
-
-                var tile = array[order].tile;
-
-                var children = array[order].children;
-
-                for(var i = 0; i < children.length; i++){
-
-                    var idTile = array[children[i].id[0] - 1].tile;
-
-                    if(tile === idTile){
-                        return array[children[i].id[0] - 1].order[0];
-                    }
-                }
-
-                return false;
-            }
-        }
-
-        function searchStep(id){
-
-            for(var  i = 0; i < array.length; i++){
-
-                if(id === array[i].order[0])
-                    return array[i];
-            }
-
-            return false;
-        }
-
-        function searchStepParent(id){
-
-            for(var i = 0; i < steps.length; i++){
-
-                var next = steps[i].next;
-
-                for(var l = 0; l < next.length; l++){
-
-                    var _id = parseInt(next[l].id);
-
-                    if(_id === id){
-
-                        var obj = {
-                            id : steps[i].id,
-                            typeCall : next[l].type
-                        }
-                        return obj;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        function deleteSteps(array, step){
-
-            var list = array,
-                ORDER = Search(step),
-                removeStep = [],
-                i = 0, l = 0;
-
-            if(list[ORDER].children.length > 0){
-
-                var oldChildren = list[ORDER].children,
-                    odlStep = list[ORDER].order,
-                    newIdStep = Search(oldChildren[0].id[0]),
-                    newStep = list[newIdStep];
-        
-                odlStep[0] = newStep.order[0];
-                newStep.order = odlStep;
-
-                deleteStep(ORDER);
-
-                for(i = 1; i < oldChildren.length; i++){
-
-                    fillRemove(oldChildren[i].id[0]);
-
-                    removeStep.push(oldChildren[i].id[0]);
-                }
-
-                for(i = 0; i < removeStep.length; i++)
-                     deleteStep(Search(removeStep[i]));
-            }
-            else{
-
-                for(i = 0; i < list.length; i++){
-
-                    var children = list[i].children;
-
-                    for(l = 0; l < children.length; l++){ 
-
-                        if(children[l].id[0] === step)
-                            children.splice(l, 1);
-                    }
-                }
-
-                deleteStep(ORDER);
-            }
-
-            list = orderPositionStep(list);
-
-            function deleteStep(order){
-
-                list.splice(order, 1);
-            }
-
-            function fillRemove(_order){
-
-                var order = Search(_order),
-                    i = 0;
-
-                for(i = 0; i < list[order].children.length; i++){
-
-                    var children = list[Search(list[order].children[i].id[0])].children;
-
-                    removeStep.push(list[order].children[i].id[0]);
-
-                    if(children.length > 0)
-                        fillRemove(list[order].children[i].id[0]);
-                }
-            }
-
-            function Search(order){
-
-                var i = 0;
-
-                for(i = 0; i < list.length; i++){
-
-                    if(list[i].order[0] === order)
-                        return i;
-                }
-            }
-
-            function orderPositionStep(array){
-
-                var array = array;
-
-                for(var i = 0; i < array.length; i++) {
-
-                    for(var t = 0; t < array.length - i; t++) {
-
-                        if(array[t + 1]){ 
-
-                            if (array[t].order[0] > array[t + 1].order[0]) {
-
-                                var aux;
-
-                                aux = array[t];
-
-                                array[t] = array[t + 1];
-
-                                array[t + 1] = aux;
-                            }
-                        }
-                    }
-                }
-
-                for(var k = 0; k < array.length; k++){
-
-                    var newId = k + 1;
-
-                    if(array[k].order[0] !== newId){
-
-                        array[k].order[0] = newId;
-                    }
-                }
-            }
-        }
-    }
-    
-    function showBrowser(state){
-
-        var browsers = window.browserManager.objects.mesh;
-
-        for(var i = 0; i < browsers.length; i++){
-            var mesh = browsers[i];
-            mesh.visible = state;
         }
     }
 
@@ -660,8 +316,6 @@ function WorkFlowEdit() {
     function createWorkFlow(){
 
         var flow = window.fieldsEdit.getData();
-
-        flow.steps = PREVIEW_STEPS;
 
         var params = getParamsData(flow);  
 
@@ -726,9 +380,7 @@ function WorkFlowEdit() {
                     var param = {};
 
                     param.type = steps[0].type;
-
-                    mesh = window.helper.getSpecificTile(getIdSpecificTile(steps[0].name, steps[0].platfrm, steps[0].layer)).data;
-                    param.comp_id = mesh.id;
+                    param.comp_id = getIdSpecificTile(steps[0].name);
                     param.title = steps[0].title;
                     if(steps[0].desc)
                         param.desc = steps[0].desc;
@@ -760,11 +412,12 @@ function WorkFlowEdit() {
                 }
             }
         }
+
     }
 
     function addWorkFlow(flow, duration){
 
-        var newFlow = new window.Workflow(flow);
+        var newFlow = new Workflow(flow);
 
         var _target = new THREE.Vector3();
 
@@ -811,6 +464,7 @@ function WorkFlowEdit() {
             window.workFlowManager.getObjHeaderFlow().push(newFlow);
 
         }, duration);
+
     }
 
     function modifyWorkFlow(){ 
@@ -969,7 +623,7 @@ function WorkFlowEdit() {
             function fillSteps(newSteps, oldSteps){ 
 
                 var difference,
-                    i, l;   
+                    i;   
 
                 if(newSteps.length > oldSteps.length){
 
@@ -996,10 +650,10 @@ function WorkFlowEdit() {
                             }
                             else if(newSteps[i].next.length !== 0){
 
-                                for(l = 0; l < newSteps[i].next.length; l++){
+                                for(var t = 0; t < newSteps[i].next.length; t++){
 
-                                    if(newSteps[i].next[l].id !== oldSteps[i].next[l].id ||
-                                       newSteps[i].next[l].type !== oldSteps[i].next[l].type){
+                                    if(newSteps[i].next[t].id !== oldSteps[i].next[t].id ||
+                                       newSteps[i].next[t].type !== oldSteps[i].next[t].type){
                                         newSteps[i]._id = oldSteps[i]._id;
                                         config.update.steps.push(newSteps[i]);
                                     }
@@ -1026,10 +680,10 @@ function WorkFlowEdit() {
                         }
                         else if(newSteps[i].next.length !== 0){
 
-                            for(l = 0; l < newSteps[i].next.length; l++){
+                            for(var t = 0; t < newSteps[i].next.length; t++){
 
-                                if(newSteps[i].next[l].id !== oldSteps[i].next[l].id ||
-                                   newSteps[i].next[l].type !== oldSteps[i].next[l].type){
+                                if(newSteps[i].next[t].id !== oldSteps[i].next[t].id ||
+                                   newSteps[i].next[t].type !== oldSteps[i].next[t].type){
                                     newSteps[i]._id = oldSteps[i]._id;
                                     config.update.steps.push(newSteps[i]);
                                 }
@@ -1063,10 +717,10 @@ function WorkFlowEdit() {
                             }
                             else if(newSteps[i].next.length !== 0){
 
-                                for(l = 0; l < newSteps[i].next.length; l++){
+                                for(var t = 0; t < newSteps[i].next.length; t++){
 
-                                    if(newSteps[i].next[l].id !== oldSteps[i].next[l].id ||
-                                       newSteps[i].next[l].type !== oldSteps[i].next[l].type){
+                                    if(newSteps[i].next[t].id !== oldSteps[i].next[t].id ||
+                                       newSteps[i].next[t].type !== oldSteps[i].next[t].type){
                                         newSteps[i]._id = oldSteps[i]._id;
                                         config.update.steps.push(newSteps[i]);
                                     }
@@ -1093,8 +747,7 @@ function WorkFlowEdit() {
                     if(task !== 'delete'){ 
 
                         param.type = array[0].type;
-                        mesh = window.helper.getSpecificTile(getIdSpecificTile(steps[0].name, steps[0].platfrm, steps[0].layer)).data;
-                        param.comp_id = mesh.id;
+                        param.comp_id = getIdSpecificTile(array[0].name);
                         param.title = array[0].title;
                         if(array[0].desc)
                             param.desc = array[0].desc;
@@ -1235,23 +888,21 @@ function WorkFlowEdit() {
         );
     }
 
-    function getIdSpecificTile(name, platform, layer){
+    function getIdSpecificTile(name){
 
-        var i = 0, tile = null;
+        for(var platfrm in window.TABLE){
 
-        if(window.TABLE[platform]){
+            for (var layer in window.TABLE[platfrm].layers){
 
-            if(window.TABLE[platform].layers[layer]){
-
-                for(i = 0; i < window.TABLE[platform].layers[layer].objects.length; i++){
+                for(var i = 0; i < window.TABLE[platfrm].layers[layer].objects.length; i++){
                     
-                    tile = window.TABLE[platform].layers[layer].objects[i]; 
+                    var tile = window.TABLE[platfrm].layers[layer].objects[i].data; 
                     
-                    if(tile.data.name.toLowerCase() === name.toLowerCase())
+                    if(tile.name.toLowerCase() === name.toLowerCase())
                         return tile.id;
-                }
-            }
-        }
+                }   
+            }        
+        } 
     }
 
     function fillFields(id){
@@ -1262,6 +913,23 @@ function WorkFlowEdit() {
 
         window.fieldsEdit.actualFlow = window.helper.clone(flow);
 
+        var steps = flow.steps;
+
+        for(var i = 0; i < steps.length; i++){
+
+            if(steps[i].element !== -1){
+
+                var data = window.helper.getSpecificTile(steps[i].element).data;
+
+                steps[i].layer = data.layer;
+                steps[i].name = data.name;
+            }
+        }
+
+        var list = document.getElementById("step-List");
+
+        list.valueJson = steps.slice();
+
         window.fieldsEdit.actualFlow.id = id;
 
         if(flow.platfrm !== undefined)
@@ -1271,7 +939,13 @@ function WorkFlowEdit() {
             document.getElementById("workflow-header-title").value = flow.name;
         
         if(flow.desc !== undefined)
-            document.getElementById("modal-desc-textarea").value = flow.desc; 
+            document.getElementById("modal-desc-textarea").value = flow.desc;
+
+        list.update();
+
+        if(steps.length > 0)
+            document.getElementById("modal-steps-div").changeStep(0);
+        
     }
 
     function animate(mesh, target, duration, callback){
@@ -1288,2329 +962,16 @@ function WorkFlowEdit() {
 
         new TWEEN.Tween(mesh.position)
             .to({x : x, y : y, z : z}, _duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
+            .easing(TWEEN.Easing.Cubic.Out)
             .start();
 
         new TWEEN.Tween(mesh.rotation)
             .to({x: rx, y: ry, z: rz}, _duration + 500)
-            .easing(TWEEN.Easing.Exponential.InOut)
+            .easing(TWEEN.Easing.Cubic.Out)
             .onComplete(function () {
                     if(typeof(callback) === 'function')
                         callback();   
                 })
             .start();
     }
-
-    function addIdStep(id, IDtile, parent, typeCall){
-
-        var mesh = createIdStep(),
-            difference = TILEWIDTH / 2;
-
-        var newArray = [id];
-
-        var tile = window.helper.getSpecificTile(IDtile).target.show;
-
-        var target = window.helper.fillTarget(tile.position.x - difference, tile.position.y, tile.position.z + 1, 'table');
-
-        mesh.position.copy(target.hide.position);
-
-        mesh.rotation.copy(target.hide.rotation);
-
-        mesh.userData = {
-                id : newArray,
-                tile : IDtile,
-                type: 'step'
-            };
-
-        if(parent){
-            var children = EDIT_STEPS[parent - 1].children;
-
-            if(children.length > 0)
-                newArray[0] = window.helper.getLastValueArray(children).id[0] + 0.5;
-
-            var obj = {
-                id : newArray,
-                type : 'direct call'
-            };
-
-            if(typeCall)
-                obj.type = typeCall;
-            
-            children.push(obj);
-        }
-        
-        var object = {
-                    order : newArray,
-                    mesh : mesh,
-                    target : target,
-                    tile : IDtile,
-                    children : [],
-                    existArrow: false,
-                    title : [''],
-                    desc : ['']
-                };
-
-        EDIT_STEPS.push(object);
-
-        mesh.material.map = changeTextureId(id, parent);
-
-        calculatePositionsSteps(IDtile);
-
-        if(parent){
-            orderPositionStep();
-        }
-
-        // Validaciones 
-
-        if(EDIT_STEPS.length > 1){ // nuevo
-
-            for (var i = 0; i < EDIT_STEPS.length; i++) {
-
-                if(EDIT_STEPS[i].children.length > 0){
-                    
-                    for (var q = 0; q < EDIT_STEPS[i].children.length; q++) {
-
-                        for (var j = 0; j < EDIT_STEPS.length; j++) {
-
-                             if(EDIT_STEPS[i].children[q].id[0] === EDIT_STEPS[j].order[0]){// if 2
-                                                      
-                                 if(EDIT_STEPS.length === 2){
-                                    self.createLineStep(EDIT_STEPS[i].target.show, 
-                                                        EDIT_STEPS[j].target.show,
-                                                        EDIT_STEPS[i].order,
-                                                        EDIT_STEPS[j].order,
-                                                        EDIT_STEPS[i].tile,
-                                                        EDIT_STEPS[j].tile, false);
-
-                                    updateArrowStep(EDIT_STEPS[j].tile);
-                                 }else{
-
-                                    for (var k = 0; k < LIST_ARROWS.length; k++) {
-                                        
-                                        if((LIST_ARROWS[k].originID[0] === EDIT_STEPS[i].order[0]) && (LIST_ARROWS[k].targetID[0] === EDIT_STEPS[j].order[0])){
-                                            find = true;
-                                        } 
-                                    }
-
-                                    if(find === false){
-                                        self.createLineStep(EDIT_STEPS[i].target.show, 
-                                                            EDIT_STEPS[j].target.show,
-                                                            EDIT_STEPS[i].order,
-                                                            EDIT_STEPS[j].order,
-                                                            EDIT_STEPS[i].tile,
-                                                            EDIT_STEPS[j].tile, false);
-
-                                        updateArrowStep(EDIT_STEPS[j].tile);
-                                    }
-                                    find = false;
-                                }
-                            }
-                        }
-                    }
-                } 
-            }
-        }
-
-        // Depuramos el objeto LIST_ARROWS
-
-        for(var m = 0; m < LIST_ARROWS.length; m++){ // nuevo
-
-           if(debug(LIST_ARROWS[m].originID[0], LIST_ARROWS[m].targetID[0]) === false){
-
-                window.scene.remove(LIST_ARROWS[m].arrow);
-                window.scene.remove(LIST_ARROWS[m].meshPrimary);
-                window.scene.remove(LIST_ARROWS[m].meshSecondary);
-                window.scene.remove(LIST_ARROWS[m].vector1);
-                window.scene.remove(LIST_ARROWS[m].vector2);
-
-                LIST_ARROWS.splice(m, 1);
-           }
-
-        }
-
-        function debug(origin, target){ // nuevo
-
-            var _search = false;
-
-            for (var n = 0; n < EDIT_STEPS.length; n++) {
-                            
-                for (var o = 0; o < EDIT_STEPS[n].children.length; o++) {
-
-                    if(LIST_ARROWS[m].originID[0] === EDIT_STEPS[n].order[0] && LIST_ARROWS[m].targetID[0] === EDIT_STEPS[n].children[o].id[0]){
-
-                        _search =  true;
-                    }
-                    
-                }   
-            }
-
-            return _search;
-        }
-
-        return mesh;
-    }
-
-    function createIdStep(){
-
-        var height = TILEHEIGHT / 9;
-        var width = TILEHEIGHT / 5;
-
-        var mesh = new THREE.Mesh(
-                   new THREE.PlaneBufferGeometry(width, height),
-                   new THREE.MeshBasicMaterial({ 
-                        side: THREE.DoubleSide, 
-                        transparent: true, 
-                        map:null 
-                    }));
-
-        mesh.renderOrder = 1;
-
-        mesh.scale.set(1.4, 1.4, 1.4);
-
-        mesh.material.needsUpdate = true;
-
-        mesh.material.depthTest = false;
-
-        window.scene.add(mesh);
-
-        return mesh;
-    }
-
-    function hideArrowConfig(state, type, IdOrigen, IdTarget){
-
-        var object = {
-            dataArrow : null,
-            arrows : {
-                vector1: null,
-                vector2: null
-            }
-        };
-
-        if(state){
-
-            for(var i = 0; i < SHOW_ARROW.length; i++){
-
-                var dataArrow = SHOW_ARROW[i].dataArrow;
-
-                dataArrow.meshPrimary.visible = true;
-                dataArrow.meshSecondary.visible = true;
-                dataArrow.arrow.visible = true;
-                dataArrow.vector1.visible = true;
-                dataArrow.vector2.visible = true;
-
-                var vector1 = SHOW_ARROW[i].arrows.vector1;
-                var vector2 = SHOW_ARROW[i].arrows.vector2;
-
-                if(vector1)
-                    window.scene.remove(vector1);
-
-                if(vector2)
-                    window.scene.remove(vector2);
-            }
-
-            SHOW_ARROW = [];
-        }
-        else{
-
-            var mesh = null;
-
-            object.dataArrow = LIST_ARROWS.find(function(x){
-                if(x.originID[0] === IdOrigen && x.targetID[0] === IdTarget)
-                    return x;
-            });
-
-            if(!object.dataArrow){
-                object.dataArrow = LIST_ARROWS.find(function(x){
-                    if(x.originID[0] === IdTarget && x.targetID[0] === IdOrigen)
-                        return x;
-                });
-            }
-
-            if(object.dataArrow){ 
-
-                if(type === 'changeStep'){
-                    mesh = object.dataArrow.meshPrimary;
-                    object.dataArrow.meshSecondary.visible = false;
-                }
-                else if(type === 'fork'){
-                    mesh = object.dataArrow.meshSecondary;
-                    object.dataArrow.meshPrimary.visible = false;
-                }
-                else{
-                    object.dataArrow.meshPrimary.visible = false;
-                    object.dataArrow.meshSecondary.visible = false;
-                }
-
-                object.dataArrow.arrow.visible = false;
-                object.dataArrow.vector1.visible = false;
-                object.dataArrow.vector2.visible = false;
-
-                var color = TYPE.async;
-
-                var typeCall = EDIT_STEPS[IdOrigen - 1].children.find(function(x){
-                    if(x.id[0] === IdTarget)
-                        return x;
-                });
-
-                if(!typeCall){
-
-                    typeCall = EDIT_STEPS[IdTarget - 1].children.find(function(x){
-                        if(x.id[0] === IdOrigen)
-                            return x;
-                    });
-                }
-
-                if(typeCall){
-
-                    if(typeCall.type === "direct call")
-                        color = TYPE.direct;
-                }
-
-                var from = null;
-                var to = null;
-                var direction = null;
-                var length = null;
-
-                var origen = null;
-                var target = EDIT_STEPS[IdTarget - 1].target.show.position;
-
-                switch(type) {
-
-                    case 'changeStep':
-                    case 'fork':
-
-                        origen = EDIT_STEPS[IdOrigen - 1].target.show.position;
-                        from = new THREE.Vector3(origen.x, origen.y, 2);
-                        to = new THREE.Vector3(mesh.position.x, mesh.position.y, 2);
-
-                        direction = to.clone().sub(from);
-                        length = direction.length();
-                        arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1);
-                        arrowHelper.userData.from = from;
-                        object.arrows.vector1 = arrowHelper;
-                        window.scene.add(arrowHelper);
-
-                        from = new THREE.Vector3(target.x, target.y, 2);
-
-                        direction = to.clone().sub(from);
-                        length = direction.length();
-                        arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1);
-                        arrowHelper.userData.from = from;
-                        object.arrows.vector2 = arrowHelper;
-                        window.scene.add(arrowHelper);
-
-                        break;
-                    default:
-
-                        origen = EDIT_STEPS[IdOrigen - 1].mesh.position;
-
-                        from = new THREE.Vector3(target.x, target.y, 2);
-                        to = new THREE.Vector3(origen.x, origen.y, 2);
-
-                        direction = to.clone().sub(from);
-                        length = direction.length();
-                        arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1);
-                        arrowHelper.userData.from = from;
-                        object.arrows.vector1 = arrowHelper;
-                        window.scene.add(arrowHelper);
-
-                        break; 
-                }
-
-                SHOW_ARROW.push(object);
-            }
-        }
-    }
-
-    function updatePositionArrowTest(position){
-
-        var from = null, to = null, direction = null, length = null;
-
-        for(var i = 0; i < SHOW_ARROW.length; i++){
-
-            var vector1 = SHOW_ARROW[i].arrows.vector1;
-            var vector2 = SHOW_ARROW[i].arrows.vector2;
-
-            if(vector1){ 
-
-                from = vector1.userData.from;
-                to = new THREE.Vector3(position.x, position.y, 2);
-                direction = to.clone().sub(from);
-                length = direction.length();
-                vector1.setDirection(direction.normalize());
-                vector1.setLength(length,0.1,0.1);
-            }
-
-            if(vector2){ 
-
-                from = vector2.userData.from;
-                to = new THREE.Vector3(position.x, position.y, 2);
-                direction = to.clone().sub(from);
-                length = direction.length();
-                vector2.setDirection(direction.normalize());
-                vector2.setLength(length,0.1,0.1);
-            }
-        }
-    }
-
-    function createArrowTest(IdOrigen){
-
-        var children = EDIT_STEPS[IdOrigen - 1].children;
-
-        var parent = searchParentStep(IdOrigen);
-
-        if(children.length > 0){
-
-            for(var i = 0; i < children.length; i++){
-
-                hideArrowConfig(false, 'step', IdOrigen, children[i].id[0]);
-            }
-        }
-
-        if(typeof parent === 'number'){
-            hideArrowConfig(false, 'step', IdOrigen, parent);
-        }
-    }
-
-    function addIdStepDrag(idOrigen, idTarget, IDtile){
-
-        var mesh = createIdStep(),
-            difference = TILEWIDTH / 2,
-            stepOrigen = EDIT_STEPS[idOrigen - 1],
-            stepTarget = EDIT_STEPS[idTarget - 1];
-
-        var newArray = [idTarget];
-
-        var tile = window.helper.getSpecificTile(IDtile).target.show;
-
-        var target = window.helper.fillTarget(tile.position.x - difference, tile.position.y, tile.position.z + 1, 'table');
-
-        mesh.position.copy(target.hide.position);
-
-        mesh.rotation.copy(target.hide.rotation);
-
-        mesh.userData = {
-                id : newArray,
-                tile : IDtile,
-                type: 'step'
-            };
-
-        var children = stepOrigen.children;
-
-        for(var i = 0; i < children.length; i++){
-
-            if(children[i].id[0] === idTarget){
-                children[i].id = newArray;
-            }
-        }
-    
-        var object = {
-                    order : newArray,
-                    mesh : mesh,
-                    target : target,
-                    tile : IDtile,
-                    children : [],
-                    existArrow: false,
-                    title : [''],
-                    desc : ['']
-                };
-
-        stepTarget.order[0] =  stepTarget.order[0] + 0.5;
-
-        var obj = {
-                id : stepTarget.order,
-                type : 'direct call'
-            };
-
-        object.children.push(obj);
-
-        EDIT_STEPS.push(object);
-
-        mesh.material.map = changeTextureId(idTarget, parent);
-
-        calculatePositionsSteps(IDtile);
-
-        orderPositionStep();
-
-        if(EDIT_STEPS.length > 1){ 
-
-            for (var i = 0; i < EDIT_STEPS.length; i++) {
-
-                if(EDIT_STEPS[i].children.length > 0){
-                    
-                    for (var q = 0; q < EDIT_STEPS[i].children.length; q++) {
-
-                        for (var j = 0; j < EDIT_STEPS.length; j++) {
-
-                             if(EDIT_STEPS[i].children[q].id[0] === EDIT_STEPS[j].order[0]){// if 2
-                                                      
-                                 if(EDIT_STEPS.length === 2){
-                                    self.createLineStep(EDIT_STEPS[i].target.show, 
-                                                        EDIT_STEPS[j].target.show,
-                                                        EDIT_STEPS[i].order,
-                                                        EDIT_STEPS[j].order,
-                                                        EDIT_STEPS[i].tile,
-                                                        EDIT_STEPS[j].tile, false);
-
-                                    updateArrowStep(EDIT_STEPS[j].tile);
-                                 }else{
-
-                                    for (var k = 0; k < LIST_ARROWS.length; k++) {
-                                        
-                                        if((LIST_ARROWS[k].originID[0] === EDIT_STEPS[i].order[0]) && (LIST_ARROWS[k].targetID[0] === EDIT_STEPS[j].order[0])){
-                                            find = true;
-                                        } 
-                                    }
-
-                                    if(find === false){
-                                        self.createLineStep(EDIT_STEPS[i].target.show, 
-                                                            EDIT_STEPS[j].target.show,
-                                                            EDIT_STEPS[i].order,
-                                                            EDIT_STEPS[j].order,
-                                                            EDIT_STEPS[i].tile,
-                                                            EDIT_STEPS[j].tile, false);
-
-                                        updateArrowStep(EDIT_STEPS[j].tile);
-                                    }
-                                    find = false;
-                                }
-                            }
-                        }
-                    }
-                } 
-            }
-        }
-
-        for(var m = 0; m < LIST_ARROWS.length; m++){ // nuevo
-
-           if(debug(LIST_ARROWS[m].originID[0], LIST_ARROWS[m].targetID[0]) === false){
-
-                window.scene.remove(LIST_ARROWS[m].arrow);
-                window.scene.remove(LIST_ARROWS[m].meshPrimary);
-                window.scene.remove(LIST_ARROWS[m].meshSecondary);
-                window.scene.remove(LIST_ARROWS[m].vector1);
-                window.scene.remove(LIST_ARROWS[m].vector2);
-
-                LIST_ARROWS.splice(m, 1);
-           }
-
-        }
-
-        function debug(origin, target){
-
-            var _search = false;
-
-            for (var n = 0; n < EDIT_STEPS.length; n++) {
-                            
-                for (var o = 0; o < EDIT_STEPS[n].children.length; o++) {
-
-                    if(LIST_ARROWS[m].originID[0] === EDIT_STEPS[n].order[0] && LIST_ARROWS[m].targetID[0] === EDIT_STEPS[n].children[o].id[0]){
-
-                        _search =  true;
-                    }
-                    
-                }   
-            }
-
-            return _search;
-        }
-
-        if(actualMode === "edit-path"){
-
-            self.deleteArrow();
-            self.updateArrow();
-
-        }
-
-        return mesh;
-    }
-
-    this.createLineStep = function(meshOrigin, meshTarget, idOrigin, idTarget, tileOrigin, tileTarget, update, _indice){ // nuevo
-
-        var mesh, vertexPositions, geometry, from, to, color, listSteps, midPoint, distanceX, distanceY, indice = _indice || 0;
-        var positionMesh = {x: null, y: null, z : null}, meshTrinogometry;
-
-        var objArrow = null;
-
-        if(update){
-            objArrow = LIST_ARROWS[indice];
-        }
-        else{
-            objArrow = {
-                tileOriginId : null,
-                tileTargetId : null,
-                originID: null,
-                targetID: null,
-                vector1: null,
-                meshPrimary: null,
-                vector2:null,
-                meshSecondary: null,
-                arrow: null,
-                meshPrimaryTarget: [],
-                meshSecondaryTarget: []
-            };
-        }
-
-        var object = EDIT_STEPS[idOrigin - 1].children.find(function(x){
-            if(x.id[0] === idTarget[0])
-                return x;
-        });
-
-        var color = TYPE.direct;
-
-        if(object){
-
-            if(object.type !== "direct call")
-                color = TYPE.async;
-        }
-
-        var vertexOriginX = meshOrigin.position.x,
-            vertexOriginY = meshOrigin.position.y,
-            vertexDestX = meshTarget.position.x,
-            vertexDestY = meshTarget.position.y;
-
-        objArrow.originID = idOrigin;
-        objArrow.targetID = idTarget;
-        objArrow.tileOriginId = tileOrigin;
-        objArrow.tileTargetId = tileTarget;
-
-        var angleDeg = Math.atan2(vertexDestY - vertexOriginY, vertexDestX - vertexOriginX) * 180 / Math.PI; // emmanuel
-        var angleRadians = Math.atan2(vertexDestY - vertexOriginY, vertexDestX - vertexOriginX); // emmanuel
-
-        if((vertexOriginY >  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es descendente diagonal
-            
-            from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
-
-            if(angleDeg <= -1 && angleDeg >= -90){
-
-                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-                to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-
-            }
-            else if(angleDeg <= -91 && angleDeg >= -180){
-
-                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-                to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-            }
-            
-            vectorArrow = 'arrowDesc';
-        }
-        else if((vertexOriginY <  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es ascendente diagonal // emmanuel
-        
-
-            from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
-
-            if(angleDeg >= 1 && angleDeg <= 90){
-
-                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-                to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-
-            }
-            else if(angleDeg >= 91 && angleDeg <= 180){
-
-                meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-                to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-            }
-
-            vectorArrow = 'arrowAsc';
-        }
-
-        if((vertexOriginX == vertexDestX) && (vertexOriginY > vertexDestY)){ // si es vertical descendente
-
-            from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
-
-            to = new THREE.Vector3(vertexOriginX, vertexOriginY - 20, 2);
-
-            meshTrinogometry = to;
-            vectorArrow = 'arrowDescVer';
-        }
-        else if((vertexOriginX == vertexDestX) && (vertexOriginY < vertexDestY)){ // si es vertical ascendente
-           
-            from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
-
-            to = new THREE.Vector3(vertexOriginX, vertexOriginY + 20, 2);
-
-            meshTrinogometry = to;
-            vectorArrow = 'arrowAscVer';
-        }
-
-        if((vertexOriginY == vertexDestY) && (vertexOriginX < vertexDestX)){ // Horizontal Derecha
-
-            from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
-            
-            to = new THREE.Vector3(vertexOriginX + 40, vertexOriginY, 2);
-            
-            meshTrinogometry = to;
-            vectorArrow = 'arrowRight';
-        } 
-
-        if((vertexOriginY == vertexDestY) && (vertexOriginX > vertexDestX)){ // Horizontal Derecha
-
-            from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
-            
-            to = new THREE.Vector3(vertexOriginX - 40, vertexOriginY, 2);
-            
-            meshTrinogometry = to;
-            vectorArrow = 'arrowLeft';
-        }  
-                
-        var direction = to.clone().sub(from);
-
-        var length = direction.length();
-
-        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1); // Arrow Rojo
-
-        window.scene.add(arrowHelper);
-
-        mesh = createSimbol();
-
-        mesh.material.map = createTextureButton('+');
-
-        mesh.userData = {
-            originOrder : idOrigin,
-            targetOrder : idTarget,
-            type : 'changeStep'
-        };
-
-        mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
-
-        objArrow.vector1 = arrowHelper;
-        objArrow.meshPrimary = mesh;
-
-        var target = window.helper.fillTarget(meshTrinogometry.x, meshTrinogometry.y, 3, 'table');
-        objArrow.meshPrimaryTarget = target;
-
-        directionLineMesh(meshTrinogometry.x, meshTrinogometry.y);
-
-        if(update){
-            LIST_ARROWS[indice] = objArrow;
-        }
-        else{
-            LIST_ARROWS.push(objArrow);
-        }  
-
-        function directionLineMesh(x, y){
-
-            var mesh, vertexPositions, from, to, midPoint, meshTrinogometry;
-            var positionMesh = {x: null, y: null, z : null};
-
-            switch(vectorArrow){
-
-                case 'arrowDesc':
-                    from = new THREE.Vector3(x, y, 2);
-                    
-                    meshTrinogometry = trigonometry(x, y, 30, angleRadians);
-
-                    to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-
-                    break;
-
-                case 'arrowAsc':
-                    from = new THREE.Vector3(x, y, 2);
-            
-                    meshTrinogometry = trigonometry(x, y, 30, angleRadians);
-
-                    to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-
-                    break;
-
-                case 'arrowDescVer':
-                    from = new THREE.Vector3(x, y, 2);
-                    
-                    to = new THREE.Vector3(x, y - 20, 2);
-
-                    meshTrinogometry = to;
-
-                    break;
-
-                case 'arrowAscVer':
-                    from = new THREE.Vector3(x, y, 2);
-                    
-                    to = new THREE.Vector3(x, y + 20, 2);
-
-                    meshTrinogometry = to;
-
-                    break;
-
-                case 'arrowRight':
-                    from = new THREE.Vector3(x, y, 2);
-                
-                    to = new THREE.Vector3(x + 30, y, 2);
-
-                    meshTrinogometry = to;
-
-                    break;
-
-                case 'arrowLeft':
-                    from = new THREE.Vector3(x, y, 2);
-
-                    to = new THREE.Vector3(x - 30, y, 2);
-
-                    meshTrinogometry = to;
-
-                    break;
-
-                default:
-                    break;
-            }
-
-            var direction = to.clone().sub(from);
-
-            var length = direction.length();
-
-            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1); // Arrow Azul
-
-            scene.add(arrowHelper);
-            
-            mesh = createSimbol();
-
-            mesh.material.map = createTextureButton('y');
-
-            objArrow.vector2 = arrowHelper;
-            objArrow.meshSecondary = mesh;
-
-            mesh.userData = {
-                originOrder : objArrow.originID,
-                targetOrder : objArrow.targetID,
-                type : 'fork'
-            };
-
-            directionArrowMesh(meshTrinogometry.x, meshTrinogometry.y);
-
-
-            mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
-                    
-
-            var target = window.helper.fillTarget(meshTrinogometry.x, meshTrinogometry.y, 3, 'table');
-            objArrow.meshSecondaryTarget = target;
-        }
-
-        function createTextureButton(src){
-
-            var canvas = document.createElement('canvas');
-                canvas.height = 128;
-                canvas.width = 128;
-            var ctx = canvas.getContext('2d');
-            var image = document.createElement('img');
-            var texture = new THREE.Texture(canvas);
-                texture.minFilter = THREE.NearestFilter;
-
-            image.onload = function() {
-
-                ctx.drawImage(image, 0, 0);
-
-                ctx.textAlign = 'center';
-                
-                texture.needsUpdate = true;
-            };
-
-            image.src = 'images/workflow/button_'+src+'.png';
-
-            return texture;
-        }
-
-        function directionArrowMesh(x, y){
-
-            var from, to;
-
-            from = new THREE.Vector3(x, y, 2);
-            to = new THREE.Vector3(vertexDestX, vertexDestY, 2);
-
-            var direction = to.clone().sub(from);
-
-            var length = direction.length();
-
-            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 4*2, 4*2); // Arrow Rojo
-
-            scene.add(arrowHelper);
-
-            objArrow.arrow = arrowHelper;
-        }
-    };
-    
-    function updateArrowStep(tileTarget){
-        
-        var list = EDIT_STEPS;
-
-        for (var i = 0; i < list.length - 1; i++) {
-            
-            if(tileTarget === list[i].tile){
-                    
-                for (var j = 0; j < LIST_ARROWS.length; j++) {
-                    
-                    for (var o = 0; o < list[i].children.length; o++) {
-
-                        if((list[i].order[0] === LIST_ARROWS[j].originID[0]) && (list[i].children[o].id[0] === LIST_ARROWS[j].targetID[0])){ // buscamos la flecha a borrar para crear otra con la nueva posicion // if 2
-
-                            window.scene.remove(LIST_ARROWS[j].arrow);
-                            window.scene.remove(LIST_ARROWS[j].meshPrimary);
-                            window.scene.remove(LIST_ARROWS[j].meshSecondary);
-                            window.scene.remove(LIST_ARROWS[j].vector1);
-                            window.scene.remove(LIST_ARROWS[j].vector2);
-
-                            for (var k = 0; k < list.length; k++) {
-
-                                if(list[i].children[o].id[0] === list[k].order[0]){
-
-                                    self.createLineStep(list[i].target.show, 
-                                                        list[k].target.show, 
-                                                        list[i].order, 
-                                                        list[k].order,
-                                                        list[i].tile,
-                                                        list[k].tile, true, j);
-                                }
-                            }  
-                        } // if
-                    }
-
-                    //actualizacion de las flechas que le llegan a los pasos que estan en ese tile "tileTarget"
-                    for(var t = 0; t < list.length; t++) {
-
-                        for(var r = 0; r < list[t].children.length; r++){
-
-                            if(list[i].order[0] === list[t].children[r].id[0]){
-
-                                for(var m = 0; m < LIST_ARROWS.length; m++){
-
-                                    if(list[t].order[0] === LIST_ARROWS[m].originID[0] && list[i].order[0] === LIST_ARROWS[m].targetID[0]){
-
-                                        window.scene.remove(LIST_ARROWS[m].arrow);
-                                        window.scene.remove(LIST_ARROWS[m].meshPrimary);
-                                        window.scene.remove(LIST_ARROWS[m].meshSecondary);
-                                        window.scene.remove(LIST_ARROWS[m].vector1);
-                                        window.scene.remove(LIST_ARROWS[m].vector2);
-
-                                        self.createLineStep(list[t].target.show, 
-                                                            list[i].target.show, 
-                                                            list[t].order, 
-                                                            list[i].order,
-                                                            list[t].tile,
-                                                            list[i].tile, true, m);
-                                    }
-                                }
-                            }
-                        }      
-                    }
-                }  
-            }
-        }
-    }
-
-    function trigonometry(vertexOriginX, vertexOriginY, hypotenuse, angleRadians){ // emmanuel
-
-        var co, ca, vector = new THREE.Vector3(), x, y;
-
-        x = vertexOriginX;
-        y = vertexOriginY;
-
-        co = Math.sin(angleRadians) * hypotenuse;
-        ca = Math.cos(angleRadians) * hypotenuse;
-
-        x = x + ca;
-        y = y + co;
-
-        vector.x = x;
-        vector.y = y;
-
-        return vector;
-    }
-
-    function createSimbol(){ // nuevo
-
-        var tileWidth = (window.TILE_DIMENSION.width - window.TILE_SPACING) / 2,
-            tileHeight = (window.TILE_DIMENSION.height - window.TILE_SPACING) / 8;
-
-        var mesh =  new THREE.Mesh(
-                    new THREE.PlaneBufferGeometry(tileHeight, tileHeight),
-                    new THREE.MeshBasicMaterial({
-                            side: THREE.DoubleSide,
-                            transparent: true, 
-                            map:null 
-                    }));
-
-        mesh.renderOrder = 1;
-
-        mesh.material.needsUpdate = true;
-
-        mesh.material.depthTest = false;
-
-        window.scene.add(mesh);
-
-        return mesh;
-    }
-
-    function changeTextureId(id, parent){
-
-        if(parent)
-            parent = parent.toString();
-        else
-            parent = '';
-
-        var canvas = document.createElement('canvas');
-            canvas.height = 412;
-            canvas.width = 635;
-        var ctx = canvas.getContext('2d');
-        var middle = canvas.width / 2;
-        var image = document.createElement('img');
-        var texture = new THREE.Texture(canvas);
-            texture.minFilter = THREE.NearestFilter;
-
-        image.onload = function() {
-
-            ctx.drawImage(image, 0, 0);
-
-            ctx.textAlign = 'center';
-
-            ctx.font = '140px Arial';
-            ctx.fillText(id, middle - 110, middle - 70);
-
-            ctx.font = '75px Arial';
-            ctx.fillText(parent, middle + 185, middle - 85);
-            
-            texture.needsUpdate = true;
-        };
-
-        image.src = 'images/workflow/Boton1.png';
-
-        return texture;
-    }
-
-    function calculatePositionsSteps(idTile){
-
-        var countSteps = [],
-            rootY = window.helper.getSpecificTile(idTile).target.show.position.y,
-            i,
-            mesh = null,
-            target = null;
-
-        var action = function (){updateTileIgnoredAdd();};
-
-        for(i = 0; i < EDIT_STEPS.length; i++){
-
-            if(EDIT_STEPS[i].tile === idTile)
-                countSteps.push(EDIT_STEPS[i]);
-        }
-        
-        if(countSteps.length === 1){ 
-
-            target = countSteps[0].target.show;
-
-            target.position.y = rootY;
-
-            if(actualMode === 'edit-path')
-                animate(countSteps[0].mesh, countSteps[0].target.show, 500, action);
-            else
-                countSteps[0].mesh.position.copy(countSteps[0].target.show.position);
-        }
-        else if(countSteps.length === 2){ 
-
-            for(i = 0; i < countSteps.length; i++) {
-
-                target = countSteps[i].target.show;
-
-                mesh = countSteps[i].mesh;
-
-                if(i === 0){
-
-                    target.position.y = rootY + (TILEHEIGHT / 4);
-
-                    if(actualMode === 'edit-path')
-                        animate(mesh, target, 1000);
-                    else
-                        mesh.position.copy(target.position);
-                }
-                else{
-
-                    target.position.y = rootY - (TILEHEIGHT / 4);
-
-                    if(actualMode === 'edit-path')
-                        animate(mesh, target, 1000, action);
-                    else
-                        mesh.position.copy(target.position);
-                }
-            }
-        }
-        else if(countSteps.length > 2){
-
-            var difference = (TILEHEIGHT / 6) / 2,
-                topY = rootY + ((TILEHEIGHT / 2) - difference),
-                countSpaceSteps = countSteps.length - 1,
-                distanceSteps = (TILEHEIGHT - difference - ((TILEHEIGHT / 6) / 2)) / countSpaceSteps;
-
-            for(i = 0; i < countSteps.length; i++) {
-
-                mesh = countSteps[i].mesh;
-
-                target = countSteps[i].target.show;
-
-                target.position.y = topY;
-
-                if(i !== countSpaceSteps){
-
-                    if(actualMode === 'edit-path')
-                        animate(mesh, target, 1000);
-                    else
-                        mesh.position.copy(target.position);
-                }
-                else{
-
-                    target.position.y = topY;
-
-                    if(actualMode === 'edit-path')
-                        animate(mesh, target, 1000, action);
-                    else
-                        mesh.position.copy(target.position);
-                }
-
-                topY = topY - distanceSteps; 
-            }
-        }
-    }
-
-    function orderPositionStep(){
-
-        var array = EDIT_STEPS;
-
-        for(var i = 0; i < array.length; i++) {
-
-            for(var t = 0; t < array.length - i; t++) {
-
-                if(array[t + 1]){ 
-
-                    if (array[t].order[0] > array[t + 1].order[0]) {
-
-                        var aux;
-
-                        aux = array[t];
-
-                        array[t] = array[t + 1];
-
-                        array[t + 1] = aux;
-                    }
-                }
-            }
-        }
-
-        for(var k = 0; k < array.length; k++){
-
-            var newId = k + 1;
-
-            if(array[k].order[0] !== newId){
-
-                var mesh = array[k].mesh;
-
-                array[k].order[0] = newId;
-                mesh.userData.id[0] = newId;
-            }
-        }
-
-        if(array.length > 0){ 
-
-            FOCUS.data = window.helper.getLastValueArray(array).mesh;
-
-            updateTileIgnoredAdd();
-        }
-        else{
-
-            updateStepList();
-
-            var mesh = FOCUS.mesh;
-
-            var target = window.helper.fillTarget(0, 0, 0, 'table');
-
-            target.hide.rotation.x = 0;
-            target.hide.rotation.y = 0;
-            target.hide.rotation.z = 0;
-
-            animate(mesh, target.hide, 500);
-
-            FOCUS.data = null;
-
-            window.dragManager.objects = getAllTiles();
-        }
-
-        updateTextureParent();
-    }
-
-    function updateTileIgnoredAdd(){
-
-        if(actualMode === "edit-path"){
-
-            updateStepList();
-
-            if(FOCUS.data){ 
-
-                var id = FOCUS.data.userData.id - 1,
-                    ignoredTile = FOCUS.data.userData.tile,
-                    mesh = FOCUS.mesh;
-
-                window.dragManager.objects = [];
-
-                for(var i = 0; i < EDIT_STEPS.length; i++){
-
-                    if(i === id)
-                        mesh.position.copy(EDIT_STEPS[i].mesh.position);
-                    
-                    window.dragManager.objects.push(EDIT_STEPS[i].mesh); 
-                    
-                }
-
-                for(var i = 0; i < LIST_ARROWS.length; i++){
-                    
-                    window.dragManager.objects.push(LIST_ARROWS[i].meshPrimary);
-                    window.dragManager.objects.push(LIST_ARROWS[i].meshSecondary);  
-                }
-
-                for(var t = 0; t < window.tilesQtty.length; t++){
-
-                    if(window.tilesQtty[t] !== ignoredTile){
-
-                        var tile = window.helper.getSpecificTile(window.tilesQtty[t]).mesh;
-
-                        window.dragManager.objects.push(tile);
-
-                    }
-                }
-            }
-        }
-    }
-
-    function deleteSteps(step){
-
-        var list = EDIT_STEPS,
-            ORDER = Search(step),
-            tilesCalculatePositions = [],
-            removeStep = [],
-            i = 0, l = 0;
-
-        FOCUS.mesh.material.visible = false;
-
-        if(list[ORDER].children.length > 0){
-
-            if(validateChildrenTiles()){ 
-
-                var oldChildren = list[ORDER].children,
-                    odlStep = list[ORDER].order,
-                    newIdStep = Search(oldChildren[0].id[0]),
-                    newStep = list[newIdStep];
-        
-                odlStep[0] = newStep.order[0];
-                newStep.order = odlStep;
-                newStep.mesh.userData.id = odlStep;
-
-                deleteStep(ORDER);
-
-                for(i = 1; i < oldChildren.length; i++){
-
-                    fillRemove(oldChildren[i].id[0]);
-
-                    removeStep.push(oldChildren[i].id[0]);
-                }
-
-                for(i = 0; i < removeStep.length; i++)
-                     deleteStep(Search(removeStep[i]));
-            }else{
-                resetPositionIdStepMesh(step);
-            }
-        }
-        else{
-
-            for(i = 0; i < list.length; i++){
-
-                var children = list[i].children;
-
-                for(l = 0; l < children.length; l++){ 
-
-                    if(children[l].id[0] === step)
-                        children.splice(l, 1);
-                }
-            }
-
-            deleteStep(ORDER);
-        }
-
-        for(i = 0; i < tilesCalculatePositions.length; i++)
-            calculatePositionsSteps(tilesCalculatePositions[i]);
-
-        self.updateArrow();
-
-        orderPositionStep();
-
-        FOCUS.mesh.material.visible = true;
-
-        updateTextureParent();
-
-        function validateChildrenTiles(){
-
-            var children = list[ORDER].children;
-
-            var parent = searchParentStep(step);
-
-            if(parent){
-
-                var parentTile = list[parent - 1].tile;
-
-                for(i = 0; i < children.length; i++){
-
-                    var idTile = list[children[i].id[0] - 1].tile;
-
-                    if(parentTile === idTile){
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        function deleteStep(order){ // nuevo
-
-            removeMesh(list[order]);
-
-            self.deleteArrow();
-
-            list.splice(order, 1);
-        }
-
-        function removeMesh(data){
-
-            var mesh = data.mesh,
-                target = data.target,
-                tile = data.tile;
-
-            if(!tilesCalculatePositions.find(function(x){if(x === tile) return x;}))
-                tilesCalculatePositions.push(tile);
-
-            animate(mesh, target.hide, 2000, function(){ 
-                window.scene.remove(mesh);
-            });
-        }
-
-        function fillRemove(_order){
-
-            var order = Search(_order),
-                i = 0;
-
-            for(i = 0; i < list[order].children.length; i++){
-
-                var children = list[Search(list[order].children[i].id[0])].children;
-
-                removeStep.push(list[order].children[i].id[0]);
-
-                if(children.length > 0)
-                    fillRemove(list[order].children[i].id[0]);
-            }
-        }
-
-        function Search(order){
-
-            var i = 0;
-
-            for(i = 0; i < list.length; i++){
-
-                if(list[i].order[0] === order)
-                    return i;
-            }
-        }
-    }
-
-    this.updateArrow =  function(){
-
-        for (var i = 0; i < EDIT_STEPS.length; i++) {
-            
-            for (var j = 0; j < EDIT_STEPS[i].children.length; j++) {
-                
-                for (var k = 0; k < EDIT_STEPS.length; k++) {
-                    
-                    if(EDIT_STEPS[i].children[j].id[0] === EDIT_STEPS[k].order[0]){
-
-                        self.createLineStep(EDIT_STEPS[i].target.show, 
-                                            EDIT_STEPS[k].target.show,
-                                            EDIT_STEPS[i].order,
-                                            EDIT_STEPS[k].order,
-                                            EDIT_STEPS[i].tile,
-                                            EDIT_STEPS[k].tile, false);
-                    }
-                }
-            }
-        }
-    };
-
-    this.deleteArrow = function(){ // nuevo
-
-        var indice = [];
-
-        for(var j = 0; j < LIST_ARROWS.length; j++){
-
-            window.scene.remove(LIST_ARROWS[j].arrow);
-            window.scene.remove(LIST_ARROWS[j].meshPrimary);
-            window.scene.remove(LIST_ARROWS[j].meshSecondary);
-            window.scene.remove(LIST_ARROWS[j].vector1);
-            window.scene.remove(LIST_ARROWS[j].vector2);
-
-            indice.push(j);
-        }
-
-        indice.reverse();
-        for(var k = 0; k < indice.length; k++){
-            LIST_ARROWS.splice(indice[k], 1);
-        }
-    };
-
-    function updateTextureParent(){
-
-        for(var i = 0; i < EDIT_STEPS.length; i++){
-
-            var id = EDIT_STEPS[i].order[0];
-
-            var parent = searchParentStep(id);
-
-            var mesh = EDIT_STEPS[i].mesh;
-
-            mesh.material.map = changeTextureId(id, parent);
-
-            mesh.material.needsUpdate = true;
-        }
-    }
-
-    function createMeshFocus(){
-
-        if(!FOCUS.mesh){ 
-
-            var height = TILEHEIGHT / 9;
-            var width = TILEHEIGHT / 5;
-
-            var canvas = document.createElement('canvas');
-
-            var img = new Image();
-            
-            var texture = null;
-
-            canvas.height = 412;
-            canvas.width = 635;
-
-            var ctx = canvas.getContext('2d');
-
-            img.src = 'images/workflow/Boton2.png';
-
-            var mesh = new THREE.Mesh(
-                       new THREE.PlaneBufferGeometry(width, height),
-                       new THREE.MeshBasicMaterial({ 
-                            side: THREE.DoubleSide, 
-                            transparent: true, 
-                            map:null 
-                        }));
-
-            mesh.renderOrder = 2;
-
-            mesh.scale.set(1.4, 1.4, 1.4);
-
-            mesh.material.depthTest = false;
-
-            window.scene.add(mesh);
-
-            img.onload = function() { 
-
-                ctx.drawImage(img, 0, 0);
-
-                texture = new THREE.Texture(canvas);
-                texture.minFilter = THREE.NearestFilter;
-                texture.magFilter = THREE.LinearFilter;
-                texture.needsUpdate = true;  
-
-                mesh.material.map = texture;
-
-                mesh.material.needsUpdate = true;
-
-                FOCUS.mesh = mesh;
-            };
-        }
-    }
-
-    function transformData(to){
-
-        var json = [], i = 0, l = 0;
-
-        if(to === 'PREVIEW'){ 
-
-            PREVIEW_STEPS = [];
-
-            for(i = 0; i < EDIT_STEPS.length; i++){
-
-                var tile = null, platfrm = null, children = null, next = [];
-
-                tile = window.helper.getSpecificTile(EDIT_STEPS[i].tile).data;
-
-                platfrm = tile.platform || tile.superLayer;
-
-                children = EDIT_STEPS[i].children;
-
-                for(l = 0; l < children.length; l++){
-
-                    var object = {
-                        id : children[l].id[0] - 1,
-                        type: children[l].type
-                    };
-
-                    next.push(object);
-                }
-
-                var step = {
-                    id : i,
-                    title : EDIT_STEPS[i].title[0],
-                    desc : EDIT_STEPS[i].desc[0],
-                    type : "start",
-                    next : next,
-                    name : tile.name,
-                    layer : tile.layer,
-                    platfrm : platfrm
-                };
-
-                json.push(step);
-            }
-
-            if(json.length > 1){
-
-                for(i = 1; i < json.length; i++){
-
-                    if(i === (json.length - 1))
-                        json[i].type = 'end';
-                    else 
-                        json[i].type = 'activity';
-                }
-            }
-
-            PREVIEW_STEPS = json;
-        }
-        else{
-
-            EDIT_STEPS = [];
-
-            for(i = 0; i < PREVIEW_STEPS.length; i++){
-
-                var order = null, title = null, platform = null, layer = null, name = null,
-                    IDtile = null, parent = null, desc = null, id = null, typeCall = null;
-
-                order = PREVIEW_STEPS[i].id + 1;
-
-                title = PREVIEW_STEPS[i].title;
-
-                desc = PREVIEW_STEPS[i].desc;
-
-                platform = PREVIEW_STEPS[i].platfrm;
-
-                layer = PREVIEW_STEPS[i].layer;
-
-                name = PREVIEW_STEPS[i].name;
-
-                IDtile = getIdSpecificTile(name, platform, layer);
-
-                parent = searchParent(order - 1);
-
-                if(parent){
-                    id = parent.id + 1;
-                    typeCall = parent.typeCall;
-                }
-
-                var mesh = addIdStep(order, IDtile, id, typeCall);
-
-                EDIT_STEPS[order - 1].title[0] = title;
-
-                EDIT_STEPS[order - 1].desc[0] = desc;
-
-                FOCUS.data = mesh;
-            }
-        }
-
-        function searchParent(id){
-
-            var i, l;
-
-            for(i = 0; i < PREVIEW_STEPS.length; i++){
-
-                var next = PREVIEW_STEPS[i].next;
-
-                for(l = 0; l < next.length; l++){
-
-                    if(next[l].id === id){
-
-                        var obj = {
-                            id : PREVIEW_STEPS[i].id,
-                            typeCall : next[l].type
-                        };
-                        return obj;
-                    }    
-                }
-            }
-            return null;
-        }
-
-        function searchChildren(id, type){
-
-            var i, l;
-
-            for(i = 0; i < EDIT_STEPS.length; i++){
-
-                var children = EDIT_STEPS[i].children;
-
-                for(l = 0; l < children.length; l++){
-
-                    if(children[l].id[0] === id){
-
-                        EDIT_STEPS[i].children[l].type = type;
-                        return null;
-                    }    
-                }
-            }
-        }
-    }
-
-    function changeMode(mode){ 
-
-        var buttons = {
-
-            path : function(){ 
-                window.buttonsManager.createButtons('button-path', 'Edit Path', function(){
-                    changeMode('edit-path');}, null, null, "right");
-            },
-            steps : function(){
-                window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
-                    changeMode('edit-step');}, null, null, "left");
-            },
-            preview : function(){
-                window.buttonsManager.createButtons('button-preview', 'Workflow Preview', function(){
-                    changeMode('preview');}, null, null, "left");
-            },
-            save : function(){
-                window.buttonsManager.createButtons('button-save', 'Save', function(){
-                    self.save();}, null, null, "right");
-            }
-        };
-
-        if(!MODE().exit()){
-
-            window.buttonsManager.removeAllButtons(true);
-
-            window.dragManager.reset();
-
-            actualMode = mode;
-
-            MODE().enter();
-        }
-
-        function MODE(){
-
-            var actions = {}, enter = null, exit = null; 
-
-            switch(actualMode) {
-
-                case 'edit-step':
-                    enter = function() {
-
-                        window.dragManager.on();
-
-                        window.helper.hide('backButton', 0, true);
-
-                        window.fieldsEdit.hiddenStepsList(true);
-
-                        buttons.preview();
-
-                        buttons.path();
-
-                        window.actualView = false;
-
-                        displayField(false);
-
-                        window.tileManager.transform(false, 1000);
-
-                        window.signLayer.transformSignLayer();
-
-                        var newCenter = new THREE.Vector3(0, 0, 0);
-                        var transition = 1500;
-                        var z = camera.getMaxDistance() / 2;
-
-                        if(EDIT_STEPS.length > 0){
-
-                            updateStepList();
-
-                            window.dragManager.objects = [];
-                            
-                            for(var i = 0; i < EDIT_STEPS.length; i++){
-
-                                window.dragManager.objects.push(EDIT_STEPS[i].mesh);
-                            }
-
-                            newCenter = EDIT_STEPS[0].target.show.position;
-
-                            z = 500;
-                        }
-                        else{
-
-                            newCenter = window.viewManager.translateToSection('table', newCenter);
-                        }
-
-                        var action = function(tile){
-
-                            if(tile){ 
-
-                                var type = null;
-
-                                if(!tile.userData.type)
-                                    type = 'tile';
-                                else if(tile.userData.type === 'step')
-                                    type = 'step';
-
-                                switch(type) {
-                                    case "step":
-
-                                        var step = EDIT_STEPS[tile.userData.id[0] - 1];
-
-                                        updateTileIgnoredAdd();
-                                        
-                                        window.fieldsEdit.showModal(step);
-
-                                        var vector = window.helper.getSpecificTile(step.tile).mesh.position;
-
-                                        window.camera.move(vector.x, vector.y + 100, 500, 1000, true);
-
-                                        window.dragManager.functions.DROP.push(
-                                            function(SELECTED){
-                                                SELECTED = null;
-                                                window.camera.disable();
-                                        });
-                                        break;                
-                                }
-                            }
-                            else{
-                                window.dragManager.functions.DROP = [];
-                                window.fieldsEdit.hiddenModal();
-                            }
-                        };
-
-                        window.dragManager.functions.CLICK.push(action);
-
-                        window.camera.move(newCenter.x, newCenter.y, z, transition, true);
-                        
-                        window.headers.transformTable(transition);
-                    };             
-                    
-                    exit = function() {
-
-                        window.fieldsEdit.hiddenModal();
-    
-                        if(mode === 'preview'){
-
-                            var step = validateFieldSteps();
-
-                            if(step){
-
-                                updateTileIgnoredAdd();
-                                            
-                                window.fieldsEdit.showModal(step);
-
-                                var vector = window.helper.getSpecificTile(step.tile).mesh.position;
-
-                                window.camera.move(vector.x, vector.y + 100, 500, 1000, true);
-
-                                window.dragManager.functions.DROP.push(
-                                    function(SELECTED){
-                                        SELECTED = null;
-                                        window.camera.disable();
-                                });
-
-                                return true;
-                            }
-                            else{
-
-                                var focus = FOCUS.mesh;
-
-                                focus.visible = false;
-
-                                transformData('PREVIEW');
-    
-                                cleanEditStep();
-    
-                                window.dragManager.off();
-
-                                setTimeout(function() { focus.visible = true; }, 1000);
-                            }
-                        }
-                        
-                    };
-
-                    break;   
-                case 'edit-path':
-                    enter = function() {
-
-                        buttons.steps();
-
-                        window.dragManager.styleMouse.CROSS = 'copy';
-
-                        if(EDIT_STEPS.length > 0){
-                            updateTileIgnoredAdd();
-                        }
-                        else{
-                            window.dragManager.objects = getAllTiles();
-                        }
-
-                        var clickAction = function(tile){
-
-                            if(tile){
-
-                                var type = null;
-
-                                if(!tile.userData.type)
-                                    type = 'tile';
-                                else 
-                                    type = tile.userData.type;
-
-                                switch(type) {
-                                    case "tile":
-                                        var parent = null;
-
-                                        if(FOCUS.data)
-                                            parent = FOCUS.data.userData.id[0];
-
-                                        var mesh = addIdStep(EDIT_STEPS.length + 1, tile.userData.id, parent);
-
-                                        FOCUS.data = mesh;
-                                        break;
-                                    case "step":
-
-                                        FOCUS.data = EDIT_STEPS[tile.userData.id[0] - 1].mesh;
-
-                                        updateTileIgnoredAdd();
-
-                                        createArrowTest(tile.userData.id[0]);
-
-                                        window.dragManager.objectsCollision = getAllTiles(tile.userData.tile);
-                                        
-                                        var drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
-
-                                            if(SELECTED){
-
-                                                hideArrowConfig(true, type, tile.userData.originOrder, tile.userData.targetOrder);
-
-                                                var orderFocus = FOCUS.data.userData.id[0];
-
-                                                if(COLLISION){
-
-                                                    if(!validateCollisionTileSteps(orderFocus, COLLISION.userData.id))
-                                                        resetPositionIdStepMesh(orderFocus);
-                                                    else
-                                                        changeTileStep(orderFocus, COLLISION.userData.id);
-                                                }
-                                                else{
-
-                                                    if(calculateAreaTile(SELECTED.position)){
-                                                        resetPositionIdStepMesh(orderFocus);
-                                                    }
-                                                    else{
-                                                        deleteSteps(orderFocus);
-                                                    }
-                                                }
-                                            }
-
-                                            window.dragManager.objectsCollision = [];
-                                            window.dragManager.functions.DROP = [];
-                                        };
-
-                                        window.dragManager.functions.DROP = [drop];
-
-                                        break;
-                                    case "changeStep":
-
-                                        hideArrowConfig(false, type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
-
-                                        window.dragManager.objectsCollision = getAllTiles(tile.userData.tile);
-                                        
-                                        var drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
-
-                                            hideArrowConfig(true, type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
-
-                                            if(SELECTED){
-
-                                                var origen = SELECTED.userData.originOrder[0];
-
-                                                var target = SELECTED.userData.targetOrder[0];
-
-                                                if(COLLISION){
-
-                                                    if(!validateCollisionTile(origen, COLLISION.userData.id) || !validateCollisionTile(target, COLLISION.userData.id))
-                                                        resetPositionStepMeshButtons(SELECTED, type, origen, target);
-                                                    else
-                                                        addIdStepDrag(origen, target, COLLISION.userData.id);
-                                                }
-                                                else{
-                                                    resetPositionStepMeshButtons(SELECTED, type, origen, target);
-                                                }
-                                            }
-
-                                            window.dragManager.objectsCollision = [];
-                                            window.dragManager.functions.DROP = [];
-                                        };
-
-                                        window.dragManager.functions.DROP = [drop];
-                                        break;
-                                    case "fork":
-                                        window.dragManager.objectsCollision = getAllTiles(tile.userData.tile);
-                                        hideArrowConfig(false, type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
-                                        var drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
-
-                                            hideArrowConfig(true, type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
-
-                                            if(SELECTED){
-
-                                                var origen = SELECTED.userData.originOrder[0];
-
-                                                var target = SELECTED.userData.targetOrder[0];
-
-                                                resetPositionStepMeshButtons(SELECTED, type, origen, target);
-
-                                                if(COLLISION){                                                 
-
-                                                    if(validateCollisionTile(origen, COLLISION.userData.id)){
-
-                                                        parent = origen;
-
-                                                        var mesh = addIdStep(EDIT_STEPS.length + 1, COLLISION.userData.id, parent);
-
-                                                        FOCUS.data = mesh;
-                                                    }
-                                                }
-                                            }
-
-                                            window.dragManager.objectsCollision = [];
-                                            window.dragManager.functions.DROP = [];
-                                        };
-
-                                        window.dragManager.functions.DROP = [drop];
-                                        break;
-                                }
-                            }
-                        };
-
-                        window.dragManager.functions.CLICK.push(clickAction);
-
-                        var moveAction = function(mesh, position){ 
-
-                            var type = null;
-
-                            if(!mesh.userData.type)
-                                type = 'tile';
-                            else 
-                                type = mesh.userData.type;
-
-                            if(type === 'step'){
-                                mesh.position.copy(position);
-                                FOCUS.mesh.position.copy(position);
-                                updatePositionArrowTest(position);
-                            }
-                            else if(type === 'changeStep' || type === 'fork'){
-                                mesh.position.copy(position);
-                                updatePositionArrowTest(position);
-                            }
-                        }; 
-
-                        window.dragManager.functions.MOVE.push(moveAction);
-                    };
-                    
-                    exit = function() {
-                        
-                    };
-
-                    break; 
-                case 'preview':
-                    enter = function() {
-
-                        window.helper.show('backButton', 0);
-
-                        buttons.save();
-
-                        window.fieldsEdit.hiddenStepsList(false);
-
-                        displayField(true);
-
-                        self.changeTexture();
-
-                        window.actualView = 'workflows';
-
-                        var mesh = window.fieldsEdit.objects.tile.mesh;
-
-                        animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
-
-                            window.camera.setFocus(mesh, new THREE.Vector4(0, 0, 950, 1), 2000);
-
-                            self.fillStep();
-
-                            window.headers.transformWorkFlow(2000);
-
-                            buttons.steps();
-
-                        });
-                    };             
-                    
-                    exit = function() {
-
-                        if(mode === 'edit-step'){
-                            transformData();
-                        }
-                        
-                    };
-
-                    break; 
-                case 'repared':
-                    enter = function() {
-
-                        window.dragManager.on();
-
-                        window.helper.hide('backButton', 0, true);
-
-                        window.actualView = false;
-
-                        displayField(false);
-
-                        window.tileManager.transform(false, 1500);
-
-                        window.signLayer.transformSignLayer();
-
-                        var newCenter = new THREE.Vector3(0, 0, 0);
-                        var transition = 1500;
-                        var z = camera.getMaxDistance() / 2;  
-
-                        newCenter = window.viewManager.translateToSection('table', newCenter);
-
-                        window.camera.move(newCenter.x, newCenter.y, z, transition, true);
-                        
-                        window.headers.transformTable(transition);
-
-                        createButtonsRepared();
-                    };
-
-                    exit = function(){
-
-                    };
-            } 
-
-            actions = {
-                enter : enter || function(){},
-                exit : exit || function(){}
-            };
-
-            return actions;
-        }
-    }
-
-    function createButtonsRepared(){
-
-        for(var i = 0; i < REPARED_STEPS.length; i++){
-
-            var step = window.helper.clone(REPARED_STEPS[i]);
-
-            var id = step.id + 1;
-
-            window.buttonsManager.createButtons('button-step-' + id, 'Step ('+id+')', function(){
-                
-                window.dragManager.objects = dragModeRepared(step);
-
-            }, null, null, "left");
-        }
-
-        function dragModeRepared(step){
-
-            var steps = window.fieldsEdit.actualFlow.steps.slice();
-
-            var parent = searchStepParent();
-
-            var children = validateChildrenTiles();
-
-            var array = [];
-
-            for(var i = 0; i < window.tilesQtty.length; i++){
-
-                if(window.tilesQtty[i] !== parent.element && !children.find(function(x){ if(x.element === window.tilesQtty[i]) return x;})){
-
-                    var tile = window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
-
-                    array.push(tile);
-                }
-            }
-
-            return array;
-
-            function searchStepParent(){
-
-                for(var i = 0; i < steps.length; i++){
-
-                    var next = steps[i].next;
-
-                    for(var l = 0; l < next.length; l++){
-
-                        var _id = parseInt(next[l].id);
-
-                        if(_id === step.id){
-                            return steps[i];
-                        }
-                    }
-                }
-
-                return false;
-            }
-
-            function validateChildrenTiles(){
-
-                var _array = [];
-
-                var children = step.next;
-
-                for(var i = 0; i < steps.length; i++){
-
-                    if(children.find(function(x){ if(x.id === steps[i].id) return x;}))
-                        _array.push(steps[i]);
-                }
-
-                return _array;
-            }
-        }
-    }
-
-    function validateFieldSteps(){
-
-        return EDIT_STEPS.find(function(x){ if(x.title[0] === '') return x; });   
-    }
-
-    function changeTileStep(orderFocus, newTile){
-
-        var step = EDIT_STEPS[orderFocus - 1];
-
-        var focus = FOCUS.mesh;
-
-        focus.visible = false;
-
-        var oldTile = step.tile;
-
-        var difference = TILEWIDTH / 2;
-
-        var tile = window.helper.getSpecificTile(newTile).target.show;
-
-        var target = window.helper.fillTarget(tile.position.x - difference, tile.position.y, tile.position.z + 1, 'table');
-
-        step.target = target;
-
-        step.tile = newTile;
-
-        step.mesh.userData.tile = newTile;
-
-        calculatePositionsSteps(newTile);
-
-        calculatePositionsSteps(oldTile);
-
-        setTimeout(function() { focus.visible = true; }, 1500);
-
-        updateArrowStepAfterChangeTile();
-    }
-
-    function updateArrowStepAfterChangeTile(){ 
-
-        self.deleteArrow();
-        self.updateArrow();  
-    }
-
-    function resetPositionIdStepMesh(orderFocus){
-
-        var focus = FOCUS.mesh;
-
-        var step = EDIT_STEPS[orderFocus - 1];
-
-        focus.visible = false;
-
-        var mesh = step.mesh;
-
-        var xInit = mesh.position.x - 0.5;
-
-        var xEnd = mesh.position.x + 0.5;
-
-        var target = step.target.show;
-
-        if(target.position.x >= xInit && target.position.x <= xEnd)
-            focus.visible = true;
-
-        animate(mesh, target, 300, function(){
-            FOCUS.mesh.position.copy(mesh.position);
-            focus.visible = true;
-        });
-    }
-
-    function resetPositionStepMeshButtons(mesh, type, IdOrigen, IdTarget){
-
-        var object = LIST_ARROWS.find(function(x){
-            if(x.originID[0] === IdOrigen && x.targetID[0] === IdTarget)
-                return x;
-        });
-
-        var target = null;
-
-        if(type === 'changeStep')
-            target = object.meshPrimaryTarget.show;
-        else
-            target = object.meshSecondaryTarget.show;
-
-        animate(mesh, target, 300);
-    }
-
-    function validateCollisionTileSteps(orderStepFocus, tileValidate){
-
-        var validate = true,
-            stepFocus = EDIT_STEPS[orderStepFocus - 1],
-            children = stepFocus.children,
-            parent = searchParentStep(orderStepFocus);
-
-        if(parent){
-            if(tileValidate === EDIT_STEPS[parent - 1].tile)
-                validate = false;
-        }
-
-        if(children.length > 0){
-
-            for(var i = 0; i < children.length; i++){
-
-                var order = children[i].id[0];
-
-                if(tileValidate === EDIT_STEPS[order - 1].tile)
-                    validate = false;
-            }
-        }
-
-        return validate;
-    }
-
-    function validateCollisionTile(order, tileValidate){
-
-        var validate = true,
-            stepFocus = EDIT_STEPS[order - 1];
-
-        if(stepFocus.tile === tileValidate)
-            validate = false;
-
-        return validate;
-    }
-
-    function searchParentStep(order){
-
-        var i, l;
-
-        for(i = 0; i < EDIT_STEPS.length; i++){
-
-            var children = EDIT_STEPS[i].children;
-
-            for(l = 0; l < children.length; l++){
-
-                if(children[l].id[0] === order)
-                    return EDIT_STEPS[i].order[0];
-            }
-        }
-
-        return false;
-    }
-
-    function getAllTiles(idIgnore){
-
-        var array = [];
-
-        for(var t = 0; t < window.tilesQtty.length; t++){
-
-            if(window.tilesQtty[t] !== idIgnore){
-
-                var tile = window.helper.getSpecificTile(window.tilesQtty[t]).mesh;
-
-                array.push(tile);
-            }
-        }
-
-        return array;
-    }
-
-    function calculateAreaTile(position){
-
-        var tile = window.helper.getSpecificTile(FOCUS.data.userData.tile).target.show;
-
-        var x = position.x,
-            y = position.y,
-            xInit = tile.position.x - (TILEWIDTH / 2) - window.TILE_SPACING,
-            yInit = tile.position.y + (TILEHEIGHT / 2),
-            xEnd = xInit + TILEWIDTH,
-            yEnd = yInit - TILEHEIGHT;
-
-        if((x >= xInit && x <= xEnd) && (y <= yInit && y >= yEnd))
-            return true;
-        else
-            return false;
-    }
-
-    function displayField(visible){
-
-        if(visible)
-            window.helper.show("workflow-header");
-        else
-            window.helper.hide("workflow-header", 1000, true);
-    }
-
-    function newOnKeyDown(event){
-
-        if(event.keyCode === 27) {
-
-            window.camera.offFocus();
-
-            window.actualView = 'workflows';
-
-            window.camera.onKeyDown(event);
-        }
-    }
-
-    function updateStepList(){
-
-        var _obj = EDIT_STEPS;
-        var div = document.getElementById("steps-list");
-        var con = document.getElementById("steps-list-content");
-        
-        con.innerHTML = "";
-
-        for(var i = 0; i < _obj.length; i++) {
-
-            var id = i + 1;
-
-            div.addStep(id, _obj[i]);
-        }
-    }
-
-    function cleanEditStep(){
-
-        var target = window.helper.fillTarget(0, 0, 0, 'table');
-
-        for(var i = 0; i < EDIT_STEPS.length; i++){
-
-            var mesh = EDIT_STEPS[i].mesh;
-
-            animate(mesh, target.hide, 2000, function(){
-                window.scene.remove(mesh);
-            }); 
-        }
-
-        FOCUS.data = null;
-
-        EDIT_STEPS = [];
-    } 
-
-    function cleanButtons(){
-
-        window.buttonsManager.deleteButton('button-save');
-        window.buttonsManager.deleteButton('button-preview');
-        window.buttonsManager.deleteButton('button-path');
-        window.buttonsManager.deleteButton('button-Steps');   
-    }
-
-    this.getFocus = function(){
-        return FOCUS;
-    };
-
 }

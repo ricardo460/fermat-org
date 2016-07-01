@@ -15,9 +15,9 @@ function API() {
 
         var param;
 
-        window.session.useTestData();
+        //window.session.useTestData();
 
-        if(window.session.getIsLogin() && !window.disconnected){
+        if(window.session.getIsLogin()){
 
             var usr = window.helper.clone(window.session.getUserLogin());
 
@@ -62,19 +62,13 @@ function API() {
         }
         else{
 
-            if(!window.disconnected)
-                url = self.getAPIUrl("comps");
-            else
-                url = 'json/testData/comps.json';
+            url = self.getAPIUrl("comps");
 
             callAjax('', '',function(route, res){
 
                 list = res;
 
-                if(!window.disconnected)
-                    url = self.getAPIUrl("user");
-                else
-                    url = 'json/testData/devs.json';
+                url = self.getAPIUrl("user");
 
                 callAjax('', '',function(route, res){
 
@@ -88,13 +82,8 @@ function API() {
 
         function callAjax(route, port, callback){
 
-            var URL = url + route + port;
-
-            if(window.disconnected)
-                URL = url;
-
             $.ajax({
-                url: URL,
+                url: url + route + port,
                 method: "GET"
             }).success (
                 function (res) {

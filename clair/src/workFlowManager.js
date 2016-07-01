@@ -131,13 +131,7 @@ function WorkFlowManager(){
             layer : element.layer,
             component : element.name
         };
-
-        var url = '';
-
-        if(!window.disconnected)
-            url = window.API.getAPIUrl("procs", params);
-        else
-            url = 'json/testData/procs.json';
+        var url = window.API.getAPIUrl("procs", params);
 
         $.ajax({
             url: url,
@@ -195,12 +189,7 @@ function WorkFlowManager(){
      */
     this.getHeaderFLow = function() {
 
-        var url = '';
-
-        if(!window.disconnected)
-            url = window.API.getAPIUrl("procs");
-        else
-            url = 'json/testData/procs.json';
+        var url = window.API.getAPIUrl("procs");
 
         $.ajax({
             url: url,

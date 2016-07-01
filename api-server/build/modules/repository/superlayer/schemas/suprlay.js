@@ -22,9 +22,9 @@ var suprlaySchema = mongoose.Schema({
     },
     deps: [{
         // code reference
-        type: mongoose.Schema.Types.ObjectId,
-        //uppercase: true,
-        //trim: true,
+        type: String,
+        uppercase: true,
+        trim: true,
         required: true
     }],
     order: {

@@ -884,13 +884,6 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "deps",
-            "description": "<p>Platform dependencies.</p>"
-          },
-          {
-            "group": "Parameter",
             "type": "Number",
             "optional": false,
             "field": "order",
@@ -1000,13 +993,6 @@ define({ "api": [
             "optional": false,
             "field": "logo",
             "description": "<p>Platform logo.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "deps",
-            "description": "<p>Platform dependencies.</p>"
           },
           {
             "group": "Parameter",
@@ -1381,13 +1367,6 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "deps",
-            "description": "<p>Superlay dependencies.</p>"
-          },
-          {
-            "group": "Parameter",
             "type": "Number",
             "optional": false,
             "field": "order",
@@ -1499,13 +1478,6 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "deps",
-            "description": "<p>Superlay dependencies.</p>"
-          },
-          {
-            "group": "Parameter",
             "type": "Number",
             "optional": false,
             "field": "order",
@@ -1517,75 +1489,6 @@ define({ "api": [
     "description": "<p>Update super layer from architecture of fermat.</p>",
     "filename": "routes/v1/repo/suprlay/index.js",
     "groupTitle": "Repo_SuprLay"
-  },
-  {
-    "type": "post",
-    "url": "/v1/svg/upload/:type/:code",
-    "title": "upload svg file",
-    "name": "Upload",
-    "version": "1.0.0",
-    "group": "SVG",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "type",
-            "description": "<p>Image type (headers, group, type).</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "File",
-            "optional": false,
-            "field": "svg",
-            "description": "<p>SVG file to upload.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "code",
-            "description": "<p>Image code.</p>"
-          }
-        ]
-      }
-    },
-    "description": "<p>Converts svg to png file and uploads it to the server via ftp.</p>",
-    "filename": "routes/v1/svg/index.js",
-    "groupTitle": "SVG"
-  },
-  {
-    "type": "post",
-    "url": "/v1/user/assignTypeUser",
-    "title": "assign user type",
-    "name": "AssignTypeUser",
-    "version": "1.0.0",
-    "group": "User",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "user_id",
-            "description": "<p>User id.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "type",
-            "description": "<p>User type (Ex. Developer, Designer).</p>"
-          }
-        ]
-      }
-    },
-    "description": "<p>assign user type.</p>",
-    "filename": "routes/v1/user/index.js",
-    "groupTitle": "User"
   },
   {
     "type": "post",
@@ -1627,18 +1530,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/v1/user/users",
-    "title": "get user list",
-    "name": "GetUsrs",
-    "version": "1.0.0",
-    "group": "User",
-    "description": "<p>Get users list.</p>",
-    "filename": "routes/v1/user/index.js",
-    "groupTitle": "User"
-  },
-  {
-    "type": "post",
-    "url": "/v1/user",
+    "url": "/v1/user/:usrnm",
     "title": "get user by username",
     "name": "GetUsrsByUsrnm",
     "version": "1.0.0",

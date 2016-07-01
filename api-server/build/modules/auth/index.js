@@ -298,7 +298,7 @@ exports.checkUsrPermEdit = function(usr_id, element, action, callback) {
 				var binry = octToBin[digit];
 				if (binry.charAt(idx_action) === '1') return callback(null, true);
 				else return callback(null, false);
-			} else return callback("The user is not in the database", null);
+			}
 		});
 	} catch (err) {
 		return callback(err, null);

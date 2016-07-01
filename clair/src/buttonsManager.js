@@ -104,17 +104,16 @@ function ButtonsManager() {
      * @param {String}  id  Button ID.
      * @param {Function} callback Function to call when finished.    
      */
-    this.deleteButton = function(id, callback){
+    this.deleteButton = function(id, _side, callback){
 
-        for(var side in self.objects){
-            
-            for(var i = 0; i < self.objects[side].buttons.length; i++){
+        var side = _side || 'left';
 
-                if(self.objects[side].buttons[i].id === id){
-                    self.objects[side].buttons.splice(i,1);
-                    window.helper.hide($('#'+id), 1000, callback);
-                    
-                }
+        for(var i = 0; i < self.objects[side].buttons.length; i++){
+
+            if(self.objects[side].buttons[i].id === id){
+                self.objects[side].buttons.splice(i,1);
+                window.helper.hide($('#'+id), 1000, callback);
+                
             }
         }
     };
@@ -123,7 +122,7 @@ function ButtonsManager() {
      * @author Ricardo Delgado
      * Removes all created buttons. 
      */
-    this.removeAllButtons = function(action){
+    this.removeAllButtons = function(){
 
         if(self.objects.left.buttons.length !== 0 || self.objects.right.buttons.length !== 0){
 
@@ -137,12 +136,10 @@ function ButtonsManager() {
             if($('#'+actualButton.id) != null) 
                 window.helper.hide($('#'+actualButton.id), 1000); 
             
-                self.removeAllButtons(action);
+                self.removeAllButtons();
         }
-        else{
-            if(!action)
-                window.fieldsEdit.removeAllFields();
-        }
+        else
+            window.fieldsEdit.removeAllFields();
     };
 
     function calculatePosition(sucesorButton, side, x){

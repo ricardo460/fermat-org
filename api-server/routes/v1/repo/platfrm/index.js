@@ -70,7 +70,6 @@ var release = function(req) {
  * @apiParam {String} code Platform code.
  * @apiParam {String} name Platform name.
  * @apiParam {String} logo Platform logo.
- * @apiParam {String} deps Platform dependencies.
  * @apiParam {Number} order Indicates the position where the platform this with respect to other.
  * @apiGroup Repo-Platform
  * @apiDescription Add a platform to the architecture of fermat.
@@ -86,7 +85,6 @@ router.post('/', function(req, res, next) {
 					if (!security.isValidData(req.body.code) || //
 						!security.isValidData(req.body.name) ||
 						!security.ifExistIsValidData(req.body.logo) ||
-						!security.isValidDeps(req.body.deps) ||
 						!security.ifExistIsValidData(req.body.order)) {
 						res.status(412).send({
 							"message": "missing or invalid data"
@@ -94,9 +92,9 @@ router.post('/', function(req, res, next) {
 					} else {
 						repMod.addPlatform(req, function(error, result) {
 							if (error) {
-								res.status(403).send(error);
+								res.status(200).send(error);
 							} else {
-								res.status(200).send(result);
+								res.status(201).send(result);
 							}
 						});
 					}
@@ -173,7 +171,6 @@ router.get('/:platfrm_id', function(req, res, next) {
  * @apiParam {String} code Platform code.
  * @apiParam {String} name Platform name.
  * @apiParam {String} logo Platform logo.
- * @apiParam {String} deps Platform dependencies.
  * @apiParam {Number} order Indicates the position where the platform this with respect to other.
  * @apiDescription Update platform from the architecture of fermat.
  */
@@ -188,7 +185,6 @@ router.put('/:platfrm_id', function(req, res, next) {
 					if (!security.isValidData(req.params.platfrm_id) ||
 						!security.ifExistIsValidData(req.body.name) || //
 						!security.ifExistIsValidData(req.body.logo) || //
-						!security.isValidDeps(req.body.deps) ||
 						!security.ifExistIsValidData(req.body.order)) {
 						res.status(412).send({
 							"message": "missing or invalid data"

@@ -356,13 +356,13 @@ function Workflow(flow) {
                 used[node.element] = true;
 
                 new TWEEN.Tween(tile.position)
-                .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 4000)
-                .easing(TWEEN.Easing.Exponential.InOut)
+                .to({x : tilePosition.x, y : tilePosition.y, z : tilePosition.z}, 7000)
+                .easing(TWEEN.Easing.Cubic.Out)
                 .start();
 
                 new TWEEN.Tween(tile.rotation)
-                .to({x: 0, y: 0, z: 0}, 4000)
-                .easing(TWEEN.Easing.Exponential.InOut)
+                .to({x: 0, y: 0, z: 0}, 7000)
+                .easing(TWEEN.Easing.Cubic.Out)
                 .start();
             }
 

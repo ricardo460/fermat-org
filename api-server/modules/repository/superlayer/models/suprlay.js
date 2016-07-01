@@ -18,7 +18,7 @@ function SuprlayMdl(code, name, logo, deps, order) {
     this.code = code;
     this.name = name;
     this.logo = logo;
-    this.deps = deps;
+    this.deps = [];
     this.order = order;
     this.upd_at = new mongoose.Types.ObjectId();
 }

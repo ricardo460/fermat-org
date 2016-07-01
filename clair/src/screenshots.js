@@ -24,10 +24,8 @@ function ScreenshotsAndroid() {
     var action = { state : false, mesh : null };
 
 	var onClick = function(target) {
-		if(actualView === "table"){ 
-			change(target.userData.id);
-			window.buttonsManager.removeAllButtons();
-		}
+		change(target.userData.id);
+		window.buttonsManager.removeAllButtons();
 	};
 
 	this.getScreenshots = function(){
@@ -162,39 +160,33 @@ function ScreenshotsAndroid() {
 
 	        		for(var _wallet in json[_group][_layer]){
 
-	        			if(window.TABLE[_group]){
+        				for(var i = 0; i < window.TABLE[_group].layers[_layer].objects.length; i++){
 
-	        				if(window.TABLE[_group].layers[_layer]){
+        					var id = _group + "_" + _layer + "_" + i;
+                            
+                            var tile = window.helper.getSpecificTile(id).data;        
 
-		        				for(var i = 0; i < window.TABLE[_group].layers[_layer].objects.length; i++){
+	        				if(tile.type === "Plugin" || tile.type === "Android"){ 
 
-		        					var id = _group + "_" + _layer + "_" + i;
-		                            
-		                            var tile = window.helper.getSpecificTile(id).data;        
+		        				if(tile.name === _wallet){
+		        					
+		        					var name = json[_group][_layer][_wallet].name,
+		        						position = window.helper.getSpecificTile(id).target.show.position,
+		        						_id = _group + "_" + _layer + "_" + name,
+		        						show = false,
+		        						screenshots = {};
 
-			        				if(tile.type === "Plugin" || tile.type === "Android"){ 
+		        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
+		        						show = true;
 
-				        				if(tile.name === _wallet){
-				        					
-				        					var name = json[_group][_layer][_wallet].name,
-				        						position = window.helper.getSpecificTile(id).target.show.position,
-				        						_id = _group + "_" + _layer + "_" + name,
-				        						show = false,
-				        						screenshots = {};
+	        						for(var _screen in json[_group][_layer][_wallet].screenshots){
+										screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
+									}
 
-				        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
-				        						show = true;
-
-			        						for(var _screen in json[_group][_layer][_wallet].screenshots){
-												screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
-											}
-
-											fillScreenshots(id, _id, position, name, show, screenshots);
-				        				}
-				        			}
-			        			}
-			        		}
-		        		}
+									fillScreenshots(id, _id, position, name, show, screenshots);
+		        				}
+		        			}
+	        			}
 	        		}
 	        	}
 	        }

@@ -7,23 +7,9 @@ var map,
         NETWORK_CLIENT : []
     },
     infoWindow = null,
-    actorTypes = {},
-    lines = [];
+    actorTypes = {};
 
 $(document).ready(main);
-
-function checkEdges() {
-    var markers = markClusterer.getMarkers();
-    
-    for(var i = 0; i < lines.length; i++) {
-        if(markers.indexOf(lines[i].client) === -1 || markers.indexOf(lines[i].server) === -1) {
-            lines[i].line.setMap(null);
-        }
-        else {
-            lines[i].line.setMap(map);
-        }
-    }
-}
 
 /**
  * Draws the control panel
@@ -69,8 +55,8 @@ function createControlPanel() {
     var options = "<table class='filter'>";
     
     options += "<tr>";
-    options += createFilter('NETWORK_NODE', 'Nodes');
-    options += createFilter('NETWORK_CLIENT', 'Devices');
+    options += createFilter('NETWORK_NODE', 'Network Node');
+    options += createFilter('NETWORK_CLIENT', 'Network Client');
     options += "</tr>";
     
     var pair = false;
@@ -80,7 +66,7 @@ function createControlPanel() {
         
         if(!pair) options += "<tr>";
         
-        options += createFilter(actor.name, actor.label);
+        options += createFilter(actor, window.helper.fromMACRO_CASE(actor));
         
         if(pair) options += "</tr>";
         
@@ -116,12 +102,12 @@ function createGraphic(data) {
     container.innerHTML = "";
     
     groups.add({id : 0, content: "Nodes"});
-    groups.add({id : 1, content: "Devices"});
+    groups.add({id : 1, content: "Clients"});
     
     for(var i = 0; i < data.length; i++) {
         var element = data[i];
         items.push({x: new Date(element.time), y: element.servers, group: 0});
-        items.push({x: new Date(element.time), y: element.clients, group: 1});
+        items.push({x: new Date(element.time), y: element.NETWORK_CLIENT, group: 1});
     }
     
     var dataSet = new vis.DataSet(items);
@@ -202,8 +188,8 @@ function createActors(clients) {
                 if(comp.location) {
                     
                     var actorType = ((comp.networkServiceType !== "UNDEFINED") ? comp.networkServiceType : comp.platformComponentType) || "UNDEFINED";
-                    var actorHasMarker = searchActor(actorType) != -1;
-                    var title = (actorHasMarker) ? actorTypes[searchActor(actorType)].label : window.helper.fromMACRO_CASE(actorType);
+                    var title = window.helper.fromMACRO_CASE(actorType);
+                    var actorHasMarker = actorTypes.indexOf(actorType) != -1;
                     var url = "img/markers/";
                     
                     if(actorHasMarker) {
@@ -215,10 +201,10 @@ function createActors(clients) {
 						var marker = new google.maps.Marker({
 							title : title,
 							position : randomizeLocation(comp.location),
+							//position : { lat : comp.location.latitude, lng : comp.location.longitude },
 							icon : {
 								url : url,
-								scaledSize: new google.maps.Size(50, 50),
-                                anchor: new google.maps.Point(25,25)
+								scaledSize: new google.maps.Size(50, 50)
 							}
 						});
 						
@@ -269,8 +255,7 @@ function createMarkers(list, title) {
                 position : {lat : node.extra.location.latitude, lng : node.extra.location.longitude},
                 icon : {
                     url : "img/markers/" + url,
-                    scaledSize: new google.maps.Size(50, 50),
-                    anchor: new google.maps.Point(25,25)
+                    scaledSize: new google.maps.Size(50, 50)
                 },
             });
             
@@ -300,10 +285,10 @@ function drawDetails(node) {
     var content = "";
     var details = null;
     
-    content += "<div id='nsWindow' class='info-window'>";
+    content += "<div class='info-window'>";
     
     if(node.marker.title === "Node") {
-        content += "<strong>IP:</strong> " + node.extra.location.ip + "<br/>" +
+        content = "<strong>IP:</strong> " + node.extra.location.ip + "<br/>" +
         "<strong>Clients:</strong> " + node.extra.current.registeredClientConnection + "<br/><br/>";
         
         details = node.extra.current.registeredNetworkServiceDetail;
@@ -321,7 +306,7 @@ function drawDetails(node) {
         
         setClientsFocus(node);
     }
-    else if(node.marker.title === "Device") {
+    else if(node.marker.title === "Client") {
         
         if(node.extra.location.ip)
             content += "<strong>IP:</strong> " + node.extra.location.ip + "<br/>";
@@ -340,7 +325,7 @@ function drawDetails(node) {
         
         setServersFocus(node);
     }
-    else if(searchActor(node.marker.title) != -1) {
+    else if(actorTypes.indexOf(window.helper.toMACRO_CASE(node.marker.title)) != -1) {
         content += "<strong>" + node.marker.title + "</strong><br/>";
         
         if(node.extraData) {
@@ -350,7 +335,7 @@ function drawDetails(node) {
         }
     }
     else {
-        content += "<strong>" + node.marker.title + "</strong><br>No details available";
+        content = "<strong>" + node.marker.title + "</strong><br>No details available";
     }
     
     content += "</div>";
@@ -358,8 +343,6 @@ function drawDetails(node) {
     infoWindow = new google.maps.InfoWindow({
         content : content
     });
-    //infoWindow.setCloseSrc("img/close_if.png");
-    //$("#nsWindow").parent().parent().height()
     infoWindow.addListener('closeclick', unSetAllFocus);
     
     infoWindow.open(map, node.marker);
@@ -387,7 +370,7 @@ function drawMap() {
         success: function(list) {
             window.actorTypes = list.clients.actors;
             for(var i = 0; i < actorTypes.length; i++) {
-                elements[actorTypes[i].name] = [];
+                elements[actorTypes[i]] = [];
             }
             getNodes();
         },
@@ -407,7 +390,7 @@ function drawMap() {
 function getClients(nodeList) {
     
     var success = function(list) {
-        window.elements.NETWORK_CLIENT = createMarkers(list, "Device");
+        window.elements.NETWORK_CLIENT = createMarkers(list, "Client");
         createActors(list);
     };
     var error = function(request, error) {
@@ -445,7 +428,6 @@ function getNodes() {
         success : function(list) {
             window.elements.NETWORK_NODE = createMarkers(list, "Node");
             getClients(list);
-            toggleFilter('ALL');
         },
         error : function(request, error) {
             window.alert("Could not retrieve the data, see console for details.");
@@ -469,60 +451,19 @@ function randomizeLocation(location) {
     };
 }
 
-function searchActor(actorType) {
-    for(var p = 0; p < actorTypes.length; p++) {
-        if(actorTypes[p].name === actorType || actorTypes[p].label === actorType) {
-            return p;
-        }
-    }
-
-    return -1;
-}
-
 function setClientsFocus(node) {
     for(var i = 0; i < elements.NETWORK_CLIENT.length; i++) {
         var client = elements.NETWORK_CLIENT[i];
         
-        //if(client.marker && client._serv_id !== node._id) client.marker.setOpacity(0.5);
-        if(client.marker && client._serv_id === node._id) {
-            connectMarkers(client, node);
-        }
-        
+        if(client.marker && client._serv_id !== node._id) client.marker.setOpacity(0.5);
     }
-}
-
-function connectMarkers(client, server) {
-    
-    var clientPos = {
-        lat : client.marker.position.lat() + 0,
-        lng : client.marker.position.lng()
-    };
-    var serverPos = {
-        lat : server.marker.position.lat() + 0,
-        lng : server.marker.position.lng()
-    };
-    
-    var line = new google.maps.Polyline({
-        
-        path : [clientPos, serverPos],
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.7,
-        strokeWeight: 3,
-        map: map
-        });
-
-        lines.push({line: line, client: client.marker, server: server.marker});
-        checkEdges();
 }
 
 function setServersFocus(client) {
     for(var i = 0; i < elements.NETWORK_NODE.length; i++) {
         var server = elements.NETWORK_NODE[i];
         
-        //if(server.marker && server._id !== client._serv_id) server.marker.setOpacity(0.5);
-        if(server.marker && server._id === client._serv_id) {
-            connectMarkers(client, server);
-        }
+        if(server.marker && server._id !== client._serv_id) server.marker.setOpacity(0.5);
     }
 }
 
@@ -608,17 +549,11 @@ function toggleFilter(id, forcedState) {
 
             action(list);
     }
-    
-    checkEdges();
 }
 
 function unSetAllFocus() {
-    //unSetClientsFocus();
-    //unSetServersFocus();
-    
-    for(var i = 0; i < lines.length; i++) lines[i].line.setMap(null);
-    
-    lines = [];
+    unSetClientsFocus();
+    unSetServersFocus();
 }
 
 function unSetClientsFocus() {
@@ -627,7 +562,6 @@ function unSetClientsFocus() {
         
         if(client.marker) client.marker.setOpacity(1);
     }
-    
 }
 
 function unSetServersFocus() {

@@ -19,26 +19,26 @@ var syncMod = require('./lib/syncer');
  *
  * @return {[type]}   [description]
  */
-exports.getComps = function(req, next) {
+exports.getComps = function (req, next) {
 	'use strict';
 	try {
 		var res = {};
-		platfrmMod.getPlatfrms(function(err, platfrms) {
+		platfrmMod.getPlatfrms(function (err, platfrms) {
 			if (err) {
 				next(err, null);
 			} else {
 				res.platfrms = platfrms;
-				suprlayMod.getSuprlays(function(err, suprlays) {
+				suprlayMod.getSuprlays(function (err, suprlays) {
 					if (err) {
 						next(err, null);
 					} else {
 						res.suprlays = suprlays;
-						layerMod.getLayers(function(err, layers) {
+						layerMod.getLayers(function (err, layers) {
 							if (err) {
 								next(err, null);
 							} else {
 								res.layers = layers;
-								compMod.getComps(function(err, comps) {
+								compMod.getComps(function (err, comps) {
 									if (err) {
 										next(err, null);
 									} else {
@@ -66,7 +66,7 @@ exports.getComps = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.getProcs = function(req, next) {
+exports.getProcs = function (req, next) {
 	'use strict';
 	try {
 		var platfrm_code;
@@ -75,7 +75,7 @@ exports.getProcs = function(req, next) {
 			var suprlay_code = req.query.superlayer ? req.query.superlayer.toUpperCase() : null,
 				layer_name = req.query.layer ? req.query.layer.toLowerCase() : null,
 				comp_name = req.query.component ? req.query.component.toLowerCase() : null;
-			procMod.findProcsByComp(platfrm_code, suprlay_code, layer_name, comp_name, function(err, res) {
+			procMod.findProcsByComp(platfrm_code, suprlay_code, layer_name, comp_name, function (err, res) {
 				if (err) {
 					next(err, null);
 				} else {
@@ -85,7 +85,7 @@ exports.getProcs = function(req, next) {
 		} else if (req.query.platform && req.query.name) {
 			platfrm_code = req.query.platform ? req.query.platform.toUpperCase() : null;
 			var name = req.query.name ? req.query.name.toLowerCase() : null;
-			procMod.findStepsByProc(platfrm_code, name, function(err, res) {
+			procMod.findStepsByProc(platfrm_code, name, function (err, res) {
 				if (err) {
 					next(err, null);
 				} else {
@@ -93,7 +93,7 @@ exports.getProcs = function(req, next) {
 				}
 			});
 		} else {
-			procMod.getAllProces(function(err, res) {
+			procMod.getAllProces(function (err, res) {
 				if (err) {
 					next(err, null);
 				} else {
@@ -114,10 +114,10 @@ exports.getProcs = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.getReadme = function(req, next) {
+exports.getReadme = function (req, next) {
 	'use strict';
 	try {
-		docMod.getReadme(function(err, res) {
+		docMod.getReadme(function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -137,10 +137,10 @@ exports.getReadme = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.getBook = function(req, next) {
+exports.getBook = function (req, next) {
 	'use strict';
 	try {
-		docMod.getBook(function(err, res) {
+		docMod.getBook(function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -161,13 +161,13 @@ exports.getBook = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.getDocs = function(req, next) {
+exports.getDocs = function (req, next) {
 	'use strict';
 	try {
 		var type = req.param('type');
 		var style = req.query.style;
 		if (type == 'book') {
-			docMod.getBookPdf(style, function(err, res) {
+			docMod.getBookPdf(style, function (err, res) {
 				if (err) {
 					next(err, null);
 				} else {
@@ -175,7 +175,7 @@ exports.getDocs = function(req, next) {
 				}
 			});
 		} else if (type == 'readme') {
-			docMod.getReadmePdf(style, function(err, res) {
+			docMod.getReadmePdf(style, function (err, res) {
 				if (err) {
 					next(err, null);
 				} else {
@@ -183,7 +183,7 @@ exports.getDocs = function(req, next) {
 				}
 			});
 		} else if (type == 'paper') {
-			docMod.getPaperPdf(style, function(err, res) {
+			docMod.getPaperPdf(style, function (err, res) {
 				if (err) {
 					next(err, null);
 				} else {
@@ -205,10 +205,10 @@ exports.getDocs = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.getDevs = function(req, next) {
+exports.getDevs = function (req, next) {
 	'use strict';
 	try {
-		devMod.getDevs(function(err, res) {
+		devMod.getDevs(function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -229,10 +229,10 @@ exports.getDevs = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.loadComps = function(req, next) {
+exports.loadComps = function (req, next) {
 	'use strict';
 	try {
-		loadMod.loadComps(function(err, res) {
+		loadMod.loadComps(function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -253,10 +253,10 @@ exports.loadComps = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.updComps = function(req, next) {
+exports.updComps = function (req, next) {
 	'use strict';
 	try {
-		loadMod.updComps(function(err, res) {
+		loadMod.updComps(function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -277,10 +277,10 @@ exports.updComps = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.updBook = function(req, next) {
+exports.updBook = function (req, next) {
 	'use strict';
 	try {
-		syncMod.getBook(function(err, res) {
+		syncMod.getBook(function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -301,10 +301,10 @@ exports.updBook = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.checkManifest = function(req, next) {
+exports.checkManifest = function (req, next) {
 	'use strict';
 	try {
-		loadMod.getManifestWithExt('xsd', function(err_xsd, res_xsd) {
+		loadMod.getManifestWithExt('xsd', function (err_xsd, res_xsd) {
 			if (err_xsd) {
 				next(err_xsd, null);
 			} else {
@@ -350,10 +350,10 @@ exports.checkManifest = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.addProc = function(req, next) {
+exports.addProc = function (req, next) {
 	'use strict';
 	try {
-		procMod.insOrUpdProc(req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, function(err, res) {
+		procMod.insOrUpdProc(req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -372,10 +372,10 @@ exports.addProc = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.getProc = function(req, next) {
+exports.getProc = function (req, next) {
 	'use strict';
 	try {
-		procMod.findProcById(req.params.proc_id, function(err, res) {
+		procMod.findProcById(req.params.proc_id, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -394,10 +394,10 @@ exports.getProc = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.uptProc = function(req, next) {
+exports.uptProc = function (req, next) {
 	'use strict';
 	try {
-		procMod.updateProcById(req.params.proc_id, req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, function(err, res) {
+		procMod.updateProcById(req.params.proc_id, req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -416,10 +416,10 @@ exports.uptProc = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delProc = function(req, next) {
+exports.delProc = function (req, next) {
 	'use strict';
 	try {
-		procMod.delProcById(req.params.proc_id, function(err, res) {
+		procMod.delProcById(req.params.proc_id, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -438,10 +438,10 @@ exports.delProc = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.getComp = function(req, next) {
+exports.getComp = function (req, next) {
 	'use strict';
 	try {
-		compMod.findCompById(req.params.comp_id, function(err, res) {
+		compMod.findCompById(req.params.comp_id, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -460,10 +460,10 @@ exports.getComp = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.uptComp = function(req, next) {
+exports.uptComp = function (req, next) {
 	'use strict';
 	try {
-		compMod.updateCompById(req.params.comp_id, req.body.platfrm_id, req.body.suprlay_id, req.body.layer_id, req.body.name, req.body.type, req.body.description, req.body.difficulty, req.body.code_level, req.body.repo_dir, req.body.scrnshts, req.body.found, function(err, res) {
+		compMod.updateCompById(req.params.comp_id, req.body.platfrm_id, req.body.suprlay_id, req.body.layer_id, req.body.name, req.body.type, req.body.description, req.body.difficulty, req.body.code_level, req.body.repo_dir, req.body.scrnshts, req.body.found, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -482,10 +482,10 @@ exports.uptComp = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delComp = function(req, next) {
+exports.delComp = function (req, next) {
 	'use strict';
 	try {
-		compMod.delCompById(req.params.comp_id, function(err, res) {
+		compMod.delCompById(req.params.comp_id, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -504,10 +504,10 @@ exports.delComp = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.getLay = function(req, next) {
+exports.getLay = function (req, next) {
 	'use strict';
 	try {
-		layerMod.findLayerById(req.params.layer_id, function(err, res) {
+		layerMod.findLayerById(req.params.layer_id, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -526,10 +526,10 @@ exports.getLay = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.uptLay = function(req, next) {
+exports.uptLay = function (req, next) {
 	'use strict';
 	try {
-		layerMod.updateLayerById(req.params.layer_id, req.body.name, req.body.lang, req.body.suprlay || null, req.body.order, function(err, res) {
+		layerMod.updateLayerById(req.params.layer_id, req.body.name, req.body.lang, req.body.suprlay || null, req.body.order, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -548,10 +548,10 @@ exports.uptLay = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delLay = function(req, next) {
+exports.delLay = function (req, next) {
 	'use strict';
 	try {
-		layerMod.delLayerById(req.params.layer_id, function(err, res) {
+		layerMod.delLayerById(req.params.layer_id, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -570,10 +570,10 @@ exports.delLay = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.getSprlay = function(req, next) {
+exports.getSprlay = function (req, next) {
 	'use strict';
 	try {
-		suprlayMod.findSuprlayById(req.params.suprlay_id, function(err, res) {
+		suprlayMod.findSuprlayById(req.params.suprlay_id, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -592,10 +592,10 @@ exports.getSprlay = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.uptSprlay = function(req, next) {
+exports.uptSprlay = function (req, next) {
 	'use strict';
 	try {
-		suprlayMod.updateSuprlayById(req.params.suprlay_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function(err, res) {
+		suprlayMod.updateSuprlayById(req.params.suprlay_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -614,10 +614,10 @@ exports.uptSprlay = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delSprlay = function(req, next) {
+exports.delSprlay = function (req, next) {
 	'use strict';
 	try {
-		suprlayMod.delSuprlayById(req.params.suprlay_id, function(err, res) {
+		suprlayMod.delSuprlayById(req.params.suprlay_id, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -636,10 +636,10 @@ exports.delSprlay = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.getPltf = function(req, next) {
+exports.getPltf = function (req, next) {
 	'use strict';
 	try {
-		platfrmMod.findPlatfrmById(req.params.platfrm_id, function(err, res) {
+		platfrmMod.findPlatfrmById(req.params.platfrm_id, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -658,10 +658,10 @@ exports.getPltf = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.listPlatforms = function(req, next) {
+exports.listPlatforms = function (req, next) {
 	'use strict';
 	try {
-		platfrmMod.getPlatfrms(function(err, res) {
+		platfrmMod.getPlatfrms(function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -680,10 +680,10 @@ exports.listPlatforms = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.uptPltf = function(req, next) {
+exports.uptPltf = function (req, next) {
 	'use strict';
 	try {
-		platfrmMod.updatePlatfrmById(req.params.platfrm_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function(err, res) {
+		platfrmMod.updatePlatfrmById(req.params.platfrm_id, req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -702,10 +702,10 @@ exports.uptPltf = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delPltf = function(req, next) {
+exports.delPltf = function (req, next) {
 	'use strict';
 	try {
-		platfrmMod.delPlatfrmById(req.params.platfrm_id, function(err, res) {
+		platfrmMod.delPlatfrmById(req.params.platfrm_id, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -724,10 +724,10 @@ exports.delPltf = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.listProcs = function(req, next) {
+exports.listProcs = function (req, next) {
 	'use strict';
 	try {
-		procMod.getAllProces(function(err, res) {
+		procMod.getAllProces(function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -746,39 +746,39 @@ exports.listProcs = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.addComp = function(req, next) {
+exports.addComp = function (req, next) {
 	'use strict';
 	try {
-		compMod.insOrUpdComp(req.body.platfrm_id, req.body.suprlay_id, req.body.layer_id, req.body.name, req.body.type, req.body.description, req.body.difficulty, req.body.code_level, req.body.repo_dir, req.body.scrnshts, req.body.found, function(err, res) {
+		compMod.insOrUpdComp(req.body.platfrm_id, req.body.suprlay_id, req.body.layer_id, req.body.name, req.body.type, req.body.description, req.body.difficulty, req.body.code_level, req.body.repo_dir, req.body.scrnshts, req.body.found, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
 				if (res.life_cycle.length === 0) {
-					var loopInsertLifeCicles = function(i) {
+					var loopInsertLifeCicles = function (i) {
 						var name;
 						switch (i) {
-							case 0:
-								name = "concept";
-								break;
-							case 1:
-								name = "development";
-								break;
-							case 2:
-								name = "qa";
-								break;
-							case 3:
-								name = "production";
-								break;
-							default:
-								next(null, res);
-								break;
+						case 0:
+							name = "concept";
+							break;
+						case 1:
+							name = "development";
+							break;
+						case 2:
+							name = "qa";
+							break;
+						case 3:
+							name = "production";
+							break;
+						default:
+							next(null, res);
+							break;
 						}
-						compMod.insOrUpdStatus(res._id, name, new Date(), new Date(), function(err_stat, res_stat) {
+						compMod.insOrUpdStatus(res._id, name, new Date(), new Date(), function (err_stat, res_stat) {
 							if (err_stat) {
 								next(err_stat, null);
 							}
 							res.life_cycle.push(res_stat._id);
-							compMod.pushStatusToCompLifeCycleById(res._id, res_stat._id, function(err_push, res_push) {
+							compMod.pushStatusToCompLifeCycleById(res._id, res_stat._id, function (err_push, res_push) {
 								if (err_push) {
 									next(err_push, null);
 								}
@@ -805,10 +805,10 @@ exports.addComp = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.listComps = function(req, next) {
+exports.listComps = function (req, next) {
 	'use strict';
 	try {
-		compMod.getComps(function(err, res) {
+		compMod.getComps(function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -827,10 +827,10 @@ exports.listComps = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.addLayer = function(req, next) {
+exports.addLayer = function (req, next) {
 	'use strict';
 	try {
-		layerMod.insOrUpdLayer(req.body.name, req.body.lang, req.body.suprlay || null, req.body.order, function(err, res) {
+		layerMod.insOrUpdLayer(req.body.name, req.body.lang, req.body.suprlay || null, req.body.order, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -849,10 +849,10 @@ exports.addLayer = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.listLayers = function(req, next) {
+exports.listLayers = function (req, next) {
 	'use strict';
 	try {
-		layerMod.getLayers(function(err, res) {
+		layerMod.getLayers(function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -871,10 +871,10 @@ exports.listLayers = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.addSuprLay = function(req, next) {
+exports.addSuprLay = function (req, next) {
 	'use strict';
 	try {
-		suprlayMod.insOrUpdSuprlay(req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function(err, res) {
+		suprlayMod.insOrUpdSuprlay(req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -893,10 +893,10 @@ exports.addSuprLay = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.listSuprLays = function(req, next) {
+exports.listSuprLays = function (req, next) {
 	'use strict';
 	try {
-		suprlayMod.getSuprlays(function(err, res) {
+		suprlayMod.getSuprlays(function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -915,10 +915,10 @@ exports.listSuprLays = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.addPlatform = function(req, next) {
+exports.addPlatform = function (req, next) {
 	'use strict';
 	try {
-		platfrmMod.insOrUpdPlatfrm(req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function(err, res) {
+		platfrmMod.insOrUpdPlatfrm(req.body.code, req.body.name, req.body.logo, req.body.deps, req.body.order, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -938,10 +938,10 @@ exports.addPlatform = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.uptLifeCiclesToComp = function(req, next) {
+exports.uptLifeCiclesToComp = function (req, next) {
 	'use strict';
 	try {
-		compMod.uptLifeCiclesById(req.params.life_cicle_id, req.body.target, req.body.reached, function(err, res) {
+		compMod.uptLifeCiclesById(req.params.life_cicle_id, req.body.target, req.body.reached, function (err, res) {
 			if (err) {
 				next(err, null);
 			}
@@ -959,14 +959,14 @@ exports.uptLifeCiclesToComp = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.addCompDev = function(req, next) {
+exports.addCompDev = function (req, next) {
 	'use strict';
 	try {
-		compMod.insOrUpdCompDev(req.params.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function(err, res) {
+		compMod.insOrUpdCompDev(req.params.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
-				compServ.pushDevToCompById(req.params.comp_id, res._id, function(err_push_dev, res_push_dev) {
+				compServ.pushDevToCompById(req.params.comp_id, res._id, function (err_push_dev, res_push_dev) {
 					if (err_push_dev) {
 						next(err_push_dev, null);
 					} else {
@@ -987,10 +987,10 @@ exports.addCompDev = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.uptCompDev = function(req, next) {
+exports.uptCompDev = function (req, next) {
 	'use strict';
 	try {
-		compMod.updateCompDevById(req.params.comp_dev_id, req.params.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function(err, res) {
+		compMod.updateCompDevById(req.params.comp_dev_id, req.params.comp_id, req.body.dev_id, req.body.role, req.body.scope, req.body.percnt, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -1009,10 +1009,10 @@ exports.uptCompDev = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delCompDev = function(req, next) {
+exports.delCompDev = function (req, next) {
 	'use strict';
 	try {
-		compMod.delCompDevById(req.params.comp_id, req.params.comp_dev_id, function(err, res) {
+		compMod.delCompDevById(req.params.comp_id, req.params.comp_dev_id, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -1031,10 +1031,10 @@ exports.delCompDev = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.addStep = function(req, next) {
+exports.addStep = function (req, next) {
 	'use strict';
 	try {
-		procMod.insertStep(req.params.proc_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, req.body.next, function(err, res) {
+		procMod.insertStep(req.params.proc_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, req.body.next, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -1053,10 +1053,10 @@ exports.addStep = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.uptStep = function(req, next) {
+exports.uptStep = function (req, next) {
 	'use strict';
 	try {
-		procMod.updateStepById(req.params.step_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, req.body.next, function(err, res) {
+		procMod.updateStepById(req.params.step_id, req.body.comp_id, req.body.type, req.body.title, req.body.desc, req.body.order, req.body.next, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -1075,10 +1075,10 @@ exports.uptStep = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.delStep = function(req, next) {
+exports.delStep = function (req, next) {
 	'use strict';
 	try {
-		procMod.delStepById(req.params.step_id, function(err, res) {
+		procMod.delStepById(req.params.step_id, function (err, res) {
 			if (err) {
 				next(err, null);
 			} else {
@@ -1099,7 +1099,7 @@ exports.delStep = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.doLock = function(req, next) {
+exports.doLock = function (req, next) {
 	try {
 		if (req.body.usr_id && //
 			req.body.item_id && //
@@ -1109,7 +1109,7 @@ exports.doLock = function(req, next) {
 				req.body.item_id, // item to lock
 				req.body.item_type, // type of item
 				req.body.priority || 5, // lock priority
-				function(err_lck, res_lck) {
+				function (err_lck, res_lck) {
 					if (err_lck) {
 						next(err_lck, null);
 					} else {
@@ -1131,13 +1131,13 @@ exports.doLock = function(req, next) {
  *
  * @return {[type]}   [description]
  */
-exports.doRelease = function(req, next) {
+exports.doRelease = function (req, next) {
 	try {
 		if (req.body.usr_id && //
 			req.body.item_id) {
 			lockMod.delLock(req.body.usr_id, //
 				req.body.item_id, //
-				function(err_lck, res_lck) {
+				function (err_lck, res_lck) {
 					if (err_lck) {
 						next(err_lck, null);
 					} else {

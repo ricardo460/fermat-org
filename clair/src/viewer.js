@@ -8,7 +8,6 @@ var tilesQtty = [],
     stats = null,
     headersUp = false,
     currentRender = "start",
-    disconnected = false,
 //Class
     tileManager = new TileManager(),
     logo = new Logo(),
@@ -27,8 +26,7 @@ var tilesQtty = [],
     magazine = null,
     networkViewer = null,
     buttonsManager = null,
-    guide = null,
-    dragManager = null;
+    guide = null;
 //Global constants
 var TILE_DIMENSION = {
     width : 231,
@@ -78,8 +76,8 @@ function createScene(current, option){
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.domElement.style.position = 'absolute';
         renderer.domElement.id = "canvas";
-        //renderer.setClearColor(0xFFFFFF);
-        renderer.setClearColor(0x313131);//Mode Test.
+        renderer.setClearColor(0xFFFFFF);
+        //renderer.setClearColor(0x313131);//Mode Test.
         document.getElementById('container').appendChild(renderer.domElement);
 
         camera = new Camera(new THREE.Vector3(0, 0, 90000),
@@ -128,7 +126,6 @@ function init() {
     fieldsEdit = new FieldsEdit();
     tableEdit = new TableEdit();
     workFlowEdit = new WorkFlowEdit();
-    dragManager = new DragManager();
 
     //View Manager
     viewManager = new ViewManager();

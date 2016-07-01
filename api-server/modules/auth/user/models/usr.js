@@ -18,7 +18,6 @@ function UsrMdl(usrnm, email, name, avatar_url, github_tkn, perm) {
 	this.github_tkn = github_tkn;
 	this.upd_at = new mongoose.Types.ObjectId();
 	this.perm = perm;
-	this.type = null;
 }
 /**
  * [init description]
@@ -38,7 +37,6 @@ UsrMdl.prototype.init = function (usrSchema) {
 	this.github_tkn = usrSchema.github_tkn;
 	this.upd_at = usrSchema.upd_at;
 	this.perm = usrSchema.perm;
-	this.type = usrSchema.type;
 };
 /**
  * [setUpdate description]
