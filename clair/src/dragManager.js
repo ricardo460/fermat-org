@@ -184,7 +184,7 @@ function DragManager() {
 
         var i = 0;
 
-        var intersects = rayCaster.intersectObjects(self.objects);
+        var intersects = rayCaster.intersectObjects(self.objects, true);
 
         if (intersects.length > 0) {
 

@@ -1117,32 +1117,60 @@ function FieldsEdit() {
             </div>
             `;
 			
-			div.addStep = function(i, obj) {
+			div.addStep = function(i, obj, type) {
 
 				var div = document.createElement('div');
 				var div2 = document.createElement('div');
 				var close = document.createElement('button');
+                var alert = document.createElement('div');
+                var foto = document.createElement('div');
 				var canvas = document.createElement('canvas');
 				
 				div.className = "steps-list-step";
+                alert.className = "steps-alert";
 				div2.className = "steps-div-close";
 				close.className = "steps-button-close";
 				canvas.className = "steps-list-step";
 				var ctx = canvas.getContext("2d");
-				
+
+                switch(obj.state) {
+
+                    case 'good':
+                        alert.style.backgroundImage = "url('images/workflow/tick.png')";
+                        alert.style.backgroundColor = '#E0E040';
+                        break;
+                    case 'locked':
+                        alert.style.backgroundImage = "url('images/workflow/locked.png')";
+                        alert.style.backgroundColor = '#666';
+                        break;
+                    case 'error':
+                        alert.style.backgroundImage = "url('images/workflow/error.png')";
+                        alert.style.backgroundColor = '#F00';
+                        break;
+                }
+
 				div.appendChild(div2);
-				div2.appendChild(close);
 				div.appendChild(canvas);
+                div2.appendChild(alert);
+
+                if(type === 'normal')
+                    div2.appendChild(close);
 				
 				canvas.dataset.num = i;
 
 				canvas.onclick = function () {
 
-					var mesh = obj.mesh;
+                    if(type === 'normal'){ 
 
-                    var position = mesh.position;
+    					var mesh = obj.mesh;
 
-                    window.camera.move(position.x, position.y, 200, 1500, true);
+                        var position = mesh.position;
+
+                        window.camera.move(position.x, position.y, 200, 1500, true);
+                    }
+                    else{
+                        window.dragManager.objects = dragModeRepared(obj);
+                    }
 				};
 				
 				close.onclick = function () {
@@ -1180,6 +1208,63 @@ function FieldsEdit() {
                 else 
                     element.dataset.state = "hidden";
             };
+        }
+
+        function dragModeRepared(step){
+
+            var steps = window.fieldsEdit.actualFlow.steps.slice();
+
+            var parent = searchStepParent();
+
+            var children = validateChildrenTiles();
+
+            var array = [];
+
+            for(var i = 0; i < window.tilesQtty.length; i++){
+
+                if(window.tilesQtty[i] !== parent.element && !children.find(function(x){ if(x.element === window.tilesQtty[i]) return x;})){
+
+                    var tile = window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
+
+                    array.push(tile);
+                }
+            }
+
+            return array;
+
+            function searchStepParent(){
+
+                for(var i = 0; i < steps.length; i++){
+
+                    var next = steps[i].next;
+
+                    for(var l = 0; l < next.length; l++){
+
+                        var _id = parseInt(next[l].id);
+
+                        if(_id === step.id){
+                            return steps[i];
+                        }
+                    }
+                }
+
+                return false;
+            }
+
+            function validateChildrenTiles(){
+
+                var _array = [];
+
+                var children = step.next;
+
+                for(var i = 0; i < steps.length; i++){
+
+                    if(children.find(function(x){ if(x.id === steps[i].id) return x;}))
+                        _array.push(steps[i]);
+                }
+
+                return _array;
+            }
         }
     };
 
