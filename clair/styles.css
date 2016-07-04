@@ -1334,3 +1334,16 @@ END
 	float: left;
 	width: 100%;
 }
+
+.steps-alert {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 5px;
+  background-size: 70%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
