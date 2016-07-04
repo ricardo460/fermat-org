@@ -51,7 +51,7 @@ function Guide() {
 
                     var m = document.getElementById("modal-help");
                     var div = document.getElementById("modal-help-div");
-                    var w = (m.offsetHeight*1.4) + "px";
+                    var w = "50%";
                     m.style.width = w;
 
                     var m_y = (window.innerHeight/2) - (m.offsetHeight/2);
