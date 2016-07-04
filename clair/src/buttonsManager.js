@@ -23,18 +23,6 @@ function ButtonsManager() {
 
         self.removeAllButtons();
 
-        if(window.helper.getSpecificTile(id).data.author) {
-
-            self.createButtons('developerButton', 'View developer', function(){
-
-                self.removeAllButtons();
-                
-                if(typeof(callback) === 'function')
-                    callback();
-
-            });
-        }
-
         window.screenshotsAndroid.showButtonScreenshot(id);
 
         window.tableEdit.addButton(id);
