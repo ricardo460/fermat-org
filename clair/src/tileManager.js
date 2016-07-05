@@ -28,6 +28,7 @@ function TileManager() {
     var superLayerMaxHeight = 0;
     var superLayerPosition = [];
     var qualities = {};
+    var platformsQtty;
 
     var onClick = function(target) {
         if(window.actualView === 'table')
@@ -106,8 +107,7 @@ function TileManager() {
 
                     var c = tile.data.platformID;
                     var idT = tile.id;
-
-
+                    
                     self.elementsByGroup[c].push(idT);
 
                     if (layers[tile.data.layer].super_layer) {
@@ -229,12 +229,15 @@ function TileManager() {
 
             var _platfrm = getSPL(_comp._platfrm_id, _platfrms);
             var _layer = getSPL(_comp._layer_id, _layers);
+            var _suprlay = getSPL(_comp._suprlay_id, _suprlays);
 
             var layerID = _layer.order;
             layerID = (layerID === undefined) ? layers.size() : layerID;
+            
+            var superlayerID = _suprlay ? _suprlay.order + window.platforms.size() : undefined;
 
             var platformID = _platfrm ? _platfrm.order : undefined;
-            platformID = (platformID === undefined) ? window.platforms.size() : platformID;
+            platformID = (platformID === undefined) ? superlayerID : platformID;
 
             var _author = getBestDev(_comp.devs, "author");
             var _maintainer = getBestDev(_comp.devs, "maintainer");
@@ -242,7 +245,7 @@ function TileManager() {
             _layer = helper.capFirstLetter(_layer.name);
 
             var element = {
-            	id: _comp._id,
+                id: _comp._id,
                 platform: _platfrm ? _platfrm.code : undefined,
                 platformID: platformID,
                 superLayer : layers[_layer].super_layer,
@@ -312,8 +315,9 @@ function TileManager() {
 
         }
 
-        groupsQtty = _platfrms.length;
+        groupsQtty = _platfrms.length + _suprlays.length;
         layersQtty = list.layers.length;
+        platformsQtty = _platfrms.length;
         _firstLayer = _layers[0].order;
     };
 
@@ -627,6 +631,7 @@ function TileManager() {
                     var animation = animate(target.mesh, target.target.show, delay);
 
                     animation.start();
+                    
                 }
             }
         }
@@ -700,12 +705,12 @@ function TileManager() {
             var row = tile.layerID;
 
             if (layers[tile.layer].super_layer) {
-                object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
+                object.position.x = ((section[row]) * window.TILE_DIMENSION.width) - (columnWidth * platformsQtty * window.TILE_DIMENSION.width / 2);
                 section[row]++;
             } else {
                 //Column (X)
                 var column = tile.platformID;
-                object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * groupsQtty * window.TILE_DIMENSION.width / 2);
+                object.position.x = (((column * (columnWidth) + section[row][column]) + column) * window.TILE_DIMENSION.width) - (columnWidth * platformsQtty * window.TILE_DIMENSION.width / 2);
                 section[row][column]++;
             }
 
@@ -743,7 +748,7 @@ function TileManager() {
         this.dimensions = {
             columnWidth: columnWidth,
             superLayerMaxHeight: superLayerMaxHeight,
-            groupsQtty: groupsQtty,
+            groupsQtty: platformsQtty,
             layersQtty: layersQtty,
             superLayerPosition: superLayerPosition,
             layerPositions : layerCoordinates
@@ -832,7 +837,6 @@ function TileManager() {
                     window.tilesQtty.push(id);
 
                     self.elementsByGroup[c].push(id);
-
                 }
             }
         }
