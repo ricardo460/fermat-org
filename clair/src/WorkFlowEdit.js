@@ -15,7 +15,10 @@ function WorkFlowEdit() {
 
     var PREVIEW_STEPS = [];
 
-    var REPARED_STEPS = [];
+    var REPARED_STEPS = { 
+            steps : [],
+            mesh : null
+        };
 
     var SHOW_ARROW = [];
 
@@ -308,7 +311,7 @@ function WorkFlowEdit() {
 
             if(res){
 
-                REPARED_STEPS = res;
+                REPARED_STEPS.steps = res;
                 changeMode('repared');
             }
             else{
@@ -3129,26 +3132,10 @@ function WorkFlowEdit() {
                         var clickAction = function(tile){
 
                             if(tile){
-
-                                var type = null;
-
-                                if(!tile.userData.type)
-                                    type = 'tile';
-                                else 
-                                    type = tile.userData.type;
-
-                                switch(type) {
-                                    case "tile":
-                                        var parent = null;
-
-                                        if(FOCUS.data)
-                                            parent = FOCUS.data.userData.id[0];
-
-                                        var mesh = addIdStep(EDIT_STEPS.length + 1, tile.userData.id, parent);
-
-                                        FOCUS.data = mesh;
-                                        break;
-                                }
+                                var id = FOCUS.data;
+                                REPARED_STEPS.steps[id].element = tile.userData.id;
+                                REPARED_STEPS.steps[id].state = 'good';
+                                createButtonsRepared(id);
                             }
                         };
 
@@ -3169,22 +3156,32 @@ function WorkFlowEdit() {
         }
     }
 
-    function createButtonsRepared(){
+    function createButtonsRepared(idStep){
 
-        var _obj = REPARED_STEPS;
+        var _obj = REPARED_STEPS.steps;
         var div = document.getElementById("steps-list");
         var con = document.getElementById("steps-list-content");
         
         con.innerHTML = "";
 
-        for(var i = 0; i < REPARED_STEPS.length; i++){
+        if(!REPARED_STEPS.mesh)
+            REPARED_STEPS.mesh = createIdStep();
 
-            var step = window.helper.clone(REPARED_STEPS[i]);
+        var mesh = REPARED_STEPS.mesh;
+
+        for(var i = 0; i < _obj.length; i++){
+
+            var step = window.helper.clone(_obj[i]);
+
+            step.mesh = mesh;
 
             var id = step.id + 1;
 
             div.addStep(id, step, 'repared');
         }
+
+        if(typeof idStep === 'number')
+            document.getElementById('canvas-step-' + (idStep + 1)).click();
     }
 
     function validateFieldSteps(){
@@ -3423,6 +3420,9 @@ function WorkFlowEdit() {
             window.scene.remove(LIST_ARROWS[i].vector2);
         }
 
+        if(REPARED_STEPS.mesh)
+            window.scene.remove(REPARED_STEPS.mesh);
+
         FOCUS.data = null;
 
         FOCUS.mesh = null;
@@ -3431,10 +3431,13 @@ function WorkFlowEdit() {
 
         LIST_ARROWS = [];
 
-        REPARED_STEPS = [];
+        REPARED_STEPS = { 
+            steps : [],
+            mesh : null
+        };
 
         SHOW_ARROW = [];
-    } 
+    }
 
     function cleanButtons(){
 

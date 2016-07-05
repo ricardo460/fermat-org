@@ -1117,7 +1117,7 @@ function FieldsEdit() {
             </div>
             `;
 			
-			div.addStep = function(i, obj, type) {
+			div.addStep = function(i, obj, type, mesh) {
 
 				var div = document.createElement('div');
 				var div2 = document.createElement('div');
@@ -1125,6 +1125,8 @@ function FieldsEdit() {
                 var alert = document.createElement('div');
                 var foto = document.createElement('div');
 				var canvas = document.createElement('canvas');
+
+                canvas.id = 'canvas-step-' + i;
 				
 				div.className = "steps-list-step";
                 alert.className = "steps-alert";
@@ -1155,8 +1157,6 @@ function FieldsEdit() {
 
                 if(type === 'normal')
                     div2.appendChild(close);
-				
-				canvas.dataset.num = i;
 
 				canvas.onclick = function () {
 
@@ -1169,7 +1169,34 @@ function FieldsEdit() {
                         window.camera.move(position.x, position.y, 200, 1500, true);
                     }
                     else{
-                        window.dragManager.objects = dragModeRepared(obj);
+
+                        var state = obj.state;
+
+                        if(state === 'error'){
+                            window.dragManager.objects = dragModeRepared(obj);
+                            window.workFlowEdit.getFocus().data = obj.id;
+                            obj.mesh.visible = false;
+                        }
+                        else{
+                            
+                            window.dragManager.objects = [];
+                            var parent = searchStepParent(obj);
+                            var mesh = obj.mesh;
+                            mesh.material.map  = changeTextureId(obj.id + 1, parent.id + 1);
+                            mesh.material.needsUpdate = true;
+                            var difference = (window.TILE_DIMENSION.width - window.TILE_SPACING) / 2;
+                            var tile = window.helper.getSpecificTile(obj.element).mesh;
+
+                            var target = window.helper.fillTarget(tile.position.x - difference, tile.position.y, tile.position.z + 1, 'table');
+
+                            mesh.position.copy(target.show.position);
+
+                            var position = mesh.position;
+
+                            obj.mesh.visible = true;
+
+                            window.camera.move(position.x, position.y, 200, 1500, true);
+                        }
                     }
 				};
 				
@@ -1210,11 +1237,68 @@ function FieldsEdit() {
             };
         }
 
+        function changeTextureId(id, parent){
+
+            if(parent)
+                parent = parent.toString();
+            else
+                parent = '';
+
+            var canvas = document.createElement('canvas');
+                canvas.height = 412;
+                canvas.width = 635;
+            var ctx = canvas.getContext('2d');
+            var middle = canvas.width / 2;
+            var image = document.createElement('img');
+            var texture = new THREE.Texture(canvas);
+                texture.minFilter = THREE.NearestFilter;
+
+            image.onload = function() {
+
+                ctx.drawImage(image, 0, 0);
+
+                ctx.textAlign = 'center';
+
+                ctx.font = '140px Arial';
+                ctx.fillText(id, middle - 110, middle - 70);
+
+                ctx.font = '75px Arial';
+                ctx.fillText(parent, middle + 185, middle - 85);
+                
+                texture.needsUpdate = true;
+            };
+
+            image.src = 'images/workflow/Boton1.png';
+
+            return texture;
+        }
+
+        function searchStepParent(step){
+
+            var steps = window.fieldsEdit.actualFlow.steps.slice();
+
+            for(var i = 0; i < steps.length; i++){
+
+                var next = steps[i].next;
+
+                for(var l = 0; l < next.length; l++){
+
+                    var _id = parseInt(next[l].id);
+
+                    if(_id === step.id){
+                        return steps[i];
+                    }
+                }
+            }
+
+            return false;
+        }
+
         function dragModeRepared(step){
 
             var steps = window.fieldsEdit.actualFlow.steps.slice();
 
-            var parent = searchStepParent();
+            var parent = searchStepParent(step);
 
             var children = validateChildrenTiles();
 
@@ -1232,25 +1316,6 @@ function FieldsEdit() {
 
             return array;
 
-            function searchStepParent(){
-
-                for(var i = 0; i < steps.length; i++){
-
-                    var next = steps[i].next;
-
-                    for(var l = 0; l < next.length; l++){
-
-                        var _id = parseInt(next[l].id);
-
-                        if(_id === step.id){
-                            return steps[i];
-                        }
-                    }
-                }
-
-                return false;
-            }
-
             function validateChildrenTiles(){
 
                 var _array = [];
@@ -1259,7 +1324,7 @@ function FieldsEdit() {
 
                 for(var i = 0; i < steps.length; i++){
 
-                    if(children.find(function(x){ if(x.id === steps[i].id) return x;}))
+                    if(children.find(function(x){ if(parseInt(x.id) === steps[i].id) return x;}))
                         _array.push(steps[i]);
                 }
 
