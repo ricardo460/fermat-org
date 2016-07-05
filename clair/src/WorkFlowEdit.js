@@ -1752,8 +1752,7 @@ function WorkFlowEdit() {
         objArrow.tileOriginId = tileOrigin;
         objArrow.tileTargetId = tileTarget;
 
-        var angleDeg = Math.atan2(vertexDestY - vertexOriginY, vertexDestX - vertexOriginX) * 180 / Math.PI; // emmanuel
-        var angleRadians = Math.atan2(vertexDestY - vertexOriginY, vertexDestX - vertexOriginX); // emmanuel
+        var angleRadians = Math.atan2(vertexDestY - vertexOriginY, vertexDestX - vertexOriginX);
 
         if((vertexOriginY >  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es descendente diagonal
             
@@ -1764,7 +1763,7 @@ function WorkFlowEdit() {
             
             vectorArrow = 'arrowDesc';
         }
-        else if((vertexOriginY <  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es ascendente diagonal // emmanuel
+        else if((vertexOriginY <  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es ascendente diagonal 
         
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
@@ -1852,11 +1851,11 @@ function WorkFlowEdit() {
         var target = window.helper.fillTarget(meshTrinogometry.x, meshTrinogometry.y, 3, 'table');
         objArrow.meshPrimaryTarget = target;
 
-        directionLineMesh(meshTrinogometry.x, meshTrinogometry.y);
+        directionLineMesh(meshTrinogometry.x, meshTrinogometry.y, angleRadians);
 
         LIST_ARROWS.push(objArrow);
          
-        function directionLineMesh(x, y){
+        function directionLineMesh(x, y, angleRadians){
 
             var mesh, vertexPositions, from, to, midPoint, meshTrinogometry;
             var positionMesh = {x: null, y: null, z : null};
@@ -1940,7 +1939,7 @@ function WorkFlowEdit() {
                 type : 'fork'
             };
 
-            directionArrowMesh(meshTrinogometry.x, meshTrinogometry.y);
+            directionArrowMesh(meshTrinogometry.x, meshTrinogometry.y, angleRadians);
 
 
             mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
@@ -1974,18 +1973,28 @@ function WorkFlowEdit() {
             return texture;
         }
 
-        function directionArrowMesh(x, y){
+        function directionArrowMesh(x, y, angleRadians){ // x y origen 
 
-            var from, to;
+            var from, to, hypotenuse;
 
             from = new THREE.Vector3(x, y, 2);
-            to = new THREE.Vector3(vertexDestX, vertexDestY, 2);
+            
+            if(vectorArrow === 'arrowDescVer' || vectorArrow === 'arrowAscVer'){ // valor de distancia de la felcha
+
+                hypotenuse = 10;
+            }
+            else{
+                hypotenuse = 15;
+            }
+
+            to = trigonometry(x, y, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - hypotenuse, angleRadians);
+            to.z = 2;
 
             var direction = to.clone().sub(from);
 
             var length = direction.length();
 
-            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 4*2, 4*2);
+            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 4*2.5, 4*2.5);
 
             arrowHelper.userData = dataArrow;
 
@@ -1999,7 +2008,7 @@ function WorkFlowEdit() {
         }
     };
 
-    function trigonometry(vertexOriginX, vertexOriginY, hypotenuse, angleRadians){ // emmanuel
+    function trigonometry(vertexOriginX, vertexOriginY, hypotenuse, angleRadians){
 
         var co, ca, vector = new THREE.Vector3(), x, y;
 
