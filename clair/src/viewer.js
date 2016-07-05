@@ -292,11 +292,12 @@ function onElementClick(id) {
 
             window.helper.showBackButton();
 
+            window.buttonsManager.actionButtons(id, function(){});
+
         }, 3000);
 
         window.camera.disable();
     }
-
 }
 
 /**
