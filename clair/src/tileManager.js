@@ -206,11 +206,6 @@ function TileManager() {
             window.platforms[code] = {};
             window.platforms[code].index = _platfrms[i].order;
             window.platforms[code].dependsOn = _platfrms[i].deps;
-            /* FIXME!!!!!! */
-            for(var q = 0; q < window.platforms[code].dependsOn.length; q++) {
-                if(window.platforms[code].dependsOn[q] === "WPD") window.platforms[code].dependsOn[q] = "APD"; //FIXME: Workaround for the dependencies
-            }
-            /* *************/
             window.platforms[code]._id = _platfrms[i]._id;
             window.TABLE[code] = {
                 layers : {},
