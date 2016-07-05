@@ -1854,11 +1854,11 @@ function WorkFlowEdit() {
         var target = window.helper.fillTarget(meshTrinogometry.x, meshTrinogometry.y, 3, 'table');
         objArrow.meshPrimaryTarget = target;
 
-        directionLineMesh(meshTrinogometry.x, meshTrinogometry.y, angleRadians);
+        directionLineMesh(meshTrinogometry.x, meshTrinogometry.y, angleRadians, tileOrigin, tileTarget);
 
         LIST_ARROWS.push(objArrow);
          
-        function directionLineMesh(x, y, angleRadians){
+        function directionLineMesh(x, y, angleRadians, tileOrigin, tileTarget){
 
             var mesh, vertexPositions, from, to, midPoint, meshTrinogometry;
             var positionMesh = {x: null, y: null, z : null};
@@ -1942,7 +1942,7 @@ function WorkFlowEdit() {
                 type : 'fork'
             };
 
-            directionArrowMesh(meshTrinogometry.x, meshTrinogometry.y, angleRadians);
+            directionArrowMesh(meshTrinogometry.x, meshTrinogometry.y, angleRadians, tileOrigin, tileTarget);
 
 
             mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
@@ -1976,21 +1976,42 @@ function WorkFlowEdit() {
             return texture;
         }
 
-        function directionArrowMesh(x, y, angleRadians){ // x y origen 
+        function directionArrowMesh(x, y, angleRadians, tileOrigin, tileTarget){ // x y origen 
 
             var from, to, hypotenuse;
 
             from = new THREE.Vector3(x, y, 2);
             
-            if(vectorArrow === 'arrowDescVer' || vectorArrow === 'arrowAscVer'){ // valor de distancia de la felcha
+            switch(vectorArrow){
 
-                hypotenuse = 10;
-            }
-            else{
-                hypotenuse = 15;
+                case 'arrowDescVer':
+                case 'arrowAscVer':
+
+                    hypotenuse = 10;
+                    to = trigonometry(x, y, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - hypotenuse, angleRadians);
+                break;
+
+                case 'arrowRight':
+                case 'arrowLeft':
+
+                    hypotenuse = 17;
+                    to = trigonometry(x, y, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - hypotenuse, angleRadians);
+                break;
+
+                case 'arrowAsc':
+                    hypotenuse = 0;
+                    to = trigonometry(vertexDestX - 7, vertexDestY - 9.5, hypotenuse, angleRadians);
+                break;
+
+                case 'arrowDesc':
+                    hypotenuse = 0;
+                    to = trigonometry(vertexDestX - 4, vertexDestY + 9.5, hypotenuse, angleRadians);
+                break;
+
+                default:
+                break;
             }
 
-            to = trigonometry(x, y, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - hypotenuse, angleRadians);
             to.z = 2;
 
             var direction = to.clone().sub(from);
