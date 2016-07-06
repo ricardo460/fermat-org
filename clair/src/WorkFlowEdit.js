@@ -15,6 +15,8 @@ function WorkFlowEdit() {
 
     var PREVIEW_STEPS = [];
 
+    var LIST_ARROWS = [];
+
     var REPARED_STEPS = { 
             steps : [],
             mesh : null
@@ -31,9 +33,6 @@ function WorkFlowEdit() {
 
     var TILEWIDTH = window.TILE_DIMENSION.width - window.TILE_SPACING;
     var TILEHEIGHT = window.TILE_DIMENSION.height - window.TILE_SPACING;
-
-    var LIST_ARROWS = [];
-
 
     this.get = function(){
         return EDIT_STEPS;
@@ -270,7 +269,7 @@ function WorkFlowEdit() {
             mesh = window.fieldsEdit.objects.tile.mesh;
 
             changeMode('edit-step');
-
+            changeMode('edit-path');
         }
         else if(window.fieldsEdit.actions.type === "update"){
 
@@ -319,7 +318,6 @@ function WorkFlowEdit() {
                 workFlow.deleteStep();
                 changeMode('preview');
             }
-            
         }
 
         window.fieldsEdit.actions.exit = function(){
@@ -371,7 +369,7 @@ function WorkFlowEdit() {
 
             var repared = [];
 
-            var msj = "Se han eliminado los siguientes pasos: \n";
+            var msj = "They removed the following steps: \n";
 
             for(var i = 0; i < steps.length; i++){
 
@@ -391,8 +389,9 @@ function WorkFlowEdit() {
 
                 order.find(function(x){msj += "* ("+(x.id + 1)+")" +x.title +".\n";});
 
-                msj += "Por los siguentes motivos: \n * No tener un TILE asignado." +
-                "\n * Repetir continuamente el mismo TILE.";
+                msj += "For the following reasons: \n* Do not have an assigned component." +
+                "\n* Repeat the same component sequentially in steps." +
+                "\nYou want to repair these steps?";
 
                 if(window.confirm(msj)) 
                     return repared;
@@ -1373,10 +1372,13 @@ function WorkFlowEdit() {
         if(parent){
             orderPositionSteps();
         }
+        else{
+            updateStepList();
+        }
 
         updateArrow();
 
-        return mesh;
+        return mesh;   
     }
 
     function createIdStep(){
@@ -2248,8 +2250,6 @@ function WorkFlowEdit() {
         }
         else{
 
-            updateStepList();
-
             var mesh = FOCUS.mesh;
 
             var target = window.helper.fillTarget(0, 0, 0, 'table');
@@ -2265,14 +2265,14 @@ function WorkFlowEdit() {
             window.dragManager.objects = getAllTiles();
         }
 
+        updateStepList();
+
         updateTextureParent();
     }
 
     function updateTileIgnoredAdd(){
 
         if(actualMode === "edit-path"){
-
-            updateStepList();
 
             if(FOCUS.data){ 
 
@@ -2722,6 +2722,11 @@ function WorkFlowEdit() {
             save : function(){
                 window.buttonsManager.createButtons('button-save', 'Save', function(){
                     self.save();}, null, null, "right");
+            },
+            continue : function(){
+                window.buttonsManager.createButtons('button-save', 'Save', function(){
+                    
+                    }, null, null, "right");
             }
         };
 
@@ -3150,6 +3155,28 @@ function WorkFlowEdit() {
 
                         createButtonsRepared();
 
+                        window.buttonsManager.createButtons('button-continue', 'Continue', function(){
+
+                            var res = true;
+                            
+                            if(REPARED_STEPS.steps.find(function(x){ if(x.state === 'error')return x;}))
+                                res = window.confirm('Still has steps with errors \n\nDo you wish to continue?');
+
+                            if(res){ 
+
+                                EDIT_STEPS = resetSteps(REPARED_STEPS.steps);
+
+                                transformData('PREVIEW');
+
+                                EDIT_STEPS = [];
+
+                                changeMode('preview');
+
+                                cleanEditStep();
+                            }
+
+                        }, null, null, "right");
+
                         var clickAction = function(tile){
 
                             if(tile){
@@ -3239,6 +3266,8 @@ function WorkFlowEdit() {
         setTimeout(function() { focus.visible = true; }, 1500);
 
         updateArrow();
+
+        updateStepList();
     }
 
     function resetPositionIdStepMesh(orderFocus){

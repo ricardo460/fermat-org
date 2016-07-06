@@ -1139,7 +1139,7 @@ function FieldsEdit() {
 
                     case 'good':
                         alert.style.backgroundImage = "url('images/workflow/tick.png')";
-                        alert.style.backgroundColor = '#E0E040';
+                        alert.style.backgroundColor = '#2BFF39';
                         break;
                     case 'locked':
                         alert.style.backgroundImage = "url('images/workflow/locked.png')";
@@ -1213,8 +1213,11 @@ function FieldsEdit() {
 				ctx.height = canvas.offsetHeight;
 				
 				var img = new Image();
+
 				img.src = "images/workflow/step.png";
+
 				img.onload = function() {
+
 					ctx.drawImage(img, ctx.width/2 - 45, ctx.height/2 - 45, 90, 90);
 					
 					ctx.font = "30px Arial";
@@ -1331,8 +1334,7 @@ function FieldsEdit() {
                 return _array;
             }
         }
-    };
-
+    }
     
     this.hiddenStepsList = function(state, duration) {
 
