@@ -607,7 +607,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
                 objectHeaderInWFlowGroup = new THREE.Object3D();
 
-                objectHeaderInWFlowGroup.position.x = (width * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) + 10000;
+                objectHeaderInWFlowGroup.position.x = (width * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 20000;
                 objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
                 objectHeaderInWFlowGroup.name = group;
 
@@ -619,7 +619,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             if(window.superLayers.hasOwnProperty(slayer) && slayer !== 'size'){
                 headerData = window.superLayers[slayer];
 
-                column = headerData.index + 1;
+                column = headerData.index + window.platforms.size();
 
                 objectHeaderInWFlowGroup = new THREE.Object3D();
 
@@ -650,16 +650,14 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 if(parents != null && parents.length !== 0) {
 
                     for(i = 0, l = parents.length; i < l; i++) {
-
                         dependencies[parents[i]] = dependencies[parents[i]] || [];
-
                         actual = dependencies[parents[i]];
-
                         actual.push(child);
                     }
                 }
-                else
+                else {
                     dependencies.root.push(child);
+                }
 
                 dependencies[child] = dependencies[child] || [];
             }
@@ -688,12 +686,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                     id: index,
                     onClick : onClick
                 };
-
                 helper.applyTexture(source, object);
-
                 header.addLevel(object, levels[i][1]);
             }
-
             return header;
         }
 
