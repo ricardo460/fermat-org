@@ -6,14 +6,15 @@ function Workflow(flow) {
         ROW_SPACING = 350,
         COLUMN_SPACING = 900,
         HEADER_WIDTH = 825,
-        HEADER_HEIGHT = 238;
+        HEADER_HEIGHT = 238,
+        TYPE = { //Colors for different call types
+            async : 0xFF0000,
+            direct: 0x0000FF
+        };
 
     var account = 0;
-
     var self = this;
-
     var used = [];
-
     var objectsFlow = {
             mesh : [],
             position :{
@@ -30,13 +31,9 @@ function Workflow(flow) {
     };
 
     this.stepsTest = objectsStep;
-
     this.flow = flow || [];
-
     this.action = false;
-
     this.objects = objectsFlow.mesh;
-
     this.positions = objectsFlow.position;
 
     initFlow();
@@ -53,7 +50,7 @@ function Workflow(flow) {
         }
     };
 
-    // Public method
+    // Public methods
 
     /**
      * Draws the flow
@@ -134,14 +131,9 @@ function Workflow(flow) {
      * @param {Number} x    X position of the root
      * @param {Number} y    Y position of the root
      */
-
     this.drawTree = function(root, x, y, z) {
-
-        var TYPE = {
-            async : 0xFF0000,
-            direct: 0x0000FF
-        };
-
+        
+        
         if(typeof root.drawn === 'undefined'){
 
             drawStep(root, x, y, z);
@@ -165,9 +157,7 @@ function Workflow(flow) {
                     origin;           
 
                 lineGeo = new THREE.BufferGeometry();
-
                 lineMat = new THREE.LineBasicMaterial({color : color}); 
-
                 rootPoint = new THREE.Vector3(x + X_OFFSET, y - ROW_SPACING / 2, -1);
 
                 var vertexPositions = [
@@ -177,8 +167,7 @@ function Workflow(flow) {
                 
                 var vertices = new Float32Array(vertexPositions.length * 3);
 
-                for(var j = 0; j < vertexPositions.length; j++)
-                {
+                for(var j = 0; j < vertexPositions.length; j++) {
                     vertices[j*3 + 0] = vertexPositions[j][0];
                     vertices[j*3 + 1] = vertexPositions[j][1];
                     vertices[j*3 + 2] = vertexPositions[j][2];
@@ -206,10 +195,7 @@ function Workflow(flow) {
                 for(i = 0; i < childCount; i++) {
 
                     child = getStep(root.next[i].id);
-
                     isLoop = (typeof child.drawn !== 'undefined');
-
-
                     nextX = startX + i * COLUMN_SPACING;
 
                     if(isLoop) {
