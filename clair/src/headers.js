@@ -596,41 +596,28 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      */
 
     var calculateWorkflowPositions = function() {
+        
+        var calculatePosition = function(group, offset) {
+            for(var element in group){
+                if(group.hasOwnProperty(element) && element !== 'size'){
+                    var headerData = group[element];
 
-        var group, headerData, objectHeaderInWFlowGroup, slayer, column;
+                    var column = headerData.index + offset;
 
-        for(group in window.platforms){
-            if(window.platforms.hasOwnProperty(group) && group !== 'size'){
-                headerData = window.platforms[group];
-                column = headerData.index;
+                    var headerObject = new THREE.Object3D();
 
+                    headerObject.position.x = (width * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 20000;
+                    headerObject.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
+                    headerObject.name = element;
 
-                objectHeaderInWFlowGroup = new THREE.Object3D();
-
-                objectHeaderInWFlowGroup.position.x = (width * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 20000;
-                objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
-                objectHeaderInWFlowGroup.name = group;
-
-                objectHeaderInWFlowGroup.position.copy(window.viewManager.translateToSection('workflows', objectHeaderInWFlowGroup.position));
-                positions.workFlow.push(objectHeaderInWFlowGroup);
+                    headerObject.position.copy(window.viewManager.translateToSection('workflows', headerObject.position));
+                    positions.workFlow.push(headerObject);
+                }
             }
-        }
-        for(slayer in superLayers){
-            if(window.superLayers.hasOwnProperty(slayer) && slayer !== 'size'){
-                headerData = window.superLayers[slayer];
-
-                column = headerData.index + window.platforms.size();
-
-                objectHeaderInWFlowGroup = new THREE.Object3D();
-
-                objectHeaderInWFlowGroup.position.x = (width * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 20000;
-                objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
-                objectHeaderInWFlowGroup.name = slayer;
-
-                objectHeaderInWFlowGroup.position.copy(window.viewManager.translateToSection('workflows', objectHeaderInWFlowGroup.position));
-                positions.workFlow.push(objectHeaderInWFlowGroup);
-            }
-        }
+        };
+        
+        calculatePosition(window.superLayers, 0);
+        calculatePosition(window.platforms, window.superLayers.size());
     };
 
     var initialize = function() {
