@@ -595,7 +595,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      * Calculate the position header
      */
 
-    var headersPositionsViewWorkFlow = function() {
+    var calculateWorkflowPositions = function() {
 
         var group, headerData, objectHeaderInWFlowGroup, slayer, column;
 
@@ -743,7 +743,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
         buildGraph();
         calculateStackPositions();
-        headersPositionsViewWorkFlow();
+        calculateWorkflowPositions();
     };
 
     initialize();
