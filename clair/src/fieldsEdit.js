@@ -1043,26 +1043,17 @@ function FieldsEdit() {
             div.id  = "step-modal";
             
             div.innerHTML += 
-            `
-                 <div id="step-modal-c">
-                   <label>Preview:</label><br>
-                   <canvas id="step-modal-canvas"></canvas>
-                 </div>
-                 <div id="step-modal-a">
-                   <label>Title:</label><br>
-                   <input type="text" id="step-modal-title">
-                 </div>
-                 <div id="step-modal-b">
-                   <label>Description:</label><br>
-                   <textarea rows="8" id="step-modal-desc">
-                   </textarea>
-                 </div>
+            `               
+               <canvas id="step-modal-canvas"></canvas>
+               <input type="text" placeholder="Text" id="step-modal-title"/>
+               <textarea placeholder="Description" id="step-modal-desc"></textarea>
+
             `;
             
             document.body.appendChild(div);
 
             window.onresize  = function() {
-                div.style.height = (div.offsetWidth * 0.9) + "px";
+                div.style.width = (div.offsetHeight * 0.8) + "px";
             };
             
             window.onresize();
