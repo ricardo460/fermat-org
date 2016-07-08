@@ -1159,75 +1159,61 @@ END
 * CSS FOR WORKFLOW EDIT STEP MODAL.
 */
 
+
+#step-modal * {
+    font-family: sans-serif;
+    font-size: 14px;
+}
+
 #step-modal {
-   position: absolute;
-   overflow: hidden;
-   width: 30%;
-   height: 30%;
-   top: 5%;
-   left: 35%;
-   display: block;
-   background: #EEE;
-   border: 10px solid #eee;
+    position: absolute;
+    overflow: hidden;
+    width: 30%;
+    height: 45%;
+    top: 5%;
+    left: 35%;
+    background: #EEE;
 }
 
-#step-modal-c label {
-   height: 20%;
-   font-size: 1.5vmax;
+#step-modal-canvas {
+    position: absolute;
+    border: 1px solid #99C;
+    border-radius: 5px;
+    width: 90%;
+    height: 17.5%;
+    left: 5%;
+    top: 6%
 }
 
-#step-modal-a label {
-   height: 50%;
-   font-size: 1.5vmax;
+#step-modal-title {
+    position: absolute;
+    border: 1px solid #99C;
+    border-radius: 5px;
+    width: 83%;
+    height: 12.5%;
+    left: 5%;
+    top: 28%;
+    padding-left:10px;
+    padding-right:10px;
 }
 
-#step-modal-b label {
-   height: 20%;
-   font-size: 1.5vmax;
-}
-
-#step-modal-c {
-   float: left;
-   width: 100%;
-   display: inline-block;
-   height: 30%;
-   font-size: 1.5vmax;
-}
-
-#step-modal-a {
-   float: left;
-   width: 100%;
-   display: inline-block;
-   height: 22%;
-   font-size: 1.5vmax;
-}
-
-#step-modal-b {
-   float: left;
-   width: 100%;
-   display: inline-block;
-   height: 58%;
+#step-modal-title:focus {
+    border: 2px solid #BBF;
 }
 
 #step-modal-desc {
-   width: 100%;
-   resize: none;
-   font-size: 1.5vmax;
-   height: 80%;
+    position: absolute;
+    border: 1px solid #99C;
+    width: 83%;
+    resize: none;
+    height: 41%;
+    left: 5%;
+    top: 46%;
+    padding:10px;
 }
- 
-#step-modal-title {
-   height: 50%;
-   width: 100%;
-   resize: none;
-   font-size: 1.5vmax;
-}
- 
-#step-modal-canvas {
-   height: 60%;
-   width: 100%;
-   font-size: 1.5vmax;
-   background: #FFF;
+
+#step-modal-desc:focus {
+    border: 2px solid #BBF;
 }
 
 /**
