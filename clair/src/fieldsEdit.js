@@ -197,6 +197,7 @@ function FieldsEdit() {
         workflowHeader();
         workflowDescription();
         createStepsList();
+        createModeEdit();
     };
 
     this.changeLayer = function(platform){
@@ -1078,13 +1079,35 @@ function FieldsEdit() {
 
         workflowPreview(step);
     };
-    
-    function setModeEdit(mode) {
-        var div = document.createElement("div");
-        div.innerHTML = "Mode: Edit Mode";
-        div.id = "workflow-mode";
+
+    this.setModeEdit = function(mode){
+
+        var div = document.getElementById("workflow-mode");
+
+        if(div)
+            div.innerHTML = mode;
         
-        document.body.appendChild(div);
+    };
+    
+    function createModeEdit(){
+
+        var div = document.getElementById("workflow-mode");
+
+        if(!div){ 
+
+            var object = {
+                id : "workflow-mode",
+                text : ""
+            };
+
+            self.objects.row1.buttons.push(object);
+
+            div = document.createElement("div");
+            div.innerHTML = "";
+            div.id = "workflow-mode";
+            
+            document.body.appendChild(div);
+        }
     };
 
     function createStepsList(){
@@ -1113,36 +1136,6 @@ function FieldsEdit() {
             <button id="steps-expand"></button>
             </div>
             `;
-            
-            div.changeFocus = function(index, _i) {
-                var i = _i || 0;
-                
-                i++;
-                
-                var canvas = document.getElementById("canvas-step-" + (i));
-
-                if(!canvas)
-                    return;
-
-                var ctx = canvas.getContext("2d");
-
-                var img = new Image();
-                if(i == index)
-                    img.src = "images/workflow/step_pressed.png";
-                else
-                    img.src = "images/workflow/step.png";
-
-
-                img.onload = function() {
-                    ctx.drawImage(this, ctx.width/2 - 45, ctx.height/2 - 45, 90, 90);
-
-                    ctx.font = "60px Arial";
-                    ctx.textAlign = "center";
-                    ctx.fillStyle = "#FFFFFF";
-                    ctx.fillText(i, ctx.width/2, ctx.height/2 + 21);
-                    div.changeFocus(index, i);
-                };
-            };
 			
 			div.addStep = function(i, obj, type, mesh) {
 
@@ -1160,6 +1153,7 @@ function FieldsEdit() {
 				div2.className = "steps-div-close";
 				close.className = "steps-button-close";
 				canvas.className = "steps-list-step";
+
 				var ctx = canvas.getContext("2d");
 
                 switch(obj.state) {
@@ -1185,6 +1179,8 @@ function FieldsEdit() {
                 if(type === 'normal')
                     div2.appendChild(close);
 
+                canvas.dataset.state = false;
+
 				canvas.onclick = function () {
 
                     if(type === 'normal'){ 
@@ -1194,6 +1190,7 @@ function FieldsEdit() {
                         var position = mesh.position;
 
                         window.camera.move(position.x, position.y, 200, 1500, true);
+
                     }
                     else{
 
@@ -1225,6 +1222,8 @@ function FieldsEdit() {
                             window.camera.move(position.x, position.y, 200, 1500, true);
                         }
                     }
+
+                    changeFocus(canvas, i);
 				};
 				
 				close.onclick = function () {
@@ -1238,20 +1237,8 @@ function FieldsEdit() {
 				canvas.height = canvas.offsetHeight;
 				ctx.width  = canvas.offsetWidth;
 				ctx.height = canvas.offsetHeight;
-				
-				var img = new Image();
 
-				img.src = "images/workflow/step.png";
-
-				img.onload = function() {
-
-					ctx.drawImage(img, ctx.width/2 - 45, ctx.height/2 - 45, 90, 90);
-					
-					ctx.font = "60px Arial";
-					ctx.textAlign = "center";
-                    ctx.fillStyle = "#FFFFFF";
-					ctx.fillText(i, ctx.width/2, ctx.height/2 + 21);
-				}
+                applyTextureCanvas(ctx, i, "images/workflow/step.png");
 			}
             
             document.body.appendChild(div); 
@@ -1264,6 +1251,51 @@ function FieldsEdit() {
                     element.dataset.state = "show"; 
                 else 
                     element.dataset.state = "hidden";
+            };
+        }
+
+        function changeFocus(canvas, id){
+
+            if(canvas.dataset.state === "false"){ 
+
+                var ctx = canvas.getContext("2d");
+
+                applyTextureCanvas(ctx, id, "images/workflow/step_pressed.png");
+                
+                var count = $("#steps-list-content canvas").length;
+
+                for(var i = 1; i <= count; i++){
+
+                    var _canvas = document.getElementById('canvas-step-' + i);
+
+                    if(_canvas.dataset.state === "true"){
+
+                        var _ctx = _canvas.getContext("2d");
+
+                        applyTextureCanvas(_ctx, i, "images/workflow/step.png");
+
+                        _canvas.dataset.state = false;
+                    }
+                }
+
+                canvas.dataset.state = true;
+            }
+        }
+
+        function applyTextureCanvas(ctx, id, src){
+
+            var img = new Image();
+
+            img.src = src;
+
+            img.onload = function() {
+
+                ctx.drawImage(this, ctx.width/2 - 45, ctx.height/2 - 45, 90, 90);
+
+                ctx.font = "60px Arial";
+                ctx.textAlign = "center";
+                ctx.fillStyle = "#FFFFFF";
+                ctx.fillText(id, ctx.width/2, ctx.height/2 + 21);
             };
         }
         
@@ -1368,10 +1400,14 @@ function FieldsEdit() {
 
         duration = duration || 500;
 
-        if(state)
+        if(state){
+            window.helper.show(document.getElementById("workflow-mode"), duration);
             window.helper.show(document.getElementById("steps-list"), duration);
-        else
+        }
+        else{
+            window.helper.hide(document.getElementById("workflow-mode"), duration, true);
             window.helper.hide(document.getElementById("steps-list"), duration, true);
+        }
     };
     
     this.hiddenModal = function(duration) {

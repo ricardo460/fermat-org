@@ -1336,6 +1336,7 @@ END
     position: absolute;
     left: 25%;
     width: 50%;
+    padding-top: 10px;
     text-align: center;
     z-index: 11;
     color: rgba(127,127,127,1);

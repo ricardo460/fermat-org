@@ -1197,6 +1197,8 @@ function WorkFlowEdit() {
 
                         createMeshFocus();
 
+                        window.fieldsEdit.setModeEdit('Mode Edit-Steps');
+
                         window.dragManager.enable();
 
                         window.helper.hide('backButton', 0, true);
@@ -1356,6 +1358,8 @@ function WorkFlowEdit() {
                         createMeshFocus();
 
                         buttons.steps();
+
+                        window.fieldsEdit.setModeEdit('Mode Edit-Path');
 
                         window.dragManager.styleMouse.CROSS = 'copy';
 
@@ -1578,7 +1582,9 @@ function WorkFlowEdit() {
 
                         window.dragManager.enable();
 
-                        window.helper.hide('backButton', 0, true);
+                        window.helper.show('backButton', 0);
+
+                        window.fieldsEdit.setModeEdit('Mode Repared-Steps');
 
                         window.actualView = false;
 
@@ -3165,7 +3171,7 @@ function WorkFlowEdit() {
         if(visible)
             window.helper.show("workflow-header");
         else
-            window.helper.hide("workflow-header", 1000, true);
+            window.helper.hide("workflow-header", 0, true);
     }
     /**
      * @author Ricardo Delgado.
