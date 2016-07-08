@@ -1169,9 +1169,9 @@ END
     position: absolute;
     overflow: hidden;
     width: 30%;
-    height: 45%;
+    height: 54%;
     top: 5%;
-    left: 35%;
+    left: 33%;
     background: #EEE;
 }
 
@@ -1189,31 +1189,29 @@ END
     position: absolute;
     border: 1px solid #99C;
     border-radius: 5px;
-    width: 83%;
+    width: 90%;
     height: 12.5%;
     left: 5%;
     top: 28%;
-    padding-left:10px;
-    padding-right:10px;
 }
 
 #step-modal-title:focus {
-    border: 2px solid #BBF;
+    border: 1px solid #BBF;
 }
 
 #step-modal-desc {
     position: absolute;
     border: 1px solid #99C;
-    width: 83%;
+    border-radius: 5px;
+    width: 90%;
     resize: none;
-    height: 41%;
+    height: 49%;
     left: 5%;
     top: 46%;
-    padding:10px;
 }
 
 #step-modal-desc:focus {
-    border: 2px solid #BBF;
+    border: 1px solid #BBF;
 }
 
 /**
