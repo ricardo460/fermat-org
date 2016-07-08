@@ -41,7 +41,7 @@ function WorkFlowEdit() {
     }; 
 
     this.getr = function(){
-        return LIST_ARROWS; // test
+        return classFlow; // test
     };
 
     /**
@@ -384,9 +384,12 @@ function WorkFlowEdit() {
 
             cleanEditStep();
 
-            classFlow.deleteStep();
+            if(classFlow){
 
-            classFlow = null;
+                classFlow.deleteStep();
+
+                classFlow = null;
+            }
 
             showBrowser(true);
 
@@ -487,10 +490,6 @@ function WorkFlowEdit() {
                 postParamsSteps(flow, function(flow){ 
 
                     addWorkFlow(flow, 3000);
-
-                    classFlow.deleteStep();
-
-                    classFlow = null;
 
                     window.camera.loseFocus();
 
@@ -639,6 +638,8 @@ function WorkFlowEdit() {
 
         var newFlow = window.fieldsEdit.getData();
 
+        newFlow.steps = PREVIEW_STEPS;
+
         var params = getParamsData(newFlow);
 
         var dataPost = {
@@ -661,10 +662,6 @@ function WorkFlowEdit() {
                         mesh = workFlow.objects[0];
                         
                     window.camera.loseFocus();
-
-                    classFlow.deleteStep();
-
-                    classFlow = null;
 
                     var positionCameraX = workFlow.positions.target[0].x,
                         positionCameraY = workFlow.positions.target[0].y;
@@ -915,7 +912,7 @@ function WorkFlowEdit() {
                     if(task !== 'delete'){ 
 
                         param.type = array[0].type;
-                        mesh = window.helper.getSpecificTile(getIdSpecificTile(steps[0].name, steps[0].platfrm, steps[0].layer)).data;
+                        mesh = window.helper.getSpecificTile(getIdSpecificTile(array[0].name, array[0].platfrm, array[0].layer)).data;
                         param.comp_id = mesh.id;
                         param.title = array[0].title;
                         if(array[0].desc)
@@ -1343,8 +1340,8 @@ function WorkFlowEdit() {
                                 transformData('PREVIEW');
     
                                 cleanEditStep();
-    
-                                window.dragManager.disable();
+
+                                window.dragManager.reset();
 
                                 setTimeout(function() { focus.visible = true; }, 1000);
                             }
