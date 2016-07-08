@@ -1376,7 +1376,7 @@ function WorkFlowEdit() {
             updateStepList();
         }
 
-        setTimeout(function(){deleteArrow(); updateArrow();}, 1500);
+        updateArrow();
 
         return mesh;   
     }
@@ -1674,8 +1674,7 @@ function WorkFlowEdit() {
 
         orderPositionSteps();
 
-        deleteArrow();
-        setTimeout(function(){updateArrow();}, 1000);
+        updateArrow();
 
         return mesh;
     }
@@ -2376,8 +2375,7 @@ function WorkFlowEdit() {
 
             orderPositionSteps();
 
-            deleteArrow();
-            setTimeout(function(){updateArrow();}, 1000);
+            updateArrow();
 
             updateTextureParent();
         }
@@ -2458,9 +2456,11 @@ function WorkFlowEdit() {
         return true;
     }
 
-    function deleteArrow(){
-        
-        for(var i = 0; i < LIST_ARROWS.length; i++){
+    function updateArrow(){
+
+        var i, l;
+
+        for(i = 0; i < LIST_ARROWS.length; i++){
 
             window.scene.remove(LIST_ARROWS[i].arrow);
             window.scene.remove(LIST_ARROWS[i].meshPrimary);
@@ -2470,11 +2470,6 @@ function WorkFlowEdit() {
         }
 
         LIST_ARROWS = [];
-    }
-
-    function updateArrow(){
-
-        var i, l;
 
         for(i = 0; i < EDIT_STEPS.length; i++){
 
@@ -3270,8 +3265,7 @@ function WorkFlowEdit() {
 
         setTimeout(function() { focus.visible = true; }, 1500);
 
-        deleteArrow();
-        setTimeout(function(){updateArrow();}, 1000);
+        updateArrow();
 
         updateStepList();
     }
