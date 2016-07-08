@@ -1716,7 +1716,7 @@ function WorkFlowEdit() {
             updateStepList();
         }
 
-        updateArrow();
+        setTimeout(function(){deleteArrow(); updateArrow();}, 1500);
 
         return mesh;   
     }
@@ -1837,6 +1837,11 @@ function WorkFlowEdit() {
         }
     }
 
+    /**
+     * @author Emmanuel Colina.
+     * 
+     * @param {mesh, mesh, int, int, string, string}
+     */
     function createLineStep(meshOrigin, meshTarget, idOrigin, idTarget, tileOrigin, tileTarget){
 
         var mesh, vertexPositions, geometry, from, to, color, listSteps, midPoint, distanceX, distanceY;
@@ -1982,7 +1987,12 @@ function WorkFlowEdit() {
         directionLineMesh(meshTrinogometry.x, meshTrinogometry.y, angleRadians, tileOrigin, tileTarget);
 
         LIST_ARROWS.push(objArrow);
-         
+        
+    /**
+     * @author Emmanuel Colina.
+     * 
+     * @param {float, float, float, string, string}
+     */
         function directionLineMesh(x, y, angleRadians, tileOrigin, tileTarget){
 
             var mesh, vertexPositions, from, to, midPoint, meshTrinogometry;
@@ -2101,6 +2111,11 @@ function WorkFlowEdit() {
             return texture;
         }
 
+    /**
+     * @author Emmanuel Colina.
+     * 
+     * @param{float, float, float, string, string}
+     */
         function directionArrowMesh(x, y, angleRadians, tileOrigin, tileTarget){ // x y origen 
 
             var from, to, hypotenuse;
@@ -2180,6 +2195,11 @@ function WorkFlowEdit() {
         }
     }
 
+    /**
+     * @author Emmanuel Colina.
+     * 
+     * @param {float, float, int, float}
+     */
     function trigonometry(vertexOriginX, vertexOriginY, hypotenuse, angleRadians){
 
         var co, ca, vector = new THREE.Vector3(), x, y;
@@ -2264,7 +2284,8 @@ function WorkFlowEdit() {
 
         orderPositionSteps(EDIT_STEPS, 'step');
 
-        updateArrow();
+        deleteArrow();
+        setTimeout(function(){updateArrow();}, 1000);
 
         return mesh;
     }
@@ -2419,11 +2440,14 @@ function WorkFlowEdit() {
         }
     }
 
-    function updateArrow(){
-
-        var i, l;
-
-        for(i = 0; i < LIST_ARROWS.length; i++){
+    /**
+     * @author Emmanuel Colina.
+     * 
+     * 
+     */
+    function deleteArrow(){
+        
+        for(var i = 0; i < LIST_ARROWS.length; i++){
 
             window.scene.remove(LIST_ARROWS[i].arrow);
             window.scene.remove(LIST_ARROWS[i].meshPrimary);
@@ -2431,6 +2455,19 @@ function WorkFlowEdit() {
             window.scene.remove(LIST_ARROWS[i].vector1);
             window.scene.remove(LIST_ARROWS[i].vector2);
         }
+
+        LIST_ARROWS = [];
+    }
+
+    /**
+     * @author Emmanuel Colina.
+     * 
+     * 
+     */
+
+    function updateArrow(){
+
+        var i, l;
 
         LIST_ARROWS = [];
 
@@ -3026,7 +3063,8 @@ function WorkFlowEdit() {
 
         setTimeout(function() { focus.visible = true; }, 1500);
 
-        updateArrow();
+        deleteArrow();
+        setTimeout(function(){updateArrow();}, 1000);
 
         updateStepList();
     }
@@ -3252,7 +3290,8 @@ function WorkFlowEdit() {
 
             orderPositionSteps(EDIT_STEPS, 'step');
 
-            updateArrow();
+            deleteArrow();
+            setTimeout(function(){updateArrow();}, 1000);
 
             updateTextureParent();
         }
