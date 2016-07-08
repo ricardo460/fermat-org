@@ -1384,6 +1384,7 @@ function WorkFlowEdit() {
 
                                 switch(type) {
                                     case "tile":
+                                    
                                         var parent = null;
 
                                         if(FOCUS.data)
@@ -1391,13 +1392,13 @@ function WorkFlowEdit() {
 
                                         var mesh = addIdStep(EDIT_STEPS.length + 1, tile.userData.id, parent);
 
-                                        FOCUS.data = mesh;
+                                        if(mesh)
+                                            FOCUS.data = mesh;
+
                                         break;
                                     case "step":
 
                                         FOCUS.data = EDIT_STEPS[tile.userData.id[0] - 1].mesh;
-
-                                        updateTileIgnored();
 
                                         createArrowTest(tile.userData.id[0]);
 
@@ -1681,6 +1682,12 @@ function WorkFlowEdit() {
             };
 
         if(parent){
+
+            tileParent = EDIT_STEPS[parent - 1].tile;
+
+            if(IDtile === tileParent)
+                return false;
+
             var children = EDIT_STEPS[parent - 1].children;
 
             if(children.length > 0)

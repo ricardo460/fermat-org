@@ -1197,9 +1197,11 @@ function FieldsEdit() {
                         var state = obj.state;
 
                         if(state === 'error'){
+                            
                             window.dragManager.objects = dragModeRepared(obj);
                             window.workFlowEdit.getFocus().data = obj.id;
                             obj.mesh.visible = false;
+                            window.fieldsEdit.hiddenModal();
                         }
                         else{
                             

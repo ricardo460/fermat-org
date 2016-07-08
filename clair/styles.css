@@ -1171,7 +1171,7 @@ END
     width: 30%;
     height: 54%;
     top: 5%;
-    left: 33%;
+    left: 36%;
     background: #EEE;
 }
 
@@ -1196,7 +1196,7 @@ END
 }
 
 #step-modal-title:focus {
-    border: 1px solid #BBF;
+    border: 1px solid #77bae8;
 }
 
 #step-modal-desc {
@@ -1211,7 +1211,7 @@ END
 }
 
 #step-modal-desc:focus {
-    border: 1px solid #BBF;
+    border: 1px solid #77bae8;
 }
 
 /**
