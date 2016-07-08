@@ -39,7 +39,11 @@ function DragManager() {
         STATE = false;
 
     init();
-
+    /**
+     * @author Ricardo Delgado.
+     * Crea el plano utilizado para la interseccion.
+     * @param {String}
+     */ 
     function init(){
 
         plane = new THREE.Mesh(
@@ -49,25 +53,41 @@ function DragManager() {
 
         window.scene.add(plane);
     }
+    /**
+     * @author Ricardo Delgado.
+     * Enables raycaster.
+     */ 
+    this.enable = function(){
 
-    this.on = function(){
+        if(!STATE){
 
-        if(!STATE){ 
+            STATE = true;
+
             window.renderer.domElement.addEventListener('mousemove', mouseMove, false);
             window.renderer.domElement.addEventListener('mousedown', mouseDown, false);
             window.renderer.domElement.addEventListener('mouseup', mouseUp, false);
         }
     };
-
-    this.off = function(){
+    /**
+     * @author Ricardo Delgado.
+     * Disables raycaster.
+     */ 
+    this.disable = function(){
 
         if(STATE){ 
+
+            STATE = false;
+
             window.renderer.domElement.removeEventListener('mousemove', mouseMove, false);
             window.renderer.domElement.removeEventListener('mousedown', mouseDown, false);
             window.renderer.domElement.removeEventListener('mouseup', mouseUp, false);
         }
     };
-
+    /**
+     * @author Ricardo Delgado.
+     * Intersect objects 
+     * @param {String}
+     */ 
     function mouseMove(event) {
 
         event.preventDefault();
@@ -170,12 +190,14 @@ function DragManager() {
                 }
 
                 container.style.cursor = self.styleMouse.default;
-
-                //window.camera.enable();
             }
         }
     }
-
+    /**
+     * @author Ricardo Delgado.
+     * 
+     * @param {String}
+     */ 
     function mouseDown(event) { 
 
         event.preventDefault();
@@ -209,7 +231,11 @@ function DragManager() {
                 action(SELECTED);
         }
     }
-
+    /**
+     * @author Ricardo Delgado.
+     * 
+     * @param {String}
+     */ 
     function mouseUp(event) { 
 
         var i = 0;
@@ -245,7 +271,10 @@ function DragManager() {
             COLLISION = null;
         }
     }
-
+    /**
+     * @author Ricardo Delgado.
+     * 
+     */ 
     function resetStyleMouse(){
 
         self.styleMouse.CLICK = 'default';
@@ -253,7 +282,10 @@ function DragManager() {
         self.styleMouse.MOVE = 'default';
         self.styleMouse.DROP = 'default';
     }
-
+    /**
+     * @author Ricardo Delgado.
+     * 
+     */ 
     function cleanFunctions(){
 
         self.functions = {
@@ -263,7 +295,10 @@ function DragManager() {
             CROSS : []
         };
     }
-
+    /**
+     * @author Ricardo Delgado.
+     * 
+     */ 
     this.reset = function(){
         SELECTED = null;
         INTERSECTED = null;

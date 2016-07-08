@@ -1043,26 +1043,17 @@ function FieldsEdit() {
             div.id  = "step-modal";
             
             div.innerHTML += 
-            `
-                 <div id="step-modal-c">
-                   <label>Preview:</label><br>
-                   <canvas id="step-modal-canvas"></canvas>
-                 </div>
-                 <div id="step-modal-a">
-                   <label>Title:</label><br>
-                   <input type="text" id="step-modal-title">
-                 </div>
-                 <div id="step-modal-b">
-                   <label>Description:</label><br>
-                   <textarea rows="8" id="step-modal-desc">
-                   </textarea>
-                 </div>
+            `               
+               <canvas id="step-modal-canvas"></canvas>
+               <input type="text" placeholder="Title" id="step-modal-title"/>
+               <textarea placeholder="Description" id="step-modal-desc"></textarea>
+
             `;
             
             document.body.appendChild(div);
 
             window.onresize  = function() {
-                div.style.height = (div.offsetWidth * 0.9) + "px";
+                div.style.width = (div.offsetHeight * 0.9) + "px";
             };
             
             window.onresize();
@@ -1071,21 +1062,19 @@ function FieldsEdit() {
         var _title = document.getElementById("step-modal-title");
         var _desc  = document.getElementById("step-modal-desc");
             
-            _title.value = title;
-            _desc.value  = desc;
-            
-            _title.oninput = function() {step.title[0] = _title.value};
-            _desc.oninput  = function() {step.desc[0] = _desc.value;};
+        _title.value = title;
+        _desc.value  = desc;
 
-            _title.addEventListener('blur', function() {
+        _title.oninput = function() {step.title[0] = _title.value};
+        _desc.oninput  = function() {step.desc[0] = _desc.value;};
 
-                workflowPreview(step);
-            });
+        _title.addEventListener('blur', function() {
+            workflowPreview(step);
+        });
 
-            _desc.addEventListener('blur', function() {
-
-                workflowPreview(step);
-            });
+        _desc.addEventListener('blur', function() {
+            workflowPreview(step);
+        });
 
         workflowPreview(step);
     };
@@ -1116,6 +1105,36 @@ function FieldsEdit() {
             <button id="steps-expand"></button>
             </div>
             `;
+            
+            div.changeFocus = function(index, _i) {
+                var i = _i || 0;
+                
+                i++;
+                
+                var canvas = document.getElementById("canvas-step-" + (i));
+
+                if(!canvas)
+                    return;
+
+                var ctx = canvas.getContext("2d");
+
+                var img = new Image();
+                if(i == index)
+                    img.src = "images/workflow/step_pressed.png";
+                else
+                    img.src = "images/workflow/step.png";
+
+
+                img.onload = function() {
+                    ctx.drawImage(this, ctx.width/2 - 45, ctx.height/2 - 45, 90, 90);
+
+                    ctx.font = "60px Arial";
+                    ctx.textAlign = "center";
+                    ctx.fillStyle = "#FFFFFF";
+                    ctx.fillText(i, ctx.width/2, ctx.height/2 + 21);
+                    div.changeFocus(index, i);
+                };
+            };
 			
 			div.addStep = function(i, obj, type, mesh) {
 
@@ -1220,10 +1239,10 @@ function FieldsEdit() {
 
 					ctx.drawImage(img, ctx.width/2 - 45, ctx.height/2 - 45, 90, 90);
 					
-					ctx.font = "30px Arial";
+					ctx.font = "60px Arial";
 					ctx.textAlign = "center";
                     ctx.fillStyle = "#FFFFFF";
-					ctx.fillText(i, ctx.width/2, ctx.height/2 + 10);
+					ctx.fillText(i, ctx.width/2, ctx.height/2 + 21);
 				}
 			}
             
