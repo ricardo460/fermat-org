@@ -1078,6 +1078,14 @@ function FieldsEdit() {
 
         workflowPreview(step);
     };
+    
+    function setModeEdit(mode) {
+        var div = document.createElement("div");
+        div.innerHTML = "Mode: Edit Mode";
+        div.id = "workflow-mode";
+        
+        document.body.appendChild(div);
+    };
 
     function createStepsList(){
 
@@ -1258,6 +1266,7 @@ function FieldsEdit() {
                     element.dataset.state = "hidden";
             };
         }
+        
 
         function changeTextureId(id, parent){
 
