@@ -1331,3 +1331,12 @@ END
   background-position: center;
   background-repeat: no-repeat;
 }
+
+#workflow-mode {
+    position: absolute;
+    left: 25%;
+    width: 50%;
+    text-align: center;
+    z-index: 11;
+    color: rgba(127,127,127,1);
+}
