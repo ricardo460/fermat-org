@@ -32,6 +32,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     this.dep = dependencies;
     this.arrows = arrows;
     this.arrowPositions = arrowsPositions;
+    this.positions = positions;
 
     var onClick = function(target) {
         if(window.actualView === 'workflows'){
@@ -616,8 +617,8 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             }
         };
         
-        calculatePosition(window.superLayers, 0);
         calculatePosition(window.platforms, window.superLayers.size());
+        calculatePosition(window.superLayers, 0);
     };
 
     var initialize = function() {
