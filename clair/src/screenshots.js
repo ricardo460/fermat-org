@@ -353,7 +353,7 @@ function ScreenshotsAndroid() {
 
         if(state){ 
             _texture = searchWallet(wallet, 1);
-            y = window.tileManager.dimensions.layerPositions[3] + 240;
+            y = window.tileManager.dimensions.layerPositions[3] + window.TILE_DIMENSION.height + 240;
         }
         else{ 
         	y = _position.y;

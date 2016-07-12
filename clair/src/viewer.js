@@ -292,57 +292,12 @@ function onElementClick(id) {
 
             window.helper.showBackButton();
 
-            window.buttonsManager.actionButtons(id, function(){
-                showDeveloper(id);
-            });
+            window.buttonsManager.actionButtons(id, function(){});
 
         }, 3000);
 
         window.camera.disable();
     }
-
-    function showDeveloper(id) {
-
-        var tile = window.helper.getSpecificTile(id).data;
-
-        var section = 0;
-        var center = window.helper.getSpecificTile(id).mesh.position;
-
-        developer.getDeveloper();
-
-        var duration = 750,
-            l = developer.findDeveloper(tile.author);
-
-        new TWEEN.Tween(l.position)
-        .to({
-            x : center.x-290,
-            y : center.y+400,
-            z : center.z
-        }, Math.random() * duration + duration)
-        .easing(TWEEN.Easing.Exponential.InOut)
-        .start();
-
-        for(var i = 0; i < window.tilesQtty.length; i++){
-
-            var _tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
-
-            var mesh =  window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
-
-            if(_tile.author == tile.author) {
-
-                new TWEEN.Tween(mesh.position)
-                .to({x : center.x + (section % 5) * window.TILE_DIMENSION.width - 750, y : center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height, z : 0}, 2000)
-                .easing(TWEEN.Easing.Exponential.InOut)
-                .start();
-
-                section += 1;
-            }
-        }
-
-        camera.enable();
-        camera.move(center.x-300, center.y, center.z + window.TILE_DIMENSION.width * 11);
-    }
-
 }
 
 /**

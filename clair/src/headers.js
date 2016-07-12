@@ -737,7 +737,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 scene.add(object);
                 objects.push(object);
                 object = new THREE.Object3D();
-                object.position.x = -(((groupsQtty + 1) * width / 2) + window.TILE_DIMENSION.width);
+                object.position.x = -(((groupsQtty + 1.3) * width / 2) + window.TILE_DIMENSION.width);
                 object.position.y = (-(superLayerPosition[headerData.index]) - (superLayerMaxHeight / 2) + (layersQtty / 2)) * window.TILE_DIMENSION.height;
                 object.name = slayer;
                 object.position.copy(window.viewManager.translateToSection('table', object.position));
