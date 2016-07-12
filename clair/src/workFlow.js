@@ -85,11 +85,7 @@ function Workflow(flow) {
                 self.drawTree(self.flow.steps[i], initialX + COLUMN_SPACING * i, initialY, 0);
             }
 
-            new TWEEN.Tween(this)
-                .to({}, 8000)
-                .easing(TWEEN.Easing.Cubic.Out)
-                .onUpdate(window.render)
-                .start();
+            window.helper.forceTweenRender(5000);
 
             self.showAllFlow();
             self.showSteps();
@@ -162,7 +158,7 @@ function Workflow(flow) {
 
                 var vertexPositions = [
                     [x + X_OFFSET, y, -1],
-                    [ x + X_OFFSET, y - ROW_SPACING / 2, -1]
+                    [rootPoint.x, rootPoint.y, rootPoint.z]
                 ];
                 
                 var vertices = new Float32Array(vertexPositions.length * 3);
@@ -197,6 +193,7 @@ function Workflow(flow) {
                     child = getStep(root.next[i].id);
                     isLoop = (typeof child.drawn !== 'undefined');
                     nextX = startX + i * COLUMN_SPACING;
+                    if(collides(nextX, root, false, y)) nextX += COLUMN_SPACING;
 
                     if(isLoop) {
 
@@ -209,8 +206,8 @@ function Workflow(flow) {
                         lineMat = new THREE.LineBasicMaterial({color : gradient.getHex()}); //gradient
                         nextY = child.drawn.y;
 
-                        if(nextX !== rootPoint.x && colides(nextX, root))
-                            nextX += (childCount + 1) * COLUMN_SPACING;
+                        if(nextX !== rootPoint.x && collides(nextX, root, true))
+                            nextX += COLUMN_SPACING;
                     }
                     else {
                         lineMat = new THREE.LineBasicMaterial({color : color});
@@ -268,7 +265,7 @@ function Workflow(flow) {
      */
     this.showAllFlow = function() {
 
-        animateFlows('flow', 'target', true, 2500);
+        animateFlows('flow', 'target', true, 3000);
     };
 
     /**
@@ -374,23 +371,40 @@ function Workflow(flow) {
             y : y
         };
     }
-
+    
     /**
      * Check if the line collides a block
-     * @param   {Number}  x    Position to check
-     * @param   {Object}  from Object where the line starts
-     * @returns {Boolean} true if collision is detected
+     * @author Miguelcldn
+     * @param   {number}  x            The x coordinate of the child
+     * @param   {object}  from         The parent object to ignore
+     * @param   {boolean} [loop=false] If true, it will consider the box width
+     * @param   {number}  [y]          The y coordinate of the child, it loop=false then this will ignore all ancestors
+     * @returns {boolean} Whether it collides or no
      */
+    function collides(x, from, loop, y) {
 
-    function colides(x, from) {
-
-        var actual;
+        var actual,
+            left,
+            right;
+        
+        loop = loop || false;
 
         for(var i = 0; i < self.flow.steps.length; i++) {
             actual = self.flow.steps[i];
+            
+            if(loop) {
+                if(actual.drawn && actual !== from) {
+                    left = Math.min(actual.drawn.x, x);
+                    right = Math.max(actual.drawn.x, x);
 
-            if(actual.drawn && actual.drawn.x === x && actual !== from)
-                return true;
+                    if(right - left - BOX_WIDTH <= 0)
+                        return true;
+                }
+            }
+            else {
+                if(actual.drawn && actual.drawn.x === x && actual !== from && actual.drawn.y <= y)
+                    return true;
+            }
         }
 
         return false;
@@ -563,6 +577,9 @@ function Workflow(flow) {
                 })
                 .start();
         }
+        
+        if(objects === 'steps')
+            window.helper.forceTweenRender(_duration * 1.3);
 
 
     }
