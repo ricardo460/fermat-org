@@ -23,7 +23,6 @@ var tilesQtty = [],
     headers = null,
     workFlowManager = null,
     viewManager = null,
-    magazine = null,
     networkViewer = null,
     buttonsManager = null,
     guide = null;
@@ -120,7 +119,6 @@ function init() {
 
     browserManager = new BrowserManager();
     screenshotsAndroid = new ScreenshotsAndroid();
-    magazine = new Magazine();
     workFlowManager = new WorkFlowManager();
     buttonsManager = new ButtonsManager();
     fieldsEdit = new FieldsEdit();
@@ -365,4 +363,3 @@ function render() {
     //renderer.render( scene, camera );
     camera.render(renderer, scene);
 }
-
