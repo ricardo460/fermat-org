@@ -150,9 +150,9 @@ function TableEdit() {
 
     function createElement() {
 
-        var newCenter = window.helper.getCenterView('table');
-
-        var y = window.helper.getLastValueArray(window.tileManager.dimensions.layerPositions) + (window.TILE_DIMENSION.height * 2);
+        var newCenter = window.helper.getCenterView('table'),
+            y = window.helper.getLastValueArray(window.tileManager.dimensions.layerPositions) + (window.TILE_DIMENSION.height * 2);
+            position = new THREE.Vector3(0, y, 0);
 
         var mesh = new THREE.Mesh(
                    new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
@@ -163,7 +163,9 @@ function TableEdit() {
                         })
                 );
 
-        var target = window.helper.fillTarget(newCenter.x, y, newCenter.z, 'table');
+        position = window.viewManager.translateToSection('table', position);
+
+        var target = window.helper.fillTarget(newCenter.x, position.y, newCenter.z, 'table');
 
         mesh.position.copy(target.hide.position);
 
