@@ -1137,7 +1137,7 @@ function FieldsEdit() {
             </div>
             `;
 			
-			div.addStep = function(i, obj, type, mesh) {
+			div.addStep = function(i, obj, type) {
 
 				var div = document.createElement('div');
 				var div2 = document.createElement('div');
@@ -1176,14 +1176,14 @@ function FieldsEdit() {
 				div.appendChild(canvas);
                 div2.appendChild(alert);
 
-                if(type === 'normal')
+                if(type === 'edit-path')
                     div2.appendChild(close);
 
                 canvas.dataset.state = false;
 
 				canvas.onclick = function () {
 
-                    if(type === 'normal'){ 
+                    if(type === 'edit-step' || type === 'edit-path'){ 
 
     					var mesh = obj.mesh;
 
@@ -1208,7 +1208,7 @@ function FieldsEdit() {
                             window.dragManager.objects = [];
                             var parent = searchStepParent(obj);
                             var mesh = obj.mesh;
-                            mesh.material.map  = changeTextureId(obj.id + 1, parent.id + 1);
+                            mesh.material.map  = window.workFlowEdit.changeTextureId(obj.id + 1, parent.id + 1);
                             mesh.material.needsUpdate = true;
                             var difference = (window.TILE_DIMENSION.width - window.TILE_SPACING) / 2;
                             var tile = window.helper.getSpecificTile(obj.element).mesh;
@@ -1301,43 +1301,6 @@ function FieldsEdit() {
             };
         }
         
-
-        function changeTextureId(id, parent){
-
-            if(parent)
-                parent = parent.toString();
-            else
-                parent = '';
-
-            var canvas = document.createElement('canvas');
-                canvas.height = 412;
-                canvas.width = 635;
-            var ctx = canvas.getContext('2d');
-            var middle = canvas.width / 2;
-            var image = document.createElement('img');
-            var texture = new THREE.Texture(canvas);
-                texture.minFilter = THREE.NearestFilter;
-
-            image.onload = function() {
-
-                ctx.drawImage(image, 0, 0);
-
-                ctx.textAlign = 'center';
-
-                ctx.font = '140px Arial';
-                ctx.fillText(id, middle - 110, middle - 70);
-
-                ctx.font = '75px Arial';
-                ctx.fillText(parent, middle + 185, middle - 85);
-                
-                texture.needsUpdate = true;
-            };
-
-            image.src = 'images/workflow/Boton1.png';
-
-            return texture;
-        }
-
         function searchStepParent(step){
 
             var steps = window.fieldsEdit.actualFlow.steps.slice();

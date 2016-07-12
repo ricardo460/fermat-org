@@ -1411,6 +1411,7 @@ function WorkFlowEdit() {
 
                         if(EDIT_STEPS.length > 0){
                             updateTileIgnored();
+                            updateStepList();
                             hideButtonsArrows(true);
                         }
                         else{
@@ -1706,7 +1707,7 @@ function WorkFlowEdit() {
      * 
      * @param {String}
      */ 
-    function addIdStep(id, IDtile, parent, typeCall){
+    function addIdStep(id, IDtile, parent, typeCall, visible){
 
         var mesh = createIdStep(),
             difference = TILEWIDTH / 2;
@@ -1764,7 +1765,7 @@ function WorkFlowEdit() {
 
         EDIT_STEPS.push(object);
 
-        mesh.material.map = changeTextureId(id, parent);
+        mesh.material.map = self.changeTextureId(id, parent);
 
         calculatePositionsSteps(IDtile);
 
@@ -1775,7 +1776,15 @@ function WorkFlowEdit() {
             updateStepList();
         }
 
-        setTimeout(function(){deleteArrow(); updateArrow();}, 1500);
+        if(visible){
+
+            deleteArrow(); 
+            updateArrow();
+        }
+        else{
+
+            setTimeout(function(){deleteArrow(); updateArrow();}, 1500);
+        }
 
         return mesh;   
     }
@@ -2305,7 +2314,7 @@ function WorkFlowEdit() {
 
         EDIT_STEPS.push(object);
 
-        mesh.material.map = changeTextureId(idTarget, parent);
+        mesh.material.map = self.changeTextureId(idTarget, parent);
 
         calculatePositionsSteps(IDtile);
 
@@ -2616,7 +2625,7 @@ function WorkFlowEdit() {
      * 
      * @param {String}
      */ 
-    function changeTextureId(id, parent){
+    this.changeTextureId = function(id, parent){
 
         if(parent)
             parent = parent.toString();
@@ -2661,7 +2670,7 @@ function WorkFlowEdit() {
 
             var mesh = EDIT_STEPS[i].mesh;
 
-            mesh.material.map = changeTextureId(id, parent);
+            mesh.material.map = self.changeTextureId(id, parent);
 
             mesh.material.needsUpdate = true;
         }
@@ -3045,7 +3054,7 @@ function WorkFlowEdit() {
                     typeCall = parent.typeCall;
                 }
 
-                var mesh = addIdStep(order, IDtile, id, typeCall);
+                var mesh = addIdStep(order, IDtile, id, typeCall, true);
 
                 EDIT_STEPS[order - 1].title[0] = title;
 
@@ -3274,7 +3283,7 @@ function WorkFlowEdit() {
                 _obj[i].state = 'locked';
             }
 
-            div.addStep(id, _obj[i], 'normal');
+            div.addStep(id, _obj[i], actualMode);
         }
     }
     /**
