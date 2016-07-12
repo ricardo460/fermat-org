@@ -32,6 +32,12 @@ function WorkFlowEdit() {
     var TILEWIDTH = window.TILE_DIMENSION.width - window.TILE_SPACING;
     var TILEHEIGHT = window.TILE_DIMENSION.height - window.TILE_SPACING;
 
+    var TEXTURE = {
+        x : null,
+        y : null,
+        image : null
+    };
+
     this.get = function(){
         return EDIT_STEPS; // test
     };
@@ -51,13 +57,13 @@ function WorkFlowEdit() {
      */  
     this.deleteStepList = function(step){
         deleteSteps(step, EDIT_STEPS, 'step');
-    } 
+    }; 
 
     /**
      * @author Ricardo Delgado.
      * 
      * @param {String}
-     */ 
+     */
     this.addButton = function(_id){
 
         var id = null,
@@ -155,7 +161,7 @@ function WorkFlowEdit() {
     /**
      * @author Ricardo Delgado.
      * 
-     */ 
+     */
     this.changeTexture = function(){
         
         var flow = window.fieldsEdit.getData();
@@ -173,7 +179,7 @@ function WorkFlowEdit() {
      * @author Ricardo Delgado.
      * 
      * @param {String}
-     */ 
+     */
     this.fillStep = function(){
 
         var flow = window.fieldsEdit.getData();
@@ -193,12 +199,12 @@ function WorkFlowEdit() {
         }
 
         classFlow.showSteps();
-    }
+    };
 
     /**
      * @author Ricardo Delgado.
      * 
-     */ 
+     */
     this.save = function(){
 
         if(validateFields() === ''){ 
@@ -295,6 +301,12 @@ function WorkFlowEdit() {
             mesh = null;
 
         createMeshFocus();
+
+        loadImage();
+
+        TEXTURE.x = loadTextureButtons('+');
+
+        TEXTURE.y = loadTextureButtons('y');
 
         showBrowser(false);
 
@@ -449,7 +461,7 @@ function WorkFlowEdit() {
                 if(window.confirm(msj)) 
                     return repared;
                 else
-                    false;
+                    return false;
             }       
         }
     }
@@ -468,10 +480,47 @@ function WorkFlowEdit() {
         }
     }
 
+    function loadTextureButtons(src){
+
+
+        var canvas = document.createElement('canvas');
+            canvas.height = 128;
+            canvas.width = 128;
+        var ctx = canvas.getContext('2d');
+        var image = document.createElement('img');
+        var texture = new THREE.Texture(canvas);
+            texture.minFilter = THREE.NearestFilter;
+
+        image.onload = function() {
+
+            ctx.drawImage(image, 0, 0);
+
+            ctx.textAlign = 'center';
+            
+            texture.needsUpdate = true;
+        };
+
+        image.src = 'images/workflow/button_'+src+'.png';
+
+        return texture;
+    }
+
+    function loadImage(){
+
+        var image = document.createElement('img');
+
+        image.onload = function() {
+
+            TEXTURE.img = image;
+        };
+
+        image.src = 'images/workflow/Boton1.png';
+    }
+
     //workFlow action
     /**
      * @author Ricardo Delgado.
-     * añade el nuevo workflow a la base de datos.
+     * adds the new workflow to the database.
      * @param {String}
      */ 
     function createWorkFlow(){
@@ -576,7 +625,7 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * crea y anima el workflow creado.
+     * creates and encourages the workflow created.
      * @param {String}
      */ 
     function addWorkFlow(flow, duration){
@@ -631,7 +680,7 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * Modifica el workflow de la base de datos.
+     * Modifies the workflow database.
      * @param {String}
      */ 
     function modifyWorkFlow(){ 
@@ -1282,13 +1331,10 @@ function WorkFlowEdit() {
                                         break;
                                     case "arrow":
 
-                                        var origin = tile.userData.originOrder[0],
-                                            target = tile.userData.targetOrder[0];
+                                        var origin = tile.userData.originOrder,
+                                            target = tile.userData.targetOrder;
 
-                                        var arrow = LIST_ARROWS.find(function(x){
-                                                        if(x.originID[0] === origin && x.targetID[0] === target)
-                                                            return x;
-                                                    });
+                                        var arrow = searchArrow(origin, target);
 
                                         changeTypeArrow(arrow);
                                         break;                
@@ -1377,6 +1423,8 @@ function WorkFlowEdit() {
 
                                 var type = null;
 
+                                var drop = null, mesh = null;
+
                                 if(!tile.userData.type)
                                     type = 'tile';
                                 else 
@@ -1390,7 +1438,7 @@ function WorkFlowEdit() {
                                         if(FOCUS.data)
                                             parent = FOCUS.data.userData.id[0];
 
-                                        var mesh = addIdStep(EDIT_STEPS.length + 1, tile.userData.id, parent);
+                                        mesh = addIdStep(EDIT_STEPS.length + 1, tile.userData.id, parent);
 
                                         if(mesh)
                                             FOCUS.data = mesh;
@@ -1404,11 +1452,9 @@ function WorkFlowEdit() {
 
                                         window.dragManager.objectsCollision = getAllTiles(tile.userData.tile);
                                         
-                                        var drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
+                                        drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
 
                                             if(SELECTED){
-
-                                                changeArrowTest(true, type, tile.userData.originOrder, tile.userData.targetOrder);
 
                                                 var orderFocus = FOCUS.data.userData.id[0];
 
@@ -1430,6 +1476,7 @@ function WorkFlowEdit() {
                                                 }
                                             }
 
+                                            updateTileIgnored();
                                             window.dragManager.objectsCollision = [];
                                             window.dragManager.functions.DROP = [];
                                         };
@@ -1439,13 +1486,11 @@ function WorkFlowEdit() {
                                         break;
                                     case "changeStep":
 
-                                        changeArrowTest(false, type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
+                                        changeArrowTest(type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
 
                                         window.dragManager.objectsCollision = getAllTiles(tile.userData.tile);
                                         
-                                        var drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
-
-                                            changeArrowTest(true, type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
+                                        drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
 
                                             if(SELECTED){
 
@@ -1472,11 +1517,12 @@ function WorkFlowEdit() {
                                         window.dragManager.functions.DROP = [drop];
                                         break;
                                     case "fork":
-                                        window.dragManager.objectsCollision = getAllTiles(tile.userData.tile);
-                                        changeArrowTest(false, type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
-                                        var drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
 
-                                            changeArrowTest(true, type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
+                                        window.dragManager.objectsCollision = getAllTiles(tile.userData.tile);
+                                        
+                                        changeArrowTest(type, tile.userData.originOrder[0], tile.userData.targetOrder[0]);
+                                       
+                                        drop = function(SELECTED, INTERSECTED, COLLISION, POSITION){
 
                                             if(SELECTED){
 
@@ -1492,7 +1538,7 @@ function WorkFlowEdit() {
 
                                                         parent = origen;
 
-                                                        var mesh = addIdStep(EDIT_STEPS.length + 1, COLLISION.userData.id, parent);
+                                                        mesh = addIdStep(EDIT_STEPS.length + 1, COLLISION.userData.id, parent);
 
                                                         FOCUS.data = mesh;
                                                     }
@@ -1857,8 +1903,7 @@ function WorkFlowEdit() {
      */
     function createLineStep(meshOrigin, meshTarget, idOrigin, idTarget, tileOrigin, tileTarget){
 
-        var mesh, vertexPositions, geometry, from, to, color, listSteps, midPoint, distanceX, distanceY;
-        var positionMesh = {x: null, y: null, z : null}, meshTrinogometry, vectorArrow = '';
+        var mesh, from, to, color, meshTrinogometry, vectorArrow = '';
 
         var objArrow = {
                 tileOriginId : null,
@@ -1981,7 +2026,7 @@ function WorkFlowEdit() {
 
         mesh = createSimbol();
 
-        mesh.material.map = createTextureButton('+');
+        mesh.material.map = TEXTURE.x;
 
         mesh.userData = {
             originOrder : idOrigin,
@@ -2001,15 +2046,10 @@ function WorkFlowEdit() {
 
         LIST_ARROWS.push(objArrow);
         
-    /**
-     * @author Emmanuel Colina.
-     * 
-     * @param {float, float, float, string, string}
-     */
+
         function directionLineMesh(x, y, angleRadians, tileOrigin, tileTarget){
 
-            var mesh, vertexPositions, from, to, midPoint, meshTrinogometry;
-            var positionMesh = {x: null, y: null, z : null};
+            var mesh, from, to, meshTrinogometry;
 
             switch(vectorArrow){
 
@@ -2079,7 +2119,7 @@ function WorkFlowEdit() {
             
             mesh = createSimbol();
 
-            mesh.material.map = createTextureButton('y');
+            mesh.material.map = TEXTURE.y;
 
             objArrow.vector2 = arrowHelper;
             objArrow.meshSecondary = mesh;
@@ -2100,35 +2140,7 @@ function WorkFlowEdit() {
             objArrow.meshSecondaryTarget = target;
         }
 
-        function createTextureButton(src){
-
-            var canvas = document.createElement('canvas');
-                canvas.height = 128;
-                canvas.width = 128;
-            var ctx = canvas.getContext('2d');
-            var image = document.createElement('img');
-            var texture = new THREE.Texture(canvas);
-                texture.minFilter = THREE.NearestFilter;
-
-            image.onload = function() {
-
-                ctx.drawImage(image, 0, 0);
-
-                ctx.textAlign = 'center';
-                
-                texture.needsUpdate = true;
-            };
-
-            image.src = 'images/workflow/button_'+src+'.png';
-
-            return texture;
-        }
-
-    /**
-     * @author Emmanuel Colina.
-     * 
-     * @param{float, float, float, string, string}
-     */
+    
         function directionArrowMesh(x, y, angleRadians, tileOrigin, tileTarget){ // x y origen 
 
             var from, to, hypotenuse;
@@ -2199,12 +2211,12 @@ function WorkFlowEdit() {
 
             for(var i = 0; i < children.length; i++){
 
-                changeArrowTest(false, 'step', IdOrigen, children[i].id[0]);
+                changeArrowTest('step', IdOrigen, children[i].id[0]);
             }
         }
 
         if(typeof parent === 'number'){
-            changeArrowTest(false, 'step', IdOrigen, parent);
+            changeArrowTest('step', IdOrigen, parent);
         }
     }
 
@@ -2242,6 +2254,8 @@ function WorkFlowEdit() {
             difference = TILEWIDTH / 2,
             stepOrigen = EDIT_STEPS[idOrigen - 1],
             stepTarget = EDIT_STEPS[idTarget - 1];
+
+        searchArrow(idOrigen, idTarget).meshPrimary.visible = false;
 
         var newArray = [idTarget];
 
@@ -2297,8 +2311,9 @@ function WorkFlowEdit() {
 
         orderPositionSteps(EDIT_STEPS, 'step');
 
-        deleteArrow();
-        setTimeout(function(){updateArrow();}, 1000);
+        removeArrowTest(1000);
+
+        setTimeout(function(){deleteArrow(); updateArrow();}, 1000);
 
         return mesh;
     }
@@ -2307,7 +2322,7 @@ function WorkFlowEdit() {
      * 
      * @param {String}
      */ 
-    function changeArrowTest(state, type, IdOrigen, IdTarget){
+    function changeArrowTest(type, IdOrigen, IdTarget){
 
         var object = {
             dataArrow : null,
@@ -2317,7 +2332,123 @@ function WorkFlowEdit() {
             }
         };
 
-        if(state){
+        var mesh = null, arrowHelper;
+
+        object.dataArrow = searchArrow(IdOrigen, IdTarget);
+
+        if(!object.dataArrow)
+            object.dataArrow = searchArrow(IdTarget, IdOrigen);
+        
+        if(object.dataArrow){ 
+
+            if(type === 'changeStep'){
+                mesh = object.dataArrow.meshPrimary;
+                object.dataArrow.meshSecondary.visible = false;
+            }
+            else if(type === 'fork'){
+                mesh = object.dataArrow.meshSecondary;
+                object.dataArrow.meshPrimary.visible = false;
+            }
+            else{
+                object.dataArrow.meshPrimary.visible = false;
+                object.dataArrow.meshSecondary.visible = false;
+            }
+
+            object.dataArrow.arrow.visible = false;
+            object.dataArrow.vector1.visible = false;
+            object.dataArrow.vector2.visible = false;
+
+            var color = TYPE.async;
+
+            var typeCall = EDIT_STEPS[IdOrigen - 1].children.find(function(x){
+                if(x.id[0] === IdTarget)
+                    return x;
+            });
+
+            if(!typeCall){
+
+                typeCall = EDIT_STEPS[IdTarget - 1].children.find(function(x){
+                    if(x.id[0] === IdOrigen)
+                        return x;
+                });
+            }
+
+            if(typeCall){
+
+                if(typeCall.type === "direct call")
+                    color = TYPE.direct;
+            }
+
+            var from = null;
+            var to = null;
+            var direction = null;
+            var length = null;
+
+            var origen = null;
+            var target = EDIT_STEPS[IdTarget - 1].target.show.position;
+
+            switch(type) {
+
+                case 'changeStep':
+                case 'fork':
+
+                    origen = EDIT_STEPS[IdOrigen - 1].target.show.position;
+                    from = new THREE.Vector3(origen.x, origen.y, 2);
+                    to = new THREE.Vector3(mesh.position.x, mesh.position.y, 2);
+
+                    direction = to.clone().sub(from);
+                    length = direction.length();
+                    arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1);
+                    arrowHelper.userData.from = from;
+                    object.arrows.vector1 = arrowHelper;
+                    window.scene.add(arrowHelper);
+
+                    from = new THREE.Vector3(target.x, target.y, 2);
+
+                    direction = to.clone().sub(from);
+                    length = direction.length();
+                    arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1);
+                    arrowHelper.userData.from = from;
+                    object.arrows.vector2 = arrowHelper;
+                    window.scene.add(arrowHelper);
+
+                    break;
+                default:
+
+                    origen = EDIT_STEPS[IdOrigen - 1].mesh.position;
+
+                    from = new THREE.Vector3(target.x, target.y, 2);
+                    to = new THREE.Vector3(origen.x, origen.y, 2);
+
+                    direction = to.clone().sub(from);
+                    length = direction.length();
+                    arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1);
+                    arrowHelper.userData.from = from;
+                    object.arrows.vector1 = arrowHelper;
+                    window.scene.add(arrowHelper);
+
+                    break; 
+            }
+
+            SHOW_ARROW.push(object);
+        }
+    }
+
+    function removeArrowTest(duration){
+
+        for(var i = 0; i < SHOW_ARROW.length; i++){
+
+            var vector1 = SHOW_ARROW[i].arrows.vector1;
+            var vector2 = SHOW_ARROW[i].arrows.vector2;
+
+            if(vector1)
+                window.scene.remove(vector1);
+
+            if(vector2)
+                window.scene.remove(vector2);
+        }
+
+        setTimeout(function(){
 
             for(var i = 0; i < SHOW_ARROW.length; i++){
 
@@ -2328,129 +2459,11 @@ function WorkFlowEdit() {
                 dataArrow.arrow.visible = true;
                 dataArrow.vector1.visible = true;
                 dataArrow.vector2.visible = true;
-
-                var vector1 = SHOW_ARROW[i].arrows.vector1;
-                var vector2 = SHOW_ARROW[i].arrows.vector2;
-
-                if(vector1)
-                    window.scene.remove(vector1);
-
-                if(vector2)
-                    window.scene.remove(vector2);
             }
 
             SHOW_ARROW = [];
-        }
-        else{
 
-            var mesh = null;
-
-            object.dataArrow = LIST_ARROWS.find(function(x){
-                if(x.originID[0] === IdOrigen && x.targetID[0] === IdTarget)
-                    return x;
-            });
-
-            if(!object.dataArrow){
-                object.dataArrow = LIST_ARROWS.find(function(x){
-                    if(x.originID[0] === IdTarget && x.targetID[0] === IdOrigen)
-                        return x;
-                });
-            }
-
-            if(object.dataArrow){ 
-
-                if(type === 'changeStep'){
-                    mesh = object.dataArrow.meshPrimary;
-                    object.dataArrow.meshSecondary.visible = false;
-                }
-                else if(type === 'fork'){
-                    mesh = object.dataArrow.meshSecondary;
-                    object.dataArrow.meshPrimary.visible = false;
-                }
-                else{
-                    object.dataArrow.meshPrimary.visible = false;
-                    object.dataArrow.meshSecondary.visible = false;
-                }
-
-                object.dataArrow.arrow.visible = false;
-                object.dataArrow.vector1.visible = false;
-                object.dataArrow.vector2.visible = false;
-
-                var color = TYPE.async;
-
-                var typeCall = EDIT_STEPS[IdOrigen - 1].children.find(function(x){
-                    if(x.id[0] === IdTarget)
-                        return x;
-                });
-
-                if(!typeCall){
-
-                    typeCall = EDIT_STEPS[IdTarget - 1].children.find(function(x){
-                        if(x.id[0] === IdOrigen)
-                            return x;
-                    });
-                }
-
-                if(typeCall){
-
-                    if(typeCall.type === "direct call")
-                        color = TYPE.direct;
-                }
-
-                var from = null;
-                var to = null;
-                var direction = null;
-                var length = null;
-
-                var origen = null;
-                var target = EDIT_STEPS[IdTarget - 1].target.show.position;
-
-                switch(type) {
-
-                    case 'changeStep':
-                    case 'fork':
-
-                        origen = EDIT_STEPS[IdOrigen - 1].target.show.position;
-                        from = new THREE.Vector3(origen.x, origen.y, 2);
-                        to = new THREE.Vector3(mesh.position.x, mesh.position.y, 2);
-
-                        direction = to.clone().sub(from);
-                        length = direction.length();
-                        arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1);
-                        arrowHelper.userData.from = from;
-                        object.arrows.vector1 = arrowHelper;
-                        window.scene.add(arrowHelper);
-
-                        from = new THREE.Vector3(target.x, target.y, 2);
-
-                        direction = to.clone().sub(from);
-                        length = direction.length();
-                        arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1);
-                        arrowHelper.userData.from = from;
-                        object.arrows.vector2 = arrowHelper;
-                        window.scene.add(arrowHelper);
-
-                        break;
-                    default:
-
-                        origen = EDIT_STEPS[IdOrigen - 1].mesh.position;
-
-                        from = new THREE.Vector3(target.x, target.y, 2);
-                        to = new THREE.Vector3(origen.x, origen.y, 2);
-
-                        direction = to.clone().sub(from);
-                        length = direction.length();
-                        arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1);
-                        arrowHelper.userData.from = from;
-                        object.arrows.vector1 = arrowHelper;
-                        window.scene.add(arrowHelper);
-
-                        break; 
-                }
-
-                SHOW_ARROW.push(object);
-            }
-        }
+        }, duration);
     }
 
     /**
@@ -2482,8 +2495,6 @@ function WorkFlowEdit() {
 
         var i, l;
 
-        LIST_ARROWS = [];
-
         for(i = 0; i < EDIT_STEPS.length; i++){
 
             var children = EDIT_STEPS[i].children;
@@ -2497,10 +2508,14 @@ function WorkFlowEdit() {
               
                 if(step){
 
-                    createLineStep(EDIT_STEPS[i].target.show, 
+                    var originID = EDIT_STEPS[i].order,
+                        targetID = step.order;
+
+                    if(!searchArrow(originID, targetID))
+                        createLineStep(EDIT_STEPS[i].target.show, 
                                         step.target.show,
-                                        EDIT_STEPS[i].order,
-                                        step.order,
+                                        originID,
+                                        targetID,
                                         EDIT_STEPS[i].tile,
                                         step.tile, false);
                 }
@@ -2613,26 +2628,21 @@ function WorkFlowEdit() {
             canvas.width = 635;
         var ctx = canvas.getContext('2d');
         var middle = canvas.width / 2;
-        var image = document.createElement('img');
+        var image = TEXTURE.img;
         var texture = new THREE.Texture(canvas);
             texture.minFilter = THREE.NearestFilter;
 
-        image.onload = function() {
+        ctx.drawImage(image, 0, 0);
 
-            ctx.drawImage(image, 0, 0);
+        ctx.textAlign = 'center';
 
-            ctx.textAlign = 'center';
+        ctx.font = '140px Arial';
+        ctx.fillText(id, middle - 110, middle - 70);
 
-            ctx.font = '140px Arial';
-            ctx.fillText(id, middle - 110, middle - 70);
-
-            ctx.font = '75px Arial';
-            ctx.fillText(parent, middle + 185, middle - 85);
-            
-            texture.needsUpdate = true;
-        };
-
-        image.src = 'images/workflow/Boton1.png';
+        ctx.font = '75px Arial';
+        ctx.fillText(parent, middle + 185, middle - 85);
+        
+        texture.needsUpdate = true;
 
         return texture;
     }
@@ -2676,6 +2686,8 @@ function WorkFlowEdit() {
             if(EDIT_STEPS[i].tile === idTile)
                 countSteps.push(EDIT_STEPS[i]);
         }
+
+        hideArrow();
         
         if(countSteps.length === 1){ 
 
@@ -2751,6 +2763,47 @@ function WorkFlowEdit() {
                 topY = topY - distanceSteps; 
             }
         }
+
+        function hideArrow(){
+
+            for(i = 0; i < countSteps.length; i++){
+
+                var children = countSteps[i].children;
+
+                var parent = searchParentStepEdit(countSteps[i].order[0], EDIT_STEPS);
+
+                var originID = parent,
+                    targetID = countSteps[i].order[0];
+
+                var connection = searchArrow(originID, targetID);
+
+                if(connection){
+                    
+                    connection.meshPrimary.visible = false;
+                    connection.meshSecondary.visible = false;
+                    connection.arrow.visible = false;
+                    connection.vector1.visible = false;
+                    connection.vector2.visible = false;
+                }
+            
+                for (l = 0; l < children.length; l++) {
+
+                    originID = countSteps[i].order,
+                    targetID = children[l].id;
+
+                    connection = searchArrow(originID, targetID);
+
+                    if(connection){
+                        
+                        connection.meshPrimary.visible = false;
+                        connection.meshSecondary.visible = false;
+                        connection.arrow.visible = false;
+                        connection.vector1.visible = false;
+                        connection.vector2.visible = false;
+                    }
+                }
+            }
+        }
     }
     /**
      * @author Ricardo Delgado.
@@ -2760,7 +2813,7 @@ function WorkFlowEdit() {
     function orderPositionSteps(_array, type){
 
         var array = _array,
-            i, l;
+            i, l, mesh;
 
         for(i = 0; i < array.length; i++) {
 
@@ -2792,7 +2845,7 @@ function WorkFlowEdit() {
 
                 if(type === 'step'){ 
 
-                    var mesh = array[i].mesh;
+                    mesh = array[i].mesh;
 
                     mesh.userData.id[0] = newId;
                 }
@@ -2809,7 +2862,7 @@ function WorkFlowEdit() {
             }
             else{
 
-                var mesh = FOCUS.mesh;
+                mesh = FOCUS.mesh;
 
                 var target = window.helper.fillTarget(0, 0, 0, 'table');
 
@@ -3076,8 +3129,9 @@ function WorkFlowEdit() {
 
         setTimeout(function() { focus.visible = true; }, 1500);
 
-        deleteArrow();
-        setTimeout(function(){updateArrow();}, 1000);
+        removeArrowTest(1000);
+
+        setTimeout(function(){ deleteArrow(); updateArrow();}, 1000);
 
         updateStepList();
     }
@@ -3209,7 +3263,7 @@ function WorkFlowEdit() {
         
         con.innerHTML = "";
 
-        for(var i = 0; i < _obj.length; i++) {
+        for(var i = 0; i < _obj.length; i++){
 
             var id = i + 1;
 
@@ -3301,10 +3355,11 @@ function WorkFlowEdit() {
 
         if(state){
 
+            removeArrowTest(1000);
+
             orderPositionSteps(EDIT_STEPS, 'step');
 
-            deleteArrow();
-            setTimeout(function(){updateArrow();}, 1000);
+            setTimeout(function(){deleteArrow(); updateArrow();}, 1000);
 
             updateTextureParent();
         }
@@ -3359,9 +3414,9 @@ function WorkFlowEdit() {
      */ 
     function resetSteps(steps){
 
-        var array = [];
+        var array = [], i;
 
-        for(var i = 0; i < steps.length; i++){
+        for(i = 0; i < steps.length; i++){
 
             var object = {
                     order : [],
@@ -3404,9 +3459,9 @@ function WorkFlowEdit() {
 
         function validateTiles(){
 
-            var deleteStep = null;
+            var deleteStep = null, i;
 
-            for(var i = 0; i < array.length; i++){
+            for(i = 0; i < array.length; i++){
 
                 if(!deleteStep){
 
@@ -3415,7 +3470,7 @@ function WorkFlowEdit() {
                 }
             }
 
-            for(var i = 0; i < array.length; i++){
+            for(i = 0; i < array.length; i++){
 
                 if(!deleteStep){
 
@@ -3471,8 +3526,13 @@ function WorkFlowEdit() {
 
         var target = step.target.show;
 
-        if(target.position.x >= xInit && target.position.x <= xEnd)
+        if(target.position.x >= xInit && target.position.x <= xEnd){
             focus.visible = true;
+            removeArrowTest(0);
+        }
+        else{
+            removeArrowTest(500);
+        }
 
         animate(mesh, target, 300, function(){
             FOCUS.mesh.position.copy(mesh.position);
@@ -3486,10 +3546,7 @@ function WorkFlowEdit() {
      */ 
     function resetPositionStepMeshButtons(mesh, type, IdOrigen, IdTarget){
 
-        var object = LIST_ARROWS.find(function(x){
-            if(x.originID[0] === IdOrigen && x.targetID[0] === IdTarget)
-                return x;
-        });
+        var object = searchArrow(IdOrigen, IdTarget);
 
         var target = null;
 
@@ -3497,6 +3554,8 @@ function WorkFlowEdit() {
             target = object.meshPrimaryTarget.show;
         else
             target = object.meshSecondaryTarget.show;
+
+        removeArrowTest(0);
 
         animate(mesh, target, 300);
     }
@@ -3585,6 +3644,17 @@ function WorkFlowEdit() {
 
         return false;
     }
+
+    function searchArrow(originID, targetID){
+
+        return  LIST_ARROWS.find(function(x){
+                    if(x.originID === originID && x.targetID === targetID)
+                        return x;
+                    else if(x.originID[0] === originID && x.targetID[0] === targetID)
+                        return x;
+                });
+    }
+
     /**
      * @author Ricardo Delgado.
      * 
