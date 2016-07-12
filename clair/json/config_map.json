@@ -1,104 +1,54 @@
 {
     "start": "home",
-    
+
     "views" : {
-        
+
         "home": {
             "up": "",
-            "down": "learn",
-            "right": "network",
-            "left": "table",
+            "down": "table",
+            "right": "",
+            "left": "",
             "section" : [0, 0],
             "title" : "Home",
             "enabled" : true
         },
 
-        "learn": {
-            "up": "home",
-            "down": "book",
-            "right": "readme",
-            "left": "whitepaper",
-            "section" : [0, -5],
-            "title" : "Learning Area",
-            "enabled" : true
-        },
-
-        "book": {
-            "up": "learn",
-            "down": "",
-            "right": "",
-            "left": "",
-            "section" : [0, -6],
-            "title" : "Fermat Book",
-            "enabled" : true
-        },
-
-        "readme": {
-            "up": "",
-            "down": "",
-            "right": "",
-            "left": "learn",
-            "section" : [1, -5],
-            "title" : "Read Me",
-            "enabled" : true
-        },
-
-        "whitepaper": {
-            "up": "",
-            "down": "",
-            "right": "learn",
-            "left": "",
-            "section" : [-1, -5],
-            "title" : "Fermat White Paper",
-            "enabled" : true
-        },
-
         "table": {
-            "up": "developers",
-            "down": "workflows",
-            "right": "home",
-            "left": "stack",
-            "section" : [-5, 0],
+            "up": "home",
+            "down": "stack",
+            "right": "workflows",
+            "left": "developers",
+            "section" : [0, -2],
             "title" : "Architecture",
             "enabled" : true
         },
 
         "stack": {
-            "up": "",
+            "up": "table",
             "down": "",
-            "right": "table",
+            "right": "",
             "left": "",
-            "section" : [-6, 0],
+            "section" : [0, -3],
             "title" : "Platform Stack",
             "enabled" : true
         },
 
         "developers": {
             "up": "",
-            "down": "table",
-            "right": "",
+            "down": "",
+            "right": "table",
             "left": "",
-            "section" : [-5, 1],
+            "section" : [-1, -2],
             "title" : "Developers",
             "enabled" : true
         },
 
-        "network": {
+        "workflows": {
             "up": "",
             "down": "",
             "right": "",
-            "left": "home",
-            "section" : [5, 0],
-            "title" : "Fermat Network",
-            "enabled" : true
-        },
-
-        "workflows": {
-            "up": "table",
-            "down": "",
-            "right": "",
-            "left": "",
-            "section" : [-5, -1],
+            "left": "table",
+            "section" : [5, -2],
             "title" : "Workflows",
             "enabled" : true
         }
