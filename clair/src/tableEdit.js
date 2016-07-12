@@ -152,7 +152,6 @@ function TableEdit() {
 
         var newCenter = window.helper.getCenterView('table'),
             y = window.helper.getLastValueArray(window.tileManager.dimensions.layerPositions) + (window.TILE_DIMENSION.height * 2);
-            position = new THREE.Vector3(0, y, 0);
 
         var mesh = new THREE.Mesh(
                    new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
@@ -163,9 +162,9 @@ function TableEdit() {
                         })
                 );
 
-        position = window.viewManager.translateToSection('table', position);
+        y = transformPositionY(y);
 
-        var target = window.helper.fillTarget(newCenter.x, position.y, newCenter.z, 'table');
+        var target = window.helper.fillTarget(newCenter.x, y, newCenter.z, 'table');
 
         mesh.position.copy(target.hide.position);
 
@@ -352,7 +351,7 @@ function TableEdit() {
 
                     var index = window.layers[layer].index;
 
-                    y = window.tileManager.dimensions.layerPositions[index];
+                    y = transformPositionY(window.tileManager.dimensions.layerPositions[index]);
 
                     z = 0;
 
@@ -524,7 +523,7 @@ function TableEdit() {
                     }
 
                     var positionCameraX = window.TABLE[oldGroup].x,
-                        positionCameraY = window.helper.getPositionYLayer(oldLayer);
+                        positionCameraY = transformPositionY(window.helper.getPositionYLayer(oldLayer));
 
                     window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
 
@@ -557,8 +556,10 @@ function TableEdit() {
                         setTimeout( function() { 
 
                             positionCameraX = window.TABLE[newGroup].x;
-                            positionCameraY = window.helper.getPositionYLayer(newLayer);
+                            positionCameraY = transformPositionY(window.helper.getPositionYLayer(newLayer));
+
                             camera.move(positionCameraX, positionCameraY,8000, 2000);
+
                             createNewElementTile(table);
                             window.screenshotsAndroid.hidePositionScreenshots(newGroup, newLayer);
                             window.tileManager.updateElementsByGroup();
@@ -820,7 +821,7 @@ function TableEdit() {
                 window.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
                 var positionCameraX = window.TABLE[oldGroup].x,
-                    positionCameraY = helper.getPositionYLayer(oldLayer);
+                    positionCameraY = transformPositionY(window.helper.getPositionYLayer(oldLayer));
 
                 window.camera.loseFocus();
                 window.camera.enable();
@@ -876,7 +877,7 @@ function TableEdit() {
         if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
             window.TABLE[platform].layers[layer] = {   
                 objects : [],
-                y : window.helper.getPositionYLayer(layer)
+                y : transformPositionY(window.helper.getPositionYLayer(layer))
             };
         }
 
@@ -895,11 +896,11 @@ function TableEdit() {
         else
             x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
 
-        y = window.helper.getPositionYLayer(layer);
+        y = transformPositionY(window.helper.getPositionYLayer(layer));
 
         z = 0;
 
-        var target = helper.fillTarget(x, y, z, 'table');
+        var target = window.helper.fillTarget(x, y, z, 'table');
 
         mesh.position.copy(target.hide.position);
         mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
@@ -1039,7 +1040,7 @@ function TableEdit() {
                 
             var x = 0, y = 0, z = 0;
 
-            var lastObject = helper.getLastValueArray(newArrayObject);
+            var lastObject = window.helper.getLastValueArray(newArrayObject);
 
             var count = newArrayObject.length;
 
@@ -1055,7 +1056,8 @@ function TableEdit() {
             else
                 x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
 
-            y = window.helper.getPositionYLayer(oldLayer);
+            y = transformPositionY(window.helper.getPositionYLayer(oldLayer));
+
 
             z = 0;
 
@@ -1101,6 +1103,13 @@ function TableEdit() {
             }
         }
         return dev;
+    }
+
+    function transformPositionY(y){
+
+        var newPosition = new THREE.Vector3(0, y, 0);
+
+        return window.viewManager.translateToSection('table', newPosition).y;
     }
 
     function animate(mesh, target, duration, callback){
