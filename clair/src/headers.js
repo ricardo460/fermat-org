@@ -32,6 +32,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
     this.dep = dependencies;
     this.arrows = arrows;
     this.arrowPositions = arrowsPositions;
+    this.positions = positions;
 
     var onClick = function(target) {
         if(window.actualView === 'workflows'){
@@ -595,42 +596,29 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
      * Calculate the position header
      */
 
-    var headersPositionsViewWorkFlow = function() {
+    var calculateWorkflowPositions = function() {
+        
+        var calculatePosition = function(group, offset) {
+            for(var element in group){
+                if(group.hasOwnProperty(element) && element !== 'size'){
+                    var headerData = group[element];
 
-        var group, headerData, objectHeaderInWFlowGroup, slayer, column;
+                    var column = headerData.index + offset;
 
-        for(group in window.platforms){
-            if(window.platforms.hasOwnProperty(group) && group !== 'size'){
-                headerData = window.platforms[group];
-                column = headerData.index;
+                    var headerObject = new THREE.Object3D();
 
+                    headerObject.position.x = (width * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 20000;
+                    headerObject.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
+                    headerObject.name = element;
 
-                objectHeaderInWFlowGroup = new THREE.Object3D();
-
-                objectHeaderInWFlowGroup.position.x = (width * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) + 10000;
-                objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
-                objectHeaderInWFlowGroup.name = group;
-
-                objectHeaderInWFlowGroup.position.copy(window.viewManager.translateToSection('workflows', objectHeaderInWFlowGroup.position));
-                positions.workFlow.push(objectHeaderInWFlowGroup);
+                    headerObject.position.copy(window.viewManager.translateToSection('workflows', headerObject.position));
+                    positions.workFlow.push(headerObject);
+                }
             }
-        }
-        for(slayer in superLayers){
-            if(window.superLayers.hasOwnProperty(slayer) && slayer !== 'size'){
-                headerData = window.superLayers[slayer];
-
-                column = headerData.index + 1;
-
-                objectHeaderInWFlowGroup = new THREE.Object3D();
-
-                objectHeaderInWFlowGroup.position.x = (width * (column - (groupsQtty - 1) / 2) + ((column - 1) * window.TILE_DIMENSION.width)) - 20000;
-                objectHeaderInWFlowGroup.position.y = ((layersQtty + 10) * window.TILE_DIMENSION.height) / 2;
-                objectHeaderInWFlowGroup.name = slayer;
-
-                objectHeaderInWFlowGroup.position.copy(window.viewManager.translateToSection('workflows', objectHeaderInWFlowGroup.position));
-                positions.workFlow.push(objectHeaderInWFlowGroup);
-            }
-        }
+        };
+        
+        calculatePosition(window.platforms, window.superLayers.size());
+        calculatePosition(window.superLayers, 0);
     };
 
     var initialize = function() {
@@ -650,16 +638,14 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                 if(parents != null && parents.length !== 0) {
 
                     for(i = 0, l = parents.length; i < l; i++) {
-
                         dependencies[parents[i]] = dependencies[parents[i]] || [];
-
                         actual = dependencies[parents[i]];
-
                         actual.push(child);
                     }
                 }
-                else
+                else {
                     dependencies.root.push(child);
+                }
 
                 dependencies[child] = dependencies[child] || [];
             }
@@ -688,12 +674,9 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
                     id: index,
                     onClick : onClick
                 };
-
                 helper.applyTexture(source, object);
-
                 header.addLevel(object, levels[i][1]);
             }
-
             return header;
         }
 
@@ -748,7 +731,7 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
 
         buildGraph();
         calculateStackPositions();
-        headersPositionsViewWorkFlow();
+        calculateWorkflowPositions();
     };
 
     initialize();

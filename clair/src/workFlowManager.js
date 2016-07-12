@@ -236,7 +236,7 @@ function WorkFlowManager(){
             var camTarget = headerFlow[id].objects[0].clone();
             camTarget.position.y -= 850;
 
-            window.camera.setFocus(camTarget, new THREE.Vector4(0, -850, 2600, 1),duration);
+            window.camera.setFocus(camTarget, new THREE.Vector4(0, -850, 2600, 1), duration);
 
             for(var i = 0; i < headerFlow.length ; i++) {
                 if(id !== i)
