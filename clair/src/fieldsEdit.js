@@ -985,7 +985,7 @@ function FieldsEdit() {
 
         modal.innerHTML = ''+
             '<label>Description:</label>'+
-            '<textarea id="modal-desc-textarea" rows="12" maxlength="250"></textarea>'+
+            '<textarea id="modal-desc-textarea" rows="12" maxlength="220"></textarea>'+
             '<div>'+
                 '<button id="modal-desc-cancel">Cancel</button>'+
                 '<button id="modal-desc-accept">Accept</button>'+
