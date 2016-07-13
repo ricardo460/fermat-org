@@ -1051,6 +1051,26 @@ function FieldsEdit() {
 
             `;
             
+            var b1 = document.createElement("button");
+            var b2 = document.createElement("button");
+            
+            b1.id = "step-modal-accept";
+            b2.id = "step-modal-cancel";
+            
+            b1.onclick = function() {
+                //Accept
+            };
+            
+            b2.onclick = function() {
+                //Cancel
+            };
+            
+            b1.innerHTML = "Accept";
+            b2.innerHTML = "Cancel";
+            
+            div.appendChild(b1);
+            div.appendChild(b2);
+            
             document.body.appendChild(div);
 
             window.onresize  = function() {

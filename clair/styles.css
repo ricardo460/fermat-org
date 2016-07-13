@@ -1169,8 +1169,8 @@ END
     position: absolute;
     overflow: hidden;
     width: 30%;
-    height: 54%;
-    top: 5%;
+    height: 48%;
+    top: 8%;
     left: 36%;
     background: #EEE;
 }
@@ -1180,7 +1180,7 @@ END
     border: 1px solid #99C;
     border-radius: 5px;
     width: 90%;
-    height: 17.5%;
+    height: 18.5%;
     left: 5%;
     top: 6%
 }
@@ -1190,9 +1190,9 @@ END
     border: 1px solid #99C;
     border-radius: 5px;
     width: 90%;
-    height: 12.5%;
+    height: 9.5%;
     left: 5%;
-    top: 28%;
+    top: 29%;
 }
 
 #step-modal-title:focus {
@@ -1205,15 +1205,44 @@ END
     border-radius: 5px;
     width: 90%;
     resize: none;
-    height: 49%;
+    height: 39%;
     left: 5%;
-    top: 46%;
+    top: 42.5%;
 }
 
 #step-modal-desc:focus {
     border: 1px solid #77bae8;
 }
 
+
+#step-modal-cancel {
+    position: absolute;
+    border: 1px solid rgb(153, 153, 204);
+    border-radius: 5px;
+    width: 45%;
+    resize: none;
+    height: 10%;
+    left: 5%;
+    top: 86%;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+}
+
+#step-modal-accept {
+    position: absolute;
+    border: 1px solid rgb(153, 153, 204);
+    border-radius: 5px;
+    width: 45%;
+    resize: none;
+    height: 10%;
+    left: 51%;
+    top: 86%;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+}
+
+#step-modal-cancel:hover, #step-modal-cancel:hover {
+    cursor: pointer;
+    background: #eef;
+}
 /**
 * END
 */
