@@ -985,7 +985,7 @@ function FieldsEdit() {
 
         modal.innerHTML = ''+
             '<label>Description:</label>'+
-            '<textarea id="modal-desc-textarea" rows="12" maxlength="200"></textarea>'+
+            '<textarea id="modal-desc-textarea" rows="12" maxlength="250"></textarea>'+
             '<div>'+
                 '<button id="modal-desc-cancel">Cancel</button>'+
                 '<button id="modal-desc-accept">Accept</button>'+
@@ -1048,7 +1048,7 @@ function FieldsEdit() {
             `               
                <canvas id="step-modal-canvas"></canvas>
                <input type="text" placeholder="Title" id="step-modal-title" maxlength = "75"/>
-               <textarea placeholder="Description" id="step-modal-desc" maxlength = "150"></textarea>
+               <textarea placeholder="Description" id="step-modal-desc" maxlength = "160"></textarea>
 
             `;
             
@@ -1467,7 +1467,7 @@ function FieldsEdit() {
     }
 
     function cleanPreview(){
-
+        
         var canvas = document.getElementById('step-modal-canvas');
         var ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
