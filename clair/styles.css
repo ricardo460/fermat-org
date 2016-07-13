@@ -1370,3 +1370,64 @@ END
     z-index: 11;
     color: rgba(127,127,127,1);
 }
+
+/**
+ *        START
+ * @author Daril Rodriguez
+ *
+ */
+
+#modal-call-type {
+    position: relative;
+    background: #555;
+    padding: 3px;
+    width: 86px;
+}
+
+#modal-call-select {
+    border: 1px solid rgb(58, 58, 58);
+    width: 84px;
+    overflow: hidden;
+    background: linear-gradient(to bottom, rgba(107, 107, 107, 1) 0%, rgba(88, 88, 88, 1) 100%);
+}
+
+#modal-call-select select{
+    border: 0;
+    width: 84px;
+    font-size: 11px;
+    width: 84;
+    float: left;
+    color: #FFF;
+    border: none;
+    padding: 3.5px;
+    appearance: none;
+    padding-left: 0px;
+    -moz-appearance: none;
+    font-family: sans-serif;
+    -webkit-appearance: none;
+    background: transparent url("http://flaticons.net/icons/Application/Arrowhead-Down-01.png") right center no-repeat;
+    background-size: 7%;
+    background-position: 74px;
+}
+
+#modal-solap-a {
+    position: absolute;
+    left: 70px;
+    height: 10px;
+    width: 7px;
+    background: linear-gradient( 50deg, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 1) 50%, #555 50%);
+}
+
+#modal-solap-b {
+    position: absolute;
+    left: 77px;
+    height: 10px;
+    width: 7px;
+    background: linear-gradient( -50deg, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 1) 50%, #555 50%);
+}
+
+#modal-call {
+    position: absolute;
+    left: 44%;
+    top: 47%;
+}
