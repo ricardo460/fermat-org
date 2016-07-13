@@ -1171,7 +1171,7 @@ END
     width: 30%;
     height: 48%;
     top: 8%;
-    left: 36%;
+    left: 37.5%;
     background: #EEE;
 }
 
@@ -1222,7 +1222,7 @@ END
     width: 45%;
     resize: none;
     height: 10%;
-    left: 5%;
+    left: 51%;
     top: 86%;
     background: rgb(255, 255, 255) none repeat scroll 0% 0%;
 }
@@ -1234,12 +1234,12 @@ END
     width: 45%;
     resize: none;
     height: 10%;
-    left: 51%;
+    left: 5%;
     top: 86%;
     background: rgb(255, 255, 255) none repeat scroll 0% 0%;
 }
 
-#step-modal-cancel:hover, #step-modal-cancel:hover {
+#step-modal-cancel:hover, #step-modal-accept:hover {
     cursor: pointer;
     background: #eef;
 }
@@ -1339,7 +1339,7 @@ END
 
 .steps-button-close:hover {
 	cursor: pointer;
-    transform: rotate(-45deg);
+  transform: rotate(-45deg);
 }
 
 .steps-div-close {

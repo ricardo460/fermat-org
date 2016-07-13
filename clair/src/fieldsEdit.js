@@ -1036,7 +1036,8 @@ function FieldsEdit() {
         var div = document.getElementById("step-modal");
 
         var title = step.title[0],
-            desc = step.desc[0];
+            desc = step.desc[0],
+            _title, _desc, b1, b2;
 
         if(!div){ 
         
@@ -1051,19 +1052,11 @@ function FieldsEdit() {
 
             `;
             
-            var b1 = document.createElement("button");
-            var b2 = document.createElement("button");
+            b1 = document.createElement("button");
+            b2 = document.createElement("button");
             
             b1.id = "step-modal-accept";
             b2.id = "step-modal-cancel";
-            
-            b1.onclick = function() {
-                //Accept
-            };
-            
-            b2.onclick = function() {
-                //Cancel
-            };
             
             b1.innerHTML = "Accept";
             b2.innerHTML = "Cancel";
@@ -1072,22 +1065,36 @@ function FieldsEdit() {
             div.appendChild(b2);
             
             document.body.appendChild(div);
-
+            
             window.onresize  = function() {
                 div.style.width = (div.offsetHeight * 0.9) + "px";
             };
             
             window.onresize();
         }
+        else{
 
-        var _title = document.getElementById("step-modal-title");
-        var _desc  = document.getElementById("step-modal-desc");
-            
+            b1 = document.getElementById("step-modal-accept");
+            b2  = document.getElementById("step-modal-cancel");
+        }
+
+        _title = document.getElementById("step-modal-title");
+        _desc  = document.getElementById("step-modal-desc");
+
         _title.value = title;
         _desc.value  = desc;
 
-        _title.oninput = function() {step.title[0] = _title.value};
-        _desc.oninput  = function() {step.desc[0] = _desc.value;};
+        b1.onclick = function() {
+            step.title[0] = _title.value;
+            step.desc[0] = _desc.value;
+            window.dragManager.functions.DROP = [];
+            window.fieldsEdit.hiddenModal();
+        };
+        
+        b2.onclick = function() {
+            window.dragManager.functions.DROP = [];
+            window.fieldsEdit.hiddenModal();
+        };
 
         _title.addEventListener('blur', function() {
             workflowPreview(step);

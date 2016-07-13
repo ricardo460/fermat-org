@@ -38,6 +38,10 @@ function WorkFlowEdit() {
         image : null
     };
 
+    this.getFocus = function(){
+        return FOCUS; // test
+    };
+
     this.get = function(){
         return EDIT_STEPS; // test
     };
@@ -328,6 +332,7 @@ function WorkFlowEdit() {
 
             changeMode('edit-step');
             changeMode('edit-path');
+            document.getElementById("steps-list").dataset.state = 'show';
         }
         else if(window.fieldsEdit.actions.type === "update"){
 
@@ -406,7 +411,6 @@ function WorkFlowEdit() {
             showBrowser(true);
 
             window.dragManager.disable();
-
             window.dragManager.reset();
 
             actualMode = null;
@@ -416,13 +420,9 @@ function WorkFlowEdit() {
             PREVIEW_STEPS = [];
 
             window.fieldsEdit.hiddenModal();
-
             window.camera.resetPosition();
-
             window.headers.transformWorkFlow(2000);
-
             window.removeEventListener('keydown', newOnKeyDown, false);
-
             window.addEventListener('keydown', window.camera.onKeyDown, false);
         };
 
@@ -434,7 +434,7 @@ function WorkFlowEdit() {
 
             var repared = [];
 
-            var msj = "They removed the following steps: \n";
+            var msj = "The following steps were removed: \n";
 
             for(var i = 0; i < steps.length; i++){
 
@@ -454,9 +454,11 @@ function WorkFlowEdit() {
 
                 order.find(function(x){msj += "* ("+(x.id + 1)+")" +x.title +".\n";});
 
-                msj += "For the following reasons: \n* Do not have an assigned component." +
-                "\n* Repeat the same component sequentially in steps." +
-                "\n\nYou want to repair these steps?";
+                msj += "Due to the following reasons: \n* They do not have an assigned component." +
+                "\n* Two or more sequential steps have the same component." +
+                "\n\nDo you want to repair these steps?\n"+
+                "Press Accept to repair them or press Cancel "+
+                "to delete the steps listed above from the workflow.";
 
                 if(window.confirm(msj)) 
                     return repared;
@@ -1245,25 +1247,15 @@ function WorkFlowEdit() {
                     enter = function() {
 
                         createMeshFocus();
-
-                        window.fieldsEdit.setModeEdit('Mode Edit-Steps');
-
+                        window.fieldsEdit.setModeEdit('Edit Steps Mode');
                         window.dragManager.enable();
-
                         window.helper.hide('backButton', 0, true);
-
                         window.fieldsEdit.hiddenStepsList(true);
-
                         buttons.preview();
-
                         buttons.path();
-
                         window.actualView = false;
-
                         displayField(false);
-
                         window.tileManager.transform(false, 1000);
-
                         window.signLayer.transformSignLayer();
 
                         var newCenter = new THREE.Vector3(0, 0, 0);
@@ -1273,7 +1265,6 @@ function WorkFlowEdit() {
                         if(EDIT_STEPS.length > 0){
 
                             updateStepList();
-
                             hideButtonsArrows();
 
                             window.dragManager.objects = [];
@@ -1322,6 +1313,8 @@ function WorkFlowEdit() {
                                         var vector = window.helper.getSpecificTile(step.tile).mesh.position;
 
                                         window.camera.move(vector.x, vector.y + 100, 500, 1000, true);
+
+                                        window.dragManager.cleanObjects();
 
                                         window.dragManager.functions.DROP.push(
                                             function(SELECTED){
@@ -1405,7 +1398,7 @@ function WorkFlowEdit() {
 
                         buttons.steps();
 
-                        window.fieldsEdit.setModeEdit('Mode Edit-Path');
+                        window.fieldsEdit.setModeEdit('Edit Path Mode');
 
                         window.dragManager.styleMouse.CROSS = 'copy';
 
@@ -1632,7 +1625,7 @@ function WorkFlowEdit() {
 
                         window.helper.show('backButton', 0);
 
-                        window.fieldsEdit.setModeEdit('Mode Repared-Steps');
+                        window.fieldsEdit.setModeEdit('Repair Steps Mode');
 
                         window.actualView = false;
 
@@ -1651,6 +1644,8 @@ function WorkFlowEdit() {
                         window.camera.move(newCenter.x, newCenter.y, z, transition, true);
                         
                         window.headers.transformTable(transition);
+
+                        document.getElementById("steps-list").dataset.state = 'show';
 
                         updateStepsRepared();
 

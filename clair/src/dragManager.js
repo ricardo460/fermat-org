@@ -201,11 +201,9 @@ function DragManager() {
     function mouseDown(event) { 
 
         event.preventDefault();
-
         window.camera.getRayCast(rayCaster, mouse);
 
         var i = 0;
-
         var intersects = rayCaster.intersectObjects(self.objects, true);
 
         if (intersects.length > 0) {
@@ -219,7 +217,6 @@ function DragManager() {
             }
 
             window.camera.disable();
-
             container.style.cursor = self.styleMouse.CLICK;
         }
 
@@ -241,9 +238,7 @@ function DragManager() {
         var i = 0;
 
         event.preventDefault();
-
         window.camera.enable();
-
         container.style.cursor = self.styleMouse.DROP;
 
         for(i = 0; i < self.functions.DROP.length; i++){
@@ -266,9 +261,7 @@ function DragManager() {
             else
                 plane.position.copy(INTERSECTED.position);
 
-            SELECTED = null;
-            INTERSECTED = null;
-            COLLISION = null;
+            self.cleanObjects();
         }
     }
     /**
@@ -295,16 +288,21 @@ function DragManager() {
             CROSS : []
         };
     }
+
+    this.cleanObjects = function(){
+
+        SELECTED = null;
+        INTERSECTED = null;
+        COLLISION = null;
+    }
     /**
      * @author Ricardo Delgado.
      * 
      */ 
     this.reset = function(){
-        SELECTED = null;
-        INTERSECTED = null;
-        COLLISION = null;
         cleanFunctions();
         resetStyleMouse();
+        self.cleanObjects();
         self.objects = [];
         self.objectsColision = [];
     }
