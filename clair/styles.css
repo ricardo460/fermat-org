@@ -1417,3 +1417,45 @@ END
     left: 44%;
     top: 47%;
 }
+
+
+#step-error {
+    padding-left: 5px;
+    padding-top: 5px;
+    border: 1px solid #F44;
+    height: 9.5%;
+    width: 90%;
+    position: absolute;
+    top: 14%;
+    left: 5%;
+    background: #FFF;
+    font-size: 12px;
+    transition: 1s all ease 0s;
+    border-radius: 2px;
+}
+
+#step-error[data-state="hidden"] {
+    opacity: 0;
+    top: 18%;
+}
+
+#step-error[data-state="show"] {
+    opacity: 1;
+    top: 14%;
+}
+
+#part-a {
+    width: 10px;
+    height: 12px;
+    margin-top: 5%;
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0) 40%, #E44 50%, #FFF 50%);
+}
+
+#part-b {
+    width: 10px;
+    height: 12px;
+    margin-left: 10px;
+    margin-top: -12px;
+    background: linear-gradient(-45deg, rgba(0, 0, 0, 0) 40%, #E44 50%, #FFF 50%);
+}
+
