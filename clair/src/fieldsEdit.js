@@ -1032,29 +1032,36 @@ function FieldsEdit() {
     }
     
     this.showLineSelectType = function(array, select) {
+
+        var div = document.getElementById("modal-call");
+
+        if(!div){ 
         
-        var div = document.createElement("div");
-        div.id = "modal-call";
-        div.innerHTML = `
-                <div id="modal-call-type">
-                  <div id="modal-call-select">
-                    <select id="modal-call-sselect">
-                    </select>
-                  </div>
-                  <div id="modal-solap-a">
-                  </div>
-                  <div id="modal-solap-b">
-                  </div></div>`;
-        
-        document.body.appendChild(div);
-        
-        var _select = document.getElementById("modal-call-sselect");
-        
-        for(var i=0; i < array.length; i++)
-            if(i == select)
-                _select.innerHTML += "<option selected>" + array[i] + "</option>";
-            else
-                _select.innerHTML += "<option>" + array[i] + "</option>";
+            div = document.createElement("div");
+            div.id = "modal-call";
+            div.innerHTML = `
+                    <div id="modal-call-type">
+                      <div id="modal-call-select">
+                        <select id="modal-call-select_">
+                        </select>
+                      </div>
+                      <div id="modal-solap-a">
+                      </div>
+                      <div id="modal-solap-b">
+                      </div></div>`;
+            
+            document.body.appendChild(div);
+            
+            var _select = document.getElementById("modal-call-select_");
+            
+            for(var i = 0; i < array.length; i++){ 
+
+                if(i === select)
+                    _select.innerHTML += "<option selected>" + array[i] + "</option>";
+                else
+                    _select.innerHTML += "<option>" + array[i] + "</option>";
+            }
+        }
         
     }
 
@@ -1433,6 +1440,7 @@ function FieldsEdit() {
 
         duration = duration || 500;
         window.helper.hide(document.getElementById("step-modal"), duration);
+        window.helper.hide(document.getElementById("modal-call"), duration);
     };
 
     function workflowPreview(steps) {
