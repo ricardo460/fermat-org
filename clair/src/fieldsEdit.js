@@ -908,7 +908,7 @@ function FieldsEdit() {
             var div = document.createElement("div");
             div.id = "workflow-header";
             div.innerHTML += '<label> Title: </label>';
-            div.innerHTML += '<input id="workflow-header-title" class="edit-Fermat" placeholder="Title" type="text" maxlength="85"></input>';
+            div.innerHTML += '<input id="workflow-header-title" class="edit-Fermat" placeholder="Title" type="text" maxlength="68"></input>';
             div.innerHTML += '<label> Select the Group : </label>';
             var select = document.createElement("select");
             select.id = "workflow-header-plataform";
@@ -985,7 +985,7 @@ function FieldsEdit() {
 
         modal.innerHTML = ''+
             '<label>Description:</label>'+
-            '<textarea id="modal-desc-textarea" rows="12" maxlength="340"></textarea>'+
+            '<textarea id="modal-desc-textarea" rows="12" maxlength="220"></textarea>'+
             '<div>'+
                 '<button id="modal-desc-cancel">Cancel</button>'+
                 '<button id="modal-desc-accept">Accept</button>'+
@@ -1081,8 +1081,8 @@ function FieldsEdit() {
             div.innerHTML += 
             `               
                <canvas id="step-modal-canvas"></canvas>
-               <input type="text" placeholder="Title" id="step-modal-title"/>
-               <textarea placeholder="Description" id="step-modal-desc"></textarea>
+               <input type="text" placeholder="Title" id="step-modal-title" maxlength = "50"/>
+               <textarea placeholder="Description" id="step-modal-desc" maxlength = "113"></textarea>
 
             `;
             
@@ -1502,7 +1502,7 @@ function FieldsEdit() {
     }
 
     function cleanPreview(){
-
+        
         var canvas = document.getElementById('step-modal-canvas');
         var ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
