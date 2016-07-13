@@ -22,11 +22,6 @@ function WorkFlowEdit() {
 
     var SHOW_ARROW = [];
 
-    var TYPE = {
-            async : 0xFF0000,
-            direct: 0x0000FF
-        };
-
     var actualMode = null;
 
     var TILEWIDTH = window.TILE_DIMENSION.width - window.TILE_SPACING;
@@ -1929,14 +1924,11 @@ function WorkFlowEdit() {
                 return x;
         });
 
-        var color = TYPE.direct;
+        var color = classFlow.getColor('');
 
-        if(object){
-
-            if(object.type !== "direct call")
-                color = TYPE.async;
-        }
-
+        if(object)
+            color = classFlow.getColor(object.type);
+        
         var vertexOriginX = meshOrigin.position.x,
             vertexOriginY = meshOrigin.position.y,
             vertexDestX = meshTarget.position.x,
@@ -2362,8 +2354,6 @@ function WorkFlowEdit() {
             object.dataArrow.vector1.visible = false;
             object.dataArrow.vector2.visible = false;
 
-            var color = TYPE.async;
-
             var typeCall = EDIT_STEPS[IdOrigen - 1].children.find(function(x){
                 if(x.id[0] === IdTarget)
                     return x;
@@ -2377,12 +2367,10 @@ function WorkFlowEdit() {
                 });
             }
 
-            if(typeCall){
+            var color = classFlow.getColor('');
 
-                if(typeCall.type === "direct call")
-                    color = TYPE.direct;
-            }
-
+            color = classFlow.getColor(typeCall.type);
+            
             var from = null;
             var to = null;
             var direction = null;
@@ -2595,12 +2583,12 @@ function WorkFlowEdit() {
 
             if(object.type === 'direct call'){
                 object.type = 'event';
-                color = TYPE.async;
             }
             else{
                 object.type = 'direct call';
-                color = TYPE.direct;
             }
+
+            var color = classFlow.getColor(object.type);
 
             ApplyColor(arrow.arrow); 
             ApplyColor(arrow.vector1);

@@ -6,11 +6,26 @@ function Workflow(flow) {
         ROW_SPACING = 350,
         COLUMN_SPACING = 900,
         HEADER_WIDTH = 825,
-        HEADER_HEIGHT = 238,
-        TYPE = { //Colors for different call types
-            async : 0xFF0000,
-            direct: 0x0000FF
-        };
+        HEADER_HEIGHT = 238;
+
+    var TYPECALL = [//Colors for different call types
+        {
+            title : 'Event',
+            color : 0xFF0000
+        },
+        {
+            title : 'Direct Call',
+            color : 0x0000FF
+        },
+        {
+            title : 'Fermat Message',
+            color : 0xFF0000
+        },
+        {
+            title : 'defaults',
+            color : 0x0000FF
+        }
+    ];
 
     var account = 0;
     var self = this;
@@ -139,12 +154,7 @@ function Workflow(flow) {
 
             if(childCount !== 0){
 
-                var color = TYPE[root.next[0].type];
-
-                if(root.next[0].type === "direct call")
-                    color = (color !== undefined) ? color : TYPE.direct;
-                else
-                    color = (color !== undefined) ? color : TYPE.async;
+                var color = self.getColor(root.next[0].type);
 
                 var lineGeo,
                     lineMat, 
@@ -604,6 +614,18 @@ function Workflow(flow) {
         }
 
         return null;
+    }
+
+    this.getColor = function(call){
+
+        var color = TYPECALL.find(function(x){
+            if(x.title.toLowerCase() === call.toLowerCase())
+                return x;
+            else if(x.title === 'defaults')
+                return x;
+        }).color;
+
+        return color;
     }
 
     //-----------------------------------------------------------------------------
