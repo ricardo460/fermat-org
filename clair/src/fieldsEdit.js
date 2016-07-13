@@ -1074,6 +1074,11 @@ function FieldsEdit() {
             div.innerHTML += 
             `               
                <canvas id="step-modal-canvas"></canvas>
+                <div id="step-error" data-state="hidden">
+                  Message
+                  <div id="part-a"></div>
+                  <div id="part-b"></div>
+                </div>
                <input type="text" placeholder="Title" id="step-modal-title"/>
                <textarea placeholder="Description" id="step-modal-desc"></textarea>
 
