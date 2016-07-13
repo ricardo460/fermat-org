@@ -908,7 +908,7 @@ function FieldsEdit() {
             var div = document.createElement("div");
             div.id = "workflow-header";
             div.innerHTML += '<label> Title: </label>';
-            div.innerHTML += '<input id="workflow-header-title" class="edit-Fermat" placeholder="Title" type="text" maxlength="85"></input>';
+            div.innerHTML += '<input id="workflow-header-title" class="edit-Fermat" placeholder="Title" type="text" maxlength="68"></input>';
             div.innerHTML += '<label> Select the Group : </label>';
             var select = document.createElement("select");
             select.id = "workflow-header-plataform";
@@ -1047,8 +1047,8 @@ function FieldsEdit() {
             div.innerHTML += 
             `               
                <canvas id="step-modal-canvas"></canvas>
-               <input type="text" placeholder="Title" id="step-modal-title" maxlength = "75"/>
-               <textarea placeholder="Description" id="step-modal-desc" maxlength = "160"></textarea>
+               <input type="text" placeholder="Title" id="step-modal-title" maxlength = "50"/>
+               <textarea placeholder="Description" id="step-modal-desc" maxlength = "113"></textarea>
 
             `;
             
