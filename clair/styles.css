@@ -1399,6 +1399,10 @@ END
     background-position: 74px;
 }
 
+#modal-call-select option{
+    background: #555;
+}
+
 #modal-solap-a {
     position: absolute;
     left: 70px;
