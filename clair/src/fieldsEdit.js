@@ -985,7 +985,7 @@ function FieldsEdit() {
 
         modal.innerHTML = ''+
             '<label>Description:</label>'+
-            '<textarea id="modal-desc-textarea" rows="12" maxlength="220"></textarea>'+
+            '<textarea id="modal-desc-textarea" rows="12" maxlength="280"></textarea>'+
             '<div>'+
                 '<button id="modal-desc-cancel">Cancel</button>'+
                 '<button id="modal-desc-accept">Accept</button>'+
@@ -1098,8 +1098,8 @@ function FieldsEdit() {
                   <div id="part-a"></div>
                   <div id="part-b"></div>
                 </div>
-               <input type="text" placeholder="Title" id="step-modal-title" maxlength = "50"/>
-               <textarea placeholder="Description" id="step-modal-desc" maxlength = "113"></textarea>
+               <input type="text" placeholder="Title" id="step-modal-title" maxlength = "75"/>
+               <textarea placeholder="Description" id="step-modal-desc" maxlength = "127"></textarea>
             `;
             
             b1 = document.createElement("button");
