@@ -1078,7 +1078,7 @@ function FieldsEdit() {
         
     }
 
-    this.showModal = function(step) {
+    this.showModal = function(step, missing) {
 
         var div = document.getElementById("step-modal");
 
@@ -1098,8 +1098,8 @@ function FieldsEdit() {
                   <div id="part-a"></div>
                   <div id="part-b"></div>
                 </div>
-               <input type="text" placeholder="Title" id="step-modal-title"/>
-               <textarea placeholder="Description" id="step-modal-desc"></textarea>
+               <input type="text" placeholder="Title" id="step-modal-title" maxlength = "50"/>
+               <textarea placeholder="Description" id="step-modal-desc" maxlength = "113"></textarea>
             `;
             
             b1 = document.createElement("button");
@@ -1128,6 +1128,9 @@ function FieldsEdit() {
             b2  = document.getElementById("step-modal-cancel");
         }
 
+        if(missing)
+            document.getElementById("step-error").dataset.state = "show";
+
         _title = document.getElementById("step-modal-title");
         _desc  = document.getElementById("step-modal-desc");
 
@@ -1147,7 +1150,13 @@ function FieldsEdit() {
         };
 
         _title.addEventListener('blur', function() {
+
             workflowPreview(step);
+
+            if(_title.value === '')
+                document.getElementById("step-error").dataset.state = "show";
+            else
+                document.getElementById("step-error").dataset.state = "hidden";
         });
 
         _desc.addEventListener('blur', function() {

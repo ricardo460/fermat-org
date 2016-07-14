@@ -1361,7 +1361,7 @@ function WorkFlowEdit() {
 
                                 updateTileIgnored();
                                             
-                                window.fieldsEdit.showModal(step);
+                                window.fieldsEdit.showModal(step, true);
 
                                 var vector = window.helper.getSpecificTile(step.tile).mesh.position;
 
