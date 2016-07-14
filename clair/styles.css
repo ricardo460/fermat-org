@@ -648,8 +648,8 @@ END
 }
 
 #modal-desc label {
-    font-size: 14px;
-    font-family: uppercase;
+    font-size: 20px;
+    font-family: sans-serif;
 }
 
 #modal-desc textarea {
@@ -661,7 +661,6 @@ END
     margin-top: 5px;
     background: #FFF;
     font-family: sans-serif;
-    font-family: uppercase;
 }
 
 #modal-desc div {
