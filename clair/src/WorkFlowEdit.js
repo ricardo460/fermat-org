@@ -1201,14 +1201,10 @@ function WorkFlowEdit() {
             path : function(){ 
                 window.buttonsManager.createButtons('button-path', 'Edit Path', function(){
                     changeMode('edit-path');}, null, null, "right");
-
-                window.guide.buttonWorkFlowEditSteps();
             },
             steps : function(){
                 window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
                     changeMode('edit-step');}, null, null, "left");
-
-                window.guide.buttonWorkFlowEditPath();
             },
             preview : function(){
                 window.buttonsManager.createButtons('button-preview', 'Workflow Preview', function(){
@@ -1218,11 +1214,18 @@ function WorkFlowEdit() {
                 window.buttonsManager.createButtons('button-save', 'Save', function(){
                     self.save();}, null, null, "right");
             },
-            continue : function(){
-                window.buttonsManager.createButtons('button-save', 'Save', function(){
-                    
-                    }, null, null, "right");
-            }
+            helpPath : function(){
+                window.buttonsManager.createButtons('help-path', 'Help', function(){
+                    window.guide.HelpWorkFlowEdit('path');}, null, null, "right");
+            },
+            helpEdit : function(){
+                window.buttonsManager.createButtons('help-edit', 'Help', function(){
+                    window.guide.HelpWorkFlowEdit('edit');}, null, null, "right");
+            },
+            helpRepared : function(){
+                window.buttonsManager.createButtons('help-repared', 'Help', function(){
+                    window.guide.HelpWorkFlowEdit('repared');}, null, null, "right");
+            } 
         };
 
         if(!MODE().exit()){
@@ -1252,6 +1255,7 @@ function WorkFlowEdit() {
                         window.fieldsEdit.hiddenStepsList(true);
                         buttons.preview();
                         buttons.path();
+                        buttons.helpEdit();
                         window.actualView = false;
                         displayField(false);
                         window.tileManager.transform(false, 1000);
@@ -1404,6 +1408,8 @@ function WorkFlowEdit() {
                         createMeshFocus();
 
                         buttons.steps();
+
+                        buttons.helpPath();
 
                         window.fieldsEdit.setModeEdit('Edit Path Mode');
 
@@ -1668,14 +1674,12 @@ function WorkFlowEdit() {
 
                         }, null, null, "left");
 
-                        window.guide.buttonWorkFlowRepair();
-
                         window.buttonsManager.createButtons('button-continue', 'Continue', function(){
 
                             var res = true;
                             
                             if(REPARED_STEPS.steps.find(function(x){ if(x.state === 'error')return x;}))
-                                res = window.confirm('There are steps with errors, these will be deleted from the flow. \n\nPress accept to continue');
+                                res = window.confirm('You still have steps with problems, those steps will be removed from the workflow. \n\nPress Accept to remove them.');
 
                             if(res){ 
 
@@ -1691,6 +1695,8 @@ function WorkFlowEdit() {
                             }
 
                         }, null, null, "right");
+
+                        buttons.helpRepared();
 
                         var clickAction = function(tile){
 
@@ -3556,9 +3562,9 @@ function WorkFlowEdit() {
         var target = step.target.show;
 
         if(typeReset === 'collision')
-            msj = "You can't select the same component from the father step and none from a child step.";
+            msj = "You can't have a two consequent steps with the same component!";
         else if(typeReset === 'delete')
-            msj = "This step can not be deleted because its father step and child step share the same component.";
+            msj = "You can't remove this step because its father and child has the same component!";
 
         if(target.position.x >= xInit && target.position.x <= xEnd){
             focus.visible = true;
@@ -3752,6 +3758,9 @@ function WorkFlowEdit() {
         window.buttonsManager.deleteButton('button-save');
         window.buttonsManager.deleteButton('button-preview');
         window.buttonsManager.deleteButton('button-path');
-        window.buttonsManager.deleteButton('button-Steps');   
+        window.buttonsManager.deleteButton('button-Steps'); 
+        window.buttonsManager.deleteButton('help-repared');
+        window.buttonsManager.deleteButton('help-path');
+        window.buttonsManager.deleteButton('help-edit');   
     }
 }

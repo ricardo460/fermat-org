@@ -1094,7 +1094,7 @@ function FieldsEdit() {
             div.innerHTML += 
             `  <canvas id="step-modal-canvas"></canvas>
                 <div id="step-error" data-state="hidden">
-                  Message
+                  The Title field is required.
                   <div id="part-a"></div>
                   <div id="part-b"></div>
                 </div>
