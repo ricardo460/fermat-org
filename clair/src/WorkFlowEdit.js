@@ -1201,10 +1201,14 @@ function WorkFlowEdit() {
             path : function(){ 
                 window.buttonsManager.createButtons('button-path', 'Edit Path', function(){
                     changeMode('edit-path');}, null, null, "right");
+
+                window.guide.buttonWorkFlowEditSteps();
             },
             steps : function(){
                 window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
                     changeMode('edit-step');}, null, null, "left");
+
+                window.guide.buttonWorkFlowEditPath();
             },
             preview : function(){
                 window.buttonsManager.createButtons('button-preview', 'Workflow Preview', function(){
