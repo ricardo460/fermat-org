@@ -1285,7 +1285,7 @@ function WorkFlowEdit() {
                             newCenter = window.viewManager.translateToSection('table', newCenter);
                         }
 
-                        var action = function(tile){
+                        var action = function(tile, mouse){
 
                             if(tile){ 
 
@@ -1324,7 +1324,15 @@ function WorkFlowEdit() {
 
                                         var arrow = searchArrow(origin, target);
 
-                                        changeTypeArrow(arrow);
+                                        changeTypeArrow(arrow, mouse);
+
+                                        window.dragManager.cleanObjects();
+
+                                        window.dragManager.functions.DROP.push(
+                                            function(SELECTED){
+                                                SELECTED = null;
+                                                window.camera.disable();
+                                        });
                                         break;                
                                 }
                             }
@@ -2569,30 +2577,42 @@ function WorkFlowEdit() {
      * 
      * @param {String}
      */ 
-    function changeTypeArrow(arrow){
+    function changeTypeArrow(arrow, mouse){
 
         var idOrigin = arrow.originID[0],
-            idTarget = arrow.targetID[0];
+            idTarget = arrow.targetID[0],
+            color = null;
 
         var object = EDIT_STEPS[idOrigin - 1].children.find(function(x){
             if(x.id[0] === idTarget)
                 return x;
         });
 
+        var typeCall = classFlow.TYPECALL,
+            array = [],
+            select = 0;
+
         if(object){
 
-            if(object.type === 'direct call'){
-                object.type = 'event';
-            }
-            else{
-                object.type = 'direct call';
+            for(var i = 0; i < typeCall.length - 1; i++){
+                array.push(typeCall[i].title);
+
+                if(object.type.toLowerCase() === typeCall[i].title.toLowerCase())
+                    select = i;
             }
 
-            var color = classFlow.getColor(object.type);
+            var callback = function(type){
 
-            ApplyColor(arrow.arrow); 
-            ApplyColor(arrow.vector1);
-            ApplyColor(arrow.vector2);
+                object.type = type;
+
+                color = classFlow.getColor(type);
+
+                ApplyColor(arrow.arrow); 
+                ApplyColor(arrow.vector1);
+                ApplyColor(arrow.vector2);
+            }
+
+            window.fieldsEdit.showLineSelectType(array, select, mouse, callback);
         }
 
         function ApplyColor(element){

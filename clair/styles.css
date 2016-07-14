@@ -1380,7 +1380,7 @@ END
 #modal-call-select select{
     border: 0;
     width: 84px;
-    font-size: 11px;
+    font-size: 15px;
     width: 84;
     float: left;
     color: #FFF;
@@ -1411,13 +1411,6 @@ END
     width: 7px;
     background: linear-gradient( -50deg, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 1) 50%, #555 50%);
 }
-
-#modal-call {
-    position: absolute;
-    left: 44%;
-    top: 47%;
-}
-
 
 #step-error {
     padding-left: 5px;

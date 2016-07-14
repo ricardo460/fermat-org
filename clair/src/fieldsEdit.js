@@ -1031,7 +1031,7 @@ function FieldsEdit() {
         });
     }
     
-    this.showLineSelectType = function(array, select) {
+    this.showLineSelectType = function(array, select, mouse, callback) {
 
         var div = document.getElementById("modal-call");
 
@@ -1051,17 +1051,30 @@ function FieldsEdit() {
                       </div></div>`;
             
             document.body.appendChild(div);
-            
-            var _select = document.getElementById("modal-call-select_");
-            
-            for(var i = 0; i < array.length; i++){ 
-
-                if(i === select)
-                    _select.innerHTML += "<option selected>" + array[i] + "</option>";
-                else
-                    _select.innerHTML += "<option>" + array[i] + "</option>";
-            }
         }
+
+        var _select = document.getElementById("modal-call-select_");
+
+        _select.innerHTML = "";
+            
+        for(var i = 0; i < array.length; i++){ 
+
+            if(i === select)
+                _select.innerHTML += "<option selected>" + array[i] + "</option>";
+            else
+                _select.innerHTML += "<option>" + array[i] + "</option>";
+        }
+
+        div.style.top = (mouse.clientY - 39) + 'px';
+        div.style.left = (mouse.clientX - 70) + 'px';
+
+        div.style.position = 'absolute';
+
+        $("#modal-call").change('click', function() {
+    
+            callback(_select.value);
+            
+        });
         
     }
 
@@ -1079,8 +1092,7 @@ function FieldsEdit() {
             div.id  = "step-modal";
             
             div.innerHTML += 
-            `               
-               <canvas id="step-modal-canvas"></canvas>
+            `  <canvas id="step-modal-canvas"></canvas>
                 <div id="step-error" data-state="hidden">
                   Message
                   <div id="part-a"></div>

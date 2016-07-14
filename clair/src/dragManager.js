@@ -225,8 +225,9 @@ function DragManager() {
             var action = self.functions.CLICK[i];
 
             if(typeof(action) === 'function')
-                action(SELECTED);
+                action(SELECTED, event);
         }
+    
     }
     /**
      * @author Ricardo Delgado.

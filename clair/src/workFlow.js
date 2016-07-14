@@ -8,14 +8,14 @@ function Workflow(flow) {
         HEADER_WIDTH = 825,
         HEADER_HEIGHT = 238;
 
-    var TYPECALL = [//Colors for different call types
-        {
-            title : 'Event',
-            color : 0xFF0000
-        },
+    this.TYPECALL = [//Colors for different call types
         {
             title : 'Direct Call',
             color : 0x0000FF
+        },
+        {
+            title : 'Event',
+            color : 0xFF0000
         },
         {
             title : 'Fermat Message',
@@ -618,7 +618,7 @@ function Workflow(flow) {
 
     this.getColor = function(call){
 
-        var color = TYPECALL.find(function(x){
+        var color = self.TYPECALL.find(function(x){
             if(x.title.toLowerCase() === call.toLowerCase())
                 return x;
             else if(x.title === 'defaults')
