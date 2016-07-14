@@ -1664,6 +1664,8 @@ function WorkFlowEdit() {
 
                         }, null, null, "left");
 
+                        window.guide.buttonWorkFlowRepair();
+
                         window.buttonsManager.createButtons('button-continue', 'Continue', function(){
 
                             var res = true;
