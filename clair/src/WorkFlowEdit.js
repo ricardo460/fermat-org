@@ -1671,7 +1671,7 @@ function WorkFlowEdit() {
                             var res = true;
                             
                             if(REPARED_STEPS.steps.find(function(x){ if(x.state === 'error')return x;}))
-                                res = window.confirm('Still has steps with errors \n\nDo you wish to continue?');
+                                res = window.confirm('There are steps with errors, these will be deleted from the flow. \n\nPress accept to continue');
 
                             if(res){ 
 
@@ -3552,9 +3552,9 @@ function WorkFlowEdit() {
         var target = step.target.show;
 
         if(typeReset === 'collision')
-            msj = "colission";
+            msj = "You can't select the same component from the father step and none from a child step.";
         else if(typeReset === 'delete')
-            msj = "delete";
+            msj = "This step can not be deleted because its father step and child step share the same component.";
 
         if(target.position.x >= xInit && target.position.x <= xEnd){
             focus.visible = true;
