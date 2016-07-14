@@ -1626,7 +1626,7 @@ function WorkFlowEdit() {
 
                         window.dragManager.enable();
 
-                        window.helper.show('backButton', 0);
+                        window.helper.hide('backButton', 0, true);
 
                         window.fieldsEdit.setModeEdit('Repair Steps Mode');
 
@@ -1651,6 +1651,18 @@ function WorkFlowEdit() {
                         document.getElementById("steps-list").dataset.state = 'show';
 
                         updateStepsRepared();
+
+                        window.buttonsManager.createButtons('button-back', 'BACK', function(){
+
+                            var event ={ keyCode : 27} ;
+
+                            window.camera.offFocus();
+
+                            window.actualView = 'workflows';
+
+                            window.camera.onKeyDown(event);
+
+                        }, null, null, "left");
 
                         window.buttonsManager.createButtons('button-continue', 'Continue', function(){
 

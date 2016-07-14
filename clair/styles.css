@@ -669,7 +669,7 @@ END
 }
 
 #modal-desc div button{
-    float: left;
+    float: right;
     border: 0;
     margin: 0;
     padding: 0;
@@ -686,14 +686,18 @@ END
 
 #modal-desc div #modal-desc-accept {
     
-    float: right;
-    
+    float: left;
 }
 
 #modal-desc div button:active {
     color: #000000;
     background-color: #eef;
     
+}
+
+#modal-desc div button:hover {
+    cursor: pointer;
+    background: #eef;
 }
 
 /**
