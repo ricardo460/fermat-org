@@ -1458,7 +1458,7 @@ function WorkFlowEdit() {
                                                 if(COLLISION){
 
                                                     if(!validateCollisionTileSteps(orderFocus, COLLISION.userData.id))
-                                                        resetPositionIdStepMesh(orderFocus);
+                                                        resetPositionIdStepMesh(orderFocus, 'collision');
                                                     else
                                                         changeTileStep(orderFocus, COLLISION.userData.id);
                                                 }
@@ -3354,7 +3354,7 @@ function WorkFlowEdit() {
                      deleteStep(SearchStepPositionEdit(removeStep[i], list));
             }else{
                 state = false;
-                resetPositionIdStepMesh(step);
+                resetPositionIdStepMesh(step, 'delete');
             }
         }
         else{
@@ -3536,21 +3536,25 @@ function WorkFlowEdit() {
      * 
      * @param {String}
      */ 
-    function resetPositionIdStepMesh(orderFocus){
+    function resetPositionIdStepMesh(orderFocus, typeReset){
 
-        var focus = FOCUS.mesh;
-
-        var step = EDIT_STEPS[orderFocus - 1];
+        var focus = FOCUS.mesh,
+            step = EDIT_STEPS[orderFocus - 1],
+            mesh = step.mesh,
+            msj = null;
 
         focus.visible = false;
-
-        var mesh = step.mesh;
 
         var xInit = mesh.position.x - 0.5;
 
         var xEnd = mesh.position.x + 0.5;
 
         var target = step.target.show;
+
+        if(typeReset === 'collision')
+            msj = "colission";
+        else if(typeReset === 'delete')
+            msj = "delete";
 
         if(target.position.x >= xInit && target.position.x <= xEnd){
             focus.visible = true;
@@ -3563,6 +3567,10 @@ function WorkFlowEdit() {
         animate(mesh, target, 300, function(){
             FOCUS.mesh.position.copy(mesh.position);
             focus.visible = true;
+
+            if(msj){
+                window.alert(msj);
+            }
         });
     }
     /**
