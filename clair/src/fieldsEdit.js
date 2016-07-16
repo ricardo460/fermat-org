@@ -1039,19 +1039,19 @@ function FieldsEdit() {
         
             div = document.createElement("div");
             div.id = "modal-call";
-            div.innerHTML = `
-                    <div id="modal-call-type">
-                      <div id="modal-call-select">
-                        <select id="modal-call-select_">
-                        </select>
-                      </div>
-                      <div id="modal-solap-a">
-                      </div>
-                      <div id="modal-solap-b">
-                      </div></div>`;
-            
             document.body.appendChild(div);
         }
+
+        div.innerHTML = `
+            <div id="modal-call-type">
+              <div id="modal-call-select">
+                <select id="modal-call-select_">
+                </select>
+              </div>
+              <div id="modal-solap-a">
+              </div>
+              <div id="modal-solap-b">
+              </div></div>`;
 
         var _select = document.getElementById("modal-call-select_");
 

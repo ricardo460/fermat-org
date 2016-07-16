@@ -55,6 +55,17 @@ function Camera(position, renderer, renderFunc) {
         self.onWindowResize();
         self.freeView = true;
     };
+
+    this.createVector = function(x, y) {
+
+       var p = new THREE.Vector3(x, y, 0);
+       var vector = p.project(camera);
+
+       vector.x = (vector.x + 1) / 2 * window.innerWidth;
+       vector.y = -(vector.y - 1) / 2 * window.innerHeight;
+
+       return vector;
+    };
     
     this.disableFreeMode = function() {
         controls.noRotate = true;
