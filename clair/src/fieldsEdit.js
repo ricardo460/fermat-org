@@ -1277,6 +1277,10 @@ function FieldsEdit() {
 
                         window.camera.move(position.x, position.y, 200, 1500, true);
 
+                        if(type === 'edit-path'){
+                            window.workFlowEdit.changeFocusSteps(obj.order[0]);
+                        }
+
                     }
                     else{
 
@@ -1311,7 +1315,7 @@ function FieldsEdit() {
                         }
                     }
 
-                    changeFocus(canvas, i);
+                    self.changeFocus(canvas, i);
 				};
 				
 				close.onclick = function () {
@@ -1339,51 +1343,6 @@ function FieldsEdit() {
                     element.dataset.state = "show"; 
                 else 
                     element.dataset.state = "hidden";
-            };
-        }
-
-        function changeFocus(canvas, id){
-
-            if(canvas.dataset.state === "false"){ 
-
-                var ctx = canvas.getContext("2d");
-
-                applyTextureCanvas(ctx, id, "images/workflow/step_pressed.png");
-                
-                var count = $("#steps-list-content canvas").length;
-
-                for(var i = 1; i <= count; i++){
-
-                    var _canvas = document.getElementById('canvas-step-' + i);
-
-                    if(_canvas.dataset.state === "true"){
-
-                        var _ctx = _canvas.getContext("2d");
-
-                        applyTextureCanvas(_ctx, i, "images/workflow/step.png");
-
-                        _canvas.dataset.state = false;
-                    }
-                }
-
-                canvas.dataset.state = true;
-            }
-        }
-
-        function applyTextureCanvas(ctx, id, src){
-
-            var img = new Image();
-
-            img.src = src;
-
-            img.onload = function() {
-
-                ctx.drawImage(this, ctx.width/2 - 45, ctx.height/2 - 45, 90, 90);
-
-                ctx.font = "60px Arial";
-                ctx.textAlign = "center";
-                ctx.fillStyle = "#FFFFFF";
-                ctx.fillText(id, ctx.width/2, ctx.height/2 + 21);
             };
         }
         
@@ -1443,6 +1402,54 @@ function FieldsEdit() {
                 }
 
                 return _array;
+            }
+        }
+    }
+
+    function applyTextureCanvas(ctx, id, src){
+
+        var img = new Image();
+
+        img.src = src;
+
+        img.onload = function() {
+
+            ctx.drawImage(this, ctx.width/2 - 45, ctx.height/2 - 45, 90, 90);
+
+            ctx.font = "60px Arial";
+            ctx.textAlign = "center";
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillText(id, ctx.width/2, ctx.height/2 + 21);
+        };
+    }
+
+    this.changeFocus = function(canvas, id){
+
+        if(canvas){ 
+
+            if(canvas.dataset.state === "false"){ 
+
+                var ctx = canvas.getContext("2d");
+
+                applyTextureCanvas(ctx, id, "images/workflow/step_pressed.png");
+                
+                var count = $("#steps-list-content canvas").length;
+
+                for(var i = 1; i <= count; i++){
+
+                    var _canvas = document.getElementById('canvas-step-' + i);
+
+                    if(_canvas.dataset.state === "true"){
+
+                        var _ctx = _canvas.getContext("2d");
+
+                        applyTextureCanvas(_ctx, i, "images/workflow/step.png");
+
+                        _canvas.dataset.state = false;
+                    }
+                }
+
+                canvas.dataset.state = true;
             }
         }
     }

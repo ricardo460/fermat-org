@@ -49,6 +49,12 @@ function WorkFlowEdit() {
         return classFlow; // test
     };
 
+    this.changeFocusSteps = function(id){
+
+        FOCUS.data = EDIT_STEPS[id - 1].mesh;
+        updateTileIgnored();
+    };  
+
     /**
      * @author Ricardo Delgado.
      * 
@@ -1416,8 +1422,8 @@ function WorkFlowEdit() {
                         window.dragManager.styleMouse.CROSS = 'copy';
 
                         if(EDIT_STEPS.length > 0){
-                            updateTileIgnored();
                             updateStepList();
+                            updateTileIgnored();
                             hideButtonsArrows(true);
                         }
                         else{
@@ -2888,7 +2894,9 @@ function WorkFlowEdit() {
             }
         }
 
-        if(type === 'step'){ 
+        if(type === 'step'){
+
+            updateStepList(); 
 
             if(array.length > 0){ 
 
@@ -2913,8 +2921,6 @@ function WorkFlowEdit() {
                 window.dragManager.objects = getAllTiles();
             }
 
-            updateStepList();
-
             updateTextureParent();
         }
     }
@@ -2932,7 +2938,10 @@ function WorkFlowEdit() {
                 var id = FOCUS.data.userData.id,
                     ignoredTile = FOCUS.data.userData.tile,
                     mesh = FOCUS.mesh,
+                    canvas = document.getElementById('canvas-step-' + id),
                     i;
+
+                window.fieldsEdit.changeFocus(canvas, id[0]);
 
                 window.dragManager.objects = [];
 
