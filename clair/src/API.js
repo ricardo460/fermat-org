@@ -149,17 +149,25 @@ function API() {
 
                     case "tableEdit insert":
 
-                        if(res._id){
+                        if(res){
 
-                            if(typeof(doneCallback) === 'function')
-                                doneCallback(res);
+                            if(res._id){
+
+                                if(typeof(doneCallback) === 'function')
+                                    doneCallback(res);
+                            }
+                            else{
+
+                                window.alert('There is already a component with that name in this group and layer, please use another one');
+
+                                if(typeof(failCallback) === 'function')
+                                    failCallback(res);
+                            }
                         }
                         else{
 
-                            window.alert('There is already a component with that name in this group and layer, please use another one');
-
                             if(typeof(failCallback) === 'function')
-                                failCallback(res);
+                                    failCallback(res);
                         }
 
                         break;
@@ -191,15 +199,23 @@ function API() {
                         break;
                     case "wolkFlowEdit insert":
 
-                        if(res._id){
+                        if(res){
 
-                            if(typeof(doneCallback) === 'function')
-                                doneCallback(res);
+                            if(res._id){
+
+                                if(typeof(doneCallback) === 'function')
+                                    doneCallback(res);
+                            }
+                            else{
+
+                                if(typeof(failCallback) === 'function')
+                                    failCallback(res);
+                            }
                         }
                         else{
-
+                            
                             if(typeof(failCallback) === 'function')
-                                failCallback(res);
+                                    failCallback(res);
                         }
 
                         break;
@@ -288,9 +304,15 @@ function API() {
 
                 var res = null;
 
-                if(method !== 'DELETE')
-                    res = JSON.parse(xhr.responseText);
+                if(method !== 'DELETE'){
+                    
+                    //if(xhr.responseText.match("_id[a-z0-9-A-Z0-9]*"))
+                        res = JSON.parse(xhr.responseText);
+                    /*else 
+                        window.alert(xhr.responseText);*/
+                }
 
+                
                 success(res);
 
             };
