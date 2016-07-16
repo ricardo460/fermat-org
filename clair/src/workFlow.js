@@ -205,6 +205,8 @@ function Workflow(flow) {
                     nextX = startX + i * COLUMN_SPACING;
                     if(collides(nextX, root, false, y)) nextX += COLUMN_SPACING;
 
+                    color = self.getColor(root.next[i].type);
+
                     if(isLoop) {
 
                         var gradient = new THREE.Color(color);
