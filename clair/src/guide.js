@@ -155,7 +155,7 @@ function Guide() {
                                     <li><p>Click on a created step and you will see a form to fill its <br>
                                     title and description for such step.</p></li>
                                     <li><p>Clicking on an arrow s head will display the options to choose <br>
-                                    the call type between the steps.</p></li>
+                                    the call type between the steps</p></li>
                                     <li><p>Click on WorkFlow preview to see the whole workflow s preview.</p></li>
                                   </ul>
                                 </div>
