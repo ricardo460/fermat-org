@@ -19,7 +19,7 @@ function Workflow(flow) {
         },
         {
             title : 'Fermat Message',
-            color : 0xFF0000
+            color : 0xF8E645
         },
         {
             title : 'defaults',

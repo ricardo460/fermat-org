@@ -1,5 +1,5 @@
 var platfrmSrv = require('../platform/services/platfrm');
-var suprLayMod = require('../superlayer');
+var suprlaySrv = require('../superlayer/services/suprlay');
 var mapPlatfrms = {};
 var mapSuprlay = {};
 var createMapsPlatfrm = function(platfrms) {
@@ -22,49 +22,74 @@ var createMapsSuprlay = function(suprlays) {
 		throw err;
 	}
 };
-
-function CodePlatfSuprl() {
+exports.loadCodesPlatform = function(callback) {
 	try {
 		platfrmSrv.findAllPlatfrms({}, {
 			order: 1
 		}, function(err, platfrms) {
 			if (err) {
-				throw err;
-			} else {
-				createMapsPlatfrm(platfrms);
-				suprLayMod.getSuprlays(function(err, suprlays) {
-					if (err) throw err;
-					else {
-						createMapsSuprlay(suprlays);
-						return true;
-					}
-				});
+				return callback(err, null);
 			}
+			if (platfrms) {
+				mapPlatfrms = createMapsPlatfrm(platfrms);
+				return callback(null, mapPlatfrms);
+			} else return callback('platforms not found', null);
 		});
 	} catch (err) {
-		throw err;
+		return callback(err, null);
 	}
-}
-CodePlatfSuprl.prototype.existDeps = function(deps) {
+};
+
+exports.loadCodesSuprlays = function(callback) {
+	try {
+		suprlaySrv.findAllSuprlays({}, {
+			order: 1
+		}, function(err, suprlays) {
+			if (err) {
+				return callback(err, null);
+			}
+			if (suprlays) {
+				mapSuprlay = createMapsSuprlay(suprlays);
+				return callback(null, mapSuprlay);
+			} else return callback('super layers not found', null);
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
+
+exports.existDeps = function(deps, callback) {
 	var platfrmCode = null;
 	var suprlayCode = null;
 	var notExis = {};
-	for (var i = 0; i < deps.length; i++) {
-		platfrmCode = mapPlatfrms[deps[i]];
-		suprlayCode = mapSuprlay[deps[i]];
-		if ((platfrmCode === undefined || platfrmCode === null) && (suprlayCode === undefined || suprlayCode === null)) {
-			notExis._id = deps[i];
-			notExis.valid = false;
-			return notExis;
-		}
+	 if (deps) {
+		var loopDeps = function(i) {
+			if (i < deps.length) {
+				platfrmSrv.findPlatfrmById(deps[i], function(err, platfrm) {
+					if (err) return callback(err, null);
+					if (platfrm) {
+						loopDeps(++i);
+					} else {
+						suprlaySrv.findSuprlayById(deps[i], function(err, suprlay) {
+							if (err) return callback(err, null);
+							if (suprlay) {
+								loopDeps(++i);
+							} else {
+								notExis._id = deps[i];
+								notExis.valid = false;
+								return callback(null, notExis);
+							}
+						});
+					}
+				});
+			} else {
+				notExis.valid = true;
+				return callback(null, notExis);
+			}
+		};
+		loopDeps(0);
+	} else {
+		notExis.valid = true;
+		return callback(null, notExis);
 	}
-	notExis.valid = true;
-	return notExis;
 };
-CodePlatfSuprl.prototype.mapsCodePlatfrm = function mapsCodePlatfrm() {
-	return mapPlatfrms;
-};
-CodePlatfSuprl.prototype.mapsCodeSuprlay = function mapsCodeSuprlay() {
-	return mapSuprlay;
-};
-module.exports = CodePlatfSuprl;

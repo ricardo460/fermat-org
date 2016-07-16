@@ -56,8 +56,8 @@ function SignLayer(){
 
         window.screenshotsAndroid.setGroup(_group, titleSign);
 
-            if(typeof TABLE[_group].x === 'undefined')
-                TABLE[_group].x = x;
+            if(typeof window.TABLE[_group].x === 'undefined')
+                window.TABLE[_group].x = x;
 
 		var fillBox = function(ctx, image) {
             
@@ -92,7 +92,7 @@ function SignLayer(){
         }
 
         return false;
-    }
+    };
 
     /**
     * @author Isaias Taborda
@@ -102,15 +102,16 @@ function SignLayer(){
     */
     this.deleteSignLayer = function(_group, titleSign){
         var objectsSize = objects.length;
-        for(var i=0; i<objectsSize; i++) {
+        var i = 0;
+        var callback = function(pos) {
+            window.scene.remove(objects[pos]);
+            objects.splice(pos,1);
+            positions.target.splice(pos,1);
+            positions.lastTarget.splice(pos,1);
+        };
+        for(i = 0; i < objectsSize; i++) {
             if(objects[i].name === _group.concat(titleSign)) {
-                self.removeSignLayer(i, function(){
-                    window.scene.remove(objects[i]);
-                    objects.splice(i,1);
-                    positions.target.splice(i,1);
-                    positions.lastTarget.splice(i,1);
-                });
-
+                self.removeSignLayer(i, callback);
                 break;
             }
         }
@@ -127,7 +128,7 @@ function SignLayer(){
             .easing(TWEEN.Easing.Exponential.InOut)
             .onComplete(function () {
                     if(typeof(callback) === 'function')
-                        callback();   
+                        callback(pos);   
                 })
             .start();
     };

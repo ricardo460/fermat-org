@@ -3,6 +3,7 @@ var nodeMod = require('./node');
 var waveMod = require('./wave');
 var servMod = require('./server');
 var clintMod = require('./client');
+var actrMod = require('./actor');
 var loadNet = require('./lib/loader');
 exports.getServerNetwork = function(req, next) {
     'use strict';
@@ -184,6 +185,19 @@ exports.getClients = function(req, next) {
     'use strict';
     try {
         clintMod.getLastServerStatus(req.params.serv_id, function(err_servs, res_servs) {
+            if (err_servs) {
+                return next(err_servs, null);
+            }
+            return next(null, res_servs);
+        });
+    } catch (err) {
+        next(err, null);
+    }
+};
+exports.getActors = function(req, next) {
+    'use strict';
+    try {
+        actrMod.getLastServerStatus(req.params.serv_id, function(err_servs, res_servs) {
             if (err_servs) {
                 return next(err_servs, null);
             }
