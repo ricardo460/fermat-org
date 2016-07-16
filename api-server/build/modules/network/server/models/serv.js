@@ -9,13 +9,16 @@ var mongoose = require('mongoose');
  * @param  {[type]} type     [description]
  * @param  {[type]} extra    [description]
  */
-function ServMdl(_wave_id, hash, extra) {
+function ServMdl(_wave_id, hash, location, lastIP, networkServices) {
 	'use strict';
 	// always initialize all instance properties
 	this._wave_id = _wave_id;
 	this.hash = hash;
 	this.type = 'server';
-	this.extra = extra;
+    this.location = location;
+    this.lastIP = lastIP;
+    this.conectedClients = 0;
+    this.networkServices = networkServices;
 	this.upd_at = new mongoose.Types.ObjectId();
 }
 /**
@@ -33,7 +36,10 @@ ServMdl.prototype.init = function (servSchema) {
 	this._wave_id = servSchema._wave_id;
 	this.hash = servSchema.hash;
 	this.type = servSchema.type;
-	this.extra = servSchema.extra;
+	this.location = servSchema.location;
+    this.lastIP = servSchema.lastIP;
+    this.conectedClients = servSchema.conectedClients || 0;
+    this.networkServices = servSchema.networkServices;
 	this.upd_at = servSchema.upd_at;
 };
 /**

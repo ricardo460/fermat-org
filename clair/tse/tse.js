@@ -180,11 +180,13 @@ function modifyStructure(element, type){
 
                         setTimeout(function (){
                             var list = document.getElementById("groupDeps"),
-                                l = list.options.length;
+                                l = list.options.length,
+                                depCode;
 
                             for(var e in res.deps){
                                 for(var i = 0; i < l; i++){
-                                    if(res.deps[e] === list.options[i].value)
+                                    depCode = list.options[i].innerHTML.slice(0,3);
+                                    if(res.deps[e] === depCode)
                                         list.options[i].selected = 'true';
                                 }
                             }
@@ -200,16 +202,19 @@ function modifyStructure(element, type){
 
                     setTimeout(function (){
                         var list = document.getElementById("groupDeps"),
-                            l = list.options.length;
+                            l = list.options.length,
+                            depCode;
 
                         for(var e in res.deps){
                             for(var i = 0; i < l; i++){
-                                if(res.deps[e] === list.options[i].value)
+                                depCode = list.options[i].innerHTML.slice(0,3);
+                                if(res.deps[e] === depCode)
                                     list.options[i].selected = 'true';
                             }
                         }
                     }, 500);
 
+                    referenceOrder = res.order;
                     referenceCode = res.code;
                 }
             }
@@ -485,14 +490,20 @@ function setFields(data, form, type, superlayer){
                 $("#layerSuperLayer").append($("<option></option>").val(data[i].code).html(data[i].code + " - " + data[i].name.capitalize()));
             }
             if(type === "layer")
-                if(data[i].suprlay === superlayer && data[i].name !== referenceName)
-                    $("#layerOrder").append($("<option></option>").val(data[i].order).html(data[i].name.capitalize()));
+                if(data[i].name !== referenceName){
+                    if(data[i].suprlay !== false){
+                        var rename = "Superlayer " + data[i].suprlay + " - " + data[i].name.capitalize();
+                        $("#layerOrder").append($("<option></option>").val(data[i].order).html(rename));
+                    }
+                    else
+                        $("#layerOrder").append($("<option></option>").val(data[i].order).html(data[i].name.capitalize()));
+                }
         }
         else{
             if(data[i].name !== referenceName){
                 if(form === type)
                     $("#groupOrder").append($("<option></option>").val(data[i].order).html(data[i].code + " - " + data[i].name.capitalize()));
-                $("#groupDeps").append($("<option></option>").val(data[i].code).html(data[i].code + " - " + data[i].name.capitalize()));
+                $("#groupDeps").append($("<option></option>").val(data[i]._id).html(data[i].code + " - " + data[i].name.capitalize()));
             }
         }
     }
@@ -609,7 +620,6 @@ function verify(form, request){
         fileCheck = 200,
         proceed = true;
 
-
     if(request === "add"){
         if(form === "layer"){   //Add layer
 
@@ -618,7 +628,7 @@ function verify(form, request){
 
             for(i = 0, l = elements.length; i < l; i+=5){
                 if(data.name === elements[i].innerHTML.toLowerCase()){
-                    window.alert('Layer name in use');
+                    window.alert('Layer name in use, check the layer list to check which layer names are already taken.');
                     return false;
                 }
             }
@@ -648,11 +658,11 @@ function verify(form, request){
 
             for(i = 0, l = elements.length; i < l; i+=j){
                 if(data.code.toUpperCase() === elements[i].innerHTML){
-                    window.alert('Code in use');
+                    window.alert('Code in use, there is a platform currently using this code.');
                     return false;
                 }
                 if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML){
-                    window.alert('Name in use');
+                    window.alert('Name in use, this name has already been taken by another platform.');
                     return false;
                 }
             }
@@ -662,11 +672,11 @@ function verify(form, request){
 
             for(i = 0, l = elements.length; i < l; i+=j){
                 if(data.code.toUpperCase() === elements[i].innerHTML){
-                    window.alert('Code in use');
+                    window.alert('Code in use, there is a superlayer currently using this code.');
                     return false;
                 }
                 if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML){
-                    window.alert('Name in use');
+                    window.alert('Name in use, this name has already been taken by another superlayer.');
                     return false;
                 }
             }
@@ -691,7 +701,7 @@ function verify(form, request){
 
             for(i = 0, l = elements.length; i < l; i+=5){
                 if(data.name === elements[i].innerHTML.toLowerCase() && data.name !== referenceName){
-                    window.alert('Layer name in use');
+                    window.alert('Layer name in use, check the layer list to check which layer names are already taken.');
                     return false;
                 }
             }
@@ -736,11 +746,11 @@ function verify(form, request){
 
             for(i = 0, l = elements.length; i < l; i+=j){
                 if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){
-                    window.alert('Code in use');
+                    window.alert('Code in use, there is a platform currently using this code.');
                     return false;
                 }
                 if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML && (data.name.toLowerCase()) !== referenceName){
-                    window.alert('Name in use');
+                    window.alert('Name in use, this name has already been taken by another platform.');
                     return false;
                 }
             }
@@ -750,11 +760,11 @@ function verify(form, request){
 
             for(i = 0, l = elements.length; i < l; i+=j){
                 if(data.code.toUpperCase() === elements[i].innerHTML && data.code.toUpperCase() !== referenceCode){
-                    window.alert('Code in use');
+                    window.alert('Code in use, there is a superlayer currently using this code.');
                     return false;
                 }
                 if((data.name.toLowerCase()).capitalize() === elements[i+1].innerHTML && (data.name.toLowerCase()) !== referenceName){
-                    window.alert('Name in use');
+                    window.alert('Name in use, this name has already been taken by another superlayer.');
                     return false;
                 }
             }
@@ -860,10 +870,14 @@ function getData(form, request) {
         }
     }
     else{
-        if(document.getElementById('groupPos').value === "before")
-            order = document.getElementById('groupOrder').value;
+        if(usertype === 'developer'){
+            if(document.getElementById('groupPos').value === "before")
+                order = document.getElementById('groupOrder').value;
+            else
+                order = parseInt(document.getElementById('groupOrder').value) + 1;
+        }
         else
-            order = parseInt(document.getElementById('groupOrder').value) + 1;
+            order = referenceOrder;
 
         if(order === -1)
             order = 0;
@@ -926,7 +940,7 @@ function getData(form, request) {
                         name:document.getElementById('desName').value.toLowerCase(),
                         logo:document.getElementById('desCode').value + "_logo.png",
                         deps:dependencies,
-                        order:document.getElementById('groupOrder').value
+                        order:order
                     };
                 }
             }
@@ -948,7 +962,7 @@ function getData(form, request) {
                         name:document.getElementById('desName').value.toLowerCase(),
                         logo:document.getElementById('desCode').value + "_logo.png",
                         deps:dependencies,
-                        order:document.getElementById('groupOrder').value
+                        order:order
                     };
                 }
             }

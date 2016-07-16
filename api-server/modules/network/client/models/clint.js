@@ -9,14 +9,15 @@ var mongoose = require('mongoose');
  * @param  {[type]} hash     [description]
  * @param  {[type]} extra    [description]
  */
-function ClintMdl(_wave_id, _serv_id, hash, extra) {
+function ClintMdl(_wave_id, _serv_id, hash, location, networkServices) {
 	'use strict';
 	// always initialize all instance properties
 	this._wave_id = _wave_id;
 	this._serv_id = _serv_id;
 	this.hash = hash;
 	this.type = 'client';
-	this.extra = extra;
+	this.location = location;
+    this.networkServices = networkServices;
 	this.upd_at = new mongoose.Types.ObjectId();
 }
 /**
@@ -35,7 +36,8 @@ ClintMdl.prototype.init = function (clintSchema) {
 	this._serv_id = clintSchema._serv_id;
 	this.hash = clintSchema.hash;
 	this.type = clintSchema.type;
-	this.extra = clintSchema.extra;
+	this.location = clintSchema.location;
+    this.networkServices = clintSchema.networkServices;
 	this.upd_at = clintSchema.upd_at;
 };
 /**

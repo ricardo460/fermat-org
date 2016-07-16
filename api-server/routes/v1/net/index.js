@@ -58,16 +58,41 @@ router.get('/servrs', function (req, res, next) {
 	}
 });
 /**
- * @api {get} /v1/net/servrs/:serv_id get server network
+ * @api {get} /v1/net/servrs/:serv_id/clients get server clients
  * @apiName getClients
  * @apiVersion 0.0.1
  * @apiGroup Net
  * @apiDescription List clients connected to a server.
  */
-router.get('/servrs/:serv_id', function (req, res, next) {
+router.get('/servrs/:serv_id/clients', function (req, res, next) {
 	'use strict';
 	try {
 		netMod.getClients(req, function (error, result) {
+			if (error) {
+				res.status(200).send(error);
+			} else {
+				if (result) {
+					res.status(200).send(result);
+				} else {
+					res.status(200).send(new Error('Invalid server data'));
+				}
+			}
+		});
+	} catch (err) {
+		next(err);
+	}
+});
+/**
+ * @api {get} /v1/net/servrs/:serv_id/actors get server actors
+ * @apiName getActors
+ * @apiVersion 0.0.1
+ * @apiGroup Net
+ * @apiDescription List actors connected to a server.
+ */
+router.get('/servrs/:serv_id/actors', function (req, res, next) {
+	'use strict';
+	try {
+		netMod.getActors(req, function (error, result) {
 			if (error) {
 				res.status(200).send(error);
 			} else {

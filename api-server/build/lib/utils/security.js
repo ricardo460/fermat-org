@@ -129,12 +129,10 @@ var isObjectID = function(str) {
  */
 var isValidDeps = function(deps) {
 	var bnd = 0;
-
 	if (deps === undefined || deps === null)
 		return 1;
 	if (ifExistIsValidData(deps)) {
 		deps = deps.split(',');
-		console.log(deps);
 		for (var i = 0; i < deps.length; i++) {
 			if (isObjectID(deps[i]))
 				bnd = 1;

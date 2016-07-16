@@ -22,7 +22,19 @@ var servSchema = mongoose.Schema({
 		trim: true,
 		required: true
 	},
-	extra: {},
+    location: mongoose.Schema.Types.Mixed,
+    lastIP: {
+        type: String
+    },
+    os: {
+        type: String,
+        trim: true
+    },
+	networkServices: mongoose.Schema.Types.Mixed,
+    conectedClients: {
+        type: Number,
+        default: 0
+    },
 	upd_at: {
 		type: mongoose.Schema.Types.ObjectId,
 		'default': new mongoose.Types.ObjectId()

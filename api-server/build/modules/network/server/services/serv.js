@@ -99,11 +99,12 @@ exports.findAllServs = function (sort, callback) {
  *
  * @return {[type]}      [description]
  */
-exports.updateServById = function (_id, set, callback) {
+exports.updateServById = function (_id, _wave_id, set, callback) {
 	'use strict';
 	set.upd_at = new mongoose.Types.ObjectId();
 	servDao.updateSchema({
-		_id: _id
+		_id: _id,
+        _wave_id : _wave_id
 	}, set, {}, function (err, serv) {
 		callback(err, serv);
 	});
