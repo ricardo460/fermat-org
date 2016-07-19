@@ -45,10 +45,6 @@ function WorkFlowEdit() {
         return PREVIEW_STEPS; // test
     }; 
 
-    this.getr = function(){
-        return classFlow; // test
-    };
-
     this.changeFocusSteps = function(id){
 
         FOCUS.data = EDIT_STEPS[id - 1].mesh;
@@ -124,12 +120,12 @@ function WorkFlowEdit() {
 
                 callback = function(){
 
-                    //validateLock(id, function(){ 
+                    validateLock(id, function(){ 
 
                         window.fieldsEdit.actions.type = "update";
                         window.buttonsManager.removeAllButtons(); 
                         drawHeaderFlow(id);
-                    //});
+                    });
                 };
             }
 
@@ -214,7 +210,7 @@ function WorkFlowEdit() {
 
         if(validateFields() === ''){ 
 
-            window.fieldsEdit.disabledButtonSave(true);
+            disableButtons(true);
             
             if(window.fieldsEdit.actions.type === "insert")
                 createWorkFlow();
@@ -239,6 +235,16 @@ function WorkFlowEdit() {
             return msj;
         }
     };
+
+    function disableButtons(state){
+
+        var button = document.getElementById('button-Steps');
+
+        window.fieldsEdit.disabledButtonSave(state);
+
+        if(button)
+            button.disabled = state;
+    }
 
     /**
      * @author Ricardo Delgado.
@@ -549,7 +555,7 @@ function WorkFlowEdit() {
             },
             function(){
 
-                window.fieldsEdit.disabledButtonSave(false);    
+                disableButtons(false);    
             });
 
         function getParamsData(flow){
@@ -675,7 +681,7 @@ function WorkFlowEdit() {
 
         setTimeout( function() {
 
-            newFlow.drawEdit(_target.x, _target.y, _target.z, id);
+            newFlow.draw(_target.x, _target.y, _target.z, 1, id);
             
             window.workFlowManager.getObjHeaderFlow().push(newFlow);
 
@@ -779,7 +785,7 @@ function WorkFlowEdit() {
 
         },
         function(){
-            window.fieldsEdit.disabledButtonSave(false);
+            disableButtons(false);
         });
 
         function getParamsData(flow){
@@ -855,7 +861,7 @@ function WorkFlowEdit() {
 
                             if(newSteps[i].title.toLowerCase() !== oldSteps[i].title.toLowerCase() ||
                                newSteps[i].desc.toLowerCase() !== oldSteps[i].desc.toLowerCase() ||
-                               newSteps[i].name.toLowerCase() !== oldSteps[i].name.toLowerCase()){
+                               newSteps[i].name !== oldSteps[i].name){
 
                                 newSteps[i]._id = oldSteps[i]._id;
                                 config.update.steps.push(newSteps[i]);
@@ -885,7 +891,7 @@ function WorkFlowEdit() {
 
                         if(newSteps[i].title.toLowerCase() !== oldSteps[i].title.toLowerCase() ||
                            newSteps[i].desc.toLowerCase() !== oldSteps[i].desc.toLowerCase() ||
-                           newSteps[i].name.toLowerCase() !== oldSteps[i].name.toLowerCase() ){
+                           newSteps[i].name !== oldSteps[i].name){
 
                             newSteps[i]._id = oldSteps[i]._id;
                             config.update.steps.push(newSteps[i]);
@@ -922,7 +928,7 @@ function WorkFlowEdit() {
 
                             if(newSteps[i].title.toLowerCase() !== oldSteps[i].title.toLowerCase() ||
                                newSteps[i].desc.toLowerCase()!== oldSteps[i].desc.toLowerCase() ||
-                               newSteps[i].element.toLowerCase()!== oldSteps[i].element.toLowerCase() ){
+                               newSteps[i].name!== oldSteps[i].name){
 
                                 newSteps[i]._id = oldSteps[i]._id;
                                 config.update.steps.push(newSteps[i]);
@@ -1000,7 +1006,7 @@ function WorkFlowEdit() {
 
                         },
                         function(){
-                            window.fieldsEdit.disabledButtonSave(false);
+                            disableButtons(false);
                         });
                 }
                 else{
@@ -1208,9 +1214,9 @@ function WorkFlowEdit() {
                 window.buttonsManager.createButtons('button-path', 'Edit Path', function(){
                     changeMode('edit-path');}, null, null, "right");
             },
-            steps : function(){
+            steps : function(side){
                 window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
-                    changeMode('edit-step');}, null, null, "right");
+                    changeMode('edit-step');}, null, null, side);
             },
             preview : function(){
                 window.buttonsManager.createButtons('button-preview', 'Workflow Preview', function(){
@@ -1415,7 +1421,7 @@ function WorkFlowEdit() {
                         
                         buttons.helpPath();
 
-                        buttons.steps();
+                        buttons.steps('right');
 
                         window.fieldsEdit.setModeEdit('Edit Path Mode');
 
@@ -1623,7 +1629,7 @@ function WorkFlowEdit() {
 
                             window.headers.transformWorkFlow(2000);
 
-                            buttons.steps();
+                            buttons.steps('left');
 
                         });
                     };             
