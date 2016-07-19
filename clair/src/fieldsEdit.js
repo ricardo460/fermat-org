@@ -1443,6 +1443,8 @@ function FieldsEdit() {
 
                         var _ctx = _canvas.getContext("2d");
 
+                        cleanPreview(_canvas);
+
                         applyTextureCanvas(_ctx, i, "images/workflow/step.png");
 
                         _canvas.dataset.state = false;
@@ -1518,7 +1520,7 @@ function FieldsEdit() {
 
         var canvas = document.getElementById('step-modal-canvas');
         var ctx = canvas.getContext('2d');
-        cleanPreview();
+        cleanPreview(canvas);
         var size = 12;
         ctx.fillStyle = '#FFFFFF';
 
@@ -1533,9 +1535,8 @@ function FieldsEdit() {
         image.src = "images/workflow/stepBox.png";
     }
 
-    function cleanPreview(){
-        
-        var canvas = document.getElementById('step-modal-canvas');
+    function cleanPreview(canvas){
+
         var ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }  
