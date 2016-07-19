@@ -1672,7 +1672,7 @@ function WorkFlowEdit() {
 
                             var event ={ keyCode : 27} ;
 
-                            window.camera.offFocus();
+                            window.camera.disableFocus();
 
                             window.actualView = 'workflows';
 
@@ -3288,7 +3288,7 @@ function WorkFlowEdit() {
 
         if(event.keyCode === 27) {
 
-            window.camera.offFocus();
+            window.camera.disableFocus();
 
             window.actualView = 'workflows';
 

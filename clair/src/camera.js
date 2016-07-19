@@ -334,12 +334,8 @@ function Camera(position, renderer, renderFunc) {
         return focus;
     };
 
-    this.offFocus = function(){
+    this.disableFocus = function(){
         focus = true;
-    };
-
-    this.onFocus = function(){
-        focus = null;
     };
     
     /**
