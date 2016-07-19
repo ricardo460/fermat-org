@@ -15,7 +15,7 @@ function API() {
 
         var param;
 
-        window.session.useTestData();
+        //window.session.useTestData();
 
         if(window.session.getIsLogin() && !window.disconnected){
 
