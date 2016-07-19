@@ -17,7 +17,7 @@ function API() {
 
         //window.session.useTestData();
 
-        if(window.session.getIsLogin()){
+        if(window.session.getIsLogin() && !window.disconnected){
 
             var usr = window.helper.clone(window.session.getUserLogin());
 
@@ -62,13 +62,19 @@ function API() {
         }
         else{
 
-            url = self.getAPIUrl("comps");
+            if(!window.disconnected)
+                url = self.getAPIUrl("comps");
+            else
+                url = 'json/testData/comps.json';
 
             callAjax('', '',function(route, res){
 
                 list = res;
 
-                url = self.getAPIUrl("user");
+                if(!window.disconnected)
+                    url = self.getAPIUrl("user");
+                else
+                    url = 'json/testData/devs.json';
 
                 callAjax('', '',function(route, res){
 
@@ -82,8 +88,13 @@ function API() {
 
         function callAjax(route, port, callback){
 
+            var URL = url + route + port;
+
+            if(window.disconnected)
+                URL = url;
+
             $.ajax({
-                url: url + route + port,
+                url: URL,
                 method: "GET"
             }).success (
                 function (res) {
@@ -138,17 +149,25 @@ function API() {
 
                     case "tableEdit insert":
 
-                        if(res._id){
+                        if(res){
 
-                            if(typeof(doneCallback) === 'function')
-                                doneCallback(res);
+                            if(res._id){
+
+                                if(typeof(doneCallback) === 'function')
+                                    doneCallback(res);
+                            }
+                            else{
+
+                                window.alert('There is already a component with that name in this group and layer, please use another one');
+
+                                if(typeof(failCallback) === 'function')
+                                    failCallback(res);
+                            }
                         }
                         else{
 
-                            window.alert('There is already a component with that name in this group and layer, please use another one');
-
                             if(typeof(failCallback) === 'function')
-                                failCallback(res);
+                                    failCallback(res);
                         }
 
                         break;
@@ -180,15 +199,23 @@ function API() {
                         break;
                     case "wolkFlowEdit insert":
 
-                        if(res._id){
+                        if(res){
 
-                            if(typeof(doneCallback) === 'function')
-                                doneCallback(res);
+                            if(res._id){
+
+                                if(typeof(doneCallback) === 'function')
+                                    doneCallback(res);
+                            }
+                            else{
+
+                                if(typeof(failCallback) === 'function')
+                                    failCallback(res);
+                            }
                         }
                         else{
-
+                            
                             if(typeof(failCallback) === 'function')
-                                failCallback(res);
+                                    failCallback(res);
                         }
 
                         break;
@@ -277,9 +304,15 @@ function API() {
 
                 var res = null;
 
-                if(method !== 'DELETE')
-                    res = JSON.parse(xhr.responseText);
+                if(method !== 'DELETE'){
+                    
+                    //if(xhr.responseText.match("_id[a-z0-9-A-Z0-9]*"))
+                        res = JSON.parse(xhr.responseText);
+                    /*else 
+                        window.alert(xhr.responseText);*/
+                }
 
+                
                 success(res);
 
             };

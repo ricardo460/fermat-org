@@ -626,63 +626,49 @@ END
 */
 
 #modal-desc {
-    
     opacity: 0;
     z-index: 12;
     width: 45.5%;
     padding: 8px;
-    background: #00cdad;
+    background: #FFF;
     padding-bottom: 4px;
     
     position: absolute;
     left: calc(50% - 22.7%);
-    
 }  
 
 #modal-desc[data-state="hidden"] {
-    
     opacity: 0;
     display: none;
-    
 }
 
 #modal-desc[data-state="show"] {
-    
     opacity: 1;
     display: block;
-    
 }
 
 #modal-desc label {
-    
-    color: #006053;
-    font-size: 14px;
-    font-family: uppercase;
-    
+    font-size: 20px;
+    font-family: sans-serif;
 }
 
 #modal-desc textarea {
-    
-    border: 0px;
+    border: 1px solid rgb(153, 153, 204);
+    border-radius: 5px;
     width: 100%;
     resize: none;
-    color: #006053;
     font-size: 18px;
     margin-top: 5px;
-    background: #daf0e9;
-    font-family: uppercase;
-    
+    background: #FFF;
+    font-family: sans-serif;
 }
 
 #modal-desc div {
-    
     width: 100%;
-    
 }
 
 #modal-desc div button{
-    
-    float: left;
+    float: right;
     border: 0;
     margin: 0;
     padding: 0;
@@ -691,23 +677,26 @@ END
     font-size: 12px;
     padding-top: 2px;
     padding-bottom: 2px;
-    background: #daf0e9;
+    background: #FFF;
     font-family: sans-serif;
-    
+    border: 1px solid rgb(153, 153, 204);
+    border-radius: 5px;
 }
 
 #modal-desc div #modal-desc-accept {
     
-    float: right;
-    
+    float: left;
 }
 
 #modal-desc div button:active {
-    
     color: #000000;
-    border: none;
-    background-color: rgba(127,127,127,0.75);
+    background-color: #eef;
     
+}
+
+#modal-desc div button:hover {
+    cursor: pointer;
+    background: #eef;
 }
 
 /**
@@ -1153,3 +1142,320 @@ END
 /**
 * END
 */
+
+/**     START
+* @author Daril Rodriguez.
+* CSS FOR WORKFLOW EDIT STEP MODAL.
+*/
+
+
+#step-modal * {
+    font-family: sans-serif;
+    font-size: 14px;
+}
+
+#step-modal {
+    position: absolute;
+    overflow: hidden;
+    width: 30%;
+    height: 48%;
+    top: 8%;
+    left: 37.5%;
+    background: #EEE;
+}
+
+#step-modal-canvas {
+    position: absolute;
+    border: 1px solid #99C;
+    border-radius: 5px;
+    width: 90%;
+    height: 18.5%;
+    left: 5%;
+    top: 6%
+}
+
+#step-modal-title {
+    position: absolute;
+    border: 1px solid #99C;
+    border-radius: 5px;
+    width: 90%;
+    height: 9.5%;
+    left: 5%;
+    top: 29%;
+}
+
+#step-modal-title:focus {
+    border: 1px solid #77bae8;
+}
+
+#step-modal-desc {
+    position: absolute;
+    border: 1px solid #99C;
+    border-radius: 5px;
+    width: 90%;
+    resize: none;
+    height: 39%;
+    left: 5%;
+    top: 42.5%;
+}
+
+#step-modal-desc:focus {
+    border: 1px solid #77bae8;
+}
+
+
+#step-modal-cancel {
+    position: absolute;
+    border: 1px solid rgb(153, 153, 204);
+    border-radius: 5px;
+    width: 45%;
+    resize: none;
+    height: 10%;
+    left: 51%;
+    top: 86%;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+}
+
+#step-modal-accept {
+    position: absolute;
+    border: 1px solid rgb(153, 153, 204);
+    border-radius: 5px;
+    width: 45%;
+    resize: none;
+    height: 10%;
+    left: 5%;
+    top: 86%;
+    background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+}
+
+#step-modal-cancel:hover, #step-modal-accept:hover {
+    cursor: pointer;
+    background: #eef;
+}
+/**
+* END
+*/
+
+#steps-list {
+  z-index: 11;
+  position: fixed;
+  left: 0px;
+  background: #eee;
+  width: 200px;
+  height: 100%;
+  transition: 1s all ease 0s;
+}
+
+#steps-list-content {
+  display: inline-block;
+  float: left;
+  width: 190px;
+  height: 100%;
+  padding-top: 5px;
+  background: #eee;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+#steps-list-expand {
+  display: inline-block;
+  float: left;
+  width: 10px;
+  height: 100%;
+  background: #e4e4e4;
+}
+
+#steps-list-expand:hover {
+  background: #dadada;
+  cursor: pointer;
+}
+
+.steps-list-step {
+  float: left;
+  margin: 2.5px;
+  width: 97%;
+  height: 100px;
+  background: #fff;
+}
+
+.steps-list-step:hover {
+  cursor: pointer;
+  background: #fbfbfb;
+}
+
+#steps-expand {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid #000;
+  padding: 0;
+  border-radius: 5px;
+  height: 20px;
+  background: #000;
+  margin-left: 3px;
+  width: 4px;
+}
+
+#steps-expand:hover {
+  cursor: pointer;
+}
+
+#steps-list[data-state="hidden"] {
+  left: -190px;
+  transition: 1s all ease 0s;
+}
+
+#steps-list[data-state="show"] {
+  left: 0px;
+  transition: 1s all ease 0s;
+}
+
+.steps-button-close {
+	position: absolute;
+	right: 0;
+	width: 20px;
+	height: 20px;
+	border: 0;
+	border-radius: 5px;
+	background: #F04F4F;
+	background-size: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("images/workflow/add_btn.png");
+    transform: rotate(45deg);
+	transition: 1s all ease-in 0s;
+}
+
+.steps-button-close:hover {
+	cursor: pointer;
+  transform: rotate(-45deg);
+}
+
+.steps-div-close {
+	position: relative;
+	float: left;
+	width: 100%;
+}
+
+.steps-alert {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 5px;
+  background-size: 70%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#workflow-mode {
+    position: absolute;
+    left: 25%;
+    width: 50%;
+    padding-top: 10px;
+    text-align: center;
+    z-index: 11;
+    color: rgba(127,127,127,1);
+}
+
+/**
+ *        START
+ * @author Daril Rodriguez
+ *
+ */
+
+#modal-call-type {
+    position: relative;
+    background: #555;
+    padding: 3px;
+    width: 86px;
+}
+
+#modal-call-select {
+    border: 1px solid rgb(58, 58, 58);
+    width: 84px;
+    overflow: hidden;
+    background: linear-gradient(to bottom, rgba(107, 107, 107, 1) 0%, rgba(88, 88, 88, 1) 100%);
+}
+
+#modal-call-select select{
+    border: 0;
+    width: 84px;
+    font-size: 15px;
+    width: 84;
+    float: left;
+    color: #FFF;
+    border: none;
+    padding: 3.5px;
+    appearance: none;
+    padding-left: 0px;
+    -moz-appearance: none;
+    font-family: sans-serif;
+    -webkit-appearance: none;
+    background: transparent url("http://flaticons.net/icons/Application/Arrowhead-Down-01.png") right center no-repeat;
+    background-size: 7%;
+    background-position: 74px;
+}
+
+#modal-call-select option{
+    background: #555;
+}
+
+#modal-solap-a {
+    position: absolute;
+    left: 70px;
+    height: 10px;
+    width: 7px;
+    background: linear-gradient( 50deg, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 1) 50%, #555 50%);
+}
+
+#modal-solap-b {
+    position: absolute;
+    left: 77px;
+    height: 10px;
+    width: 7px;
+    background: linear-gradient( -50deg, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 1) 50%, #555 50%);
+}
+
+#step-error {
+    padding-left: 5px;
+    padding-top: 5px;
+    border: 1px solid #F44;
+    height: 9.5%;
+    width: 90%;
+    position: absolute;
+    top: 14%;
+    left: 5%;
+    background: #FFF;
+    font-size: 12px;
+    transition: 1s all ease 0s;
+    border-radius: 2px;
+}
+
+#step-error[data-state="hidden"] {
+    opacity: 0;
+    top: 18%;
+}
+
+#step-error[data-state="show"] {
+    opacity: 1;
+    top: 14%;
+}
+
+#part-a {
+    width: 10px;
+    height: 12px;
+    margin-top: 5%;
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0) 40%, #E44 50%, #FFF 50%);
+}
+
+#part-b {
+    width: 10px;
+    height: 12px;
+    margin-left: 10px;
+    margin-top: -12px;
+    background: linear-gradient(-45deg, rgba(0, 0, 0, 0) 40%, #E44 50%, #FFF 50%);
+}
+

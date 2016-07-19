@@ -131,7 +131,13 @@ function WorkFlowManager(){
             layer : element.layer,
             component : element.name
         };
-        var url = window.API.getAPIUrl("procs", params);
+
+        var url = '';
+
+        if(!window.disconnected)
+            url = window.API.getAPIUrl("procs", params);
+        else
+            url = 'json/testData/procs.json';
 
         $.ajax({
             url: url,
@@ -189,7 +195,12 @@ function WorkFlowManager(){
      */
     this.getHeaderFLow = function() {
 
-        var url = window.API.getAPIUrl("procs");
+        var url = '';
+
+        if(!window.disconnected)
+            url = window.API.getAPIUrl("procs");
+        else
+            url = 'json/testData/procs.json';
 
         $.ajax({
             url: url,
@@ -225,7 +236,7 @@ function WorkFlowManager(){
             var camTarget = headerFlow[id].objects[0].clone();
             camTarget.position.y -= 850;
 
-            window.camera.setFocus(camTarget, new THREE.Vector4(0, -850, 2600, 1),duration);
+            window.camera.setFocus(camTarget, new THREE.Vector4(0, -850, 2600, 1), duration);
 
             for(var i = 0; i < headerFlow.length ; i++) {
                 if(id !== i)
