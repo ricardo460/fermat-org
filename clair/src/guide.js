@@ -108,6 +108,7 @@ function Guide() {
                                         <li><p>The (+) symbol over the arrow is to insert another step between<br> 
                                         two.</p></li>
                                         <li><p>Click on the Edit Steps button to enter EDIT STEP MODE.</p></li>
+                                        <li><p>To cancel press 'exit' and return to the initial menu.</p></li>
                                       </ul>
                                     </div>
                                 </div>
@@ -135,6 +136,7 @@ function Guide() {
                                     showing it is valid now.</p></li>
                                     <li><p>Repeat for any other step with error. When done, click on the <br>
                                     "Continue" button and you will go to the previous view.</p></li>
+                                    <li><p>To cancel press 'exit' and return to the initial menu.</p></li>
                                   </ul>
                                 </div>
                             </div>
@@ -157,6 +159,7 @@ function Guide() {
                                     <li><p>Clicking on an arrow s head will display the options to choose <br>
                                     the call type between the steps.</p></li>
                                     <li><p>Click on WorkFlow preview to see the whole workflow s preview.</p></li>
+                                    <li><p>To cancel press 'exit' and return to the initial menu.</p></li>
                                   </ul>
                                 </div>
                             </div>

@@ -1210,7 +1210,7 @@ function WorkFlowEdit() {
             },
             steps : function(){
                 window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
-                    changeMode('edit-step');}, null, null, "left");
+                    changeMode('edit-step');}, null, null, "right");
             },
             preview : function(){
                 window.buttonsManager.createButtons('button-preview', 'Workflow Preview', function(){
@@ -1231,7 +1231,7 @@ function WorkFlowEdit() {
             helpRepared : function(){
                 window.buttonsManager.createButtons('help-repared', 'Help', function(){
                     window.guide.HelpWorkFlowEdit('repared');}, null, null, "right");
-            } 
+            }
         };
 
         if(!MODE().exit()){
@@ -1259,9 +1259,9 @@ function WorkFlowEdit() {
                         window.dragManager.enable();
                         window.helper.hide('backButton', 0, true);
                         window.fieldsEdit.hiddenStepsList(true);
+                        buttons.helpEdit();
                         buttons.preview();
                         buttons.path();
-                        buttons.helpEdit();
                         window.actualView = false;
                         displayField(false);
                         window.tileManager.transform(false, 1000);
@@ -1412,10 +1412,10 @@ function WorkFlowEdit() {
                     enter = function() {
 
                         createMeshFocus();
+                        
+                        buttons.helpPath();
 
                         buttons.steps();
-
-                        buttons.helpPath();
 
                         window.fieldsEdit.setModeEdit('Edit Path Mode');
 
@@ -1670,7 +1670,7 @@ function WorkFlowEdit() {
 
                         window.buttonsManager.createButtons('button-back', 'BACK', function(){
 
-                            var event ={ keyCode : 27} ;
+                            var event = { keyCode : 27} ;
 
                             window.camera.disableFocus();
 
