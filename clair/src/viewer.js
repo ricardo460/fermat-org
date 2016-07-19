@@ -334,15 +334,13 @@ function onClick(e) {
 }
 
 function animate() {
-
-    requestAnimationFrame(animate);
-
     TWEEN.update();
-
     camera.update();
-
     if(stats)
         stats.update();
+    
+    render();
+    requestAnimationFrame(animate);
 }
 
 function create_stats(){

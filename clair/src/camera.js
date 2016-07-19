@@ -183,8 +183,6 @@ function Camera(position, renderer, renderFunc) {
         self.aspectRatio = camera.aspect;
 
         renderer.setSize(innerWidth, innerHeight);
-
-        render();
     };
     
     /**
@@ -374,8 +372,6 @@ function Camera(position, renderer, renderFunc) {
                     .onUpdate(function(){
                         if(!self.freeView || synced)
                             controls.target.set(camera.position.x, camera.position.y, 0);
-
-                        window.render();
                     });
             
             var next = new TWEEN.Tween(camera.up)
