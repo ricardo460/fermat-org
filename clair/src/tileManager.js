@@ -652,12 +652,6 @@ function TileManager() {
             }
         }
 
-
-        new TWEEN.Tween(this)
-            .to({}, duration * 2 + self.elementsByGroup * DELAY)
-            .onUpdate(render)
-            .start();
-
         setTimeout(window.screenshotsAndroid.show, duration);
     };
 
@@ -800,11 +794,6 @@ function TileManager() {
 
             animate(tile.mesh, target, Math.random() * _duration + _duration);
         }
-
-        new TWEEN.Tween(this)
-            .to({}, _duration * 2)
-            .onUpdate(render)
-            .start();
 
         window.screenshotsAndroid.hide();
         window.signLayer.letAloneSignLayer();

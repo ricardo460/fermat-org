@@ -221,11 +221,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             .easing(TWEEN.Easing.Exponential.InOut)
             .start();
         }
-
-        new TWEEN.Tween(this)
-        .to({}, duration * 3)
-        .onUpdate(render)
-        .start();
     };
 
     /**
@@ -248,11 +243,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             .easing(TWEEN.Easing.Exponential.InOut)
             .start();
         }
-
-        new TWEEN.Tween(this)
-        .to({}, duration * 2)
-        .onUpdate(render)
-        .start();
     };
 
     /**
@@ -412,11 +402,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
             helper.hideObject(arrows[i].cone, false, _duration);
         }
 
-        new TWEEN.Tween(this)
-        .to({}, _duration * 2)
-        .onUpdate(render)
-        .start();
-
         arrows = [];
     };
 
@@ -475,11 +460,6 @@ function Headers(columnWidth, superLayerMaxHeight, groupsQtty, layersQtty, super
         self.flyOut();
 
         self.showHeaders(_duration);
-
-        new TWEEN.Tween(this)
-            .to({}, _duration * 2)
-            .onUpdate(render)
-            .start();
     };
 
     /**

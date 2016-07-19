@@ -100,8 +100,6 @@ function Workflow(flow) {
                 self.drawTree(self.flow.steps[i], initialX + COLUMN_SPACING * i, initialY, 0);
             }
 
-            window.helper.forceTweenRender(5000);
-
             self.showAllFlow();
             self.showSteps();
         }
@@ -589,11 +587,6 @@ function Workflow(flow) {
                 })
                 .start();
         }
-        
-        if(objects === 'steps')
-            window.helper.forceTweenRender(_duration * 1.3);
-
-
     }
 
     /**
