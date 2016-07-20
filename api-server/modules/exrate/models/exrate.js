@@ -21,9 +21,9 @@ function ExRateMdl(price, timestamp) {
  *
  * @return {[type]} [description]
  */
-ExRateMdl.prototype.init = function (exRateSchema) {
-	'use strict';
-	this._id = exRateSchema._id;
+ExRateMdl.prototype.init = function(exRateSchema) {
+    'use strict';
+    this._id = exRateSchema._id;
     this.price = exRateSchema.price;
     this.timestamp = exRateSchema.timestamp;
 };

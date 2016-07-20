@@ -24,6 +24,6 @@ var exRateSchema = mongoose.Schema({
 exRateSchema.index({
     timestamp: 1
 }, {
-    name: "actrs_cp_indx"
+    name: "exrate_indx"
 });
 module.exports = exRateSchema;
