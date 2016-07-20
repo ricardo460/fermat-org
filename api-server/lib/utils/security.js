@@ -139,7 +139,7 @@ var isValidDeps = function(deps) {
 			else return 0;
 		}
 		return bnd;
-	} 
+	}
 	return 0;
 };
 /**
@@ -462,3 +462,12 @@ exports.isUUID = function(uuid) {
 	}
 	return 0;
 };
+
+/**
+ * Checks wether a string is a valid number or not
+ * @param  {[type]}  str [description]
+ * @return {Boolean}     [description]
+ */
+exports.isNumber = function(str) {
+	return !isNaN(str);
+}
