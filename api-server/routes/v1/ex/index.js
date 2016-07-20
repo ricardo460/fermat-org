@@ -62,7 +62,8 @@ router.get('/ticker', function(req, res, next) {
             } else {
                 res.status(200).send({
                     "FER_USD": {
-                        "price": exrate.price,
+                        "purchase": exrate.price,
+                        "sale": 1 / (exrate.price),
                         "timestamp": Date.parse(exrate.timestamp)
                     }
                 });
