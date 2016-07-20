@@ -27,22 +27,22 @@ function Workflow(flow) {
         }
     ];
 
-    var account = 0;
-    var self = this;
-    var used = [];
-    var objectsFlow = {
-            mesh : [],
-            position :{
-                target : [],
-                origin : []
-            } 
+    var account = 0,
+    self = this,
+    used = [],
+    objectsFlow = {
+        mesh : [],
+        position :{
+            target : [],
+            origin : []
+        } 
     },
-        objectsStep = {
-            mesh : [],
-            position :{
-                target : [],
-                origin : []
-            }
+    objectsStep = {
+        mesh : [],
+        position :{
+            target : [],
+            origin : []
+        }
     };
 
     this.stepsTest = objectsStep;
@@ -51,11 +51,22 @@ function Workflow(flow) {
     this.objects = objectsFlow.mesh;
     this.positions = objectsFlow.position;
 
-    initFlow();
-
     this.countFlowElement = function(){
-        initFlow();
+
+        var i, l;
+
+        for(i = 0, l = self.flow.steps.length; i < l; i++) {
+
+            var element = self.flow.steps[i];
+
+            self.flow.steps[i].element = helper.searchElement(
+                (element.platfrm || element.suprlay) + '/' + element.layer + '/' + element.name
+            );
+        }
+    
     };
+
+    self.countFlowElement();
 
     var onClick = function(target) {
 
@@ -80,6 +91,9 @@ function Workflow(flow) {
             origin = window.helper.getOutOfScreenPoint(0),
             target = new THREE.Vector3(initialX, initialY + window.TILE_DIMENSION.height * 2, initialZ);
 
+        if(indice === 1)
+            target = new THREE.Vector3(initialX, initialY, initialZ);
+
         title.userData = {
                 id: id,
                 onClick : onClick
@@ -103,32 +117,8 @@ function Workflow(flow) {
             self.showAllFlow();
             self.showSteps();
         }
-
         else if(indice === 1)
             self.showAllFlow();
-    };
-
-    this.drawEdit = function(initialX, initialY, initialZ, id) {
-
-        var title = self.createTitleBox(self.flow.name, self.flow.desc),
-            origin = window.helper.getOutOfScreenPoint(0),
-            target = new THREE.Vector3(initialX, initialY , initialZ);
-
-        title.userData = {
-                id: id,
-                onClick : onClick
-        };
-
-        objectsFlow.position.origin.push(origin);
-        objectsFlow.position.target.push(target);
-
-        title.position.copy(origin);
-
-        objectsFlow.mesh.push(title);
-
-        window.scene.add(title);
-
-        self.showAllFlow();
     };
 
     /**
@@ -622,21 +612,4 @@ function Workflow(flow) {
 
         return color;
     }
-
-    //-----------------------------------------------------------------------------
-
-    function initFlow(){
-
-        var i, l;
-
-        for(i = 0, l = self.flow.steps.length; i < l; i++) {
-
-            var element = self.flow.steps[i];
-
-            self.flow.steps[i].element = helper.searchElement(
-                (element.platfrm || element.suprlay) + '/' + element.layer + '/' + element.name
-            );
-        }
-    }
-
 }

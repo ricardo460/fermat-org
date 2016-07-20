@@ -1370,21 +1370,20 @@ END
     position: relative;
     background: #555;
     padding: 3px;
-    width: 86px;
+    width: 131px;
 }
 
 #modal-call-select {
     border: 1px solid rgb(58, 58, 58);
-    width: 84px;
+    width: 130px;
     overflow: hidden;
     background: linear-gradient(to bottom, rgba(107, 107, 107, 1) 0%, rgba(88, 88, 88, 1) 100%);
 }
 
 #modal-call-select select{
     border: 0;
-    width: 84px;
+    width: 128px;
     font-size: 15px;
-    width: 84;
     float: left;
     color: #FFF;
     border: none;
@@ -1396,7 +1395,7 @@ END
     -webkit-appearance: none;
     background: transparent url("http://flaticons.net/icons/Application/Arrowhead-Down-01.png") right center no-repeat;
     background-size: 7%;
-    background-position: 74px;
+    background-position: 118px;
 }
 
 #modal-call-select option{
