@@ -36,6 +36,7 @@ config.oauth_token = secret[config.env].oauth_token;
 config.user_agent = secret[config.env].user_agent;
 config.ftp = secret[config.env].ftp;
 config.network = secret[config.env].network;
+config.exrate = secret[config.env].exrate;
 
 printObject(config);
 module.exports = config;

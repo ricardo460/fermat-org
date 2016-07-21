@@ -1,0 +1,33 @@
+.hidden {
+    display: none;
+}
+.actions {
+    padding-top: 10px;
+}
+.actions * {
+    margin-right: 5px;
+}
+.navbar-fermat {
+    max-width: 100%;
+    background-image: linear-gradient(to bottom, #59D1BD 0, #009A80 100%);
+}
+h2 {
+    margin-bottom: 50px;
+}
+.navbar-brand {
+    color: #fff;
+}
+.brand-img {
+    margin-top: -5px;
+}
+.brand {
+    height: 30px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin: 0px;
+    padding: 0px;
+}
+.content {
+    margin: auto;
+    max-width: 900px;
+}
