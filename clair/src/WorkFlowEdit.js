@@ -523,7 +523,7 @@ function WorkFlowEdit() {
             TEXTURE.img = image;
         };
 
-        image.src = 'images/workflow/Boton1.png';
+        image.src = 'images/workflow/skinStep.png';
     }
 
     //workFlow action
@@ -1903,7 +1903,7 @@ function WorkFlowEdit() {
 
             var ctx = canvas.getContext('2d');
 
-            img.src = 'images/workflow/Boton2.png';
+            img.src = 'images/workflow/skinStepF.png';
 
             var mesh = new THREE.Mesh(
                        new THREE.PlaneBufferGeometry(width, height),
@@ -2759,7 +2759,7 @@ function WorkFlowEdit() {
         
         focus.visible = false;
 
-        setTimeout(function(){focus.visible = true;}, 2010);
+        setTimeout(function(){focus.visible = true;}, 2500);
 
 
         var action = function (){updateTileIgnored();};
