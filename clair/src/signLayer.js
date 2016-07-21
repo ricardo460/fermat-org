@@ -143,26 +143,15 @@ function SignLayer(){
 
 	this.setPositionSignLayer = function(mesh, x, y){
 
-		var object, object2;
+        var target = window.helper.fillTarget(x - 500, y, 0, 'table');
 
-		mesh.position.x = Math.random() * 990000;
-        mesh.position.y = Math.random() * 990000;
-        mesh.position.z = 80000 * 2;
-            
-        mesh.position.copy(window.viewManager.translateToSection('table', mesh.position));
+        mesh.position.copy(target.hide.position);
+
 		objects.push(mesh);
 
-		object2 = new THREE.Vector3();
-		object2.x = mesh.position.x ;
-		object2.y = mesh.position.y ;
+		positions.lastTarget.push(target.hide.position);
 
-		positions.lastTarget.push(object2);
-
-		object = new THREE.Vector3();
-		object.x = x - 500;
-		object.y = y;
-
-		positions.target.push(object);
+		positions.target.push(target.show.position);
 
 		return mesh;
 	};

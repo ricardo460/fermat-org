@@ -42,12 +42,8 @@ function WorkFlowEdit() {
     };
 
     this.getp = function(){
-        return PREVIEW_STEPS; // test
+        return LIST_ARROWS; // test
     }; 
-
-    this.getr = function(){
-        return classFlow; // test
-    };
 
     this.changeFocusSteps = function(id){
 
@@ -61,7 +57,7 @@ function WorkFlowEdit() {
      * @param {String}
      */  
     this.deleteStepList = function(step){
-        deleteSteps(step, EDIT_STEPS, 'step');
+        deleteSteps(step, EDIT_STEPS, 'step', 0);
     }; 
 
     /**
@@ -124,12 +120,12 @@ function WorkFlowEdit() {
 
                 callback = function(){
 
-                    //validateLock(id, function(){ 
+                    validateLock(id, function(){ 
 
                         window.fieldsEdit.actions.type = "update";
                         window.buttonsManager.removeAllButtons(); 
                         drawHeaderFlow(id);
-                    //});
+                    });
                 };
             }
 
@@ -214,7 +210,7 @@ function WorkFlowEdit() {
 
         if(validateFields() === ''){ 
 
-            window.fieldsEdit.disabledButtonSave(true);
+            disableButtons(true);
             
             if(window.fieldsEdit.actions.type === "insert")
                 createWorkFlow();
@@ -239,6 +235,16 @@ function WorkFlowEdit() {
             return msj;
         }
     };
+
+    function disableButtons(state){
+
+        var button = document.getElementById('button-Steps');
+
+        window.fieldsEdit.disabledButtonSave(state);
+
+        if(button)
+            button.disabled = state;
+    }
 
     /**
      * @author Ricardo Delgado.
@@ -549,7 +555,7 @@ function WorkFlowEdit() {
             },
             function(){
 
-                window.fieldsEdit.disabledButtonSave(false);    
+                disableButtons(false);    
             });
 
         function getParamsData(flow){
@@ -675,7 +681,7 @@ function WorkFlowEdit() {
 
         setTimeout( function() {
 
-            newFlow.drawEdit(_target.x, _target.y, _target.z, id);
+            newFlow.draw(_target.x, _target.y, _target.z, 1, id);
             
             window.workFlowManager.getObjHeaderFlow().push(newFlow);
 
@@ -779,7 +785,7 @@ function WorkFlowEdit() {
 
         },
         function(){
-            window.fieldsEdit.disabledButtonSave(false);
+            disableButtons(false);
         });
 
         function getParamsData(flow){
@@ -855,7 +861,7 @@ function WorkFlowEdit() {
 
                             if(newSteps[i].title.toLowerCase() !== oldSteps[i].title.toLowerCase() ||
                                newSteps[i].desc.toLowerCase() !== oldSteps[i].desc.toLowerCase() ||
-                               newSteps[i].name.toLowerCase() !== oldSteps[i].name.toLowerCase()){
+                               newSteps[i].name !== oldSteps[i].name){
 
                                 newSteps[i]._id = oldSteps[i]._id;
                                 config.update.steps.push(newSteps[i]);
@@ -885,7 +891,7 @@ function WorkFlowEdit() {
 
                         if(newSteps[i].title.toLowerCase() !== oldSteps[i].title.toLowerCase() ||
                            newSteps[i].desc.toLowerCase() !== oldSteps[i].desc.toLowerCase() ||
-                           newSteps[i].name.toLowerCase() !== oldSteps[i].name.toLowerCase() ){
+                           newSteps[i].name !== oldSteps[i].name){
 
                             newSteps[i]._id = oldSteps[i]._id;
                             config.update.steps.push(newSteps[i]);
@@ -922,7 +928,7 @@ function WorkFlowEdit() {
 
                             if(newSteps[i].title.toLowerCase() !== oldSteps[i].title.toLowerCase() ||
                                newSteps[i].desc.toLowerCase()!== oldSteps[i].desc.toLowerCase() ||
-                               newSteps[i].element.toLowerCase()!== oldSteps[i].element.toLowerCase() ){
+                               newSteps[i].name!== oldSteps[i].name){
 
                                 newSteps[i]._id = oldSteps[i]._id;
                                 config.update.steps.push(newSteps[i]);
@@ -1000,7 +1006,7 @@ function WorkFlowEdit() {
 
                         },
                         function(){
-                            window.fieldsEdit.disabledButtonSave(false);
+                            disableButtons(false);
                         });
                 }
                 else{
@@ -1208,9 +1214,9 @@ function WorkFlowEdit() {
                 window.buttonsManager.createButtons('button-path', 'Edit Path', function(){
                     changeMode('edit-path');}, null, null, "right");
             },
-            steps : function(){
+            steps : function(side){
                 window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
-                    changeMode('edit-step');}, null, null, "right");
+                    changeMode('edit-step');}, null, null, side);
             },
             preview : function(){
                 window.buttonsManager.createButtons('button-preview', 'Workflow Preview', function(){
@@ -1415,7 +1421,7 @@ function WorkFlowEdit() {
                         
                         buttons.helpPath();
 
-                        buttons.steps();
+                        buttons.steps('right');
 
                         window.fieldsEdit.setModeEdit('Edit Path Mode');
 
@@ -1484,7 +1490,7 @@ function WorkFlowEdit() {
                                                         resetPositionIdStepMesh(orderFocus);
                                                     }
                                                     else{
-                                                        deleteSteps(orderFocus, EDIT_STEPS, 'step');
+                                                        deleteSteps(orderFocus, EDIT_STEPS, 'step', 1000);
                                                     }
                                                 }
                                             }
@@ -1623,7 +1629,7 @@ function WorkFlowEdit() {
 
                             window.headers.transformWorkFlow(2000);
 
-                            buttons.steps();
+                            buttons.steps('left');
 
                         });
                     };             
@@ -2502,8 +2508,31 @@ function WorkFlowEdit() {
      * 
      */
     function deleteArrow(){
+
+        var array = window.dragManager.objects,
+            newArray = [],
+            type = null,
+            i;
+
+        for(i = 0; i < array.length; i++ ){
+
+            type = array[i].userData.type;
+
+            if(type){
+
+                if(type === 'step')
+                    newArray.push(array[i]);
+
+            }
+            else{
+                newArray.push(array[i]);
+            }
+
+        }
+
+        window.dragManager.objects = newArray;
         
-        for(var i = 0; i < LIST_ARROWS.length; i++){
+        for(i = 0; i < LIST_ARROWS.length; i++){
 
             window.scene.remove(LIST_ARROWS[i].arrow);
             window.scene.remove(LIST_ARROWS[i].meshPrimary);
@@ -2550,6 +2579,12 @@ function WorkFlowEdit() {
                                         step.tile, false);
                 }
             }
+        }
+
+        for(i = 0; i < LIST_ARROWS.length; i++){
+                    
+            window.dragManager.objects.push(LIST_ARROWS[i].meshPrimary);
+            window.dragManager.objects.push(LIST_ARROWS[i].meshSecondary);  
         }
     }
     /**
@@ -2719,7 +2754,13 @@ function WorkFlowEdit() {
             rootY = window.helper.getSpecificTile(idTile).target.show.position.y,
             i,
             mesh = null,
-            target = null;
+            target = null,
+            focus = FOCUS.mesh;
+        
+        focus.visible = false;
+
+        setTimeout(function(){focus.visible = true;}, 2010);
+
 
         var action = function (){updateTileIgnored();};
 
@@ -3327,7 +3368,7 @@ function WorkFlowEdit() {
      * 
      * @param {String}
      */ 
-    function deleteSteps(step, array, type){
+    function deleteSteps(step, array, type, duration){
 
         var list = array,
             ORDER = SearchStepPositionEdit(step, list),
@@ -3404,7 +3445,7 @@ function WorkFlowEdit() {
 
             orderPositionSteps(EDIT_STEPS, 'step');
 
-            setTimeout(function(){deleteArrow(); updateArrow();}, 1000);
+            setTimeout(function(){deleteArrow(); updateArrow();}, duration);
 
             updateTextureParent();
         }
@@ -3527,7 +3568,7 @@ function WorkFlowEdit() {
             }
 
             if(deleteStep){
-                deleteSteps(deleteStep, array, 'flow');
+                deleteSteps(deleteStep, array, 'flow', 1000);
                 validateTiles();
             }
 
