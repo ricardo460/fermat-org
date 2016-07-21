@@ -380,21 +380,6 @@ function Helper() {
         window.helper.hide('backButton', 1000, true);
     };
 
-    /**
-     * Creates an empty tween which calls render() every update
-     * @author Miguel Celedon
-     * @param {number} [duration=2000] Duration of the tween
-     */
-    this.forceTweenRender = function(duration) {
-
-        duration = (typeof duration !== "undefined") ? duration : 2000;
-
-        new TWEEN.Tween(window)
-        .to({}, duration)
-        .onUpdate(window.render)
-        .start();
-    };
-
     this.getCenterView = function(view){
 
         var newCenter = new THREE.Vector3(0, 0, 0);

@@ -8,6 +8,7 @@ var tilesQtty = [],
     stats = null,
     headersUp = false,
     currentRender = "start",
+    disconnected = false,
 //Class
     tileManager = new TileManager(),
     logo = new Logo(),
@@ -23,10 +24,10 @@ var tilesQtty = [],
     headers = null,
     workFlowManager = null,
     viewManager = null,
-    magazine = null,
     networkViewer = null,
     buttonsManager = null,
-    guide = null;
+    guide = null,
+    dragManager = null;
 //Global constants
 var TILE_DIMENSION = {
     width : 231,
@@ -76,8 +77,8 @@ function createScene(current, option){
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.domElement.style.position = 'absolute';
         renderer.domElement.id = "canvas";
-        renderer.setClearColor(0xFFFFFF);
-        //renderer.setClearColor(0x313131);//Mode Test.
+        //renderer.setClearColor(0xFFFFFF);
+        renderer.setClearColor(0x313131);//Mode Test.
         document.getElementById('container').appendChild(renderer.domElement);
 
         camera = new Camera(new THREE.Vector3(0, 0, 90000),
@@ -120,12 +121,12 @@ function init() {
 
     browserManager = new BrowserManager();
     screenshotsAndroid = new ScreenshotsAndroid();
-    magazine = new Magazine();
     workFlowManager = new WorkFlowManager();
     buttonsManager = new ButtonsManager();
     fieldsEdit = new FieldsEdit();
     tableEdit = new TableEdit();
     workFlowEdit = new WorkFlowEdit();
+    dragManager = new DragManager();
 
     //View Manager
     viewManager = new ViewManager();
@@ -336,15 +337,13 @@ function onClick(e) {
 }
 
 function animate() {
-
-    requestAnimationFrame(animate);
-
     TWEEN.update();
-
     camera.update();
-
     if(stats)
         stats.update();
+    
+    render();
+    requestAnimationFrame(animate);
 }
 
 function create_stats(){
@@ -365,4 +364,3 @@ function render() {
     //renderer.render( scene, camera );
     camera.render(renderer, scene);
 }
-

@@ -24,8 +24,10 @@ function ScreenshotsAndroid() {
     var action = { state : false, mesh : null };
 
 	var onClick = function(target) {
-		change(target.userData.id);
-		window.buttonsManager.removeAllButtons();
+		if(actualView === "table"){ 
+			change(target.userData.id);
+			window.buttonsManager.removeAllButtons();
+		}
 	};
 
 	this.getScreenshots = function(){
@@ -48,11 +50,11 @@ function ScreenshotsAndroid() {
 
 						var target = {x : x, y : y + 240, z : 0};
 
-						self.objects.target[i].x = target.x;
-						self.objects.target[i].y = target.y;
-						self.objects.target[i].z = target.z;
+						self.objects.target[i].show.x = target.x;
+						self.objects.target[i].show.y = target.y;
+						self.objects.target[i].show.z = target.z;
 
-						animate(mesh, target, true);
+						animate(mesh, target.show);
 					}
 				}
 			}
@@ -78,7 +80,7 @@ function ScreenshotsAndroid() {
 						self.objects.mesh.splice(i,1);
 						self.objects.target.splice(i,1);
 
-						animate(mesh, target, false, 1000, function(){
+						animate(mesh, target.hide, 1000, function(){
 
 							window.scene.remove(mesh);
 						 }); 
@@ -114,9 +116,9 @@ function ScreenshotsAndroid() {
 
 								var mesh = self.objects.mesh[i];
 
-								self.objects.target[i].z = 160000;
+								self.objects.target[i].show.z = 160000;
 
-								animate(mesh, self.objects.target[i], false);
+								animate(mesh, self.objects.target[i].hide);
 							}
 						}
 					}
@@ -214,7 +216,7 @@ function ScreenshotsAndroid() {
 		for(var i = 0; i < self.objects.mesh.length; i++) { 
 
 			if(i != ignore)  
-				animate(self.objects.mesh[i], self.objects.target[i], false, 800);
+				animate(self.objects.mesh[i], self.objects.target[i].hide, 800);
 		}
 	}; 
 
@@ -230,7 +232,7 @@ function ScreenshotsAndroid() {
 			
 			for(var i = 0; i < self.objects.mesh.length; i++) {
 
-				animate(self.objects.mesh[i], self.objects.target[i], true, 1500);
+				animate(self.objects.mesh[i], self.objects.target[i].show, 1500);
 			}
 		}
 	};
@@ -266,8 +268,8 @@ function ScreenshotsAndroid() {
 
 		if(cant < 4){
 
-			var random = Math.random() * 80000,
-				_position = {x : random, y : random};
+			var _position = {x : Math.random() * 80000};
+
 			for(cant; cant <= 4; cant++)
 				addMesh('1', _position , lost, false);
 		}
@@ -336,29 +338,22 @@ function ScreenshotsAndroid() {
 	/**
 	* @author Ricardo Delgado
 	* The plans necessary for the wallet are added, each level is for a group of wallet.
-	* @param {number}  _position    End position of the plane in the x axis.
-	* @param {String}    wallet     Wallet group to which it belongs.
+	* @param {number}  root    End position of the plane in the x axis.
+	* @param {String}  wallet     Wallet group to which it belongs.
 	*/   
-	function addMesh(_position, wallet, state) {
+	function addMesh(root, wallet, state) {
 
 		var id = self.objects.mesh.length,
-			pz = 80000 * 2,
-			rx = Math.random() * 180,
-			ry = Math.random() * 180,
-			rz = Math.random() * 180,
-			x = _position.x,
+			x = root.x,
 			y = 0,
 			z = 0,
-			_texture = null; 
+			_texture = null,
+			position = new THREE.Vector3(0, 0, 0); 
 
-        if(state){ 
-            _texture = searchWallet(wallet, 1);
-            y = window.tileManager.dimensions.layerPositions[3] + window.TILE_DIMENSION.height + 240;
-        }
-        else{ 
-        	y = _position.y;
-            z = pz;
-        }
+
+        _texture = searchWallet(wallet, 1);
+        y = window.tileManager.dimensions.layerPositions[3] + window.TILE_DIMENSION.height + 240;
+
 			
 		var mesh = new THREE.Mesh(
 					new THREE.PlaneBufferGeometry(50, 80),
@@ -373,20 +368,24 @@ function ScreenshotsAndroid() {
 			onClick : onClick
 		};
 
-		var _target = window.helper.fillTarget(x, y, z, 'table');
+		position.y = y;
+
+		position = window.viewManager.translateToSection('table', position);
+
+		var target = window.helper.fillTarget(x, position.y, z, 'table');
 
 		mesh.material.opacity = 1;
 
 		mesh.scale.set(4, 4, 4);
 
-		var target = { x : x, y : y, z : z,
-					   px : _target.hide.position.x, py : _target.hide.position.y, pz : _target.hide.position.z,
-					   rx : rx, ry : ry, rz : rz };
-
-		mesh.position.copy(_target.hide.position);
-		mesh.rotation.set(rx, ry, rz);
+		mesh.position.copy(target.hide.position);
+		mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
 
 		window.scene.add(mesh);
+
+		if(!state){
+			target.show = target.hide;
+		}
 
 		self.objects.target.push(target);
 
@@ -400,13 +399,7 @@ function ScreenshotsAndroid() {
 	*/ 
 	function addTitle() {
 
-		var px = Math.random() * 80000 - 40000,
-			py = Math.random() * 80000 - 40000,
-			pz = 80000 * 2,
-			rx = Math.random() * 180,
-			ry = Math.random() * 180,
-			rz = Math.random() * 180,
-			texture = null;
+		var texture = null;
 			
 		var mesh = new THREE.Mesh(
 					new THREE.PlaneGeometry(70, 15),
@@ -419,11 +412,10 @@ function ScreenshotsAndroid() {
 
 		mesh.scale.set(4, 4, 4);
 
-		var target = { px : px, py : py, pz : pz,
-					   rx : rx, ry : ry, rz : rz };
+		var target = window.helper.fillTarget(0, 0, 0, 'table');
 
-		mesh.position.set(px, py, pz);
-		mesh.rotation.set(rx, ry, rz);
+		mesh.position.copy(target.hide.position);
+		mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
 
 		window.scene.add(mesh);
 
@@ -508,12 +500,12 @@ function ScreenshotsAndroid() {
 		var _mesh = self.objects.title.mesh.mesh,
 			target = {};
 
-		target = { x: mesh.position.x, y : mesh.position.y + 240, z : mesh.position.z };
+		target = window.helper.fillTarget(mesh.position.x, mesh.position.y + 240, mesh.position.z, 'table');
 
 		_mesh.material.map = self.objects.title.texture[wallet]; 
 		_mesh.material.needsUpdate = true;
 
-		animate(_mesh, target, true, 2000);
+		animate(_mesh, target.show, 2000);
 	}
 
 	/**
@@ -563,9 +555,9 @@ function ScreenshotsAndroid() {
 
 		window.tileManager.letAlone();
 
-		target = { x: position.x, y : position.y, z : 0 };
+		target = window.helper.fillTarget(position.x, position.y, 0, 'table');
 
-		animate(mesh, target, true, 1000, function(){
+		animate(mesh, target.show, 1000, function(){
 	   			window.camera.enable();
 	   			window.camera.setFocus(mesh, new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 1000);
 	   			positionFocus(id);
@@ -606,10 +598,10 @@ function ScreenshotsAndroid() {
 
 		showTitle(wallet, mesh);
 			
-		target = { x: mesh.position.x - (x / 2), y : mesh.position.y, z : mesh.position.z };
+		target = window.helper.fillTarget(mesh.position.x - (x / 2), mesh.position.y, mesh.position.z, 'table');
         
 		if(_countControl > 3)
-			animate(mesh, target, true, 1000);
+			animate(mesh, target.show, 1000);
 
 		setTimeout(function() { loadTexture(wallet, ignore); }, 500);
 
@@ -645,9 +637,9 @@ function ScreenshotsAndroid() {
 
 							count++;
 
-							target = { x: mesh.position.x + x, y : mesh.position.y, z : mesh.position.z };
+							target = window.helper.fillTarget(mesh.position.x + x, mesh.position.y, mesh.position.z, 'table');
 
-							animate(_mesh, target, true, 2000);
+							animate(_mesh, target.show, 2000);
 
 						}
 					} 
@@ -702,7 +694,7 @@ function ScreenshotsAndroid() {
 
 		self.hide(); 
 
-		animate(title, self.objects.title.mesh.target, false, 1000, function() {   
+		animate(title, self.objects.title.mesh.target.hide, 1000, function() {   
 
 			for(var i = 0; i < self.objects.mesh.length; i++) { 
 
@@ -729,52 +721,30 @@ function ScreenshotsAndroid() {
 	* @param {Boolean}   state     Status wallet.
 	* @param {Number}   duration   Animation length.
 	*/ 
-	function animate(mesh, target, state, duration, callback){
+    function animate(mesh, target, duration, callback){
 
-		var _duration = duration || 2000,
-			x,
-			y,
-			z,
-			rx,
-			ry,
-			rz;
+        var _duration = duration || 2000,
+            x = target.position.x,
+            y = target.position.y,
+            z = target.position.z,
+            rx = target.rotation.x,
+            ry = target.rotation.y,
+            rz = target.rotation.z; 
 
-		if(state) {
+        _duration = Math.random() * _duration + _duration;
 
-		   x = target.x;
-		   y = target.y;
-		   z = target.z;
+        new TWEEN.Tween(mesh.position)
+            .to({x : x, y : y, z : z}, _duration)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .start();
 
-		   rx = 0;
-		   ry = 0;
-		   rz = 0;
-		} 
-		else {
-
-		   x = target.px;
-		   y = target.py;
-		   z = target.pz;
-		   
-		   rx = target.rx;
-		   ry = target.ry;
-		   rz = target.rz; 
-		}  
-
-		_duration = Math.random() * _duration + _duration;
-
-		new TWEEN.Tween(mesh.position)
-			.to({x : x, y : y, z : z}, _duration)
-			.easing(TWEEN.Easing.Exponential.InOut)
-			.start();
-
-		new TWEEN.Tween(mesh.rotation)
-			.to({x: rx, y: ry, z: rz}, _duration + 500)
-			.easing(TWEEN.Easing.Exponential.InOut)
-			.onComplete(function() {
-                    if(callback != null && typeof(callback) === 'function')
+        new TWEEN.Tween(mesh.rotation)
+            .to({x: rx, y: ry, z: rz}, _duration + 500)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .onComplete(function () {
+                    if(typeof(callback) === 'function')
                         callback();   
                 })
-			.start();
+            .start();
     }
-
 }

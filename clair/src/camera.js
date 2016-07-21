@@ -55,6 +55,17 @@ function Camera(position, renderer, renderFunc) {
         self.onWindowResize();
         self.freeView = true;
     };
+
+    this.createVector = function(x, y) {
+
+       var p = new THREE.Vector3(x, y, 0);
+       var vector = p.project(camera);
+
+       vector.x = (vector.x + 1) / 2 * window.innerWidth;
+       vector.y = -(vector.y - 1) / 2 * window.innerHeight;
+
+       return vector;
+    };
     
     this.disableFreeMode = function() {
         controls.noRotate = true;
@@ -183,8 +194,6 @@ function Camera(position, renderer, renderFunc) {
         self.aspectRatio = camera.aspect;
 
         renderer.setSize(innerWidth, innerHeight);
-
-        render();
     };
     
     /**
@@ -206,7 +215,8 @@ function Camera(position, renderer, renderFunc) {
                     window.viewManager.views[window.actualView].reset();
                 }
 
-                self.resetPosition(duration);
+                if(window.actualView)
+                    self.resetPosition(duration);
             }
         }
     };
@@ -321,6 +331,10 @@ function Camera(position, renderer, renderFunc) {
     this.getFocus = function() { 
         return focus;
     };
+
+    this.disableFocus = function(){
+        focus = true;
+    };
     
     /**
      * Casts a ray between the camera to the target
@@ -349,6 +363,11 @@ function Camera(position, renderer, renderFunc) {
         
         return raycaster.intersectObjects(elements);
     };
+
+    this.getRayCast = function(raycaster, mouse){
+
+        raycaster.setFromCamera(mouse, camera);
+    };
     
     /**
      * Moves the camera to a position
@@ -374,8 +393,6 @@ function Camera(position, renderer, renderFunc) {
                     .onUpdate(function(){
                         if(!self.freeView || synced)
                             controls.target.set(camera.position.x, camera.position.y, 0);
-
-                        window.render();
                     });
             
             var next = new TWEEN.Tween(camera.up)
