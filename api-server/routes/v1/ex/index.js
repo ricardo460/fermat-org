@@ -13,11 +13,13 @@ var sha256 = require('../../../modules/auth/lib/sha256');
  * @apiName AddExRate
  * @apiGroup Ex
  * @apiParam {Number} price The price in USD
+ * @apiParam {String} pass The admin password
  * @apiDescription Adds a new ex rate
  */
 router.post('/ticker', function(req, res, next) {
     'use strict';
     try {
+        console.log(req.body);
         // Check that all required data is present
         if (!security.isValidData(req.body.price) ||
             !security.isNumber(req.body.price) ||
@@ -30,7 +32,7 @@ router.post('/ticker', function(req, res, next) {
             // Check that the password match
             if (sha256.calc(req.body.pass) !== config.exrate.pass) {
                 res.status(403).send({
-                    "message": "invalid password"
+                    "message": "Invalid password"
                 });
             } else {
                 // Tries to create the ex rate
@@ -65,8 +67,7 @@ router.get('/ticker', function(req, res, next) {
             if (err === null && exrate === null) {
                 res.status(200).send({
                     "FER_USD": {
-                        "purchase": 0,
-                        "sale": 0,
+                        "price": 0,
                         "timestamp": 0
                     }
                 });
@@ -77,8 +78,7 @@ router.get('/ticker', function(req, res, next) {
             } else {
                 res.status(200).send({
                     "FER_USD": {
-                        "purchase": exrate.price,
-                        "sale": 1 / (exrate.price),
+                        "price": exrate.price,
                         "timestamp": Date.parse(exrate.timestamp)
                     }
                 });

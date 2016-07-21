@@ -99,6 +99,13 @@ define({ "api": [
             "optional": false,
             "field": "price",
             "description": "<p>The price in USD</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "pass",
+            "description": "<p>The admin password</p>"
           }
         ]
       }
