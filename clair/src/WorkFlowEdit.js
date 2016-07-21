@@ -42,7 +42,7 @@ function WorkFlowEdit() {
     };
 
     this.getp = function(){
-        return PREVIEW_STEPS; // test
+        return LIST_ARROWS; // test
     }; 
 
     this.changeFocusSteps = function(id){
@@ -57,7 +57,7 @@ function WorkFlowEdit() {
      * @param {String}
      */  
     this.deleteStepList = function(step){
-        deleteSteps(step, EDIT_STEPS, 'step');
+        deleteSteps(step, EDIT_STEPS, 'step', 0);
     }; 
 
     /**
@@ -1490,7 +1490,7 @@ function WorkFlowEdit() {
                                                         resetPositionIdStepMesh(orderFocus);
                                                     }
                                                     else{
-                                                        deleteSteps(orderFocus, EDIT_STEPS, 'step');
+                                                        deleteSteps(orderFocus, EDIT_STEPS, 'step', 1000);
                                                     }
                                                 }
                                             }
@@ -2508,8 +2508,31 @@ function WorkFlowEdit() {
      * 
      */
     function deleteArrow(){
+
+        var array = window.dragManager.objects,
+            newArray = [],
+            type = null,
+            i;
+
+        for(i = 0; i < array.length; i++ ){
+
+            type = array[i].userData.type;
+
+            if(type){
+
+                if(type === 'step')
+                    newArray.push(array[i]);
+
+            }
+            else{
+                newArray.push(array[i]);
+            }
+
+        }
+
+        window.dragManager.objects = newArray;
         
-        for(var i = 0; i < LIST_ARROWS.length; i++){
+        for(i = 0; i < LIST_ARROWS.length; i++){
 
             window.scene.remove(LIST_ARROWS[i].arrow);
             window.scene.remove(LIST_ARROWS[i].meshPrimary);
@@ -2556,6 +2579,12 @@ function WorkFlowEdit() {
                                         step.tile, false);
                 }
             }
+        }
+
+        for(i = 0; i < LIST_ARROWS.length; i++){
+                    
+            window.dragManager.objects.push(LIST_ARROWS[i].meshPrimary);
+            window.dragManager.objects.push(LIST_ARROWS[i].meshSecondary);  
         }
     }
     /**
@@ -2725,7 +2754,13 @@ function WorkFlowEdit() {
             rootY = window.helper.getSpecificTile(idTile).target.show.position.y,
             i,
             mesh = null,
-            target = null;
+            target = null,
+            focus = FOCUS.mesh;
+        
+        focus.visible = false;
+
+        setTimeout(function(){focus.visible = true;}, 2010);
+
 
         var action = function (){updateTileIgnored();};
 
@@ -3333,7 +3368,7 @@ function WorkFlowEdit() {
      * 
      * @param {String}
      */ 
-    function deleteSteps(step, array, type){
+    function deleteSteps(step, array, type, duration){
 
         var list = array,
             ORDER = SearchStepPositionEdit(step, list),
@@ -3410,7 +3445,7 @@ function WorkFlowEdit() {
 
             orderPositionSteps(EDIT_STEPS, 'step');
 
-            setTimeout(function(){deleteArrow(); updateArrow();}, 1000);
+            setTimeout(function(){deleteArrow(); updateArrow();}, duration);
 
             updateTextureParent();
         }
@@ -3533,7 +3568,7 @@ function WorkFlowEdit() {
             }
 
             if(deleteStep){
-                deleteSteps(deleteStep, array, 'flow');
+                deleteSteps(deleteStep, array, 'flow', 1000);
                 validateTiles();
             }
 
