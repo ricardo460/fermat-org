@@ -85,6 +85,41 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/v1/ex/ticker",
+    "title": "set exchange rate",
+    "version": "0.0.1",
+    "name": "AddExRate",
+    "group": "Ex",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "price",
+            "description": "<p>The price in USD</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Adds a new ex rate</p>",
+    "filename": "routes/v1/ex/index.js",
+    "groupTitle": "Ex"
+  },
+  {
+    "type": "get",
+    "url": "/v1/ex/ticker",
+    "title": "get exchange rate",
+    "version": "0.0.1",
+    "name": "GetExRate",
+    "group": "Ex",
+    "description": "<p>Gets the current exchange rate</p>",
+    "filename": "routes/v1/ex/index.js",
+    "groupTitle": "Ex"
+  },
+  {
+    "type": "post",
     "url": "/v1/net/waves",
     "title": "create a wave",
     "name": "CreateWave",
