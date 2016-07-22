@@ -1,4 +1,13 @@
 $(document).ready(function() {
+    var getRoute = function() {
+        var param = {
+            environment: API_ENV
+        };
+        var url = window.helper.SERVER.replace('http://', '') + '/v1/ex/ticker';
+        url = 'http://' + window.helper.buildURL(url, param);
+        return url;
+    }
+
     var isNumber = function(num) {
         return !isNaN(num);
     }
@@ -18,7 +27,7 @@ $(document).ready(function() {
 
         $.ajax({
             method: 'POST',
-            url: 'http://api.fermat.org/v1/ex/ticker',
+            url: getRoute(),
             data: {
                 'price': price,
                 'pass': pass
