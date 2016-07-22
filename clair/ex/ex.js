@@ -1,16 +1,8 @@
 $(document).ready(function() {
-    var getRoute = function() {
-        var param = {
-            environment: API_ENV
-        };
-        var url = window.helper.SERVER.replace('http://', '') + '/v1/ex/ticker';
-        url = 'http://' + window.helper.buildURL(url, param);
-        return url;
-    }
 
     var isNumber = function(num) {
         return !isNaN(num);
-    }
+    };
 
     $("#sub").click(function() {
         var price = document.getElementById('price').value;
@@ -27,7 +19,7 @@ $(document).ready(function() {
 
         $.ajax({
             method: 'POST',
-            url: getRoute(),
+            url: window.helper.getAPIUrl("exrate"),
             data: {
                 'price': price,
                 'pass': pass
