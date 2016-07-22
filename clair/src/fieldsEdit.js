@@ -1246,7 +1246,7 @@ function FieldsEdit() {
 
                     case 'good':
                         alert.style.backgroundImage = "url('images/workflow/tick.png')";
-                        alert.style.backgroundColor = '#2BFF39';
+                        alert.style.backgroundColor = '#4DE539';
                         break;
                     case 'locked':
                         alert.style.backgroundImage = "url('images/workflow/locked.png')";
@@ -1254,7 +1254,7 @@ function FieldsEdit() {
                         break;
                     case 'error':
                         alert.style.backgroundImage = "url('images/workflow/error.png')";
-                        alert.style.backgroundColor = '#F00';
+                        alert.style.backgroundColor = '#E12727';
                         break;
                 }
 
@@ -1431,7 +1431,7 @@ function FieldsEdit() {
 
                 var ctx = canvas.getContext("2d");
 
-                applyTextureCanvas(ctx, id, "images/workflow/step_pressed.png");
+                applyTextureCanvas(ctx, id, "images/workflow/stepF.png");
                 
                 var count = $("#steps-list-content canvas").length;
 

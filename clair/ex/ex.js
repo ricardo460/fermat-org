@@ -1,7 +1,8 @@
 $(document).ready(function() {
+
     var isNumber = function(num) {
         return !isNaN(num);
-    }
+    };
 
     $("#sub").click(function() {
         var price = document.getElementById('price').value;
@@ -18,7 +19,7 @@ $(document).ready(function() {
 
         $.ajax({
             method: 'POST',
-            url: 'http://api.fermat.org/v1/ex/ticker',
+            url: window.helper.getAPIUrl("exrate"),
             data: {
                 'price': price,
                 'pass': pass
