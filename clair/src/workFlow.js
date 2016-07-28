@@ -130,8 +130,8 @@ function Workflow(flow) {
      * @param {Number} x    X position of the root
      * @param {Number} y    Y position of the root
      */
-    this.drawTree = function(root, x, y, z) {
-        
+    var xDraw = 0;
+    this.drawTree = function(root, x, y, z) { //TODO
         
         if(typeof root.drawn === 'undefined'){
 
@@ -241,11 +241,20 @@ function Workflow(flow) {
                     objectsStep.mesh.push(childLine);
                     window.scene.add(childLine);
 
-                    self.drawTree(child, nextX, nextY, nextZ);
+                    if(nextX !== undefined){
+
+                        if(xDraw < nextX){
+
+                            xDraw = nextX;
+                        }
+                    }
+
+                    self.drawTree(child, nextX, nextY, nextZ);                   
                 }
             }
         }
         account = 0;
+        return xDraw;
     };
     
     /**
