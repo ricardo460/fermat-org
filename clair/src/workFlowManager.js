@@ -48,17 +48,12 @@ function WorkFlowManager(){
 
             center.x = center.x - 500;
 
-            for(var k = 0; k < countElement; k++) {
+            obj = new THREE.Vector3();
 
-                obj = new THREE.Vector3();
+            obj.x = center.x;
+            obj.y = center.y;
 
-                obj.x = center.x;
-                obj.y = center.y;
-
-                position.push(obj);
-
-                center.x = center.x + 1000;
-            }
+            position.push(obj);
         }
         else if(countElement > 2){
 
@@ -68,25 +63,20 @@ function WorkFlowManager(){
 
             for(var x = mid; x > 0; x--) {
 
-                center.x = center.x - 3500;
+                center.x = center.x - 2000;
             }
 
-            for(var j = 0; j < countElement; j++){
+            obj = new THREE.Vector3();
 
-                obj = new THREE.Vector3();
+            obj.x = center.x + 2200;
+            obj.y = center.y;
 
-                obj.x = center.x + 1000;
-                obj.y = center.y;
-
-                position.push(obj);
-
-                center.x = center.x + 4000;
-            }
+            position.push(obj);
         }
 
         letAloneColumHeaderFlow(ids);
-        setPositionColumHeaderFlow(ids, position);
-        drawColumHeaderFlow(ids, position);
+
+        drawColumHeaderFlow(ids, position); // create
     };
 
     /**
@@ -357,20 +347,19 @@ function WorkFlowManager(){
      * @param {Object} ids id of header flow
      * @param {Object} position of header flow
      */
+
     function setPositionColumHeaderFlow(ids, position){
 
         var duration = 3000;
 
-        for(var i = 0, l = ids.length; i < l; i++) {
-            new TWEEN.Tween(headerFlow[ids[i]].objects[0].position)
-            .to({
-                x : position[i].x,
-                y : position[i].y,
-                z : position[i].z
-            }, Math.random() * duration + duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
-            .start();
-        }
+        new TWEEN.Tween(headerFlow[ids].objects[0].position)
+        .to({
+            x : position[0].x,
+            y : position[0].y,
+            z : position[0].z
+        }, Math.random() * duration + duration)
+        .easing(TWEEN.Easing.Exponential.InOut)
+        .start();
     }
 
     /**
@@ -379,15 +368,22 @@ function WorkFlowManager(){
      * @param {Object} ids id of header flow
      * @param {Object} position of header flow
      */
-    function drawColumHeaderFlow(ids, position){
+    function drawColumHeaderFlow(ids, position){ 
+
+        var xDraw;
 
         for(var m = 0; m < ids.length; m++) {
+
             for(var k = 0; k < headerFlow[ids[m]].flow.steps.length; k++) {
-                    headerFlow[ids[m]].drawTree(headerFlow[ids[m]].flow.steps[k], position[m].x + 900 * k, position[m].y - 211, 0);
+                xDraw = headerFlow[ids[m]].drawTree(headerFlow[ids[m]].flow.steps[k], position[0].x + 900 * k, position[0].y - 211, 0);
             }
 
             headerFlow[ids[m]].showSteps();
             headerFlow[ids[m]].action = true;
+
+            setPositionColumHeaderFlow(ids[m], position);
+
+            position[0].x = xDraw + 1500;
         }
     }
 }

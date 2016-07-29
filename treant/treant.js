@@ -1,62 +1,122 @@
 'use strict';
 
 var map,
-    markClusterer,
+    layers = [],
     elements = {
-        NETWORK_NODE : [],
-        NETWORK_CLIENT : []
+        NETWORK_NODE :{
+            layers : [],
+            state : true
+        },
+        NETWORK_CLIENT :{
+            layers : [],
+            state : true
+        }
     },
-    infoWindow = null,
+    view,
     actorTypes = {},
-    lines = [];
+    overlay;
 
 $(document).ready(main);
 
 /**
- * Checks if an edge already exists
- * @author Miguelcldn
+ * Action by clicking on the map
+ * @author Ricardo Delgado
  */
-function checkEdges() {
-    var markers = markClusterer.getMarkers();
-    
-    for(var i = 0; i < lines.length; i++) {
-        if(markers.indexOf(lines[i].client) === -1 || markers.indexOf(lines[i].server) === -1) {
-            lines[i].line.setMap(null);
+function setListener(){
+
+    var closer = document.getElementById('popup-closer');
+
+    window.map.on('click', function(evt) {
+
+        var feature = map.forEachFeatureAtPixel(evt.pixel, function(feature, layer){
+                                return feature;
+                        });
+
+        if(feature){
+
+            if(feature.get('features').length){ 
+
+                if(feature.get('features').length < 2){
+
+                    var data = feature.get('features')[0];
+
+                    var node = {
+                        title : data.get('title'),
+                        coordinates : data.get('coordinates'),
+                        properties : data.get('info')
+                    }
+
+                    drawDetails(node);
+                    var geometry = feature.getGeometry();
+                    var coord = geometry.getCoordinates();
+                    overlay.setPosition(coord);
+                }
+            }
         }
-        else {
-            lines[i].line.setMap(map);
+    });
+
+    closer.onclick = function() {
+        clearLine();
+        overlay.setPosition(undefined);
+        closer.blur();
+        return false;
+    };
+
+    var exportPNGElement = document.getElementById('export-png');
+
+    if(exportPNGElement){ 
+
+        if ('download' in exportPNGElement) {
+            exportPNGElement.addEventListener('click', function() {
+                
+                map.once('postcompose', function(event) {
+                    var canvas = event.context.canvas;
+                    exportPNGElement.href = canvas.toDataURL('image/png');
+                });
+
+                map.renderSync();
+            }, false);
         }
     }
 }
 
 /**
- * Connects two markers with a line
- * @author Miguelcldn
- * @param {object} client Client marker
- * @param {object} server Server marker
+ * Erases all lines
+ * @author Ricardo Delgado.
  */
-function connectMarkers(client, server) {
+function clearLine(){
+
+    var layers = window.map.getLayers().getArray();
+
+    while (layers.length > 2) {
+
+        window.map.removeLayer(layers[2]);
+        layers = map.getLayers().getArray();
+    }
+}
+
+/**
+ * creates connections with lines
+ * @author Ricardo Delgado.
+ * @param {array} lines lines to create
+ */
+function connectMarkers(lines) {
     
-    var clientPos = {
-        lat : client.marker.position.lat() + 0,
-        lng : client.marker.position.lng()
-    };
-    var serverPos = {
-        lat : server.marker.position.lat() + 0,
-        lng : server.marker.position.lng()
-    };
-    
-    var line = new google.maps.Polyline({
-        
-        path : [clientPos, serverPos],
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.7,
-        strokeWeight: 3,
-        map: map
+    var layerLines = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                features: [new ol.Feature({
+                    geometry: new ol.geom.MultiLineString(lines)
+                })]
+            }),
+            style : new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                    color: '#1A48EE',
+                    width: 2
+                })
+            })
         });
 
-        lines.push({line: line, client: client.marker, server: server.marker});
-        checkEdges();
+    map.addLayer(layerLines);
 }
 
 /**
@@ -76,6 +136,7 @@ function createControlPanel() {
     
     // Create a div to hold the control.
     var controlDiv = document.createElement('div');
+    controlDiv.className = 'controlDiv ol-unselectable ol-control';
 
     // Set CSS for the control border
     var controlUI = document.createElement('div');
@@ -195,20 +256,122 @@ function createGraphic(data) {
 
 /**
  * Hides all markers from the map
- * @author Miguelcldn
+ * @author Ricardo Delgado.
  * @param {Array} list The list of elements to hide
  */
 function clearMarkers(list) {
     
     if(list === undefined) return;
-    
-    for(var i = 0; i < list.length; i++) {
-        if(list[i].marker !== undefined)
-            markClusterer.removeMarker(list[i].marker, true);
+
+    list.state = false;
+
+    updateMarkers();
+}
+
+
+/**
+ * updates all map markers.
+ * @author Ricardo Delgado.
+ */
+function updateMarkers(){
+
+    var features = [];
+
+    for(var _layer in window.elements){
+
+        if(window.elements[_layer].state)
+            features = features.concat(window.elements[_layer].layers);
     }
-    
-    markClusterer.resetViewport();
-    markClusterer.redraw();
+
+    var layers = window.map.getLayers().getArray();
+
+    if(layers.length > 0){
+
+        while (layers.length > 1) {
+
+            window.map.removeLayer(layers[1]);
+            layers = window.map.getLayers().getArray();
+        }
+
+        window.map.addLayer(createLayer(features));
+    }
+    else{
+        window.map.addLayer(createLayer(features));
+    }
+}
+
+/**
+ * creates the layer with the markers to the map
+ * @author Ricardo Delgado.
+ * @param {object} features It contains the map markers.
+ * @returns {ol.layer.Vector} new layer to the map.
+ */
+function createLayer(features){
+
+    var clusterSource = new ol.source.Cluster({
+            distance: 40,
+            source: new ol.source.Vector({ features: features })
+    });
+
+    var layer = new ol.layer.Vector({
+                    source: clusterSource,
+                    style: function(feature) {
+                        return iconClusters(feature);
+                    }
+                });
+
+    return layer;
+
+    function iconClusters(features){
+
+        var cluster = features.get('features');
+
+        var size = cluster.length;
+
+        var style;
+
+        if(size > 1){
+
+            var url;
+
+            if(size <= 9)
+                url = "img/markers/m1.png";
+            else if(size >= 10 && size <= 24)
+                url = "img/markers/m2.png";
+            else if(size >= 25 && size <= 49)
+                url = "img/markers/m3.png";
+            else if(size >= 50 && size <= 149)
+                url = "img/markers/m4.png";
+            else
+                url = "img/markers/m5.png";
+
+            style = new ol.style.Style({
+                image: new ol.style.Icon({
+                        src: url,
+                        scale: 1.5
+                    }),
+                text: new ol.style.Text({
+                        text: size.toString(),
+                        fill: new ol.style.Fill({
+                        color: '#fff'
+                    })
+                })
+            });
+        }
+        else{
+            
+            var url = cluster[0].get('icon');
+
+            style = new ol.style.Style({
+                image: new ol.style.Icon({
+                        src: url,
+                        scale: 0.25
+                    })
+                });
+        }
+
+        return style;
+    }
 }
 
 /**
@@ -219,10 +382,8 @@ function clearMarkers(list) {
 function createActors(actors) {
     
     var actorsList = {};
-    
-    var setListener = function(act) {
-        act.marker.addListener('click', function() {drawDetails(act);});
-    };
+
+    var features = [];
     
     for(var i = 0; i < actors.length; i++) {
         
@@ -236,50 +397,54 @@ function createActors(actors) {
             var url = "img/markers/";
 
             if(actorHasMarker) {
+
                 url += actorType;
 
                 url += ".svg";
-
-
-                var marker = new google.maps.Marker({
-                    title : title,
-                    position : randomizeLocation(actor.location),
-                    icon : {
-                        url : url,
-                        scaledSize: new google.maps.Size(50, 50),
-                        anchor: new google.maps.Point(25,25)
-                    }
-                });
                 
                 if(actor.location.latitude === 0 && actor.location.longitude === 0) {
-                    marker.setPosition(randomizeLocation(actor.location, 45, 120));
+                    actor.location = randomizeLocation(actor.location, 45, 120);
+                }else{
+                    actor.location = randomizeLocation(actor.location);
                 }
-                
-                actor.marker = marker;
+
+                var coordinates = ol.proj.fromLonLat([actor.location.lng, actor.location.lat]);
 
                 var list = (actorHasMarker) ? actorType : "OTHER";
-                if(window.elements[list] === undefined) window.elements[list] = [];
-                window.elements[list].push(actor);
-                setListener(actor);
+
+                if(actorsList[list] === undefined) {
+                    actorsList[list] = [];
+                }
+
+                actorsList[list].push(new ol.Feature({ 
+                    geometry: new ol.geom.Point(coordinates),
+                    title: title,
+                    info: actor,
+                    coordinates : coordinates,
+                    icon: url
+                }));  
             }
         }
     }
-    
-    toggleFilter('ALL');
+
+    for(var type in actorsList){
+
+        if(window.elements[type] === undefined)
+            window.elements[type] = { layers : [], state : true};
+
+        window.elements[type].layers = actorsList[type];
+    }
 }
 
 /**
  * Draws the Fermat Nodes
  * @author Miguelcldn
- * @param {Array} list Response from the server
+ * @param {Array} list Response from the server.
+ * @param {string} title loading data.
  */
 function createMarkers(list, title) {
     
-    var newNodes = [];
-    
-    var setListener = function(node) {
-        node.marker.addListener('click', function() {drawDetails(node);});
-    };
+    var features = [];
     
     for(var i = 0; i < list.length; i++) {
         var node = list[i];
@@ -287,30 +452,26 @@ function createMarkers(list, title) {
         var location = node.location;
         
         if(location !== undefined && location.latitude !== undefined && location.longitude !== undefined) {
-            var marker = new google.maps.Marker({
-                title : title,
-                position : {lat : location.latitude, lng : location.longitude},
-                icon : {
-                    url : "img/markers/" + url,
-                    scaledSize: new google.maps.Size(50, 50),
-                    anchor: new google.maps.Point(25,25)
-                },
-            });
-            
+        
             if(location.latitude === 0 && location.longitude === 0) {
-                marker.setPosition(randomizeLocation(location, 45, 120));
+                location = randomizeLocation(location, 45, 120);
             }else {
-                marker.setPosition(randomizeLocation(location, 0.1));
+                location = randomizeLocation(location, 0.1);
             }
-            node.marker = marker;
-            setListener(node);
+
+            var coordinates = ol.proj.fromLonLat([location.lng, location.lat]);
+
+            features.push(new ol.Feature({ 
+                geometry: new ol.geom.Point(coordinates),
+                title: title,
+                info: node,
+                coordinates : coordinates,
+                icon: 'img/markers/'+url
+            }));
         }
-        
-        
-        newNodes.push(node);
     }
     
-    return newNodes;
+    return features;
 }
 
 /**
@@ -319,22 +480,18 @@ function createMarkers(list, title) {
  * @param {Object} node The node
  */
 function drawDetails(node) {
-    
-    if(infoWindow !== null) {
-        infoWindow.close();
-        unSetAllFocus();
-    }
+
+    clearLine();
     
     var content = "";
     var details = null;
-    
-    content += "<div id='nsWindow' class='info-window'>";
-    
-    if(node.marker.title === "Node") {
-        content += "<strong>IP:</strong> " + node.lastIP + "<br/>" +
-        "<strong>Clients:</strong> " + node.conectedClients + "<br/><br/>";
+ 
+    if(node.title === "Node") {
+
+        content += "<strong>IP:</strong> " + node.properties.lastIP + "<br/>" +
+        "<strong>Clients:</strong> " + node.properties.conectedClients + "<br/><br/>";
         
-        details = node.networkServices;
+        details = node.properties.networkServices;
         
         if(details) {
             
@@ -349,13 +506,13 @@ function drawDetails(node) {
         
         setClientsFocus(node);
     }
-    else if(node.marker.title === "Device") {
+    else if(node.title === "Device") {
         
         /*Don't show ip
         if(node.extra.location.ip)
             content += "<strong>IP:</strong> " + node.extra.location.ip + "<br/>";*/
         
-        details = node.networkServices;
+        details = node.properties.networkServices;
         
         if(details && details.length !== 0) {
             
@@ -365,50 +522,73 @@ function drawDetails(node) {
                 content += "-" + window.helper.fromMACRO_CASE(details[i]) + "<br/>";
             }
         }
-        
+
         setServersFocus(node);
     }
-    else if(searchActor(node.marker.title) != -1) {
-        content += "<strong>" + node.marker.title + "</strong><br/>";
+    else if(searchActor(node.title) != -1) {
+        content += "<strong>" + node.title + "</strong><br/>";
         
-        if(node.profile) {
-            if(node.profile.name) content += node.profile.name + "<br/>";
-            if(node.profile.phrase) content += "Phrase: " + node.profile.phrase + "<br/>";
-            if(node.profile.picture) {
-                var mimeType = guessImageMime(node.profile.picture);
-                content += "<img class='profile-pic' src='data:" + mimeType + ";base64," + node.profile.picture + "'/>";
+        if(node.properties.profile) {
+            if(node.properties.profile.name) content += node.properties.profile.name + "<br/>";
+            if(node.properties.profile.phrase) content += "Phrase: " + node.properties.profile.phrase + "<br/>";
+            if(node.properties.profile.picture) {
+                var mimeType = guessImageMime(node.properties.profile.picture);
+                content += "<img class='profile-pic' src='data:" + mimeType + ";base64," + node.properties.profile.picture + "'/>";
             }
         }
     }
     else {
-        content += "<strong>" + node.marker.title + "</strong><br>No details available";
+        content += "<strong>" + node.title + "</strong><br>No details available";
     }
     
-    content += "</div>";
-    
-    infoWindow = new google.maps.InfoWindow({
-        content : content
-    });
-    //infoWindow.setCloseSrc("img/close_if.png");
-    //$("#nsWindow").parent().parent().height()
-    infoWindow.addListener('closeclick', unSetAllFocus);
-    
-    infoWindow.open(map, node.marker);
+    document.getElementById("popup-content").innerHTML = content;
     
 }
 
 /**
- * Draws the Google Map
+ * Draws the OpenLayers Map
  * @author Miguelcldn
  */
 function drawMap() {
     
-    window.map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 14.695393959866866, lng: 9.029051737500042},
-        zoom: 2
+    layers.push(new ol.layer.Tile({ source: new ol.source.BingMaps({
+        key: 'AkGbxXx6tDWf1swIhPJyoAVp06H0s0gDTYslNWWHZ6RoPqMpB9ld5FY1WutX8UoF',
+        imagerySet: 'Road'
+      })
+    }));
+
+
+    view = new ol.View({ center: [0, 0], zoom: 3 });
+
+    var container = document.createElement('div');
+
+    container.id = 'nsWindow';
+    container.className = 'ol-popup';
+
+    var content = '<a id="popup-closer" class="ol-popup-closer"></a>'+
+                    '<div id="popup-content"></div>'
+
+    container.innerHTML = content;
+
+
+    overlay = new ol.Overlay(({
+        element: container,
+        autoPan: true,
+        autoPanAnimation: {
+          duration: 250
+        }
+      }));
+
+    map = new ol.Map({
+        layers: layers,
+        target: 'map',
+        overlays: [overlay],
+        renderer: 'canvas',
+        controls: ol.control.defaults().extend([
+          new ol.control.FullScreen()
+        ]),
+        view: view
     });
-    
-    window.markClusterer = new MarkerClusterer(window.map, [], { gridSize : 50 });
     
     //Load the config file before loading anything else
     $.ajax({
@@ -416,10 +596,13 @@ function drawMap() {
         method: "GET",
         crossDomain: true,
         success: function(list) {
+
             window.actorTypes = list.actors;
+
             for(var i = 0; i < actorTypes.length; i++) {
-                elements[actorTypes[i].code] = [];
+                elements[actorTypes[i].code] = {layers : [], state : true};
             }
+
             getNodes();
         },
         error: function(request, error) {
@@ -434,10 +617,12 @@ function drawMap() {
  * Gets the actors from a server
  * @author Miguelcldn
  * @param {Array} nodeList The list of servers
+ * @param {Function} callback Function to call when finished
  */
-function getActors(nodeList) {
+function getActors(nodeList, callback) {
     var success = function(list) {
         createActors(list);
+        callback();
     };
     var error = function(request, error) {
         window.alert("Could not retrieve the data, see console for details.");
@@ -462,11 +647,13 @@ function getActors(nodeList) {
  * Based on the nodes IDs, load the clients
  * @author Miguelcldn
  * @param {Array} nodeList Array of nodes to extract the IDs
+ * @param {Function} callback Function to call when finished
  */
-function getClients(nodeList) {
+function getClients(nodeList, callback) {
     
     var success = function(list) {
-        window.elements.NETWORK_CLIENT = createMarkers(list, "Device");
+        window.elements.NETWORK_CLIENT.layers = createMarkers(list, "Device");
+        callback();
     };
     var error = function(request, error) {
         window.alert("Could not retrieve the data, see console for details.");
@@ -486,7 +673,7 @@ function getClients(nodeList) {
         });
     }
 
-    window.map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(createControlPanel());
+   document.body.appendChild(createControlPanel());
 }
 
 /**
@@ -501,10 +688,15 @@ function getNodes() {
         method: "GET",
         crossDomain: true,
         success : function(list) {
-            window.elements.NETWORK_NODE = createMarkers(list, "Node");
-            getClients(list);
-            getActors(list);
-            toggleFilter('ALL');
+
+            window.elements.NETWORK_NODE.layers = createMarkers(list, "Node");
+
+            getClients(list, function(){
+                getActors(list,function(){
+                    updateMarkers();
+                    setListener();
+                });
+            });
         },
         error : function(request, error) {
             window.alert("Could not retrieve the data, see console for details.");
@@ -531,6 +723,7 @@ function guessImageMime(data){
  */
 function main() {
     $("#showHistoryBtn").click(showHistory);
+    drawMap();
 }
 
 /**
@@ -574,14 +767,24 @@ function searchActor(actorType) {
  * @param {object} node The server to use as center
  */
 function setClientsFocus(node) {
-    for(var i = 0; i < elements.NETWORK_CLIENT.length; i++) {
-        var client = elements.NETWORK_CLIENT[i];
-        
-        //if(client.marker && client._serv_id !== node._id) client.marker.setOpacity(0.5);
-        if(client.marker && client._serv_id === node._id) {
-            connectMarkers(client, node);
+
+    if(window.elements.NETWORK_CLIENT.state){ 
+
+        var lines = [];
+
+        for(var i = 0; i < elements.NETWORK_CLIENT.layers.length; i++) {
+
+            var client = window.elements.NETWORK_CLIENT.layers[i].get('info');
+            
+            if(client._serv_id === node.properties._id) {
+
+                var cliLocation = window.elements.NETWORK_CLIENT.layers[i].get('coordinates');
+                var serLocation = node.coordinates;
+                lines.push([cliLocation, serLocation]);
+            }
         }
-        
+
+        connectMarkers(lines);
     }
 }
 
@@ -591,13 +794,22 @@ function setClientsFocus(node) {
  * @param {object} client The client to use as center
  */
 function setServersFocus(client) {
-    for(var i = 0; i < elements.NETWORK_NODE.length; i++) {
-        var server = elements.NETWORK_NODE[i];
-        
-        //if(server.marker && server._id !== client._serv_id) server.marker.setOpacity(0.5);
-        if(server.marker && server._id === client._serv_id) {
-            connectMarkers(client, server);
+
+    if(window.elements.NETWORK_NODE.state){ 
+
+        var lines = [];
+
+        for(var i = 0; i < elements.NETWORK_NODE.layers.length; i++) {
+            var server = elements.NETWORK_NODE.layers[i].get('info');
+            
+            if(server._id === client.properties._serv_id) {
+                var serLocation = window.elements.NETWORK_NODE.layers[i].get('coordinates');
+                var cliLocation = client.coordinates;
+                lines.push([cliLocation, serLocation]);
+            }
         }
+
+        connectMarkers(lines);
     }
 }
 
@@ -630,13 +842,9 @@ function showMarkers(list) {
     
     if(list === undefined) return;
     
-    for(var i = 0; i < list.length; i++) {
-        if(list[i].marker !== undefined && markClusterer.getMarkers().indexOf(list[i].marker) === -1)
-            markClusterer.addMarker(list[i].marker, true);
-    }
-    
-    markClusterer.resetViewport();
-    markClusterer.redraw();
+    list.state = true;
+
+    updateMarkers();
 }
 
 /**
@@ -665,7 +873,7 @@ function toggleFilter(id, forcedState) {
             break;
             
         default:
-            
+
             list = window.elements[id];
             caption = $('#' + id + '-caption');
             logo = $('#' + id + '-logo');
@@ -684,43 +892,6 @@ function toggleFilter(id, forcedState) {
             action(list);
     }
     
-    checkEdges();
+    overlay.setPosition(undefined);
 }
 
-/**
- * Unlinks all nodes
- * @author Miguelcldn
- */
-function unSetAllFocus() {
-    //unSetClientsFocus();
-    //unSetServersFocus();
-    
-    for(var i = 0; i < lines.length; i++) lines[i].line.setMap(null);
-    
-    lines = [];
-}
-
-/**
- * Unlinks the clients
- * @author Miguelcldn
- */
-function unSetClientsFocus() {
-    for(var i = 0; i < elements.NETWORK_CLIENT.length; i++) {
-        var client = elements.NETWORK_CLIENT[i];
-        
-        if(client.marker) client.marker.setOpacity(1);
-    }
-    
-}
-
-/**
- * Unlinks the servers
- * @author Miguelcldn
- */
-function unSetServersFocus() {
-    for(var i = 0; i < elements.NETWORK_NODE.length; i++) {
-        var server = elements.NETWORK_NODE[i];
-        
-        if(server.marker) server.marker.setOpacity(1);
-    }
-}
