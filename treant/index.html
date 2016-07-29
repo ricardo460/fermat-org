@@ -8,7 +8,8 @@
         <title>Fermat P2P Visualization</title>
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/styles.css" rel="stylesheet">
-        <link href="/common/vis.min.css" rel="stylesheet">
+        <link href="../common/vis.min.css" rel="stylesheet">
+        <link href="css/ol.css" rel="stylesheet">
         <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -27,6 +28,8 @@
                 <ul class="nav navbar-nav navbar-right" style="float: right!important;margin-right: -15px;margin:0px">
                     <li>
                         <button id="showHistoryBtn" type="button" class="btn btn-default navbar-btn btn-md" data-toggle="modal" data-target="#history" style="margin-top:7px">See Network History</button>
+                        <!--uncomment to download button-->
+                        <!--<a id="export-png" type="button" class="btn btn-default" download="map.png" style="margin-top:7px">Download PNG</a>-->
                         <!--<a id="showHistoryBtn" data-toggle="modal" data-target="#history">See Network History</a>-->
                     </li>
                 </ul>
@@ -59,15 +62,15 @@
             </div>
         </div>
         
-        <script src="/common/jquery-2.1.4.min.js"></script>
-        <script src="/common/bootstrap.min.js"></script>
-        <script src="/common/markerclusterer.js"></script>
-        <script src="/common/helper.js"></script>
-        <script src="/common/vis.min.js"></script>
-        <script src="/common/cli.js"></script>
-        <script src="/common/constants.js"></script>
+        <script src="../common/jquery-2.1.4.min.js"></script>
+        <script src="../common/ol.js"></script>
+        <script src="../common/bootstrap.min.js"></script>
+        <script src="../common/helper.js"></script>
+        <script src="../common/vis.min.js"></script>
+        <script src="../common/cli.js"></script>
+        <script src="../common/constants.js"></script>
         <script src="treant.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?callback=drawMap&key=AIzaSyD7XZsMPlvmv8ifUFTfO3g8HGFDND_o_Tw" async defer></script>
+
         <!--<script src="/common/infobubble.js"></script>-->
     </body>
 </html>
