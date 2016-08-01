@@ -345,6 +345,8 @@ function WorkFlowEdit() {
 
             var workFlow = window.workFlowManager.getObjHeaderFlow()[id];
 
+            workFlow.letAloneHeaderFlow();
+
             flow = workFlow.flow;
 
             flow = window.helper.clone(flow);
@@ -2757,10 +2759,11 @@ function WorkFlowEdit() {
             target = null,
             focus = FOCUS.mesh;
         
-        focus.visible = false;
+        if(focus){
 
-        setTimeout(function(){focus.visible = true;}, 2500);
-
+            focus.visible = false;
+            setTimeout(function(){focus.visible = true;}, 2500);
+        }
 
         var action = function (){updateTileIgnored();};
 
