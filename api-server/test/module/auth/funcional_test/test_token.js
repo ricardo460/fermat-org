@@ -1,20 +1,20 @@
-var modTkn = require('../../../modules/auth/token');
+var modTkn = require('../../../../modules/auth/token');
 var mongoose = require('mongoose');
 var accessKey = null;
 var _INTERVAL = 2000;
 var loop = 0;
 console.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 60);
 setInterval(function() {
-	var mod = loop % 7;
+	var mod = loop % 4;
 	loop++;
 	switch (mod) {
 		case 0:
 			console.log('info', 'Starting database connexion');
-			var db = require('../../../db');
+			var db = require('../../../../db');
 			break;
-		/*case 1:
+		case 1:
 			console.log('info', 'Inserting Tkn 1 ');
-			modTkn.insTkn(new mongoose.Types.ObjectId("569ff8867a833e1f1bd9b4d3"), new mongoose.Types.ObjectId("569ff9157bdc782d1b1f3343"), function(err, res) {
+			modTkn.insTkn(new mongoose.Types.ObjectId("579a6998292268bc1328d233"), new mongoose.Types.ObjectId("579a6fc9e87eea5c131988f7"), function(err, res) {
 				if (err) {
 					console.log('error', err);
 				} else {
@@ -23,7 +23,7 @@ setInterval(function() {
 				}
 			});
 			break;
-		case 2:
+		/*case 2:
 			console.log('info', 'Inserting Tkn 2');
 			modTkn.insTkn(new mongoose.Types.ObjectId("569ff8827a833e1f1bd9b4c5"), new mongoose.Types.ObjectId("569ff9117bdc782d1b1f3338"), function(err, res) {
 				if (err) {
@@ -58,9 +58,9 @@ setInterval(function() {
 				}
 			});
 			break;*/
-		case 5:
+		case 2:
 			console.log('info', 'Obtaining Tkn by access key: '+accessKey);
-			modTkn.getTkn(new mongoose.Types.ObjectId("569ff92ec07f1a391b447a37"), function(err_res, res_tkn) {
+			modTkn.getTkn(new mongoose.Types.ObjectId("579a73962dca362410010ac7"), function(err_res, res_tkn) {
 				if (err_res) {
 					console.log('error', err_res);
 				} else {
@@ -69,7 +69,7 @@ setInterval(function() {
 				}
 			});
 			break;
-		case 6:
+		case 3:
 			console.log('info', 'Killing process');
 			process.exit(1);
 			break;
