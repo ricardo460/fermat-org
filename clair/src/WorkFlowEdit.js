@@ -345,6 +345,8 @@ function WorkFlowEdit() {
 
             var workFlow = window.workFlowManager.getObjHeaderFlow()[id];
 
+            workFlow.letAloneHeaderFlow();
+
             flow = workFlow.flow;
 
             flow = window.helper.clone(flow);
@@ -1946,7 +1948,7 @@ function WorkFlowEdit() {
      */
     function createLineStep(meshOrigin, meshTarget, idOrigin, idTarget, tileOrigin, tileTarget){
 
-        var mesh, from, to, color, meshTrinogometry, vectorArrow = '';
+        var mesh, from, to, meshTrinogometry, vectorArrow = '';
 
         var objArrow = {
                 tileOriginId : null,
@@ -2675,7 +2677,7 @@ function WorkFlowEdit() {
                 ApplyColor(arrow.arrow); 
                 ApplyColor(arrow.vector1);
                 ApplyColor(arrow.vector2);
-            }
+            };
 
             window.fieldsEdit.showLineSelectType(array, select, mouse, callback);
         }
@@ -2722,7 +2724,7 @@ function WorkFlowEdit() {
         texture.needsUpdate = true;
 
         return texture;
-    }
+    };
     /**
      * @author Ricardo Delgado.
      * 
@@ -2757,10 +2759,11 @@ function WorkFlowEdit() {
             target = null,
             focus = FOCUS.mesh;
         
-        focus.visible = false;
+        if(focus){
 
-        setTimeout(function(){focus.visible = true;}, 2500);
-
+            focus.visible = false;
+            setTimeout(function(){focus.visible = true;}, 2500);
+        }
 
         var action = function (){updateTileIgnored();};
 
@@ -2871,7 +2874,7 @@ function WorkFlowEdit() {
             
                 for (l = 0; l < children.length; l++) {
 
-                    originID = countSteps[i].order,
+                    originID = countSteps[i].order;
                     targetID = children[l].id;
 
                     connection = searchArrow(originID, targetID);
@@ -3560,7 +3563,7 @@ function WorkFlowEdit() {
 
                 if(!deleteStep){
 
-                    var id = validateChildrenTiles(array[i].order[0] - 1);
+                    var id = validateChildTiles(array[i].order[0] - 1);
 
                     if(id)
                         deleteStep = id;
@@ -3572,7 +3575,7 @@ function WorkFlowEdit() {
                 validateTiles();
             }
 
-            function validateChildrenTiles(order){
+            function validateChildTiles(order){
 
                 var tile = array[order].tile;
 
@@ -3768,7 +3771,7 @@ function WorkFlowEdit() {
 
             animate(mesh, target.hide, 2000, function(){
                 window.scene.remove(mesh);
-            }); 
+            });
         }
 
         for(i = 0; i < LIST_ARROWS.length; i++){
