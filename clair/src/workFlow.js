@@ -88,7 +88,7 @@ function Workflow(flow) {
     this.draw = function(initialX, initialY, initialZ, indice, id) {
 
         var title = self.createTitleBox(self.flow.name, self.flow.desc),
-            origin = window.helper.getOutOfScreenPoint(0),
+            origin = window.helper.getOutOfScreenPoint(80000 * 2, 'workflows'),
             target = new THREE.Vector3(initialX, initialY + window.TILE_DIMENSION.height * 2, initialZ);
 
         if(indice === 1)
