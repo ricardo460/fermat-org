@@ -1074,9 +1074,8 @@ function FieldsEdit() {
     
             callback(_select.value);
             
-        });
-        
-    }
+        }); 
+    };
 
     this.showModal = function(step, missing) {
 
@@ -1166,15 +1165,29 @@ function FieldsEdit() {
         workflowPreview(step);
     };
 
-    this.setModeEdit = function(mode){
+    this.setModeEdit = function(mode, buttonRight, ButtonsLeft){
 
-        var div = document.getElementById("workflow-mode");
+        var div = document.getElementById("header-text");
 
-        if(div)
+        if(div){
             div.innerHTML = mode;
-        
+
+            if(buttonRight){
+                window.helper.show(document.getElementById("header-next"), 500);
+            }
+            else{
+                window.helper.hide(document.getElementById("header-next"), 500, true);
+            }
+
+            if(ButtonsLeft){
+                window.helper.show(document.getElementById("header-back"), 500);
+            }
+            else{
+                window.helper.hide(document.getElementById("header-back"), 500, true);
+            }
+        }
     };
-    
+ 
     function createModeEdit(){
 
         var div = document.getElementById("workflow-mode");
@@ -1189,12 +1202,19 @@ function FieldsEdit() {
             self.objects.row1.buttons.push(object);
 
             div = document.createElement("div");
-            div.innerHTML = "";
-            div.id = "workflow-mode";
+
+            div.id  = "workflow-mode";
+            
+            div.innerHTML += 
+            ` <button id="header-back"></button>
+              <div id="header-text">
+              </div>
+              <button id="header-next"></button>
+            `;
             
             document.body.appendChild(div);
         }
-    };
+    }
 
     function createStepsList(){
 
@@ -1462,7 +1482,7 @@ function FieldsEdit() {
 
         if(state){
             window.helper.show(document.getElementById("workflow-mode"), duration);
-            window.helper.show(document.getElementById("steps-list"), duration);
+            window.helper.show(document.getElementById("steps-list"), duration);  
         }
         else{
             window.helper.hide(document.getElementById("workflow-mode"), duration, true);

@@ -1240,16 +1240,26 @@ function WorkFlowEdit() {
         var buttons = {
 
             path : function(){ 
-                window.buttonsManager.createButtons('button-path', 'Edit Path', function(){
-                    changeMode('edit-path');}, null, null, "right");
+                document.getElementById("header-next").onclick = function() {
+                    changeMode('edit-path');
+                };
             },
             steps : function(side){
-                window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
-                    changeMode('edit-step');}, null, null, side);
+
+                if(side){ 
+                    window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
+                        changeMode('edit-step');}, null, null, side);
+                }
+                else{ 
+                    document.getElementById("header-back").onclick = function() {
+                        changeMode('edit-step');
+                    };
+                }
             },
             preview : function(){
-                window.buttonsManager.createButtons('button-preview', 'Workflow Preview', function(){
-                    changeMode('preview');}, null, null, "left");
+                document.getElementById("header-back").onclick = function() {
+                    changeMode('preview');
+                };
             },
             save : function(){
                 window.buttonsManager.createButtons('button-save', 'Save', function(){
@@ -1290,7 +1300,7 @@ function WorkFlowEdit() {
                     enter = function() {
 
                         createMeshFocus();
-                        window.fieldsEdit.setModeEdit('Edit Steps Mode');
+                        window.fieldsEdit.setModeEdit('Edit Steps Mode', true, true);
                         window.dragManager.enable();
                         window.helper.hide('backButton', 0, true);
                         window.fieldsEdit.hiddenStepsList(true);
@@ -1450,9 +1460,9 @@ function WorkFlowEdit() {
                         
                         buttons.helpPath();
 
-                        buttons.steps('right');
+                        buttons.steps();
 
-                        window.fieldsEdit.setModeEdit('Edit Path Mode');
+                        window.fieldsEdit.setModeEdit('Edit Path Mode', false, true);
 
                         window.dragManager.styleMouse.CROSS = 'copy';
 
@@ -1640,7 +1650,7 @@ function WorkFlowEdit() {
 
                         buttons.save();
 
-                        window.fieldsEdit.hiddenStepsList(false);
+                        window.fieldsEdit.hiddenStepsList(false, 0);
 
                         displayField(true);
 
@@ -2591,7 +2601,6 @@ function WorkFlowEdit() {
      * 
      * 
      */
-
     function updateArrow(){
 
         var i, l;
@@ -3366,7 +3375,7 @@ function WorkFlowEdit() {
     function displayField(visible){
 
         if(visible)
-            window.helper.show("workflow-header");
+            window.helper.show("workflow-header", 1500);
         else
             window.helper.hide("workflow-header", 0, true);
     }
