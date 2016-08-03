@@ -164,7 +164,7 @@ function Helper() {
 
         return result.trim();
     };
-    
+
     /**
      * Transforms a string to MARCO_CASE
      * @param   {string} input The input string
@@ -173,7 +173,7 @@ function Helper() {
     this.toMACRO_CASE = function(input) {
         return input.toUpperCase().split(' ').join('_');
     };
-    
+
     this.fromMACRO_CASE = function(input) {
         input = input.split("_").join(" ");
         return self.capFirstLetter(input);
@@ -459,9 +459,9 @@ function Helper() {
         var areParams = (result.indexOf('?') !== -1);   //If result has a '?', then there are already params and must append with &
 
         var param = null;
-        
+
         if(params == null) params = {};
-        
+
         params.env = window.API_ENV;
 
         //Search for wildcards parameters
@@ -498,7 +498,7 @@ function Helper() {
 
         return result;
     };
-    
+
     /**
      * Makes a deep copy of an object
      * @author Miguelcldn
@@ -509,7 +509,7 @@ function Helper() {
     this.clone = function(obj) {
         return JSON.parse(JSON.stringify(obj));
     };
-    
+
     /**
      * Returns the route of the API server
      * @author Miguel Celedon
@@ -517,7 +517,7 @@ function Helper() {
      * @returns {string} The URL related to the requested route
      */
     this.getAPIUrl = function(route, params) {
-        
+
         var tail = "";
 
         switch(route) {
@@ -552,6 +552,9 @@ function Helper() {
             case "exrate":
                 tail = "/v1/ex/ticker";
                 break;
+            case "issues":
+                tail = "/v1/issues/report"
+                break;
 
             case "tableEdit insert":
                 tail = "/v1/repo/usrs/:usrs/comps";
@@ -572,7 +575,7 @@ function Helper() {
             case "wolkFlowEdit insert":
                 tail = "/v1/repo/usrs/:usrs/procs";
                 break;
-            case "wolkFlowEdit get":    
+            case "wolkFlowEdit get":
             case "wolkFlowEdit update":
             case "wolkFlowEdit delete":
                 tail = "/v1/repo/usrs/:usrs/procs/:proc_id";
