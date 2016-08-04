@@ -1206,13 +1206,24 @@ function FieldsEdit() {
             div.id  = "workflow-mode";
             
             div.innerHTML += 
-            ` <button id="header-back"></button>
-              <div id="header-text">
-              </div>
-              <button id="header-next"></button>
+            ` 
+            <div id="header-container">
+                <button id="header-back"></button>
+                <div id="header-text">
+                </div>
+                <button id="header-next"></button>
+            </div>
             `;
             
+            window.onresize  = function() {
+                var cont = document.getElementById("header-container");
+                cont.style.height = cont.offsetWidth/5.6 + "px";
+                document.getElementById("header-text").style.lineHeight = (cont.offsetWidth/5.6) + "px";
+            };
+            
+            
             document.body.appendChild(div);
+            window.onresize();
         }
     }
 

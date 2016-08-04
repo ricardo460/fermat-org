@@ -1048,9 +1048,14 @@ END
 
 #workflow-mode {
     margin-left: 37.5%;
-    width: 26%;
-    height: 8%;
     position: absolute;
+    width: 25%;
+    left: 0px;
+    top: 0px;
+}
+
+#header-container {
+    width: 100%;
 }
 
 #header-back {
