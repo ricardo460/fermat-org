@@ -6,7 +6,7 @@ declare namespace Helper {
 
     export function hide(element : any, duration? : number, keep? : boolean, callback? : () => void) : void;
     export function hideButtons() : void;
-    export function show(element : any, duration? : number) : void;
+    export function show(element : any, duration? : number, callback? : () => void) : void;
     export function showMaterial(material : THREE.Material, duration? : number, easing? : () => void, delay? : number) : void;
     export function hideObject(object : THREE.Mesh, keep? : boolean, duration? : number);
     export function parseDate(date : string) : Date;
