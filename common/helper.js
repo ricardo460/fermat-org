@@ -58,7 +58,7 @@ function Helper() {
      * @param {Object} element         DOMElement to show
      * @param {Number} [duration=1000] Duration of animation
      */
-    this.show = function(element, duration) {
+    this.show = function(element, duration, callback) {
 
         duration = duration || 1000;
 
@@ -67,6 +67,9 @@ function Helper() {
 
         $(element).fadeTo(duration, 1, function() {
                 $(element).show();
+
+                if(typeof(callback) === 'function')
+                    callback();
         });
     };
 
