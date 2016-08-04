@@ -1036,16 +1036,6 @@ END
   background-repeat: no-repeat;
 }
 
-#workflow-moded {
-    position: absolute;
-    left: 25%;
-    width: 50%;
-    padding-top: 10px;
-    text-align: center;
-    z-index: 11;
-    color: rgba(127,127,127,1);
-}
-
 #workflow-mode {
     margin-left: 37.5%;
     position: absolute;
@@ -1087,6 +1077,12 @@ END
     background: url("images/workflow/header-right.png");
     background-size: 100%;
     cursor: pointer;
+}
+#header-back:focus, #header-next:focus{
+    outline:0px;
+}
+#header-back:hover, #header-next:hover {
+   opacity: 0.5;
 }
 
 /**

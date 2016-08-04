@@ -1169,21 +1169,30 @@ function FieldsEdit() {
 
         var div = document.getElementById("header-text");
 
+        var right = document.getElementById("header-next"),
+            left = document.getElementById("header-back");
+
         if(div){
             div.innerHTML = mode;
 
             if(buttonRight){
-                window.helper.show(document.getElementById("header-next"), 500);
+                window.helper.show(right, 500, function(){
+                    right.style.opacity = "";
+                    right.style.transition = "";
+                });
             }
             else{
-                window.helper.hide(document.getElementById("header-next"), 500, true);
+                window.helper.hide(right, 500, true);
             }
 
             if(ButtonsLeft){
-                window.helper.show(document.getElementById("header-back"), 500);
+                window.helper.show(left, 500, function(){
+                    left.style.opacity = "";
+                    left.style.transition = "";
+                });
             }
             else{
-                window.helper.hide(document.getElementById("header-back"), 500, true);
+                window.helper.hide(left, 500, true);
             }
         }
     };

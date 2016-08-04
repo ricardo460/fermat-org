@@ -1243,6 +1243,7 @@ function WorkFlowEdit() {
                 document.getElementById("header-next").onclick = function() {
                     changeMode('edit-path');
                 };
+                document.getElementById("header-next").title = "Edit Path";
             },
             steps : function(side){
 
@@ -1254,12 +1255,14 @@ function WorkFlowEdit() {
                     document.getElementById("header-back").onclick = function() {
                         changeMode('edit-step');
                     };
+                    document.getElementById("header-back").title = "Edit Steps";
                 }
             },
             preview : function(){
                 document.getElementById("header-back").onclick = function() {
                     changeMode('preview');
                 };
+                document.getElementById("header-back").title = "Workflow Preview";
             },
             save : function(){
                 window.buttonsManager.createButtons('button-save', 'Save', function(){
