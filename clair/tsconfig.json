@@ -1,0 +1,37 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "allowJs": true,
+        "outFile": "main.js",
+        "target": "es5"
+    },
+    "files": [
+        "src/API.ts",
+        "src/common.d.ts",
+        "src/session.ts",
+        "src/browserManager.ts",
+        "src/buttonsManager.ts",
+        "src/camera.js",
+        "src/developer.js",
+        "src/dragManager.js",
+        "src/fieldsEdit.js",
+        "src/getData.js",
+        "src/guide.js",
+        "src/headers.js",
+        "src/loader.js",
+        "src/logo.js",
+        "src/map.js",
+        "src/preloader.js",
+        "src/screenshots.js",
+        "src/signLayer.js",
+        "src/tableEdit.js",
+        "src/tileManager.js",
+        "src/timeline.js",
+        "src/viewer.js",
+        "src/viewManager.js",
+        "src/workFlow.js",
+        "src/WorkFlowEdit.js",
+        "src/workFlowManager.js",
+        "../typings/index.d.ts"
+    ]
+}

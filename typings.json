@@ -1,0 +1,14 @@
+{
+  "dependencies": {},
+  "globalDependencies": {
+    "jquery": "registry:dt/jquery#1.10.0+20160704162008",
+    "three": "registry:dt/three#0.0.0+20160627210315"
+  },
+  "globalDevDependencies": {
+    "gulp": "registry:dt/gulp#3.8.0+20160724062653",
+    "node": "registry:dt/node#6.0.0+20160802155038",
+    "orchestrator": "registry:dt/orchestrator#0.0.0+20160316155526",
+    "q": "registry:dt/q#0.0.0+20160613154756",
+    "tween.js": "registry:dt/tween.js#0.0.0+20160608102153"
+  }
+}
