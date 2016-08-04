@@ -3,25 +3,21 @@
  * @last modified By Miguel Celedon
  * function create a Buttons Browser and charge your textures
  */
-function BrowserManager() {
+class BrowserManager {
 
-       this.objects = {
+       objects = {
             mesh : []
-        };
+    };
 
-    var self = this;
+    wide = (Math.floor(window.camera.aspectRatio * 10) !== Math.floor(40 / 3));
     
-    var wide = (Math.floor(window.camera.aspectRatio * 10) !== Math.floor(40/3));
-    
-    var LOWER_LAYER = 63000,
-        POSITION_X = (wide) ? 15000 : 12000,
-        POSITION_Y = (wide) ? 7500 : 8000,
-        SCALE = (wide) ? 70 : 40;
+    LOWER_LAYER = 63000
+    POSITION_X = (this.wide) ? 15000 : 12000
+    POSITION_Y = (this.wide) ? 7500 : 8000
+    SCALE = (this.wide) ? 70 : 40;
 
-    var onClick = function(target) {
-
-       actionButton(target.userData.view);
-
+    onClick(target : THREE.Mesh) : void {
+       this.actionButton(target.userData.view);
     };
 
      /**
@@ -29,10 +25,8 @@ function BrowserManager() {
      * Pressed button function.
      * @param {String} view  vista a cargar
      */
-    function actionButton(view) {
-
+    actionButton(view : string) : void {
        window.goToView(view);
-
     }
 
    /**
@@ -41,58 +35,48 @@ function BrowserManager() {
      * @param {Number}  valor    value of opacity.
      * @param {String} display   button status.
      */
-   this.modifyButtonLegend = function(valor, display) {
+   modifyButtonLegend(valor : number, display : string) : void{
     
-      var browserButton = document.getElementById('legendButton');
+      let browserButton = document.getElementById('legendButton');
       
-      $(browserButton).fadeTo(1000, valor, function() {
-
+      $(browserButton).fadeTo(1000, valor, () => {
             $(browserButton).show();
-
             browserButton.style.display = display;
-
       });
-  
    };
 
    /**
     * @author Ricardo Delgado
     * Initialization of the arrows
     */
-   this.init = function() {
-       
-        for(var view in window.map.views) {
-            loadView(view);
-        }
-
+   init(): void {
+       for (let view in window.map.views) {
+           this.loadView(view);
+       }
    };
     
    /**
     * @author Ricardo Delgado
-    * Loading the necessary views and arrows according to varible map. 
+    * Loading the necessary views and arrows according to letible map. 
     * @param {String} view  view to load
     */
-    function loadView(view) {
+    loadView(view : string) : void {
         
-        var directions = ['up', 'down', 'right', 'left'];
-
-        var newCenter = new THREE.Vector3(0, 0, 0);
+        let directions = ['up', 'down', 'right', 'left'];
+        let newCenter = new THREE.Vector3(0, 0, 0);
         newCenter = window.viewManager.translateToSection(view, newCenter);
         
         if(window.map.views[view].enabled !== true)
-            showSign(newCenter);
+            this.showSign(newCenter);
         
-        var dir = '';
+        let dir = '';
 
-        for(var i = 0; i < directions.length; i++) {
-            
+        for(let i = 0; i < directions.length; i++) {
             //Get up, down, left and right views
             dir = window.map.views[view][directions[i]];
-            
             if(dir !== '')
-                addArrow(dir, newCenter.x, newCenter.y, directions[i]);
+                this.addArrow(dir, newCenter.x, newCenter.y, directions[i]);
         }
-
     }
     
     /**
@@ -100,23 +84,21 @@ function BrowserManager() {
      * @author Miguel Celedon
      * @param {THREE.Vector3} center Center of the sign
      */
-     
-    function showSign(center) {
+    showSign(center : THREE.Vector3) : void{
         
-        var newCenter = center.clone();
-        newCenter.z = LOWER_LAYER;
+        let newCenter = center.clone();
+        newCenter.z = this.LOWER_LAYER;
         
-        var texture = THREE.ImageUtils.loadTexture('images/sign.png');
+        let texture = THREE.ImageUtils.loadTexture('images/sign.png');
         texture.minFilter = THREE.NearestFilter;
         
         //Create placeholder for now
-        var sign = new THREE.Mesh(
+        let sign = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(8000, 6000),
             new THREE.MeshBasicMaterial({color : 0xFFFFFF, map : texture})
         );
         
         sign.position.copy(newCenter);
-        
         window.scene.add(sign);
     }
 
@@ -127,21 +109,22 @@ function BrowserManager() {
      * @param {Number}  center   camera Center.
      * @param {String}  button   position arrow.
      */
-   function addArrow(view, centerX, centerY, button) {
+   addArrow(view : string, centerX : number, centerY : number, button : string) : void {
 
-        var mesh,
+        let mesh,
             _position,
-            id = self.objects.mesh.length;
+            id = this.objects.mesh.length;
 
         mesh = new THREE.Mesh(
                new THREE.PlaneBufferGeometry(60, 60),
-               new THREE.MeshBasicMaterial({ map:null , side: THREE.FrontSide, transparent: true }));
+               new THREE.MeshBasicMaterial({ map: null, side: THREE.FrontSide, transparent: true })
+        );
     
-       _position = calculatePositionArrow(centerX, centerY, button);
+       _position = this.calculatePositionArrow(centerX, centerY, button);
 
        mesh.position.set(_position.x, _position.y, _position.z);
 
-       mesh.scale.set(SCALE, SCALE, SCALE);
+       mesh.scale.set(this.SCALE, this.SCALE, this.SCALE);
 
        mesh.userData = { 
         id : id ,
@@ -153,9 +136,9 @@ function BrowserManager() {
     
        window.scene.add(mesh);
     
-       self.objects.mesh.push(mesh);
+       this.objects.mesh.push(mesh);
 
-       addTextura(view, button, mesh);
+       this.addTexture(view, button, mesh);
 
    }
 
@@ -165,21 +148,21 @@ function BrowserManager() {
      * @param {Number}  center   camera Center.
      * @param {String}  button   position arrow.
      */
-   function calculatePositionArrow(centerX, centerY, button) {
+   calculatePositionArrow(centerX : number, centerY : number, button : string) : Object {
 
-      var position = {},
+      let position = {},
           x = centerX,
           y = centerY,
           z = 80000 * -2; 
 
      if(button === "right")
-         x = centerX + POSITION_X; 
+         x = centerX + this.POSITION_X; 
      else if(button === "left")
-         x = centerX + (POSITION_X * -1);
+         x = centerX + (this.POSITION_X * -1);
      else if(button === "up")
-         y = centerY + POSITION_Y;
+         y = centerY + this.POSITION_Y;
      else 
-         y = centerY + (POSITION_Y * -1);
+         y = centerY + (this.POSITION_Y * -1);
 
      position = { x: x, y: y, z: z };
 
@@ -189,18 +172,18 @@ function BrowserManager() {
 
    /**
      * @author Ricardo Delgado
-     * Creates textures arrows and stored in the variable texture.
+     * Creates textures arrows and stored in the letiable texture.
      * @param {String}   view    view.
      * @param {String}  button   image to use.
      * @param {object}   mesh    button to load texture.
      */
-   function addTextura(view, button, mesh) {
+   addTexture(view : string, button : string, mesh : THREE.Mesh) : void {
        
-        var canvas,
+        let canvas,
             ctx,
             img = new Image(),
             texture,
-            config = configTexture(view, button);
+            config = this.configTexture(view, button);
 
         canvas = document.createElement('canvas');
         canvas.width  = 400;
@@ -211,12 +194,12 @@ function BrowserManager() {
 
         img.src = "images/browsers_arrows/arrow-"+button+".png";
 
-        img.onload = function() {
+        img.onload = () => {
 
             ctx.textAlign = 'center';
 
             ctx.font = config.text.font;
-            window.helper.drawText(config.text.label, 200, config.image.text, ctx, canvas.width, config.text.size);
+            Helper.drawText(config.text.label, 200, config.image.text, ctx, canvas.width, config.text.size);
             ctx.drawImage(img, config.image.x, config.image.y, 200, 200);
 
             texture = new THREE.Texture(canvas);
@@ -226,7 +209,7 @@ function BrowserManager() {
             mesh.material.map = texture;
             mesh.material.needsUpdate = true;
 
-            animate(mesh, LOWER_LAYER, 3000);
+            this.animate(mesh, this.LOWER_LAYER, 3000);
 
         };
 
@@ -238,27 +221,22 @@ function BrowserManager() {
      * @param {String}   view    view.
      * @param {String}  button   image to use.
      */
-   function configTexture(view, button) {
-     
-    var config = {},
-        text = {},
-        image = {},
-        label;
+   configTexture(view : string, button : string) : any {
+                
+       let config : any,
+           text = {},
+           image = {},
+           label;
 
-    if(button !== "down")  
-        image = { x: 100, y : 0, text : 238 };
-    else 
-        image = { x: 100, y : 120, text : 108 };
- 
+       if (button !== "down")
+           image = { x: 100, y: 0, text: 238 };
+       else
+           image = { x: 100, y: 120, text: 108 };
 
-    label = window.map.views[view].title;
-
-
-    text = { label : label, font: "48px Canaro, Sans-serif", size : 48 };
-
-    config = { image : image, text : text };
-
-    return config;
+       label = window.map.views[view].title;
+       text = { label: label, font: "48px Canaro, Sans-serif", size: 48 };
+       config = { image: image, text: text };
+       return config;
 
    }
 
@@ -269,13 +247,12 @@ function BrowserManager() {
      * @param {Number}     target      The objetive Z position.
      * @param {Number} [duration=2000] Duration of the animation.
      */
-   function animate(mesh, target, duration) {
+   animate(mesh : THREE.Mesh, target : number, duration = 2000) {
 
-        var _duration = duration || 2000,
-            z = target;
+        let z = target;
 
         new TWEEN.Tween(mesh.position)
-            .to({z : z}, _duration)
+            .to({z : z}, duration)
             .easing(TWEEN.Easing.Exponential.InOut)
             .onUpdate(window.render)
             .start();
