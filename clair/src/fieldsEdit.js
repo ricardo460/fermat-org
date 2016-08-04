@@ -1074,9 +1074,8 @@ function FieldsEdit() {
     
             callback(_select.value);
             
-        });
-        
-    }
+        }); 
+    };
 
     this.showModal = function(step, missing) {
 
@@ -1166,15 +1165,38 @@ function FieldsEdit() {
         workflowPreview(step);
     };
 
-    this.setModeEdit = function(mode){
+    this.setModeEdit = function(mode, buttonRight, ButtonsLeft){
 
-        var div = document.getElementById("workflow-mode");
+        var div = document.getElementById("header-text");
 
-        if(div)
+        var right = document.getElementById("header-next"),
+            left = document.getElementById("header-back");
+
+        if(div){
             div.innerHTML = mode;
-        
+
+            if(buttonRight){
+                window.helper.show(right, 500, function(){
+                    right.style.opacity = "";
+                    right.style.transition = "";
+                });
+            }
+            else{
+                window.helper.hide(right, 500, true);
+            }
+
+            if(ButtonsLeft){
+                window.helper.show(left, 500, function(){
+                    left.style.opacity = "";
+                    left.style.transition = "";
+                });
+            }
+            else{
+                window.helper.hide(left, 500, true);
+            }
+        }
     };
-    
+ 
     function createModeEdit(){
 
         var div = document.getElementById("workflow-mode");
@@ -1189,12 +1211,30 @@ function FieldsEdit() {
             self.objects.row1.buttons.push(object);
 
             div = document.createElement("div");
-            div.innerHTML = "";
-            div.id = "workflow-mode";
+
+            div.id  = "workflow-mode";
+            
+            div.innerHTML += 
+            ` 
+            <div id="header-container">
+                <button id="header-back"></button>
+                <div id="header-text">
+                </div>
+                <button id="header-next"></button>
+            </div>
+            `;
+            
+            window.onresize  = function() {
+                var cont = document.getElementById("header-container");
+                cont.style.height = cont.offsetWidth/5.6 + "px";
+                document.getElementById("header-text").style.lineHeight = (cont.offsetWidth/5.6) + "px";
+            };
+            
             
             document.body.appendChild(div);
+            window.onresize();
         }
-    };
+    }
 
     function createStepsList(){
 
@@ -1462,7 +1502,7 @@ function FieldsEdit() {
 
         if(state){
             window.helper.show(document.getElementById("workflow-mode"), duration);
-            window.helper.show(document.getElementById("steps-list"), duration);
+            window.helper.show(document.getElementById("steps-list"), duration);  
         }
         else{
             window.helper.hide(document.getElementById("workflow-mode"), duration, true);
