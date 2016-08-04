@@ -25,7 +25,7 @@ function report(stack, variables, env) {
     }).success(function() {
         alert('An error ocurred and it was reported to the developers');
     }).error(function() {
-        alert('error');
+        alert('An error ocurred and it could not be reported to the developers');
     });
 
 }
