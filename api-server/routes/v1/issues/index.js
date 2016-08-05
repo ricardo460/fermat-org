@@ -6,11 +6,6 @@ var request = require('request');
 
 var githubAPI = "https://api.github.com/repos/" + config.issues.repo + "/issues";
 
-function getTitle(str) {
-    var t = str.substring(str.indexOf('\n') + 5);
-    return t.substring(0, t.indexOf('\n'));
-}
-
 function getBody(obj) {
     var result = "## Stack trace:\n";
     result += "~~~\n" + obj.stack + "\n~~~\n";
@@ -35,7 +30,7 @@ function createIfDontExists(obj, res, callback) {
         } else {
             var found = false,
                 issues = JSON.parse(body),
-                title = getTitle(obj.stack);
+                title = obj.message;
 
             for (issue of issues) {
                 found = found || (issue.title === title);
@@ -71,7 +66,8 @@ router.post('/report', function(req, res, next) {
             var obj = JSON.parse(req.body.json);
             if (!security.isValidData(obj.stack) ||
                 !security.isValidData(obj.env) ||
-                !security.isValidData(obj.variables)) {
+                !security.isValidData(obj.variables) ||
+                !security.isValidData(obj.message)) {
                 res.status(412).send({
                     "message": "missing or invalid data"
                 });
@@ -90,7 +86,7 @@ router.post('/report', function(req, res, next) {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            title: getTitle(obj.stack),
+                            title: obj.message,
                             body: getBody(obj)
                         })
                     }, function(err, resp, body) {
