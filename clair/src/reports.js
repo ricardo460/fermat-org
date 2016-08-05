@@ -6,14 +6,15 @@
  *
  * Send all the error data to the server.
  */
-function report(stack, variables, env) {
+function report(stack, variables, env, message) {
     var req = new XMLHttpRequest(),
         url = helper.getAPIUrl("issues");
 
     var json = JSON.stringify({
         'stack': stack,
         'variables': variables,
-        'env': env
+        'env': env,
+        'message': message
     });
 
     $.ajax({
@@ -38,7 +39,7 @@ function report(stack, variables, env) {
  * Used to verify some condition, if this conditions fails, an error report will
  * be created.
  */
-function assert(obj, expression) {
+function assert(obj, expression, message) {
     'use strict';
     if (expression === false) {
         var err = new Error();
@@ -51,6 +52,6 @@ function assert(obj, expression) {
             }
         }
 
-        report(stack, variables, window.API_ENV);
+        report(stack, variables, window.API_ENV, message);
     }
 }
