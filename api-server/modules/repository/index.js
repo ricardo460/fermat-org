@@ -353,7 +353,7 @@ exports.checkManifest = function(req, next) {
 exports.addProc = function(req, next) {
 	'use strict';
 	try {
-		procMod.insOrUpdProc(req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, function(err, res) {
+		procMod.insOrUpdProc(req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, req.body.tags, function(err, res) {
 			if (err) {
 				next(err, null);
 			} else {

@@ -69,7 +69,8 @@ var release = function(req) {
  * @apiGroup Repo-Proc
  * @apiParam {Object} platfrm Platform data.
  * @apiParam {String} name Process name.
- * @apiParam {String} desc Process description
+ * @apiParam {String} desc Process description.
+ * @apiParam {String} tags Labels issues. Example (a, b, c).
  * @apiParam {String} prev Id of the previous process.
  * @apiParam {String} next Id the next process.
  * @apiDescription Add a process to the architecture of fermat.
@@ -85,6 +86,7 @@ router.post('/', function(req, res, next) {
 					if (!security.isValidData(req.body.platfrm) || //
 						!security.isValidData(req.body.name) || //
 						!security.isValidData(req.body.desc) || //
+						!security.isValidTags(req.body.tags) || //
 						!security.ifExistIsValidData(req.body.prev) || //
 						!security.ifExistIsValidData(req.body.next)) {
 						res.status(412).send({
@@ -333,6 +335,7 @@ router.get('/:proc_id', function(req, res, next) {
  * @apiParam {Object} platfrm Platform data.
  * @apiParam {String} name Process name.
  * @apiParam {String} desc Process description.
+ * @apiParam {String} tags Labels issues. Example (a, b, c).
  * @apiParam {String} prev Id of the previous process.
  * @apiParam {String} next Id the next process.
  * @apiDescription Update process architecture fermat.
@@ -349,6 +352,7 @@ router.put('/:proc_id', function(req, res, next) {
 						!security.ifExistIsValidData(req.body.platfrm) || //
 						!security.ifExistIsValidData(req.body.name) ||
 						!security.ifExistIsValidData(req.body.desc) || //
+						!security.isValidTags(req.body.tags) ||
 						!security.ifExistIsValidData(req.body.prev) || //
 						!security.ifExistIsValidData(req.body.next)) {
 						res.status(412).send({
