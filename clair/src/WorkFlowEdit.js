@@ -3330,8 +3330,9 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Finds all the tiles shown
+     * @param {String} idIgnore id for the tile to ignore.
+     * @returns {Array} Processed list.
      */ 
     function getAllTiles(idIgnore){
 
@@ -3351,8 +3352,9 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * calculates whether the mouse is inside a tile in specific
+     * @param {Object} position Mouse position.
+     * @returns {Boolean} true or false.
      */ 
     function calculateAreaTile(position){
 
@@ -3372,8 +3374,8 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Hides or shows the header for workflow-edit
+     * @param {Boolean} visible
      */ 
     function displayField(visible){
 
@@ -3384,8 +3386,8 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * New OnKeyDown for 'esc'.
+     * @param {Event} event event to listen to.
      */ 
     function newOnKeyDown(event){
 
@@ -3400,8 +3402,7 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Updates the list with the states of the steps.
      */ 
     function updateStepList(){
 
@@ -3427,8 +3428,11 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Delete a step from the list and sort the list.
+     * @param {Number} step  step number to be deleted.
+     * @param {Array}  array  list processing.
+     * @param {type} type  type of item to be deleted.
+     * @param {Number}   duration   Animation length.
      */ 
     function deleteSteps(step, array, type, duration){
 
@@ -3557,8 +3561,9 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * orders and clears the steps with errors.
+     * @param {array} steps object to be processed.
+     * @returns {array} processed object.
      */ 
     function resetSteps(steps){
 
@@ -3655,9 +3660,10 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
-     */ 
+     * resets the position of the mesh step.
+     * @param {Number} orderFocus   number step.
+     * @param {String} typeReset    reason to restart the mesh.
+     */
     function resetPositionIdStepMesh(orderFocus, typeReset){
 
         var focus = FOCUS.mesh,
@@ -3721,8 +3727,10 @@ function WorkFlowEdit() {
 
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Seeks the position of a specific step
+     * @param {String} id   step number.
+     * @param {array} array search list.
+     * @returns {object} step properties.
      */ 
     function searchStepEdit(id, array){
 
@@ -3736,8 +3744,10 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * looking for the father of a step
+     * @param {String} id   step number.
+     * @param {array} array search list.
+     * @returns {Object or Boolean} step properties or false.
      */ 
     function searchParentStepEdit(id, array){
 
