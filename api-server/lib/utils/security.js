@@ -143,6 +143,26 @@ var isValidDeps = function(deps) {
 	return 0;
 };
 /**
+ * [isValidTags description]
+ * @param  {[type]}  tags [description]
+ * @return {Boolean}      [description]
+ */
+var isValidTags = function(tags) {
+	var bnd = 0;
+	if (tags === undefined || tags === null)
+		return 1;
+	if (ifExistIsValidData(tags)) {
+		tags = tags.split(',');
+		for (var i = 0; i < tags.length; i++) {
+			if (isValidData(tags[i]))
+				bnd = 1;
+			else return 0;
+		}
+		return bnd;
+	}
+	return 0;
+};
+/**
  * [isEmail description]
  * @param  {[type]}  email [description]
  * @return {Boolean}       [description]
@@ -204,6 +224,9 @@ var isOctal = function(str) {
  */
 exports.isValidDeps = function(str) {
 	return isValidDeps(str);
+};
+exports.isValidTags = function(str) {
+	return isValidTags(str);
 };
 /**
  * [isValidPerm description]
