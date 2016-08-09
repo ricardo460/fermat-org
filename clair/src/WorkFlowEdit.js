@@ -1334,8 +1334,6 @@ function WorkFlowEdit() {
                             for(var l = 0; l < LIST_ARROWS.length; l++){
 
                                 window.dragManager.objects.push(LIST_ARROWS[l].arrow);
-                                window.dragManager.objects.push(LIST_ARROWS[l].vector1);
-                                window.dragManager.objects.push(LIST_ARROWS[l].vector2);
                             }
 
                             newCenter = EDIT_STEPS[0].target.show.position;
@@ -1999,9 +1997,7 @@ function WorkFlowEdit() {
                 tileTargetId : null,
                 originID: null,
                 targetID: null,
-                vector1: null,
                 meshPrimary: null,
-                vector2:null,
                 meshSecondary: null,
                 arrow: null,
                 meshPrimaryTarget: [],
@@ -2148,7 +2144,7 @@ function WorkFlowEdit() {
 
         mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
 
-        objArrow.vector1 = arrowHelper;
+        objArrow.arrow = arrowHelper;
         objArrow.meshPrimary = mesh;
 
         var target = window.helper.fillTarget(meshTrinogometry.x, meshTrinogometry.y, 3, 'table');
@@ -2472,8 +2468,6 @@ function WorkFlowEdit() {
             }
 
             object.dataArrow.arrow.visible = false;
-            object.dataArrow.vector1.visible = false;
-            object.dataArrow.vector2.visible = false;
 
             var typeCall = EDIT_STEPS[IdOrigen - 1].children.find(function(x){
                 if(x.id[0] === IdTarget)
@@ -2574,8 +2568,6 @@ function WorkFlowEdit() {
                 dataArrow.meshPrimary.visible = true;
                 dataArrow.meshSecondary.visible = true;
                 dataArrow.arrow.visible = true;
-                dataArrow.vector1.visible = true;
-                dataArrow.vector2.visible = true;
             }
 
             SHOW_ARROW = [];
@@ -2618,8 +2610,6 @@ function WorkFlowEdit() {
             window.scene.remove(LIST_ARROWS[i].arrow);
             window.scene.remove(LIST_ARROWS[i].meshPrimary);
             window.scene.remove(LIST_ARROWS[i].meshSecondary);
-            window.scene.remove(LIST_ARROWS[i].vector1);
-            window.scene.remove(LIST_ARROWS[i].vector2);
         }
 
         LIST_ARROWS = [];
@@ -2753,9 +2743,7 @@ function WorkFlowEdit() {
 
                 color = classFlow.getColor(type);
 
-                ApplyColor(arrow.arrow); 
-                ApplyColor(arrow.vector1);
-                ApplyColor(arrow.vector2);
+                ApplyColor(arrow.arrow);
             };
 
             window.fieldsEdit.showLineSelectType(array, select, event, callback);
@@ -2948,8 +2936,6 @@ function WorkFlowEdit() {
                     connection.meshPrimary.visible = false;
                     connection.meshSecondary.visible = false;
                     connection.arrow.visible = false;
-                    connection.vector1.visible = false;
-                    connection.vector2.visible = false;
                 }
             
                 for (l = 0; l < children.length; l++) {
@@ -2964,8 +2950,6 @@ function WorkFlowEdit() {
                         connection.meshPrimary.visible = false;
                         connection.meshSecondary.visible = false;
                         connection.arrow.visible = false;
-                        connection.vector1.visible = false;
-                        connection.vector2.visible = false;
                     }
                 }
             }
@@ -3884,8 +3868,6 @@ function WorkFlowEdit() {
             window.scene.remove(LIST_ARROWS[i].meshPrimary);
             window.scene.remove(LIST_ARROWS[i].meshSecondary);
             window.scene.remove(LIST_ARROWS[i].arrow);
-            window.scene.remove(LIST_ARROWS[i].vector1);
-            window.scene.remove(LIST_ARROWS[i].vector2);
         }
 
         if(REPARED_STEPS.mesh)
