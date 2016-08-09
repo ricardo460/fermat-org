@@ -188,6 +188,21 @@ exports.getLayers = function(callback) {
 		return callback(err, null);
 	}
 };
+exports.getLayersBySuprLays = function(code, callback) {
+	'use strict';
+	try {
+		layerSrv.findAllLayers({suprlay: code}, {
+			order: 1
+		}, function(err, layers) {
+			if (err) {
+				return callback(err, null);
+			}
+			return callback(null, layers);
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
+};
 /**
  * [delAllLayers description]
  *

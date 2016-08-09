@@ -40,7 +40,6 @@ session = new Session();
 session.init();
 guide = new Guide();
 
-
 $('#login').click(function() {
         window.session.getAuthCode();
 });
@@ -57,7 +56,7 @@ function createScene(current, option){
 
     var change = false;
     if(option !== "canvas" && webglAvailable() && window.currentRender !== "webgl") {
-        renderer = new THREE.WebGLRenderer({antialias : true, alpha : true}); //Logarithmic depth buffer disabled due to sprite - zbuffer issue
+        renderer = new THREE.WebGLRenderer({antialias : true, alpha : true, logarithmicDepthBuffer : true});
         current = "webgl";
         change = true;
     }

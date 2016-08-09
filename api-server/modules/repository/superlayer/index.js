@@ -1,3 +1,4 @@
+var layMod = require('../layer');
 var suprlaySrv = require('./services/suprlay');
 var platfrmMod = require('../platform');
 var SuprlayMdl = require('./models/suprlay');
@@ -287,6 +288,29 @@ exports.findSuprlayById = function(_id, callback) {
 		}
 	});
 };
+
+var updateCodesSuprlayInLayr = function (code, set_obj, res_supr, callback) {
+	console.log('update layer suprlayCode ' + res_supr.code);
+	layMod.getLayersBySuprLays(res_supr.code, function (err, res) {
+	if (err) return callback(err, null);
+	if (res) {
+		var loopLayers = function(i) {
+			if (i < res.length) {
+				console.log('updating layer ', res[i]._id);
+				layMod.updateLayerById (res[i]._id, undefined, undefined, code, undefined, 
+					function (err, res_upd) {
+						if (err) return callback(err, null);
+						if (res_upd) {
+							++i;
+							loopLayers(i);
+						}
+					});
+			} else return callback(null, set_obj);
+		};
+		loopLayers(0);
+	}
+	});
+};
 /**
  * [updateSuprlayById description]
  *
@@ -343,7 +367,9 @@ exports.updateSuprlayById = function(_sprly_id, code, name, logo, deps, order, c
 										if (err_upd) {
 											return callback(err_upd, null);
 										}
-										return callback(null, set_obj);
+										if (code) {
+											updateCodesSuprlayInLayr(code, set_obj, res_supr, callback);
+										} else return callback(null, set_obj);
 									});
 								}
 							});
@@ -352,7 +378,9 @@ exports.updateSuprlayById = function(_sprly_id, code, name, logo, deps, order, c
 								if (err_upd) {
 									return callback(err_upd, null);
 								}
-								return callback(null, set_obj);
+								if (code) {
+									updateCodesSuprlayInLayr(code, set_obj, res_supr, callback);
+								} else return callback(null, set_obj);
 							});
 						}
 					} else {

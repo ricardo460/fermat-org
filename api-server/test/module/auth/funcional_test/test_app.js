@@ -1,5 +1,5 @@
-var appMod = require('../../../modules/auth/app');
-var usrMod = require('../../../modules/auth/user');
+var appMod = require('../../../../modules/auth/app');
+var usrMod = require('../../../../modules/auth/user');
 var mongoose = require('mongoose');
 
 
@@ -9,22 +9,22 @@ var _INTERVAL = 2000;
 var loop = 0;
 console.log('info', 'Update interval on every %s minutes', (_INTERVAL / 1000) / 60);
 setInterval(function() {
-	var mod = loop % 3;
+	var mod = loop % 5;
 	loop++;
 	switch (mod) {
 		case 0:
 			console.log('info', 'Starting database connexion');
-			var db = require('../../../db');
-			/*appMod.delAllApps(function(err, res) {
+			var db = require('../../../../db');
+			appMod.delAllApps(function(err, res) {
 				if (err) {
 					console.log('error', err);
 				} else {
 					console.log('info', 'Delete all app succes ok');
 					console.log(res);
 				}
-			});*/
+			});
 			break;
-		/*case 1:
+		case 1:
 			console.log('info', 'Obtaining user by username(campol)');
 			usrMod.getUsrsByUsrnm('campol', function(err_res, res_usrs) {
 				if (err_res) {
@@ -48,7 +48,7 @@ setInterval(function() {
 				}
 			});
 			break;
-		case 3:
+		/*case 3:
 			console.log('info', 'Obtaining user by username(mceledon)');
 			usrMod.getUsrsByUsrnm('mceledon', function(err_res, res_usrs) {
 				if (err_res) {
@@ -90,8 +90,8 @@ setInterval(function() {
 					console.log(res);
 				}
 			});
-			break;
-		case 6:
+			break;*/
+		case 3:
 			appMod.getApps(function(err, res) {
 				if (err) {
 					console.log('error', err);
@@ -100,8 +100,8 @@ setInterval(function() {
 					console.log(res);
 				}
 			});
-			break;*/
-		case 1:
+			break;
+		/*case 1:
 			apiKey = "56a10473b27e63185c6970d6";
 			appMod.findAppByApiKey(apiKey, function(err, res) {
 				if (err) {
@@ -111,8 +111,8 @@ setInterval(function() {
 					console.log(res);
 				}
 			});
-			break;
-		case 2:
+			break;*/
+		case 4:
 			console.log('info', 'Killing process');
 			process.exit(1);
 			break;

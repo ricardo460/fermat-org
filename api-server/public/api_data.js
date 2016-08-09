@@ -127,6 +127,44 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/v1/issues/report",
+    "title": "create new issue",
+    "version": "0.0.1",
+    "name": "CreateIssue",
+    "group": "Issues",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "stack",
+            "description": "<p>The stack trace</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "env",
+            "description": "<p>The environment</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "variables",
+            "description": "<p>The object variables</p>"
+          }
+        ]
+      }
+    },
+    "description": "<p>Creates a new issue. All the parameters must be enclosed in a json string.</p>",
+    "filename": "routes/v1/issues/index.js",
+    "groupTitle": "Issues"
+  },
+  {
+    "type": "post",
     "url": "/v1/net/waves",
     "title": "create a wave",
     "name": "CreateWave",

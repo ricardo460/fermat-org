@@ -33,7 +33,7 @@ describe('User', function() {
 		'fuelusumar',
 		'nelsonalfo'
 	];
-	describe('#insOrUpdUsr()', function() {
+	/*describe('#insOrUpdUsr()', function() {
 		it('should save a user without error', function() {
 				console.log("Usr", loop);
 					usrMod.insOrUpdUsr('carlucho', 'carlucho' + '@gmail.com','carlucho', new Date(), 'maracaibo', 'avatar', new mongoose.Types.ObjectId(), 'url', 'bio', permUsr, function(err, resp) {
@@ -42,16 +42,16 @@ describe('User', function() {
 						console.log("Response ", resp);
 					});
 		});
-	});
+	});*/
 
-	/*describe('#getUsrs()', function() {
+	describe('#getUsrs()', function() {
 		it('should get a list of users', function() {
 			usrMod.getUsrs(function(err, resp) {
 				assert(resp.length > 0);
 				console.log("resp.length", resp.length);
 			});
 		});
-	});*/
+	});
 
 	/*describe('#getUsrsByEmail()', function() {
 		it('should obtain a given user email', function() {
