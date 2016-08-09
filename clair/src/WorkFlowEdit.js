@@ -1992,7 +1992,7 @@ function WorkFlowEdit() {
      */
     function createLineStep(meshOrigin, meshTarget, idOrigin, idTarget, tileOrigin, tileTarget){
 
-        var mesh, from, to, meshTrinogometry, vectorArrow = '', hypotenuse;
+        var mesh, from, to, meshTrinogometry, vectorArrow = '';
 
         var objArrow = {
                 tileOriginId : null,
@@ -2030,45 +2030,15 @@ function WorkFlowEdit() {
         objArrow.tileTargetId = tileTarget;
 
         var angleRadians = Math.atan2(vertexDestY - vertexOriginY, vertexDestX - vertexOriginX);
-        var toMain;
-        /*
-            case 'arrowDescVer':
-                case 'arrowAscVer':
 
-                    hypotenuse = 10;
-                    to = trigonometry(x, y, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - hypotenuse, angleRadians);
-                break;
-
-                case 'arrowRight':
-                case 'arrowLeft':
-
-                    hypotenuse = 17;
-                    to = trigonometry(x, y, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - hypotenuse, angleRadians);
-                break;
-
-                case 'arrowAsc':
-                    hypotenuse = 0;
-                    to = trigonometry(vertexDestX - 7, vertexDestY - 9.5, hypotenuse, angleRadians);
-                break;
-
-                case 'arrowDesc':
-                    hypotenuse = 0;
-                    to = trigonometry(vertexDestX - 4, vertexDestY + 9.5, hypotenuse, angleRadians);
-                break;
-
-        */
         if((vertexOriginY >  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es descendente diagonal
             
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
             meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-            //to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
+            to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
             
             vectorArrow = 'arrowDesc';
-
-            //hypotenuse = 0;
-
-            toMain = trigonometry(vertexDestX - 4, vertexDestY + 9.5, 0, angleRadians);
         }
         else if((vertexOriginY <  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es ascendente diagonal 
         
@@ -2076,76 +2046,55 @@ function WorkFlowEdit() {
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
             meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-            //to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
+            to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
 
             vectorArrow = 'arrowAsc';
-
-            //hypotenuse = 0;
-
-            toMain = trigonometry(vertexDestX - 7, vertexDestY - 9.5, 0, angleRadians);
         }
 
         else if((vertexOriginX == vertexDestX) && (vertexOriginY > vertexDestY)){ // si es vertical descendente
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
-            //to = new THREE.Vector3(vertexOriginX, vertexOriginY - 20, 2);
-            meshTrinogometry = new THREE.Vector3(vertexOriginX, vertexOriginY - 20, 2);
-            //meshTrinogometry = to;
+            to = new THREE.Vector3(vertexOriginX, vertexOriginY - 20, 2);
+
+            meshTrinogometry = to;
             vectorArrow = 'arrowDescVer';
-
-            //hypotenuse = 10;
-
-            toMain = trigonometry(x, y, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 10, angleRadians);
         }
         else if((vertexOriginX == vertexDestX) && (vertexOriginY < vertexDestY)){ // si es vertical ascendente
            
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
-            //to = new THREE.Vector3(vertexOriginX, vertexOriginY + 20, 2);
-            meshTrinogometry = new THREE.Vector3(vertexOriginX, vertexOriginY + 20, 2);
-            //meshTrinogometry = to;
+            to = new THREE.Vector3(vertexOriginX, vertexOriginY + 20, 2);
+
+            meshTrinogometry = to;
             vectorArrow = 'arrowAscVer';
-
-            //hypotenuse = 10;
-
-            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 10, angleRadians);
         }
 
         else if((vertexOriginY == vertexDestY) && (vertexOriginX < vertexDestX)){ // Horizontal Derecha
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
             
-            //to = new THREE.Vector3(vertexOriginX + 40, vertexOriginY, 2);
-            meshTrinogometry = new THREE.Vector3(vertexOriginX + 40, vertexOriginY, 2);
-            //meshTrinogometry = to;
+            to = new THREE.Vector3(vertexOriginX + 40, vertexOriginY, 2);
+            
+            meshTrinogometry = to;
             vectorArrow = 'arrowRight';
-
-            //hypotenuse = 17;
-
-            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 17, angleRadians);
         } 
 
         else if((vertexOriginY == vertexDestY) && (vertexOriginX > vertexDestX)){ // Horizontal Derecha
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
             
-            //to = new THREE.Vector3(vertexOriginX - 40, vertexOriginY, 2);
-            meshTrinogometry = new THREE.Vector3(vertexOriginX - 40, vertexOriginY, 2);
-            //meshTrinogometry = to;
+            to = new THREE.Vector3(vertexOriginX - 40, vertexOriginY, 2);
+            
+            meshTrinogometry = to;
             vectorArrow = 'arrowLeft';
-
-            //hypotenuse = 17;
-
-            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 17, angleRadians);
         }  
-        
-
-        var direction = toMain.clone().sub(from);
+                
+        var direction = to.clone().sub(from);
 
         var length = direction.length();
 
-        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 4*2.5, 4*2.5);
+        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1);
         
         var dataArrow = {
             originOrder : idOrigin,
@@ -2186,61 +2135,61 @@ function WorkFlowEdit() {
 
         function directionLineMesh(x, y, angleRadians, tileOrigin, tileTarget){
 
-            var mesh, /*from, to,*/ meshTrinogometry;
+            var mesh, from, to, meshTrinogometry;
 
             switch(vectorArrow){
 
                 case 'arrowDesc':
                 case 'arrowAsc':
-                    //from = new THREE.Vector3(x, y, 2);
+                    from = new THREE.Vector3(x, y, 2);
                     
                     meshTrinogometry = trigonometry(x, y, 30, angleRadians);
 
-                    //to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
+                    to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
 
                     break;
 
                 case 'arrowDescVer':
-                    //from = new THREE.Vector3(x, y, 2);
+                    from = new THREE.Vector3(x, y, 2);
                     
-                    //to = new THREE.Vector3(x, y - 20, 2);
+                    to = new THREE.Vector3(x, y - 20, 2);
 
-                    //meshTrinogometry = to;
-                    meshTrinogometry = new THREE.Vector3(x, y - 20, 2);
+                    meshTrinogometry = to;
+
                     break;
 
                 case 'arrowAscVer':
-                    //from = new THREE.Vector3(x, y, 2);
+                    from = new THREE.Vector3(x, y, 2);
                     
-                    //to = new THREE.Vector3(x, y + 20, 2);
+                    to = new THREE.Vector3(x, y + 20, 2);
 
-                    //meshTrinogometry = to;
-                    meshTrinogometry = new THREE.Vector3(x, y + 20, 2);
+                    meshTrinogometry = to;
+
                     break;
 
                 case 'arrowRight':
-                    //from = new THREE.Vector3(x, y, 2);
+                    from = new THREE.Vector3(x, y, 2);
                 
-                    //to = new THREE.Vector3(x + 30, y, 2);
+                    to = new THREE.Vector3(x + 30, y, 2);
 
-                    //meshTrinogometry = to;
-                    meshTrinogometry = new THREE.Vector3(x + 30, y, 2);
+                    meshTrinogometry = to;
+
                     break;
 
                 case 'arrowLeft':
-                    //from = new THREE.Vector3(x, y, 2);
+                    from = new THREE.Vector3(x, y, 2);
 
-                    //to = new THREE.Vector3(x - 30, y, 2);
+                    to = new THREE.Vector3(x - 30, y, 2);
 
-                    //meshTrinogometry = to;
-                    meshTrinogometry = new THREE.Vector3(x - 30, y, 2);
+                    meshTrinogometry = to;
+
                     break;
 
                 default:
                     break;
             }
 
-            /*var direction = to.clone().sub(from);
+            var direction = to.clone().sub(from);
 
             var length = direction.length();
 
@@ -2250,15 +2199,15 @@ function WorkFlowEdit() {
 
             arrowHelper.line.userData = dataArrow;
 
-            arrowHelper.cone.userData = dataArrow;*/
+            arrowHelper.cone.userData = dataArrow;
 
-            //window.scene.add(arrowHelper);
+            window.scene.add(arrowHelper);
             
             mesh = createSimbol();
 
             mesh.material.map = TEXTURE.y;
 
-            //objArrow.vector2 = arrowHelper;
+            objArrow.vector2 = arrowHelper;
             objArrow.meshSecondary = mesh;
 
             mesh.userData = {
@@ -2267,7 +2216,7 @@ function WorkFlowEdit() {
                 type : 'fork'
             };
 
-            //directionArrowMesh(meshTrinogometry.x, meshTrinogometry.y, angleRadians, tileOrigin, tileTarget);
+            directionArrowMesh(meshTrinogometry.x, meshTrinogometry.y, angleRadians, tileOrigin, tileTarget);
 
 
             mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
@@ -2278,7 +2227,7 @@ function WorkFlowEdit() {
         }
 
     
-        /*function directionArrowMesh(x, y, angleRadians, tileOrigin, tileTarget){ // x y origen 
+        function directionArrowMesh(x, y, angleRadians, tileOrigin, tileTarget){ // x y origen 
 
             var from, to, hypotenuse;
 
@@ -2328,10 +2277,10 @@ function WorkFlowEdit() {
 
             arrowHelper.cone.userData = dataArrow;
 
-            //window.scene.add(arrowHelper);
+            window.scene.add(arrowHelper);
 
             objArrow.arrow = arrowHelper;
-        }*/
+        }
     }
      /**
      * @author Ricardo Delgado.
