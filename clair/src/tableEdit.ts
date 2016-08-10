@@ -1,20 +1,19 @@
 /**
  * @author Ricardo Delgado
  */
-function TableEdit() {
+class TableEdit {
 
-    var tileWidth = window.TILE_DIMENSION.width - window.TILE_SPACING,
-        tileHeight = window.TILE_DIMENSION.height - window.TILE_SPACING;
+    tileWidth = TILE_DIMENSION.width - TILE_SPACING,
+    tileHeight = TILE_DIMENSION.height - TILE_SPACING;
 
-    var self = this;
 
     /**
      * @author Ricardo Delgado
      */
 
-    this.addButton = function(_id){
+    addButton(_id){
 
-        var id = _id || null,
+        let id = _id || null,
             text = 'Edit Component',
             button = 'buttonFermatEdit',
             side = null,
@@ -106,15 +105,15 @@ function TableEdit() {
     
     };
 
-    function addAllFilds(){
+    addAllFilds(){
 
         window.fieldsEdit.createFieldTableEdit();
     }
 
     // Start editing
-    function fillFields(id){
+    fillFields(id){
 
-        var tile = window.helper.clone(window.helper.getSpecificTile(id).data);
+        let tile = window.helper.clone(window.helper.getSpecificTile(id).data);
 
         window.fieldsEdit.actualTile = window.helper.clone(tile);
 
@@ -148,12 +147,12 @@ function TableEdit() {
             document.getElementById('modal-desc-textarea').value = tile.description;
     }
 
-    function createElement() {
+    createElement() {
 
-        var newCenter = window.helper.getCenterView('table'),
+        let newCenter = window.helper.getCenterView('table'),
             y = window.helper.getLastValueArray(window.tileManager.dimensions.layerPositions) + (window.TILE_DIMENSION.height * 2);
 
-        var mesh = new THREE.Mesh(
+        let mesh = new THREE.Mesh(
                    new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
                    new THREE.MeshBasicMaterial({
                             side: THREE.DoubleSide,
@@ -164,7 +163,7 @@ function TableEdit() {
 
         y = transformPositionY(y);
 
-        var target = window.helper.fillTarget(newCenter.x, y, newCenter.z, 'table');
+        let target = window.helper.fillTarget(newCenter.x, y, newCenter.z, 'table');
 
         mesh.position.copy(target.hide.position);
 
@@ -179,14 +178,14 @@ function TableEdit() {
         window.fieldsEdit.objects.tile.target = target;
     }
 
-    function drawTile(id, callback){
+    drawTile(id, callback){
 
         if(window.fieldsEdit.objects.tile.mesh === null)
             createElement();
 
-        var mesh = window.fieldsEdit.objects.tile.mesh;
+        let mesh = window.fieldsEdit.objects.tile.mesh;
         
-        var exit = null;
+        let exit = null;
 
         if(window.fieldsEdit.actions.type === "insert") {
 
@@ -203,7 +202,7 @@ function TableEdit() {
                 if(typeof(callback) === 'function')
                     callback(); 
                 
-                self.changeTexture();
+                this.changeTexture();
 
                 window.camera.disable(); 
 
@@ -219,7 +218,7 @@ function TableEdit() {
 
             window.fieldsEdit.actions.exit = exit;
 
-            self.changeTexture();
+            this.changeTexture();
 
             animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
 
@@ -229,7 +228,7 @@ function TableEdit() {
                 window.signLayer.transformSignLayer();
 
                 setTimeout( function() {
-                    var data = helper.getSpecificTile(id);
+                    let data = helper.getSpecificTile(id);
                     animate(data.mesh, data.target.hide, 1000);
                 }, 2000 );
 
@@ -238,9 +237,9 @@ function TableEdit() {
         }
     } 
 
-    this.changeTexture = function(){
+    changeTexture(){
 
-        var table = null,
+        let table = null,
             scale = 5,
             mesh = null;
 
@@ -253,9 +252,9 @@ function TableEdit() {
 
     };
 
-    this.deleteMesh = function(){
+    deleteMesh(){
 
-        var mesh = window.fieldsEdit.objects.tile.mesh;
+        let mesh = window.fieldsEdit.objects.tile.mesh;
 
         if(mesh != null){ 
 
@@ -269,11 +268,11 @@ function TableEdit() {
     // end
 
     //Save Tile
-    this.saveTile = function(){
+    saveTile(){
 
         if(validateFields() === ''){ 
 
-            var table = fillTable();
+            let table = fillTable();
 
             window.fieldsEdit.disabledButtonSave(true);
             
@@ -287,10 +286,10 @@ function TableEdit() {
         }
     };
 
-    function validateFields(){
-        var msj = '';
+    validateFields(){
+        let msj = '';
 
-        var name = document.getElementById('imput-Name');
+        let name = document.getElementById('imput-Name');
 
         if(name.value === ""){
             msj += 'The component must have a name \n';
@@ -302,9 +301,9 @@ function TableEdit() {
     // end
 
     //tile action
-    function createTile(_table){
+    createTile(_table){
 
-        var params = getParamsData(_table);  
+        let params = getParamsData(_table);  
 
         window.API.postRoutesEdit('tableEdit', 'insert', params, null,
             function(res){ 
@@ -316,9 +315,9 @@ function TableEdit() {
                     window.camera.loseFocus();
                     window.camera.enable();
                         
-                    var x, y, z;
+                    let x, y, z;
 
-                    var platform = table.platform || window.layers[table.layer].super_layer,
+                    let platform = table.platform || window.layers[table.layer].super_layer,
                         layer = table.layer,
                         object = { 
                             mesh : null,
@@ -334,13 +333,13 @@ function TableEdit() {
                         };
                     }
 
-                    var count = window.TABLE[platform].layers[layer].objects.length;
+                    let count = window.TABLE[platform].layers[layer].objects.length;
 
                     object.id = platform + '_' + layer + '_' + count;
 
-                    var mesh = window.tileManager.createElement(object.id, table);
+                    let mesh = window.tileManager.createElement(object.id, table);
 
-                    var lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
+                    let lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
 
                     x = 0;
 
@@ -349,13 +348,13 @@ function TableEdit() {
                     else
                         x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
 
-                    var index = window.layers[layer].index;
+                    let index = window.layers[layer].index;
 
                     y = transformPositionY(window.tileManager.dimensions.layerPositions[index]);
 
                     z = 0;
 
-                    var target = helper.fillTarget(x, y, z, 'table');
+                    let target = helper.fillTarget(x, y, z, 'table');
 
                     mesh.position.copy(target.hide.position);
                     mesh.rotation.copy(target.hide.rotation);
@@ -397,9 +396,9 @@ function TableEdit() {
 
         function getParamsData(table){
 
-            var param = { };
+            let param = { };
 
-            var newLayer = table.layer,
+            let newLayer = table.layer,
                 newGroup = table.platform || window.layers[table.layer].super_layer;
 
             if(typeof window.platforms[newGroup] !== "undefined"){
@@ -442,9 +441,9 @@ function TableEdit() {
 
         function postParamsDev(table, callback){
 
-            var devs = table.devs;
+            let devs = table.devs;
 
-            var newDevs = [];
+            let newDevs = [];
 
             postDevs(devs);
 
@@ -452,11 +451,11 @@ function TableEdit() {
 
                 if(devs.length > 0){ 
 
-                    var dataPost = {
+                    let dataPost = {
                                 comp_id : table.id
                             };
 
-                    var param = {};
+                    let param = {};
 
                     param.dev_id = devs[0].dev._id;
                     param.percnt = devs[0].percnt;
@@ -486,11 +485,11 @@ function TableEdit() {
         }
     }
 
-    function modifyTile(_table){ 
+    modifyTile(_table){ 
 
-        var params = getParamsData(_table);
+        let params = getParamsData(_table);
 
-        var dataPost = {
+        let dataPost = {
                 comp_id : window.fieldsEdit.actualTile.id
             };
 
@@ -501,7 +500,7 @@ function TableEdit() {
 
                 postParamsDev(_table, function(table){
 
-                    var oldTile = window.helper.clone(window.fieldsEdit.actualTile),
+                    let oldTile = window.helper.clone(window.fieldsEdit.actualTile),
                         newLayer = table.layer,
                         newGroup = table.platform || window.layers[table.layer].super_layer,
                         oldLayer = oldTile.layer,
@@ -511,9 +510,9 @@ function TableEdit() {
                     window.camera.loseFocus();
                     window.camera.enable();
 
-                    var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects.slice(0);
+                    let arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects.slice(0);
 
-                    for(var i = 0; i < arrayObject.length; i++){
+                    for(let i = 0; i < arrayObject.length; i++){
                         
                         if(arrayObject[i].data.author === oldTile.author && arrayObject[i].data.name === oldTile.name){
 
@@ -522,7 +521,7 @@ function TableEdit() {
                         }
                     }
 
-                    var positionCameraX = window.TABLE[oldGroup].x,
+                    let positionCameraX = window.TABLE[oldGroup].x,
                         positionCameraY = transformPositionY(window.helper.getPositionYLayer(oldLayer));
 
                     window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
@@ -539,11 +538,11 @@ function TableEdit() {
                     function change(){
 
                         window.TABLE[oldGroup].layers[oldLayer].objects = [];
-                        var idScreenshot = oldGroup + "_" + oldLayer + "_" + oldTile.name;
+                        let idScreenshot = oldGroup + "_" + oldLayer + "_" + oldTile.name;
 
                         window.screenshotsAndroid.deleteScreenshots(idScreenshot);
                
-                        for(var i = 0; i < arrayObject.length; i++){
+                        for(let i = 0; i < arrayObject.length; i++){
                             
                             if(arrayObject[i].data.author === oldTile.author && arrayObject[i].data.name === oldTile.name){
 
@@ -570,17 +569,17 @@ function TableEdit() {
 
                     function notChange(){
 
-                        var arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
-                        var target = null;
-                        var _ID = null;
-                        var id = 0;
+                        let arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
+                        let target = null;
+                        let _ID = null;
+                        let id = 0;
 
-                        var idScreenshot = oldGroup + "_" + oldLayer + "_" + oldTile.name;
+                        let idScreenshot = oldGroup + "_" + oldLayer + "_" + oldTile.name;
 
                         if(oldTile.name !== table.name)
                             window.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
-                        for(var i = 0; i < arrayObject.length; i++){
+                        for(let i = 0; i < arrayObject.length; i++){
                             
                             if(arrayObject[i].data.author === oldTile.author && arrayObject[i].data.name === oldTile.name){
 
@@ -591,7 +590,7 @@ function TableEdit() {
                             }
                         }
 
-                        var mesh = window.tileManager.createElement(_ID, table);
+                        let mesh = window.tileManager.createElement(_ID, table);
 
                         window.TABLE[oldGroup].layers[oldLayer].objects[id].mesh = mesh;
 
@@ -612,11 +611,11 @@ function TableEdit() {
             window.fieldsEdit.disabledButtonSave(false);
         });
 
-        function getParamsData(table){
+        getParamsData(table){
 
-            var param = {};
+            let param = {};
 
-            var newLayer = table.layer,
+            let newLayer = table.layer,
                 newGroup = table.platform || window.layers[table.layer].super_layer,
                 oldLayer = window.fieldsEdit.actualTile.layer,
                 oldGroup = window.fieldsEdit.actualTile.platform || window.layers[window.fieldsEdit.actualTile.layer].super_layer;
@@ -656,9 +655,9 @@ function TableEdit() {
             return param;
         }
 
-        function postParamsDev(table, callback){
+        postParamsDev(table, callback){
 
-            var newDevs = table.devs.slice(0),
+            let newDevs = table.devs.slice(0),
                 oldDevs = window.fieldsEdit.actualTile.devs.slice(0),
                 newTableDevs = [],
                 config = { 
@@ -702,9 +701,9 @@ function TableEdit() {
 
                     if(task === 'insert'){
 
-                        var array = [];
+                        let array = [];
 
-                        for(var i = 0; i < newDevs.length; i++){
+                        for(let i = 0; i < newDevs.length; i++){
 
                             if(!newDevs[i]._id)
                                 config.insert.devs.push(newDevs[i]);
@@ -719,9 +718,9 @@ function TableEdit() {
                         if(oldDevs.length > 0){
                             
 
-                            for(var f = 0; f < oldDevs.length; f++){
+                            for(let f = 0; f < oldDevs.length; f++){
 
-                                var t = newDevs.find(find_Dev);
+                                let t = newDevs.find(find_Dev);
                                 
                                 if(t){
 
@@ -745,7 +744,7 @@ function TableEdit() {
                 }
                 else{
 
-                    for(var l = 0; l < oldDevs.length; l++){
+                    for(let l = 0; l < oldDevs.length; l++){
                         config.delete.devs.push(oldDevs[l]);
                     }
                 }
@@ -755,11 +754,11 @@ function TableEdit() {
 
                 if(array.length > 0){
 
-                    var dataPost = {
+                    let dataPost = {
                                 comp_id : table.id
                             };
 
-                    var param = {};
+                    let param = {};
 
                     if(task === 'update' || task === 'delete')
                         dataPost.devs_id = array[0]._id;
@@ -802,25 +801,25 @@ function TableEdit() {
         }
     }
 
-    function deleteTile(id){
+    deleteTile(id){
 
-        var table = window.helper.getSpecificTile(id).data;
+        let table = window.helper.getSpecificTile(id).data;
 
-        var dataPost = {
+        let dataPost = {
                 comp_id : table.id
             };
 
         window.API.postRoutesEdit('tableEdit', 'delete', false, dataPost,
             function(res){ 
 
-                var oldLayer = table.layer,
+                let oldLayer = table.layer,
                     oldGroup = table.platform || window.layers[table.layer].super_layer,
                     arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects.slice(),
                     idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
 
                 window.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
-                var positionCameraX = window.TABLE[oldGroup].x,
+                let positionCameraX = window.TABLE[oldGroup].x,
                     positionCameraY = transformPositionY(window.helper.getPositionYLayer(oldLayer));
 
                 window.camera.loseFocus();
@@ -840,9 +839,9 @@ function TableEdit() {
 
                     id = parseInt(id[2]);
 
-                    var mesh = arrayObject[id].mesh;
+                    let mesh = arrayObject[id].mesh;
 
-                    var target =  window.helper.fillTarget(0, 0, 160000, 'table');
+                    let target =  window.helper.fillTarget(0, 0, 160000, 'table');
 
                     animate(mesh, target.hide, 1500, function(){
                         window.scene.remove(mesh);
@@ -861,11 +860,11 @@ function TableEdit() {
     //
 
     //Tools
-    function createNewElementTile(table){
+    createNewElementTile(table){
 
-        var x, y, z;
+        let x, y, z;
 
-        var platform = table.platform || window.layers[table.layer].super_layer,
+        let platform = table.platform || window.layers[table.layer].super_layer,
             layer = table.layer,
             object = { 
                 mesh : null,
@@ -881,13 +880,13 @@ function TableEdit() {
             };
         }
 
-        var lastObject = window.helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
+        let lastObject = window.helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
 
-        var count = window.TABLE[platform].layers[layer].objects.length;
+        let count = window.TABLE[platform].layers[layer].objects.length;
 
         object.id = platform + '_' + layer + '_' + count;
 
-        var mesh = window.tileManager.createElement(object.id, table);
+        let mesh = window.tileManager.createElement(object.id, table);
     
         x = 0;
 
@@ -900,7 +899,7 @@ function TableEdit() {
 
         z = 0;
 
-        var target = window.helper.fillTarget(x, y, z, 'table');
+        let target = window.helper.fillTarget(x, y, z, 'table');
 
         mesh.position.copy(target.hide.position);
         mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
@@ -926,11 +925,11 @@ function TableEdit() {
         window.TABLE[platform].layers[layer].objects.push(object);
     }
 
-    function validateLock(_id, callback){
+    validateLock(_id, callback){
 
-        var id = window.helper.getSpecificTile(_id).data.id;
+        let id = window.helper.getSpecificTile(_id).data.id;
 
-        var dataPost = {
+        let dataPost = {
                 comp_id : id
             };
 
@@ -947,9 +946,9 @@ function TableEdit() {
         );
     }
 
-    function fillTable(){
+    fillTable(){
 
-        var table = {platform : undefined},
+        let table = {platform : undefined},
             data = {},
             group = document.getElementById(window.fieldsEdit.objects.idFields.group).value,
             layer = document.getElementById(window.fieldsEdit.objects.idFields.layer).value,
@@ -981,7 +980,7 @@ function TableEdit() {
         table.layerID = layerID;
         table.superLayer = superLayer;
 
-        var dir = group+"/"+table.type.toLowerCase()+"/"+layer.toLowerCase()+"/";
+        let dir = group+"/"+table.type.toLowerCase()+"/"+layer.toLowerCase()+"/";
 
         while(dir.match(' ') !== null) 
            dir = dir.replace(' ', '_');
@@ -993,7 +992,7 @@ function TableEdit() {
 
         table.repo_dir = dir;
 
-        var devs = document.getElementById("modal-devs").value;
+        let devs = document.getElementById("modal-devs").value;
         
         table.devs = devs.slice(0);
 
@@ -1004,7 +1003,7 @@ function TableEdit() {
         table.authorRealName = _author.name ? _author.name : undefined;
         table.authorEmail = _author.email ? _author.email : undefined;
 
-        var _maintainer = getBestDev(table.devs, "maintainer");
+        let _maintainer = getBestDev(table.devs, "maintainer");
 
         table.maintainer = _maintainer.usrnm ? _maintainer.usrnm : undefined;
         table.maintainerPicture = _maintainer.avatar_url ? _maintainer.avatar_url : undefined;
@@ -1013,9 +1012,9 @@ function TableEdit() {
         return table;
     }
 
-    function modifyRowTable(arrayObject, oldGroup, oldLayer){
+    modifyRowTable(arrayObject, oldGroup, oldLayer){
 
-        var newArrayObject = [];
+        let newArrayObject = [];
 
         if(arrayObject.length < 1){
 
@@ -1026,9 +1025,9 @@ function TableEdit() {
             }
         }
 
-        for(var t = 0; t < arrayObject.length; t++){
+        for(let t = 0; t < arrayObject.length; t++){
 
-            var data = arrayObject[t].data,
+            let data = arrayObject[t].data,
                 mesh = arrayObject[t].mesh,
                 target = null,
                 object = { 
@@ -1038,15 +1037,15 @@ function TableEdit() {
                     id : null
                 };
                 
-            var x = 0, y = 0, z = 0;
+            let x = 0, y = 0, z = 0;
 
-            var lastObject = window.helper.getLastValueArray(newArrayObject);
+            let lastObject = window.helper.getLastValueArray(newArrayObject);
 
-            var count = newArrayObject.length;
+            let count = newArrayObject.length;
 
             object.id = oldGroup + '_' + oldLayer + '_' + count;
 
-            for(var i = 0; i < mesh.levels.length; i++)
+            for(let i = 0; i < mesh.levels.length; i++)
                 mesh.levels[i].object.userData.id = object.id;
 
             x = 0;
@@ -1061,7 +1060,7 @@ function TableEdit() {
 
             z = 0;
 
-            var idScreenshots = oldGroup + "_" + oldLayer + "_" + data.name;
+            let idScreenshots = oldGroup + "_" + oldLayer + "_" + data.name;
 
             window.screenshotsAndroid.changePositionScreenshots(idScreenshots, x, y);
             
@@ -1079,13 +1078,13 @@ function TableEdit() {
         return newArrayObject;
     }
 
-    function getBestDev(_devs, role) {
+    getBestDev(_devs, role) {
         
-        var dev = {};
+        let dev = {};
         if (_devs) {
-            var _dev = {};
+            let _dev = {};
             dev.percnt = 0;
-            for (var i = 0, l = _devs.length; i < l; i++) {
+            for (let i = 0, l = _devs.length; i < l; i++) {
                 _dev = _devs[i];
                 
                 if((role === 'author' && _dev.role === 'author' && _dev.scope === 'implementation') ||
@@ -1105,16 +1104,16 @@ function TableEdit() {
         return dev;
     }
 
-    function transformPositionY(y){
+    transformPositionY(y){
 
-        var newPosition = new THREE.Vector3(0, y, 0);
+        let newPosition = new THREE.Vector3(0, y, 0);
 
         return window.viewManager.translateToSection('table', newPosition).y;
     }
 
-    function animate(mesh, target, duration, callback){
+    animate(mesh, target, duration, callback){
 
-        var _duration = duration || 2000,
+        let _duration = duration || 2000,
             x = target.position.x,
             y = target.position.y,
             z = target.position.z,
