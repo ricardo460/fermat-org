@@ -9,6 +9,7 @@
 var path = require('path');
 var validator = require('validator'),
 	sanitizer = require('sanitizer');
+var MAX_LENGHT_TAGS = 20;
 // yyyy-MM-dd'T'HH:mm:ss.SSSZ
 /**
  * [isValidDate description]
@@ -154,7 +155,7 @@ var isValidTags = function(tags) {
 	if (ifExistIsValidData(tags)) {
 		tags = tags.split(',');
 		for (var i = 0; i < tags.length; i++) {
-			if (isValidData(tags[i]))
+			if (isValidData(tags[i]) && tags[i].length <= MAX_LENGHT_TAGS)
 				bnd = 1;
 			else return 0;
 		}
@@ -493,4 +494,4 @@ exports.isUUID = function(uuid) {
  */
 exports.isNumber = function(str) {
 	return !isNaN(str);
-}
+};
