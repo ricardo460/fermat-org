@@ -1014,7 +1014,7 @@ END
 
 .steps-button-close:hover {
 	cursor: pointer;
-  transform: rotate(-45deg);
+    transform: rotate(-45deg);
 }
 
 .steps-div-close {
@@ -1037,13 +1037,52 @@ END
 }
 
 #workflow-mode {
+    margin-left: 37.5%;
     position: absolute;
-    left: 25%;
-    width: 50%;
-    padding-top: 10px;
+    width: 25%;
+    left: 0px;
+    top: 0px;
+}
+
+#header-container {
+    width: 100%;
+}
+
+#header-back {
+    float: left;
+    width: 15.2%;
+    height: 100%;
+    border: 0px;
+    background: url("images/workflow/header-left.png");
+    background-size: 100%;
+    cursor: pointer;
+}
+
+#header-text {
+    float: left;
+    width: 58.6%;
+    height: 100%;
+    background: url("images/workflow/header-center.png");
+    background-size: 100%;
     text-align: center;
-    z-index: 11;
-    color: rgba(127,127,127,1);
+    vertical-align: middle;
+    line-height: 64px;  
+}
+
+#header-next {
+    float: left;
+    width: 15.2%;
+    height: 100%;
+    border: 0px;
+    background: url("images/workflow/header-right.png");
+    background-size: 100%;
+    cursor: pointer;
+}
+#header-back:focus, #header-next:focus{
+    outline:0px;
+}
+#header-back:hover, #header-next:hover {
+   opacity: 0.5;
 }
 
 /**

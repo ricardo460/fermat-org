@@ -34,7 +34,7 @@ function WorkFlowEdit() {
     };
 
     this.getFocus = function(){
-        return FOCUS; // test
+        return FOCUS;
     };
 
     this.get = function(){
@@ -45,6 +45,11 @@ function WorkFlowEdit() {
         return LIST_ARROWS; // test
     }; 
 
+    /**
+     * @author Ricardo Delgado.
+     * Repositions to focus. 
+     * @param  {Number}  id step number.
+     */  
     this.changeFocusSteps = function(id){
 
         FOCUS.data = EDIT_STEPS[id - 1].mesh;
@@ -53,8 +58,8 @@ function WorkFlowEdit() {
 
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Deletes the selected step.
+     * @param {Number} step step number.
      */  
     this.deleteStepList = function(step){
         deleteSteps(step, EDIT_STEPS, 'step', 0);
@@ -62,8 +67,8 @@ function WorkFlowEdit() {
 
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * id of the selected workflow.
+     * @param {Number} _id 
      */
     this.addButton = function(_id){
 
@@ -161,7 +166,7 @@ function WorkFlowEdit() {
 
     /**
      * @author Ricardo Delgado.
-     * 
+     * Updated mesh texture.
      */
     this.changeTexture = function(){
         
@@ -178,8 +183,7 @@ function WorkFlowEdit() {
 
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Full information for step.
      */
     this.fillStep = function(){
 
@@ -204,7 +208,7 @@ function WorkFlowEdit() {
 
     /**
      * @author Ricardo Delgado.
-     * 
+     * Checks and sends the data to the database.
      */
     this.save = function(){
 
@@ -236,6 +240,11 @@ function WorkFlowEdit() {
         }
     };
 
+    /**
+     * @author Ricardo Delgado.
+     * disable and enable buttons.
+     * @param {boolean} state button status
+     */
     function disableButtons(state){
 
         var button = document.getElementById('button-Steps');
@@ -248,7 +257,7 @@ function WorkFlowEdit() {
 
     /**
      * @author Ricardo Delgado.
-     * 
+     * creates a mesh test for workflow-Edit.
      */ 
     function createElement(){
 
@@ -277,7 +286,8 @@ function WorkFlowEdit() {
 
     /**
      * @author Ricardo Delgado.
-     * 
+     * seeks the farthest position Y
+     * @returns {Number} Position.
      */ 
     function getPositionY(){
 
@@ -303,8 +313,8 @@ function WorkFlowEdit() {
 
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * initialisation for editing or creating a workflow
+     * @param {String} id id workflow
      */ 
     function drawHeaderFlow(id){ 
 
@@ -479,7 +489,8 @@ function WorkFlowEdit() {
 
     /**
      * @author Ricardo Delgado.
-     * 
+     * hides the navigation arrows.
+     * @param {boolean} state visibility arrows.
      */ 
     function showBrowser(state){
 
@@ -491,6 +502,12 @@ function WorkFlowEdit() {
         }
     }
 
+    /**
+     * @author Ricardo Delgado.
+     * creates texture for buttons.
+     * @param {String} src image path.
+     * @returns {THREE.Texture} texture.
+     */ 
     function loadTextureButtons(src){
 
 
@@ -516,6 +533,10 @@ function WorkFlowEdit() {
         return texture;
     }
 
+    /**
+     * @author Ricardo Delgado.
+     * loads the image for focus.
+     */ 
     function loadImage(){
 
         var image = document.createElement('img');
@@ -532,7 +553,6 @@ function WorkFlowEdit() {
     /**
      * @author Ricardo Delgado.
      * adds the new workflow to the database.
-     * @param {String}
      */ 
     function createWorkFlow(){
 
@@ -637,7 +657,8 @@ function WorkFlowEdit() {
     /**
      * @author Ricardo Delgado.
      * creates and encourages the workflow created.
-     * @param {String}
+     * @param {Object}     flow     information for the workflow.
+     * @param {Number}   duration   Animation length.
      */ 
     function addWorkFlow(flow, duration){
 
@@ -692,7 +713,6 @@ function WorkFlowEdit() {
     /**
      * @author Ricardo Delgado.
      * Modifies the workflow database.
-     * @param {String}
      */ 
     function modifyWorkFlow(){ 
 
@@ -1021,8 +1041,8 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * Elimina el workflow de la base de datos.
-     * @param {String}
+     * Eliminates workflow database.
+     * @param {String} id id workflow to eliminate
      */ 
     function deleteWorkFlow(id){
 
@@ -1056,8 +1076,8 @@ function WorkFlowEdit() {
     }
     /**
      * @author Emmanuel Colina.
-     * actualiza las posiciones de los workflow de una plataforma 
-     * @param {String}
+     * updates the positions of the workflow of a platform.
+     * @param {String} platform platform name
      */ 
     function updateWorkFlow(platform){
 
@@ -1102,8 +1122,9 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * Valida si el workFlow esta siendo usado por otra persona.
-     * @param {String}
+     * Validates if the workflow is being used by someone else.
+     * @param {String}      id      id workflow
+     * @param {Function} callback   Function to call when finished
      */ 
     function validateLock(_id, callback){
 
@@ -1127,8 +1148,11 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * busca un componente por su name, platform and layer
-     * @param {String}
+     * looking for a component by its name, platform and layer.
+     * @param {String} name     component name.
+     * @param {String} platform component platform.
+     * @param {String} layer    component layer.
+     * @returns {object} component id.
      */ 
     function getIdSpecificTile(name, platform, layer){
 
@@ -1150,8 +1174,8 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * fills the fields for modification.
+     * @param {String} id  id workflow.
      */ 
     function fillFields(id){
 
@@ -1175,7 +1199,10 @@ function WorkFlowEdit() {
     /**
      * @author Ricardo Delgado.
      * creates the animation of the mesh
-     * @param {String}
+     * @param {object}     mesh     object three.
+     * @param {object}    target    Coordinates.
+     * @param {Number}   duration   Animation length.
+     * @param {Function} callback   Function to call when finished
      */ 
     function animate(mesh, target, duration, callback){
 
@@ -1205,24 +1232,37 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * controls the types of mode for creating a workflow.
+     * @param {String} mode  editing mode to run
      */ 
     function changeMode(mode){ 
 
         var buttons = {
 
             path : function(){ 
-                window.buttonsManager.createButtons('button-path', 'Edit Path', function(){
-                    changeMode('edit-path');}, null, null, "right");
+                document.getElementById("header-next").onclick = function() {
+                    changeMode('edit-path');
+                };
+                document.getElementById("header-next").title = "Edit Path";
             },
             steps : function(side){
-                window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
-                    changeMode('edit-step');}, null, null, side);
+
+                if(side){ 
+                    window.buttonsManager.createButtons('button-Steps', 'Edit Steps', function(){
+                        changeMode('edit-step');}, null, null, side);
+                }
+                else{ 
+                    document.getElementById("header-back").onclick = function() {
+                        changeMode('edit-step');
+                    };
+                    document.getElementById("header-back").title = "Edit Steps";
+                }
             },
             preview : function(){
-                window.buttonsManager.createButtons('button-preview', 'Workflow Preview', function(){
-                    changeMode('preview');}, null, null, "left");
+                document.getElementById("header-back").onclick = function() {
+                    changeMode('preview');
+                };
+                document.getElementById("header-back").title = "Workflow Preview";
             },
             save : function(){
                 window.buttonsManager.createButtons('button-save', 'Save', function(){
@@ -1263,7 +1303,7 @@ function WorkFlowEdit() {
                     enter = function() {
 
                         createMeshFocus();
-                        window.fieldsEdit.setModeEdit('Edit Steps Mode');
+                        window.fieldsEdit.setModeEdit('Edit Steps Mode', true, true);
                         window.dragManager.enable();
                         window.helper.hide('backButton', 0, true);
                         window.fieldsEdit.hiddenStepsList(true);
@@ -1294,8 +1334,6 @@ function WorkFlowEdit() {
                             for(var l = 0; l < LIST_ARROWS.length; l++){
 
                                 window.dragManager.objects.push(LIST_ARROWS[l].arrow);
-                                window.dragManager.objects.push(LIST_ARROWS[l].vector1);
-                                window.dragManager.objects.push(LIST_ARROWS[l].vector2);
                             }
 
                             newCenter = EDIT_STEPS[0].target.show.position;
@@ -1423,9 +1461,9 @@ function WorkFlowEdit() {
                         
                         buttons.helpPath();
 
-                        buttons.steps('right');
+                        buttons.steps();
 
-                        window.fieldsEdit.setModeEdit('Edit Path Mode');
+                        window.fieldsEdit.setModeEdit('Edit Path Mode', false, true);
 
                         window.dragManager.styleMouse.CROSS = 'copy';
 
@@ -1613,7 +1651,7 @@ function WorkFlowEdit() {
 
                         buttons.save();
 
-                        window.fieldsEdit.hiddenStepsList(false);
+                        window.fieldsEdit.hiddenStepsList(false, 0);
 
                         displayField(true);
 
@@ -1740,8 +1778,13 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * adds another step to the workflow.
+     * @param {Number} id        Step number.
+     * @param {String} IDtile    id component.
+     * @param {Number} parent    number step father.
+     * @param {String} typeCall  call type of connection.
+     * @param {boolean} visible  visibility arrows for connection.
+     * @returns {object} mesh step.
      */ 
     function addIdStep(id, IDtile, parent, typeCall, visible){
 
@@ -1826,8 +1869,8 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * creates the mesh step.
+     * @returns {object} mesh.
      */ 
     function createIdStep(){
 
@@ -1856,8 +1899,8 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * ccreates the mesh connections buttons.
+     * @returns {object} mesh.
      */ 
     function createSimbol(){
 
@@ -1884,8 +1927,7 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * creates the mesh focus.
      */ 
     function createMeshFocus(){
 
@@ -1943,21 +1985,25 @@ function WorkFlowEdit() {
 
     /**
      * @author Emmanuel Colina.
-     * 
+     * Create the arrow of the step
      * @param {mesh, mesh, int, int, string, string}
+     * @param {mesh} Mesh of the Origin
+     * @param {mesh} Mesh of the Destination
+     * @param {int} ID tile origin
+     * @param {int} ID tile destination
+     * @param {String} ID tile origin
+     * @param {String} ID tile destination
      */
     function createLineStep(meshOrigin, meshTarget, idOrigin, idTarget, tileOrigin, tileTarget){
 
-        var mesh, from, to, meshTrinogometry, vectorArrow = '';
+        var mesh, from, to, meshTrinogometry, vectorArrow = '', hypotenuse;
 
         var objArrow = {
                 tileOriginId : null,
                 tileTargetId : null,
                 originID: null,
                 targetID: null,
-                vector1: null,
                 meshPrimary: null,
-                vector2:null,
                 meshSecondary: null,
                 arrow: null,
                 meshPrimaryTarget: [],
@@ -1986,15 +2032,17 @@ function WorkFlowEdit() {
         objArrow.tileTargetId = tileTarget;
 
         var angleRadians = Math.atan2(vertexDestY - vertexOriginY, vertexDestX - vertexOriginX);
-
+        var toMain;
+        
         if((vertexOriginY >  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es descendente diagonal
             
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
             meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-            to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
             
             vectorArrow = 'arrowDesc';
+
+            toMain = trigonometry(vertexDestX - 4, vertexDestY + 9.5, 0, angleRadians);
         }
         else if((vertexOriginY <  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es ascendente diagonal 
         
@@ -2002,55 +2050,60 @@ function WorkFlowEdit() {
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
             meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-            to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
 
             vectorArrow = 'arrowAsc';
+
+            toMain = trigonometry(vertexDestX - 7, vertexDestY - 9.5, 0, angleRadians);
         }
 
         else if((vertexOriginX == vertexDestX) && (vertexOriginY > vertexDestY)){ // si es vertical descendente
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
-            to = new THREE.Vector3(vertexOriginX, vertexOriginY - 20, 2);
-
-            meshTrinogometry = to;
+            meshTrinogometry = new THREE.Vector3(vertexOriginX, vertexOriginY - 20, 2);
+            
             vectorArrow = 'arrowDescVer';
+
+            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 10, angleRadians);
         }
         else if((vertexOriginX == vertexDestX) && (vertexOriginY < vertexDestY)){ // si es vertical ascendente
            
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
-            to = new THREE.Vector3(vertexOriginX, vertexOriginY + 20, 2);
-
-            meshTrinogometry = to;
+            meshTrinogometry = new THREE.Vector3(vertexOriginX, vertexOriginY + 20, 2);
+            
             vectorArrow = 'arrowAscVer';
+
+            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 10, angleRadians);
         }
 
         else if((vertexOriginY == vertexDestY) && (vertexOriginX < vertexDestX)){ // Horizontal Derecha
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
             
-            to = new THREE.Vector3(vertexOriginX + 40, vertexOriginY, 2);
+            meshTrinogometry = new THREE.Vector3(vertexOriginX + 40, vertexOriginY, 2);
             
-            meshTrinogometry = to;
             vectorArrow = 'arrowRight';
+
+            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 17, angleRadians);
         } 
 
         else if((vertexOriginY == vertexDestY) && (vertexOriginX > vertexDestX)){ // Horizontal Derecha
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
             
-            to = new THREE.Vector3(vertexOriginX - 40, vertexOriginY, 2);
+            meshTrinogometry = new THREE.Vector3(vertexOriginX - 40, vertexOriginY, 2);
             
-            meshTrinogometry = to;
             vectorArrow = 'arrowLeft';
+
+            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 17, angleRadians);
         }  
-                
-        var direction = to.clone().sub(from);
+        
+        var direction = toMain.clone().sub(from);
 
         var length = direction.length();
 
-        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1);
+        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 4*2.5, 4*2.5);
         
         var dataArrow = {
             originOrder : idOrigin,
@@ -2078,7 +2131,7 @@ function WorkFlowEdit() {
 
         mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
 
-        objArrow.vector1 = arrowHelper;
+        objArrow.arrow = arrowHelper;
         objArrow.meshPrimary = mesh;
 
         var target = window.helper.fillTarget(meshTrinogometry.x, meshTrinogometry.y, 3, 'table');
@@ -2091,79 +2144,44 @@ function WorkFlowEdit() {
 
         function directionLineMesh(x, y, angleRadians, tileOrigin, tileTarget){
 
-            var mesh, from, to, meshTrinogometry;
+            var mesh, meshTrinogometry;
 
             switch(vectorArrow){
 
                 case 'arrowDesc':
                 case 'arrowAsc':
-                    from = new THREE.Vector3(x, y, 2);
                     
                     meshTrinogometry = trigonometry(x, y, 30, angleRadians);
-
-                    to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-
                     break;
 
                 case 'arrowDescVer':
-                    from = new THREE.Vector3(x, y, 2);
-                    
-                    to = new THREE.Vector3(x, y - 20, 2);
 
-                    meshTrinogometry = to;
-
+                    meshTrinogometry = new THREE.Vector3(x, y - 20, 2);
                     break;
 
                 case 'arrowAscVer':
-                    from = new THREE.Vector3(x, y, 2);
-                    
-                    to = new THREE.Vector3(x, y + 20, 2);
 
-                    meshTrinogometry = to;
-
+                    meshTrinogometry = new THREE.Vector3(x, y + 20, 2);
                     break;
 
                 case 'arrowRight':
-                    from = new THREE.Vector3(x, y, 2);
-                
-                    to = new THREE.Vector3(x + 30, y, 2);
 
-                    meshTrinogometry = to;
-
+                    meshTrinogometry = new THREE.Vector3(x + 30, y, 2);
                     break;
 
                 case 'arrowLeft':
-                    from = new THREE.Vector3(x, y, 2);
 
-                    to = new THREE.Vector3(x - 30, y, 2);
-
-                    meshTrinogometry = to;
-
+                    meshTrinogometry = new THREE.Vector3(x - 30, y, 2);
                     break;
 
                 default:
                     break;
             }
-
-            var direction = to.clone().sub(from);
-
-            var length = direction.length();
-
-            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1); // Arrow Azul
-
-            arrowHelper.userData = dataArrow;
-
-            arrowHelper.line.userData = dataArrow;
-
-            arrowHelper.cone.userData = dataArrow;
-
-            window.scene.add(arrowHelper);
             
             mesh = createSimbol();
 
             mesh.material.map = TEXTURE.y;
 
-            objArrow.vector2 = arrowHelper;
             objArrow.meshSecondary = mesh;
 
             mesh.userData = {
@@ -2172,76 +2190,17 @@ function WorkFlowEdit() {
                 type : 'fork'
             };
 
-            directionArrowMesh(meshTrinogometry.x, meshTrinogometry.y, angleRadians, tileOrigin, tileTarget);
-
-
             mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
                     
-
             var target = window.helper.fillTarget(meshTrinogometry.x, meshTrinogometry.y, 3, 'table');
             objArrow.meshSecondaryTarget = target;
         }
-
-    
-        function directionArrowMesh(x, y, angleRadians, tileOrigin, tileTarget){ // x y origen 
-
-            var from, to, hypotenuse;
-
-            from = new THREE.Vector3(x, y, 2);
-            
-            switch(vectorArrow){
-
-                case 'arrowDescVer':
-                case 'arrowAscVer':
-
-                    hypotenuse = 10;
-                    to = trigonometry(x, y, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - hypotenuse, angleRadians);
-                break;
-
-                case 'arrowRight':
-                case 'arrowLeft':
-
-                    hypotenuse = 17;
-                    to = trigonometry(x, y, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - hypotenuse, angleRadians);
-                break;
-
-                case 'arrowAsc':
-                    hypotenuse = 0;
-                    to = trigonometry(vertexDestX - 7, vertexDestY - 9.5, hypotenuse, angleRadians);
-                break;
-
-                case 'arrowDesc':
-                    hypotenuse = 0;
-                    to = trigonometry(vertexDestX - 4, vertexDestY + 9.5, hypotenuse, angleRadians);
-                break;
-
-                default:
-                break;
-            }
-
-            to.z = 2;
-
-            var direction = to.clone().sub(from);
-
-            var length = direction.length();
-
-            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 4*2.5, 4*2.5);
-
-            arrowHelper.userData = dataArrow;
-
-            arrowHelper.line.userData = dataArrow;
-
-            arrowHelper.cone.userData = dataArrow;
-
-            window.scene.add(arrowHelper);
-
-            objArrow.arrow = arrowHelper;
-        }
     }
+
      /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * creates the movement arrows.
+     * @param {String} IdOrigen  step source.
      */ 
     function createArrowTest(IdOrigen){
 
@@ -2287,8 +2246,11 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * repositions a step.
+     * @param {Number} idOrigen    step number of origin.
+     * @param {Number} idTarget    target step number.
+     * @param {String} IDtile    id component.
+     * @returns {object} mesh step.
      */ 
     function addIdStepDrag(idOrigen, idTarget, IDtile){
 
@@ -2361,8 +2323,10 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * hides the arrows and buttons and make connections arrows for movement.
+     * @param {String} type        type of button pressed
+     * @param {Number} idOrigen    number step father.
+     * @param {Number} idTarget    number step children.
      */ 
     function changeArrowTest(type, IdOrigen, IdTarget){
 
@@ -2397,8 +2361,6 @@ function WorkFlowEdit() {
             }
 
             object.dataArrow.arrow.visible = false;
-            object.dataArrow.vector1.visible = false;
-            object.dataArrow.vector2.visible = false;
 
             var typeCall = EDIT_STEPS[IdOrigen - 1].children.find(function(x){
                 if(x.id[0] === IdTarget)
@@ -2471,7 +2433,11 @@ function WorkFlowEdit() {
             SHOW_ARROW.push(object);
         }
     }
-
+    /**
+     * @author Ricardo Delgado.
+     * removes the movement arrows.
+     * @param {Number}   duration   Animation length.
+     */ 
     function removeArrowTest(duration){
 
         for(var i = 0; i < SHOW_ARROW.length; i++){
@@ -2495,8 +2461,6 @@ function WorkFlowEdit() {
                 dataArrow.meshPrimary.visible = true;
                 dataArrow.meshSecondary.visible = true;
                 dataArrow.arrow.visible = true;
-                dataArrow.vector1.visible = true;
-                dataArrow.vector2.visible = true;
             }
 
             SHOW_ARROW = [];
@@ -2539,8 +2503,6 @@ function WorkFlowEdit() {
             window.scene.remove(LIST_ARROWS[i].arrow);
             window.scene.remove(LIST_ARROWS[i].meshPrimary);
             window.scene.remove(LIST_ARROWS[i].meshSecondary);
-            window.scene.remove(LIST_ARROWS[i].vector1);
-            window.scene.remove(LIST_ARROWS[i].vector2);
         }
 
         LIST_ARROWS = [];
@@ -2551,7 +2513,6 @@ function WorkFlowEdit() {
      * 
      * 
      */
-
     function updateArrow(){
 
         var i, l;
@@ -2591,8 +2552,8 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * updates the positions of the arrows
+     * @param {object} position  mesh position
      */ 
     function updatePositionArrowTest(position){
 
@@ -2626,8 +2587,8 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * hides and shows the buttons connections.
+     * @param {boolean}  _keep  button status.
      */ 
     function hideButtonsArrows(_keep){
 
@@ -2641,10 +2602,11 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * change the type of connection steps
+     * @param {Object}  arrow  selected Connection.
+     * @param {Object}  event  mouse event.
      */ 
-    function changeTypeArrow(arrow, mouse){
+    function changeTypeArrow(arrow, event){
 
         var idOrigin = arrow.originID[0],
             idTarget = arrow.targetID[0],
@@ -2674,12 +2636,10 @@ function WorkFlowEdit() {
 
                 color = classFlow.getColor(type);
 
-                ApplyColor(arrow.arrow); 
-                ApplyColor(arrow.vector1);
-                ApplyColor(arrow.vector2);
+                ApplyColor(arrow.arrow);
             };
 
-            window.fieldsEdit.showLineSelectType(array, select, mouse, callback);
+            window.fieldsEdit.showLineSelectType(array, select, event, callback);
         }
 
         function ApplyColor(element){
@@ -2692,8 +2652,10 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * changes the texture of the steps.
+     * @param {Number}  id  number step.
+     * @param {Number}  parent  number step father.
+     * @returns {THREE.Texture} texture.
      */ 
     this.changeTextureId = function(id, parent){
 
@@ -2727,8 +2689,7 @@ function WorkFlowEdit() {
     };
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * updated textures steps.
      */ 
     function updateTextureParent(){
 
@@ -2747,8 +2708,8 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * calculates the position of the steps within the tile
+     * @param {String} IDtile  id component.
      */ 
     function calculatePositionsSteps(idTile){
 
@@ -2868,8 +2829,6 @@ function WorkFlowEdit() {
                     connection.meshPrimary.visible = false;
                     connection.meshSecondary.visible = false;
                     connection.arrow.visible = false;
-                    connection.vector1.visible = false;
-                    connection.vector2.visible = false;
                 }
             
                 for (l = 0; l < children.length; l++) {
@@ -2884,8 +2843,6 @@ function WorkFlowEdit() {
                         connection.meshPrimary.visible = false;
                         connection.meshSecondary.visible = false;
                         connection.arrow.visible = false;
-                        connection.vector1.visible = false;
-                        connection.vector2.visible = false;
                     }
                 }
             }
@@ -2893,8 +2850,9 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * ordered steps positions on the object
+     * @param {array} _array  objects to order.
+     * @param {String} type   object type to order.
      */ 
     function orderPositionSteps(_array, type){
 
@@ -2970,8 +2928,7 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Updates the focus.
      */ 
     function updateTileIgnored(){
 
@@ -3017,8 +2974,9 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * validates if the step father and son share the same component step
+     * @param {Number} step  step number
+     * @returns {boolean}
      */ 
     function validateChildrenTiles(step){
 
@@ -3046,8 +3004,8 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Transforms the steps (to the database) or (for workflow-edit).
+     * @param {String} to  type of transformation.
      */ 
     function transformData(to){
 
@@ -3146,8 +3104,8 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * updates the list of steps to repair
+     * @param {String} idStep  number step.
      */ 
     function updateStepsRepared(idStep){
 
@@ -3178,8 +3136,7 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * validates if a step has an empty title.
      */ 
     function validateFieldSteps(){
 
@@ -3187,8 +3144,9 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * changes from tile to a step
+     * @param {Number} orderFocus number step.
+     * @param {String} newTile    new Tile to move.
      */ 
     function changeTileStep(orderFocus, newTile){
 
@@ -3226,9 +3184,11 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
-     */ 
+     * validates if the step is released on a step father or children
+     * @param {number} orderStepFocus id step
+     * @param {String} tileValidate   id tile
+     * @returns {boolean}
+     */
     function validateCollisionTileSteps(orderStepFocus, tileValidate){
 
         var validate = true,
@@ -3256,8 +3216,10 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * validates if the step is released on the same tile
+     * @param {number} order id step
+     * @param {String} tile  Validate id tile
+     * @returns {boolean} 
      */ 
     function validateCollisionTile(order, tileValidate){
 
@@ -3271,8 +3233,9 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Finds all the tiles shown
+     * @param {String} idIgnore id for the tile to ignore.
+     * @returns {Array} Processed list.
      */ 
     function getAllTiles(idIgnore){
 
@@ -3292,8 +3255,9 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * calculates whether the mouse is inside a tile in specific
+     * @param {Object} position Mouse position.
+     * @returns {Boolean} true or false.
      */ 
     function calculateAreaTile(position){
 
@@ -3313,20 +3277,20 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Hides or shows the header for workflow-edit
+     * @param {Boolean} visible
      */ 
     function displayField(visible){
 
         if(visible)
-            window.helper.show("workflow-header");
+            window.helper.show("workflow-header", 1500);
         else
             window.helper.hide("workflow-header", 0, true);
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * New OnKeyDown for 'esc'.
+     * @param {Event} event event to listen to.
      */ 
     function newOnKeyDown(event){
 
@@ -3341,8 +3305,7 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Updates the list with the states of the steps.
      */ 
     function updateStepList(){
 
@@ -3368,8 +3331,11 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Delete a step from the list and sort the list.
+     * @param {Number} step  step number to be deleted.
+     * @param {Array}  array  list processing.
+     * @param {type} type  type of item to be deleted.
+     * @param {Number}   duration   Animation length.
      */ 
     function deleteSteps(step, array, type, duration){
 
@@ -3498,8 +3464,9 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * orders and clears the steps with errors.
+     * @param {array} steps object to be processed.
+     * @returns {array} processed object.
      */ 
     function resetSteps(steps){
 
@@ -3596,9 +3563,10 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
-     */ 
+     * resets the position of the mesh step.
+     * @param {Number} orderFocus   number step.
+     * @param {String} typeReset    reason to restart the mesh.
+     */
     function resetPositionIdStepMesh(orderFocus, typeReset){
 
         var focus = FOCUS.mesh,
@@ -3638,8 +3606,11 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * resets the position of the buttons Connection.
+     * @param {object} mesh       object mesh animate.
+     * @param {String} type       new Tile to move.
+     * @param {array} originID    number of step father.
+     * @param {array} targetID    number of step children.
      */ 
     function resetPositionStepMeshButtons(mesh, type, IdOrigen, IdTarget){
 
@@ -3657,11 +3628,12 @@ function WorkFlowEdit() {
         animate(mesh, target, 300);
     }
 
-    //EDIT-STEPS search
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Seeks the position of a specific step
+     * @param {String} id   step number.
+     * @param {array} array search list.
+     * @returns {object} step properties.
      */ 
     function searchStepEdit(id, array){
 
@@ -3675,8 +3647,10 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * looking for the father of a step
+     * @param {String} id   step number.
+     * @param {array} array search list.
+     * @returns {Object or Boolean} step properties or false.
      */ 
     function searchParentStepEdit(id, array){
 
@@ -3697,8 +3671,10 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * seeks the position of step
+     * @param {number} id  id step
+     * @param {array} array  object to search.
+     * @returns {number} position
      */ 
     function SearchStepPositionEdit(id, array){
 
@@ -3709,11 +3685,12 @@ function WorkFlowEdit() {
         }
     }
 
-    //PREVIEW-STEPS search
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * looking for a specific step
+     * @param {number} id  number of step.
+     * @param {array} array  object to search.
+     * @returns {boolean}
      */ 
     function searchStepParentPreview(id, array){
 
@@ -3741,7 +3718,13 @@ function WorkFlowEdit() {
 
         return false;
     }
-
+   /**
+     * @author Ricardo Delgado.
+     * validates the existence of a connection.
+     * @param {array} originID  number of step father.
+     * @param {array} targetID  number of step children.
+     * @returns {boolean}
+     */ 
     function searchArrow(originID, targetID){
 
         return  LIST_ARROWS.find(function(x){
@@ -3754,8 +3737,7 @@ function WorkFlowEdit() {
 
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * clean all the variables
      */ 
     function cleanEditStep(){
 
@@ -3779,8 +3761,6 @@ function WorkFlowEdit() {
             window.scene.remove(LIST_ARROWS[i].meshPrimary);
             window.scene.remove(LIST_ARROWS[i].meshSecondary);
             window.scene.remove(LIST_ARROWS[i].arrow);
-            window.scene.remove(LIST_ARROWS[i].vector1);
-            window.scene.remove(LIST_ARROWS[i].vector2);
         }
 
         if(REPARED_STEPS.mesh)
@@ -3803,8 +3783,7 @@ function WorkFlowEdit() {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * deletes all buttons.
      */ 
     function cleanButtons(){
 

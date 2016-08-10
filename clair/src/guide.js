@@ -98,13 +98,13 @@ function Guide() {
 
                                     <div id="modal-help-text">
                                       <ul>
-                                        <li><p>After selecting one or more components from the table, you will <br> 
-                                        see in the left pane those steps, and you will see an arrow <br>
+                                        <li><p>After selecting one or more components from the table, you <br>
+                                        will see in the left pane those steps, and you will see an arrow <br>
                                         showing the WorkFlow path.</p></li>
-                                        <li><p>To remove a step click on it, drag and drop to an empty space of <br>
-                                        the table.  You can click on the (X) button in the pane too.</p></li>
-                                        <li><p>The (Y) symbol over the arrow is to create a fork of the path. Drag<br>
-                                        it and drop it over another component to set the fork s target.</p></li>
+                                        <li><p>To remove a step click on it, drag and drop to an empty space<br>
+                                        of the table. You can click on the (X) button in the pane too.</p></li>
+                                        <li><p>The (Y) symbol over the arrow is to create a fork of the path.<br>
+                                        Drag it and drop it over another component to set the fork s <br> target.</p></li>
                                         <li><p>The (+) symbol over the arrow is to insert another step between<br> 
                                         two.</p></li>
                                         <li><p>Click on the Edit Steps button to enter EDIT STEP MODE.</p></li>
