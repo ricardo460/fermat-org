@@ -28,6 +28,10 @@ var procSchema = mongoose.Schema({
         type: String,
         trim: true
     },
+    tags: [{
+        type: String,
+        required: true
+    }],
     steps: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Step'
