@@ -1334,8 +1334,6 @@ function WorkFlowEdit() {
                             for(var l = 0; l < LIST_ARROWS.length; l++){
 
                                 window.dragManager.objects.push(LIST_ARROWS[l].arrow);
-                                window.dragManager.objects.push(LIST_ARROWS[l].vector1);
-                                window.dragManager.objects.push(LIST_ARROWS[l].vector2);
                             }
 
                             newCenter = EDIT_STEPS[0].target.show.position;
@@ -1987,21 +1985,25 @@ function WorkFlowEdit() {
 
     /**
      * @author Emmanuel Colina.
-     * 
+     * Create the arrow of the step
      * @param {mesh, mesh, int, int, string, string}
+     * @param {mesh} Mesh of the Origin
+     * @param {mesh} Mesh of the Destination
+     * @param {int} ID tile origin
+     * @param {int} ID tile destination
+     * @param {String} ID tile origin
+     * @param {String} ID tile destination
      */
     function createLineStep(meshOrigin, meshTarget, idOrigin, idTarget, tileOrigin, tileTarget){
 
-        var mesh, from, to, meshTrinogometry, vectorArrow = '';
+        var mesh, from, to, meshTrinogometry, vectorArrow = '', hypotenuse;
 
         var objArrow = {
                 tileOriginId : null,
                 tileTargetId : null,
                 originID: null,
                 targetID: null,
-                vector1: null,
                 meshPrimary: null,
-                vector2:null,
                 meshSecondary: null,
                 arrow: null,
                 meshPrimaryTarget: [],
@@ -2030,15 +2032,17 @@ function WorkFlowEdit() {
         objArrow.tileTargetId = tileTarget;
 
         var angleRadians = Math.atan2(vertexDestY - vertexOriginY, vertexDestX - vertexOriginX);
-
+        var toMain;
+        
         if((vertexOriginY >  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es descendente diagonal
             
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
             meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-            to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
             
             vectorArrow = 'arrowDesc';
+
+            toMain = trigonometry(vertexDestX - 4, vertexDestY + 9.5, 0, angleRadians);
         }
         else if((vertexOriginY <  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es ascendente diagonal 
         
@@ -2046,55 +2050,60 @@ function WorkFlowEdit() {
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
             meshTrinogometry = trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-            to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
 
             vectorArrow = 'arrowAsc';
+
+            toMain = trigonometry(vertexDestX - 7, vertexDestY - 9.5, 0, angleRadians);
         }
 
         else if((vertexOriginX == vertexDestX) && (vertexOriginY > vertexDestY)){ // si es vertical descendente
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
-            to = new THREE.Vector3(vertexOriginX, vertexOriginY - 20, 2);
-
-            meshTrinogometry = to;
+            meshTrinogometry = new THREE.Vector3(vertexOriginX, vertexOriginY - 20, 2);
+            
             vectorArrow = 'arrowDescVer';
+
+            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 10, angleRadians);
         }
         else if((vertexOriginX == vertexDestX) && (vertexOriginY < vertexDestY)){ // si es vertical ascendente
            
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
-            to = new THREE.Vector3(vertexOriginX, vertexOriginY + 20, 2);
-
-            meshTrinogometry = to;
+            meshTrinogometry = new THREE.Vector3(vertexOriginX, vertexOriginY + 20, 2);
+            
             vectorArrow = 'arrowAscVer';
+
+            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 10, angleRadians);
         }
 
         else if((vertexOriginY == vertexDestY) && (vertexOriginX < vertexDestX)){ // Horizontal Derecha
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
             
-            to = new THREE.Vector3(vertexOriginX + 40, vertexOriginY, 2);
+            meshTrinogometry = new THREE.Vector3(vertexOriginX + 40, vertexOriginY, 2);
             
-            meshTrinogometry = to;
             vectorArrow = 'arrowRight';
+
+            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 17, angleRadians);
         } 
 
         else if((vertexOriginY == vertexDestY) && (vertexOriginX > vertexDestX)){ // Horizontal Derecha
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
             
-            to = new THREE.Vector3(vertexOriginX - 40, vertexOriginY, 2);
+            meshTrinogometry = new THREE.Vector3(vertexOriginX - 40, vertexOriginY, 2);
             
-            meshTrinogometry = to;
             vectorArrow = 'arrowLeft';
+
+            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 17, angleRadians);
         }  
-                
-        var direction = to.clone().sub(from);
+        
+        var direction = toMain.clone().sub(from);
 
         var length = direction.length();
 
-        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1);
+        var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 4*2.5, 4*2.5);
         
         var dataArrow = {
             originOrder : idOrigin,
@@ -2122,7 +2131,7 @@ function WorkFlowEdit() {
 
         mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
 
-        objArrow.vector1 = arrowHelper;
+        objArrow.arrow = arrowHelper;
         objArrow.meshPrimary = mesh;
 
         var target = window.helper.fillTarget(meshTrinogometry.x, meshTrinogometry.y, 3, 'table');
@@ -2135,79 +2144,44 @@ function WorkFlowEdit() {
 
         function directionLineMesh(x, y, angleRadians, tileOrigin, tileTarget){
 
-            var mesh, from, to, meshTrinogometry;
+            var mesh, meshTrinogometry;
 
             switch(vectorArrow){
 
                 case 'arrowDesc':
                 case 'arrowAsc':
-                    from = new THREE.Vector3(x, y, 2);
                     
                     meshTrinogometry = trigonometry(x, y, 30, angleRadians);
-
-                    to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-
                     break;
 
                 case 'arrowDescVer':
-                    from = new THREE.Vector3(x, y, 2);
-                    
-                    to = new THREE.Vector3(x, y - 20, 2);
 
-                    meshTrinogometry = to;
-
+                    meshTrinogometry = new THREE.Vector3(x, y - 20, 2);
                     break;
 
                 case 'arrowAscVer':
-                    from = new THREE.Vector3(x, y, 2);
-                    
-                    to = new THREE.Vector3(x, y + 20, 2);
 
-                    meshTrinogometry = to;
-
+                    meshTrinogometry = new THREE.Vector3(x, y + 20, 2);
                     break;
 
                 case 'arrowRight':
-                    from = new THREE.Vector3(x, y, 2);
-                
-                    to = new THREE.Vector3(x + 30, y, 2);
 
-                    meshTrinogometry = to;
-
+                    meshTrinogometry = new THREE.Vector3(x + 30, y, 2);
                     break;
 
                 case 'arrowLeft':
-                    from = new THREE.Vector3(x, y, 2);
 
-                    to = new THREE.Vector3(x - 30, y, 2);
-
-                    meshTrinogometry = to;
-
+                    meshTrinogometry = new THREE.Vector3(x - 30, y, 2);
                     break;
 
                 default:
                     break;
             }
-
-            var direction = to.clone().sub(from);
-
-            var length = direction.length();
-
-            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1); // Arrow Azul
-
-            arrowHelper.userData = dataArrow;
-
-            arrowHelper.line.userData = dataArrow;
-
-            arrowHelper.cone.userData = dataArrow;
-
-            window.scene.add(arrowHelper);
             
             mesh = createSimbol();
 
             mesh.material.map = TEXTURE.y;
 
-            objArrow.vector2 = arrowHelper;
             objArrow.meshSecondary = mesh;
 
             mesh.userData = {
@@ -2216,72 +2190,13 @@ function WorkFlowEdit() {
                 type : 'fork'
             };
 
-            directionArrowMesh(meshTrinogometry.x, meshTrinogometry.y, angleRadians, tileOrigin, tileTarget);
-
-
             mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
                     
-
             var target = window.helper.fillTarget(meshTrinogometry.x, meshTrinogometry.y, 3, 'table');
             objArrow.meshSecondaryTarget = target;
         }
-
-    
-        function directionArrowMesh(x, y, angleRadians, tileOrigin, tileTarget){ // x y origen 
-
-            var from, to, hypotenuse;
-
-            from = new THREE.Vector3(x, y, 2);
-            
-            switch(vectorArrow){
-
-                case 'arrowDescVer':
-                case 'arrowAscVer':
-
-                    hypotenuse = 10;
-                    to = trigonometry(x, y, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - hypotenuse, angleRadians);
-                break;
-
-                case 'arrowRight':
-                case 'arrowLeft':
-
-                    hypotenuse = 17;
-                    to = trigonometry(x, y, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - hypotenuse, angleRadians);
-                break;
-
-                case 'arrowAsc':
-                    hypotenuse = 0;
-                    to = trigonometry(vertexDestX - 7, vertexDestY - 9.5, hypotenuse, angleRadians);
-                break;
-
-                case 'arrowDesc':
-                    hypotenuse = 0;
-                    to = trigonometry(vertexDestX - 4, vertexDestY + 9.5, hypotenuse, angleRadians);
-                break;
-
-                default:
-                break;
-            }
-
-            to.z = 2;
-
-            var direction = to.clone().sub(from);
-
-            var length = direction.length();
-
-            var arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 4*2.5, 4*2.5);
-
-            arrowHelper.userData = dataArrow;
-
-            arrowHelper.line.userData = dataArrow;
-
-            arrowHelper.cone.userData = dataArrow;
-
-            window.scene.add(arrowHelper);
-
-            objArrow.arrow = arrowHelper;
-        }
     }
+
      /**
      * @author Ricardo Delgado.
      * creates the movement arrows.
@@ -2446,8 +2361,6 @@ function WorkFlowEdit() {
             }
 
             object.dataArrow.arrow.visible = false;
-            object.dataArrow.vector1.visible = false;
-            object.dataArrow.vector2.visible = false;
 
             var typeCall = EDIT_STEPS[IdOrigen - 1].children.find(function(x){
                 if(x.id[0] === IdTarget)
@@ -2548,8 +2461,6 @@ function WorkFlowEdit() {
                 dataArrow.meshPrimary.visible = true;
                 dataArrow.meshSecondary.visible = true;
                 dataArrow.arrow.visible = true;
-                dataArrow.vector1.visible = true;
-                dataArrow.vector2.visible = true;
             }
 
             SHOW_ARROW = [];
@@ -2592,8 +2503,6 @@ function WorkFlowEdit() {
             window.scene.remove(LIST_ARROWS[i].arrow);
             window.scene.remove(LIST_ARROWS[i].meshPrimary);
             window.scene.remove(LIST_ARROWS[i].meshSecondary);
-            window.scene.remove(LIST_ARROWS[i].vector1);
-            window.scene.remove(LIST_ARROWS[i].vector2);
         }
 
         LIST_ARROWS = [];
@@ -2727,9 +2636,7 @@ function WorkFlowEdit() {
 
                 color = classFlow.getColor(type);
 
-                ApplyColor(arrow.arrow); 
-                ApplyColor(arrow.vector1);
-                ApplyColor(arrow.vector2);
+                ApplyColor(arrow.arrow);
             };
 
             window.fieldsEdit.showLineSelectType(array, select, event, callback);
@@ -2922,8 +2829,6 @@ function WorkFlowEdit() {
                     connection.meshPrimary.visible = false;
                     connection.meshSecondary.visible = false;
                     connection.arrow.visible = false;
-                    connection.vector1.visible = false;
-                    connection.vector2.visible = false;
                 }
             
                 for (l = 0; l < children.length; l++) {
@@ -2938,8 +2843,6 @@ function WorkFlowEdit() {
                         connection.meshPrimary.visible = false;
                         connection.meshSecondary.visible = false;
                         connection.arrow.visible = false;
-                        connection.vector1.visible = false;
-                        connection.vector2.visible = false;
                     }
                 }
             }
@@ -3858,8 +3761,6 @@ function WorkFlowEdit() {
             window.scene.remove(LIST_ARROWS[i].meshPrimary);
             window.scene.remove(LIST_ARROWS[i].meshSecondary);
             window.scene.remove(LIST_ARROWS[i].arrow);
-            window.scene.remove(LIST_ARROWS[i].vector1);
-            window.scene.remove(LIST_ARROWS[i].vector2);
         }
 
         if(REPARED_STEPS.mesh)
