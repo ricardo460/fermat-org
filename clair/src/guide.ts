@@ -3,14 +3,14 @@
  * @lastmodifcate Emmanuel Colina
  * function creates a guide to help inexperienced users navigate the site
  */
-function Guide() {
+class Guide {
 
-    this.addButton = function(){
+    addButton() {
 
         function showHelp() {
-            if(!document.getElementById("modal-help-div")) {
-                var div = document.createElement("div");
-                div.id="modal-help-div";
+            if (!document.getElementById("modal-help-div")) {
+                var div = document.createElement("div") as any;
+                div.id = "modal-help-div";
                 div.dataset.state = "hidden";
 
                 div.innerHTML = `
@@ -35,40 +35,40 @@ function Guide() {
                 `;
 
                 document.body.appendChild(div);
-                
-                document.getElementById("modal-help-close").onclick = function() {
-                    var div = document.getElementById("modal-help-div");
+
+                document.getElementById("modal-help-close").onclick = function () {
+                    var div = document.getElementById("modal-help-div") as any;
                     div.dataset.state = "hidden";
-                    
+
                     var area = document.getElementById("hidden-area");
-                    window.helper.hide(area, 1000);
-                    window.helper.hide(document.getElementById("modal-help-div"), 1000);
+                    Helper.hide(area, 1000);
+                    Helper.hide(document.getElementById("modal-help-div"), 1000);
                 };
 
-                window.onresize = function() {
+                window.onresize = function () {
 
                     var button = document.getElementById("modal-help-close");
                     button.style.width = button.offsetHeight + "px";
-                    button.style.backgroundSize= button.offsetHeight + "px";
+                    button.style.backgroundSize = button.offsetHeight + "px";
 
                     var m = document.getElementById("modal-help");
                     var div = document.getElementById("modal-help-div");
-                    var w = (m.offsetHeight*1.4) + "px";
+                    var w = (m.offsetHeight * 1.4) + "px";
                     m.style.width = w;
 
-                    var m_y = (window.innerHeight/2) - (m.offsetHeight/2);
+                    var m_y = (window.innerHeight / 2) - (m.offsetHeight / 2);
 
                     div.style.top = m_y + "px";
                 };
             }
-            
-            var div = document.getElementById("modal-help-div");
+
+            var div = document.getElementById("modal-help-div") as any;
             div.dataset.state = "show";
             var area = document.createElement("div");
             area.id = "hidden-area";
             document.body.appendChild(area);
-            window.helper.show(area, 1000);
-            window.onresize();
+            Helper.show(area, 1000);
+            window.onresize(null);
         }
 
         var text = 'Help',
@@ -78,17 +78,17 @@ function Guide() {
         window.buttonsManager.createButtons(button, text, showHelp, null, null, side);
     };
 
-    this.HelpWorkFlowEdit = function(Type){
+    HelpWorkFlowEdit = function (Type) {
 
-        if(!document.getElementById("modal-help-div")) {
-            var div = document.createElement("div");
-            div.id="modal-help-div";
+        if (!document.getElementById("modal-help-div")) {
+            var div = document.createElement("div") as any;
+            div.id = "modal-help-div";
             div.dataset.state = "hidden";
 
-            switch(Type) {
+            switch (Type) {
 
                 case 'path':
-                        div.innerHTML = `
+                    div.innerHTML = `
                             <div id="modal-help">
                                 <div id="modal-close-div"><button id="modal-help-close"></button></div>
                                 <div id="modal-close-shadow">
@@ -114,7 +114,7 @@ function Guide() {
                                 </div>
                             </div>
                             `;
-                        break;
+                    break;
                 case 'repared':
                     div.innerHTML = `
                         <div id="modal-help">
@@ -166,43 +166,43 @@ function Guide() {
                         </div>
                         `;
                     break;
-            } 
+            }
 
             document.body.appendChild(div);
-            
-            document.getElementById("modal-help-close").onclick = function() {
-                var div = document.getElementById("modal-help-div");
-                div.dataset.state = "hidden";
-                
-                var area = document.getElementById("hidden-area");
-                window.helper.hide(area, 1000);
 
-                window.helper.hide(document.getElementById("modal-help-div"), 1000);
+            document.getElementById("modal-help-close").onclick = function () {
+                var div = document.getElementById("modal-help-div") as any;
+                div.dataset.state = "hidden";
+
+                var area = document.getElementById("hidden-area");
+                Helper.hide(area, 1000);
+
+                Helper.hide(document.getElementById("modal-help-div"), 1000);
             };
 
-            window.onresize = function() {
+            window.onresize = function () {
 
                 var button = document.getElementById("modal-help-close");
                 button.style.width = button.offsetHeight + "px";
-                button.style.backgroundSize= button.offsetHeight + "px";
+                button.style.backgroundSize = button.offsetHeight + "px";
 
                 var m = document.getElementById("modal-help");
                 var div = document.getElementById("modal-help-div");
-                var w = (m.offsetHeight*1.4) + "px";
+                var w = (m.offsetHeight * 1.4) + "px";
                 m.style.width = w;
 
-                var m_y = (window.innerHeight/2) - (m.offsetHeight/2);
+                var m_y = (window.innerHeight / 2) - (m.offsetHeight / 2);
 
                 div.style.top = m_y + "px";
             };
         }
-        
-        var div = document.getElementById("modal-help-div");
+
+        var div = document.getElementById("modal-help-div") as any;
         div.dataset.state = "show";
         var area = document.createElement("div");
         area.id = "hidden-area";
         document.body.appendChild(area);
-        window.helper.show(area, 1000);
-        window.onresize();
+        Helper.show(area, 1000);
+        window.onresize(null);
     };
 }
