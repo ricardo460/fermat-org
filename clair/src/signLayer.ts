@@ -1,11 +1,10 @@
-function SignLayer(){
+class SignLayer{
 
-	var objects = [],
-		positions = {
-            lastTarget : [],
-            target : []
-        },
-        self = this;
+	objects = [];
+	positions = {
+        lastTarget : [],
+        target : []
+    };
 
     /**
      * Creates a flow box and when texture is loaded, calls fillBox
@@ -15,17 +14,17 @@ function SignLayer(){
      * @author Emmanuel Colina
      */
 
-    function createBoxSignLayer(src, fillBox, width, height) {
+    createBoxSignLayer(src, fillBox, width, height) {
         
-        var canvas = document.createElement('canvas');
+        let canvas = document.createElement('canvas');
         canvas.height = height;
         canvas.width = width;
-        var ctx = canvas.getContext('2d');
+        let ctx = canvas.getContext('2d');
         
         ctx.fillStyle = '#000000'; 
         
-        var image = document.createElement('img');
-        var texture = new THREE.Texture(canvas);
+        let image = document.createElement('img');
+        let texture = new THREE.Texture(canvas);
         texture.minFilter = THREE.LinearFilter;
         
         image.onload = function() {
@@ -35,7 +34,7 @@ function SignLayer(){
         
         image.src = src;
         
-        var mesh = new THREE.Mesh(
+        let mesh = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(width, height),
             new THREE.MeshBasicMaterial({color : 0xFFFFFF, map : texture, transparent : true})
         );
@@ -50,21 +49,21 @@ function SignLayer(){
     * @param   {titleSign} [string] sign layer     
  	* function create a Sign Layer
  	*/
-	this.createSignLayer = function(x, y, titleSign, _group){
-		var mesh;
-		var source = "images/sign/sign.png";
+	createSignLayer(x, y, titleSign, _group){
+		let mesh;
+		let source = "images/sign/sign.png";
 
         window.screenshotsAndroid.setGroup(_group, titleSign);
 
             if(typeof window.TABLE[_group].x === 'undefined')
                 window.TABLE[_group].x = x;
 
-		var fillBox = function(ctx, image) {
+		let fillBox = function(ctx, image) {
             
             ctx.drawImage(image, 0, 0);
             
             //sign
-            var size = 40;
+            let size = 40;
 
                 ctx.font = 'bold ' + size + 'px Arial';
 
@@ -73,7 +72,7 @@ function SignLayer(){
 
         mesh = createBoxSignLayer(source, fillBox, 720, 140);
         mesh.name = _group.concat(titleSign);
-		mesh = self.setPositionSignLayer(mesh, x , y);
+		mesh = this.setPositionSignLayer(mesh, x , y);
 		window.scene.add(mesh);
 	};
 
@@ -84,9 +83,9 @@ function SignLayer(){
     * @returns {boolean}    
     * checks if a Sign Layer has been drawn
     */
-    this.findSignLayer = function(group, titleSign){
-        var objectsSize = objects.length;
-        for(var i=0; i<objectsSize; i++) {
+    findSignLayer(group, titleSign){
+        let objectsSize = objects.length;
+        for(let i=0; i<objectsSize; i++) {
             if(objects[i].name === group.concat(titleSign))
                 return true;
         }
@@ -100,10 +99,10 @@ function SignLayer(){
     * @param   {titleSign} [string] sign layer's name     
     * function delete a Sign Layer
     */
-    this.deleteSignLayer = function(_group, titleSign){
-        var objectsSize = objects.length;
-        var i = 0;
-        var callback = function(pos) {
+    deleteSignLayer(_group, titleSign){
+        let objectsSize = objects.length;
+        let i = 0;
+        let callback = function(pos) {
             window.scene.remove(objects[pos]);
             objects.splice(pos,1);
             positions.target.splice(pos,1);
@@ -111,14 +110,14 @@ function SignLayer(){
         };
         for(i = 0; i < objectsSize; i++) {
             if(objects[i].name === _group.concat(titleSign)) {
-                self.removeSignLayer(i, callback);
+                this.removeSignLayer(i, callback);
                 break;
             }
         }
     };
 
-    this.removeSignLayer = function(pos, callback){
-        var duration = 3000;
+    removeSignLayer(pos, callback){
+        let duration = 3000;
         new TWEEN.Tween(objects[pos].position)
             .to({
                 x : positions.lastTarget[pos].x,
@@ -141,9 +140,9 @@ function SignLayer(){
  	* function set position Layer
  	*/
 
-	this.setPositionSignLayer = function(mesh, x, y){
+	setPositionSignLayer(mesh, x, y){
 
-        var target = window.helper.fillTarget(x - 500, y, 0, 'table');
+        let target = window.helper.fillTarget(x - 500, y, 0, 'table');
 
         mesh.position.copy(target.hide.position);
 
@@ -156,11 +155,11 @@ function SignLayer(){
 		return mesh;
 	};
 
-	this.transformSignLayer = function(){
+	transformSignLayer(){
 		
-		var duration = 3000;
+		let duration = 3000;
 
-		for(var i = 0, l = objects.length; i < l; i++) {
+		for(let i = 0, l = objects.length; i < l; i++) {
             new TWEEN.Tween(objects[i].position)
             .to({
                 x : positions.target[i].x,
@@ -172,11 +171,11 @@ function SignLayer(){
         }
 	};
 
-	this.letAloneSignLayer = function(){
+	letAloneSignLayer(){
 
-		var duration = 3000;
+		let duration = 3000;
             
-        for(var i = 0, l = objects.length; i < l; i++) {
+        for(let i = 0, l = objects.length; i < l; i++) {
         	new TWEEN.Tween(objects[i].position)
             .to({
                 x : positions.lastTarget[i].x,
