@@ -1104,7 +1104,14 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "desc",
-            "description": "<p>Process description</p>"
+            "description": "<p>Process description.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "tags",
+            "description": "<p>Labels issues. Example (a, b, c).</p>"
           },
           {
             "group": "Parameter",
@@ -1313,6 +1320,13 @@ define({ "api": [
             "optional": false,
             "field": "desc",
             "description": "<p>Process description.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "tags",
+            "description": "<p>Labels issues. Example (a, b, c).</p>"
           },
           {
             "group": "Parameter",
