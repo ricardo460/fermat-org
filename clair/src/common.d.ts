@@ -1,6 +1,8 @@
 /// <reference path="../../common/helper.d.ts" />
 /// <reference path="../../common/cli.d.ts" />
 /// <reference path="../../common/constants.d.ts" />
+/// <reference path="../../common/TrackballControls.d.ts" />
+
 
 interface UserData {
     __v: string
@@ -18,4 +20,12 @@ interface CookieData {
     axs_key: string,
     upd_at: string,
     userData: UserData
+}
+
+interface DeveloperData {
+    id : string,
+    author : string,
+    picture : string,
+    authorRealName : string,
+    authorEmail : string
 }
