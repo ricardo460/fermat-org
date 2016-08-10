@@ -37,6 +37,7 @@ config.user_agent = secret[config.env].user_agent;
 config.ftp = secret[config.env].ftp;
 config.network = secret[config.env].network;
 config.exrate = secret[config.env].exrate;
+config.issues = secret[config.env].issues;
 
 printObject(config);
 module.exports = config;
