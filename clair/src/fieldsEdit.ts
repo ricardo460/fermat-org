@@ -1,78 +1,71 @@
 /**
  * @author Ricardo Delgado
  */
-function FieldsEdit() {
+class FieldsEdit {
 
-    this.objects = {
-            row1 : {
-                div : null,
-                buttons : [],
-                y : 10
-            },
-            row2 : {            
-                div : null,
-                buttons : [],
-                y : 30
-            },
-            tile : { 
-                mesh : null,
-                target : {}
-            },
-            idFields : {}
-        };
-
-    this.actions = { 
+    objects : any = {
+        row1 : {
+            div : null,
+            buttons : [],
+            y : 10
+        },
+        row2 : {            
+            div : null,
+            buttons : [],
+            y : 30
+        },
+        tile : { 
+            mesh : null,
+            target : {}
+        },
+        idFields: {}
+    };
+    actions = { 
         exit : null,
         type : null
     };
+    actualTile = null;
+    actualFlow = null;
+    DATA_USER = API.listDevs;
+    button;
+    text;
+    x;
+    type;
 
-    this.actualTile = null;
+    removeAllFields() : void{
 
-    this.actualFlow = null;
+        if(this.objects.row1.buttons.length !== 0 || this.objects.row2.buttons.length !== 0){
 
-    var self = this;
+            let row = 'row1';
 
-    var DATA_USER = window.API.listDevs;
-
-    var button,
-        text,
-        x,
-        type;
-
-    this.removeAllFields = function(){
-
-        if(self.objects.row1.buttons.length !== 0 || self.objects.row2.buttons.length !== 0){
-
-            var row = 'row1';
-
-            if(self.objects[row].buttons.length === 0)
+            if(this.objects[row].buttons.length === 0)
                 row = 'row2';
 
-            var actualButton = self.objects[row].buttons.shift();
+            let actualButton = this.objects[row].buttons.shift();
 
             if( $('#'+actualButton.id) != null ) 
-                window.helper.hide($('#'+actualButton.id), 1000); 
+                Helper.hide($('#'+actualButton.id), 1000); 
             
-                self.removeAllFields();
+                this.removeAllFields();
         }
         else {
 
-            if( $('#'+self.objects.row1.div) != null ) 
-                window.helper.hide($('#'+self.objects.row1.div), 1000);
+            if( $('#'+this.objects.row1.div) != null ) 
+                Helper.hide($('#'+this.objects.row1.div), 1000);
 
-            if( $('#'+self.objects.row2.div) != null ) 
-                window.helper.hide($('#'+self.objects.row2.div), 1000);
+            if( $('#'+this.objects.row2.div) != null ) 
+                Helper.hide($('#'+this.objects.row2.div), 1000);
 
-            self.objects.row1.div = null;
-            self.objects.row2.div = null;
-            self.objects.idFields = {};
+            this.objects.row1.div = null;
+            this.objects.row2.div = null;
+            this.objects.idFields = {};
 
             if(document.getElementById("hidden-area"))
-                window.helper.hide('hidden-area', 1000);
+                Helper.hide('hidden-area', 1000);
 
             if(window.actualView === 'table'){ 
 
-                self.actualTile = null;
+                this.actualTile = null;
 
                 window.tableEdit.formerName = null;
                 
@@ -81,100 +74,96 @@ function FieldsEdit() {
                 if(window.camera.getFocus() === null)
                     window.tableEdit.addButton();              
 
-                if(typeof(self.actions.exit) === 'function'){
-                    self.actions.exit();
-                    self.actions.exit = null;
+                if(typeof(this.actions.exit) === 'function'){
+                    this.actions.exit();
+                    this.actions.exit = null;
                 }
             }
             else if(window.actualView === 'workflows'){
                     
-                self.actualFlow = null;
+                this.actualFlow = null;
                     
                 window.tableEdit.deleteMesh();
 
                 if(window.camera.getFocus() === null)
                     window.workFlowEdit.addButton();              
 
-                if(typeof(self.actions.exit) === 'function'){
-                    self.actions.exit();
-                    self.actions.exit = null;
+                if(typeof(this.actions.exit) === 'function'){
+                    this.actions.exit();
+                    this.actions.exit = null;
                 }
             }
 
         }
     };
 
-    this.createField = function(id, text, _x, _type, _row){
+    createField(id : string, text : string, _x = 5, _type = 'button', _row = '1') : HTMLElement {
 
-        var object = {
+        let object = {
             id : id,
             text : text
           };
 
-        var x = _x || 5,
-            type = _type || 'button',
+        let x = _x,
+            type = _type,
             idSucesor = "backButton",
-            row = _row || '1';
+            row = _row;
 
-        if( self.objects['row' + row].div === null)
-            self.createDiv(row);
+        if( this.objects['row' + row].div === null)
+            this.createDiv(row);
 
-        if(self.objects['row' + row].buttons.length !== 0)
-            idSucesor = self.objects['row' + row].buttons[self.objects['row' + row].buttons.length - 1].id;
+        if(this.objects['row' + row].buttons.length !== 0)
+            idSucesor = this.objects['row' + row].buttons[this.objects['row' + row].buttons.length - 1].id;
 
-        var div = document.getElementById(self.objects['row' + row].div);
+        let div = document.getElementById(this.objects['row' + row].div);
 
-        var button = document.createElement(type),
+        let button = document.createElement(type),
             sucesorButton = document.getElementById(idSucesor);
                   
         button.id = id;
         button.className = 'edit-Fermat';
         button.innerHTML = text;
-        button.style.zIndex = 10;
-        button.style.opacity = 0;
+        button.style.zIndex = '10';
+        button.style.opacity = '0';
 
         div.appendChild(button);
 
-        self.objects['row' + row].buttons.push(object);
+        this.objects['row' + row].buttons.push(object);
 
-        window.helper.show(button, 1000);
+        Helper.show(button, 1000);
 
         return button;
     };
 
-    this.createDiv = function(row){ 
+    createDiv(row : string) : void{ 
 
-        var div = document.createElement('div');
-
+        let div = document.createElement('div');
         div.id = 'div-Edit' + row;
-
         document.body.appendChild(div);
-
-        self.objects['row' + row].div = 'div-Edit' + row;
-
-        window.helper.show(div, 1000);
+        this.objects['row' + row].div = 'div-Edit' + row;
+        Helper.show(div, 1000);
     };
 
-    this.setTextSize = function() { 
+    setTextSize() : void { 
         
-        var object = {
+        let object = {
             id : "fermatEditStyle",
             text : "style"
           };
 
-        self.objects.row2.buttons.push(object);
+        this.objects.row2.buttons.push(object);
 
-        var windowWidth  = window.innerWidth;
-        var size         = windowWidth * 0.009;
-        var style        = document.createElement("style");
-        var styleSheet   = ".edit-Fermat {font-size:"+size+"px;}";
-        var node         = document.createTextNode(styleSheet);
+        let windowWidth  = window.innerWidth;
+        let size         = windowWidth * 0.009;
+        let style        = document.createElement("style");
+        let styleSheet   = ".edit-Fermat {font-size:"+size+"px;}";
+        let node         = document.createTextNode(styleSheet);
         
         style.appendChild(node);
         document.body.appendChild(style);  
     };
 
-    this.createFieldTableEdit = function(){
+    createFieldTableEdit() : void {
 
         sesionGroup();
         sesionType();
@@ -185,45 +174,43 @@ function FieldsEdit() {
         sesionState();
         sesionAuthor();
         createbutton(function(){
-            self.actions.exit = null;
+            this.actions.exit = null;
             window.tableEdit.saveTile();  
         });
-        self.setTextSize();
-
+        this.setTextSize();
     };
 
-    this.createFieldWorkFlowEdit = function(){
-
+    createFieldWorkFlowEdit() : void{
         workflowHeader();
         workflowDescription();
         createStepsList();
         createModeEdit();
     };
 
-    this.changeLayer = function(platform){
+    changeLayer(platform : string) : void {
 
-        var state = false;
+        let state = 'false';
 
         if(typeof window.platforms[platform] === 'undefined')
             state = platform;
 
-        var _layers = window.CLI.query(window.layers,function(el){return (typeof(el) !== "function" && el.super_layer.toString() === state.toString());});
+        let _layers = CLI.query(window.layers, (el) => {
+            return (typeof (el) !== "function" && el.super_layer.toString() === state.toString());
+        });
 
-        var option = "";
+        let option = "";
 
-        for(var i = 0;i < _layers.length; i++){
-
+        for(let i = 0;i < _layers.length; i++){
             option += "<option value = '"+_layers[i]+"' >"+_layers[i]+"</option>";
-
         }
 
         $("#select-layer").html(option);  
         
     };
 
-    this.disabledButtonSave = function(state){
+    disabledButtonSave(state : boolean) : void {
 
-        var button = document.getElementById('button-save');
+        let button = document.getElementById('button-save') as HTMLButtonElement;
 
         if(state){
             button.innerHTML  = "Saving...";
@@ -235,13 +222,13 @@ function FieldsEdit() {
         }
     };
     
-    this.getData = function() {
+    getData() : Object {
         
-        var title = document.getElementById("workflow-header-title");
-        var desc = document.getElementById("modal-desc-textarea");
-        var platform = document.getElementById("workflow-header-plataform");
+        let title = document.getElementById("workflow-header-title") as HTMLInputElement;
+        let desc = document.getElementById("modal-desc-textarea") as HTMLInputElement;
+        let platform = document.getElementById("workflow-header-plataform") as HTMLInputElement;
         
-        var json = {
+        let json = {
             "platfrm": platform.value,
             "name": title.value,
             "desc": desc.value,
@@ -253,177 +240,140 @@ function FieldsEdit() {
         return json;
     };
     
-    function setSelectImages(select) {
-        
+    setSelectImages(select : HTMLSelectElement) : void {
         select.style.backgroundSize = select.offsetHeight + "px";
         select.style.width = select.offsetWidth + select.offsetHeight + "px";  
     }
 
-    function sesionGroup(){
+    sesionGroup() : void {
 
-        var id = 'label-Group'; text = 'Select the Group : '; type = 'label';
+        let id = 'label-Group',
+            text = 'Select the Group : ',
+            type = 'label';
 
-        self.createField(id, text, null, type);
-
+        this.createField(id, text, null, type);
         id = 'select-Group'; text = ''; type = 'select';
-
-        self.createField(id, text, null, type);
-
-        var optgroup = "<optgroup label = Platform>",
+        this.createField(id, text, null, type);
+        let optgroup = "<optgroup label = Platform>",
             option = "";
 
-        self.objects.idFields.group = id;
+        this.objects.idFields.group = id;
 
-        for(var i in window.platforms){ 
-
+        for(let i in window.platforms){ 
             if(i != "size"){
-
                 option += "<option value = "+i+" >"+i+"</option>";
             }
-
         }
 
         optgroup += option + "</optgroup>";
-
         option = "";
-
         optgroup += "<optgroup label = superLayer>";
 
-        for(var _i in window.superLayers){
-
+        for(let _i in window.superLayers){
             if(_i != "size"){
-
                 option += "<option value = "+_i+" >"+_i+"</option>";
             }
-
         }
 
         optgroup += option + "</optgroup>";
-
         $("#"+id).html(optgroup);
-
         sesionLayer();
-
-        self.changeLayer(document.getElementById(id).value);
-
-       $("#"+id).change('click', function() {
+        this.changeLayer((document.getElementById(id) as HTMLInputElement).value);
+       $("#"+id).change('click', () => {
         
-            self.changeLayer(document.getElementById(id).value);
+            this.changeLayer((document.getElementById(id) as HTMLInputElement).value);
             window.tableEdit.changeTexture();
         });
         
-        setSelectImages(document.getElementById(id));
+        this.setSelectImages(document.getElementById(id) as HTMLSelectElement);
     }
 
-    function sesionLayer(){
+    sesionLayer() : void{
 
-        var id = 'label-layer'; text = 'Select the Layer : '; type = 'label';
+        let id = 'label-layer',
+            text = 'Select the Layer : ',
+            type = 'label';
 
-        self.createField(id, text, 15, type);
-
+        this.createField(id, text, 15, type);
         id = 'select-layer'; text = ''; type = 'select';
-
-        self.createField(id, text, null, type);
-
-        self.objects.idFields.layer = id;
-
-        $("#"+id).change('click', function() {
-        
+        this.createField(id, text, null, type);
+        this.objects.idFields.layer = id;
+        $("#"+id).change('click', () => {
             window.tableEdit.changeTexture();
         });
-        
-        setSelectImages(document.getElementById(id));
+        this.setSelectImages(document.getElementById(id) as HTMLSelectElement);
     }
 
-    function sesionType(){
+    sesionType() : void{
 
-        var id = 'label-Type'; text = 'Select the Type : '; type = 'label';
+        let id = 'label-Type',
+            text = 'Select the Type : ',
+            type = 'label';
 
-        self.createField(id, text, 15, type);
-
+        this.createField(id, text, 15, type);
         id = 'select-Type'; text = ''; type = 'select';
-
-        self.createField(id, text, null, type);
-
-        self.objects.idFields.type = id;        
-
-        var option = "";
-
+        this.createField(id, text, null, type);
+        this.objects.idFields.type = id;        
+        let option = "";
         option += "<option value = Addon>Addon</option>";
         option += "<option value = Android>Android</option>";
         option += "<option value = Library>Library</option>";
         option += "<option value = Plugin>Plugin</option>";
-
         $("#"+id).html(option);
-
-        $("#"+id).change('click', function() {
-        
+        $("#"+id).change('click', () => {
             window.tableEdit.changeTexture();
         });
         
-        setSelectImages(document.getElementById(id));
+        this.setSelectImages(document.getElementById(id) as HTMLSelectElement);
     }
 
-    function sesionName(){
+    sesionName() : void {
 
-        var id = 'label-Name'; text = 'Enter Name : '; type = 'label';
+        let id = 'label-Name',
+            text = 'Enter Name : ',
+            type = 'label';
 
-        self.createField(id, text, null, type, 2);
-
-        var idSucesor = self.objects.row2.buttons[self.objects.row2.buttons.length - 1].id;
-
-        var object = {
+        this.createField(id, text, null, type, '2');
+        let idSucesor = this.objects.row2.buttons[this.objects.row2.buttons.length - 1].id;
+        let object = {
             id : "imput-Name",
             text : "textfield"
           };
-
-        self.objects.idFields.name = object.id;
-
-        var imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
-
-        $("#"+self.objects.row2.div).append(imput);
-
-        var button = document.getElementById(object.id);
-
-        var sucesorButton = document.getElementById(idSucesor);
-              
+        this.objects.idFields.name = object.id;
+        let imput = $('<input />', {"id" : object.id, "type" : "text", "text" : object.text });
+        $("#"+this.objects.row2.div).append(imput);
+        let button = document.getElementById(object.id) as HTMLInputElement;
+        let sucesorButton = document.getElementById(idSucesor);
         button.className = 'edit-Fermat';
         button.placeholder = 'Component Name';
-        button.style.zIndex = 10;
-        button.style.opacity = 0;
+        button.style.zIndex = '10';
+        button.style.opacity = '0';
 
-        window.helper.show(button, 1000);
-
-        self.objects.row2.buttons.push(object);
-
-        button.addEventListener('blur', function() {
-
+        Helper.show(button, 1000);
+        this.objects.row2.buttons.push(object);
+        button.addEventListener('blur', () => {
             window.tableEdit.changeTexture();
         });
     }
     
-    function sesionAuthor(){
+    sesionAuthor() : void {
         
-        var idSucesor = self.objects.row2.buttons[self.objects.row2.buttons.length - 1].id;
+        let idSucesor = this.objects.row2.buttons[this.objects.row2.buttons.length - 1].id;
 
-        var object = {
+        let object = {
             id : "button-author",
             text : "button"
         };
         
-        self.objects.idFields.author = object.id;
-
-        var input = $('<input />', {"id" : object.id, "type" : "button", "text" : object.text });
-
-        $("#"+self.objects.row2.div).append(input);
-
-        self.objects.row2.buttons.push(object);
-        
-        var button = document.getElementById(object.id);
+        this.objects.idFields.author = object.id;
+        let input = $('<input />', {"id" : object.id, "type" : "button", "text" : object.text });
+        $("#"+this.objects.row2.div).append(input);
+        this.objects.row2.buttons.push(object);
+        let button = document.getElementById(object.id) as HTMLButtonElement;
         
         button.className = 'actionButton edit-Fermat';
-        button.style.zIndex = 10;
-        button.style.opacity = 0;
+        button.style.zIndex = '10';
+        button.style.opacity = '0';
         button.value = "Authors";
         button.style.marginLeft = "5px";
 
@@ -432,18 +382,17 @@ function FieldsEdit() {
             text : "modal"
         };
 
-        self.objects.row2.buttons.push(object);
+        this.objects.row2.buttons.push(object);
         
         // Modal
         // START
         
         if(!document.getElementById("modal-devs")){
             
-            var modal = document.createElement("div");
+            let modal : any = document.createElement("div");
             modal.id            = "modal-devs";
             modal.style.left    = (window.innerWidth/2-227)+"px";
             modal.style.top     = (window.innerHeight/2-186)+"px";
-            modal.value         = [];
             
             modal.innerHTML = '<div id="a">'+
                     '<div id="finder">'+
@@ -468,49 +417,41 @@ function FieldsEdit() {
             
             modal.updateModal = function() {
                 
-                var cont_list = document.getElementById("cont-devs");
+                let cont_list = document.getElementById("cont-devs");
                 cont_list.innerHTML = "";
+                let finder = document.getElementById("finder-input") as HTMLInputElement;
                 
-                var finder = document.getElementById("finder-input");
-                
-                for(var i = 0; i < DATA_USER.length; i++) {
-                    
-                    var filt = DATA_USER[i].usrnm.search(finder.value);
+                for(let i = 0; i < this.DATA_USER.length; i++) {
+                    let filt = this.DATA_USER[i].usrnm.search(finder.value);
                     
                     if(filt != -1) {
-                    
-                        var img_src;
-
-                        if(DATA_USER[i].avatar_url)
-                            img_src = DATA_USER[i].avatar_url;
+                        let img_src;
+                        if(this.DATA_USER[i].avatar_url)
+                            img_src = this.DATA_USER[i].avatar_url;
                         else
                             img_src = "images/modal/avatar.png";
 
-                        var usr_html  = '<div class="dev-fermat-edit">'+
+                        let usr_html  = '<div class="dev-fermat-edit">'+
                                             '<div>'+
                                                 '<img crossorigin="anonymous" src="'+img_src+'">'+
-                                                '<label>'+DATA_USER[i].usrnm+'</label>'+
-                                                '<button data-usrid="'+DATA_USER[i].usrnm+'" class="add_btn"></button>'+
+                                                '<label>'+this.DATA_USER[i].usrnm+'</label>'+
+                                                '<button data-usrid="'+this.DATA_USER[i].usrnm+'" class="add_btn"></button>'+
                                             '</div>'+
                                         '</div>';
 
                         cont_list.innerHTML += usr_html;
-                        
                     }
                 }
                 
-                var list_btn = document.getElementsByClassName("add_btn");
+                let list_btn = document.getElementsByClassName("add_btn") as NodeListOf<HTMLButtonElement>;
                 
                 function btnOnclickAccept() {
                         
-                        var modal = document.getElementById("modal-devs");
-                        var _self = this;
+                        let modal : any = document.getElementById("modal-devs");
                         modal.value[modal.value.length] = {
-                            dev: DATA_USER.find(function(x) {
-                                
-                                if(x.usrnm == _self.dataset.usrid)
+                            dev: this.DATA_USER.find((x) => {
+                                if(x.usrnm == this.dataset.usrid)
                                     return x;
-                                
                             }),
                             scope: "implementation",
                             role: "author",
@@ -518,29 +459,27 @@ function FieldsEdit() {
                         };
                         
                         modal.updateModal();
-
                 }
 
                 
-                for(i = 0; i < list_btn.length; i++) {
-                    var btn = list_btn[i];
-
+                for(let i = 0; i < list_btn.length; i++) {
+                    let btn = list_btn[i];
                     btn.onclick = btnOnclickAccept;
                 }
                 
                 cont_list = document.getElementById("cont-devs-actives");
                 cont_list.innerHTML = "";
                 
-                for(i = 0; i < this.value.length; i++) {
+                for(let i = 0; i < this.value.length; i++) {
                     
-                    var img_src1;
+                    let img_src1;
                     
                     if(this.value[i].dev.avatar_url)
                         img_src1 = this.value[i].dev.avatar_url;
                     else
                         img_src1 = "images/modal/avatar.png";
                     
-                    var dev_html = ''+
+                    let dev_html = ''+
                     '<div data-expand="false" data-usrid='+ i +' class="dev-fermat-edit dev-active">'+
                         '<div>'+
                             '<img crossorigin="anonymous" src="' + img_src1 + '">'+
@@ -582,48 +521,48 @@ function FieldsEdit() {
                     
                 }
                 
-                var devDiv = document.getElementsByClassName("dev-active");
+                let devDiv = document.getElementsByClassName("dev-active") as any;
 
-                for(i=0; i < devDiv.length; i++) {
+                for(let i=0; i < devDiv.length; i++) {
 
-                    var div = devDiv[i];
-                    var dev     = modal.value[div.dataset.usrid];
+                    let div = devDiv[i];
+                    let dev     = modal.value[div.dataset.usrid];
                     
-                    var role    = div.getElementsByClassName("select-role")[0];
-                    var scope   = div.getElementsByClassName("select-scope")[0];
-                    var prc     = div.getElementsByClassName("input-prcnt")[0];
+                    let role    = div.getElementsByClassName("select-role")[0];
+                    let scope   = div.getElementsByClassName("select-scope")[0];
+                    let prc     = div.getElementsByClassName("input-prcnt")[0];
                     prc.value   = dev.percnt;
                     scope.value = dev.scope;
                     role.value  = dev.role;
                     
                 }
                 
-                list_btn = document.getElementsByClassName("rem_btn");
+                list_btn = document.getElementsByClassName("rem_btn") as NodeListOf<HTMLButtonElement>;
                 
                 function btnOnclickRemove() {
 
-                    var modal = document.getElementById("modal-devs");
+                    let modal = document.getElementById("modal-devs") as any;
                     modal.value.splice(this.dataset.usrid, 1);
                     modal.updateModal();
 
                 }
                 
-                for(i = 0; i < list_btn.length; i++) {
-                    var btn1 = list_btn[i];
+                for(let i = 0; i < list_btn.length; i++) {
+                    let btn1 = list_btn[i];
 
                     btn1.onclick = btnOnclickRemove;
 
                 }
                 
-                var list_dev = document.getElementsByClassName("dev-active");
+                let list_dev = document.getElementsByClassName("dev-active");
                 
                 
                 function dev_onmouseout() {
                     this.dataset.expand = "false";
 
-                    var selectRole = this.getElementsByClassName("select-role")[0].value;
-                    var selectScope = this.getElementsByClassName("select-scope")[0].value;
-                    var inputPrcnt = this.getElementsByClassName("input-prcnt")[0].value;
+                    let selectRole = this.getElementsByClassName("select-role")[0].value;
+                    let selectScope = this.getElementsByClassName("select-scope")[0].value;
+                    let inputPrcnt = this.getElementsByClassName("input-prcnt")[0].value;
 
                     modal.value[this.dataset.usrid].role = selectRole;
                     modal.value[this.dataset.usrid].scope = selectScope;
@@ -634,28 +573,18 @@ function FieldsEdit() {
                     this.dataset.expand = "true";
                 }
                 
-                for(i = 0; i < list_dev.length; i++) {
-                    var dev1 = list_dev[i];
-
+                for(let i = 0; i < list_dev.length; i++) {
+                    let dev1 = list_dev[i] as any;
                     dev1.onmouseover = dev_onmouseover;
-                    
                     dev1.onmouseout = dev_onmouseout;
-
                 }
-                
             };
             
             document.body.appendChild(modal);
-
-            var finder = document.getElementById("finder-input");
-
-            finder.onkeyup = function() {
-                
-                document.getElementById("modal-devs").updateModal();
-                
+            let finder = document.getElementById("finder-input");
+            finder.onkeyup = () => {
+                (document.getElementById("modal-devs") as any).updateModal();
             };
-
-            
         }
         
         
@@ -664,42 +593,42 @@ function FieldsEdit() {
 
         button.addEventListener('click', function() {
             
-            var modal = document.getElementById("modal-devs");
+            let modal = document.getElementById("modal-devs") as any;
             modal.dataset.state = "show";
             modal.updateModal();
-            var area = document.createElement("div");
+            let area = document.createElement("div");
             area.id = "hidden-area";
             document.body.appendChild(area);
-            window.helper.show(area, 1000);
+            Helper.show(area, 1000);
             
         });
         
         document.getElementById("modal-close-button").addEventListener("click", function() {
             
-            var modal = document.getElementById("modal-devs");
+            let modal = document.getElementById("modal-devs") as any;
             modal.dataset.state = "hidden";
-            var area = document.getElementById("hidden-area");
-            window.helper.hide(area, 500);
+            let area = document.getElementById("hidden-area");
+            Helper.hide(area, 500);
             window.tableEdit.changeTexture();
             
         });
         
         document.getElementById("modal-accept-button").addEventListener("click", function() {
             
-            var modal = document.getElementById("modal-devs");
+            let modal = document.getElementById("modal-devs") as any;
             modal.dataset.state = "hidden";
             
             //update data of devs (modal.value)
             
-            var devDiv = document.getElementsByClassName("dev-active");
+            let devDiv = document.getElementsByClassName("dev-active");
             
-            for(var i=0; i < devDiv.length; i++) {
+            for(let i=0; i < devDiv.length; i++) {
                 
-                var div = devDiv[i];
+                let div = devDiv[i] as any;
                 
-                var selectRole = div.getElementsByClassName("select-role")[0].value;
-                var selectScope = div.getElementsByClassName("select-scope")[0].value;
-                var inputPrcnt = div.getElementsByClassName("input-prcnt")[0].value;
+                let selectRole = (div.getElementsByClassName("select-role")[0] as HTMLInputElement).value;
+                let selectScope = (div.getElementsByClassName("select-scope")[0] as HTMLInputElement).value;
+                let inputPrcnt = (div.getElementsByClassName("input-prcnt")[0] as HTMLInputElement).value;
 
                 modal.value[div.dataset.usrid].role = selectRole;
                 modal.value[div.dataset.usrid].scope = selectScope;
@@ -709,28 +638,30 @@ function FieldsEdit() {
             
             //---------------------------------
             
-            var area = document.getElementById("hidden-area");
-            window.helper.hide(area, 500);
+            let area = document.getElementById("hidden-area");
+            Helper.hide(area, 500);
             window.tableEdit.changeTexture();
             
         });
 
-        window.helper.show(button, 1000);
+        Helper.show(button, 1000);
     }
 
-    function sesionDifficulty(){
+    sesionDifficulty() : void{
 
-        var id = 'label-Difficulty'; text = 'Select Difficulty : '; type = 'label';
+        let id = 'label-Difficulty',
+            text = 'Select Difficulty : ',
+            type = 'label';
 
-        self.createField(id, text, 15, type);
+        this.createField(id, text, 15, type);
 
         id = 'select-Difficulty'; text = ''; type = 'select';
 
-        self.createField(id, text, null, type);
+        this.createField(id, text, null, type);
 
-        self.objects.idFields.difficulty = id;
+        this.objects.idFields.difficulty = id;
 
-        var option = "";
+        let option = "";
 
         option += "<option value = 0>0</option>";
         option += "<option value = 1>1</option>";
@@ -751,47 +682,47 @@ function FieldsEdit() {
             window.tableEdit.changeTexture();
         });
         
-        setSelectImages(document.getElementById(id));
+        this.setSelectImages(document.getElementById(id) as HTMLSelectElement);
     }
 
-    function sesionDescription(){
+    sesionDescription() : void{
         
-        var idSucesor = self.objects.row2.buttons[self.objects.row2.buttons.length - 1].id;
+        let idSucesor = this.objects.row2.buttons[this.objects.row2.buttons.length - 1].id;
 
-        var object = {
+        let object = {
             id : "button-desc",
             text : "Description"
           };
 
-        self.objects.idFields.maintainer = object.id;
+        this.objects.idFields.maintainer = object.id;
 
-        var input = $('<input />', {"id" : object.id, "type" : "button", "text" : object.text });
+        let input = $('<input />', {"id" : object.id, "type" : "button", "text" : object.text });
 
-        $("#"+self.objects.row2.div).append(input);
+        $("#"+this.objects.row2.div).append(input);
 
-        var button = document.getElementById(object.id);
+        let button = document.getElementById(object.id) as HTMLInputElement;
         
         button.className = 'actionButton edit-Fermat';
         button.value = "Description";
         button.style.marginLeft = "5px";
-        button.style.zIndex = 10;
-        button.style.opacity = 0;
+        button.style.zIndex = '10';
+        button.style.opacity = '0';
         
-        self.objects.row2.buttons.push(object);
+        this.objects.row2.buttons.push(object);
 
         object = {
             id : "modal-desc",
             text : "modal"
         };
 
-        self.objects.row2.buttons.push(object);
+        this.objects.row2.buttons.push(object);
         
 
-        window.helper.show(button, 1000);
+        Helper.show(button, 1000);
         
         if(!document.getElementById("modal-desc")) {
             
-            var modal = document.createElement("div");
+            let modal = document.createElement("div") as any;
             modal.id = "modal-desc";
             modal.style.top = (window.innerHeight / 4) + "px" ;
             modal.dataset.state = "hidden";
@@ -812,53 +743,55 @@ function FieldsEdit() {
 
         button.addEventListener('click', function() {
             
-            var modal = document.getElementById("modal-desc");
+            let modal = document.getElementById("modal-desc");
             modal.dataset.state = "show";
             
             modal.oldValue = document.getElementById("modal-desc-textarea").value;
             
-            var area = document.createElement("div");
+            let area = document.createElement("div");
             area.id = "hidden-area";
             document.body.appendChild(area);
-            window.helper.show(area, 1000);
+            Helper.show(area, 1000);
             
         });
         
         document.getElementById("modal-desc-cancel").onclick = function() {
             
-            var modal = document.getElementById("modal-desc");
+            let modal = document.getElementById("modal-desc");
             modal.dataset.state = "hidden";
             document.getElementById("modal-desc-textarea").value = modal.oldValue;
             
-            var area = document.getElementById("hidden-area");
-            window.helper.hide(area, 500);
+            let area = document.getElementById("hidden-area");
+            Helper.hide(area, 500);
             
         };
         
         document.getElementById("modal-desc-accept").addEventListener("click", function() {
             
-            var modal = document.getElementById("modal-desc");
+            let modal = document.getElementById("modal-desc");
             modal.dataset.state = "hidden";
             
-            var area = document.getElementById("hidden-area");
-            window.helper.hide(area, 500);
+            let area = document.getElementById("hidden-area");
+            Helper.hide(area, 500);
             
         });
     }
 
-    function sesionState(){
+    sesionState() : void {
 
-        var id = 'label-State'; text = 'Select the State : '; type = 'label';
+        let id = 'label-State',
+            text = 'Select the State : ',
+            type = 'label';
 
-        self.createField(id, text, 15, type);
+        this.createField(id, text, 15, type);
 
         id = 'select-State'; text = ''; type = 'select';
 
-        self.createField(id, text, 8, type);
+        this.createField(id, text, 8, type);
 
-        self.objects.idFields.state = id;
+        this.objects.idFields.state = id;
 
-        var option = "";
+        let option = "";
 
         option += "<option value = concept>Concept</option>";
         option += "<option value = development>Development</option>";
@@ -872,12 +805,12 @@ function FieldsEdit() {
             window.tableEdit.changeTexture();
         });
         
-        setSelectImages(document.getElementById(id));
+        this.setSelectImages(document.getElementById(id) as HTMLSelectElement);
     }
 
-    function createbutton(callback){
+    createbutton(callback : () => void) : void {
         
-        var id = 'button-save', text = 'Save', type = 'button';
+        let id = 'button-save', text = 'Save', type = 'button';
         
         window.buttonsManager.createButtons(id, text, function(){
 
@@ -887,44 +820,44 @@ function FieldsEdit() {
         }, null, null, "right");
     }
 
-    function deleteMesh(){
+    deleteMesh() : void{
 
-        var mesh = self.objects.tile.mesh;
+        let mesh = this.objects.tile.mesh;
 
         if(mesh != null){ 
 
-            animate(mesh, self.objects.tile.target.hide, 1500, function(){ 
+            this.animate(mesh, this.objects.tile.target.hide, 1500, () => { 
                     window.scene.remove(mesh);
                     
-                    self.objects.tile.mesh = null;
+                    this.objects.tile.mesh = null;
                 });
         }
     }
 
-    function workflowHeader() {
+    workflowHeader() : void {
         
         if(!document.getElementById("workflow-header")) {
             
-            var div = document.createElement("div");
+            let div = document.createElement("div");
             div.id = "workflow-header";
             div.innerHTML += '<label> Title: </label>';
             div.innerHTML += '<input id="workflow-header-title" class="edit-Fermat" placeholder="Title" type="text" maxlength="68"></input>';
             div.innerHTML += '<label> Select the Group : </label>';
-            var select = document.createElement("select");
+            let select = document.createElement("select");
             select.id = "workflow-header-plataform";
             select.className = "edit-Fermat";
 
-            var object = {
+            let object = {
                 id : "workflow-header",
                 text : "workflow-header"
             };
 
-            self.objects.row1.buttons.push(object);
+            this.objects.row1.buttons.push(object);
   
-            var optgroup = "<optgroup label = Platform>",
+            let optgroup = "<optgroup label = Platform>",
             option = "";
 
-            for(var i in window.platforms){ 
+            for(let i in window.platforms){ 
 
                 if(i != "size"){
 
@@ -939,7 +872,7 @@ function FieldsEdit() {
 
             optgroup += "<optgroup label = superLayer>";
 
-            for(var _i in window.superLayers){
+            for(let _i in window.superLayers){
 
                 if(_i != "size"){
 
@@ -963,25 +896,25 @@ function FieldsEdit() {
                window.workFlowEdit.changeTexture();
             });
             
-            setSelectImages(document.getElementById("workflow-header-plataform"));
+            this.setSelectImages(document.getElementById("workflow-header-plataform") as HTMLSelectElement);
         }   
     }
     
-    function workflowDescription() {
+    workflowDescription() : void {
 
-        var div = document.createElement("div");
+        let div = document.createElement("div");
         div.id = "workflow-modal-desc";
-        var modal = document.createElement("div");
+        let modal = document.createElement("div") as any;
         modal.id = "modal-desc";
         modal.style.top = (window.innerHeight / 4) + "px" ;
         modal.dataset.state = "hidden";
 
-        var object = {
+        let object = {
             id : "workflow-modal-desc",
             text : "workflow-header"
         };
 
-        self.objects.row1.buttons.push(object);
+        this.objects.row1.buttons.push(object);
 
         modal.innerHTML = ''+
             '<label>Description:</label>'+
@@ -994,46 +927,46 @@ function FieldsEdit() {
         div.appendChild(modal);
         document.body.appendChild(div);
         
-        var button = document.getElementById("workflow-header-description");
+        let button = document.getElementById("workflow-header-description");
         
-        button.addEventListener('click', function() {
+        button.addEventListener('click', () => {
             
-            var modal = document.getElementById("modal-desc");
+            let modal = document.getElementById("modal-desc") as any;
             modal.dataset.state = "show";
             
-            modal.oldValue = document.getElementById("modal-desc-textarea").value;
+            modal.oldValue = (document.getElementById("modal-desc-textarea") as HTMLInputElement).value;
             
-            var area = document.createElement("div");
+            let area = document.createElement("div");
             area.id = "hidden-area";
             document.body.appendChild(area);
-            window.helper.show(area, 1000);
+            Helper.show(area, 1000);
             
         });
         
-        document.getElementById("modal-desc-cancel").onclick = function() {
-            var modal = document.getElementById("modal-desc");
+        document.getElementById("modal-desc-cancel").onclick = () => {
+            let modal = document.getElementById("modal-desc") as any;
             modal.dataset.state = "hidden";
-            document.getElementById("modal-desc-textarea").value = modal.oldValue;
+            (document.getElementById("modal-desc-textarea") as HTMLInputElement).value = modal.oldValue;
             
-            var area = document.getElementById("hidden-area");
-            window.helper.hide(area, 500);
+            let area = document.getElementById("hidden-area");
+            Helper.hide(area, 500);
             
         };
         
-        document.getElementById("modal-desc-accept").addEventListener("click", function() {
-            var modal = document.getElementById("modal-desc");
+        document.getElementById("modal-desc-accept").addEventListener("click", () => {
+            let modal = document.getElementById("modal-desc") as any;
             modal.dataset.state = "hidden";
             
-            var area = document.getElementById("hidden-area");
-            window.helper.hide(area, 500);
+            let area = document.getElementById("hidden-area");
+            Helper.hide(area, 500);
             
             window.workFlowEdit.changeTexture();
         });
     }
     
-    this.showLineSelectType = function(array, select, mouse, callback) {
+    showLineSelectType(array, select, mouse, callback) {
 
-        var div = document.getElementById("modal-call");
+        let div = document.getElementById("modal-call");
 
         if(!div){ 
         
@@ -1053,11 +986,11 @@ function FieldsEdit() {
               <div id="modal-solap-b">
               </div></div>`;
 
-        var _select = document.getElementById("modal-call-select_");
+        let _select = document.getElementById("modal-call-select_") as HTMLInputElement;
 
         _select.innerHTML = "";
             
-        for(var i = 0; i < array.length; i++){ 
+        for(let i = 0; i < array.length; i++){ 
 
             if(i === select)
                 _select.innerHTML += "<option selected>" + array[i] + "</option>";
@@ -1077,11 +1010,11 @@ function FieldsEdit() {
         }); 
     };
 
-    this.showModal = function(step, missing) {
+    showModal(step, missing) {
 
-        var div = document.getElementById("step-modal");
+        let div = document.getElementById("step-modal");
 
-        var title = step.title[0],
+        let title = step.title[0],
             desc = step.desc[0],
             _title, _desc, b1, b2;
 
@@ -1115,11 +1048,11 @@ function FieldsEdit() {
             
             document.body.appendChild(div);
             
-            window.onresize  = function() {
+            window.onresize  = () => {
                 div.style.width = (div.offsetHeight * 0.9) + "px";
             };
             
-            window.onresize();
+            window.onresize(undefined);
         }
         else{
 
@@ -1128,7 +1061,7 @@ function FieldsEdit() {
         }
 
         if(missing)
-            document.getElementById("step-error").dataset.state = "show";
+            (document.getElementById("step-error") as any).dataset.state = "show";
 
         _title = document.getElementById("step-modal-title");
         _desc  = document.getElementById("step-modal-desc");
@@ -1153,9 +1086,9 @@ function FieldsEdit() {
             workflowPreview(step);
 
             if(_title.value === '')
-                document.getElementById("step-error").dataset.state = "show";
+                (document.getElementById("step-error").dataset as any).state = "show";
             else
-                document.getElementById("step-error").dataset.state = "hidden";
+                (document.getElementById("step-error").dataset as any).state = "hidden";
         });
 
         _desc.addEventListener('blur', function() {
@@ -1165,50 +1098,50 @@ function FieldsEdit() {
         workflowPreview(step);
     };
 
-    this.setModeEdit = function(mode, buttonRight, ButtonsLeft){
+    setModeEdit(mode, buttonRight, ButtonsLeft){
 
-        var div = document.getElementById("header-text");
+        let div = document.getElementById("header-text");
 
-        var right = document.getElementById("header-next"),
+        let right = document.getElementById("header-next"),
             left = document.getElementById("header-back");
 
         if(div){
             div.innerHTML = mode;
 
             if(buttonRight){
-                window.helper.show(right, 500, function(){
+                Helper.show(right, 500, function(){
                     right.style.opacity = "";
                     right.style.transition = "";
                 });
             }
             else{
-                window.helper.hide(right, 500, true);
+                Helper.hide(right, 500, true);
             }
 
             if(ButtonsLeft){
-                window.helper.show(left, 500, function(){
+                Helper.show(left, 500, function(){
                     left.style.opacity = "";
                     left.style.transition = "";
                 });
             }
             else{
-                window.helper.hide(left, 500, true);
+                Helper.hide(left, 500, true);
             }
         }
     };
  
-    function createModeEdit(){
+    createModeEdit(){
 
-        var div = document.getElementById("workflow-mode");
+        let div = document.getElementById("workflow-mode");
 
         if(!div){ 
 
-            var object = {
+            let object = {
                 id : "workflow-mode",
                 text : ""
             };
 
-            self.objects.row1.buttons.push(object);
+            this.objects.row1.buttons.push(object);
 
             div = document.createElement("div");
 
@@ -1225,34 +1158,34 @@ function FieldsEdit() {
             `;
             
             window.onresize  = function() {
-                var cont = document.getElementById("header-container");
+                let cont = document.getElementById("header-container");
                 cont.style.height = cont.offsetWidth/5.6 + "px";
                 document.getElementById("header-text").style.lineHeight = (cont.offsetWidth/5.6) + "px";
             };
             
             
             document.body.appendChild(div);
-            window.onresize();
+            window.onresize(undefined);
         }
     }
 
-    function createStepsList(){
+    createStepsList(){
 
-        var div = document.getElementById("steps-list");
+        let div = document.getElementById("steps-list") as any;
 
         if(!div){ 
         
             div = document.createElement("div");
             div.id  = "steps-list";
 
-            var object = {
+            let object = {
                 id : "steps-list",
                 text : ""
             };
 
             div.dataset.state = "hidden";
 
-            self.objects.row1.buttons.push(object);
+            this.objects.row1.buttons.push(object);
             
             div.innerHTML += 
             `
@@ -1265,12 +1198,12 @@ function FieldsEdit() {
 			
 			div.addStep = function(i, obj, type) {
 
-				var div = document.createElement('div');
-				var div2 = document.createElement('div');
-				var close = document.createElement('button');
-                var alert = document.createElement('div');
-                var foto = document.createElement('div');
-				var canvas = document.createElement('canvas');
+				let div = document.createElement('div');
+				let div2 = document.createElement('div');
+				let close = document.createElement('button');
+                let alert = document.createElement('div');
+                let foto = document.createElement('div');
+				let canvas = document.createElement('canvas') as any;
 
                 canvas.id = 'canvas-step-' + i;
 				
@@ -1280,7 +1213,7 @@ function FieldsEdit() {
 				close.className = "steps-button-close";
 				canvas.className = "steps-list-step";
 
-				var ctx = canvas.getContext("2d");
+				let ctx = canvas.getContext("2d");
 
                 switch(obj.state) {
 
@@ -1307,13 +1240,13 @@ function FieldsEdit() {
 
                 canvas.dataset.state = false;
 
-				canvas.onclick = function () {
+				canvas.onclick = () => {
 
                     if(type === 'edit-step' || type === 'edit-path'){ 
 
-    					var mesh = obj.mesh;
+    					let mesh = obj.mesh;
 
-                        var position = mesh.position;
+                        let position = mesh.position;
 
                         window.camera.move(position.x, position.y, 200, 1500, true);
 
@@ -1324,30 +1257,30 @@ function FieldsEdit() {
                     }
                     else{
 
-                        var state = obj.state;
+                        let state = obj.state;
 
                         if(state === 'error'){
                             
-                            window.dragManager.objects = dragModeRepared(obj);
+                            window.dragManager.this.objects = dragModeRepared(obj);
                             window.workFlowEdit.getFocus().data = obj.id;
                             obj.mesh.visible = false;
-                            window.fieldsEdit.hiddenModal();
+                            this.hiddenModal();
                         }
                         else{
                             
-                            window.dragManager.objects = [];
-                            var parent = searchStepParent(obj);
-                            var mesh = obj.mesh;
+                            window.dragManager.this.objects = [];
+                            let parent = searchStepParent(obj);
+                            let mesh = obj.mesh;
                             mesh.material.map  = window.workFlowEdit.changeTextureId(obj.id + 1, parent.id + 1);
                             mesh.material.needsUpdate = true;
-                            var difference = (window.TILE_DIMENSION.width - window.TILE_SPACING) / 2;
-                            var tile = window.helper.getSpecificTile(obj.element).mesh;
+                            let difference = (window.TILE_DIMENSION.width - window.TILE_SPACING) / 2;
+                            let tile = Helper.getSpecificTile(obj.element).mesh;
 
-                            var target = window.helper.fillTarget(tile.position.x - difference, tile.position.y, tile.position.z + 1, 'table');
+                            let target = Helper.fillTarget(tile.position.x - difference, tile.position.y, tile.position.z + 1, 'table');
 
                             mesh.position.copy(target.show.position);
 
-                            var position = mesh.position;
+                            let position = mesh.position;
 
                             obj.mesh.visible = true;
 
@@ -1355,7 +1288,7 @@ function FieldsEdit() {
                         }
                     }
 
-                    self.changeFocus(canvas, i);
+                    this.changeFocus(canvas, i);
 				};
 				
 				close.onclick = function () {
@@ -1377,7 +1310,7 @@ function FieldsEdit() {
 
             document.getElementById("steps-list-expand").onclick = function() {
 
-                var element = document.getElementById("steps-list");
+                let element = document.getElementById("steps-list") as any;
 
                 if(element.dataset.state == "hidden") 
                     element.dataset.state = "show"; 
@@ -1388,15 +1321,15 @@ function FieldsEdit() {
         
         function searchStepParent(step){
 
-            var steps = window.fieldsEdit.actualFlow.steps.slice();
+            let steps = window.fieldsEdit.this.actualFlow.steps.slice();
 
-            for(var i = 0; i < steps.length; i++){
+            for(let i = 0; i < steps.length; i++){
 
-                var next = steps[i].next;
+                let next = steps[i].next;
 
-                for(var l = 0; l < next.length; l++){
+                for(let l = 0; l < next.length; l++){
 
-                    var _id = parseInt(next[l].id);
+                    let _id = parseInt(next[l].id);
 
                     if(_id === step.id){
                         return steps[i];
@@ -1409,19 +1342,19 @@ function FieldsEdit() {
 
         function dragModeRepared(step){
 
-            var steps = window.fieldsEdit.actualFlow.steps.slice();
+            let steps = window.fieldsEdit.this.actualFlow.steps.slice();
 
-            var parent = searchStepParent(step);
+            let parent = searchStepParent(step);
 
-            var children = validateChildrenTiles();
+            let children = validateChildrenTiles();
 
-            var array = [];
+            let array = [];
 
-            for(var i = 0; i < window.tilesQtty.length; i++){
+            for(let i = 0; i < window.tilesQtty.length; i++){
 
                 if(window.tilesQtty[i] !== parent.element && !children.find(function(x){ if(x.element === window.tilesQtty[i]) return x;})){
 
-                    var tile = window.helper.getSpecificTile(window.tilesQtty[i]).mesh;
+                    let tile = Helper.getSpecificTile(window.tilesQtty[i]).mesh;
 
                     array.push(tile);
                 }
@@ -1431,11 +1364,11 @@ function FieldsEdit() {
 
             function validateChildrenTiles(){
 
-                var _array = [];
+                let _array = [];
 
-                var children = step.next;
+                let children = step.next;
 
-                for(var i = 0; i < steps.length; i++){
+                for(let i = 0; i < steps.length; i++){
 
                     if(children.find(function(x){ if(parseInt(x.id) === steps[i].id) return x;}))
                         _array.push(steps[i]);
@@ -1446,9 +1379,9 @@ function FieldsEdit() {
         }
     }
 
-    function applyTextureCanvas(ctx, id, src){
+    applyTextureCanvas(ctx, id, src){
 
-        var img = new Image();
+        let img = new Image();
 
         img.src = src;
 
@@ -1463,73 +1396,62 @@ function FieldsEdit() {
         };
     }
 
-    this.changeFocus = function(canvas, id){
+    changeFocus(canvas, id){
 
         if(canvas){ 
-
             if(canvas.dataset.state === "false"){ 
+                let ctx = canvas.getContext("2d");
+                this.applyTextureCanvas(ctx, id, "images/workflow/stepF.png");
+                let count = $("#steps-list-content canvas").length;
 
-                var ctx = canvas.getContext("2d");
-
-                applyTextureCanvas(ctx, id, "images/workflow/stepF.png");
-                
-                var count = $("#steps-list-content canvas").length;
-
-                for(var i = 1; i <= count; i++){
-
-                    var _canvas = document.getElementById('canvas-step-' + i);
-
+                for(let i = 1; i <= count; i++){
+                    let _canvas = document.getElementById('canvas-step-' + i) as any;
                     if(_canvas.dataset.state === "true"){
-
-                        var _ctx = _canvas.getContext("2d");
-
+                        let _ctx = _canvas.getContext("2d");
                         cleanPreview(_canvas);
-
-                        applyTextureCanvas(_ctx, i, "images/workflow/step.png");
-
+                        this.applyTextureCanvas(_ctx, i, "images/workflow/step.png");
                         _canvas.dataset.state = false;
                     }
                 }
-
                 canvas.dataset.state = true;
             }
         }
     }
     
-    this.hiddenStepsList = function(state, duration) {
+    hiddenStepsList (state, duration) {
 
         duration = duration || 500;
 
         if(state){
-            window.helper.show(document.getElementById("workflow-mode"), duration);
-            window.helper.show(document.getElementById("steps-list"), duration);  
+            Helper.show(document.getElementById("workflow-mode"), duration);
+            Helper.show(document.getElementById("steps-list"), duration);  
         }
         else{
-            window.helper.hide(document.getElementById("workflow-mode"), duration, true);
-            window.helper.hide(document.getElementById("steps-list"), duration, true);
+            Helper.hide(document.getElementById("workflow-mode"), duration, true);
+            Helper.hide(document.getElementById("steps-list"), duration, true);
         }
     };
     
-    this.hiddenModal = function(duration) {
+    hiddenModal(duration) {
 
         duration = duration || 500;
-        window.helper.hide(document.getElementById("step-modal"), duration);
-        window.helper.hide(document.getElementById("modal-call"), duration);
+        Helper.hide(document.getElementById("step-modal"), duration);
+        Helper.hide(document.getElementById("modal-call"), duration);
     };
 
-    function workflowPreview(steps) {
+    workflowPreview(steps) {
 
-        var step = steps;
+        let step = steps;
 
-        var fillBox = function(ctx, image) {
+        let fillBox = function(ctx, image) {
 
             ctx.drawImage(image, 0, 0, 300, 150);
 
-            var mesh = window.helper.getSpecificTile(step.tile).mesh;
+            let mesh = Helper.getSpecificTile(step.tile).mesh;
 
-            var texture = mesh.levels[0].object.material.map.image;
+            let texture = mesh.levels[0].object.material.map.image;
 
-            var img = document.createElement('img');
+            let img = document.createElement('img');
 
             img.src = texture.toDataURL("image/png");
 
@@ -1538,33 +1460,33 @@ function FieldsEdit() {
             };
 
             //ID
-            var Nodeid = parseInt(step.order[0]);
-            Nodeid = (Nodeid < 10) ? '0' + Nodeid.toString() : Nodeid.toString();
+            let Nodeid = step.order[0] as string;
+            Nodeid = (parseInt(Nodeid) < 10) ? '0' + Nodeid.toString() : Nodeid.toString();
 
-            var size = 37;
+            let size = 37;
             ctx.font = size + 'px Arial';
             ctx.fillStyle = '#000000';
-            window.helper.drawText(Nodeid, 16, 90, ctx, 76, size);
+            Helper.drawText(Nodeid, 16, 90, ctx, 76, size);
             ctx.fillStyle = '#FFFFFF';
 
             //Title
             size = 8;
             ctx.font = 'bold ' + size + 'px Arial';
-            window.helper.drawText(step.title[0], 151, 40, ctx, 100, size);
+            Helper.drawText(step.title[0], 151, 40, ctx, 100, size);
 
             //Description
             size = 6;
             ctx.font = size + 'px Arial';
-            window.helper.drawText(step.desc[0], 151, 80, ctx, 100, size);
+            Helper.drawText(step.desc[0], 151, 80, ctx, 100, size);
         };
 
-        var canvas = document.getElementById('step-modal-canvas');
-        var ctx = canvas.getContext('2d');
+        let canvas = document.getElementById('step-modal-canvas') as any;
+        let ctx = canvas.getContext('2d');
         cleanPreview(canvas);
-        var size = 12;
+        let size = 12;
         ctx.fillStyle = '#FFFFFF';
 
-        var image = document.createElement('img');
+        let image = document.createElement('img');
 
         ctx.font = size + 'px Arial';
 
@@ -1575,9 +1497,9 @@ function FieldsEdit() {
         image.src = "images/workflow/stepBox.png";
     }
 
-    function cleanPreview(canvas){
+    cleanPreview(canvas){
 
-        var ctx = canvas.getContext('2d');
+        let ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }  
 }
