@@ -2,20 +2,20 @@
  * Represents a flow of actions related to some tiles
  * @param   {Object}  flow The objects that describes the flow including a set of steps
  */
-function WorkFlowManager(){
+class WorkFlowManager {
 
-    // Private Variables
-    var headerFlow = [],
-        positionHeaderFlow = [],
-        actualFlow = null;
+    // Private letiables
+    headerFlow = [];
+    positionHeaderFlow = [];
+    actualFlow = null;
 
     // Public method
-    this.getObjHeaderFlow = function(){ 
-        return headerFlow;
+    getObjHeaderFlow(){ 
+        return this.headerFlow;
     };
 
-    this.getpositionHeaderFlow = function(){ 
-        return positionHeaderFlow;
+    getpositionHeaderFlow(){ 
+        return this.positionHeaderFlow;
     };
     /**
      * @author Emmanuel Colina
@@ -23,16 +23,16 @@ function WorkFlowManager(){
      * @param {Object} header target
      */
 
-    this.createColumHeaderFlow = function(header){
+    createColumHeaderFlow(header){
 
-        var countElement = 0,
+        let countElement = 0,
             obj,
             ids = [],
             position = [],
             center;
 
-        for(var i = 0; i < headerFlow.length; i++) {
-            if(header.name === headerFlow[i].flow.platfrm){
+        for(let i = 0; i < this.headerFlow.length; i++) {
+            if(header.name === this.headerFlow[i].flow.platfrm){
                 countElement = countElement + 1;
                 ids.push(i);
             }
@@ -57,11 +57,11 @@ function WorkFlowManager(){
         }
         else if(countElement > 2){
 
-            var mid;
+            let mid;
 
             mid = Math.round(countElement / 2);
 
-            for(var x = mid; x > 0; x--) {
+            for(let x = mid; x > 0; x--) {
 
                 center.x = center.x - 2000;
             }
@@ -74,9 +74,9 @@ function WorkFlowManager(){
             position.push(obj);
         }
 
-        letAloneColumHeaderFlow(ids);
+        this.letAloneColumHeaderFlow(ids);
 
-        drawColumHeaderFlow(ids, position); // create
+        this.drawColumHeaderFlow(ids, position); // create
     };
 
     /**
@@ -84,45 +84,44 @@ function WorkFlowManager(){
     * @lastmodifiedBy Ricardo Delgado
     * Delete All the actual view to table
     */
-    this.deleteAllWorkFlows = function(){
+    deleteAllWorkFlows(){
 
-        var _duration = 2000;
+        let _duration = 2000;
 
-        if(headerFlow){
-            for(var i = 0; i < headerFlow.length; i++) {
-
-                headerFlow[i].deleteAll();
-                window.helper.hideObject(headerFlow[i].objects[0], false, _duration);
-                window.scene.remove(headerFlow[i]);
+        if(this.headerFlow){
+            for(let i = 0; i < this.headerFlow.length; i++) {
+                this.headerFlow[i].deleteAll();
+                Helper.hideObject(this.headerFlow[i].objects[0], false, _duration);
+                window.scene.remove(this.headerFlow[i]);
             }
         }
 
-        headerFlow = [];
+        this.headerFlow = [];
     };
 
-    this.getActualFlow = function(){
+    getActualFlow(){
 
-        if(actualFlow) {
-            for(var i = 0; i < actualFlow.length; i++) {
-                actualFlow[i].deleteAll();
+        if(this.actualFlow) {
+            for(let i = 0; i < this.actualFlow.length; i++) {
+                this.actualFlow[i].deleteAll();
             }
-            actualFlow = null;
+            this.actualFlow = null;
         }
     };
 
-    this.getAndShowFlows = function(id) {
+    getAndShowFlows(id) {
 
-        var element = window.helper.getSpecificTile(id).data;
+        let element = Helper.getSpecificTile(id).data;
 
-        var button = window.buttonsManager.createButtons('showFlows', 'Loading flows...');
+        let button = window.buttonsManager.createButtons('showFlows', 'Loading flows...');
 
-        var params = {
+        let params = {
             group : (element.platform || element.superLayer),
             layer : element.layer,
             component : element.name
         };
 
-        var url = '';
+        let url = '';
 
         if(!window.disconnected)
             url = window.API.getAPIUrl("procs", params);
@@ -132,12 +131,12 @@ function WorkFlowManager(){
         $.ajax({
             url: url,
             method: "GET"
-        }).success(
+        }).done(
             function(processes) {
-                var p = processes,
+                let p = processes,
                     flows = [];
 
-                for(var i = 0; i < p.length; i++) {
+                for(let i = 0; i < p.length; i++) {
 
                     flows.push(new Workflow(p[i]));
                 }
@@ -145,7 +144,7 @@ function WorkFlowManager(){
                 if(flows.length > 0) {
                     button.innerHTML = 'Show Workflows';
                     button.addEventListener('click', function() {
-                        showFlow(flows);
+                        this.showFlow(flows);
                         window.buttonsManager.removeAllButtons();
                     });
                 }
@@ -155,7 +154,7 @@ function WorkFlowManager(){
         );
     };
 
-    this.showWorkFlow = function() {
+    showWorkFlow() {
 
         if(window.camera.getFocus() !== null) {
 
@@ -163,19 +162,19 @@ function WorkFlowManager(){
 
             window.headers.transformWorkFlow(2000);
 
-            for(var i = 0; i < headerFlow.length ; i++) {
+            for(let i = 0; i < this.headerFlow.length ; i++) {
 
-                if(headerFlow[i].action){
+                if(this.headerFlow[i].action){
 
-                    headerFlow[i].deleteStep();
-                    headerFlow[i].action = false;
-                    headerFlow[i].showAllFlow();
+                    this.headerFlow[i].deleteStep();
+                    this.headerFlow[i].action = false;
+                    this.headerFlow[i].showAllFlow();
                 }
                 else
-                    headerFlow[i].showAllFlow();
+                    this.headerFlow[i].showAllFlow();
             }
 
-            window.helper.hideBackButton();
+            Helper.hideBackButton();
         }
     };
 
@@ -183,29 +182,29 @@ function WorkFlowManager(){
      * @author Emmanuel Colina
      * Get the headers flows
      */
-    this.getHeaderFLow = function() {
+    getHeaderFLow() {
 
-        var url = '';
+        let url = '';
 
         if(!window.disconnected)
-            url = window.API.getAPIUrl("procs");
+            url = API.getAPIUrl("procs");
         else
             url = 'json/testData/procs.json';
 
         $.ajax({
             url: url,
             method: "GET"
-        }).success(
+        }).done(
             function(processes) {
-                var p = processes, objectHeaderInWFlowGroup;
+                let p = processes, objectHeaderInWFlowGroup;
 
-                for(var i = 0; i < p.length; i++){
+                for(let i = 0; i < p.length; i++){
                     
                     if(window.platforms[p[i].platfrm] || window.superLayers[p[i].platfrm])
-                        headerFlow.push(new Workflow(p[i]));
+                        this.headerFlow.push(new Workflow(p[i]));
                 }
                 objectHeaderInWFlowGroup = window.headers.getPositionHeaderViewInFlow();
-                calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup);
+                this.calculatePositionHeaderFLow(this.headerFlow, objectHeaderInWFlowGroup);
             }
         );
     };
@@ -217,33 +216,33 @@ function WorkFlowManager(){
      *
      */
 
-    this.onElementClickHeaderFlow = function(id) {
+    onElementClickHeaderFlow(id) {
 
-        var duration = 1000;
+        let duration = 1000;
 
         if(window.camera.getFocus() == null) {
 
-            var camTarget = headerFlow[id].objects[0].clone();
+            let camTarget = this.headerFlow[id].objects[0].clone();
             camTarget.position.y -= 850;
 
             window.camera.setFocus(camTarget, new THREE.Vector4(0, -850, 2600, 1), duration);
 
-            for(var i = 0; i < headerFlow.length ; i++) {
+            for(let i = 0; i < this.headerFlow.length ; i++) {
                 if(id !== i)
-                    headerFlow[i].letAloneHeaderFlow();
+                    this.headerFlow[i].letAloneHeaderFlow();
             }
 
             headers.hidetransformWorkFlow(duration);
 
             setTimeout(function() {
-                for(var i = 0; i < headerFlow[id].flow.steps.length; i++) {
-                    headerFlow[id].drawTree(headerFlow[id].flow.steps[i], headerFlow[id].positions.target[0].x + 900 * i, headerFlow[id].positions.target[0].y - 211, 0);
+                for(let i = 0; i < this.headerFlow[id].flow.steps.length; i++) {
+                    this.headerFlow[id].drawTree(this.headerFlow[id].flow.steps[i], this.headerFlow[id].positions.target[0].x + 900 * i, this.headerFlow[id].positions.target[0].y - 211, 0);
                 }
-               headerFlow[id].showSteps();
+               this.headerFlow[id].showSteps();
             }, 1000);
 
             window.buttonsManager.removeAllButtons();
-            window.helper.showBackButton();
+            Helper.showBackButton();
             window.workFlowEdit.addButton(id);
         }
     };
@@ -252,14 +251,14 @@ function WorkFlowManager(){
      * @author Emmanuel Colina
      * Calculate the headers flows
      */
-    function calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) {
+    calculatePositionHeaderFLow(headerFlow, objectHeaderInWFlowGroup) {
 
-        var position, indice = 1;
-        var find = false;
+        let position, indice = 1;
+        let find = false;
 
-        for(var i = 0; i < objectHeaderInWFlowGroup.length; i++) {
+        for(let i = 0; i < objectHeaderInWFlowGroup.length; i++) {
 
-            for(var j = 0; j < headerFlow.length; j++) {
+            for(let j = 0; j < headerFlow.length; j++) {
 
                 if(objectHeaderInWFlowGroup[i].name === headerFlow[j].flow.platfrm){
 
@@ -271,7 +270,7 @@ function WorkFlowManager(){
 
                         position.y = objectHeaderInWFlowGroup[i].position.y - 2500;
 
-                        positionHeaderFlow.push(position);
+                        this.positionHeaderFlow.push(position);
 
                         headerFlow[j].draw(position.x, position.y, 0, indice, j);
 
@@ -283,11 +282,11 @@ function WorkFlowManager(){
 
                         position.x = objectHeaderInWFlowGroup[i].position.x - 1500;
 
-                        position.y = positionHeaderFlow[positionHeaderFlow.length - 1].y - 500;
+                        position.y = this.positionHeaderFlow[this.positionHeaderFlow.length - 1].y - 500;
 
                         headerFlow[j].draw(position.x, position.y, 0, indice, j);
 
-                        positionHeaderFlow.push(position);
+                        this.positionHeaderFlow.push(position);
                     }
                 }
             }
@@ -296,24 +295,24 @@ function WorkFlowManager(){
     }
 
     //Should draw ONLY one flow at a time
-    function showFlow(flows) {
+    showFlow(flows) {
 
-        var position = window.camera.getFocus().position;
-        var indice = 0;
+        let position = window.camera.getFocus().position;
+        let indice = 0;
 
         window.camera.enable();
-        window.camera.move(position.x, position.y, position.z + window.TILE_DIMENSION.width * 5);
+        window.camera.move(position.x, position.y, position.z + TILE_DIMENSION.width * 5);
 
         setTimeout(function() {
 
-            actualFlow = [];
+            this.actualFlow = [];
 
-            for(var i = 0; i < flows.length; i++) {
-                actualFlow.push(flows[i]);
+            for(let i = 0; i < flows.length; i++) {
+                this.actualFlow.push(flows[i]);
                 flows[i].draw(position.x, position.y, 0, indice, i);
 
                 //Dummy, set distance between flows
-                position.x += window.TILE_DIMENSION.width * 10;
+                position.x += TILE_DIMENSION.width * 10;
             }
 
         }, 1500);
@@ -324,18 +323,18 @@ function WorkFlowManager(){
      * let alone the header flow
      * @param {Object} ids id of header flow
      */
-    function letAloneColumHeaderFlow(ids){
+    letAloneColumHeaderFlow(ids){
 
-        var find = false;
+        let find = false;
 
-        for(var p = 0; p < headerFlow.length ; p++) {
+        for(let p = 0; p < this.headerFlow.length ; p++) {
 
-            for(var q = 0; q < ids.length; q++){
+            for(let q = 0; q < ids.length; q++){
                 if(ids[q] === p)
                     find = true;
             }
             if(find === false)
-                headerFlow[p].letAloneHeaderFlow();
+                this.headerFlow[p].letAloneHeaderFlow();
 
             find = false;
         }
@@ -348,11 +347,11 @@ function WorkFlowManager(){
      * @param {Object} position of header flow
      */
 
-    function setPositionColumHeaderFlow(ids, position){
+    setPositionColumHeaderFlow(ids, position){
 
-        var duration = 3000;
+        let duration = 3000;
 
-        new TWEEN.Tween(headerFlow[ids].objects[0].position)
+        new TWEEN.Tween(this.headerFlow[ids].objects[0].position)
         .to({
             x : position[0].x,
             y : position[0].y,
@@ -368,20 +367,20 @@ function WorkFlowManager(){
      * @param {Object} ids id of header flow
      * @param {Object} position of header flow
      */
-    function drawColumHeaderFlow(ids, position){ 
+    drawColumHeaderFlow(ids, position){ 
 
-        var xDraw;
+        let xDraw;
 
-        for(var m = 0; m < ids.length; m++) {
+        for(let m = 0; m < ids.length; m++) {
 
-            for(var k = 0; k < headerFlow[ids[m]].flow.steps.length; k++) {
-                xDraw = headerFlow[ids[m]].drawTree(headerFlow[ids[m]].flow.steps[k], position[0].x + 900 * k, position[0].y - 211, 0);
+            for(let k = 0; k < this.headerFlow[ids[m]].flow.steps.length; k++) {
+                xDraw = this.headerFlow[ids[m]].drawTree(this.headerFlow[ids[m]].flow.steps[k], position[0].x + 900 * k, position[0].y - 211, 0);
             }
 
-            headerFlow[ids[m]].showSteps();
-            headerFlow[ids[m]].action = true;
+            this.headerFlow[ids[m]].showSteps();
+            this.headerFlow[ids[m]].action = true;
 
-            setPositionColumHeaderFlow(ids[m], position);
+            this.setPositionColumHeaderFlow(ids[m], position);
 
             position[0].x = xDraw + 1500;
         }
