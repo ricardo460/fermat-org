@@ -361,7 +361,7 @@ router.put('/:proc_id', function(req, res, next) {
 					} else {
 						repMod.uptProc(req, function(error, result) {
 							if (error) {
-								res.status(200).send(error);
+								res.status(403).send(error);
 							} else {
 								if (result) {
 									res.status(200).send(result);

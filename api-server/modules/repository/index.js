@@ -397,7 +397,7 @@ exports.getProc = function(req, next) {
 exports.uptProc = function(req, next) {
 	'use strict';
 	try {
-		procMod.updateProcById(req.params.proc_id, req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, function(err, res) {
+		procMod.updateProcById(req.params.proc_id, req.body.platfrm, req.body.name, req.body.desc, req.body.prev, req.body.next, req.body.tags, function(err, res) {
 			if (err) {
 				next(err, null);
 			} else {
