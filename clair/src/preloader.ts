@@ -1,22 +1,22 @@
 // add all image paths to this array
 function preLoad(onLoadAll) {
     
-    var finished = false;
+    let finished = false;
     
-    var progressBar = {
+    let progressBar = {
         max : 0,
         loaded : 0
     };
     
-    var updateBar = function() {
+    let updateBar = function() {
         
-        var percnt = ((progressBar.loaded * 100) / progressBar.max) >> 0;
+        let percnt = ((progressBar.loaded * 100) / progressBar.max) >> 0;
         $("#progress-bar").width(percnt + '%');
     };
     
-    var loadImage = function(img) {
+    let loadImage = function(img) {
         
-        var e = document.createElement('img');
+        let e = document.createElement('img');
 
         e.onload = function() {
 
@@ -47,7 +47,7 @@ function preLoad(onLoadAll) {
 
             progressBar.max = images.length;
 
-            var i = 0;
+            let i = 0;
 
             while(i < images.length) {
                 loadImage(images[i]);
@@ -57,8 +57,8 @@ function preLoad(onLoadAll) {
     });
     
     //Preload fonts
-    var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext('2d');
+    let canvas = document.createElement('canvas');
+    let ctx = canvas.getContext('2d');
     ctx.font = '12px Canaro';
     ctx.fillText('.', 0, 0);
 }
