@@ -2,13 +2,13 @@
  * Responsible for drawing the p2p network
  * @author Miguel Celedon
  */
-function ViewManager() {
+class ViewManager {
 
-    var SECTION_SIZE = window.MAX_DISTANCE * 1.5;
+    constructor(public views) {
+        this.initViews();
+    }
 
-    this.views = {};
-
-    var self = this;
+    SECTION_SIZE = MAX_DISTANCE * 1.5;
 
     /**
      * Convert a vector to the relative coordiantes of a section
@@ -17,7 +17,7 @@ function ViewManager() {
      * @param   {Object}        vector      The original vector
      * @returns {THREE.Vector3} A new vector with the positions relative to the section center
      */
-    this.translateToSection = function(sectionName, vector) {
+    translateToSection(sectionName, vector) {
 
     //    if(window.map.views[sectionName].title !== "Render") {
             sectionName = window.map.views[sectionName] || window.map.start;
@@ -42,7 +42,7 @@ function ViewManager() {
      * @param   {String} view The name of the view to process
      * @returns {Object} An object containing all the possible functions that can be called
      */
-    function setTransition(view) {
+    setTransition(view) {
 
         var transition = 5000;
         var actions = {},
@@ -193,12 +193,10 @@ function ViewManager() {
      * Create a basic skeleton of the views, with exit, enter and reset functions as empty
      * @author Miguel Celedon
      */
-    function initViews() {
+    initViews() {
 
         for(var view in window.map.views) {
-            self.views[view] = setTransition(view);
+            this.views[view] = this.setTransition(view);
         }
     }
-
-    initViews();
 }
