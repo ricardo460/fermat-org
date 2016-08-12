@@ -9,7 +9,7 @@ class BrowserManager {
             mesh : []
     };
 
-    wide = (Math.floor(window.camera.aspectRatio * 10) !== Math.floor(40 / 3));
+    wide = (Math.floor(globals.camera.aspectRatio * 10) !== Math.floor(40 / 3));
     
     LOWER_LAYER = 63000
     POSITION_X = (this.wide) ? 15000 : 12000
@@ -26,7 +26,7 @@ class BrowserManager {
      * @param {String} view  vista a cargar
      */
     actionButton(view : string) : void {
-       window.goToView(view);
+       goToView(view);
     }
 
    /**
@@ -50,7 +50,7 @@ class BrowserManager {
     * Initialization of the arrows
     */
    init(): void {
-       for (let view in window.map.views) {
+       for (let view in globals.map.views) {
            this.loadView(view);
        }
    };
@@ -64,16 +64,16 @@ class BrowserManager {
         
         let directions = ['up', 'down', 'right', 'left'];
         let newCenter = new THREE.Vector3(0, 0, 0);
-        newCenter = window.viewManager.translateToSection(view, newCenter);
+        newCenter = globals.viewManager.translateToSection(view, newCenter);
         
-        if(window.map.views[view].enabled !== true)
+        if(globals.map.views[view].enabled !== true)
             this.showSign(newCenter);
         
         let dir = '';
 
         for(let i = 0; i < directions.length; i++) {
             //Get up, down, left and right views
-            dir = window.map.views[view][directions[i]];
+            dir = globals.map.views[view][directions[i]];
             if(dir !== '')
                 this.addArrow(dir, newCenter.x, newCenter.y, directions[i]);
         }
@@ -99,7 +99,7 @@ class BrowserManager {
         );
         
         sign.position.copy(newCenter);
-        window.scene.add(sign);
+        globals.scene.add(sign);
     }
 
    /**
@@ -134,7 +134,7 @@ class BrowserManager {
 
        mesh.material.opacity = 1;
     
-       window.scene.add(mesh);
+       globals.scene.add(mesh);
     
        this.objects.mesh.push(mesh);
 
@@ -206,7 +206,7 @@ class BrowserManager {
             texture.needsUpdate = true;  
             texture.minFilter = THREE.NearestFilter;
 
-            mesh.material.map = texture;
+            (mesh.material as any).map = texture;
             mesh.material.needsUpdate = true;
 
             this.animate(mesh, this.LOWER_LAYER, 3000);
@@ -233,7 +233,7 @@ class BrowserManager {
        else
            image = { x: 100, y: 120, text: 108 };
 
-       label = window.map.views[view].title;
+       label = globals.map.views[view].title;
        text = { label: label, font: "48px Canaro, Sans-serif", size: 48 };
        config = { image: image, text: text };
        return config;
@@ -254,7 +254,7 @@ class BrowserManager {
         new TWEEN.Tween(mesh.position)
             .to({z : z}, duration)
             .easing(TWEEN.Easing.Exponential.InOut)
-            .onUpdate(window.render)
+            .onUpdate(render)
             .start();
 
    }

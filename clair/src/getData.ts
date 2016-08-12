@@ -4,21 +4,21 @@
 function getData() {
     animate();
 
-    var url = API.getAPIUrl("comps");
+    var url = globals.api.getAPIUrl("comps");
 
     //url += "?env=development"; //When needed the development branch, for lab.fermat.org
 
-    API.getCompsUser(function (list) {
+    globals.api.getCompsUser(function (list) {
 
-        window.loadMap(function () {
+        loadMap(function () {
 
-            window.tileManager.JsonTile(function () {
+            globals.tileManager.JsonTile(function () {
 
-                window.preLoad(function () {
+                preLoad(function () {
 
-                    window.tileManager.fillTable(list);
+                    globals.tileManager.fillTable(list);
                     TWEEN.removeAll();
-                    window.logo.stopFade();
+                    globals.logo.stopFade();
                     Helper.hide('welcome', 1000, true);
                     init();
 

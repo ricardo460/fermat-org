@@ -24,11 +24,11 @@ class Loader {
      * @method findThemAll
      */
     findThemAll() {
-        for (var i = 0, l = table.length; i < l; i++) {
+        /*for (var i = 0, l = globals.table.length; i < l; i++) {
             if (!table[i].found && table[i].code_level == "concept") {
                 var strIndex = "#" + i;
                 $(strIndex).append(this.getStamp());
             }
-        }
+        }*/
     };
 }

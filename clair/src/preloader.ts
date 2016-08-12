@@ -27,7 +27,7 @@ function preLoad(onLoadAll) {
                 // once we get here, we are pretty much done, so redirect to the actual page
                 if(!finished) {
                     finished = true;
-                    helper.hide('progress-bar', 1000, false);
+                    Helper.hide('progress-bar', 1000, false);
                     onLoadAll();
                 }
             }

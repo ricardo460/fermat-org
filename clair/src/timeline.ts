@@ -25,7 +25,7 @@ class Timeline {
                         lastReached = lastTarget;
 
                     let canvas = document.createElement('canvas');
-                    let oldCanvas = objects[tasks[i]].children[0].material.map.image;
+                    let oldCanvas = Helper.getSpecificTile(tasks[i]).children[0].material.map.image;
                     canvas.width = oldCanvas.width;
                     canvas.height = oldCanvas.height;
                     let ctx = canvas.getContext('2d');

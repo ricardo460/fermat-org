@@ -53,10 +53,10 @@ class SignLayer{
 		let mesh;
 		let source = "images/sign/sign.png";
 
-        window.screenshotsAndroid.setGroup(_group, titleSign);
+        globals.screenshotsAndroid.setGroup(_group, titleSign);
 
-            if(typeof window.TABLE[_group].x === 'undefined')
-                window.TABLE[_group].x = x;
+            if(typeof globals.TABLE[_group].x === 'undefined')
+                globals.TABLE[_group].x = x;
 
 		let fillBox = function(ctx, image) {
             
@@ -67,13 +67,13 @@ class SignLayer{
 
                 ctx.font = 'bold ' + size + 'px Arial';
 
-            window.helper.drawText(titleSign, 50, 80, ctx, 700, size);
+             Helper.drawText(titleSign, 50, 80, ctx, 700, size);
         };
 
-        mesh = createBoxSignLayer(source, fillBox, 720, 140);
+        mesh = this.createBoxSignLayer(source, fillBox, 720, 140);
         mesh.name = _group.concat(titleSign);
 		mesh = this.setPositionSignLayer(mesh, x , y);
-		window.scene.add(mesh);
+		globals.scene.add(mesh);
 	};
 
     /**
@@ -84,9 +84,9 @@ class SignLayer{
     * checks if a Sign Layer has been drawn
     */
     findSignLayer(group, titleSign){
-        let objectsSize = objects.length;
+        let objectsSize = this.objects.length;
         for(let i=0; i<objectsSize; i++) {
-            if(objects[i].name === group.concat(titleSign))
+            if(this.objects[i].name === group.concat(titleSign))
                 return true;
         }
 
@@ -100,16 +100,16 @@ class SignLayer{
     * function delete a Sign Layer
     */
     deleteSignLayer(_group, titleSign){
-        let objectsSize = objects.length;
+        let objectsSize = this.objects.length;
         let i = 0;
         let callback = function(pos) {
-            window.scene.remove(objects[pos]);
-            objects.splice(pos,1);
-            positions.target.splice(pos,1);
-            positions.lastTarget.splice(pos,1);
+            globals.scene.remove(this.objects[pos]);
+            this.objects.splice(pos,1);
+            this.positions.target.splice(pos,1);
+            this.positions.lastTarget.splice(pos,1);
         };
         for(i = 0; i < objectsSize; i++) {
-            if(objects[i].name === _group.concat(titleSign)) {
+            if(this.objects[i].name === _group.concat(titleSign)) {
                 this.removeSignLayer(i, callback);
                 break;
             }
@@ -118,11 +118,11 @@ class SignLayer{
 
     removeSignLayer(pos, callback){
         let duration = 3000;
-        new TWEEN.Tween(objects[pos].position)
+        new TWEEN.Tween(this.objects[pos].position)
             .to({
-                x : positions.lastTarget[pos].x,
-                y : positions.lastTarget[pos].y,
-                z : positions.lastTarget[pos].z
+                x : this.positions.lastTarget[pos].x,
+                y : this.positions.lastTarget[pos].y,
+                z : this.positions.lastTarget[pos].z
             },duration)
             .easing(TWEEN.Easing.Exponential.InOut)
             .onComplete(function () {
@@ -142,15 +142,15 @@ class SignLayer{
 
 	setPositionSignLayer(mesh, x, y){
 
-        let target = window.helper.fillTarget(x - 500, y, 0, 'table');
+        let target =  Helper.fillTarget(x - 500, y, 0, 'table');
 
         mesh.position.copy(target.hide.position);
 
-		objects.push(mesh);
+		this.objects.push(mesh);
 
-		positions.lastTarget.push(target.hide.position);
+		this.positions.lastTarget.push(target.hide.position);
 
-		positions.target.push(target.show.position);
+		this.positions.target.push(target.show.position);
 
 		return mesh;
 	};
@@ -159,12 +159,12 @@ class SignLayer{
 		
 		let duration = 3000;
 
-		for(let i = 0, l = objects.length; i < l; i++) {
-            new TWEEN.Tween(objects[i].position)
+		for(let i = 0, l = this.objects.length; i < l; i++) {
+            new TWEEN.Tween(this.objects[i].position)
             .to({
-                x : positions.target[i].x,
-                y : positions.target[i].y,
-                z : positions.target[i].z
+                x : this.positions.target[i].x,
+                y : this.positions.target[i].y,
+                z : this.positions.target[i].z
             }, Math.random() * duration + duration)
             .easing(TWEEN.Easing.Exponential.InOut)
             .start();
@@ -175,12 +175,12 @@ class SignLayer{
 
 		let duration = 3000;
             
-        for(let i = 0, l = objects.length; i < l; i++) {
-        	new TWEEN.Tween(objects[i].position)
+        for(let i = 0, l = this.objects.length; i < l; i++) {
+        	new TWEEN.Tween(this.objects[i].position)
             .to({
-                x : positions.lastTarget[i].x,
-                y : positions.lastTarget[i].y,
-                z : positions.lastTarget[i].z
+                x : this.positions.lastTarget[i].x,
+                y : this.positions.lastTarget[i].y,
+                z : this.positions.lastTarget[i].z
             }, Math.random() * duration + duration)
             .easing(TWEEN.Easing.Exponential.InOut)
             .start();

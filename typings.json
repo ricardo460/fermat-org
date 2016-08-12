@@ -9,6 +9,7 @@
     "node": "registry:dt/node#6.0.0+20160802155038",
     "orchestrator": "registry:dt/orchestrator#0.0.0+20160316155526",
     "q": "registry:dt/q#0.0.0+20160613154756",
+    "stats": "registry:dt/stats#0.16.0+20160505160752",
     "three-canvasrenderer": "registry:dt/three-canvasrenderer#0.0.0+20160317120654",
     "three-trackballcontrols": "registry:dt/three-trackballcontrols#0.0.0+20160730160925",
     "tween.js": "registry:dt/tween.js#0.0.0+20160608102153"

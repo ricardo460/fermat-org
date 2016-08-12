@@ -4,7 +4,9 @@
  */
 class ViewManager {
 
-    constructor(public views) {
+    views: string[] = [];
+
+    constructor(views? : string[]) {
         this.initViews();
     }
 
@@ -19,19 +21,19 @@ class ViewManager {
      */
     translateToSection(sectionName, vector) {
 
-    //    if(window.map.views[sectionName].title !== "Render") {
-            sectionName = window.map.views[sectionName] || window.map.start;
-            var section = sectionName.section || [0, 0];
-            var newVector = vector.clone();
+        //    if(globals.map.views[sectionName].title !== "Render") {
+        sectionName = globals.map.views[sectionName] || globals.map.start;
+        var section = sectionName.section || [0, 0];
+        var newVector = vector.clone();
 
-            if(typeof section !== 'undefined') {
+        if (typeof section !== 'undefined') {
 
-                newVector.x = vector.x + section[0] * SECTION_SIZE;
-                newVector.y = vector.y + section[1] * SECTION_SIZE;
-            }
+            newVector.x = vector.x + section[0] * this.SECTION_SIZE;
+            newVector.y = vector.y + section[1] * this.SECTION_SIZE;
+        }
 
-            return newVector;
-    //    }
+        return newVector;
+        //    }
     };
 
     /**
@@ -48,128 +50,128 @@ class ViewManager {
         var actions = {},
             enter = null, exit = null, reset = null, zoom = null, backButton = null;
 
-        if(window.map.views[view].enabled === true) {
+        if (globals.map.views[view].enabled === true) {
 
-            switch(view) {
+            switch (view) {
 
                 case 'table':
-                    enter = function() {
+                    enter = function () {
 
-                        window.tableEdit.addButton();
+                        globals.tableEdit.addButton();
 
-                        window.tileManager.transform(true, 3000 + transition);
+                        globals.tileManager.transform(true, 3000 + transition);
 
-                        setTimeout(function(){
-                            window.signLayer.transformSignLayer();
-                         }, 9500);
+                        setTimeout(function () {
+                            globals.signLayer.transformSignLayer();
+                        }, 9500);
 
                         //Special: If coming from home, delay the animation
-                        if(window.actualView === 'home')
+                        if (globals.actualView === 'home')
                             transition = transition + 3000;
 
-                        window.headers.transformTable(transition);
+                        globals.headers.transformTable(transition);
 
-                        window.developer.delete();
+                        globals.developer.delete();
                     };
 
-                    backButton = function() {
+                    backButton = function () {
 
-                        window.changeView();
+                        changeView();
 
-                        setTimeout(function(){
-                            window.signLayer.transformSignLayer();
+                        setTimeout(function () {
+                            globals.signLayer.transformSignLayer();
                         }, 2500);
 
-                        window.developer.delete();
+                        globals.developer.delete();
                     };
 
-                    exit = function() {
-                        window.tileManager.rollBack();
+                    exit = function () {
+                        globals.tileManager.rollBack();
 
-                        buttonsManager.removeAllButtons();
+                        globals.buttonsManager.removeAllButtons();
                     };
 
-                    reset = function() {
-                        window.tileManager.rollBack();
+                    reset = function () {
+                        globals.tileManager.rollBack();
 
-                        window.headers.transformTable(2000);
+                        globals.headers.transformTable(2000);
 
-                        setTimeout(function(){
-                            window.signLayer.transformSignLayer();
-                         }, 3000);
+                        setTimeout(function () {
+                            globals.signLayer.transformSignLayer();
+                        }, 3000);
                     };
 
                     break;
                 case 'stack':
-                    enter = function() {
+                    enter = function () {
 
-                        if(!window.headersUp) {
-                            headers.showHeaders(transition);
-                            window.headersUp = true;
+                        if (!globals.headersUp) {
+                            globals.headers.showHeaders(transition);
+                            globals.headersUp = true;
                         }
-                        window.headers.transformStack(transition);
+                        globals.headers.transformStack(transition);
 
-                        window.helper.hideBackButton();
+                        Helper.hideBackButton();
 
                     };
 
-                    exit = function() {
-                        window.headers.deleteArrows(transition);
+                    exit = function () {
+                        globals.headers.deleteArrows(transition);
                     };
 
                     break;
                 case 'home':
-                    enter = function() {
-                        window.logo.stopFade(2000);
-                        window.guide.addButton();
+                    enter = function () {
+                        globals.logo.stopFade(2000);
+                        globals.guide.addButton();
                     };
 
-                    exit = function() {
+                    exit = function () {
 
-                        window.buttonsManager.removeAllButtons();
+                        globals.buttonsManager.removeAllButtons();
 
                     };
                     break;
                 case 'workflows':
-                    enter = function() {
-                        if(!window.headersUp) {
-                            headers.showHeaders(transition);
-                            window.headersUp = true;
+                    enter = function () {
+                        if (!globals.headersUp) {
+                            globals.headers.showHeaders(transition);
+                            globals.headersUp = true;
                         }
-                        window.workFlowManager.getHeaderFLow();
-                        window.headers.transformWorkFlow(transition);
-                        window.workFlowEdit.addButton();
+                        globals.workFlowManager.getHeaderFLow();
+                        globals.headers.transformWorkFlow(transition);
+                        globals.workFlowEdit.addButton();
                     };
 
-                    backButton = reset = function() {
+                    backButton = reset = function () {
 
-                        window.workFlowManager.showWorkFlow();
+                        globals.workFlowManager.showWorkFlow();
                     };
 
-                    exit = function() {
-                        window.buttonsManager.removeAllButtons();
-                        window.workFlowManager.deleteAllWorkFlows();
+                    exit = function () {
+                        globals.buttonsManager.removeAllButtons();
+                        globals.workFlowManager.deleteAllWorkFlows();
                     };
                     break;
                 case 'developers':
-                    enter = function(){
-                        window.developer.getDeveloper();
+                    enter = function () {
+                        globals.developer.getDeveloper();
 
-                        setTimeout(function(){
-                            window.developer.animateDeveloper();
+                        setTimeout(function () {
+                            globals.developer.animateDeveloper();
                         }, 2500);
                     };
 
-                    backButton = reset = function() {
+                    backButton = reset = function () {
                         //setTimeout(function(){
-                            window.developer.animateDeveloper();
+                        globals.developer.animateDeveloper();
                         //}, 2000);
 
-                        window.changeView();
+                        changeView();
                     };
 
-                    exit = function() {
-                        window.developer.delete();
+                    exit = function () {
+                        globals.developer.delete();
                     };
 
                     break;
@@ -179,11 +181,11 @@ class ViewManager {
         }
 
         actions = {
-            enter : enter || function(){},
-            exit : exit || function(){},
-            reset : reset || function(){},
-            zoom : zoom || function(){},
-            backButton : backButton || function(){}
+            enter: enter || function () { },
+            exit: exit || function () { },
+            reset: reset || function () { },
+            zoom: zoom || function () { },
+            backButton: backButton || function () { }
         };
 
         return actions;
@@ -195,7 +197,7 @@ class ViewManager {
      */
     initViews() {
 
-        for(var view in window.map.views) {
+        for (var view in globals.map.views) {
             this.views[view] = this.setTransition(view);
         }
     }

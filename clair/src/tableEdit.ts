@@ -3,8 +3,8 @@
  */
 class TableEdit {
 
-    tileWidth = TILE_DIMENSION.width - TILE_SPACING,
-    tileHeight = TILE_DIMENSION.height - TILE_SPACING;
+    tileWidth = globals.TILE_DIMENSION.width - globals.TILE_SPACING;
+    tileHeight = globals.TILE_DIMENSION.height - globals.TILE_SPACING;
 
 
     /**
@@ -21,77 +21,77 @@ class TableEdit {
 
         if(id === null){
 
-            if(!window.session.getIsLogin()){
+            if(!globals.session.getIsLogin()){
             
                 callback = function(){ 
-                    window.session.getAuthCode();
+                    globals.session.getAuthCode();
                 };
             }
             else{
 
                 callback = function(){ 
 
-                    window.fieldsEdit.actions.type = "insert";
+                    globals.fieldsEdit.actions.type = "insert";
 
-                    window.buttonsManager.removeAllButtons();
+                    globals.buttonsManager.removeAllButtons();
 
-                    window.session.displayLoginButton(false);
+                    globals.session.displayLoginButton(false);
 
-                    drawTile(null, addAllFilds);
+                    this.drawTile(null, this.addAllFilds);
                 };
 
             }
 
-            window.session.displayLoginButton(true);
+            globals.session.displayLoginButton(true);
 
             text = 'Add New Component';
             button = 'buttonFermatNew';
             side = 'left';
 
-            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+            globals.buttonsManager.createButtons(button, text, callback, null, null, side);
 
         }
         else{
 
-            if(!window.session.getIsLogin()){
+            if(!globals.session.getIsLogin()){
             
                 callback = function(){ 
-                    window.session.getAuthCode();
+                    globals.session.getAuthCode();
                 };
             }
             else{
 
                 callback = function(){
 
-                    validateLock(id, function(){ 
+                    this.validateLock(id, function(){ 
 
-                        window.fieldsEdit.actions.type = "update";
-                        window.buttonsManager.removeAllButtons(); 
-                        addAllFilds();
-                        fillFields(id);
-                        drawTile(id);
+                        globals.fieldsEdit.actions.type = "update";
+                        globals.buttonsManager.removeAllButtons(); 
+                        this.addAllFilds();
+                        this.fillFields(id);
+                        this.drawTile(id);
                     });
                 };
             }
 
-            window.session.displayLoginButton(false);
+            globals.session.displayLoginButton(false);
 
-            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+            globals.buttonsManager.createButtons(button, text, callback, null, null, side);
 
-            if(!window.session.getIsLogin()){
+            if(!globals.session.getIsLogin()){
             
                 callback = function(){ 
-                    window.session.getAuthCode();
+                    globals.session.getAuthCode();
                 };
             }
             else{ 
 
                 callback = function(){
 
-                    validateLock(id, function(){ 
+                    this.validateLock(id, function(){ 
                         
                         if(window.confirm("Are you sure you want to remove this component?"))           
-                            deleteTile(id);
+                            this.deleteTile(id);
                     });                
                 };
             }
@@ -100,60 +100,60 @@ class TableEdit {
             button = 'buttonFermatDelete';
             side = 'right';
 
-            window.buttonsManager.createButtons(button, text, callback, null, null, side);
+            globals.buttonsManager.createButtons(button, text, callback, null, null, side);
         }   
     
     };
 
     addAllFilds(){
 
-        window.fieldsEdit.createFieldTableEdit();
+        globals.fieldsEdit.createFieldTableEdit();
     }
 
     // Start editing
     fillFields(id){
 
-        let tile = window.helper.clone(window.helper.getSpecificTile(id).data);
+        let tile = Helper.clone(Helper.getSpecificTile(id).data);
 
-        window.fieldsEdit.actualTile = window.helper.clone(tile);
+        globals.fieldsEdit.actualTile = Helper.clone(tile);
 
         if(tile.platform !== undefined)
-            document.getElementById('select-Group').value = tile.platform;
+            (document.getElementById('select-Group') as any).value = tile.platform;
         else
-            document.getElementById('select-Group').value = window.layers[tile.layer].super_layer;
+            (document.getElementById('select-Group') as any).value = globals.layers[tile.layer].super_layer;
 
-        window.fieldsEdit.changeLayer(document.getElementById('select-Group').value);
+        (globals.fieldsEdit.changeLayer(document.getElementById('select-Group') as any).value);
 
         if(tile.layer !== undefined)        
-            document.getElementById('select-layer').value = tile.layer;
+            (document.getElementById('select-layer') as any).value = tile.layer;
 
         if(tile.type !== undefined)
-            document.getElementById('select-Type').value = tile.type;
+            (document.getElementById('select-Type') as any).value = tile.type;
         
         if(tile.difficulty !== undefined)
-            document.getElementById('select-Difficulty').value = tile.difficulty; 
+            (document.getElementById('select-Difficulty') as any).value = tile.difficulty; 
 
         if(tile.code_level !== undefined)
-            document.getElementById('select-State').value = tile.code_level; 
+            (document.getElementById('select-State') as any).value = tile.code_level; 
 
         if(tile.name !== undefined) 
-            document.getElementById('imput-Name').value = tile.name;       
+            (document.getElementById('imput-Name') as any).value = tile.name;       
         
         
         if(tile.devs !== undefined) 
-            document.getElementById('modal-devs').value = tile.devs.slice(0);
+            (document.getElementById('modal-devs') as any).value = tile.devs.slice(0);
         
         if(tile.description !== undefined)
-            document.getElementById('modal-desc-textarea').value = tile.description;
+            (document.getElementById('modal-desc-textarea') as any).value = tile.description;
     }
 
     createElement() {
 
-        let newCenter = window.helper.getCenterView('table'),
-            y = window.helper.getLastValueArray(window.tileManager.dimensions.layerPositions) + (window.TILE_DIMENSION.height * 2);
+        let newCenter = Helper.getCenterView('table'),
+            y = Helper.getLastValueArray(globals.tileManager.dimensions.layerPositions) + (globals.TILE_DIMENSION.height * 2);
 
         let mesh = new THREE.Mesh(
-                   new THREE.PlaneBufferGeometry(tileWidth, tileHeight),
+                   new THREE.PlaneBufferGeometry(this.tileWidth, this.tileHeight),
                    new THREE.MeshBasicMaterial({
                             side: THREE.DoubleSide,
                             transparent : true,
@@ -161,9 +161,9 @@ class TableEdit {
                         })
                 );
 
-        y = transformPositionY(y);
+        y = this.transformPositionY(y);
 
-        let target = window.helper.fillTarget(newCenter.x, y, newCenter.z, 'table');
+        let target = Helper.fillTarget(newCenter.x, y, newCenter.z, 'table');
 
         mesh.position.copy(target.hide.position);
 
@@ -171,65 +171,65 @@ class TableEdit {
 
         mesh.renderOrder = 1;
 
-        window.scene.add(mesh);
+        globals.scene.add(mesh);
 
-        window.fieldsEdit.objects.tile.mesh = mesh;
+        globals.fieldsEdit.objects.tile.mesh = mesh;
 
-        window.fieldsEdit.objects.tile.target = target;
+        globals.fieldsEdit.objects.tile.target = target;
     }
 
     drawTile(id, callback){
 
-        if(window.fieldsEdit.objects.tile.mesh === null)
-            createElement();
+        if(globals.fieldsEdit.objects.tile.mesh === null)
+            this.createElement();
 
-        let mesh = window.fieldsEdit.objects.tile.mesh;
+        let mesh = globals.fieldsEdit.objects.tile.mesh;
         
         let exit = null;
 
-        if(window.fieldsEdit.actions.type === "insert") {
+        if(globals.fieldsEdit.actions.type === "insert") {
 
             exit = function(){
-                window.camera.resetPosition();
+                globals.camera.resetPosition();
             };
 
-            window.fieldsEdit.actions.exit = exit;
+            globals.fieldsEdit.actions.exit = exit;
 
-            animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
+            this.animate(mesh, globals.fieldsEdit.objects.tile.target.show, 1000, function(){ 
 
-                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 2000);
+                globals.camera.setFocus(mesh, new THREE.Vector4(0, 0, this.tileWidth, 1), 2000);
 
                 if(typeof(callback) === 'function')
                     callback(); 
                 
                 this.changeTexture();
 
-                window.camera.disable(); 
+                globals.camera.disable(); 
 
-                window.helper.showBackButton();
+                Helper.showBackButton();
 
             });
         }
         else{
 
             exit = function(){
-                window.camera.resetPosition();
+                globals.camera.resetPosition();
             };
 
-            window.fieldsEdit.actions.exit = exit;
+            globals.fieldsEdit.actions.exit = exit;
 
             this.changeTexture();
 
-            animate(mesh, window.fieldsEdit.objects.tile.target.show, 1000, function(){ 
+            this.animate(mesh, globals.fieldsEdit.objects.tile.target.show, 1000, function(){ 
 
-                window.camera.setFocus(mesh, new THREE.Vector4(0, 0, tileWidth, 1), 1500);
+                globals.camera.setFocus(mesh, new THREE.Vector4(0, 0, this.tileWidth, 1), 1500);
 
-                window.tileManager.transform(false, 1000);
-                window.signLayer.transformSignLayer();
+                globals.tileManager.transform(false, 1000);
+                globals.signLayer.transformSignLayer();
 
                 setTimeout( function() {
-                    let data = helper.getSpecificTile(id);
-                    animate(data.mesh, data.target.hide, 1000);
+                    let data = Helper.getSpecificTile(id);
+                    this.animate(data.mesh, data.target.hide, 1000);
                 }, 2000 );
 
             });
@@ -243,26 +243,26 @@ class TableEdit {
             scale = 5,
             mesh = null;
 
-        table = fillTable();
+        table = this.fillTable();
 
-        mesh = window.fieldsEdit.objects.tile.mesh;
+        mesh = globals.fieldsEdit.objects.tile.mesh;
 
-        mesh.material.map = window.tileManager.createTexture(null, 'high', tileWidth, tileHeight, scale, table); 
+        mesh.material.map = globals.tileManager.createTexture(null, 'high', this.tileWidth, this.tileHeight, scale, table); 
         mesh.material.needsUpdate = true; 
 
     };
 
     deleteMesh(){
 
-        let mesh = window.fieldsEdit.objects.tile.mesh;
+        let mesh = globals.fieldsEdit.objects.tile.mesh;
 
         if(mesh != null){ 
 
-            animate(mesh, window.fieldsEdit.objects.tile.target.hide, 1500, function(){ 
-                    window.scene.remove(mesh);
+            this.animate(mesh, globals.fieldsEdit.objects.tile.target.hide, 1500, function(){ 
+                    globals.scene.remove(mesh);
                 });
 
-            window.fieldsEdit.objects.tile.mesh = null;
+            globals.fieldsEdit.objects.tile.mesh = null;
         }
     };
     // end
@@ -270,26 +270,26 @@ class TableEdit {
     //Save Tile
     saveTile(){
 
-        if(validateFields() === ''){ 
+        if(this.validateFields() === ''){ 
 
-            let table = fillTable();
+            let table = this.fillTable();
 
-            window.fieldsEdit.disabledButtonSave(true);
+            globals.fieldsEdit.disabledButtonSave(true);
             
-            if(window.fieldsEdit.actions.type === "insert")
-                createTile(table);
-            else if(window.fieldsEdit.actions.type === "update")
-                modifyTile(table);
+            if(globals.fieldsEdit.actions.type === "insert")
+                this.createTile(table);
+            else if(globals.fieldsEdit.actions.type === "update")
+                this.modifyTile(table);
         }
         else{
-             window.alert(validateFields());
+             window.alert(this.validateFields());
         }
     };
 
     validateFields(){
         let msj = '';
 
-        let name = document.getElementById('imput-Name');
+        let name = document.getElementById('imput-Name') as any;
 
         if(name.value === ""){
             msj += 'The component must have a name \n';
@@ -305,19 +305,19 @@ class TableEdit {
 
         let params = getParamsData(_table);  
 
-        window.API.postRoutesEdit('tableEdit', 'insert', params, null,
+        globals.api.postRoutesEdit('tableEdit', 'insert', params, null,
             function(res){ 
 
                 _table.id = res._id;
 
                 postParamsDev(_table, function(table){
 
-                    window.camera.loseFocus();
-                    window.camera.enable();
+                    globals.camera.loseFocus();
+                    globals.camera.enable();
                         
                     let x, y, z;
 
-                    let platform = table.platform || window.layers[table.layer].super_layer,
+                    let platform = table.platform || globals.layers[table.layer].super_layer,
                         layer = table.layer,
                         object = { 
                             mesh : null,
@@ -326,91 +326,91 @@ class TableEdit {
                             id : null
                         };
 
-                    if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
-                        window.TABLE[platform].layers[layer] = {   
+                    if(typeof globals.TABLE[platform].layers[layer] === 'undefined'){ 
+                        globals.TABLE[platform].layers[layer] = {   
                             objects : [],
                             y : y 
                         };
                     }
 
-                    let count = window.TABLE[platform].layers[layer].objects.length;
+                    let count = globals.TABLE[platform].layers[layer].objects.length;
 
                     object.id = platform + '_' + layer + '_' + count;
 
-                    let mesh = window.tileManager.createElement(object.id, table);
+                    let mesh = globals.tileManager.createElement(object.id, table);
 
-                    let lastObject = helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
+                    let lastObject = Helper.getLastValueArray(globals.TABLE[platform].layers[layer].objects);
 
                     x = 0;
 
                     if(!lastObject)
-                        x = window.TABLE[platform].x;
+                        x = globals.TABLE[platform].x;
                     else
-                        x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
+                        x = lastObject.target.show.position.x + globals.TILE_DIMENSION.width;
 
-                    let index = window.layers[layer].index;
+                    let index = globals.layers[layer].index;
 
-                    y = transformPositionY(window.tileManager.dimensions.layerPositions[index]);
+                    y = this.transformPositionY(globals.tileManager.dimensions.layerPositions[index]);
 
                     z = 0;
 
-                    let target = helper.fillTarget(x, y, z, 'table');
+                    let target = Helper.fillTarget(x, y, z, 'table');
 
                     mesh.position.copy(target.hide.position);
                     mesh.rotation.copy(target.hide.rotation);
 
-                    window.scene.add(mesh);
+                    globals.scene.add(mesh);
 
                     object.mesh = mesh;
                     object.data = table;
                     object.target = target;
 
-                    window.camera.move(target.show.position.x, target.show.position.y, target.show.position.z + 8000, 3000);
+                    globals.camera.move(target.show.position.x, target.show.position.y, target.show.position.z + 8000, 3000);
 
-                    animate(mesh, target.show, 3500, function(){
+                    this.animate(mesh, target.show, 3500, function(){
 
-                        window.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
-                        window.tileManager.updateElementsByGroup();
+                        globals.screenshotsAndroid.hidePositionScreenshots(platform, layer); 
+                        globals.tileManager.updateElementsByGroup();
                     });
 
                     setTimeout( function() {
                         
                         if(count < 1){
 
-                            if(!window.signLayer.findSignLayer(platform, layer)){
+                            if(!globals.signLayer.findSignLayer(platform, layer)){
 
-                                window.signLayer.createSignLayer(x, y, layer, platform);
-                                window.signLayer.transformSignLayer();
+                                globals.signLayer.createSignLayer(x, y, layer, platform);
+                                globals.signLayer.transformSignLayer();
                             }
                         }
                     }, 2000 );
                             
-                    window.TABLE[platform].layers[layer].objects.push(object);
+                    globals.TABLE[platform].layers[layer].objects.push(object);
 
                 });
             },
             function(){
                 window.alert('There is already a component with that name in this group and layer, please use another one');
-                window.fieldsEdit.disabledButtonSave(false);
+                globals.fieldsEdit.disabledButtonSave(false);
             });
 
         function getParamsData(table){
 
-            let param = { };
+            let param : any = { };
 
             let newLayer = table.layer,
-                newGroup = table.platform || window.layers[table.layer].super_layer;
+                newGroup = table.platform || globals.layers[table.layer].super_layer;
 
-            if(typeof window.platforms[newGroup] !== "undefined"){
-                param.platfrm_id = window.platforms[newGroup]._id;
+            if(typeof globals.platforms[newGroup] !== "undefined"){
+                param.platfrm_id = globals.platforms[newGroup]._id;
                 param.suprlay_id = null;
             }
             else{
-                param.suprlay_id = window.superLayers[newGroup]._id;
+                param.suprlay_id = globals.superLayers[newGroup]._id;
                 param.platfrm_id = null;
             }
             
-            param.layer_id = window.layers[newLayer]._id;
+            param.layer_id = globals.layers[newLayer]._id;
             
             param.name = table.name;
 
@@ -455,14 +455,14 @@ class TableEdit {
                                 comp_id : table.id
                             };
 
-                    let param = {};
+                    let param : any = {};
 
                     param.dev_id = devs[0].dev._id;
                     param.percnt = devs[0].percnt;
                     param.role = devs[0].role;
                     param.scope = devs[0].scope;
 
-                    window.API.postRoutesEdit('tableEdit', 'insert dev', param, dataPost,
+                    globals.api.postRoutesEdit('tableEdit', 'insert dev', param, dataPost,
                         function(res){
 
                             devs[0]._id = res._id;
@@ -490,41 +490,41 @@ class TableEdit {
         let params = getParamsData(_table);
 
         let dataPost = {
-                comp_id : window.fieldsEdit.actualTile.id
+                comp_id : globals.fieldsEdit.actualTile.id
             };
 
-        window.API.postRoutesEdit('tableEdit', 'update', params, dataPost,
+        globals.api.postRoutesEdit('tableEdit', 'update', params, dataPost,
             function(res){ 
 
-                _table.id = window.fieldsEdit.actualTile.id;
+                _table.id = globals.fieldsEdit.actualTile.id;
 
                 postParamsDev(_table, function(table){
 
-                    let oldTile = window.helper.clone(window.fieldsEdit.actualTile),
+                    let oldTile = Helper.clone(globals.fieldsEdit.actualTile),
                         newLayer = table.layer,
-                        newGroup = table.platform || window.layers[table.layer].super_layer,
+                        newGroup = table.platform || globals.layers[table.layer].super_layer,
                         oldLayer = oldTile.layer,
-                        oldGroup = oldTile.platform || window.layers[oldTile.layer].super_layer;
+                        oldGroup = oldTile.platform || globals.layers[oldTile.layer].super_layer;
                         
 
-                    window.camera.loseFocus();
-                    window.camera.enable();
+                    globals.camera.loseFocus();
+                    globals.camera.enable();
 
-                    let arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects.slice(0);
+                    let arrayObject = globals.TABLE[oldGroup].layers[oldLayer].objects.slice(0);
 
                     for(let i = 0; i < arrayObject.length; i++){
                         
                         if(arrayObject[i].data.author === oldTile.author && arrayObject[i].data.name === oldTile.name){
 
-                            window.scene.remove(arrayObject[i].mesh);
+                            globals.scene.remove(arrayObject[i].mesh);
                             
                         }
                     }
 
-                    let positionCameraX = window.TABLE[oldGroup].x,
-                        positionCameraY = transformPositionY(window.helper.getPositionYLayer(oldLayer));
+                    let positionCameraX = globals.TABLE[oldGroup].x,
+                        positionCameraY = this.transformPositionY(Helper.getPositionYLayer(oldLayer));
 
-                    window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
+                    globals.camera.move(positionCameraX, positionCameraY, 8000, 2000);
 
                     setTimeout( function() {
 
@@ -537,10 +537,10 @@ class TableEdit {
 
                     function change(){
 
-                        window.TABLE[oldGroup].layers[oldLayer].objects = [];
+                        globals.TABLE[oldGroup].layers[oldLayer].objects = [];
                         let idScreenshot = oldGroup + "_" + oldLayer + "_" + oldTile.name;
 
-                        window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+                        globals.screenshotsAndroid.deleteScreenshots(idScreenshot);
                
                         for(let i = 0; i < arrayObject.length; i++){
                             
@@ -550,18 +550,18 @@ class TableEdit {
                             }
                         }
 
-                        window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+                        globals.TABLE[oldGroup].layers[oldLayer].objects = this.modifyRowTable(arrayObject, oldGroup, oldLayer);
 
                         setTimeout( function() { 
 
-                            positionCameraX = window.TABLE[newGroup].x;
-                            positionCameraY = transformPositionY(window.helper.getPositionYLayer(newLayer));
+                            positionCameraX = globals.TABLE[newGroup].x;
+                            positionCameraY = this.transformPositionY(Helper.getPositionYLayer(newLayer));
 
-                            camera.move(positionCameraX, positionCameraY,8000, 2000);
+                            globals.camera.move(positionCameraX, positionCameraY,8000, 2000);
 
-                            createNewElementTile(table);
-                            window.screenshotsAndroid.hidePositionScreenshots(newGroup, newLayer);
-                            window.tileManager.updateElementsByGroup();
+                            this.createNewElementTile(table);
+                            globals.screenshotsAndroid.hidePositionScreenshots(newGroup, newLayer);
+                            globals.tileManager.updateElementsByGroup();
 
                         }, 2000 );
 
@@ -569,7 +569,7 @@ class TableEdit {
 
                     function notChange(){
 
-                        let arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects;
+                        let arrayObject = globals.TABLE[oldGroup].layers[oldLayer].objects;
                         let target = null;
                         let _ID = null;
                         let id = 0;
@@ -577,27 +577,27 @@ class TableEdit {
                         let idScreenshot = oldGroup + "_" + oldLayer + "_" + oldTile.name;
 
                         if(oldTile.name !== table.name)
-                            window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+                            globals.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
                         for(let i = 0; i < arrayObject.length; i++){
                             
                             if(arrayObject[i].data.author === oldTile.author && arrayObject[i].data.name === oldTile.name){
 
                                 id = i;
-                                window.TABLE[oldGroup].layers[oldLayer].objects[i].data = table;
-                                target = window.TABLE[oldGroup].layers[oldLayer].objects[i].target;
-                                _ID = window.TABLE[oldGroup].layers[oldLayer].objects[i].id;
+                                globals.TABLE[oldGroup].layers[oldLayer].objects[i].data = table;
+                                target = globals.TABLE[oldGroup].layers[oldLayer].objects[i].target;
+                                _ID = globals.TABLE[oldGroup].layers[oldLayer].objects[i].id;
                             }
                         }
 
-                        let mesh = window.tileManager.createElement(_ID, table);
+                        let mesh = globals.tileManager.createElement(_ID, table);
 
-                        window.TABLE[oldGroup].layers[oldLayer].objects[id].mesh = mesh;
+                        globals.TABLE[oldGroup].layers[oldLayer].objects[id].mesh = mesh;
 
-                        window.scene.add(mesh);
+                        globals.scene.add(mesh);
                         
-                        animate(mesh, target.show, 2000,function(){
-                            window.screenshotsAndroid.hidePositionScreenshots(oldGroup, oldLayer); 
+                        this.animate(mesh, target.show, 2000,function(){
+                            globals.screenshotsAndroid.hidePositionScreenshots(oldGroup, oldLayer); 
                         });
 
                     }
@@ -608,46 +608,46 @@ class TableEdit {
         function(){
             window.alert('There is already a component with that name in this group and layer, please use another one');
             
-            window.fieldsEdit.disabledButtonSave(false);
+            globals.fieldsEdit.disabledButtonSave(false);
         });
 
-        getParamsData(table){
+        function getParamsData(table){
 
-            let param = {};
+            let param : any = {};
 
             let newLayer = table.layer,
-                newGroup = table.platform || window.layers[table.layer].super_layer,
-                oldLayer = window.fieldsEdit.actualTile.layer,
-                oldGroup = window.fieldsEdit.actualTile.platform || window.layers[window.fieldsEdit.actualTile.layer].super_layer;
+                newGroup = table.platform || globals.layers[table.layer].super_layer,
+                oldLayer = globals.fieldsEdit.actualTile.layer,
+                oldGroup = globals.fieldsEdit.actualTile.platform || globals.layers[globals.fieldsEdit.actualTile.layer].super_layer;
 
-            if(typeof window.platforms[newGroup] !== "undefined"){ 
-                param.platfrm_id = window.platforms[newGroup]._id;
+            if(typeof globals.platforms[newGroup] !== "undefined"){ 
+                param.platfrm_id = globals.platforms[newGroup]._id;
                 param.suprlay_id = null;
             }
             else{
-                param.suprlay_id = window.superLayers[newGroup]._id;
+                param.suprlay_id = globals.superLayers[newGroup]._id;
                 param.platfrm_id = null;
             }
 
             if(newLayer !== oldLayer)
-                param.layer_id = window.layers[newLayer]._id;
+                param.layer_id = globals.layers[newLayer]._id;
             
-            if(table.name !== window.fieldsEdit.actualTile.name)
+            if(table.name !== globals.fieldsEdit.actualTile.name)
                 param.name = table.name;
 
-            if(table.type !== window.fieldsEdit.actualTile.type)
+            if(table.type !== globals.fieldsEdit.actualTile.type)
                 param.type = table.type.toLowerCase();
 
-            if(table.difficulty !== window.fieldsEdit.actualTile.difficulty)
+            if(table.difficulty !== globals.fieldsEdit.actualTile.difficulty)
                 param.difficulty = parseInt(table.difficulty);
 
-            if(table.code_level !== window.fieldsEdit.actualTile.code_level)
+            if(table.code_level !== globals.fieldsEdit.actualTile.code_level)
                 param.code_level = table.code_level.toLowerCase();
 
-            if(table.description !== window.fieldsEdit.actualTile.description)
+            if(table.description !== globals.fieldsEdit.actualTile.description)
                 param.description = table.description;
 
-            if(table.repo_dir.toLowerCase() !== window.fieldsEdit.actualTile.repo_dir.toLowerCase()) 
+            if(table.repo_dir.toLowerCase() !== globals.fieldsEdit.actualTile.repo_dir.toLowerCase()) 
                 param.repo_dir = table.repo_dir;
             
             param.found = true;
@@ -655,10 +655,10 @@ class TableEdit {
             return param;
         }
 
-        postParamsDev(table, callback){
+        function postParamsDev(table, callback){
 
             let newDevs = table.devs.slice(0),
-                oldDevs = window.fieldsEdit.actualTile.devs.slice(0),
+                oldDevs = globals.fieldsEdit.actualTile.devs.slice(0),
                 newTableDevs = [],
                 config = { 
                         insert :{
@@ -683,9 +683,9 @@ class TableEdit {
 
                     postDevs('insert',config.insert.devs.slice(0), function(){
 
-                        table.devs = newTableDevs;
+                        this.table.devs = newTableDevs;
                         
-                        callback(table);
+                        callback(this.table);
                     });
                 });
             });
@@ -693,8 +693,11 @@ class TableEdit {
             function fillDevs(newDevs, oldDevs, task){
                 
                 function find_Dev(_index) {
-                    if(_index._id === oldDevs[f]._id)
-                        return _index;            
+                    for (let f = 0; f < oldDevs.length; f++) {
+                        if (_index._id === oldDevs[f]._id)
+                            return _index;
+                    }
+                    return null;
                 }
 
                 if(newDevs.length > 0){
@@ -754,11 +757,11 @@ class TableEdit {
 
                 if(array.length > 0){
 
-                    let dataPost = {
+                    let dataPost : any = {
                                 comp_id : table.id
                             };
 
-                    let param = {};
+                    let param : any = {};
 
                     if(task === 'update' || task === 'delete')
                         dataPost.devs_id = array[0]._id;
@@ -772,7 +775,7 @@ class TableEdit {
                     else
                         param.scope = 'default';
 
-                    window.API.postRoutesEdit('tableEdit', config[task].route, param, dataPost,
+                    globals.api.postRoutesEdit('tableEdit', config[task].route, param, dataPost,
                         function(res){
 
                             if(task !== 'delete'){ 
@@ -788,7 +791,7 @@ class TableEdit {
 
                         },
                         function(){
-                            window.fieldsEdit.disabledButtonSave(false);
+                            globals.fieldsEdit.disabledButtonSave(false);
                         });
                 
                 }
@@ -803,37 +806,37 @@ class TableEdit {
 
     deleteTile(id){
 
-        let table = window.helper.getSpecificTile(id).data;
+        let table = Helper.getSpecificTile(id).data;
 
         let dataPost = {
                 comp_id : table.id
             };
 
-        window.API.postRoutesEdit('tableEdit', 'delete', false, dataPost,
+        globals.api.postRoutesEdit('tableEdit', 'delete', false, dataPost,
             function(res){ 
 
                 let oldLayer = table.layer,
-                    oldGroup = table.platform || window.layers[table.layer].super_layer,
-                    arrayObject = window.TABLE[oldGroup].layers[oldLayer].objects.slice(),
+                    oldGroup = table.platform || globals.layers[table.layer].super_layer,
+                    arrayObject = globals.TABLE[oldGroup].layers[oldLayer].objects.slice(),
                     idScreenshot = oldGroup + "_" + oldLayer + "_" + table.name;
 
-                window.screenshotsAndroid.deleteScreenshots(idScreenshot);
+                globals.screenshotsAndroid.deleteScreenshots(idScreenshot);
 
-                let positionCameraX = window.TABLE[oldGroup].x,
-                    positionCameraY = transformPositionY(window.helper.getPositionYLayer(oldLayer));
+                let positionCameraX = globals.TABLE[oldGroup].x,
+                    positionCameraY = this.transformPositionY(Helper.getPositionYLayer(oldLayer));
 
-                window.camera.loseFocus();
-                window.camera.enable();
+                globals.camera.loseFocus();
+                globals.camera.enable();
 
-                window.tileManager.transform(false, 1000);
-                window.headers.transformTable(1000);
-                window.signLayer.transformSignLayer();
+                globals.tileManager.transform(false, 1000);
+                globals.headers.transformTable(1000);
+                globals.signLayer.transformSignLayer();
 
-                window.camera.move(positionCameraX, positionCameraY, 8000, 2000);
+                globals.camera.move(positionCameraX, positionCameraY, 8000, 2000);
 
                 setTimeout( function() {
 
-                    window.TABLE[oldGroup].layers[oldLayer].objects = [];
+                    globals.TABLE[oldGroup].layers[oldLayer].objects = [];
                
                     id = id.split("_");
 
@@ -841,17 +844,17 @@ class TableEdit {
 
                     let mesh = arrayObject[id].mesh;
 
-                    let target =  window.helper.fillTarget(0, 0, 160000, 'table');
+                    let target =  Helper.fillTarget(0, 0, 160000, 'table');
 
-                    animate(mesh, target.hide, 1500, function(){
-                        window.scene.remove(mesh);
+                    this.animate(mesh, target.hide, 1500, function(){
+                        globals.scene.remove(mesh);
                     });
 
                     arrayObject.splice(id, 1);
 
-                    window.TABLE[oldGroup].layers[oldLayer].objects = modifyRowTable(arrayObject, oldGroup, oldLayer);
+                    globals.TABLE[oldGroup].layers[oldLayer].objects = this.modifyRowTable(arrayObject, oldGroup, oldLayer);
 
-                    window.tileManager.updateElementsByGroup();
+                    globals.tileManager.updateElementsByGroup();
 
                 }, 3500 );
 
@@ -864,7 +867,7 @@ class TableEdit {
 
         let x, y, z;
 
-        let platform = table.platform || window.layers[table.layer].super_layer,
+        let platform = table.platform || globals.layers[table.layer].super_layer,
             layer = table.layer,
             object = { 
                 mesh : null,
@@ -873,67 +876,67 @@ class TableEdit {
                 id : null
             };
 
-        if(typeof window.TABLE[platform].layers[layer] === 'undefined'){ 
-            window.TABLE[platform].layers[layer] = {   
+        if(typeof globals.TABLE[platform].layers[layer] === 'undefined'){ 
+            globals.TABLE[platform].layers[layer] = {   
                 objects : [],
-                y : transformPositionY(window.helper.getPositionYLayer(layer))
+                y : this.transformPositionY(Helper.getPositionYLayer(layer))
             };
         }
 
-        let lastObject = window.helper.getLastValueArray(window.TABLE[platform].layers[layer].objects);
+        let lastObject = Helper.getLastValueArray(globals.TABLE[platform].layers[layer].objects);
 
-        let count = window.TABLE[platform].layers[layer].objects.length;
+        let count = globals.TABLE[platform].layers[layer].objects.length;
 
         object.id = platform + '_' + layer + '_' + count;
 
-        let mesh = window.tileManager.createElement(object.id, table);
+        let mesh = globals.tileManager.createElement(object.id, table);
     
         x = 0;
 
         if(!lastObject)
-            x = window.TABLE[platform].x;
+            x = globals.TABLE[platform].x;
         else
-            x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
+            x = lastObject.target.show.position.x + globals.TILE_DIMENSION.width;
 
-        y = transformPositionY(window.helper.getPositionYLayer(layer));
+        y = this.transformPositionY(Helper.getPositionYLayer(layer));
 
         z = 0;
 
-        let target = window.helper.fillTarget(x, y, z, 'table');
+        let target = Helper.fillTarget(x, y, z, 'table');
 
         mesh.position.copy(target.hide.position);
         mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
 
-        window.scene.add(mesh);
+        globals.scene.add(mesh);
 
         object.mesh = mesh;
         object.data = table;
         object.target = target;
 
-        animate(mesh, target.show, 2500, function(){
+        this.animate(mesh, target.show, 2500, function(){
 
             if(count < 1){
 
-                if(!window.signLayer.findSignLayer(platform, layer)){
+                if(!globals.signLayer.findSignLayer(platform, layer)){
 
-                    window.signLayer.createSignLayer(x, y, layer, platform);
-                    window.signLayer.transformSignLayer();
+                    globals.signLayer.createSignLayer(x, y, layer, platform);
+                    globals.signLayer.transformSignLayer();
                 }
             }
         });
                 
-        window.TABLE[platform].layers[layer].objects.push(object);
+        globals.TABLE[platform].layers[layer].objects.push(object);
     }
 
     validateLock(_id, callback){
 
-        let id = window.helper.getSpecificTile(_id).data.id;
+        let id = Helper.getSpecificTile(_id).data.id;
 
         let dataPost = {
                 comp_id : id
             };
 
-        window.API.postValidateLock('tableEdit', dataPost,
+        globals.api.postValidateLock('tableEdit', dataPost,
             function(res){ 
 
                 if(typeof(callback) === 'function')
@@ -948,33 +951,33 @@ class TableEdit {
 
     fillTable(){
 
-        let table = {platform : undefined},
+        let table : any = {platform : undefined},
             data = {},
-            group = document.getElementById(window.fieldsEdit.objects.idFields.group).value,
-            layer = document.getElementById(window.fieldsEdit.objects.idFields.layer).value,
-            platformID = helper.getCountObject(window.platforms) - 1,
+            group = (document.getElementById(globals.fieldsEdit.objects.idFields.group) as any).value,
+            layer = (document.getElementById(globals.fieldsEdit.objects.idFields.layer) as any).value,
+            platformID = Helper.getCountObject(globals.platforms) - 1,
             layerID = 0,
             superLayer = false,
             _author;
 
-        if(window.platforms[group]){
+        if(globals.platforms[group]){
             table.platform = group;
-            platformID = window.platforms[group].index;
+            platformID = globals.platforms[group].index;
         }
         else{
-            window.superLayer = group;
+            superLayer = group;
         }
 
-        if(window.layers[layer])
-            window.layerID = layers[layer].index;
+        if(globals.layers[layer])
+            layerID = globals.layers[layer].index;
 
         table.layer = layer;
-        table.type = document.getElementById(window.fieldsEdit.objects.idFields.type).value;
-        table.code_level = document.getElementById(window.fieldsEdit.objects.idFields.state).value;
-        table.difficulty = document.getElementById(window.fieldsEdit.objects.idFields.difficulty).value;
-        table.name = document.getElementById(window.fieldsEdit.objects.idFields.name).value;
-        table.code = helper.getCode(document.getElementById(window.fieldsEdit.objects.idFields.name).value);
-        table.description = document.getElementById("modal-desc-textarea").value;
+        table.type = (document.getElementById(globals.fieldsEdit.objects.idFields.type) as any).value;
+        table.code_level = (document.getElementById(globals.fieldsEdit.objects.idFields.state) as any).value;
+        table.difficulty = (document.getElementById(globals.fieldsEdit.objects.idFields.difficulty) as any).value;
+        table.name = (document.getElementById(globals.fieldsEdit.objects.idFields.name) as any).value;
+        table.code = Helper.getCode((document.getElementById(globals.fieldsEdit.objects.idFields.name) as any).value);
+        table.description = (document.getElementById("modal-desc-textarea") as any).value;
         table.found = true;
         table.platformID = platformID;
         table.layerID = layerID;
@@ -992,18 +995,18 @@ class TableEdit {
 
         table.repo_dir = dir;
 
-        let devs = document.getElementById("modal-devs").value;
+        let devs = (document.getElementById("modal-devs") as any).value;
         
         table.devs = devs.slice(0);
 
-        _author = getBestDev(table.devs, "author");
+        _author = this.getBestDev(table.devs, "author");
 
         table.picture = _author.avatar_url ? _author.avatar_url : undefined;
         table.author = _author.usrnm ? _author.usrnm : undefined;
         table.authorRealName = _author.name ? _author.name : undefined;
         table.authorEmail = _author.email ? _author.email : undefined;
 
-        let _maintainer = getBestDev(table.devs, "maintainer");
+        let _maintainer : any = this.getBestDev(table.devs, "maintainer");
 
         table.maintainer = _maintainer.usrnm ? _maintainer.usrnm : undefined;
         table.maintainerPicture = _maintainer.avatar_url ? _maintainer.avatar_url : undefined;
@@ -1018,9 +1021,9 @@ class TableEdit {
 
         if(arrayObject.length < 1){
 
-            if(window.signLayer.findSignLayer(oldGroup,oldLayer)){
+            if(globals.signLayer.findSignLayer(oldGroup,oldLayer)){
                 setTimeout( function() {
-                    window.signLayer.deleteSignLayer(oldGroup,oldLayer);
+                    globals.signLayer.deleteSignLayer(oldGroup,oldLayer);
                 }, 2000 );
             }
         }
@@ -1039,7 +1042,7 @@ class TableEdit {
                 
             let x = 0, y = 0, z = 0;
 
-            let lastObject = window.helper.getLastValueArray(newArrayObject);
+            let lastObject = Helper.getLastValueArray(newArrayObject);
 
             let count = newArrayObject.length;
 
@@ -1051,26 +1054,26 @@ class TableEdit {
             x = 0;
 
             if(!lastObject)
-                x = window.TABLE[oldGroup].x;
+                x = globals.TABLE[oldGroup].x;
             else
-                x = lastObject.target.show.position.x + window.TILE_DIMENSION.width;
+                x = lastObject.target.show.position.x + globals.TILE_DIMENSION.width;
 
-            y = transformPositionY(window.helper.getPositionYLayer(oldLayer));
+            y = this.transformPositionY(Helper.getPositionYLayer(oldLayer));
 
 
             z = 0;
 
             let idScreenshots = oldGroup + "_" + oldLayer + "_" + data.name;
 
-            window.screenshotsAndroid.changePositionScreenshots(idScreenshots, x, y);
+            globals.screenshotsAndroid.changePositionScreenshots(idScreenshots, x, y);
             
-            target = window.helper.fillTarget(x, y, z, 'table');
+            target = Helper.fillTarget(x, y, z, 'table');
 
             object.mesh = mesh;
             object.data = data;
             object.target = target;
 
-            animate(object.mesh, target.show, 1500);
+            this.animate(object.mesh, target.show, 1500);
 
             newArrayObject.push(object);
         }
@@ -1080,9 +1083,9 @@ class TableEdit {
 
     getBestDev(_devs, role) {
         
-        let dev = {};
+        let dev : any = {};
         if (_devs) {
-            let _dev = {};
+            let _dev : any = {};
             dev.percnt = 0;
             for (let i = 0, l = _devs.length; i < l; i++) {
                 _dev = _devs[i];
@@ -1108,10 +1111,10 @@ class TableEdit {
 
         let newPosition = new THREE.Vector3(0, y, 0);
 
-        return window.viewManager.translateToSection('table', newPosition).y;
+        return globals.viewManager.translateToSection('table', newPosition).y;
     }
 
-    animate(mesh, target, duration, callback){
+    animate(mesh, target, duration = 2000, callback?){
 
         let _duration = duration || 2000,
             x = target.position.x,

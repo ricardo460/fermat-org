@@ -43,7 +43,7 @@ class DragManager {
             new THREE.MeshBasicMaterial({ visible: false, color: Math.random() * 0xffffff })
         );
 
-        window.scene.add(this.plane);
+        globals.scene.add(this.plane);
     }
     /**
      * @author Ricardo Delgado.
@@ -55,9 +55,9 @@ class DragManager {
 
             this.STATE = true;
 
-            window.renderer.domElement.addEventListener('mousemove', mouseMove, false);
-            window.renderer.domElement.addEventListener('mousedown', mouseDown, false);
-            window.renderer.domElement.addEventListener('mouseup', mouseUp, false);
+            globals.renderer.domElement.addEventListener('mousemove', this.mouseMove, false);
+            globals.renderer.domElement.addEventListener('mousedown', this.mouseDown, false);
+            globals.renderer.domElement.addEventListener('mouseup', this.mouseUp, false);
         }
     };
     /**
@@ -70,9 +70,9 @@ class DragManager {
 
             this.STATE = false;
 
-            window.renderer.domElement.removeEventListener('mousemove', mouseMove, false);
-            window.renderer.domElement.removeEventListener('mousedown', mouseDown, false);
-            window.renderer.domElement.removeEventListener('mouseup', mouseUp, false);
+            globals.renderer.domElement.removeEventListener('mousemove', this.mouseMove, false);
+            globals.renderer.domElement.removeEventListener('mousedown', this.mouseDown, false);
+            globals.renderer.domElement.removeEventListener('mouseup', this.mouseUp, false);
         }
     };
     /**
@@ -85,7 +85,7 @@ class DragManager {
         event.preventDefault();
         this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        window.camera.getRayCast(this.rayCaster, this.mouse);
+        globals.camera.getRayCast(this.rayCaster, this.mouse);
         let i = 0;
 
         if (this.SELECTED) {
@@ -164,7 +164,7 @@ class DragManager {
     mouseDown(event: MouseEvent): void {
 
         event.preventDefault();
-        window.camera.getRayCast(this.rayCaster, this.mouse);
+        globals.camera.getRayCast(this.rayCaster, this.mouse);
 
         let i = 0;
         let intersects = this.rayCaster.intersectObjects(this.objects, true);
@@ -179,7 +179,7 @@ class DragManager {
                 this.offset.copy(intersects[0].point).sub(this.plane.position);
             }
 
-            window.camera.disable();
+            globals.camera.disable();
             this.container.style.cursor = this.styleMouse.CLICK;
         }
 
@@ -202,7 +202,7 @@ class DragManager {
         let i = 0;
 
         event.preventDefault();
-        window.camera.enable();
+        globals.camera.enable();
         this.container.style.cursor = this.styleMouse.DROP;
 
         for (i = 0; i < this.functions.DROP.length; i++) {

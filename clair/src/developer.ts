@@ -8,7 +8,7 @@ class Developer {
 	};
 
 	onClick(target : THREE.Object3D) : void {
-        if(window.actualView === 'developers')
+        if(globals.actualView === 'developers')
             this.onElementClickDeveloper(target.userData.id, this.objectsDeveloper);
     };
 
@@ -16,14 +16,14 @@ class Developer {
 
         let duration = 1000;
 
-        if(camera.getFocus() == null){
+        if(globals.camera.getFocus() == null){
             let camTarget = objectsDevelopers[id].clone();
 
-            window.camera.setFocus(camTarget, new THREE.Vector4(0, 0, 1000, 1), duration);
+            globals.camera.setFocus(camTarget, new THREE.Vector4(0, 0, 1000, 1), duration);
 
             for(let i = 0; i < objectsDevelopers.length ; i++) {
                 if(id !== i)
-                    letAloneDeveloper(objectsDevelopers[i]);
+                    this.letAloneDeveloper(objectsDevelopers[i]);
             }
 
             Helper.showBackButton();
@@ -42,8 +42,8 @@ class Developer {
     letAloneDeveloper(objectsDevelopers : THREE.Object3D) : void{
 
         let i, _duration = 2000,
-            distance = camera.getMaxDistance() * 2,
-            out = window.viewManager.translateToSection('developers', new THREE.Vector3(0, 0, distance));
+            distance = globals.camera.getMaxDistance() * 2,
+            out = globals.viewManager.translateToSection('developers', new THREE.Vector3(0, 0, distance));
         let target;
         let animate = (object, target, dur) => {
 
@@ -157,9 +157,9 @@ class Developer {
 
 		let id = 0;
 
-        for(let i = 0; i < window.tilesQtty.length; i++){
+        for(let i = 0; i < globals.tilesQtty.length; i++){
 
-            let tile = Helper.getSpecificTile(window.tilesQtty[i]).data;
+            let tile = Helper.getSpecificTile(globals.tilesQtty[i]).data;
 
             if(tile.author && this.developers[tile.author] === undefined)
             {
@@ -309,7 +309,7 @@ class Developer {
 
         	mesh.name = this.developers[key].author;
             mesh.scale.set(5, 5, 3);
-        	scene.add(mesh);
+        	globals.scene.add(mesh);
         	this.objectsDeveloper.push(mesh);
 
             i++;
@@ -328,7 +328,7 @@ class Developer {
 	    let indice = 1;
 
 	    let center = new THREE.Vector3(0, 0, 0);
-	    center = viewManager.translateToSection('developers', center);
+	    center = globals.viewManager.translateToSection('developers', center);
 
 	    if(devs.length === 1)
 	        positionDeveloper.push(center);
@@ -413,7 +413,7 @@ class Developer {
             new TWEEN.Tween(this.objectsDeveloper[id].position)
                 .to({x : target.x, y : target.y, z : target.z}, 6000)
                 .easing(TWEEN.Easing.Cubic.InOut)
-                .onComplete(function() { window.scene.remove(this.objectsDeveloper[id]); })
+                .onComplete(function() { globals.scene.remove(this.objectsDeveloper[id]); })
                 .start();
         };
 
@@ -434,18 +434,18 @@ class Developer {
         let section = 0;
         let center = this.objectsDeveloper[id].position;
 
-        for(let i = 0; i < window.tilesQtty.length; i++){
+        for(let i = 0; i < globals.tilesQtty.length; i++){
 
-            let tile = Helper.getSpecificTile(window.tilesQtty[i]).data;
+            let tile = Helper.getSpecificTile(globals.tilesQtty[i]).data;
 
-            let mesh = Helper.getSpecificTile(window.tilesQtty[i]).mesh;
+            let mesh = Helper.getSpecificTile(globals.tilesQtty[i]).mesh;
 
             if(tile.author === this.objectsDeveloper[id].name && !isNaN(mesh.position.y)){
 
                 new TWEEN.Tween(mesh.position)
                 .to({
-                    x : (center.x + (section % 5) * window.TILE_DIMENSION.width) - 450,
-                    y : (center.y - Math.floor(section / 5) * window.TILE_DIMENSION.height) - 440,
+                    x : (center.x + (section % 5) * globals.TILE_DIMENSION.width) - 450,
+                    y : (center.y - Math.floor(section / 5) * globals.TILE_DIMENSION.height) - 440,
                     z : 0
                 }, 2000)
                 .easing(TWEEN.Easing.Exponential.InOut)

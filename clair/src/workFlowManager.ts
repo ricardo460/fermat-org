@@ -92,7 +92,7 @@ class WorkFlowManager {
             for(let i = 0; i < this.headerFlow.length; i++) {
                 this.headerFlow[i].deleteAll();
                 Helper.hideObject(this.headerFlow[i].objects[0], false, _duration);
-                window.scene.remove(this.headerFlow[i]);
+                globals.scene.remove(this.headerFlow[i]);
             }
         }
 
@@ -113,7 +113,7 @@ class WorkFlowManager {
 
         let element = Helper.getSpecificTile(id).data;
 
-        let button = window.buttonsManager.createButtons('showFlows', 'Loading flows...');
+        let button = globals.buttonsManager.createButtons('showFlows', 'Loading flows...');
 
         let params = {
             group : (element.platform || element.superLayer),
@@ -123,8 +123,8 @@ class WorkFlowManager {
 
         let url = '';
 
-        if(!window.disconnected)
-            url = window.API.getAPIUrl("procs", params);
+        if(!globals.disconnected)
+            url = globals.api.getAPIUrl("procs", params);
         else
             url = 'json/testData/procs.json';
 
@@ -145,22 +145,22 @@ class WorkFlowManager {
                     button.innerHTML = 'Show Workflows';
                     button.addEventListener('click', function() {
                         this.showFlow(flows);
-                        window.buttonsManager.removeAllButtons();
+                        globals.buttonsManager.removeAllButtons();
                     });
                 }
                 else
-                    window.buttonsManager.deleteButton('showFlows');
+                    globals.buttonsManager.deleteButton('showFlows');
             }
         );
     };
 
     showWorkFlow() {
 
-        if(window.camera.getFocus() !== null) {
+        if(globals.camera.getFocus() !== null) {
 
-            window.camera.loseFocus();
+            globals.camera.loseFocus();
 
-            window.headers.transformWorkFlow(2000);
+            globals.headers.transformWorkFlow(2000);
 
             for(let i = 0; i < this.headerFlow.length ; i++) {
 
@@ -186,8 +186,8 @@ class WorkFlowManager {
 
         let url = '';
 
-        if(!window.disconnected)
-            url = API.getAPIUrl("procs");
+        if(!globals.disconnected)
+            url = globals.api.getAPIUrl("procs");
         else
             url = 'json/testData/procs.json';
 
@@ -200,10 +200,10 @@ class WorkFlowManager {
 
                 for(let i = 0; i < p.length; i++){
                     
-                    if(window.platforms[p[i].platfrm] || window.superLayers[p[i].platfrm])
+                    if(globals.platforms[p[i].platfrm] || globals.superLayers[p[i].platfrm])
                         this.headerFlow.push(new Workflow(p[i]));
                 }
-                objectHeaderInWFlowGroup = window.headers.getPositionHeaderViewInFlow();
+                objectHeaderInWFlowGroup = globals.headers.getPositionHeaderViewInFlow();
                 this.calculatePositionHeaderFLow(this.headerFlow, objectHeaderInWFlowGroup);
             }
         );
@@ -220,19 +220,19 @@ class WorkFlowManager {
 
         let duration = 1000;
 
-        if(window.camera.getFocus() == null) {
+        if(globals.camera.getFocus() == null) {
 
             let camTarget = this.headerFlow[id].objects[0].clone();
             camTarget.position.y -= 850;
 
-            window.camera.setFocus(camTarget, new THREE.Vector4(0, -850, 2600, 1), duration);
+            globals.camera.setFocus(camTarget, new THREE.Vector4(0, -850, 2600, 1), duration);
 
             for(let i = 0; i < this.headerFlow.length ; i++) {
                 if(id !== i)
                     this.headerFlow[i].letAloneHeaderFlow();
             }
 
-            headers.hidetransformWorkFlow(duration);
+            globals.headers.hidetransformWorkFlow(duration);
 
             setTimeout(function() {
                 for(let i = 0; i < this.headerFlow[id].flow.steps.length; i++) {
@@ -241,9 +241,9 @@ class WorkFlowManager {
                this.headerFlow[id].showSteps();
             }, 1000);
 
-            window.buttonsManager.removeAllButtons();
+            globals.buttonsManager.removeAllButtons();
             Helper.showBackButton();
-            window.workFlowEdit.addButton(id);
+            globals.workFlowEdit.addButton(id);
         }
     };
 
@@ -297,11 +297,11 @@ class WorkFlowManager {
     //Should draw ONLY one flow at a time
     showFlow(flows) {
 
-        let position = window.camera.getFocus().position;
+        let position = globals.camera.getFocus().position;
         let indice = 0;
 
-        window.camera.enable();
-        window.camera.move(position.x, position.y, position.z + TILE_DIMENSION.width * 5);
+        globals.camera.enable();
+        globals.camera.move(position.x, position.y, position.z + globals.TILE_DIMENSION.width * 5);
 
         setTimeout(function() {
 
@@ -312,7 +312,7 @@ class WorkFlowManager {
                 flows[i].draw(position.x, position.y, 0, indice, i);
 
                 //Dummy, set distance between flows
-                position.x += TILE_DIMENSION.width * 10;
+                position.x += globals.TILE_DIMENSION.width * 10;
             }
 
         }, 1500);

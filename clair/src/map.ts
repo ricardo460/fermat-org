@@ -1,5 +1,3 @@
-let map = {};
-
 /**
  * @author Miguel Celedon
  * Loads the map (json version)
@@ -8,7 +6,7 @@ let map = {};
 function loadMap(callback) {
 
     $.get("json/config_map.json", {}, function (json) {
-        map = json;
+        globals.map = json;
         callback();
     });
 }

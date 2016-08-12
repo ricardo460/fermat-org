@@ -19,8 +19,8 @@ class ButtonsManager {
      */
     actionButtons(id: string, callback: () => void): void {
         this.removeAllButtons();
-        window.screenshotsAndroid.showButtonScreenshot(id);
-        window.tableEdit.addButton(id);
+        globals.screenshotsAndroid.showButtonScreenshot(id);
+        globals.tableEdit.addButton(id);
     };
 
     /**
@@ -113,7 +113,7 @@ class ButtonsManager {
         }
         else {
             if (!action)
-                window.fieldsEdit.removeAllFields();
+                globals.fieldsEdit.removeAllFields();
         }
     };
 

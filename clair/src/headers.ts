@@ -29,34 +29,34 @@ class Headers {
     graph: any = {};
     arrows = [];
 
-    width = this.columnWidth * TILE_DIMENSION.width;
+    width = this.columnWidth * globals.TILE_DIMENSION.width;
     height = this.width * 443 / 1379;
 
     onClick(target: THREE.Mesh): void {
-        if (window.actualView === 'workflows') {
-            window.buttonsManager.removeAllButtons();
-            onElementClickHeader(target.userData.id, this.objects);
+        if (globals.actualView === 'workflows') {
+            globals.buttonsManager.removeAllButtons();
+            this.onElementClickHeader(target.userData.id, this.objects);
         }
     };
 
     onElementClickHeader(id: number, objects: any[]) {
         let duration = 1000;
 
-        if (camera.getFocus() == null) {
+        if (globals.camera.getFocus() == null) {
             let camTarget = objects[id].clone();
             camTarget.position.y -= 2500;
 
-            window.camera.setFocus(camTarget, new THREE.Vector4(0, -2500, 9000, 1), duration);
+            globals.camera.setFocus(camTarget, new THREE.Vector4(0, -2500, 9000, 1), duration);
 
             for (let i = 0; i < objects.length; i++) {
                 if (id !== i)
-                    letAloneHeader(objects[i]);
+                    this.letAloneHeader(objects[i]);
             }
 
             Helper.showBackButton();
         }
 
-        window.workFlowManager.createColumHeaderFlow(objects[id]);
+        globals.workFlowManager.createColumHeaderFlow(objects[id]);
     }
 
     /**
@@ -67,8 +67,8 @@ class Headers {
 
     letAloneHeader(objHeader: THREE.Mesh) {
         let i, _duration = 2000,
-            distance = camera.getMaxDistance() * 2,
-            out = window.viewManager.translateToSection('workflows', new THREE.Vector3(0, 0, distance));
+            distance = globals.camera.getMaxDistance() * 2,
+            out = globals.viewManager.translateToSection('workflows', new THREE.Vector3(0, 0, distance));
 
         let target;
 
@@ -142,14 +142,14 @@ class Headers {
 
 
         let startingPosition = Helper.getOutOfScreenPoint(0);
-        arrowHelper.position.copy(viewManager.translateToSection('stack', startingPosition));
+        arrowHelper.position.copy(globals.viewManager.translateToSection('stack', startingPosition));
         arrowHelper.rotation.set(Math.random() * Math.PI * 2, Math.random() * Math.PI * 2, Math.random() * Math.PI * 2);
 
         objectOrigin.position.copy(arrowHelper.position);
         objectOrigin.rotation.copy(arrowHelper.rotation);
         this.arrowsPositions.origin.push(objectOrigin);
 
-        scene.add(arrowHelper);
+        globals.scene.add(arrowHelper);
         this.arrows.push(arrowHelper);
     };
 
@@ -187,7 +187,7 @@ class Headers {
             this.arrowsPositions.origin = [];
             this.arrowsPositions.stack = [];
             for (let i = 0; i < limit; i++) {
-                window.scene.remove(this.arrows[i]);
+                globals.scene.remove(this.arrows[i]);
             }
             this.arrows = [];
         }, duration);
@@ -203,7 +203,7 @@ class Headers {
         let _duration = duration || 2000;
 
 
-        createEdges();
+        this.createEdges();
         this.moveToPosition(duration, duration / 2);
 
         let i, l;
@@ -330,7 +330,7 @@ class Headers {
 
         //Transport all headers to the stack section
         for (i = 0; i < this.positions.stack.length; i++) {
-            this.positions.stack[i].position.copy(window.viewManager.translateToSection('stack', this.positions.stack[i].position));
+            this.positions.stack[i].position.copy(globals.viewManager.translateToSection('stack', this.positions.stack[i].position));
         }
     };
 
@@ -583,18 +583,18 @@ class Headers {
 
                     let headerObject = new THREE.Object3D();
 
-                    headerObject.position.x = (this.width * (column - (this.groupsQtty - 1) / 2) + ((column - 1) * TILE_DIMENSION.width)) - 20000;
-                    headerObject.position.y = ((this.layersQtty + 10) * TILE_DIMENSION.height) / 2;
+                    headerObject.position.x = (this.width * (column - (this.groupsQtty - 1) / 2) + ((column - 1) * globals.TILE_DIMENSION.width)) - 20000;
+                    headerObject.position.y = ((this.layersQtty + 10) * globals.TILE_DIMENSION.height) / 2;
                     headerObject.name = element;
 
-                    headerObject.position.copy(window.viewManager.translateToSection('workflows', headerObject.position));
+                    headerObject.position.copy(globals.viewManager.translateToSection('workflows', headerObject.position));
                     this.positions.workFlow.push(headerObject);
                 }
             }
         };
 
-        calculatePosition(window.platforms, window.superLayers.size());
-        calculatePosition(window.superLayers, 0);
+        calculatePosition(globals.platforms, globals.superLayers.size());
+        calculatePosition(globals.superLayers, 0);
     };
 
     initialize() {
@@ -658,27 +658,27 @@ class Headers {
 
         let src;
 
-        for (group in window.platforms) {
-            if (window.platforms.hasOwnProperty(group) && group !== 'size') {
+        for (group in globals.platforms) {
+            if (globals.platforms.hasOwnProperty(group) && group !== 'size') {
 
-                headerData = window.platforms[group];
+                headerData = globals.platforms[group];
                 column = headerData.index;
 
                 object = createHeader(group, this.width, this.height, column);
 
-                object.position.copy(window.viewManager.translateToSection('table', Helper.getOutOfScreenPoint(0)));
+                object.position.copy(globals.viewManager.translateToSection('table', Helper.getOutOfScreenPoint(0)));
                 object.name = group;
 
-                scene.add(object);
+                globals.scene.add(object);
                 this.objects.push(object);
 
                 object = new THREE.Object3D();
 
-                object.position.x = this.width * (column - (this.groupsQtty - 1) / 2) + ((column - 1) * TILE_DIMENSION.width);
-                object.position.y = ((this.layersQtty + 10) * TILE_DIMENSION.height) / 2;
+                object.position.x = this.width * (column - (this.groupsQtty - 1) / 2) + ((column - 1) * globals.TILE_DIMENSION.width);
+                object.position.y = ((this.layersQtty + 10) * globals.TILE_DIMENSION.height) / 2;
                 object.name = group;
 
-                object.position.copy(window.viewManager.translateToSection('table', object.position));
+                object.position.copy(globals.viewManager.translateToSection('table', object.position));
 
                 this.positions.table.push(object);
 
@@ -686,20 +686,20 @@ class Headers {
             }
         }
 
-        for (slayer in superLayers) {
-            if (window.superLayers.hasOwnProperty(slayer) && slayer !== 'size') {
-                headerData = window.superLayers[slayer];
-                row = window.platforms.size() + headerData.index;
+        for (slayer in globals.superLayers) {
+            if (globals.superLayers.hasOwnProperty(slayer) && slayer !== 'size') {
+                headerData = globals.superLayers[slayer];
+                row = globals.platforms.size() + headerData.index;
                 object = createHeader(slayer, this.width, this.height, row);
-                object.position.copy(window.viewManager.translateToSection('table', Helper.getOutOfScreenPoint(0)));
+                object.position.copy(globals.viewManager.translateToSection('table', Helper.getOutOfScreenPoint(0)));
                 object.name = slayer;
-                scene.add(object);
+                globals.scene.add(object);
                 this.objects.push(object);
                 object = new THREE.Object3D();
-                object.position.x = -(((this.groupsQtty + 1) * this.width / 2) + TILE_DIMENSION.width);
-                object.position.y = (-(this.superLayerPosition[headerData.index]) - (this.superLayerMaxHeight / 2) + (this.layersQtty / 2)) * TILE_DIMENSION.height;
+                object.position.x = -(((this.groupsQtty + 1) * this.width / 2) + globals.TILE_DIMENSION.width);
+                object.position.y = (-(this.superLayerPosition[headerData.index]) - (this.superLayerMaxHeight / 2) + (this.layersQtty / 2)) * globals.TILE_DIMENSION.height;
                 object.name = slayer;
-                object.position.copy(window.viewManager.translateToSection('table', object.position));
+                object.position.copy(globals.viewManager.translateToSection('table', object.position));
                 this.positions.table.push(object);
                 createChildren(slayer, headerData.dependsOn);
             }

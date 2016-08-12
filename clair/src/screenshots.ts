@@ -2,10 +2,10 @@
  * @author Ricardo Delgado
  * Create screenshots of android with your images and functions.
  */
-class ScreenshotsAndroid() {
+class ScreenshotsAndroid {
 
 	// Public Variables
-    objects = {
+    objects : any = {
 		mesh : [],
 		target : [],
 		texture : [],
@@ -24,37 +24,37 @@ class ScreenshotsAndroid() {
     action = { state : false, mesh : null };
 
 	onClick(target) {
-		if(actualView === "table"){ 
-			change(target.userData.id);
-			window.buttonsManager.removeAllButtons();
+		if(globals.actualView === "table"){ 
+			this.change(target.userData.id);
+			globals.buttonsManager.removeAllButtons();
 		}
 	};
 
 	getScreenshots(){
-		return SCREENSHOTS;
+		return this.SCREENSHOTS;
 	};
 
 	changePositionScreenshots(id, x, y){
 
-		for(let t in SCREENSHOTS){
+		for(let t in this.SCREENSHOTS){
 
-			if(SCREENSHOTS[t].id === id && SCREENSHOTS[t].show === true){
+			if(this.SCREENSHOTS[t].id === id && this.SCREENSHOTS[t].show === true){
 
-				SCREENSHOTS[t].position = new THREE.Vector3(x, y, 0);
+				this.SCREENSHOTS[t].position = new THREE.Vector3(x, y, 0);
 
-				for(let i = 0; i < self.objects.mesh.length; i++){
+				for(let i = 0; i < this.objects.mesh.length; i++){
 
-					if(self.objects.mesh[i].userData.wallet === SCREENSHOTS[t].name){
+					if(this.objects.mesh[i].userData.wallet === this.SCREENSHOTS[t].name){
 
-						let mesh = self.objects.mesh[i];
+						let mesh = this.objects.mesh[i];
 
 						let target = {x : x, y : y + 240, z : 0};
 
-						self.objects.target[i].show.x = target.x;
-						self.objects.target[i].show.y = target.y;
-						self.objects.target[i].show.z = target.z;
+						this.objects.target[i].show.x = target.x;
+						this.objects.target[i].show.y = target.y;
+						this.objects.target[i].show.z = target.z;
 
-						animate(mesh, target.show);
+						this.animate(mesh, this.objects.target[i].show);
 					}
 				}
 			}
@@ -65,60 +65,60 @@ class ScreenshotsAndroid() {
 
 		let newObjects = {};
 
-		for(let t in SCREENSHOTS){
+		for(let t in this.SCREENSHOTS){
 
-			if(SCREENSHOTS[t].id === id){
+			if (this.SCREENSHOTS[t].id === id){
 
-				for(let i = 0; i < self.objects.mesh.length; i++){
+				for(let i = 0; i < this.objects.mesh.length; i++){
 
-					if(SCREENSHOTS[t].name === self.objects.mesh[i].userData.wallet){
+					if(this.SCREENSHOTS[t].name === this.objects.mesh[i].userData.wallet){
 
-						let mesh = self.objects.mesh[i];
+						let mesh = this.objects.mesh[i];
 
-						let target = self.objects.target[i];
+						let target = this.objects.target[i];
 
-						self.objects.mesh.splice(i,1);
-						self.objects.target.splice(i,1);
+						this.objects.mesh.splice(i,1);
+						this.objects.target.splice(i,1);
 
-						animate(mesh, target.hide, 1000, function(){
+						this.animate(mesh, target.hide, 1000, function(){
 
-							window.scene.remove(mesh);
+							globals.scene.remove(mesh);
 						 }); 
 					}
 				}
 			}
 			else
-				newObjects[t] = SCREENSHOTS[t];
+				newObjects[t] =this.SCREENSHOTS[t];
 		}
 
-		SCREENSHOTS = newObjects;
+		this.SCREENSHOTS = newObjects;
 
 	};
 
 	hidePositionScreenshots(newGroup, newLayer){
 
-		let layer = window.CLI.query(window.layers,function(el){return (el.super_layer === false);});
+		let layer = CLI.query(globals.layers,function(el){return (el.super_layer === false);});
 
-		if(typeof window.platforms[newGroup] !== 'undefined'){
+		if(typeof globals.platforms[newGroup] !== 'undefined'){
 
 			if(newLayer === layer[0] || newLayer === layer[1] || newLayer === layer[2]){
 
-				for(let t in SCREENSHOTS){
+				for(let t in this.SCREENSHOTS){
 
-					let id = SCREENSHOTS[t].id;
+					let id =this.SCREENSHOTS[t].id;
 					let data = id.split("_");
 
 					if(data[0] === newGroup && data[1] === 'Sub App'){
 
-						for(let i = 0; i < self.objects.mesh.length; i++){
+						for(let i = 0; i < this.objects.mesh.length; i++){
 
-							if(self.objects.mesh[i].userData.wallet === SCREENSHOTS[t].name){
+							if(this.objects.mesh[i].userData.wallet === this.SCREENSHOTS[t].name){
 
-								let mesh = self.objects.mesh[i];
+								let mesh = this.objects.mesh[i];
 
-								self.objects.target[i].show.z = 160000;
+								this.objects.target[i].show.z = 160000;
 
-								animate(mesh, self.objects.target[i].hide);
+								this.animate(mesh, this.objects.target[i].hide);
 							}
 						}
 					}
@@ -130,20 +130,20 @@ class ScreenshotsAndroid() {
     // Public method
     setGroup(_group, _layer) {
 
-    	if(typeof GROUP[_group] === 'undefined')
-        	GROUP[_group] = [];
+    	if(typeof this.GROUP[_group] === 'undefined')
+        	this.GROUP[_group] = [];
             
-        GROUP[_group].push(_layer);
+        this.GROUP[_group].push(_layer);
     };
 
     showButtonScreenshot(id){
 
-    	if(typeof SCREENSHOTS[id] !== 'undefined'){
+    	if(typeof this.SCREENSHOTS[id] !== 'undefined'){
 
-    		window.buttonsManager.createButtons('showScreenshots', 'View Screenshots', function(){
+    		globals.buttonsManager.createButtons('showScreenshots', 'View Screenshots', function(){
     			
-    			window.buttonsManager.removeAllButtons();
-    			showScreenshotsButton(id);
+    			globals.buttonsManager.removeAllButtons();
+    			this.showScreenshotsButton(id);
     		});
     	}	
     };
@@ -162,34 +162,34 @@ class ScreenshotsAndroid() {
 
 	        		for(let _wallet in json[_group][_layer]){
 
-	        			if(window.TABLE[_group]){
+	        			if(globals.TABLE[_group]){
 
-	        				if(window.TABLE[_group].layers[_layer]){
+	        				if(globals.TABLE[_group].layers[_layer]){
 
-		        				for(let i = 0; i < window.TABLE[_group].layers[_layer].objects.length; i++){
+		        				for(let i = 0; i < globals.TABLE[_group].layers[_layer].objects.length; i++){
 
 		        					let id = _group + "_" + _layer + "_" + i;
 		                            
-		                            let tile = window.helper.getSpecificTile(id).data;        
+		                            let tile = Helper.getSpecificTile(id).data;        
 
 			        				if(tile.type === "Plugin" || tile.type === "Android"){ 
 
 				        				if(tile.name === _wallet){
 				        					
 				        					let name = json[_group][_layer][_wallet].name,
-				        						position = window.helper.getSpecificTile(id).target.show.position,
+				        						position = Helper.getSpecificTile(id).target.show.position,
 				        						_id = _group + "_" + _layer + "_" + name,
 				        						show = false,
 				        						screenshots = {};
 
-				        					if(_layer === "Sub App" && GROUP[_group][0] === "Sub App")
+				        					if(_layer === "Sub App" && this.GROUP[_group][0] === "Sub App")
 				        						show = true;
 
 			        						for(let _screen in json[_group][_layer][_wallet].screenshots){
 												screenshots[_screen] = json[_group][_layer][_wallet].screenshots[_screen];
 											}
 
-											fillScreenshots(id, _id, position, name, show, screenshots);
+											this.fillScreenshots(id, _id, position, name, show, screenshots);
 				        				}
 				        			}
 			        			}
@@ -198,7 +198,7 @@ class ScreenshotsAndroid() {
 	        		}
 	        	}
 	        }
-	        setScreenshot();
+	        this.setScreenshot();
     	});
 	};
     
@@ -210,13 +210,13 @@ class ScreenshotsAndroid() {
 
 		let ignore;
 
-		if(action.state)
-			ignore = action.mesh;
+		if(this.action.state)
+			ignore = this.action.mesh;
 
-		for(let i = 0; i < self.objects.mesh.length; i++) { 
+		for(let i = 0; i < this.objects.mesh.length; i++) { 
 
 			if(i != ignore)  
-				animate(self.objects.mesh[i], self.objects.target[i].hide, 800);
+				this.animate(this.objects.mesh[i], this.objects.target[i].hide, 800);
 		}
 	}; 
 
@@ -226,13 +226,13 @@ class ScreenshotsAndroid() {
 	*/ 
 	show() {
 
-        if(action.state)
-			resetTexture(action.mesh);
+        if(this.action.state)
+			this.resetTexture(this.action.mesh);
 		else {
 			
-			for(let i = 0; i < self.objects.mesh.length; i++) {
+			for(let i = 0; i < this.objects.mesh.length; i++) {
 
-				animate(self.objects.mesh[i], self.objects.target[i].show, 1500);
+				this.animate(this.objects.mesh[i], this.objects.target[i].show, 1500);
 			}
 		}
 	};
@@ -242,24 +242,24 @@ class ScreenshotsAndroid() {
 	* @author Ricardo Delgado
 	* Screenshots settings show.
 	*/ 
-    function setScreenshot(){
+    setScreenshot(){
         
         let cant = 0,
 			lost = "";
 
-		for(let id in SCREENSHOTS){
+		for(let id in this.SCREENSHOTS){
 
-			let name = SCREENSHOTS[id].name,
-				position = SCREENSHOTS[id].position,
-				show = SCREENSHOTS[id].show;
+			let name =this.SCREENSHOTS[id].name,
+				position = this.SCREENSHOTS[id].position,
+				show = this.SCREENSHOTS[id].show;
 
-			CONTROL[name] = {};
+			this.CONTROL[name] = {};
 
-			addWallet(id, name);
+			this.addWallet(id, name);
 
-			addMesh(position, name, show);
+			this.addMesh(position, name, show);
             
-            addTextureTitle(name);
+            this.addTextureTitle(name);
 
 			lost = name;
 
@@ -271,10 +271,10 @@ class ScreenshotsAndroid() {
 			let _position = {x : Math.random() * 80000};
 
 			for(cant; cant <= 4; cant++)
-				addMesh('1', _position , lost, false);
+				this.addMesh(_position , lost, false);
 		}
 
-		addTitle();
+		this.addTitle();
 
 	}
 
@@ -286,14 +286,14 @@ class ScreenshotsAndroid() {
     * @param {String}   wallet     Wallet group to which it belongs.
     * @param {Array}  screenshots  All routes screenshot.
 	*/ 
-	function fillScreenshots(id, _id, position, name, show, screenshots){
+	fillScreenshots(id, _id, position, name, show, screenshots){
 
-		SCREENSHOTS[id] = {};
-		SCREENSHOTS[id].name = name;
-		SCREENSHOTS[id].position = position;
-		SCREENSHOTS[id].show = show;		
-		SCREENSHOTS[id].screenshots = screenshots;
-		SCREENSHOTS[id].id = _id;
+		this.SCREENSHOTS[id] = {};
+		this.SCREENSHOTS[id].name = name;
+		this.SCREENSHOTS[id].position = position;
+		this.SCREENSHOTS[id].show = show;		
+		this.SCREENSHOTS[id].screenshots = screenshots;
+		this.SCREENSHOTS[id].id = _id;
 	}
 
 	/**
@@ -301,12 +301,12 @@ class ScreenshotsAndroid() {
 	* Each drawing screenshots of wallet.
 	* @param {String}  wallet   Wallet draw. 
 	*/
-	function addWallet(id, wallet) {
+	addWallet(id, wallet) {
 
 		let cant = 0,
 			total = 4;
 
-		for(let c in SCREENSHOTS[id].screenshots){
+		for(let c in this.SCREENSHOTS[id].screenshots){
 			cant++;
 		}
 
@@ -314,25 +314,25 @@ class ScreenshotsAndroid() {
 			total = cant;
 
 		for(let i = 1; i <= total; i++) {
-			addTextureWallet(id, wallet, i);
+			this.addTextureWallet(id, wallet, i);
 		}
 	}
 
 	/**
 	* @author Ricardo Delgado
-	* Search for a wallet in specific in the letiable self.objects.texture.
+	* Search for a wallet in specific in the letiable this.objects.texture.
 	* @param {String}  wallet   Group wallet to find.
 	* @param {Number}    id     Wallet identifier. 
 	*/
-	function searchWallet(wallet, id) {
+	searchWallet(wallet, id) {
 
 		let i = 0;
 
-		while(self.objects.texture[i].wallet != wallet || self.objects.texture[i].id != id) {
+		while(this.objects.texture[i].wallet != wallet || this.objects.texture[i].id != id) {
 			i++ ;
 		}  
 
-		return self.objects.texture[i].image;
+		return this.objects.texture[i].image;
 	}
 
 	/**
@@ -341,9 +341,9 @@ class ScreenshotsAndroid() {
 	* @param {number}  root    End position of the plane in the x axis.
 	* @param {String}  wallet     Wallet group to which it belongs.
 	*/   
-	function addMesh(root, wallet, state) {
+	addMesh(root, wallet, state) {
 
-		let id = self.objects.mesh.length,
+		let id = this.objects.mesh.length,
 			x = root.x,
 			y = 0,
 			z = 0,
@@ -351,8 +351,8 @@ class ScreenshotsAndroid() {
 			position = new THREE.Vector3(0, 0, 0); 
 
 
-        _texture = searchWallet(wallet, 1);
-        y = window.tileManager.dimensions.layerPositions[3] + window.TILE_DIMENSION.height + 240;
+        _texture = this.searchWallet(wallet, 1);
+        y = globals.tileManager.dimensions.layerPositions[3] + globals.TILE_DIMENSION.height + 240;
 
 			
 		let mesh = new THREE.Mesh(
@@ -370,9 +370,9 @@ class ScreenshotsAndroid() {
 
 		position.y = y;
 
-		position = window.viewManager.translateToSection('table', position);
+		position = globals.viewManager.translateToSection('table', position);
 
-		let target = window.helper.fillTarget(x, position.y, z, 'table');
+		let target = Helper.fillTarget(x, position.y, z, 'table');
 
 		mesh.material.opacity = 1;
 
@@ -381,15 +381,15 @@ class ScreenshotsAndroid() {
 		mesh.position.copy(target.hide.position);
 		mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
 
-		window.scene.add(mesh);
+		globals.scene.add(mesh);
 
 		if(!state){
 			target.show = target.hide;
 		}
 
-		self.objects.target.push(target);
+		this.objects.target.push(target);
 
-		self.objects.mesh.push(mesh);
+		this.objects.mesh.push(mesh);
 	}
 
 	/**
@@ -397,7 +397,7 @@ class ScreenshotsAndroid() {
 	* Add the title of the group focused wallet.
 	* @param {String}    text    Behalf of the wallet.
 	*/ 
-	function addTitle() {
+	addTitle() {
 
 		let texture = null;
 			
@@ -412,14 +412,14 @@ class ScreenshotsAndroid() {
 
 		mesh.scale.set(4, 4, 4);
 
-		let target = window.helper.fillTarget(0, 0, 0, 'table');
+		let target = Helper.fillTarget(0, 0, 0, 'table');
 
 		mesh.position.copy(target.hide.position);
 		mesh.rotation.set(target.hide.rotation.x, target.hide.rotation.y, target.hide.rotation.z);
 
-		window.scene.add(mesh);
+		globals.scene.add(mesh);
 
-		self.objects.title.mesh = {
+		this.objects.title.mesh = {
 						mesh : mesh,
 						target : target
 						};
@@ -430,7 +430,7 @@ class ScreenshotsAndroid() {
 	* Add the title of the group focused wallet.
 	* @param {String}    Wallet    Behalf of the wallet.
 	*/ 
-	function addTextureTitle(wallet){
+	addTextureTitle(wallet){
 
 		let canvas,
 			ctx,
@@ -450,7 +450,7 @@ class ScreenshotsAndroid() {
 		texture.needsUpdate = true;  
 		texture.minFilter = THREE.NearestFilter;
 
-		self.objects.title.texture[wallet] = texture;
+		this.objects.title.texture[wallet] = texture;
 	}
 
 	/**
@@ -459,34 +459,34 @@ class ScreenshotsAndroid() {
 	* @param {String}    wallet    Wallet draw.
 	* @param {String}      i       Group identifier wallet.
 	*/ 
-	function addTextureWallet(_id, wallet, i) {
+	addTextureWallet(_id, wallet, i) {
 
 		let _texture,
 			image,
 			cant = 0,
 			place;
 
-		for(let f in SCREENSHOTS[_id].screenshots){
+		for(let f in this.SCREENSHOTS[_id].screenshots){
 			cant++;
 		}
 
 		place = Math.floor(Math.random()* cant + 1);
 
-		if(CONTROL[wallet]["picture"+place] === undefined){
+		if(this.CONTROL[wallet]["picture"+place] === undefined){
 
-			CONTROL[wallet]["picture"+place] = place;
+			this.CONTROL[wallet]["picture"+place] = place;
 
-			image = new THREE.ImageUtils.loadTexture(SCREENSHOTS[_id].screenshots['Screenshots_'+place]);
+			image = THREE.ImageUtils.loadTexture(this.SCREENSHOTS[_id].screenshots['Screenshots_'+place]);
 			image.needsUpdate = true;  
 			image.minFilter = THREE.NearestFilter;
 
 			_texture = { id : i, wallet : wallet, image : image };
 
-			self.objects.texture.push(_texture);
+			this.objects.texture.push(_texture);
 
 		}
 		else
-			addTextureWallet(_id, wallet, i);
+			this.addTextureWallet(_id, wallet, i);
 	}
 
 	/**
@@ -495,17 +495,17 @@ class ScreenshotsAndroid() {
 	* @param {String}    Wallet    Behalf of the wallet.
 	* @param {object}     mesh     Wallet.	
 	*/ 
-	function showTitle(wallet, mesh) {
+	showTitle(wallet, mesh) {
 
-		let _mesh = self.objects.title.mesh.mesh,
-			target = {};
+		let _mesh = this.objects.title.mesh.mesh,
+			target : any = {};
 
-		target = window.helper.fillTarget(mesh.position.x, mesh.position.y + 240, mesh.position.z, 'table');
+		target = Helper.fillTarget(mesh.position.x, mesh.position.y + 240, mesh.position.z, 'table');
 
-		_mesh.material.map = self.objects.title.texture[wallet]; 
+		_mesh.material.map = this.objects.title.texture[wallet]; 
 		_mesh.material.needsUpdate = true;
 
-		animate(_mesh, target.show, 2000);
+		this.animate(_mesh, target.show, 2000);
 	}
 
 	/**
@@ -514,53 +514,53 @@ class ScreenshotsAndroid() {
 	* @param {Number}    id    Wallet identifier focus.
 	*/ 
 	
-	function change(id) {
+	change(id) {
 
 		let duration = 2000;
 		let focus = parseInt(id);
 
-		if(window.camera.getFocus() === null) {
+		if(globals.camera.getFocus() === null) {
 
-			action.state = true; action.mesh = id;
+			this.action.state = true; this.action.mesh = id;
 
-			window.tileManager.letAlone();
+			globals.tileManager.letAlone();
 
-			window.camera.setFocus(self.objects.mesh[focus], new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), duration);
+			globals.camera.setFocus(this.objects.mesh[focus], new THREE.Vector4(0, 0, globals.TILE_DIMENSION.width - globals.TILE_SPACING, 1), duration);
 			
-			window.headers.hideHeaders(duration);
+			globals.headers.hideHeaders(duration);
 			
-			window.helper.showBackButton();
+			Helper.showBackButton();
 
-			positionFocus(id);
+			this.positionFocus(id);
 		}
 	}
 
-	function showScreenshotsButton(_id){
+	showScreenshotsButton(_id){
 
-		let wallet = SCREENSHOTS[_id].name,
-			position = SCREENSHOTS[_id].position,
+		let wallet = this.SCREENSHOTS[_id].name,
+			position = this.SCREENSHOTS[_id].position,
 			id = 0,
 			mesh = null,
-            target = {};
+            target : any = {};
             
 
-		for(let i = 0; i < self.objects.mesh.length; i++){
-			if(self.objects.mesh[i].userData.wallet === wallet){
+		for(let i = 0; i < this.objects.mesh.length; i++){
+			if(this.objects.mesh[i].userData.wallet === wallet){
 				id = i;
-				mesh = self.objects.mesh[i];
+				mesh = this.objects.mesh[i];
 			}
 		}
 
-		action.state = true; action.mesh = id;
+		this.action.state = true; this.action.mesh = id;
 
-		window.tileManager.letAlone();
+		globals.tileManager.letAlone();
 
-		target = window.helper.fillTarget(position.x, position.y, 0, 'table');
+		target = Helper.fillTarget(position.x, position.y, 0, 'table');
 
-		animate(mesh, target.show, 1000, function(){
-	   			window.camera.enable();
-	   			window.camera.setFocus(mesh, new THREE.Vector4(0, 0, window.TILE_DIMENSION.width - window.TILE_SPACING, 1), 1000);
-	   			positionFocus(id);
+		this.animate(mesh, target.show, 1000, function(){
+	   			globals.camera.enable();
+	   			globals.camera.setFocus(mesh, new THREE.Vector4(0, 0, globals.TILE_DIMENSION.width - globals.TILE_SPACING, 1), 1000);
+	   			this.positionFocus(id);
 			});
 
 	}
@@ -570,11 +570,11 @@ class ScreenshotsAndroid() {
 	* Screenshots account total has a wallet.
 	* @param {String}    Wallet    Wallet counting.
 	*/ 
-	function countControl(wallet){
+	countControl(wallet){
 
 		let sum = 0;
 		
-		for(let i in CONTROL[wallet]){
+		for(let i in this.CONTROL[wallet]){
 			sum++;
 		}
 
@@ -586,24 +586,24 @@ class ScreenshotsAndroid() {
 	* Accommodate the wallet.
 	* @param {Number}    id    Identifier reference wallet.
 	*/ 
-	function positionFocus(id) {
+	positionFocus(id) {
 
 		let ignore = id,
-			mesh = self.objects.mesh[id],
+			mesh = this.objects.mesh[id],
 			wallet = mesh.userData.wallet,
-			target = {},
+			target : any = {},
 			count = 1,
-			_countControl = countControl(wallet),
-			x = POSITION_X;
+			_countControl = this.countControl(wallet),
+			x = this.POSITION_X;
 
-		showTitle(wallet, mesh);
+		this.showTitle(wallet, mesh);
 			
-		target = window.helper.fillTarget(mesh.position.x - (x / 2), mesh.position.y, mesh.position.z, 'table');
+		target = Helper.fillTarget(mesh.position.x - (x / 2), mesh.position.y, mesh.position.z, 'table');
         
 		if(_countControl > 3)
-			animate(mesh, target.show, 1000);
+			this.animate(mesh, target.show, 1000);
 
-		setTimeout(function() { loadTexture(wallet, ignore); }, 500);
+		setTimeout(function() { this.loadTexture(wallet, ignore); }, 500);
 
 		setTimeout(function() { 
 
@@ -615,16 +615,16 @@ class ScreenshotsAndroid() {
 
 						if(i != ignore) { 
 
-							let _mesh = self.objects.mesh[i];
+							let _mesh = this.objects.mesh[i];
 
 							if(_countControl > 3){ 
 
-								if(x === POSITION_X)
+								if(x === this.POSITION_X)
 									x = x * 2;
-								else if(x > POSITION_X)
+								else if(x > this.POSITION_X)
 									x = (x / 2) * -1;
 								else
-									x = POSITION_X;
+									x = this.POSITION_X;
 
 							}
 							else{
@@ -637,9 +637,9 @@ class ScreenshotsAndroid() {
 
 							count++;
 
-							target = window.helper.fillTarget(mesh.position.x + x, mesh.position.y, mesh.position.z, 'table');
+							target = Helper.fillTarget(mesh.position.x + x, mesh.position.y, mesh.position.z, 'table');
 
-							animate(_mesh, target.show, 2000);
+							this.animate(_mesh, target.show, 2000);
 
 						}
 					} 
@@ -654,12 +654,12 @@ class ScreenshotsAndroid() {
 	* @param {String}    wallet    Behalf of the wallet.
 	* @param {Number}    ignore    Id focused wallet.
 	*/ 
-	function loadTexture(wallet, ignore) {
+	loadTexture(wallet, ignore) {
 
 		let id = 1,
 			_mesh,
 			count = 1,
-			_countControl = countControl(wallet);
+			_countControl = this.countControl(wallet);
 
 		for(let i = 0; i < 4; i++) { 
 
@@ -671,8 +671,8 @@ class ScreenshotsAndroid() {
 
 						id = id + 1 ;
 
-						_mesh = self.objects.mesh[i];
-						_mesh.material.map = searchWallet(wallet, id); 
+						_mesh = this.objects.mesh[i];
+						_mesh.material.map = this.searchWallet(wallet, id); 
 						_mesh.material.needsUpdate = true;
 
 						count++;
@@ -687,28 +687,28 @@ class ScreenshotsAndroid() {
 	* Change texture of the planes to the original state.
 	* @param {Number}    ignore    Id focused wallet.
 	*/   
-	function resetTexture(ignore) {
+	resetTexture(ignore) {
 
-		let title = self.objects.title.mesh.mesh, 
+		let title = this.objects.title.mesh.mesh, 
 			_mesh;
 
-		self.hide(); 
+		this.hide(); 
 
-		animate(title, self.objects.title.mesh.target.hide, 1000, function() {   
+		this.animate(title, this.objects.title.mesh.target.hide, 1000, function() {   
 
-			for(let i = 0; i < self.objects.mesh.length; i++) { 
+			for(let i = 0; i < this.objects.mesh.length; i++) { 
 
 				if(i != ignore) { 
 
-					_mesh = self.objects.mesh[i];
-					_mesh.material.map = searchWallet(_mesh.userData.wallet, 1); 
+					_mesh = this.objects.mesh[i];
+					_mesh.material.map = this.searchWallet(_mesh.userData.wallet, 1); 
 					_mesh.material.needsUpdate = true;
 				}
 			} 
 
-			action.state = false;
+			this.action.state = false;
 
-			self.show();  
+			this.show();  
 
 		});
 	}
@@ -721,7 +721,7 @@ class ScreenshotsAndroid() {
 	* @param {Boolean}   state     Status wallet.
 	* @param {Number}   duration   Animation length.
 	*/ 
-    function animate(mesh, target, duration, callback){
+    animate(mesh, target, duration = 2000, callback? : () => void){
 
         let _duration = duration || 2000,
             x = target.position.x,

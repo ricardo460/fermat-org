@@ -70,8 +70,8 @@ class Workflow {
 
     onClick = (target) => {
 
-        if (window.actualView === 'workflows') {
-            window.workFlowManager.onElementClickHeaderFlow(target.userData.id);
+        if (globals.actualView === 'workflows') {
+            globals.workFlowManager.onElementClickHeaderFlow(target.userData.id);
             this.action = true;
         }
     };
@@ -87,9 +87,9 @@ class Workflow {
      */
     draw(initialX, initialY, initialZ, indice, id) {
 
-        let title = this.createTitleBox(this.flow.name, this.flow.desc),
+        let title : any = this.createTitleBox(this.flow.name, this.flow.desc),
             origin = Helper.getOutOfScreenPoint(80000 * 2, 'workflows'),
-            target = new THREE.Vector3(initialX, initialY + TILE_DIMENSION.height * 2, initialZ);
+            target = new THREE.Vector3(initialX, initialY + globals.TILE_DIMENSION.height * 2, initialZ);
 
         if (indice === 1)
             target = new THREE.Vector3(initialX, initialY, initialZ);
@@ -106,7 +106,7 @@ class Workflow {
 
         this.objectsFlow.mesh.push(title);
 
-        window.scene.add(title);
+        globals.scene.add(title);
 
         if (indice === 0) {
 
@@ -135,7 +135,7 @@ class Workflow {
 
         if (typeof root.drawn === 'undefined') {
 
-            drawStep(root, x, y, z);
+            this.drawStep(root, x, y, z);
 
             let childCount = root.next.length,
                 startX = x - 0.5 * (childCount - 1) * this.COLUMN_SPACING;
@@ -176,7 +176,7 @@ class Workflow {
                 this.objectsStep.position.target.push(new THREE.Vector3(0, 0, 0));
 
                 this.objectsStep.mesh.push(rootLine);
-                window.scene.add(rootLine);
+                globals.scene.add(rootLine);
 
                 let nextX,
                     nextY,
@@ -188,10 +188,10 @@ class Workflow {
 
                 for (i = 0; i < childCount; i++) {
 
-                    child = getStep(root.next[i].id);
+                    child = this.getStep(root.next[i].id);
                     isLoop = (typeof child.drawn !== 'undefined');
                     nextX = startX + i * this.COLUMN_SPACING;
-                    if (collides(nextX, root, false, y)) nextX += this.COLUMN_SPACING;
+                    if (this.collides(nextX, root, false, y)) nextX += this.COLUMN_SPACING;
 
                     color = this.getColor(root.next[i].type);
 
@@ -239,7 +239,7 @@ class Workflow {
                     this.objectsStep.position.target.push(new THREE.Vector3(0, 0, 0));
 
                     this.objectsStep.mesh.push(childLine);
-                    window.scene.add(childLine);
+                    globals.scene.add(childLine);
 
                     if (nextX !== undefined) {
 
@@ -302,7 +302,7 @@ class Workflow {
      */
     deleteStep() {
 
-        window.tileManager.letAlone();
+        globals.tileManager.letAlone();
         this.animateFlows('steps', 'origin', false, 3000);
     };
 
@@ -331,14 +331,14 @@ class Workflow {
 
                 let data = Helper.clone(Helper.getSpecificTile(node.element).data);
 
-                tile = window.tileManager.createElement(node.element + "_clone_" + this.account, data);
+                tile = globals.tileManager.createElement(node.element + "_clone_" + this.account, data);
                 tile.isClone = true;
 
                 this.objectsStep.position.origin.push(Helper.getOutOfScreenPoint(1));
                 this.objectsStep.position.target.push(tilePosition);
 
                 this.objectsStep.mesh.push(tile);
-                window.scene.add(tile);
+                globals.scene.add(tile);
 
                 this.account = this.account + 1;
             }
@@ -361,7 +361,7 @@ class Workflow {
 
         }
 
-        stepBox = createStepBox(node);
+        stepBox = this.createStepBox(node);
 
         origin = Helper.getOutOfScreenPoint(0);
 
@@ -373,7 +373,7 @@ class Workflow {
         stepBox.position.copy(origin);
 
         this.objectsStep.mesh.push(stepBox);
-        scene.add(stepBox);
+        globals.scene.add(stepBox);
 
         node.drawn = {
             x: x,
@@ -390,7 +390,7 @@ class Workflow {
      * @param   {number}  [y]          The y coordinate of the child, it loop=false then this will ignore all ancestors
      * @returns {boolean} Whether it collides or no
      */
-    collides(x, from, loop, y) {
+    collides(x, from, loop = false, y?) {
 
         let actual,
             left,
@@ -427,7 +427,7 @@ class Workflow {
      * @param   {Function}   fillBox Function to call after load, receives context and image
      * @returns {THREE.Mesh} The created plane with the drawed texture
      */
-    createFlowBox(src, fillBox, width, height, _switch?) {
+    createFlowBox(src, fillBox, width, height, _switch?) : THREE.Texture | THREE.Mesh {
 
         let canvas = document.createElement('canvas');
         canvas.height = height;
@@ -502,7 +502,7 @@ class Workflow {
      * @param {String} desc  The description of the whole process
      * @author Miguel Celedon
      */
-    createTitleBox(title, desc, _switch) {
+    createTitleBox(title, desc, _switch?) {
 
         let fillBox = function (ctx, image) {
 
@@ -530,7 +530,7 @@ class Workflow {
      * @param   {Boolean}    visible    visible of the object.
      * @param   {Number}    duration    Animation length.
      */
-    animateFlows(objects, target, visible, duration, callback) {
+    animateFlows(objects, target, visible, duration = 2000, callback?) {
 
         let _duration = duration || 2000,
             _target,
@@ -583,7 +583,7 @@ class Workflow {
                 .easing(TWEEN.Easing.Cubic.Out)
                 .onComplete(function () {
                     if (!visible)
-                        window.scene.remove(object);
+                        globals.scene.remove(object);
                 })
                 .start();
         }

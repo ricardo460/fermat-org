@@ -26,7 +26,7 @@ class FieldsEdit {
     };
     actualTile = null;
     actualFlow = null;
-    DATA_USER = API.listDevs;
+    DATA_USER = globals.api.listDevs;
     button;
     text;
     x;
@@ -63,30 +63,30 @@ class FieldsEdit {
             if(document.getElementById("hidden-area"))
                 Helper.hide('hidden-area', 1000);
 
-            if(window.actualView === 'table'){ 
+            if(globals.actualView === 'table'){ 
 
                 this.actualTile = null;
 
-                window.tableEdit.formerName = null;
+                globals.tableEdit.formerName = null;
                 
-                window.tableEdit.deleteMesh();
+                globals.tableEdit.deleteMesh();
 
-                if(window.camera.getFocus() === null)
-                    window.tableEdit.addButton();              
+                if(globals.camera.getFocus() === null)
+                    globals.tableEdit.addButton();              
 
                 if(typeof(this.actions.exit) === 'function'){
                     this.actions.exit();
                     this.actions.exit = null;
                 }
             }
-            else if(window.actualView === 'workflows'){
+            else if(globals.actualView === 'workflows'){
                     
                 this.actualFlow = null;
                     
-                window.tableEdit.deleteMesh();
+                globals.tableEdit.deleteMesh();
 
-                if(window.camera.getFocus() === null)
-                    window.workFlowEdit.addButton();              
+                if(globals.camera.getFocus() === null)
+                    globals.workFlowEdit.addButton();              
 
                 if(typeof(this.actions.exit) === 'function'){
                     this.actions.exit();
@@ -165,36 +165,36 @@ class FieldsEdit {
 
     createFieldTableEdit() : void {
 
-        sesionGroup();
-        sesionType();
-        sesionName();
+        this.sesionGroup();
+        this.sesionType();
+        this.sesionName();
         //sesionRepoDir();
-        sesionDifficulty();
-        sesionDescription();
-        sesionState();
-        sesionAuthor();
-        createbutton(function(){
+        this.sesionDifficulty();
+        this.sesionDescription();
+        this.sesionState();
+        this.sesionAuthor();
+        this.createbutton(function(){
             this.actions.exit = null;
-            window.tableEdit.saveTile();  
+            globals.tableEdit.saveTile();  
         });
         this.setTextSize();
     };
 
     createFieldWorkFlowEdit() : void{
-        workflowHeader();
-        workflowDescription();
-        createStepsList();
-        createModeEdit();
+        this.workflowHeader();
+        this.workflowDescription();
+        this.createStepsList();
+        this.createModeEdit();
     };
 
     changeLayer(platform : string) : void {
 
         let state = 'false';
 
-        if(typeof window.platforms[platform] === 'undefined')
+        if(typeof globals.platforms[platform] === 'undefined')
             state = platform;
 
-        let _layers = CLI.query(window.layers, (el) => {
+        let _layers = CLI.query(globals.layers, (el) => {
             return (typeof (el) !== "function" && el.super_layer.toString() === state.toString());
         });
 
@@ -222,7 +222,7 @@ class FieldsEdit {
         }
     };
     
-    getData() : Object {
+    getData() : any {
         
         let title = document.getElementById("workflow-header-title") as HTMLInputElement;
         let desc = document.getElementById("modal-desc-textarea") as HTMLInputElement;
@@ -259,7 +259,7 @@ class FieldsEdit {
 
         this.objects.idFields.group = id;
 
-        for(let i in window.platforms){ 
+        for(let i in globals.platforms){ 
             if(i != "size"){
                 option += "<option value = "+i+" >"+i+"</option>";
             }
@@ -269,7 +269,7 @@ class FieldsEdit {
         option = "";
         optgroup += "<optgroup label = superLayer>";
 
-        for(let _i in window.superLayers){
+        for(let _i in globals.superLayers){
             if(_i != "size"){
                 option += "<option value = "+_i+" >"+_i+"</option>";
             }
@@ -277,12 +277,12 @@ class FieldsEdit {
 
         optgroup += option + "</optgroup>";
         $("#"+id).html(optgroup);
-        sesionLayer();
+        this.sesionLayer();
         this.changeLayer((document.getElementById(id) as HTMLInputElement).value);
        $("#"+id).change('click', () => {
         
             this.changeLayer((document.getElementById(id) as HTMLInputElement).value);
-            window.tableEdit.changeTexture();
+            globals.tableEdit.changeTexture();
         });
         
         this.setSelectImages(document.getElementById(id) as HTMLSelectElement);
@@ -299,7 +299,7 @@ class FieldsEdit {
         this.createField(id, text, null, type);
         this.objects.idFields.layer = id;
         $("#"+id).change('click', () => {
-            window.tableEdit.changeTexture();
+            globals.tableEdit.changeTexture();
         });
         this.setSelectImages(document.getElementById(id) as HTMLSelectElement);
     }
@@ -321,7 +321,7 @@ class FieldsEdit {
         option += "<option value = Plugin>Plugin</option>";
         $("#"+id).html(option);
         $("#"+id).change('click', () => {
-            window.tableEdit.changeTexture();
+            globals.tableEdit.changeTexture();
         });
         
         this.setSelectImages(document.getElementById(id) as HTMLSelectElement);
@@ -352,7 +352,7 @@ class FieldsEdit {
         Helper.show(button, 1000);
         this.objects.row2.buttons.push(object);
         button.addEventListener('blur', () => {
-            window.tableEdit.changeTexture();
+            globals.tableEdit.changeTexture();
         });
     }
     
@@ -609,7 +609,7 @@ class FieldsEdit {
             modal.dataset.state = "hidden";
             let area = document.getElementById("hidden-area");
             Helper.hide(area, 500);
-            window.tableEdit.changeTexture();
+            globals.tableEdit.changeTexture();
             
         });
         
@@ -640,7 +640,7 @@ class FieldsEdit {
             
             let area = document.getElementById("hidden-area");
             Helper.hide(area, 500);
-            window.tableEdit.changeTexture();
+            globals.tableEdit.changeTexture();
             
         });
 
@@ -679,7 +679,7 @@ class FieldsEdit {
 
         $("#"+id).change('click', function() {
         
-            window.tableEdit.changeTexture();
+            globals.tableEdit.changeTexture();
         });
         
         this.setSelectImages(document.getElementById(id) as HTMLSelectElement);
@@ -743,10 +743,10 @@ class FieldsEdit {
 
         button.addEventListener('click', function() {
             
-            let modal = document.getElementById("modal-desc");
+            let modal = document.getElementById("modal-desc") as any;
             modal.dataset.state = "show";
             
-            modal.oldValue = document.getElementById("modal-desc-textarea").value;
+            modal.oldValue = (document.getElementById("modal-desc-textarea") as any).value;
             
             let area = document.createElement("div");
             area.id = "hidden-area";
@@ -757,9 +757,9 @@ class FieldsEdit {
         
         document.getElementById("modal-desc-cancel").onclick = function() {
             
-            let modal = document.getElementById("modal-desc");
+            let modal = document.getElementById("modal-desc") as any;
             modal.dataset.state = "hidden";
-            document.getElementById("modal-desc-textarea").value = modal.oldValue;
+            (document.getElementById("modal-desc-textarea") as any).value = modal.oldValue;
             
             let area = document.getElementById("hidden-area");
             Helper.hide(area, 500);
@@ -768,7 +768,7 @@ class FieldsEdit {
         
         document.getElementById("modal-desc-accept").addEventListener("click", function() {
             
-            let modal = document.getElementById("modal-desc");
+            let modal = document.getElementById("modal-desc") as any;
             modal.dataset.state = "hidden";
             
             let area = document.getElementById("hidden-area");
@@ -802,7 +802,7 @@ class FieldsEdit {
 
         $("#"+id).change('click', function() {
         
-            window.tableEdit.changeTexture();
+            globals.tableEdit.changeTexture();
         });
         
         this.setSelectImages(document.getElementById(id) as HTMLSelectElement);
@@ -812,26 +812,12 @@ class FieldsEdit {
         
         let id = 'button-save', text = 'Save', type = 'button';
         
-        window.buttonsManager.createButtons(id, text, function(){
+        globals.buttonsManager.createButtons(id, text, function(){
 
             if(typeof(callback) === 'function')
                 callback();          
 
         }, null, null, "right");
-    }
-
-    deleteMesh() : void{
-
-        let mesh = this.objects.tile.mesh;
-
-        if(mesh != null){ 
-
-            this.animate(mesh, this.objects.tile.target.hide, 1500, () => { 
-                    window.scene.remove(mesh);
-                    
-                    this.objects.tile.mesh = null;
-                });
-        }
     }
 
     workflowHeader() : void {
@@ -857,7 +843,7 @@ class FieldsEdit {
             let optgroup = "<optgroup label = Platform>",
             option = "";
 
-            for(let i in window.platforms){ 
+            for(let i in globals.platforms){ 
 
                 if(i != "size"){
 
@@ -872,7 +858,7 @@ class FieldsEdit {
 
             optgroup += "<optgroup label = superLayer>";
 
-            for(let _i in window.superLayers){
+            for(let _i in globals.superLayers){
 
                 if(_i != "size"){
 
@@ -893,7 +879,7 @@ class FieldsEdit {
             document.body.appendChild(div);
             
             document.getElementById("workflow-header-title").addEventListener('blur', function() {
-               window.workFlowEdit.changeTexture();
+               globals.workFlowEdit.changeTexture();
             });
             
             this.setSelectImages(document.getElementById("workflow-header-plataform") as HTMLSelectElement);
@@ -960,7 +946,7 @@ class FieldsEdit {
             let area = document.getElementById("hidden-area");
             Helper.hide(area, 500);
             
-            window.workFlowEdit.changeTexture();
+            globals.workFlowEdit.changeTexture();
         });
     }
     
@@ -1072,18 +1058,18 @@ class FieldsEdit {
         b1.onclick = function() {
             step.title[0] = _title.value;
             step.desc[0] = _desc.value;
-            window.dragManager.functions.DROP = [];
-            window.fieldsEdit.hiddenModal();
+            globals.dragManager.functions.DROP = [];
+            globals.fieldsEdit.hiddenModal();
         };
         
         b2.onclick = function() {
-            window.dragManager.functions.DROP = [];
-            window.fieldsEdit.hiddenModal();
+            globals.dragManager.functions.DROP = [];
+            globals.fieldsEdit.hiddenModal();
         };
 
         _title.addEventListener('blur', function() {
 
-            workflowPreview(step);
+            this.workflowPreview(step);
 
             if(_title.value === '')
                 (document.getElementById("step-error").dataset as any).state = "show";
@@ -1092,10 +1078,10 @@ class FieldsEdit {
         });
 
         _desc.addEventListener('blur', function() {
-            workflowPreview(step);
+            this.workflowPreview(step);
         });
 
-        workflowPreview(step);
+        this.workflowPreview(step);
     };
 
     setModeEdit(mode, buttonRight, ButtonsLeft){
@@ -1248,10 +1234,10 @@ class FieldsEdit {
 
                         let position = mesh.position;
 
-                        window.camera.move(position.x, position.y, 200, 1500, true);
+                        globals.camera.move(position.x, position.y, 200, 1500, true);
 
                         if(type === 'edit-path'){
-                            window.workFlowEdit.changeFocusSteps(obj.order[0]);
+                            globals.workFlowEdit.changeFocusSteps(obj.order[0]);
                         }
 
                     }
@@ -1261,19 +1247,19 @@ class FieldsEdit {
 
                         if(state === 'error'){
                             
-                            window.dragManager.this.objects = dragModeRepared(obj);
-                            window.workFlowEdit.getFocus().data = obj.id;
+                            globals.dragManager.this.objects = dragModeRepared(obj);
+                            globals.workFlowEdit.getFocus().data = obj.id;
                             obj.mesh.visible = false;
                             this.hiddenModal();
                         }
                         else{
                             
-                            window.dragManager.this.objects = [];
+                            globals.dragManager.this.objects = [];
                             let parent = searchStepParent(obj);
                             let mesh = obj.mesh;
-                            mesh.material.map  = window.workFlowEdit.changeTextureId(obj.id + 1, parent.id + 1);
+                            mesh.material.map  = globals.workFlowEdit.changeTextureId(obj.id + 1, parent.id + 1);
                             mesh.material.needsUpdate = true;
-                            let difference = (window.TILE_DIMENSION.width - window.TILE_SPACING) / 2;
+                            let difference = (globals.TILE_DIMENSION.width - globals.TILE_SPACING) / 2;
                             let tile = Helper.getSpecificTile(obj.element).mesh;
 
                             let target = Helper.fillTarget(tile.position.x - difference, tile.position.y, tile.position.z + 1, 'table');
@@ -1284,7 +1270,7 @@ class FieldsEdit {
 
                             obj.mesh.visible = true;
 
-                            window.camera.move(position.x, position.y, 200, 1500, true);
+                            globals.camera.move(position.x, position.y, 200, 1500, true);
                         }
                     }
 
@@ -1293,7 +1279,7 @@ class FieldsEdit {
 				
 				close.onclick = function () {
 
-                    window.workFlowEdit.deleteStepList(obj.order[0]);
+                    globals.workFlowEdit.deleteStepList(obj.order[0]);
 				};
 				
 				document.getElementById("steps-list-content").appendChild(div);
@@ -1303,7 +1289,7 @@ class FieldsEdit {
 				ctx.width  = canvas.offsetWidth;
 				ctx.height = canvas.offsetHeight;
 
-                applyTextureCanvas(ctx, i, "images/workflow/step.png");
+                this.applyTextureCanvas(ctx, i, "images/workflow/step.png");
 			}
             
             document.body.appendChild(div); 
@@ -1321,7 +1307,7 @@ class FieldsEdit {
         
         function searchStepParent(step){
 
-            let steps = window.fieldsEdit.this.actualFlow.steps.slice();
+            let steps = globals.fieldsEdit.this.actualFlow.steps.slice();
 
             for(let i = 0; i < steps.length; i++){
 
@@ -1342,19 +1328,19 @@ class FieldsEdit {
 
         function dragModeRepared(step){
 
-            let steps = window.fieldsEdit.this.actualFlow.steps.slice();
+            let steps = globals.fieldsEdit.this.actualFlow.steps.slice();
 
             let parent = searchStepParent(step);
 
-            let children = validateChildrenTiles();
+            let children = validateChildrenTiles() as any;
 
             let array = [];
 
-            for(let i = 0; i < window.tilesQtty.length; i++){
+            for(let i = 0; i < globals.tilesQtty.length; i++){
 
-                if(window.tilesQtty[i] !== parent.element && !children.find(function(x){ if(x.element === window.tilesQtty[i]) return x;})){
+                if(globals.tilesQtty[i] !== parent.element && !children.find(function(x){ if(x.element === globals.tilesQtty[i]) return x;})){
 
-                    let tile = Helper.getSpecificTile(window.tilesQtty[i]).mesh;
+                    let tile = Helper.getSpecificTile(globals.tilesQtty[i]).mesh;
 
                     array.push(tile);
                 }
@@ -1408,7 +1394,7 @@ class FieldsEdit {
                     let _canvas = document.getElementById('canvas-step-' + i) as any;
                     if(_canvas.dataset.state === "true"){
                         let _ctx = _canvas.getContext("2d");
-                        cleanPreview(_canvas);
+                        this.cleanPreview(_canvas);
                         this.applyTextureCanvas(_ctx, i, "images/workflow/step.png");
                         _canvas.dataset.state = false;
                     }
@@ -1482,7 +1468,7 @@ class FieldsEdit {
 
         let canvas = document.getElementById('step-modal-canvas') as any;
         let ctx = canvas.getContext('2d');
-        cleanPreview(canvas);
+        this.cleanPreview(canvas);
         let size = 12;
         ctx.fillStyle = '#FFFFFF';
 

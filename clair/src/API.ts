@@ -14,10 +14,10 @@ class API {
             axs_key: ''
         };
 
-        //window.session.useTestData();
+        //globals.session.useTestData();
 
-        if (window.session.getIsLogin() && !window.disconnected) {
-            let usr = Helper.clone(window.session.getUserLogin());
+        if (globals.session.getIsLoggedIn() && !globals.disconnected) {
+            let usr = Helper.clone(globals.session.getUserLogin());
             url = Helper.SERVER + "/v1/repo/usrs/" + usr._id + "/";
 
             param = {
@@ -46,14 +46,14 @@ class API {
             });
         }
         else {
-            if (!window.disconnected)
+            if (!globals.disconnected)
                 url = this.getAPIUrl("comps");
             else
                 url = 'json/testData/comps.json';
 
             callAjax('', '', (route: string, res: Object) => {
                 list = res;
-                if (!window.disconnected)
+                if (!globals.disconnected)
                     url = this.getAPIUrl("user");
                 else
                     url = 'json/testData/devs.json';
@@ -67,7 +67,7 @@ class API {
 
         function callAjax(route: string, port: string, callback: (string, Object) => void) {
             let URL = url + route + port;
-            if (window.disconnected)
+            if (globals.disconnected)
                 URL = url;
 
             $.ajax({
@@ -81,7 +81,7 @@ class API {
 
     };
 
-    postRoutesEdit(type: string, route: string, params: Object, data: Object, doneCallback: (Object) => void, failCallback: (Object) => void): void {
+    postRoutesEdit(type: string, route: string, params: any, data: Object, doneCallback: (Object) => void, failCallback?: (Object) => void): void {
 
         let method = "",
             setup = {
@@ -90,7 +90,7 @@ class API {
                 headers: {},
                 data: null
             },
-            usr = Helper.clone(window.session.getUserLogin()),
+            usr = Helper.clone(globals.session.getUserLogin()),
             url: string;
 
         let param = {
@@ -149,7 +149,7 @@ class API {
                         }
                         else {
                             let name = (document.getElementById('imput-Name') as HTMLInputElement).value;
-                            if (window.fieldsEdit.actualTile.name.toLowerCase() === name.toLowerCase()) {
+                            if (globals.fieldsEdit.actualTile.name.toLowerCase() === name.toLowerCase()) {
                                 if (typeof (doneCallback) === 'function')
                                     doneCallback(res);
                             }
@@ -192,10 +192,10 @@ class API {
         );
     };
 
-    postValidateLock(route: string, data: Object, doneCallback: () => void, failCallback: () => void): void {
+    postValidateLock(route: string, data: Object, doneCallback: (any?) => void, failCallback: (any?) => void): void {
 
         let msj = "Component",
-            usr = Helper.clone(window.session.getUserLogin());
+            usr = Helper.clone(globals.session.getUserLogin());
 
         if (route === "wolkFlowEdit")
             msj = "WolkFlow";
@@ -215,7 +215,7 @@ class API {
             url: this.getAPIUrl(route, param),
             method: 'GET',
             dataType: 'json',
-            success: (res) => {
+             success : (res) => {
 
                 if (res._id)
                     doneCallback();
@@ -303,7 +303,7 @@ class API {
      */
     selectedComponentExists(): boolean {
 
-        if (window.actualView === 'table') {
+        if (globals.actualView === 'table') {
 
             let group = $("#select-Group").val();
             let layer = $("#select-layer").val();
@@ -311,13 +311,13 @@ class API {
             let type = $("#select-Type").val();
             let location;
 
-            if (!window.TABLE[group].layers[layer])
+            if (!globals.TABLE[group].layers[layer])
                 return false;
             else
-                location = window.TABLE[group].layers[layer].objects;
+                location = globals.TABLE[group].layers[layer].objects;
 
-            if (window.fieldsEdit.actualTile) {
-                if (window.fieldsEdit.actualTile.name.toLowerCase() === name.toLowerCase())
+            if (globals.fieldsEdit.actualTile) {
+                if (globals.fieldsEdit.actualTile.name.toLowerCase() === name.toLowerCase())
                     return false;
             }
 

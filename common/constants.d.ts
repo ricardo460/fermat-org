@@ -6,11 +6,9 @@ declare namespace Constants {
     export const testNetworkClients : Object;
     export const testNetworkServices : Object;
 
-    export const layers : Object;
-
-    export const platforms : Object;
-
-    export const superLayers : Object;
+    export const layers: { size: () => number };
+    export const platforms : { size: () => number };
+    export const superLayers : { size: () => number };
 
     export const API_ENV : string;
     export const CLIENT_ID : string;

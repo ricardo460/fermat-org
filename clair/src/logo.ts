@@ -20,7 +20,7 @@ class Logo {
 
         mesh.scale.set(this.SCALE, this.SCALE, this.SCALE);
         mesh.position.copy(position);
-        scene.add(mesh);
+        globals.scene.add(mesh);
 
         return mesh;
     }
@@ -53,7 +53,7 @@ class Logo {
      * @param {Number} [duration=1000] The duration of the fade
      * @author Miguel Celedon
      */
-    stopFade(duration) {
+    stopFade(duration = 1000) {
 
         let _duration = duration || 1000;
 

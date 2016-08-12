@@ -124,7 +124,7 @@ class Camera {
 
         this.focus = target;
 
-        this.render(renderer, scene);
+        this.render(this.renderer, globals.scene);
         offset.applyMatrix4(target.matrix);
 
         new TWEEN.Tween(this.camera.position)
@@ -156,11 +156,11 @@ class Camera {
             $('#timelineButton').fadeTo(1000, 0, function () { $('#timelineButton').remove(); });
             if ($('#tlContainer') != null)
                 Helper.hide($('#tlContainer'), 1000);
-            $(renderer.domElement).fadeTo(1000, 1);
+            $(this.renderer.domElement).fadeTo(1000, 1);
 
             this.focus = null;
 
-            window.buttonsManager.removeAllButtons();
+            globals.buttonsManager.removeAllButtons();
         }
     };
 
@@ -177,7 +177,7 @@ class Camera {
         this.camera.updateProjectionMatrix();
         this.aspectRatio = this.camera.aspect;
 
-        renderer.setSize(innerWidth, innerHeight);
+        this.renderer.setSize(innerWidth, innerHeight);
     };
 
     /**
@@ -193,13 +193,13 @@ class Camera {
             //TWEEN.removeAll();
             let duration = 2000;
 
-            if (window.viewManager !== null) {
+            if (globals.viewManager !== null) {
 
-                if (window.viewManager.views && window.viewManager.views[window.actualView]) {
-                    window.viewManager.views[window.actualView].reset();
+                if (globals.viewManager.views && globals.viewManager.views[globals.actualView]) {
+                    globals.viewManager.views[globals.actualView].reset();
                 }
 
-                if (window.actualView)
+                if (globals.actualView)
                     this.resetPosition(duration);
             }
         }
@@ -213,11 +213,11 @@ class Camera {
 
         this.disable();
 
-        let target = window.viewManager.translateToSection(window.actualView, this.controls.position0);
+        let target = globals.viewManager.translateToSection(globals.actualView, this.controls.position0);
 
         if (this.freeView) {
 
-            let targetView = window.viewManager.translateToSection(window.actualView, new THREE.Vector3(0, 0, 0));
+            let targetView = globals.viewManager.translateToSection(globals.actualView, new THREE.Vector3(0, 0, 0));
 
             new TWEEN.Tween(this.controls.target)
                 .to({ x: targetView.x, y: targetView.y, z: targetView.z }, duration)
@@ -257,8 +257,8 @@ class Camera {
             if (this.freeView === true)
                 this.enableFreeMode();
 
-            if (window.viewManager && window.actualView)
-                window.viewManager.views[window.actualView].zoom();
+            if (globals.viewManager && globals.actualView)
+                globals.viewManager.views[globals.actualView].zoom();
         }
         else if (this.controls.noPan === false && Math.ceil(this.camera.position.z) === this.controls.position0.z && this.freeView === false)
             this.onKeyDown({ keyCode: 27 }); //Force reset if far enough

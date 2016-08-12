@@ -75,7 +75,7 @@ class Guide {
             button = 'helpButton',
             side = 'left';
 
-        window.buttonsManager.createButtons(button, text, showHelp, null, null, side);
+        globals.buttonsManager.createButtons(button, text, showHelp, null, null, side);
     };
 
     HelpWorkFlowEdit = function (Type) {

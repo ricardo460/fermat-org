@@ -6,7 +6,7 @@ class Session {
     usr: UserData;
     code: string;
 
-    get IsLoggedIn(): boolean {
+    getIsLoggedIn(): boolean {
         return this.isLoggedIn;
     }
 
@@ -56,7 +56,7 @@ class Session {
      */
     logout(): void {
 
-        let url_logout = window.API.getAPIUrl("logout", {
+        let url_logout = globals.api.getAPIUrl("logout", {
             axs_key: this.axs_key,
             api_key: this.api_key
         });
@@ -93,7 +93,7 @@ class Session {
             if ((this.code !== "" && this.code.indexOf("/") < 0))
                 this.login(false);
             else
-                window.getData();
+                getData();
         }
 
     };
@@ -105,7 +105,7 @@ class Session {
 
         if (!option) {
 
-            let url = window.API.getAPIUrl("login", {
+            let url = globals.api.getAPIUrl("login", {
                 code: this.code,
                 api_key: this.api_key
             });
@@ -134,7 +134,7 @@ class Session {
                     this.drawUser(this.usr);
                     this.setToken(tkn);
 
-                    window.getData();
+                    getData();
                 }
                 else {
                     console.log("Error:", tkn);
@@ -154,7 +154,7 @@ class Session {
 
             this.drawUser(this.usr);
 
-            window.getData();
+            getData();
         }
     };
 
