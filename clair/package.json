@@ -13,7 +13,7 @@
     "gulp-tsconfig-update": "^1.1.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "typings install file:..\typings.json"
   },
   "author": "",
   "license": "ISC"
