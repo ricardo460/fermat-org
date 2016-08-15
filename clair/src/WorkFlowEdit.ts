@@ -1992,7 +1992,7 @@ class WorkFlowEdit {
             
             vectorArrow = 'arrowDesc';
 
-            toMain = trigonometry(vertexDestX - 4, vertexDestY + 9.5, 0, angleRadians);
+            toMain = this.trigonometry(vertexDestX - 4, vertexDestY + 9.5, 0, angleRadians);
         }
         else if((vertexOriginY <  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es ascendente diagonal 
         
@@ -2003,7 +2003,7 @@ class WorkFlowEdit {
 
             vectorArrow = 'arrowAsc';
 
-            toMain = trigonometry(vertexDestX - 7, vertexDestY - 9.5, 0, angleRadians);
+            toMain = this.trigonometry(vertexDestX - 7, vertexDestY - 9.5, 0, angleRadians);
         }
 
         else if((vertexOriginX == vertexDestX) && (vertexOriginY > vertexDestY)){ // si es vertical descendente
@@ -2014,7 +2014,7 @@ class WorkFlowEdit {
             
             vectorArrow = 'arrowDescVer';
 
-            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 10, angleRadians);
+            toMain = this.trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 10, angleRadians);
         }
         else if((vertexOriginX == vertexDestX) && (vertexOriginY < vertexDestY)){ // si es vertical ascendente
            
@@ -2024,7 +2024,7 @@ class WorkFlowEdit {
             
             vectorArrow = 'arrowAscVer';
 
-            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 10, angleRadians);
+            toMain = this.trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 10, angleRadians);
         }
 
         else if((vertexOriginY == vertexDestY) && (vertexOriginX < vertexDestX)){ // Horizontal Derecha
@@ -2035,7 +2035,7 @@ class WorkFlowEdit {
             
             vectorArrow = 'arrowRight';
 
-            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 17, angleRadians);
+            toMain = this.trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 17, angleRadians);
         } 
 
         else if((vertexOriginY == vertexDestY) && (vertexOriginX > vertexDestX)){ // Horizontal Derecha
@@ -2046,7 +2046,7 @@ class WorkFlowEdit {
             
             vectorArrow = 'arrowLeft';
 
-            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 17, angleRadians);
+            toMain = this.trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 17, angleRadians);
         }  
         
 	let direction = toMain.clone().sub(from);
