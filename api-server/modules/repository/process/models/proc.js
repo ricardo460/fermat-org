@@ -13,7 +13,7 @@ var mongoose = require('mongoose');
  * @param  {Function} next    [description]
  * @param  {[type]}   steps   [description]
  */
-function ProcMdl(platfrm, name, desc, prev, next, steps) {
+function ProcMdl(platfrm, name, desc, prev, next, steps, tags) {
     // always initialize all instance properties
     this.platfrm = platfrm;
     this.name = name;
@@ -21,6 +21,7 @@ function ProcMdl(platfrm, name, desc, prev, next, steps) {
     this.prev = prev;
     this.next = next;
     this.steps = steps;
+    this.tags = tags;
     this.upd_at = new mongoose.Types.ObjectId();
 }
 
@@ -41,6 +42,7 @@ ProcMdl.prototype.init = function (procSchema) {
     this.prev = procSchema.prev;
     this.next = procSchema.next;
     this.steps = procSchema.steps;
+    this.tags = procSchema.tags;
     this.upd_at = procSchema.upd_at;
 };
 

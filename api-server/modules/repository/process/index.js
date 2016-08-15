@@ -220,10 +220,13 @@ exports.findStepsByProc = function (platfrm, proc_name, callback) {
  *
  * @return {[type]}     [description]
  */
-exports.insOrUpdProc = function (platfrm, name, desc, prev, next, callback) {
+exports.insOrUpdProc = function (platfrm, name, desc, prev, next, tags, callback) {
 	'use strict';
 	try {
 		//console.dir(arguments);
+		if (tags) {
+			tags = tags.split(',');
+		}
 		var find_obj = {
 			'$and': []
 		};
@@ -255,6 +258,10 @@ exports.insOrUpdProc = function (platfrm, name, desc, prev, next, callback) {
 					set_obj.next = next;
 					res_proc.next = next;
 				}
+				if (tags && tags !== res_proc.tags) {
+					set_obj.tags = tags;
+					res_proc.tags = tags;
+				}
 				if (Object.keys(set_obj).length > 0) {
 					procSrv.updateProcById(res_proc._id, set_obj, function (err_upd, res_upd) {
 						if (err_upd) {
@@ -266,7 +273,8 @@ exports.insOrUpdProc = function (platfrm, name, desc, prev, next, callback) {
 					return callback(null, res_proc);
 				}
 			} else {
-				var proc = new ProcMdl(platfrm, name, desc, prev, next, []);
+				if (tags === undefined || tags === null) tags = [];
+				var proc = new ProcMdl(platfrm, name, desc, prev, next, [], tags);
 				procSrv.insertProc(proc, function (err_ins, res_ins) {
 					if (err_ins) {
 						return callback(err_ins, null);
@@ -650,7 +658,7 @@ exports.delAllProcs = function (callback) {
  *
  * @return {[type]}    [description]
  */
-exports.updateProcById = function (_proc_id, platfrm, name, desc, prev, next, callback) {
+exports.updateProcById = function (_proc_id, platfrm, name, desc, prev, next, tags, callback) {
 	'use strict';
 	try {
 		var set_obj = {};
@@ -668,6 +676,10 @@ exports.updateProcById = function (_proc_id, platfrm, name, desc, prev, next, ca
 		}
 		if (next) {
 			set_obj.next = next;
+		}
+		if (tags) {
+			tags = tags.split(',');
+			set_obj.tags = tags;
 		}
 		procSrv.updateProcById(_proc_id, set_obj, function (err, proc) {
 			if (err) {

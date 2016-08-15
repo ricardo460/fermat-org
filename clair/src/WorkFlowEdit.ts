@@ -1288,8 +1288,6 @@ class WorkFlowEdit {
                             for(let l = 0; l < this.LIST_ARROWS.length; l++){
 
                                 globals.dragManager.objects.push(this.LIST_ARROWS[l].arrow);
-                                globals.dragManager.objects.push(this.LIST_ARROWS[l].vector1);
-                                globals.dragManager.objects.push(this.LIST_ARROWS[l].vector2);
                             }
 
                             newCenter = this.EDIT_STEPS[0].target.show.position;
@@ -1937,21 +1935,25 @@ class WorkFlowEdit {
 
     /**
      * @author Emmanuel Colina.
-     * 
+     * Create the arrow of the step
      * @param {mesh, mesh, int, int, string, string}
+     * @param {mesh} Mesh of the Origin
+     * @param {mesh} Mesh of the Destination
+     * @param {int} ID tile origin
+     * @param {int} ID tile destination
+     * @param {String} ID tile origin
+     * @param {String} ID tile destination
      */
     createLineStep(meshOrigin, meshTarget, idOrigin, idTarget, tileOrigin, tileTarget){
 
-        let mesh, from, to, meshTrinogometry, vectorArrow = '';
+	let mesh, from, to, meshTrinogometry, vectorArrow = '', hypotenuse;
 
         let objArrow : any = {
                 tileOriginId : null,
                 tileTargetId : null,
                 originID: null,
                 targetID: null,
-                vector1: null,
                 meshPrimary: null,
-                vector2:null,
                 meshSecondary: null,
                 arrow: null,
                 meshPrimaryTarget: [],
@@ -1980,15 +1982,17 @@ class WorkFlowEdit {
         objArrow.tileTargetId = tileTarget;
 
         let angleRadians = Math.atan2(vertexDestY - vertexOriginY, vertexDestX - vertexOriginX);
-
+        var toMain;
+        
         if((vertexOriginY >  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es descendente diagonal
             
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
             meshTrinogometry = this.trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-            to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
             
             vectorArrow = 'arrowDesc';
+
+            toMain = trigonometry(vertexDestX - 4, vertexDestY + 9.5, 0, angleRadians);
         }
         else if((vertexOriginY <  vertexDestY) && (vertexOriginX !== vertexDestX)){ // si es ascendente diagonal 
         
@@ -1996,55 +2000,60 @@ class WorkFlowEdit {
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
             meshTrinogometry = this.trigonometry(vertexOriginX, vertexOriginY, 40, angleRadians);
-            to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
 
             vectorArrow = 'arrowAsc';
+
+            toMain = trigonometry(vertexDestX - 7, vertexDestY - 9.5, 0, angleRadians);
         }
 
         else if((vertexOriginX == vertexDestX) && (vertexOriginY > vertexDestY)){ // si es vertical descendente
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
-            to = new THREE.Vector3(vertexOriginX, vertexOriginY - 20, 2);
-
-            meshTrinogometry = to;
+            meshTrinogometry = new THREE.Vector3(vertexOriginX, vertexOriginY - 20, 2);
+            
             vectorArrow = 'arrowDescVer';
+
+            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 10, angleRadians);
         }
         else if((vertexOriginX == vertexDestX) && (vertexOriginY < vertexDestY)){ // si es vertical ascendente
            
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
 
-            to = new THREE.Vector3(vertexOriginX, vertexOriginY + 20, 2);
-
-            meshTrinogometry = to;
+            meshTrinogometry = new THREE.Vector3(vertexOriginX, vertexOriginY + 20, 2);
+            
             vectorArrow = 'arrowAscVer';
+
+            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 10, angleRadians);
         }
 
         else if((vertexOriginY == vertexDestY) && (vertexOriginX < vertexDestX)){ // Horizontal Derecha
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
             
-            to = new THREE.Vector3(vertexOriginX + 40, vertexOriginY, 2);
+            meshTrinogometry = new THREE.Vector3(vertexOriginX + 40, vertexOriginY, 2);
             
-            meshTrinogometry = to;
             vectorArrow = 'arrowRight';
+
+            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 17, angleRadians);
         } 
 
         else if((vertexOriginY == vertexDestY) && (vertexOriginX > vertexDestX)){ // Horizontal Derecha
 
             from = new THREE.Vector3(vertexOriginX, vertexOriginY, 2);
             
-            to = new THREE.Vector3(vertexOriginX - 40, vertexOriginY, 2);
+            meshTrinogometry = new THREE.Vector3(vertexOriginX - 40, vertexOriginY, 2);
             
-            meshTrinogometry = to;
             vectorArrow = 'arrowLeft';
+
+            toMain = trigonometry(vertexOriginX, vertexOriginY, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - 17, angleRadians);
         }  
-                
-        let direction = to.clone().sub(from);
+        
+	let direction = toMain.clone().sub(from);
 
         let length = direction.length();
 
-        let arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1);
+        let arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 4*2.5, 4*2.5);
         
         let dataArrow = {
             originOrder : idOrigin,
@@ -2072,7 +2081,7 @@ class WorkFlowEdit {
 
         mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
 
-        objArrow.vector1 = arrowHelper;
+        objArrow.arrow = arrowHelper;
         objArrow.meshPrimary = mesh;
 
         let target = Helper.fillTarget(meshTrinogometry.x, meshTrinogometry.y, 3, 'table');
@@ -2085,79 +2094,44 @@ class WorkFlowEdit {
 
         function directionLineMesh(x, y, angleRadians, tileOrigin, tileTarget){
 
-            let mesh, from, to, meshTrinogometry;
+            let mesh, meshTrinogometry;
 
             switch(vectorArrow){
 
                 case 'arrowDesc':
                 case 'arrowAsc':
-                    from = new THREE.Vector3(x, y, 2);
                     
                     meshTrinogometry = this.trigonometry(x, y, 30, angleRadians);
-
-                    to = new THREE.Vector3(meshTrinogometry.x, meshTrinogometry.y, 2);
-
                     break;
 
                 case 'arrowDescVer':
-                    from = new THREE.Vector3(x, y, 2);
-                    
-                    to = new THREE.Vector3(x, y - 20, 2);
 
-                    meshTrinogometry = to;
-
+                    meshTrinogometry = new THREE.Vector3(x, y - 20, 2);
                     break;
 
                 case 'arrowAscVer':
-                    from = new THREE.Vector3(x, y, 2);
-                    
-                    to = new THREE.Vector3(x, y + 20, 2);
 
-                    meshTrinogometry = to;
-
+                    meshTrinogometry = new THREE.Vector3(x, y + 20, 2);
                     break;
 
                 case 'arrowRight':
-                    from = new THREE.Vector3(x, y, 2);
-                
-                    to = new THREE.Vector3(x + 30, y, 2);
 
-                    meshTrinogometry = to;
-
+                    meshTrinogometry = new THREE.Vector3(x + 30, y, 2);
                     break;
 
                 case 'arrowLeft':
-                    from = new THREE.Vector3(x, y, 2);
 
-                    to = new THREE.Vector3(x - 30, y, 2);
-
-                    meshTrinogometry = to;
-
+                    meshTrinogometry = new THREE.Vector3(x - 30, y, 2);
                     break;
 
                 default:
                     break;
             }
-
-            let direction = to.clone().sub(from);
-
-            let length = direction.length();
-
-            let arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 0.1, 0.1); // Arrow Azul
-
-            arrowHelper.userData = dataArrow;
-
-            arrowHelper.line.userData = dataArrow;
-
-            arrowHelper.cone.userData = dataArrow;
-
-            globals.scene.add(arrowHelper);
             
             mesh = this.createSimbol();
 
             mesh.material.map = this.TEXTURE.y;
 
-            objArrow.vector2 = arrowHelper;
             objArrow.meshSecondary = mesh;
 
             mesh.userData = {
@@ -2166,72 +2140,13 @@ class WorkFlowEdit {
                 type : 'fork'
             };
 
-            directionArrowMesh(meshTrinogometry.x, meshTrinogometry.y, angleRadians, tileOrigin, tileTarget);
-
-
             mesh.position.set(meshTrinogometry.x, meshTrinogometry.y, 3);
                     
-
             let target = Helper.fillTarget(meshTrinogometry.x, meshTrinogometry.y, 3, 'table');
             objArrow.meshSecondaryTarget = target;
         }
-
-    
-        function directionArrowMesh(x, y, angleRadians, tileOrigin, tileTarget){ // x y origen 
-
-            let from, to, hypotenuse;
-
-            from = new THREE.Vector3(x, y, 2);
-            
-            switch(vectorArrow){
-
-                case 'arrowDescVer':
-                case 'arrowAscVer':
-
-                    hypotenuse = 10;
-                    to = this.trigonometry(x, y, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - hypotenuse, angleRadians);
-                break;
-
-                case 'arrowRight':
-                case 'arrowLeft':
-
-                    hypotenuse = 17;
-                    to = this.trigonometry(x, y, from.distanceTo(new THREE.Vector3(vertexDestX, vertexDestY, 2)) - hypotenuse, angleRadians);
-                break;
-
-                case 'arrowAsc':
-                    hypotenuse = 0;
-                    to = this.trigonometry(vertexDestX - 7, vertexDestY - 9.5, hypotenuse, angleRadians);
-                break;
-
-                case 'arrowDesc':
-                    hypotenuse = 0;
-                    to = this.trigonometry(vertexDestX - 4, vertexDestY + 9.5, hypotenuse, angleRadians);
-                break;
-
-                default:
-                break;
-            }
-
-            to.z = 2;
-
-            let direction = to.clone().sub(from);
-
-            let length = direction.length();
-
-            let arrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, color, 4*2.5, 4*2.5);
-
-            arrowHelper.userData = dataArrow;
-
-            arrowHelper.line.userData = dataArrow;
-
-            arrowHelper.cone.userData = dataArrow;
-
-            globals.scene.add(arrowHelper);
-
-            objArrow.arrow = arrowHelper;
-        }
     }
+
      /**
      * @author Ricardo Delgado.
      * creates the movement arrows.
@@ -2396,8 +2311,6 @@ class WorkFlowEdit {
             }
 
             object.dataArrow.arrow.visible = false;
-            object.dataArrow.vector1.visible = false;
-            object.dataArrow.vector2.visible = false;
 
             let typeCall = this.EDIT_STEPS[IdOrigen - 1].children.find(function(x){
                 if(x.id[0] === IdTarget)
@@ -2498,8 +2411,6 @@ class WorkFlowEdit {
                 dataArrow.meshPrimary.visible = true;
                 dataArrow.meshSecondary.visible = true;
                 dataArrow.arrow.visible = true;
-                dataArrow.vector1.visible = true;
-                dataArrow.vector2.visible = true;
             }
 
             this.SHOW_ARROW = [];
@@ -2542,8 +2453,6 @@ class WorkFlowEdit {
             globals.scene.remove(this.LIST_ARROWS[i].arrow);
             globals.scene.remove(this.LIST_ARROWS[i].meshPrimary);
             globals.scene.remove(this.LIST_ARROWS[i].meshSecondary);
-            globals.scene.remove(this.LIST_ARROWS[i].vector1);
-            globals.scene.remove(this.LIST_ARROWS[i].vector2);
         }
 
         this.LIST_ARROWS = [];
@@ -2677,9 +2586,7 @@ class WorkFlowEdit {
 
                 color = this.classFlow.getColor(type);
 
-                ApplyColor(arrow.arrow); 
-                ApplyColor(arrow.vector1);
-                ApplyColor(arrow.vector2);
+                ApplyColor(arrow.arrow);
             };
 
             globals.fieldsEdit.showLineSelectType(array, select, event, callback);
@@ -2872,8 +2779,6 @@ class WorkFlowEdit {
                     connection.meshPrimary.visible = false;
                     connection.meshSecondary.visible = false;
                     connection.arrow.visible = false;
-                    connection.vector1.visible = false;
-                    connection.vector2.visible = false;
                 }
             
                 for (let l = 0; l < children.length; l++) {
@@ -2888,8 +2793,6 @@ class WorkFlowEdit {
                         connection.meshPrimary.visible = false;
                         connection.meshSecondary.visible = false;
                         connection.arrow.visible = false;
-                        connection.vector1.visible = false;
-                        connection.vector2.visible = false;
                     }
                 }
             }
@@ -3280,8 +3183,9 @@ class WorkFlowEdit {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Finds all the tiles shown
+     * @param {String} idIgnore id for the tile to ignore.
+     * @returns {Array} Processed list.
      */ 
     getAllTiles(idIgnore?){
 
@@ -3301,8 +3205,9 @@ class WorkFlowEdit {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * calculates whether the mouse is inside a tile in specific
+     * @param {Object} position Mouse position.
+     * @returns {Boolean} true or false.
      */ 
     calculateAreaTile(position){
 
@@ -3322,8 +3227,8 @@ class WorkFlowEdit {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Hides or shows the header for workflow-edit
+     * @param {Boolean} visible
      */ 
     displayField(visible){
 
@@ -3334,8 +3239,8 @@ class WorkFlowEdit {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * New OnKeyDown for 'esc'.
+     * @param {Event} event event to listen to.
      */ 
     newOnKeyDown(event){
 
@@ -3350,8 +3255,7 @@ class WorkFlowEdit {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Updates the list with the states of the steps.
      */ 
     updateStepList(){
 
@@ -3377,8 +3281,11 @@ class WorkFlowEdit {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Delete a step from the list and sort the list.
+     * @param {Number} step  step number to be deleted.
+     * @param {Array}  array  list processing.
+     * @param {type} type  type of item to be deleted.
+     * @param {Number}   duration   Animation length.
      */ 
     deleteSteps(step, array, type, duration){
 
@@ -3507,8 +3414,9 @@ class WorkFlowEdit {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * orders and clears the steps with errors.
+     * @param {array} steps object to be processed.
+     * @returns {array} processed object.
      */ 
     resetSteps(steps){
 
@@ -3605,9 +3513,10 @@ class WorkFlowEdit {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
-     */ 
+     * resets the position of the mesh step.
+     * @param {Number} orderFocus   number step.
+     * @param {String} typeReset    reason to restart the mesh.
+     */
     resetPositionIdStepMesh(orderFocus, typeReset){
 
         let focus = this.FOCUS.mesh,
@@ -3671,8 +3580,10 @@ class WorkFlowEdit {
 
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * Seeks the position of a specific step
+     * @param {String} id   step number.
+     * @param {array} array search list.
+     * @returns {object} step properties.
      */ 
     searchStepEdit(id, array){
 
@@ -3686,8 +3597,10 @@ class WorkFlowEdit {
     }
     /**
      * @author Ricardo Delgado.
-     * 
-     * @param {String}
+     * looking for the father of a step
+     * @param {String} id   step number.
+     * @param {array} array search list.
+     * @returns {Object or Boolean} step properties or false.
      */ 
     searchParentStepEdit(id, array){
 
@@ -3798,8 +3711,6 @@ class WorkFlowEdit {
             globals.scene.remove(this.LIST_ARROWS[i].meshPrimary);
             globals.scene.remove(this.LIST_ARROWS[i].meshSecondary);
             globals.scene.remove(this.LIST_ARROWS[i].arrow);
-            globals.scene.remove(this.LIST_ARROWS[i].vector1);
-            globals.scene.remove(this.LIST_ARROWS[i].vector2);
         }
 
         if(this.REPARED_STEPS.mesh)
