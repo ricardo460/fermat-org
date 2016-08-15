@@ -2,7 +2,7 @@
 /// <reference path="../../common/cli.d.ts" />
 /// <reference path="../../common/constants.d.ts" />
 /// <reference path="../../common/TrackballControls.d.ts" />
-/// <reference path="../../common/Hash.d.ts" />
+/// <reference path="../../common/hash.d.ts" />
 /// <reference path="../../common/vis.d.ts" />
 
 interface Position2D {
