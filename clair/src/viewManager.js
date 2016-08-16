@@ -84,6 +84,8 @@ function ViewManager() {
                     };
 
                     exit = function() {
+
+                        window.tileFilter.restartTable();
                         window.tileManager.rollBack();
 
                         buttonsManager.removeAllButtons();

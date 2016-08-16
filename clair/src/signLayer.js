@@ -7,6 +7,10 @@ function SignLayer(){
         },
         self = this;
 
+    this.getSignLayer = function(){
+        return objects;
+    };
+
     /**
      * Creates a flow box and when texture is loaded, calls fillBox
      * @param   {String}     src     The texture to load
@@ -117,6 +121,24 @@ function SignLayer(){
         }
     };
 
+    this.hideSignLayer = function(list){
+
+        var objectsSize = objects.length;
+
+        var i = 0;
+
+        for(i = 0; i < objectsSize; i++) {
+
+            var group = objects[i].name.substr(0,3);
+            var titleSign = objects[i].name.substr(3);
+            
+            if(typeof list[group] === 'undefined')
+                self.removeSignLayer(i);
+            else if(typeof list[group].layers[titleSign] === 'undefined')
+                self.removeSignLayer(i);
+        }
+    };
+
     this.removeSignLayer = function(pos, callback){
         var duration = 3000;
         new TWEEN.Tween(objects[pos].position)
@@ -161,14 +183,23 @@ function SignLayer(){
 		var duration = 3000;
 
 		for(var i = 0, l = objects.length; i < l; i++) {
-            new TWEEN.Tween(objects[i].position)
-            .to({
-                x : positions.target[i].x,
-                y : positions.target[i].y,
-                z : positions.target[i].z
-            }, Math.random() * duration + duration)
-            .easing(TWEEN.Easing.Exponential.InOut)
-            .start();
+
+            var group = objects[i].name.substr(0,3);
+            var titleSign = objects[i].name.substr(3);
+            
+            if(typeof window.TABLE[group] !== 'undefined'){
+                if(typeof window.TABLE[group].layers[titleSign] !== 'undefined'){
+
+                    new TWEEN.Tween(objects[i].position)
+                    .to({
+                        x : positions.target[i].x,
+                        y : positions.target[i].y,
+                        z : positions.target[i].z
+                    }, Math.random() * duration + duration)
+                    .easing(TWEEN.Easing.Exponential.InOut)
+                    .start();
+                }
+            }
         }
 	};
 
