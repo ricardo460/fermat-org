@@ -255,42 +255,42 @@ this.Constants = new function(){
     this.layers = {
         
         size : function(){
-            this.count = 0;
+            var count = 0;
             
             for(var key in this){
                 //if(this.hasOwnProperty(key))
-                    this.count++;
+                    count++;
             }
             
-            return this.count - 1;
+            return count - 1;
         }
     };
 
     this.platforms = {
         
         size : function(){
-            this.count = 0;
+            var count = 0;
             
             for(var key in this){
                 //if(this.hasOwnProperty(key))
-                    this.count++;
+                    count++;
             }
             
-            return this.count - 1;
+            return count - 1;
         }
     };
 
     this.superLayers = {
         
         size : function(){
-            this.count = 0;
+            var count = 0;
             
             for(var key in this){
                 //if(this.hasOwnProperty(key))
-                    this.count++;
+                    count++;
             }
             
-            return this.count - 1;
+            return count - 1;
         }
     };
 

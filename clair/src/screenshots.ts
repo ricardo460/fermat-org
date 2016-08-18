@@ -80,7 +80,7 @@ class ScreenshotsAndroid {
 						this.objects.mesh.splice(i,1);
 						this.objects.target.splice(i,1);
 
-						this.animate(mesh, target.hide, 1000, function(){
+						this.animate(mesh, target.hide, 1000, () =>{
 
 							globals.scene.remove(mesh);
 						 }); 
@@ -97,7 +97,7 @@ class ScreenshotsAndroid {
 
 	hidePositionScreenshots(newGroup, newLayer){
 
-		let layer = CLI.query(globals.layers,function(el){return (el.super_layer === false);});
+		let layer = CLI.query(globals.layers,(el) => {return (el.super_layer === false);});
 
 		if(typeof globals.platforms[newGroup] !== 'undefined'){
 
@@ -140,7 +140,7 @@ class ScreenshotsAndroid {
 
     	if(typeof this.SCREENSHOTS[id] !== 'undefined'){
 
-    		globals.buttonsManager.createButtons('showScreenshots', 'View Screenshots', function(){
+    		globals.buttonsManager.createButtons('showScreenshots', 'View Screenshots', () =>{
     			
     			globals.buttonsManager.removeAllButtons();
     			this.showScreenshotsButton(id);
@@ -154,7 +154,7 @@ class ScreenshotsAndroid {
 	*/
 	init() {
 
-        $.get("json/screenshots.json", {}, function(json) {
+        $.get("json/screenshots.json", {}, (json) => {
 
 	        for(let _group in json){
 
@@ -224,7 +224,7 @@ class ScreenshotsAndroid {
 	* @author Ricardo Delgado
 	* Show wallet sight.
 	*/ 
-	show() {
+	show = () => {
 
         if(this.action.state)
 			this.resetTexture(this.action.mesh);
@@ -557,7 +557,7 @@ class ScreenshotsAndroid {
 
 		target = Helper.fillTarget(position.x, position.y, 0, 'table');
 
-		this.animate(mesh, target.show, 1000, function(){
+		this.animate(mesh, target.show, 1000, () =>{
 	   			globals.camera.enable();
 	   			globals.camera.setFocus(mesh, new THREE.Vector4(0, 0, globals.TILE_DIMENSION.width - globals.TILE_SPACING, 1), 1000);
 	   			this.positionFocus(id);
@@ -603,9 +603,9 @@ class ScreenshotsAndroid {
 		if(_countControl > 3)
 			this.animate(mesh, target.show, 1000);
 
-		setTimeout(function() { this.loadTexture(wallet, ignore); }, 500);
+		setTimeout(() => { this.loadTexture(wallet, ignore); }, 500);
 
-		setTimeout(function() { 
+		setTimeout(() => { 
 
 			for(let i = 0; i < 4; i++) { 
 
@@ -694,7 +694,7 @@ class ScreenshotsAndroid {
 
 		this.hide(); 
 
-		this.animate(title, this.objects.title.mesh.target.hide, 1000, function() {   
+		this.animate(title, this.objects.title.mesh.target.hide, 1000, () => {   
 
 			for(let i = 0; i < this.objects.mesh.length; i++) { 
 
@@ -741,7 +741,7 @@ class ScreenshotsAndroid {
         new TWEEN.Tween(mesh.rotation)
             .to({x: rx, y: ry, z: rz}, _duration + 500)
             .easing(TWEEN.Easing.Exponential.InOut)
-            .onComplete(function () {
+            .onComplete(() => {
                     if(typeof(callback) === 'function')
                         callback();   
                 })

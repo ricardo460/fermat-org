@@ -25,7 +25,7 @@ class Globals{
     fieldsEdit = null;
     browserManager = null;
     screenshotsAndroid = null;
-    headers = null;
+    headers: Headers = null;
     workFlowManager = null;
     viewManager = null;
     networkViewer = null;

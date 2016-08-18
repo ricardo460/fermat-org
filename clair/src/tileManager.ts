@@ -39,7 +39,7 @@ class TileManager {
     };
 
     JsonTile(callback) {
-        $.get("json/config_tile.json", {}, function (json) {
+        $.get("json/config_tile.json", {}, (json) => {
             this.jsonTile = json;
             this.qualities = this.jsonTile.qualities;
             callback();
@@ -602,7 +602,7 @@ class TileManager {
 
         //TWEEN.removeAll();
 
-        let animate = function (object, target, delay) {
+        let animate = (object, target, delay) => {
 
             delay = delay || 0;
 
@@ -614,7 +614,7 @@ class TileManager {
                 }, Math.random() * duration + duration)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .delay(delay)
-                .onComplete(function () { object.userData.flying = false; });
+                .onComplete(() => { object.userData.flying = false; });
 
             let rotation = new TWEEN.Tween(object.rotation)
                 .to({
@@ -625,7 +625,7 @@ class TileManager {
                 .delay(delay)
                 .easing(TWEEN.Easing.Exponential.InOut);
 
-            move.onStart(function () { rotation.start(); });
+            move.onStart(() => { rotation.start(); });
 
             return move;
         };
@@ -779,7 +779,7 @@ class TileManager {
 
         let target;
 
-        let animate = function (object, target, dur) {
+        let animate = (object, target, dur) => {
 
             new TWEEN.Tween(object.position)
                 .to({
@@ -788,7 +788,7 @@ class TileManager {
                     z: target.z
                 }, dur)
                 .easing(TWEEN.Easing.Exponential.InOut)
-                .onComplete(function () {
+                .onComplete(() => {
                     object.userData.flying = false;
                 })
                 .start();
@@ -854,14 +854,14 @@ class TileManager {
      * @param {Object} ctx     Canvas context
      * @param {Object} texture The texture object to update
      */
-    drawPicture(data, ctx, texture) {
+    drawPicture(data : any[], ctx, texture) {
 
         let image = new Image();
         let actual = data.shift();
 
         if (actual && actual.src && actual.src != 'undefined') {
 
-            image.onload = function () {
+            image.onload = () => {
 
                 if (!actual.skip) {
                     ctx.drawImage(image, actual.x, actual.y, actual.w, actual.h);
@@ -870,6 +870,8 @@ class TileManager {
                     texture.needsUpdate = true;
 
                 if (data.length !== 0) {
+                    
+                    if (!data[0]) data.shift();
 
                     if (data[0].text)
                         this.drawText(data, ctx, texture);
@@ -878,7 +880,7 @@ class TileManager {
                 }
             };
 
-            image.onerror = function () {
+            image.onerror = () => {
                 if (data.length !== 0) {
                     if (data[0].text)
                         this.drawText(data, ctx, texture);

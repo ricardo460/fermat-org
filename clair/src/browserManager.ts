@@ -16,7 +16,7 @@ class BrowserManager {
     POSITION_Y = (this.wide) ? 7500 : 8000
     SCALE = (this.wide) ? 70 : 40;
 
-    onClick(target : THREE.Mesh) : void {
+    onClick = (target : THREE.Mesh) => {
        this.actionButton(target.userData.view);
     };
 
@@ -130,7 +130,8 @@ class BrowserManager {
         id : id ,
         arrow : button, 
         view : view,
-        onClick : onClick };
+        onClick: this.onClick
+       };
 
        mesh.material.opacity = 1;
     

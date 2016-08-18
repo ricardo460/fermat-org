@@ -108,7 +108,8 @@ function init() {
 
     // groups icons
     globals.headers = new Headers(dimensions.columnWidth, dimensions.superLayerMaxHeight, dimensions.groupsQtty,
-                          dimensions.layersQtty, dimensions.superLayerPosition);
+        dimensions.layersQtty, dimensions.superLayerPosition);
+    globals.headers.initialize();
 
     // uncomment for testing
     //create_stats();

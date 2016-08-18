@@ -9,7 +9,6 @@
 class Headers {
 
     constructor(public columnWidth, public superLayerMaxHeight, public groupsQtty, public layersQtty, public superLayerPosition) {
-        this.initialize();
     }
 
     // Private members
@@ -72,7 +71,7 @@ class Headers {
 
         let target;
 
-        let animate = function (object, target, dur) {
+        let animate =  (object, target, dur) => {
 
             new TWEEN.Tween(object.position)
                 .to({
@@ -527,13 +526,13 @@ class Headers {
 
         let data, edges = [], nodes = [], options, level = 0, pending = {};
 
-        let trace = function (root, parent, _level, _nodes, _edges) {
+        let trace = (root, parent, _level, _nodes, _edges) => {
 
             if (parent)
                 pending[parent] = true;
 
             let i, l, child,
-                lookup = function (x) {
+                lookup =  (x) => {
                     return x.id == child;
                 };
 
@@ -572,9 +571,9 @@ class Headers {
      * Calculate the position header
      */
 
-    calculateWorkflowPositions = function () {
+    calculateWorkflowPositions () {
 
-        let calculatePosition = function (group, offset) {
+        let calculatePosition = (group, offset) => {
             for (let element in group) {
                 if (group.hasOwnProperty(element) && element !== 'size') {
                     let headerData = group[element];
@@ -607,7 +606,7 @@ class Headers {
             slayer,
             row;
 
-        function createChildren(child, parents) {
+        let createChildren = (child, parents) => {
 
             let i, l, actual;
 
@@ -626,7 +625,7 @@ class Headers {
             this.dependencies[child] = this.dependencies[child] || [];
         }
 
-        function createHeader(group, width, height, index) {
+        let createHeader = (group, width, height, index) => {
 
             let source,
                 levels: Array<Array<any>> = [

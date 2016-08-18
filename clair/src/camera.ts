@@ -150,10 +150,10 @@ class Camera {
 
         if (this.focus != null) {
             let backButton = document.getElementById('backButton');
-            $(backButton).fadeTo(0, 0, function () { backButton.style.display = 'none'; });
-            $('#sidePanel').fadeTo(1000, 0, function () { $('#sidePanel').remove(); });
-            $('#elementPanel').fadeTo(1000, 0, function () { $('#elementPanel').remove(); });
-            $('#timelineButton').fadeTo(1000, 0, function () { $('#timelineButton').remove(); });
+            $(backButton).fadeTo(0, 0,  () => { backButton.style.display = 'none'; });
+            $('#sidePanel').fadeTo(1000, 0,  () => { $('#sidePanel').remove(); });
+            $('#elementPanel').fadeTo(1000, 0,  () => { $('#elementPanel').remove(); });
+            $('#timelineButton').fadeTo(1000, 0,  () => { $('#timelineButton').remove(); });
             if ($('#tlContainer') != null)
                 Helper.hide($('#tlContainer'), 1000);
             $(this.renderer.domElement).fadeTo(1000, 1);
@@ -187,7 +187,7 @@ class Camera {
      * @param {Event} event event to listen to
      * 
      */
-    onKeyDown(event: KeyboardEvent | { keyCode: number }): void {
+    onKeyDown = (event: KeyboardEvent | { keyCode: number }) => {
 
         if (event.keyCode === 27 /* ESC */) {
             //TWEEN.removeAll();
@@ -228,11 +228,11 @@ class Camera {
         new TWEEN.Tween(this.camera.position)
             .to({ x: target.x, y: target.y, z: target.z }, duration)
             //.easing( TWEEN.Easing.Exponential.InOut )
-            .onUpdate(function () {
+            .onUpdate( () => {
                 if (!this.freeView)
                     this.controls.target.set(this.camera.position.x, this.camera.position.y, 1);
             })
-            .onComplete(function () {
+            .onComplete( () => {
                 this.enable();
                 this.disableFreeMode();
             })
@@ -275,14 +275,14 @@ class Camera {
      * @param {Scene}    scene    scene to render
      *
      */
-    render(renderer: THREE.Renderer, scene: THREE.Scene): void {
+    render = (renderer: THREE.Renderer, scene: THREE.Scene) => {
 
         let cam;
 
         if (this.rendering === false) {
 
             this.rendering = true;
-            scene.traverse(function (object) {
+            scene.traverse( (object) => {
                 if (object instanceof THREE.LOD) {
                     if (object.userData.flying === true)
                         cam = this.fake;
@@ -363,7 +363,7 @@ class Camera {
             tween = new TWEEN.Tween(this.camera.position)
                 .to({ x: x, y: y, z: z }, duration)
                 .easing(TWEEN.Easing.Cubic.InOut)
-                .onUpdate(function () {
+                .onUpdate( () => {
                     if (!this.freeView || synced)
                         this.controls.target.set(this.camera.position.x, this.camera.position.y, 0);
                 });
@@ -372,7 +372,7 @@ class Camera {
                 .to({ x: 0, y: 1, z: 0 }, duration)
                 .easing(TWEEN.Easing.Cubic.InOut);
 
-            tween.onStart(function () { next.start(); });
+            tween.onStart( () => { next.start(); });
             tween.start();
 
         }
