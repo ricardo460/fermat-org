@@ -3,7 +3,7 @@
 /**
  * Static object with help functions commonly used
  */
-function Helper() {
+var Helper = new function() {
 
     var self = this;
 
@@ -44,11 +44,11 @@ function Helper() {
     this.hideButtons = function(){
 
         if($('#developerButton') !== null)
-          window.helper.hide($('#developerButton'), 1000);
+          Helper.hide($('#developerButton'), 1000);
         if($('#showFlows') !== null)
-          window.helper.hide($('#showFlows'), 1000);
+          Helper.hide($('#showFlows'), 1000);
         if($('#showScreenshots') !== null)
-          window.helper.hide($('#showScreenshots'), 1000);
+          Helper.hide($('#showScreenshots'), 1000);
     };
 
     /**
@@ -113,7 +113,7 @@ function Helper() {
             .onUpdate(function() { this.needsUpdate = true; })
             .onComplete(function() {
               if(!keep)
-                window.scene.remove(object);
+                globals.scene.remove(object);
             })
             .start();
     };
@@ -318,16 +318,16 @@ function Helper() {
 
         if(components.length === 3) {
 
-            for(var i = 0; i < window.tilesQtty.length; i++){
+            for(var i = 0; i < globals.tilesQtty.length; i++){
 
-                var tile = window.helper.getSpecificTile(window.tilesQtty[i]).data;
+                var tile = Helper.getSpecificTile(globals.tilesQtty[i]).data;
 
-                group = tile.platform || window.layers[tile.layer].super_layer;
+                group = tile.platform || globals.layers[tile.layer].super_layer;
 
                 if(group && group.toLowerCase() === components[0].toLowerCase() &&
                    tile.layer.toLowerCase() === components[1].toLowerCase() &&
                    tile.name.toLowerCase() === components[2].toLowerCase())
-                    return window.tilesQtty[i];
+                    return globals.tilesQtty[i];
             }
         }
 
@@ -346,13 +346,13 @@ function Helper() {
         z = (typeof z !== "undefined") ? z : 0;
         view = (typeof view !== "undefined") ? view : 'home';
 
-        var away = window.camera.getMaxDistance() * 4;
+        var away = globals.camera.getMaxDistance() * 4;
         var point = new THREE.Vector3(0, 0, z);
 
         point.x = Math.random() * away + away * ((Math.floor(Math.random() * 10) % 2) * -1);
         point.y = Math.random() * away + away * ((Math.floor(Math.random() * 10) % 2) * -1);
 
-        point = window.viewManager.translateToSection(view, point);
+        point = globals.viewManager.translateToSection(view, point);
 
         return point;
     };
@@ -376,18 +376,18 @@ function Helper() {
     };
 
     this.showBackButton = function() {
-        window.helper.show('backButton');
+        Helper.show('backButton');
     };
 
     this.hideBackButton = function() {
-        window.helper.hide('backButton', 1000, true);
+        Helper.hide('backButton', 1000, true);
     };
 
     this.getCenterView = function(view){
 
         var newCenter = new THREE.Vector3(0, 0, 0);
 
-        newCenter = window.viewManager.translateToSection(view, newCenter);
+        newCenter = globals.viewManager.translateToSection(view, newCenter);
 
         return newCenter;
 
@@ -406,7 +406,7 @@ function Helper() {
         object3D.position.y = Math.random() * 80000 - 40000;
         object3D.position.z = 80000 * 2;
 
-        object3D.position.copy(window.viewManager.translateToSection(view, object3D.position));
+        object3D.position.copy(globals.viewManager.translateToSection(view, object3D.position));
 
         target.hide.position = new THREE.Vector3(object3D.position.x, object3D.position.y, object3D.position.z);
         target.hide.rotation = new THREE.Vector3(Math.random() * 180, Math.random() * 180, Math.random() * 180);
@@ -421,7 +421,7 @@ function Helper() {
 
         var id = _id.split("_");
 
-        return window.TABLE[id[0]].layers[id[1]].objects[id[2]];
+        return globals.TABLE[id[0]].layers[id[1]].objects[id[2]];
 
     };
 
@@ -445,9 +445,9 @@ function Helper() {
 
     this.getPositionYLayer = function(layer){
 
-        var index = window.layers[layer].index;
+        var index = globals.layers[layer].index;
 
-        return window.tileManager.dimensions.layerPositions[index];
+        return globals.tileManager.dimensions.layerPositions[index];
     };
 
     /**
@@ -596,5 +596,3 @@ function Helper() {
     };
 
 }
-
-var helper = new Helper();

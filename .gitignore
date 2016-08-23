@@ -19,5 +19,7 @@ api-server/cache/development/filecache.json
 clair/main.js
 clair/node_modules/
 sh.exe.stackdump
+.vscode
 *.pem
 *.ppk
+typings/
