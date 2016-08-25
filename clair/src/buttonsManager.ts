@@ -30,7 +30,7 @@ class ButtonsManager {
      * @param {String} text  Button text.
      * @param {Function} callback Function to call when finished.    
      */
-    createButtons(id: string, text: string, callback: () => void, x = 5, type = 'button', side = 'left'): HTMLElement {
+    createButtons(id: string, text: string, callback: () => void, _x?: number, _type?: any, _side?: any): HTMLElement {
 
         if (!document.getElementById(id)) {
 
@@ -39,10 +39,16 @@ class ButtonsManager {
                 text: text
             };
 
+            let x = _x || 5,
+                type = _type || 'button',
+                side = _side || 'left';
+
             let idSucesor = "backButton";
 
             if (side === 'right')
                 idSucesor = '';
+            else
+                side = 'left';
 
             if (this.objects[side].buttons.length !== 0)
                 idSucesor = Helper.getLastValueArray(this.objects[side].buttons).id;

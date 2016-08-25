@@ -16,7 +16,7 @@ class TableEdit {
         let id = _id || null,
             text = 'Edit Component',
             button = 'buttonFermatEdit',
-            side = null,
+            side = 'left',
             callback = null;
 
         if (id === null) {
